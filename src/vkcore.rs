@@ -122,99 +122,99 @@ pub type VkQueryControlFlags = VkFlags;
 pub type VkCommandBufferResetFlags = VkFlags;
 pub type VkStencilFaceFlags = VkFlags;
 // Define handle `VkInstance`
-#[derive(Debug, Clone, Copy)] pub struct VkInstance_T {}
+#[repr(C)] #[derive(Debug, Clone, Copy)] pub struct VkInstance_T {_unused: u32,}
 pub type VkInstance = *const VkInstance_T;
 // Define handle `VkPhysicalDevice`
-#[derive(Debug, Clone, Copy)] pub struct VkPhysicalDevice_T {}
+#[repr(C)] #[derive(Debug, Clone, Copy)] pub struct VkPhysicalDevice_T {_unused: u32,}
 pub type VkPhysicalDevice = *const VkPhysicalDevice_T;
 // Define handle `VkDevice`
-#[derive(Debug, Clone, Copy)] pub struct VkDevice_T {}
+#[repr(C)] #[derive(Debug, Clone, Copy)] pub struct VkDevice_T {_unused: u32,}
 pub type VkDevice = *const VkDevice_T;
 // Define handle `VkQueue`
-#[derive(Debug, Clone, Copy)] pub struct VkQueue_T {}
+#[repr(C)] #[derive(Debug, Clone, Copy)] pub struct VkQueue_T {_unused: u32,}
 pub type VkQueue = *const VkQueue_T;
 // Define handle `VkCommandBuffer`
-#[derive(Debug, Clone, Copy)] pub struct VkCommandBuffer_T {}
+#[repr(C)] #[derive(Debug, Clone, Copy)] pub struct VkCommandBuffer_T {_unused: u32,}
 pub type VkCommandBuffer = *const VkCommandBuffer_T;
 // Define non-dispatchable handle `VkBuffer`
 #[cfg(target_pointer_width = "32")] pub type VkBuffer = u64;
-#[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkBuffer_T {}
+#[cfg(target_pointer_width = "64")] #[repr(C)] #[derive(Debug, Clone, Copy)] pub struct VkBuffer_T {_unused: u32,}
 #[cfg(target_pointer_width = "64")] pub type VkBuffer = *const VkBuffer_T;
 // Define non-dispatchable handle `VkImage`
 #[cfg(target_pointer_width = "32")] pub type VkImage = u64;
-#[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkImage_T {}
+#[cfg(target_pointer_width = "64")] #[repr(C)] #[derive(Debug, Clone, Copy)] pub struct VkImage_T {_unused: u32,}
 #[cfg(target_pointer_width = "64")] pub type VkImage = *const VkImage_T;
 // Define non-dispatchable handle `VkSemaphore`
 #[cfg(target_pointer_width = "32")] pub type VkSemaphore = u64;
-#[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkSemaphore_T {}
+#[cfg(target_pointer_width = "64")] #[repr(C)] #[derive(Debug, Clone, Copy)] pub struct VkSemaphore_T {_unused: u32,}
 #[cfg(target_pointer_width = "64")] pub type VkSemaphore = *const VkSemaphore_T;
 // Define non-dispatchable handle `VkFence`
 #[cfg(target_pointer_width = "32")] pub type VkFence = u64;
-#[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkFence_T {}
+#[cfg(target_pointer_width = "64")] #[repr(C)] #[derive(Debug, Clone, Copy)] pub struct VkFence_T {_unused: u32,}
 #[cfg(target_pointer_width = "64")] pub type VkFence = *const VkFence_T;
 // Define non-dispatchable handle `VkDeviceMemory`
 #[cfg(target_pointer_width = "32")] pub type VkDeviceMemory = u64;
-#[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkDeviceMemory_T {}
+#[cfg(target_pointer_width = "64")] #[repr(C)] #[derive(Debug, Clone, Copy)] pub struct VkDeviceMemory_T {_unused: u32,}
 #[cfg(target_pointer_width = "64")] pub type VkDeviceMemory = *const VkDeviceMemory_T;
 // Define non-dispatchable handle `VkEvent`
 #[cfg(target_pointer_width = "32")] pub type VkEvent = u64;
-#[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkEvent_T {}
+#[cfg(target_pointer_width = "64")] #[repr(C)] #[derive(Debug, Clone, Copy)] pub struct VkEvent_T {_unused: u32,}
 #[cfg(target_pointer_width = "64")] pub type VkEvent = *const VkEvent_T;
 // Define non-dispatchable handle `VkQueryPool`
 #[cfg(target_pointer_width = "32")] pub type VkQueryPool = u64;
-#[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkQueryPool_T {}
+#[cfg(target_pointer_width = "64")] #[repr(C)] #[derive(Debug, Clone, Copy)] pub struct VkQueryPool_T {_unused: u32,}
 #[cfg(target_pointer_width = "64")] pub type VkQueryPool = *const VkQueryPool_T;
 // Define non-dispatchable handle `VkBufferView`
 #[cfg(target_pointer_width = "32")] pub type VkBufferView = u64;
-#[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkBufferView_T {}
+#[cfg(target_pointer_width = "64")] #[repr(C)] #[derive(Debug, Clone, Copy)] pub struct VkBufferView_T {_unused: u32,}
 #[cfg(target_pointer_width = "64")] pub type VkBufferView = *const VkBufferView_T;
 // Define non-dispatchable handle `VkImageView`
 #[cfg(target_pointer_width = "32")] pub type VkImageView = u64;
-#[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkImageView_T {}
+#[cfg(target_pointer_width = "64")] #[repr(C)] #[derive(Debug, Clone, Copy)] pub struct VkImageView_T {_unused: u32,}
 #[cfg(target_pointer_width = "64")] pub type VkImageView = *const VkImageView_T;
 // Define non-dispatchable handle `VkShaderModule`
 #[cfg(target_pointer_width = "32")] pub type VkShaderModule = u64;
-#[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkShaderModule_T {}
+#[cfg(target_pointer_width = "64")] #[repr(C)] #[derive(Debug, Clone, Copy)] pub struct VkShaderModule_T {_unused: u32,}
 #[cfg(target_pointer_width = "64")] pub type VkShaderModule = *const VkShaderModule_T;
 // Define non-dispatchable handle `VkPipelineCache`
 #[cfg(target_pointer_width = "32")] pub type VkPipelineCache = u64;
-#[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkPipelineCache_T {}
+#[cfg(target_pointer_width = "64")] #[repr(C)] #[derive(Debug, Clone, Copy)] pub struct VkPipelineCache_T {_unused: u32,}
 #[cfg(target_pointer_width = "64")] pub type VkPipelineCache = *const VkPipelineCache_T;
 // Define non-dispatchable handle `VkPipelineLayout`
 #[cfg(target_pointer_width = "32")] pub type VkPipelineLayout = u64;
-#[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkPipelineLayout_T {}
+#[cfg(target_pointer_width = "64")] #[repr(C)] #[derive(Debug, Clone, Copy)] pub struct VkPipelineLayout_T {_unused: u32,}
 #[cfg(target_pointer_width = "64")] pub type VkPipelineLayout = *const VkPipelineLayout_T;
 // Define non-dispatchable handle `VkPipeline`
 #[cfg(target_pointer_width = "32")] pub type VkPipeline = u64;
-#[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkPipeline_T {}
+#[cfg(target_pointer_width = "64")] #[repr(C)] #[derive(Debug, Clone, Copy)] pub struct VkPipeline_T {_unused: u32,}
 #[cfg(target_pointer_width = "64")] pub type VkPipeline = *const VkPipeline_T;
 // Define non-dispatchable handle `VkRenderPass`
 #[cfg(target_pointer_width = "32")] pub type VkRenderPass = u64;
-#[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkRenderPass_T {}
+#[cfg(target_pointer_width = "64")] #[repr(C)] #[derive(Debug, Clone, Copy)] pub struct VkRenderPass_T {_unused: u32,}
 #[cfg(target_pointer_width = "64")] pub type VkRenderPass = *const VkRenderPass_T;
 // Define non-dispatchable handle `VkDescriptorSetLayout`
 #[cfg(target_pointer_width = "32")] pub type VkDescriptorSetLayout = u64;
-#[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkDescriptorSetLayout_T {}
+#[cfg(target_pointer_width = "64")] #[repr(C)] #[derive(Debug, Clone, Copy)] pub struct VkDescriptorSetLayout_T {_unused: u32,}
 #[cfg(target_pointer_width = "64")] pub type VkDescriptorSetLayout = *const VkDescriptorSetLayout_T;
 // Define non-dispatchable handle `VkSampler`
 #[cfg(target_pointer_width = "32")] pub type VkSampler = u64;
-#[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkSampler_T {}
+#[cfg(target_pointer_width = "64")] #[repr(C)] #[derive(Debug, Clone, Copy)] pub struct VkSampler_T {_unused: u32,}
 #[cfg(target_pointer_width = "64")] pub type VkSampler = *const VkSampler_T;
 // Define non-dispatchable handle `VkDescriptorSet`
 #[cfg(target_pointer_width = "32")] pub type VkDescriptorSet = u64;
-#[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkDescriptorSet_T {}
+#[cfg(target_pointer_width = "64")] #[repr(C)] #[derive(Debug, Clone, Copy)] pub struct VkDescriptorSet_T {_unused: u32,}
 #[cfg(target_pointer_width = "64")] pub type VkDescriptorSet = *const VkDescriptorSet_T;
 // Define non-dispatchable handle `VkDescriptorPool`
 #[cfg(target_pointer_width = "32")] pub type VkDescriptorPool = u64;
-#[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkDescriptorPool_T {}
+#[cfg(target_pointer_width = "64")] #[repr(C)] #[derive(Debug, Clone, Copy)] pub struct VkDescriptorPool_T {_unused: u32,}
 #[cfg(target_pointer_width = "64")] pub type VkDescriptorPool = *const VkDescriptorPool_T;
 // Define non-dispatchable handle `VkFramebuffer`
 #[cfg(target_pointer_width = "32")] pub type VkFramebuffer = u64;
-#[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkFramebuffer_T {}
+#[cfg(target_pointer_width = "64")] #[repr(C)] #[derive(Debug, Clone, Copy)] pub struct VkFramebuffer_T {_unused: u32,}
 #[cfg(target_pointer_width = "64")] pub type VkFramebuffer = *const VkFramebuffer_T;
 // Define non-dispatchable handle `VkCommandPool`
 #[cfg(target_pointer_width = "32")] pub type VkCommandPool = u64;
-#[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkCommandPool_T {}
+#[cfg(target_pointer_width = "64")] #[repr(C)] #[derive(Debug, Clone, Copy)] pub struct VkCommandPool_T {_unused: u32,}
 #[cfg(target_pointer_width = "64")] pub type VkCommandPool = *const VkCommandPool_T;
 #[repr(C)]
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -6077,11 +6077,11 @@ pub type VkPhysicalDeviceVariablePointerFeatures = VkPhysicalDeviceVariablePoint
 pub type VkPhysicalDeviceShaderDrawParameterFeatures = VkPhysicalDeviceShaderDrawParametersFeatures;
 // Define non-dispatchable handle `VkSamplerYcbcrConversion`
 #[cfg(target_pointer_width = "32")] pub type VkSamplerYcbcrConversion = u64;
-#[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkSamplerYcbcrConversion_T {}
+#[cfg(target_pointer_width = "64")] #[repr(C)] #[derive(Debug, Clone, Copy)] pub struct VkSamplerYcbcrConversion_T {_unused: u32,}
 #[cfg(target_pointer_width = "64")] pub type VkSamplerYcbcrConversion = *const VkSamplerYcbcrConversion_T;
 // Define non-dispatchable handle `VkDescriptorUpdateTemplate`
 #[cfg(target_pointer_width = "32")] pub type VkDescriptorUpdateTemplate = u64;
-#[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkDescriptorUpdateTemplate_T {}
+#[cfg(target_pointer_width = "64")] #[repr(C)] #[derive(Debug, Clone, Copy)] pub struct VkDescriptorUpdateTemplate_T {_unused: u32,}
 #[cfg(target_pointer_width = "64")] pub type VkDescriptorUpdateTemplate = *const VkDescriptorUpdateTemplate_T;
 #[repr(C)]
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -8119,7 +8119,7 @@ pub type VkFormatFeatureFlags2 = VkFlags64;
 pub type VkFormatFeatureFlagBits2 = VkFlags64;
 // Define non-dispatchable handle `VkPrivateDataSlot`
 #[cfg(target_pointer_width = "32")] pub type VkPrivateDataSlot = u64;
-#[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkPrivateDataSlot_T {}
+#[cfg(target_pointer_width = "64")] #[repr(C)] #[derive(Debug, Clone, Copy)] pub struct VkPrivateDataSlot_T {_unused: u32,}
 #[cfg(target_pointer_width = "64")] pub type VkPrivateDataSlot = *const VkPrivateDataSlot_T;
 #[repr(C)]
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -10003,7 +10003,7 @@ pub type VkCompositeAlphaFlagsKHR = VkFlags;
 pub type VkSurfaceTransformFlagsKHR = VkFlags;
 // Define non-dispatchable handle `VkSurfaceKHR`
 #[cfg(target_pointer_width = "32")] pub type VkSurfaceKHR = u64;
-#[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkSurfaceKHR_T {}
+#[cfg(target_pointer_width = "64")] #[repr(C)] #[derive(Debug, Clone, Copy)] pub struct VkSurfaceKHR_T {_unused: u32,}
 #[cfg(target_pointer_width = "64")] pub type VkSurfaceKHR = *const VkSurfaceKHR_T;
 #[repr(C)]
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -10126,7 +10126,7 @@ pub type VkSwapchainCreateFlagsKHR = VkFlags;
 pub type VkDeviceGroupPresentModeFlagsKHR = VkFlags;
 // Define non-dispatchable handle `VkSwapchainKHR`
 #[cfg(target_pointer_width = "32")] pub type VkSwapchainKHR = u64;
-#[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkSwapchainKHR_T {}
+#[cfg(target_pointer_width = "64")] #[repr(C)] #[derive(Debug, Clone, Copy)] pub struct VkSwapchainKHR_T {_unused: u32,}
 #[cfg(target_pointer_width = "64")] pub type VkSwapchainKHR = *const VkSwapchainKHR_T;
 #[repr(C)]
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -10278,11 +10278,11 @@ pub type VkDisplayPlaneAlphaFlagsKHR = VkFlags;
 pub type VkDisplaySurfaceCreateFlagsKHR = VkFlags;
 // Define non-dispatchable handle `VkDisplayKHR`
 #[cfg(target_pointer_width = "32")] pub type VkDisplayKHR = u64;
-#[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkDisplayKHR_T {}
+#[cfg(target_pointer_width = "64")] #[repr(C)] #[derive(Debug, Clone, Copy)] pub struct VkDisplayKHR_T {_unused: u32,}
 #[cfg(target_pointer_width = "64")] pub type VkDisplayKHR = *const VkDisplayKHR_T;
 // Define non-dispatchable handle `VkDisplayModeKHR`
 #[cfg(target_pointer_width = "32")] pub type VkDisplayModeKHR = u64;
-#[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkDisplayModeKHR_T {}
+#[cfg(target_pointer_width = "64")] #[repr(C)] #[derive(Debug, Clone, Copy)] pub struct VkDisplayModeKHR_T {_unused: u32,}
 #[cfg(target_pointer_width = "64")] pub type VkDisplayModeKHR = *const VkDisplayModeKHR_T;
 #[repr(C)]
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -10457,11 +10457,11 @@ pub type VkVideoEndCodingFlagsKHR = VkFlags;
 pub type VkVideoCodingControlFlagsKHR = VkFlags;
 // Define non-dispatchable handle `VkVideoSessionKHR`
 #[cfg(target_pointer_width = "32")] pub type VkVideoSessionKHR = u64;
-#[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkVideoSessionKHR_T {}
+#[cfg(target_pointer_width = "64")] #[repr(C)] #[derive(Debug, Clone, Copy)] pub struct VkVideoSessionKHR_T {_unused: u32,}
 #[cfg(target_pointer_width = "64")] pub type VkVideoSessionKHR = *const VkVideoSessionKHR_T;
 // Define non-dispatchable handle `VkVideoSessionParametersKHR`
 #[cfg(target_pointer_width = "32")] pub type VkVideoSessionParametersKHR = u64;
-#[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkVideoSessionParametersKHR_T {}
+#[cfg(target_pointer_width = "64")] #[repr(C)] #[derive(Debug, Clone, Copy)] pub struct VkVideoSessionParametersKHR_T {_unused: u32,}
 #[cfg(target_pointer_width = "64")] pub type VkVideoSessionParametersKHR = *const VkVideoSessionParametersKHR_T;
 #[repr(C)]
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -15758,7 +15758,7 @@ impl Vulkan_KHR_buffer_device_address {
 }
 // Define non-dispatchable handle `VkDeferredOperationKHR`
 #[cfg(target_pointer_width = "32")] pub type VkDeferredOperationKHR = u64;
-#[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkDeferredOperationKHR_T {}
+#[cfg(target_pointer_width = "64")] #[repr(C)] #[derive(Debug, Clone, Copy)] pub struct VkDeferredOperationKHR_T {_unused: u32,}
 #[cfg(target_pointer_width = "64")] pub type VkDeferredOperationKHR = *const VkDeferredOperationKHR_T;
 type PFN_vkCreateDeferredOperationKHR = extern "system" fn(device: VkDevice, pAllocator: *const VkAllocationCallbacks, pDeferredOperation: *mut VkDeferredOperationKHR) -> VkResult;
 type PFN_vkDestroyDeferredOperationKHR = extern "system" fn(device: VkDevice, operation: VkDeferredOperationKHR, pAllocator: *const VkAllocationCallbacks);
@@ -16726,7 +16726,7 @@ impl Vulkan_KHR_ray_tracing_position_fetch {
 pub const VK_MAX_PIPELINE_BINARY_KEY_SIZE_KHR: u32 = 32u32;
 // Define non-dispatchable handle `VkPipelineBinaryKHR`
 #[cfg(target_pointer_width = "32")] pub type VkPipelineBinaryKHR = u64;
-#[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkPipelineBinaryKHR_T {}
+#[cfg(target_pointer_width = "64")] #[repr(C)] #[derive(Debug, Clone, Copy)] pub struct VkPipelineBinaryKHR_T {_unused: u32,}
 #[cfg(target_pointer_width = "64")] pub type VkPipelineBinaryKHR = *const VkPipelineBinaryKHR_T;
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
@@ -19872,7 +19872,7 @@ impl Vulkan_KHR_present_mode_fifo_latest_ready {
 pub type VkDebugReportFlagsEXT = VkFlags;
 // Define non-dispatchable handle `VkDebugReportCallbackEXT`
 #[cfg(target_pointer_width = "32")] pub type VkDebugReportCallbackEXT = u64;
-#[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkDebugReportCallbackEXT_T {}
+#[cfg(target_pointer_width = "64")] #[repr(C)] #[derive(Debug, Clone, Copy)] pub struct VkDebugReportCallbackEXT_T {_unused: u32,}
 #[cfg(target_pointer_width = "64")] pub type VkDebugReportCallbackEXT = *const VkDebugReportCallbackEXT_T;
 #[repr(C)]
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -20258,11 +20258,11 @@ impl Vulkan_EXT_transform_feedback {
 }
 // Define non-dispatchable handle `VkCuModuleNVX`
 #[cfg(target_pointer_width = "32")] pub type VkCuModuleNVX = u64;
-#[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkCuModuleNVX_T {}
+#[cfg(target_pointer_width = "64")] #[repr(C)] #[derive(Debug, Clone, Copy)] pub struct VkCuModuleNVX_T {_unused: u32,}
 #[cfg(target_pointer_width = "64")] pub type VkCuModuleNVX = *const VkCuModuleNVX_T;
 // Define non-dispatchable handle `VkCuFunctionNVX`
 #[cfg(target_pointer_width = "32")] pub type VkCuFunctionNVX = u64;
-#[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkCuFunctionNVX_T {}
+#[cfg(target_pointer_width = "64")] #[repr(C)] #[derive(Debug, Clone, Copy)] pub struct VkCuFunctionNVX_T {_unused: u32,}
 #[cfg(target_pointer_width = "64")] pub type VkCuFunctionNVX = *const VkCuFunctionNVX_T;
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
@@ -21497,7 +21497,7 @@ pub type VkDebugUtilsMessageSeverityFlagsEXT = VkFlags;
 pub type VkDebugUtilsMessengerCreateFlagsEXT = VkFlags;
 // Define non-dispatchable handle `VkDebugUtilsMessengerEXT`
 #[cfg(target_pointer_width = "32")] pub type VkDebugUtilsMessengerEXT = u64;
-#[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkDebugUtilsMessengerEXT_T {}
+#[cfg(target_pointer_width = "64")] #[repr(C)] #[derive(Debug, Clone, Copy)] pub struct VkDebugUtilsMessengerEXT_T {_unused: u32,}
 #[cfg(target_pointer_width = "64")] pub type VkDebugUtilsMessengerEXT = *const VkDebugUtilsMessengerEXT_T;
 #[repr(C)]
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -22072,7 +22072,7 @@ impl Vulkan_EXT_image_drm_format_modifier {
 pub type VkValidationCacheCreateFlagsEXT = VkFlags;
 // Define non-dispatchable handle `VkValidationCacheEXT`
 #[cfg(target_pointer_width = "32")] pub type VkValidationCacheEXT = u64;
-#[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkValidationCacheEXT_T {}
+#[cfg(target_pointer_width = "64")] #[repr(C)] #[derive(Debug, Clone, Copy)] pub struct VkValidationCacheEXT_T {_unused: u32,}
 #[cfg(target_pointer_width = "64")] pub type VkValidationCacheEXT = *const VkValidationCacheEXT_T;
 #[repr(C)]
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -22298,7 +22298,7 @@ pub type VkAabbPositionsNV = VkAabbPositionsKHR;
 pub type VkAccelerationStructureInstanceNV = VkAccelerationStructureInstanceKHR;
 // Define non-dispatchable handle `VkAccelerationStructureNV`
 #[cfg(target_pointer_width = "32")] pub type VkAccelerationStructureNV = u64;
-#[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkAccelerationStructureNV_T {}
+#[cfg(target_pointer_width = "64")] #[repr(C)] #[derive(Debug, Clone, Copy)] pub struct VkAccelerationStructureNV_T {_unused: u32,}
 #[cfg(target_pointer_width = "64")] pub type VkAccelerationStructureNV = *const VkAccelerationStructureNV_T;
 #[repr(C)]
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -23241,7 +23241,7 @@ impl Vulkan_INTEL_shader_integer_functions2 {
 pub type VkQueryPoolCreateInfoINTEL = VkQueryPoolPerformanceQueryCreateInfoINTEL;
 // Define non-dispatchable handle `VkPerformanceConfigurationINTEL`
 #[cfg(target_pointer_width = "32")] pub type VkPerformanceConfigurationINTEL = u64;
-#[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkPerformanceConfigurationINTEL_T {}
+#[cfg(target_pointer_width = "64")] #[repr(C)] #[derive(Debug, Clone, Copy)] pub struct VkPerformanceConfigurationINTEL_T {_unused: u32,}
 #[cfg(target_pointer_width = "64")] pub type VkPerformanceConfigurationINTEL = *const VkPerformanceConfigurationINTEL_T;
 #[repr(C)]
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -24450,7 +24450,7 @@ pub type VkIndirectStateFlagsNV = VkFlags;
 pub type VkIndirectCommandsLayoutUsageFlagsNV = VkFlags;
 // Define non-dispatchable handle `VkIndirectCommandsLayoutNV`
 #[cfg(target_pointer_width = "32")] pub type VkIndirectCommandsLayoutNV = u64;
-#[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkIndirectCommandsLayoutNV_T {}
+#[cfg(target_pointer_width = "64")] #[repr(C)] #[derive(Debug, Clone, Copy)] pub struct VkIndirectCommandsLayoutNV_T {_unused: u32,}
 #[cfg(target_pointer_width = "64")] pub type VkIndirectCommandsLayoutNV = *const VkIndirectCommandsLayoutNV_T;
 #[repr(C)]
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -25207,7 +25207,7 @@ impl Vulkan_NV_low_latency {
 }
 // Define non-dispatchable handle `VkAccelerationStructureKHR`
 #[cfg(target_pointer_width = "32")] pub type VkAccelerationStructureKHR = u64;
-#[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkAccelerationStructureKHR_T {}
+#[cfg(target_pointer_width = "64")] #[repr(C)] #[derive(Debug, Clone, Copy)] pub struct VkAccelerationStructureKHR_T {_unused: u32,}
 #[cfg(target_pointer_width = "64")] pub type VkAccelerationStructureKHR = *const VkAccelerationStructureKHR_T;
 #[repr(C)]
 #[derive(Clone, Copy)]
@@ -26860,7 +26860,7 @@ pub type VkBuildMicromapFlagsEXT = VkFlags;
 pub type VkMicromapCreateFlagsEXT = VkFlags;
 // Define non-dispatchable handle `VkMicromapEXT`
 #[cfg(target_pointer_width = "32")] pub type VkMicromapEXT = u64;
-#[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkMicromapEXT_T {}
+#[cfg(target_pointer_width = "64")] #[repr(C)] #[derive(Debug, Clone, Copy)] pub struct VkMicromapEXT_T {_unused: u32,}
 #[cfg(target_pointer_width = "64")] pub type VkMicromapEXT = *const VkMicromapEXT_T;
 #[repr(C)]
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -28155,11 +28155,11 @@ pub type VkTensorUsageFlagsARM = VkFlags64;
 pub type VkTensorUsageFlagBitsARM = VkFlags64;
 // Define non-dispatchable handle `VkTensorARM`
 #[cfg(target_pointer_width = "32")] pub type VkTensorARM = u64;
-#[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkTensorARM_T {}
+#[cfg(target_pointer_width = "64")] #[repr(C)] #[derive(Debug, Clone, Copy)] pub struct VkTensorARM_T {_unused: u32,}
 #[cfg(target_pointer_width = "64")] pub type VkTensorARM = *const VkTensorARM_T;
 // Define non-dispatchable handle `VkTensorViewARM`
 #[cfg(target_pointer_width = "32")] pub type VkTensorViewARM = u64;
-#[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkTensorViewARM_T {}
+#[cfg(target_pointer_width = "64")] #[repr(C)] #[derive(Debug, Clone, Copy)] pub struct VkTensorViewARM_T {_unused: u32,}
 #[cfg(target_pointer_width = "64")] pub type VkTensorViewARM = *const VkTensorViewARM_T;
 #[repr(C)]
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -28508,7 +28508,7 @@ pub type VkOpticalFlowSessionCreateFlagsNV = VkFlags;
 pub type VkOpticalFlowExecuteFlagsNV = VkFlags;
 // Define non-dispatchable handle `VkOpticalFlowSessionNV`
 #[cfg(target_pointer_width = "32")] pub type VkOpticalFlowSessionNV = u64;
-#[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkOpticalFlowSessionNV_T {}
+#[cfg(target_pointer_width = "64")] #[repr(C)] #[derive(Debug, Clone, Copy)] pub struct VkOpticalFlowSessionNV_T {_unused: u32,}
 #[cfg(target_pointer_width = "64")] pub type VkOpticalFlowSessionNV = *const VkOpticalFlowSessionNV_T;
 #[repr(C)]
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -28784,7 +28784,7 @@ pub type VkShaderCreateFlagsEXT = VkFlags;
 pub type VkShaderRequiredSubgroupSizeCreateInfoEXT = VkPipelineShaderStageRequiredSubgroupSizeCreateInfo;
 // Define non-dispatchable handle `VkShaderEXT`
 #[cfg(target_pointer_width = "32")] pub type VkShaderEXT = u64;
-#[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkShaderEXT_T {}
+#[cfg(target_pointer_width = "64")] #[repr(C)] #[derive(Debug, Clone, Copy)] pub struct VkShaderEXT_T {_unused: u32,}
 #[cfg(target_pointer_width = "64")] pub type VkShaderEXT = *const VkShaderEXT_T;
 #[repr(C)]
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -29442,7 +29442,7 @@ pub type VkDataGraphPipelineDispatchFlagsARM = VkFlags64;
 pub type VkDataGraphPipelineDispatchFlagBitsARM = VkFlags64;
 // Define non-dispatchable handle `VkDataGraphPipelineSessionARM`
 #[cfg(target_pointer_width = "32")] pub type VkDataGraphPipelineSessionARM = u64;
-#[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkDataGraphPipelineSessionARM_T {}
+#[cfg(target_pointer_width = "64")] #[repr(C)] #[derive(Debug, Clone, Copy)] pub struct VkDataGraphPipelineSessionARM_T {_unused: u32,}
 #[cfg(target_pointer_width = "64")] pub type VkDataGraphPipelineSessionARM = *const VkDataGraphPipelineSessionARM_T;
 #[repr(C)]
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -30101,7 +30101,7 @@ impl Vulkan_NV_raw_access_chains {
 	}
 }
 // Define handle `VkExternalComputeQueueNV`
-#[derive(Debug, Clone, Copy)] pub struct VkExternalComputeQueueNV_T {}
+#[repr(C)] #[derive(Debug, Clone, Copy)] pub struct VkExternalComputeQueueNV_T {_unused: u32,}
 pub type VkExternalComputeQueueNV = *const VkExternalComputeQueueNV_T;
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
@@ -30806,11 +30806,11 @@ pub type VkIndirectCommandsInputModeFlagsEXT = VkFlags;
 pub type VkIndirectCommandsLayoutUsageFlagsEXT = VkFlags;
 // Define non-dispatchable handle `VkIndirectExecutionSetEXT`
 #[cfg(target_pointer_width = "32")] pub type VkIndirectExecutionSetEXT = u64;
-#[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkIndirectExecutionSetEXT_T {}
+#[cfg(target_pointer_width = "64")] #[repr(C)] #[derive(Debug, Clone, Copy)] pub struct VkIndirectExecutionSetEXT_T {_unused: u32,}
 #[cfg(target_pointer_width = "64")] pub type VkIndirectExecutionSetEXT = *const VkIndirectExecutionSetEXT_T;
 // Define non-dispatchable handle `VkIndirectCommandsLayoutEXT`
 #[cfg(target_pointer_width = "32")] pub type VkIndirectCommandsLayoutEXT = u64;
-#[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkIndirectCommandsLayoutEXT_T {}
+#[cfg(target_pointer_width = "64")] #[repr(C)] #[derive(Debug, Clone, Copy)] pub struct VkIndirectCommandsLayoutEXT_T {_unused: u32,}
 #[cfg(target_pointer_width = "64")] pub type VkIndirectCommandsLayoutEXT = *const VkIndirectCommandsLayoutEXT_T;
 #[repr(C)]
 #[derive(Debug, Clone, Copy, PartialEq)]
