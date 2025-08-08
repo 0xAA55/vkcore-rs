@@ -1,0 +1,3 @@
+[submodule "vkcore-parse"]
+	path = vkcore-parse
+	url = https://github.com/0xAA55/vkcore-parse.git
