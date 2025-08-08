@@ -5,15 +5,28 @@
 #![allow(non_upper_case_globals)]
 
 use std::{
-	ffi::c_void,
+	collections::BTreeSet,
+	ffi::{c_void, CStr},
 	fmt::{self, Debug, Formatter},
 	mem::transmute,
-	ptr::null,
+	ptr::{null, null_mut},
 };
+
+pub fn vk_make_version(major: u32, minor: u32, patch: u32) -> u32 {
+	(major << 22) | (minor << 12) | patch
+}
+pub fn vk_make_api_version(variant: u32, major: u32, minor: u32, patch: u32) -> u32 {
+	(variant << 29) | (major << 22) | (minor << 12) | patch
+}
+pub fn vk_make_video_std_version(major: u32, minor: u32, patch: u32) -> u32 {
+	(major << 22) | (minor << 12) | patch
+}
 
 pub const VK_USE_64_BIT_PTR_DEFINES: u32 = 0;
 pub const VK_NULL_HANDLE: u32 = 0;
+pub const VK_API_VERSION_1_0: u32 = 0x400000;
 pub const VK_HEADER_VERSION: u32 = 324;
+pub const VK_HEADER_VERSION_COMPLETE: u32 = 0x404144;
 pub const VK_ATTACHMENT_UNUSED: u32 = !0u32;
 pub const VK_FALSE: u32 = 0u32;
 pub const VK_LOD_CLAMP_NONE: f32 = 1000.0f32;
@@ -29,180 +42,180 @@ pub const VK_UUID_SIZE: u32 = 16u32;
 pub const VK_MAX_EXTENSION_NAME_SIZE: u32 = 256u32;
 pub const VK_MAX_DESCRIPTION_SIZE: u32 = 256u32;
 pub const VK_MAX_MEMORY_HEAPS: u32 = 16u32;
-type int8_t = i8;
-type int16_t = i16;
-type int32_t = i32;
-type int64_t = i64;
-type uint8_t = u8;
-type uint16_t = u16;
-type uint32_t = u32;
-type uint64_t = u64;
-type size_t = usize;
-type char = i8;
-type short = i16;
-type int = i32;
-type unsigned = u32;
-type long = i64;
-type float = f32;
-type double = f64;
-type VkBool32 = u32;
-type VkDeviceAddress = u64;
-type VkDeviceSize = u64;
-type VkFlags = u32;
-type VkSampleMask = u32;
-type VkAccessFlags = VkFlags;
-type VkImageAspectFlags = VkFlags;
-type VkFormatFeatureFlags = VkFlags;
-type VkImageCreateFlags = VkFlags;
-type VkSampleCountFlags = VkFlags;
-type VkImageUsageFlags = VkFlags;
-type VkInstanceCreateFlags = VkFlags;
-type VkMemoryHeapFlags = VkFlags;
-type VkMemoryPropertyFlags = VkFlags;
-type VkQueueFlags = VkFlags;
-type VkDeviceCreateFlags = VkFlags;
-type VkDeviceQueueCreateFlags = VkFlags;
-type VkPipelineStageFlags = VkFlags;
-type VkMemoryMapFlags = VkFlags;
-type VkSparseMemoryBindFlags = VkFlags;
-type VkSparseImageFormatFlags = VkFlags;
-type VkFenceCreateFlags = VkFlags;
-type VkSemaphoreCreateFlags = VkFlags;
-type VkEventCreateFlags = VkFlags;
-type VkQueryPipelineStatisticFlags = VkFlags;
-type VkQueryPoolCreateFlags = VkFlags;
-type VkQueryResultFlags = VkFlags;
-type VkBufferCreateFlags = VkFlags;
-type VkBufferUsageFlags = VkFlags;
-type VkBufferViewCreateFlags = VkFlags;
-type VkImageViewCreateFlags = VkFlags;
-type VkShaderModuleCreateFlags = VkFlags;
-type VkPipelineCacheCreateFlags = VkFlags;
-type VkColorComponentFlags = VkFlags;
-type VkPipelineCreateFlags = VkFlags;
-type VkPipelineShaderStageCreateFlags = VkFlags;
-type VkCullModeFlags = VkFlags;
-type VkPipelineVertexInputStateCreateFlags = VkFlags;
-type VkPipelineInputAssemblyStateCreateFlags = VkFlags;
-type VkPipelineTessellationStateCreateFlags = VkFlags;
-type VkPipelineViewportStateCreateFlags = VkFlags;
-type VkPipelineRasterizationStateCreateFlags = VkFlags;
-type VkPipelineMultisampleStateCreateFlags = VkFlags;
-type VkPipelineDepthStencilStateCreateFlags = VkFlags;
-type VkPipelineColorBlendStateCreateFlags = VkFlags;
-type VkPipelineDynamicStateCreateFlags = VkFlags;
-type VkPipelineLayoutCreateFlags = VkFlags;
-type VkShaderStageFlags = VkFlags;
-type VkSamplerCreateFlags = VkFlags;
-type VkDescriptorPoolCreateFlags = VkFlags;
-type VkDescriptorPoolResetFlags = VkFlags;
-type VkDescriptorSetLayoutCreateFlags = VkFlags;
-type VkAttachmentDescriptionFlags = VkFlags;
-type VkDependencyFlags = VkFlags;
-type VkFramebufferCreateFlags = VkFlags;
-type VkRenderPassCreateFlags = VkFlags;
-type VkSubpassDescriptionFlags = VkFlags;
-type VkCommandPoolCreateFlags = VkFlags;
-type VkCommandPoolResetFlags = VkFlags;
-type VkCommandBufferUsageFlags = VkFlags;
-type VkQueryControlFlags = VkFlags;
-type VkCommandBufferResetFlags = VkFlags;
-type VkStencilFaceFlags = VkFlags;
+pub type int8_t = i8;
+pub type int16_t = i16;
+pub type int32_t = i32;
+pub type int64_t = i64;
+pub type uint8_t = u8;
+pub type uint16_t = u16;
+pub type uint32_t = u32;
+pub type uint64_t = u64;
+pub type size_t = usize;
+pub type char = i8;
+pub type short = i16;
+pub type int = i32;
+pub type unsigned = u32;
+pub type long = i64;
+pub type float = f32;
+pub type double = f64;
+pub type VkBool32 = u32;
+pub type VkDeviceAddress = u64;
+pub type VkDeviceSize = u64;
+pub type VkFlags = u32;
+pub type VkSampleMask = u32;
+pub type VkAccessFlags = VkFlags;
+pub type VkImageAspectFlags = VkFlags;
+pub type VkFormatFeatureFlags = VkFlags;
+pub type VkImageCreateFlags = VkFlags;
+pub type VkSampleCountFlags = VkFlags;
+pub type VkImageUsageFlags = VkFlags;
+pub type VkInstanceCreateFlags = VkFlags;
+pub type VkMemoryHeapFlags = VkFlags;
+pub type VkMemoryPropertyFlags = VkFlags;
+pub type VkQueueFlags = VkFlags;
+pub type VkDeviceCreateFlags = VkFlags;
+pub type VkDeviceQueueCreateFlags = VkFlags;
+pub type VkPipelineStageFlags = VkFlags;
+pub type VkMemoryMapFlags = VkFlags;
+pub type VkSparseMemoryBindFlags = VkFlags;
+pub type VkSparseImageFormatFlags = VkFlags;
+pub type VkFenceCreateFlags = VkFlags;
+pub type VkSemaphoreCreateFlags = VkFlags;
+pub type VkEventCreateFlags = VkFlags;
+pub type VkQueryPipelineStatisticFlags = VkFlags;
+pub type VkQueryPoolCreateFlags = VkFlags;
+pub type VkQueryResultFlags = VkFlags;
+pub type VkBufferCreateFlags = VkFlags;
+pub type VkBufferUsageFlags = VkFlags;
+pub type VkBufferViewCreateFlags = VkFlags;
+pub type VkImageViewCreateFlags = VkFlags;
+pub type VkShaderModuleCreateFlags = VkFlags;
+pub type VkPipelineCacheCreateFlags = VkFlags;
+pub type VkColorComponentFlags = VkFlags;
+pub type VkPipelineCreateFlags = VkFlags;
+pub type VkPipelineShaderStageCreateFlags = VkFlags;
+pub type VkCullModeFlags = VkFlags;
+pub type VkPipelineVertexInputStateCreateFlags = VkFlags;
+pub type VkPipelineInputAssemblyStateCreateFlags = VkFlags;
+pub type VkPipelineTessellationStateCreateFlags = VkFlags;
+pub type VkPipelineViewportStateCreateFlags = VkFlags;
+pub type VkPipelineRasterizationStateCreateFlags = VkFlags;
+pub type VkPipelineMultisampleStateCreateFlags = VkFlags;
+pub type VkPipelineDepthStencilStateCreateFlags = VkFlags;
+pub type VkPipelineColorBlendStateCreateFlags = VkFlags;
+pub type VkPipelineDynamicStateCreateFlags = VkFlags;
+pub type VkPipelineLayoutCreateFlags = VkFlags;
+pub type VkShaderStageFlags = VkFlags;
+pub type VkSamplerCreateFlags = VkFlags;
+pub type VkDescriptorPoolCreateFlags = VkFlags;
+pub type VkDescriptorPoolResetFlags = VkFlags;
+pub type VkDescriptorSetLayoutCreateFlags = VkFlags;
+pub type VkAttachmentDescriptionFlags = VkFlags;
+pub type VkDependencyFlags = VkFlags;
+pub type VkFramebufferCreateFlags = VkFlags;
+pub type VkRenderPassCreateFlags = VkFlags;
+pub type VkSubpassDescriptionFlags = VkFlags;
+pub type VkCommandPoolCreateFlags = VkFlags;
+pub type VkCommandPoolResetFlags = VkFlags;
+pub type VkCommandBufferUsageFlags = VkFlags;
+pub type VkQueryControlFlags = VkFlags;
+pub type VkCommandBufferResetFlags = VkFlags;
+pub type VkStencilFaceFlags = VkFlags;
 // Define handle `VkInstance`
 #[derive(Debug, Clone, Copy)] pub struct VkInstance_T {}
-type VkInstance = *const VkInstance_T;
+pub type VkInstance = *const VkInstance_T;
 // Define handle `VkPhysicalDevice`
 #[derive(Debug, Clone, Copy)] pub struct VkPhysicalDevice_T {}
-type VkPhysicalDevice = *const VkPhysicalDevice_T;
+pub type VkPhysicalDevice = *const VkPhysicalDevice_T;
 // Define handle `VkDevice`
 #[derive(Debug, Clone, Copy)] pub struct VkDevice_T {}
-type VkDevice = *const VkDevice_T;
+pub type VkDevice = *const VkDevice_T;
 // Define handle `VkQueue`
 #[derive(Debug, Clone, Copy)] pub struct VkQueue_T {}
-type VkQueue = *const VkQueue_T;
+pub type VkQueue = *const VkQueue_T;
 // Define handle `VkCommandBuffer`
 #[derive(Debug, Clone, Copy)] pub struct VkCommandBuffer_T {}
-type VkCommandBuffer = *const VkCommandBuffer_T;
+pub type VkCommandBuffer = *const VkCommandBuffer_T;
 // Define non-dispatchable handle `VkBuffer`
-#[cfg(target_pointer_width = "32")] type VkBuffer = u64;
+#[cfg(target_pointer_width = "32")] pub type VkBuffer = u64;
 #[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkBuffer_T {}
-#[cfg(target_pointer_width = "64")] type VkBuffer = *const VkBuffer_T;
+#[cfg(target_pointer_width = "64")] pub type VkBuffer = *const VkBuffer_T;
 // Define non-dispatchable handle `VkImage`
-#[cfg(target_pointer_width = "32")] type VkImage = u64;
+#[cfg(target_pointer_width = "32")] pub type VkImage = u64;
 #[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkImage_T {}
-#[cfg(target_pointer_width = "64")] type VkImage = *const VkImage_T;
+#[cfg(target_pointer_width = "64")] pub type VkImage = *const VkImage_T;
 // Define non-dispatchable handle `VkSemaphore`
-#[cfg(target_pointer_width = "32")] type VkSemaphore = u64;
+#[cfg(target_pointer_width = "32")] pub type VkSemaphore = u64;
 #[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkSemaphore_T {}
-#[cfg(target_pointer_width = "64")] type VkSemaphore = *const VkSemaphore_T;
+#[cfg(target_pointer_width = "64")] pub type VkSemaphore = *const VkSemaphore_T;
 // Define non-dispatchable handle `VkFence`
-#[cfg(target_pointer_width = "32")] type VkFence = u64;
+#[cfg(target_pointer_width = "32")] pub type VkFence = u64;
 #[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkFence_T {}
-#[cfg(target_pointer_width = "64")] type VkFence = *const VkFence_T;
+#[cfg(target_pointer_width = "64")] pub type VkFence = *const VkFence_T;
 // Define non-dispatchable handle `VkDeviceMemory`
-#[cfg(target_pointer_width = "32")] type VkDeviceMemory = u64;
+#[cfg(target_pointer_width = "32")] pub type VkDeviceMemory = u64;
 #[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkDeviceMemory_T {}
-#[cfg(target_pointer_width = "64")] type VkDeviceMemory = *const VkDeviceMemory_T;
+#[cfg(target_pointer_width = "64")] pub type VkDeviceMemory = *const VkDeviceMemory_T;
 // Define non-dispatchable handle `VkEvent`
-#[cfg(target_pointer_width = "32")] type VkEvent = u64;
+#[cfg(target_pointer_width = "32")] pub type VkEvent = u64;
 #[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkEvent_T {}
-#[cfg(target_pointer_width = "64")] type VkEvent = *const VkEvent_T;
+#[cfg(target_pointer_width = "64")] pub type VkEvent = *const VkEvent_T;
 // Define non-dispatchable handle `VkQueryPool`
-#[cfg(target_pointer_width = "32")] type VkQueryPool = u64;
+#[cfg(target_pointer_width = "32")] pub type VkQueryPool = u64;
 #[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkQueryPool_T {}
-#[cfg(target_pointer_width = "64")] type VkQueryPool = *const VkQueryPool_T;
+#[cfg(target_pointer_width = "64")] pub type VkQueryPool = *const VkQueryPool_T;
 // Define non-dispatchable handle `VkBufferView`
-#[cfg(target_pointer_width = "32")] type VkBufferView = u64;
+#[cfg(target_pointer_width = "32")] pub type VkBufferView = u64;
 #[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkBufferView_T {}
-#[cfg(target_pointer_width = "64")] type VkBufferView = *const VkBufferView_T;
+#[cfg(target_pointer_width = "64")] pub type VkBufferView = *const VkBufferView_T;
 // Define non-dispatchable handle `VkImageView`
-#[cfg(target_pointer_width = "32")] type VkImageView = u64;
+#[cfg(target_pointer_width = "32")] pub type VkImageView = u64;
 #[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkImageView_T {}
-#[cfg(target_pointer_width = "64")] type VkImageView = *const VkImageView_T;
+#[cfg(target_pointer_width = "64")] pub type VkImageView = *const VkImageView_T;
 // Define non-dispatchable handle `VkShaderModule`
-#[cfg(target_pointer_width = "32")] type VkShaderModule = u64;
+#[cfg(target_pointer_width = "32")] pub type VkShaderModule = u64;
 #[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkShaderModule_T {}
-#[cfg(target_pointer_width = "64")] type VkShaderModule = *const VkShaderModule_T;
+#[cfg(target_pointer_width = "64")] pub type VkShaderModule = *const VkShaderModule_T;
 // Define non-dispatchable handle `VkPipelineCache`
-#[cfg(target_pointer_width = "32")] type VkPipelineCache = u64;
+#[cfg(target_pointer_width = "32")] pub type VkPipelineCache = u64;
 #[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkPipelineCache_T {}
-#[cfg(target_pointer_width = "64")] type VkPipelineCache = *const VkPipelineCache_T;
+#[cfg(target_pointer_width = "64")] pub type VkPipelineCache = *const VkPipelineCache_T;
 // Define non-dispatchable handle `VkPipelineLayout`
-#[cfg(target_pointer_width = "32")] type VkPipelineLayout = u64;
+#[cfg(target_pointer_width = "32")] pub type VkPipelineLayout = u64;
 #[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkPipelineLayout_T {}
-#[cfg(target_pointer_width = "64")] type VkPipelineLayout = *const VkPipelineLayout_T;
+#[cfg(target_pointer_width = "64")] pub type VkPipelineLayout = *const VkPipelineLayout_T;
 // Define non-dispatchable handle `VkPipeline`
-#[cfg(target_pointer_width = "32")] type VkPipeline = u64;
+#[cfg(target_pointer_width = "32")] pub type VkPipeline = u64;
 #[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkPipeline_T {}
-#[cfg(target_pointer_width = "64")] type VkPipeline = *const VkPipeline_T;
+#[cfg(target_pointer_width = "64")] pub type VkPipeline = *const VkPipeline_T;
 // Define non-dispatchable handle `VkRenderPass`
-#[cfg(target_pointer_width = "32")] type VkRenderPass = u64;
+#[cfg(target_pointer_width = "32")] pub type VkRenderPass = u64;
 #[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkRenderPass_T {}
-#[cfg(target_pointer_width = "64")] type VkRenderPass = *const VkRenderPass_T;
+#[cfg(target_pointer_width = "64")] pub type VkRenderPass = *const VkRenderPass_T;
 // Define non-dispatchable handle `VkDescriptorSetLayout`
-#[cfg(target_pointer_width = "32")] type VkDescriptorSetLayout = u64;
+#[cfg(target_pointer_width = "32")] pub type VkDescriptorSetLayout = u64;
 #[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkDescriptorSetLayout_T {}
-#[cfg(target_pointer_width = "64")] type VkDescriptorSetLayout = *const VkDescriptorSetLayout_T;
+#[cfg(target_pointer_width = "64")] pub type VkDescriptorSetLayout = *const VkDescriptorSetLayout_T;
 // Define non-dispatchable handle `VkSampler`
-#[cfg(target_pointer_width = "32")] type VkSampler = u64;
+#[cfg(target_pointer_width = "32")] pub type VkSampler = u64;
 #[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkSampler_T {}
-#[cfg(target_pointer_width = "64")] type VkSampler = *const VkSampler_T;
+#[cfg(target_pointer_width = "64")] pub type VkSampler = *const VkSampler_T;
 // Define non-dispatchable handle `VkDescriptorSet`
-#[cfg(target_pointer_width = "32")] type VkDescriptorSet = u64;
+#[cfg(target_pointer_width = "32")] pub type VkDescriptorSet = u64;
 #[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkDescriptorSet_T {}
-#[cfg(target_pointer_width = "64")] type VkDescriptorSet = *const VkDescriptorSet_T;
+#[cfg(target_pointer_width = "64")] pub type VkDescriptorSet = *const VkDescriptorSet_T;
 // Define non-dispatchable handle `VkDescriptorPool`
-#[cfg(target_pointer_width = "32")] type VkDescriptorPool = u64;
+#[cfg(target_pointer_width = "32")] pub type VkDescriptorPool = u64;
 #[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkDescriptorPool_T {}
-#[cfg(target_pointer_width = "64")] type VkDescriptorPool = *const VkDescriptorPool_T;
+#[cfg(target_pointer_width = "64")] pub type VkDescriptorPool = *const VkDescriptorPool_T;
 // Define non-dispatchable handle `VkFramebuffer`
-#[cfg(target_pointer_width = "32")] type VkFramebuffer = u64;
+#[cfg(target_pointer_width = "32")] pub type VkFramebuffer = u64;
 #[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkFramebuffer_T {}
-#[cfg(target_pointer_width = "64")] type VkFramebuffer = *const VkFramebuffer_T;
+#[cfg(target_pointer_width = "64")] pub type VkFramebuffer = *const VkFramebuffer_T;
 // Define non-dispatchable handle `VkCommandPool`
-#[cfg(target_pointer_width = "32")] type VkCommandPool = u64;
+#[cfg(target_pointer_width = "32")] pub type VkCommandPool = u64;
 #[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkCommandPool_T {}
-#[cfg(target_pointer_width = "64")] type VkCommandPool = *const VkCommandPool_T;
+#[cfg(target_pointer_width = "64")] pub type VkCommandPool = *const VkCommandPool_T;
 #[repr(C)]
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum VkResult {
@@ -3294,9 +3307,9 @@ impl VkStencilFaceFlagBits {
 #[repr(C)]
 #[derive(Clone, Copy)]
 pub union VkClearColorValue {
-	float32: [f32; 4 as usize],
-	int32: [i32; 4 as usize],
-	uint32: [u32; 4 as usize],
+	pub float32: [f32; 4 as usize],
+	pub int32: [i32; 4 as usize],
+	pub uint32: [u32; 4 as usize],
 }
 impl Debug for VkClearColorValue {
 	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
@@ -3310,8 +3323,8 @@ impl Debug for VkClearColorValue {
 #[repr(C)]
 #[derive(Clone, Copy)]
 pub union VkClearValue {
-	color: VkClearColorValue,
-	depthStencil: VkClearDepthStencilValue,
+	pub color: VkClearColorValue,
+	pub depthStencil: VkClearDepthStencilValue,
 }
 impl Debug for VkClearValue {
 	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
@@ -3324,1192 +3337,1192 @@ impl Debug for VkClearValue {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkExtent2D {
-	width: u32,
-	height: u32,
+	pub width: u32,
+	pub height: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkExtent3D {
-	width: u32,
-	height: u32,
-	depth: u32,
+	pub width: u32,
+	pub height: u32,
+	pub depth: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkOffset2D {
-	x: i32,
-	y: i32,
+	pub x: i32,
+	pub y: i32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkOffset3D {
-	x: i32,
-	y: i32,
-	z: i32,
+	pub x: i32,
+	pub y: i32,
+	pub z: i32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkRect2D {
-	offset: VkOffset2D,
-	extent: VkExtent2D,
+	pub offset: VkOffset2D,
+	pub extent: VkExtent2D,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkBaseInStructure {
-	sType: VkStructureType,
-	pNext: *const VkBaseInStructure,
+	pub sType: VkStructureType,
+	pub pNext: *const VkBaseInStructure,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkBaseOutStructure {
-	sType: VkStructureType,
-	pNext: *mut VkBaseOutStructure,
+	pub sType: VkStructureType,
+	pub pNext: *mut VkBaseOutStructure,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkBufferMemoryBarrier {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	srcAccessMask: VkAccessFlags,
-	dstAccessMask: VkAccessFlags,
-	srcQueueFamilyIndex: u32,
-	dstQueueFamilyIndex: u32,
-	buffer: VkBuffer,
-	offset: VkDeviceSize,
-	size: VkDeviceSize,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub srcAccessMask: VkAccessFlags,
+	pub dstAccessMask: VkAccessFlags,
+	pub srcQueueFamilyIndex: u32,
+	pub dstQueueFamilyIndex: u32,
+	pub buffer: VkBuffer,
+	pub offset: VkDeviceSize,
+	pub size: VkDeviceSize,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDispatchIndirectCommand {
-	x: u32,
-	y: u32,
-	z: u32,
+	pub x: u32,
+	pub y: u32,
+	pub z: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDrawIndexedIndirectCommand {
-	indexCount: u32,
-	instanceCount: u32,
-	firstIndex: u32,
-	vertexOffset: i32,
-	firstInstance: u32,
+	pub indexCount: u32,
+	pub instanceCount: u32,
+	pub firstIndex: u32,
+	pub vertexOffset: i32,
+	pub firstInstance: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDrawIndirectCommand {
-	vertexCount: u32,
-	instanceCount: u32,
-	firstVertex: u32,
-	firstInstance: u32,
+	pub vertexCount: u32,
+	pub instanceCount: u32,
+	pub firstVertex: u32,
+	pub firstInstance: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkImageSubresourceRange {
-	aspectMask: VkImageAspectFlags,
-	baseMipLevel: u32,
-	levelCount: u32,
-	baseArrayLayer: u32,
-	layerCount: u32,
+	pub aspectMask: VkImageAspectFlags,
+	pub baseMipLevel: u32,
+	pub levelCount: u32,
+	pub baseArrayLayer: u32,
+	pub layerCount: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkImageMemoryBarrier {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	srcAccessMask: VkAccessFlags,
-	dstAccessMask: VkAccessFlags,
-	oldLayout: VkImageLayout,
-	newLayout: VkImageLayout,
-	srcQueueFamilyIndex: u32,
-	dstQueueFamilyIndex: u32,
-	image: VkImage,
-	subresourceRange: VkImageSubresourceRange,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub srcAccessMask: VkAccessFlags,
+	pub dstAccessMask: VkAccessFlags,
+	pub oldLayout: VkImageLayout,
+	pub newLayout: VkImageLayout,
+	pub srcQueueFamilyIndex: u32,
+	pub dstQueueFamilyIndex: u32,
+	pub image: VkImage,
+	pub subresourceRange: VkImageSubresourceRange,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkMemoryBarrier {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	srcAccessMask: VkAccessFlags,
-	dstAccessMask: VkAccessFlags,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub srcAccessMask: VkAccessFlags,
+	pub dstAccessMask: VkAccessFlags,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPipelineCacheHeaderVersionOne {
-	headerSize: u32,
-	headerVersion: VkPipelineCacheHeaderVersion,
-	vendorID: u32,
-	deviceID: u32,
-	pipelineCacheUUID: [u8; VK_UUID_SIZE as usize],
+	pub headerSize: u32,
+	pub headerVersion: VkPipelineCacheHeaderVersion,
+	pub vendorID: u32,
+	pub deviceID: u32,
+	pub pipelineCacheUUID: [u8; VK_UUID_SIZE as usize],
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkAllocationCallbacks {
-	pUserData: *mut c_void,
-	pfnAllocation: PFN_vkAllocationFunction,
-	pfnReallocation: PFN_vkReallocationFunction,
-	pfnFree: PFN_vkFreeFunction,
-	pfnInternalAllocation: PFN_vkInternalAllocationNotification,
-	pfnInternalFree: PFN_vkInternalFreeNotification,
+	pub pUserData: *mut c_void,
+	pub pfnAllocation: PFN_vkAllocationFunction,
+	pub pfnReallocation: PFN_vkReallocationFunction,
+	pub pfnFree: PFN_vkFreeFunction,
+	pub pfnInternalAllocation: PFN_vkInternalAllocationNotification,
+	pub pfnInternalFree: PFN_vkInternalFreeNotification,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkApplicationInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	pApplicationName: *const i8,
-	applicationVersion: u32,
-	pEngineName: *const i8,
-	engineVersion: u32,
-	apiVersion: u32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub pApplicationName: *const i8,
+	pub applicationVersion: u32,
+	pub pEngineName: *const i8,
+	pub engineVersion: u32,
+	pub apiVersion: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkFormatProperties {
-	linearTilingFeatures: VkFormatFeatureFlags,
-	optimalTilingFeatures: VkFormatFeatureFlags,
-	bufferFeatures: VkFormatFeatureFlags,
+	pub linearTilingFeatures: VkFormatFeatureFlags,
+	pub optimalTilingFeatures: VkFormatFeatureFlags,
+	pub bufferFeatures: VkFormatFeatureFlags,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkImageFormatProperties {
-	maxExtent: VkExtent3D,
-	maxMipLevels: u32,
-	maxArrayLayers: u32,
-	sampleCounts: VkSampleCountFlags,
-	maxResourceSize: VkDeviceSize,
+	pub maxExtent: VkExtent3D,
+	pub maxMipLevels: u32,
+	pub maxArrayLayers: u32,
+	pub sampleCounts: VkSampleCountFlags,
+	pub maxResourceSize: VkDeviceSize,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkInstanceCreateInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkInstanceCreateFlags,
-	pApplicationInfo: *const VkApplicationInfo,
-	enabledLayerCount: u32,
-	ppEnabledLayerNames: *const *const char,
-	enabledExtensionCount: u32,
-	ppEnabledExtensionNames: *const *const char,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkInstanceCreateFlags,
+	pub pApplicationInfo: *const VkApplicationInfo,
+	pub enabledLayerCount: u32,
+	pub ppEnabledLayerNames: *const *const char,
+	pub enabledExtensionCount: u32,
+	pub ppEnabledExtensionNames: *const *const char,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkMemoryHeap {
-	size: VkDeviceSize,
-	flags: VkMemoryHeapFlags,
+	pub size: VkDeviceSize,
+	pub flags: VkMemoryHeapFlags,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkMemoryType {
-	propertyFlags: VkMemoryPropertyFlags,
-	heapIndex: u32,
+	pub propertyFlags: VkMemoryPropertyFlags,
+	pub heapIndex: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceFeatures {
-	robustBufferAccess: VkBool32,
-	fullDrawIndexUint32: VkBool32,
-	imageCubeArray: VkBool32,
-	independentBlend: VkBool32,
-	geometryShader: VkBool32,
-	tessellationShader: VkBool32,
-	sampleRateShading: VkBool32,
-	dualSrcBlend: VkBool32,
-	logicOp: VkBool32,
-	multiDrawIndirect: VkBool32,
-	drawIndirectFirstInstance: VkBool32,
-	depthClamp: VkBool32,
-	depthBiasClamp: VkBool32,
-	fillModeNonSolid: VkBool32,
-	depthBounds: VkBool32,
-	wideLines: VkBool32,
-	largePoints: VkBool32,
-	alphaToOne: VkBool32,
-	multiViewport: VkBool32,
-	samplerAnisotropy: VkBool32,
-	textureCompressionETC2: VkBool32,
-	textureCompressionASTC_LDR: VkBool32,
-	textureCompressionBC: VkBool32,
-	occlusionQueryPrecise: VkBool32,
-	pipelineStatisticsQuery: VkBool32,
-	vertexPipelineStoresAndAtomics: VkBool32,
-	fragmentStoresAndAtomics: VkBool32,
-	shaderTessellationAndGeometryPointSize: VkBool32,
-	shaderImageGatherExtended: VkBool32,
-	shaderStorageImageExtendedFormats: VkBool32,
-	shaderStorageImageMultisample: VkBool32,
-	shaderStorageImageReadWithoutFormat: VkBool32,
-	shaderStorageImageWriteWithoutFormat: VkBool32,
-	shaderUniformBufferArrayDynamicIndexing: VkBool32,
-	shaderSampledImageArrayDynamicIndexing: VkBool32,
-	shaderStorageBufferArrayDynamicIndexing: VkBool32,
-	shaderStorageImageArrayDynamicIndexing: VkBool32,
-	shaderClipDistance: VkBool32,
-	shaderCullDistance: VkBool32,
-	shaderFloat64: VkBool32,
-	shaderInt64: VkBool32,
-	shaderInt16: VkBool32,
-	shaderResourceResidency: VkBool32,
-	shaderResourceMinLod: VkBool32,
-	sparseBinding: VkBool32,
-	sparseResidencyBuffer: VkBool32,
-	sparseResidencyImage2D: VkBool32,
-	sparseResidencyImage3D: VkBool32,
-	sparseResidency2Samples: VkBool32,
-	sparseResidency4Samples: VkBool32,
-	sparseResidency8Samples: VkBool32,
-	sparseResidency16Samples: VkBool32,
-	sparseResidencyAliased: VkBool32,
-	variableMultisampleRate: VkBool32,
-	inheritedQueries: VkBool32,
+	pub robustBufferAccess: VkBool32,
+	pub fullDrawIndexUint32: VkBool32,
+	pub imageCubeArray: VkBool32,
+	pub independentBlend: VkBool32,
+	pub geometryShader: VkBool32,
+	pub tessellationShader: VkBool32,
+	pub sampleRateShading: VkBool32,
+	pub dualSrcBlend: VkBool32,
+	pub logicOp: VkBool32,
+	pub multiDrawIndirect: VkBool32,
+	pub drawIndirectFirstInstance: VkBool32,
+	pub depthClamp: VkBool32,
+	pub depthBiasClamp: VkBool32,
+	pub fillModeNonSolid: VkBool32,
+	pub depthBounds: VkBool32,
+	pub wideLines: VkBool32,
+	pub largePoints: VkBool32,
+	pub alphaToOne: VkBool32,
+	pub multiViewport: VkBool32,
+	pub samplerAnisotropy: VkBool32,
+	pub textureCompressionETC2: VkBool32,
+	pub textureCompressionASTC_LDR: VkBool32,
+	pub textureCompressionBC: VkBool32,
+	pub occlusionQueryPrecise: VkBool32,
+	pub pipelineStatisticsQuery: VkBool32,
+	pub vertexPipelineStoresAndAtomics: VkBool32,
+	pub fragmentStoresAndAtomics: VkBool32,
+	pub shaderTessellationAndGeometryPointSize: VkBool32,
+	pub shaderImageGatherExtended: VkBool32,
+	pub shaderStorageImageExtendedFormats: VkBool32,
+	pub shaderStorageImageMultisample: VkBool32,
+	pub shaderStorageImageReadWithoutFormat: VkBool32,
+	pub shaderStorageImageWriteWithoutFormat: VkBool32,
+	pub shaderUniformBufferArrayDynamicIndexing: VkBool32,
+	pub shaderSampledImageArrayDynamicIndexing: VkBool32,
+	pub shaderStorageBufferArrayDynamicIndexing: VkBool32,
+	pub shaderStorageImageArrayDynamicIndexing: VkBool32,
+	pub shaderClipDistance: VkBool32,
+	pub shaderCullDistance: VkBool32,
+	pub shaderFloat64: VkBool32,
+	pub shaderInt64: VkBool32,
+	pub shaderInt16: VkBool32,
+	pub shaderResourceResidency: VkBool32,
+	pub shaderResourceMinLod: VkBool32,
+	pub sparseBinding: VkBool32,
+	pub sparseResidencyBuffer: VkBool32,
+	pub sparseResidencyImage2D: VkBool32,
+	pub sparseResidencyImage3D: VkBool32,
+	pub sparseResidency2Samples: VkBool32,
+	pub sparseResidency4Samples: VkBool32,
+	pub sparseResidency8Samples: VkBool32,
+	pub sparseResidency16Samples: VkBool32,
+	pub sparseResidencyAliased: VkBool32,
+	pub variableMultisampleRate: VkBool32,
+	pub inheritedQueries: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceLimits {
-	maxImageDimension1D: u32,
-	maxImageDimension2D: u32,
-	maxImageDimension3D: u32,
-	maxImageDimensionCube: u32,
-	maxImageArrayLayers: u32,
-	maxTexelBufferElements: u32,
-	maxUniformBufferRange: u32,
-	maxStorageBufferRange: u32,
-	maxPushConstantsSize: u32,
-	maxMemoryAllocationCount: u32,
-	maxSamplerAllocationCount: u32,
-	bufferImageGranularity: VkDeviceSize,
-	sparseAddressSpaceSize: VkDeviceSize,
-	maxBoundDescriptorSets: u32,
-	maxPerStageDescriptorSamplers: u32,
-	maxPerStageDescriptorUniformBuffers: u32,
-	maxPerStageDescriptorStorageBuffers: u32,
-	maxPerStageDescriptorSampledImages: u32,
-	maxPerStageDescriptorStorageImages: u32,
-	maxPerStageDescriptorInputAttachments: u32,
-	maxPerStageResources: u32,
-	maxDescriptorSetSamplers: u32,
-	maxDescriptorSetUniformBuffers: u32,
-	maxDescriptorSetUniformBuffersDynamic: u32,
-	maxDescriptorSetStorageBuffers: u32,
-	maxDescriptorSetStorageBuffersDynamic: u32,
-	maxDescriptorSetSampledImages: u32,
-	maxDescriptorSetStorageImages: u32,
-	maxDescriptorSetInputAttachments: u32,
-	maxVertexInputAttributes: u32,
-	maxVertexInputBindings: u32,
-	maxVertexInputAttributeOffset: u32,
-	maxVertexInputBindingStride: u32,
-	maxVertexOutputComponents: u32,
-	maxTessellationGenerationLevel: u32,
-	maxTessellationPatchSize: u32,
-	maxTessellationControlPerVertexInputComponents: u32,
-	maxTessellationControlPerVertexOutputComponents: u32,
-	maxTessellationControlPerPatchOutputComponents: u32,
-	maxTessellationControlTotalOutputComponents: u32,
-	maxTessellationEvaluationInputComponents: u32,
-	maxTessellationEvaluationOutputComponents: u32,
-	maxGeometryShaderInvocations: u32,
-	maxGeometryInputComponents: u32,
-	maxGeometryOutputComponents: u32,
-	maxGeometryOutputVertices: u32,
-	maxGeometryTotalOutputComponents: u32,
-	maxFragmentInputComponents: u32,
-	maxFragmentOutputAttachments: u32,
-	maxFragmentDualSrcAttachments: u32,
-	maxFragmentCombinedOutputResources: u32,
-	maxComputeSharedMemorySize: u32,
-	maxComputeWorkGroupCount: [u32; 3 as usize],
-	maxComputeWorkGroupInvocations: u32,
-	maxComputeWorkGroupSize: [u32; 3 as usize],
-	subPixelPrecisionBits: u32,
-	subTexelPrecisionBits: u32,
-	mipmapPrecisionBits: u32,
-	maxDrawIndexedIndexValue: u32,
-	maxDrawIndirectCount: u32,
-	maxSamplerLodBias: f32,
-	maxSamplerAnisotropy: f32,
-	maxViewports: u32,
-	maxViewportDimensions: [u32; 2 as usize],
-	viewportBoundsRange: [f32; 2 as usize],
-	viewportSubPixelBits: u32,
-	minMemoryMapAlignment: usize,
-	minTexelBufferOffsetAlignment: VkDeviceSize,
-	minUniformBufferOffsetAlignment: VkDeviceSize,
-	minStorageBufferOffsetAlignment: VkDeviceSize,
-	minTexelOffset: i32,
-	maxTexelOffset: u32,
-	minTexelGatherOffset: i32,
-	maxTexelGatherOffset: u32,
-	minInterpolationOffset: f32,
-	maxInterpolationOffset: f32,
-	subPixelInterpolationOffsetBits: u32,
-	maxFramebufferWidth: u32,
-	maxFramebufferHeight: u32,
-	maxFramebufferLayers: u32,
-	framebufferColorSampleCounts: VkSampleCountFlags,
-	framebufferDepthSampleCounts: VkSampleCountFlags,
-	framebufferStencilSampleCounts: VkSampleCountFlags,
-	framebufferNoAttachmentsSampleCounts: VkSampleCountFlags,
-	maxColorAttachments: u32,
-	sampledImageColorSampleCounts: VkSampleCountFlags,
-	sampledImageIntegerSampleCounts: VkSampleCountFlags,
-	sampledImageDepthSampleCounts: VkSampleCountFlags,
-	sampledImageStencilSampleCounts: VkSampleCountFlags,
-	storageImageSampleCounts: VkSampleCountFlags,
-	maxSampleMaskWords: u32,
-	timestampComputeAndGraphics: VkBool32,
-	timestampPeriod: f32,
-	maxClipDistances: u32,
-	maxCullDistances: u32,
-	maxCombinedClipAndCullDistances: u32,
-	discreteQueuePriorities: u32,
-	pointSizeRange: [f32; 2 as usize],
-	lineWidthRange: [f32; 2 as usize],
-	pointSizeGranularity: f32,
-	lineWidthGranularity: f32,
-	strictLines: VkBool32,
-	standardSampleLocations: VkBool32,
-	optimalBufferCopyOffsetAlignment: VkDeviceSize,
-	optimalBufferCopyRowPitchAlignment: VkDeviceSize,
-	nonCoherentAtomSize: VkDeviceSize,
+	pub maxImageDimension1D: u32,
+	pub maxImageDimension2D: u32,
+	pub maxImageDimension3D: u32,
+	pub maxImageDimensionCube: u32,
+	pub maxImageArrayLayers: u32,
+	pub maxTexelBufferElements: u32,
+	pub maxUniformBufferRange: u32,
+	pub maxStorageBufferRange: u32,
+	pub maxPushConstantsSize: u32,
+	pub maxMemoryAllocationCount: u32,
+	pub maxSamplerAllocationCount: u32,
+	pub bufferImageGranularity: VkDeviceSize,
+	pub sparseAddressSpaceSize: VkDeviceSize,
+	pub maxBoundDescriptorSets: u32,
+	pub maxPerStageDescriptorSamplers: u32,
+	pub maxPerStageDescriptorUniformBuffers: u32,
+	pub maxPerStageDescriptorStorageBuffers: u32,
+	pub maxPerStageDescriptorSampledImages: u32,
+	pub maxPerStageDescriptorStorageImages: u32,
+	pub maxPerStageDescriptorInputAttachments: u32,
+	pub maxPerStageResources: u32,
+	pub maxDescriptorSetSamplers: u32,
+	pub maxDescriptorSetUniformBuffers: u32,
+	pub maxDescriptorSetUniformBuffersDynamic: u32,
+	pub maxDescriptorSetStorageBuffers: u32,
+	pub maxDescriptorSetStorageBuffersDynamic: u32,
+	pub maxDescriptorSetSampledImages: u32,
+	pub maxDescriptorSetStorageImages: u32,
+	pub maxDescriptorSetInputAttachments: u32,
+	pub maxVertexInputAttributes: u32,
+	pub maxVertexInputBindings: u32,
+	pub maxVertexInputAttributeOffset: u32,
+	pub maxVertexInputBindingStride: u32,
+	pub maxVertexOutputComponents: u32,
+	pub maxTessellationGenerationLevel: u32,
+	pub maxTessellationPatchSize: u32,
+	pub maxTessellationControlPerVertexInputComponents: u32,
+	pub maxTessellationControlPerVertexOutputComponents: u32,
+	pub maxTessellationControlPerPatchOutputComponents: u32,
+	pub maxTessellationControlTotalOutputComponents: u32,
+	pub maxTessellationEvaluationInputComponents: u32,
+	pub maxTessellationEvaluationOutputComponents: u32,
+	pub maxGeometryShaderInvocations: u32,
+	pub maxGeometryInputComponents: u32,
+	pub maxGeometryOutputComponents: u32,
+	pub maxGeometryOutputVertices: u32,
+	pub maxGeometryTotalOutputComponents: u32,
+	pub maxFragmentInputComponents: u32,
+	pub maxFragmentOutputAttachments: u32,
+	pub maxFragmentDualSrcAttachments: u32,
+	pub maxFragmentCombinedOutputResources: u32,
+	pub maxComputeSharedMemorySize: u32,
+	pub maxComputeWorkGroupCount: [u32; 3 as usize],
+	pub maxComputeWorkGroupInvocations: u32,
+	pub maxComputeWorkGroupSize: [u32; 3 as usize],
+	pub subPixelPrecisionBits: u32,
+	pub subTexelPrecisionBits: u32,
+	pub mipmapPrecisionBits: u32,
+	pub maxDrawIndexedIndexValue: u32,
+	pub maxDrawIndirectCount: u32,
+	pub maxSamplerLodBias: f32,
+	pub maxSamplerAnisotropy: f32,
+	pub maxViewports: u32,
+	pub maxViewportDimensions: [u32; 2 as usize],
+	pub viewportBoundsRange: [f32; 2 as usize],
+	pub viewportSubPixelBits: u32,
+	pub minMemoryMapAlignment: usize,
+	pub minTexelBufferOffsetAlignment: VkDeviceSize,
+	pub minUniformBufferOffsetAlignment: VkDeviceSize,
+	pub minStorageBufferOffsetAlignment: VkDeviceSize,
+	pub minTexelOffset: i32,
+	pub maxTexelOffset: u32,
+	pub minTexelGatherOffset: i32,
+	pub maxTexelGatherOffset: u32,
+	pub minInterpolationOffset: f32,
+	pub maxInterpolationOffset: f32,
+	pub subPixelInterpolationOffsetBits: u32,
+	pub maxFramebufferWidth: u32,
+	pub maxFramebufferHeight: u32,
+	pub maxFramebufferLayers: u32,
+	pub framebufferColorSampleCounts: VkSampleCountFlags,
+	pub framebufferDepthSampleCounts: VkSampleCountFlags,
+	pub framebufferStencilSampleCounts: VkSampleCountFlags,
+	pub framebufferNoAttachmentsSampleCounts: VkSampleCountFlags,
+	pub maxColorAttachments: u32,
+	pub sampledImageColorSampleCounts: VkSampleCountFlags,
+	pub sampledImageIntegerSampleCounts: VkSampleCountFlags,
+	pub sampledImageDepthSampleCounts: VkSampleCountFlags,
+	pub sampledImageStencilSampleCounts: VkSampleCountFlags,
+	pub storageImageSampleCounts: VkSampleCountFlags,
+	pub maxSampleMaskWords: u32,
+	pub timestampComputeAndGraphics: VkBool32,
+	pub timestampPeriod: f32,
+	pub maxClipDistances: u32,
+	pub maxCullDistances: u32,
+	pub maxCombinedClipAndCullDistances: u32,
+	pub discreteQueuePriorities: u32,
+	pub pointSizeRange: [f32; 2 as usize],
+	pub lineWidthRange: [f32; 2 as usize],
+	pub pointSizeGranularity: f32,
+	pub lineWidthGranularity: f32,
+	pub strictLines: VkBool32,
+	pub standardSampleLocations: VkBool32,
+	pub optimalBufferCopyOffsetAlignment: VkDeviceSize,
+	pub optimalBufferCopyRowPitchAlignment: VkDeviceSize,
+	pub nonCoherentAtomSize: VkDeviceSize,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceMemoryProperties {
-	memoryTypeCount: u32,
-	memoryTypes: [VkMemoryType; VK_MAX_MEMORY_TYPES as usize],
-	memoryHeapCount: u32,
-	memoryHeaps: [VkMemoryHeap; VK_MAX_MEMORY_HEAPS as usize],
+	pub memoryTypeCount: u32,
+	pub memoryTypes: [VkMemoryType; VK_MAX_MEMORY_TYPES as usize],
+	pub memoryHeapCount: u32,
+	pub memoryHeaps: [VkMemoryHeap; VK_MAX_MEMORY_HEAPS as usize],
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceSparseProperties {
-	residencyStandard2DBlockShape: VkBool32,
-	residencyStandard2DMultisampleBlockShape: VkBool32,
-	residencyStandard3DBlockShape: VkBool32,
-	residencyAlignedMipSize: VkBool32,
-	residencyNonResidentStrict: VkBool32,
+	pub residencyStandard2DBlockShape: VkBool32,
+	pub residencyStandard2DMultisampleBlockShape: VkBool32,
+	pub residencyStandard3DBlockShape: VkBool32,
+	pub residencyAlignedMipSize: VkBool32,
+	pub residencyNonResidentStrict: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceProperties {
-	apiVersion: u32,
-	driverVersion: u32,
-	vendorID: u32,
-	deviceID: u32,
-	deviceType: VkPhysicalDeviceType,
-	deviceName: [i8; VK_MAX_PHYSICAL_DEVICE_NAME_SIZE as usize],
-	pipelineCacheUUID: [u8; VK_UUID_SIZE as usize],
-	limits: VkPhysicalDeviceLimits,
-	sparseProperties: VkPhysicalDeviceSparseProperties,
+	pub apiVersion: u32,
+	pub driverVersion: u32,
+	pub vendorID: u32,
+	pub deviceID: u32,
+	pub deviceType: VkPhysicalDeviceType,
+	pub deviceName: [i8; VK_MAX_PHYSICAL_DEVICE_NAME_SIZE as usize],
+	pub pipelineCacheUUID: [u8; VK_UUID_SIZE as usize],
+	pub limits: VkPhysicalDeviceLimits,
+	pub sparseProperties: VkPhysicalDeviceSparseProperties,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkQueueFamilyProperties {
-	queueFlags: VkQueueFlags,
-	queueCount: u32,
-	timestampValidBits: u32,
-	minImageTransferGranularity: VkExtent3D,
+	pub queueFlags: VkQueueFlags,
+	pub queueCount: u32,
+	pub timestampValidBits: u32,
+	pub minImageTransferGranularity: VkExtent3D,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDeviceQueueCreateInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkDeviceQueueCreateFlags,
-	queueFamilyIndex: u32,
-	queueCount: u32,
-	pQueuePriorities: *const float,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkDeviceQueueCreateFlags,
+	pub queueFamilyIndex: u32,
+	pub queueCount: u32,
+	pub pQueuePriorities: *const float,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDeviceCreateInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkDeviceCreateFlags,
-	queueCreateInfoCount: u32,
-	pQueueCreateInfos: *const VkDeviceQueueCreateInfo,
-	enabledLayerCount: u32,
-	ppEnabledLayerNames: *const *const char,
-	enabledExtensionCount: u32,
-	ppEnabledExtensionNames: *const *const char,
-	pEnabledFeatures: *const VkPhysicalDeviceFeatures,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkDeviceCreateFlags,
+	pub queueCreateInfoCount: u32,
+	pub pQueueCreateInfos: *const VkDeviceQueueCreateInfo,
+	pub enabledLayerCount: u32,
+	pub ppEnabledLayerNames: *const *const char,
+	pub enabledExtensionCount: u32,
+	pub ppEnabledExtensionNames: *const *const char,
+	pub pEnabledFeatures: *const VkPhysicalDeviceFeatures,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkExtensionProperties {
-	extensionName: [i8; VK_MAX_EXTENSION_NAME_SIZE as usize],
-	specVersion: u32,
+	pub extensionName: [i8; VK_MAX_EXTENSION_NAME_SIZE as usize],
+	pub specVersion: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkLayerProperties {
-	layerName: [i8; VK_MAX_EXTENSION_NAME_SIZE as usize],
-	specVersion: u32,
-	implementationVersion: u32,
-	description: [i8; VK_MAX_DESCRIPTION_SIZE as usize],
+	pub layerName: [i8; VK_MAX_EXTENSION_NAME_SIZE as usize],
+	pub specVersion: u32,
+	pub implementationVersion: u32,
+	pub description: [i8; VK_MAX_DESCRIPTION_SIZE as usize],
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkSubmitInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	waitSemaphoreCount: u32,
-	pWaitSemaphores: *const VkSemaphore,
-	pWaitDstStageMask: *const VkPipelineStageFlags,
-	commandBufferCount: u32,
-	pCommandBuffers: *const VkCommandBuffer,
-	signalSemaphoreCount: u32,
-	pSignalSemaphores: *const VkSemaphore,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub waitSemaphoreCount: u32,
+	pub pWaitSemaphores: *const VkSemaphore,
+	pub pWaitDstStageMask: *const VkPipelineStageFlags,
+	pub commandBufferCount: u32,
+	pub pCommandBuffers: *const VkCommandBuffer,
+	pub signalSemaphoreCount: u32,
+	pub pSignalSemaphores: *const VkSemaphore,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkMappedMemoryRange {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	memory: VkDeviceMemory,
-	offset: VkDeviceSize,
-	size: VkDeviceSize,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub memory: VkDeviceMemory,
+	pub offset: VkDeviceSize,
+	pub size: VkDeviceSize,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkMemoryAllocateInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	allocationSize: VkDeviceSize,
-	memoryTypeIndex: u32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub allocationSize: VkDeviceSize,
+	pub memoryTypeIndex: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkMemoryRequirements {
-	size: VkDeviceSize,
-	alignment: VkDeviceSize,
-	memoryTypeBits: u32,
+	pub size: VkDeviceSize,
+	pub alignment: VkDeviceSize,
+	pub memoryTypeBits: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkSparseMemoryBind {
-	resourceOffset: VkDeviceSize,
-	size: VkDeviceSize,
-	memory: VkDeviceMemory,
-	memoryOffset: VkDeviceSize,
-	flags: VkSparseMemoryBindFlags,
+	pub resourceOffset: VkDeviceSize,
+	pub size: VkDeviceSize,
+	pub memory: VkDeviceMemory,
+	pub memoryOffset: VkDeviceSize,
+	pub flags: VkSparseMemoryBindFlags,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkSparseBufferMemoryBindInfo {
-	buffer: VkBuffer,
-	bindCount: u32,
-	pBinds: *const VkSparseMemoryBind,
+	pub buffer: VkBuffer,
+	pub bindCount: u32,
+	pub pBinds: *const VkSparseMemoryBind,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkSparseImageOpaqueMemoryBindInfo {
-	image: VkImage,
-	bindCount: u32,
-	pBinds: *const VkSparseMemoryBind,
+	pub image: VkImage,
+	pub bindCount: u32,
+	pub pBinds: *const VkSparseMemoryBind,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkImageSubresource {
-	aspectMask: VkImageAspectFlags,
-	mipLevel: u32,
-	arrayLayer: u32,
+	pub aspectMask: VkImageAspectFlags,
+	pub mipLevel: u32,
+	pub arrayLayer: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkSparseImageMemoryBind {
-	subresource: VkImageSubresource,
-	offset: VkOffset3D,
-	extent: VkExtent3D,
-	memory: VkDeviceMemory,
-	memoryOffset: VkDeviceSize,
-	flags: VkSparseMemoryBindFlags,
+	pub subresource: VkImageSubresource,
+	pub offset: VkOffset3D,
+	pub extent: VkExtent3D,
+	pub memory: VkDeviceMemory,
+	pub memoryOffset: VkDeviceSize,
+	pub flags: VkSparseMemoryBindFlags,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkSparseImageMemoryBindInfo {
-	image: VkImage,
-	bindCount: u32,
-	pBinds: *const VkSparseImageMemoryBind,
+	pub image: VkImage,
+	pub bindCount: u32,
+	pub pBinds: *const VkSparseImageMemoryBind,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkBindSparseInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	waitSemaphoreCount: u32,
-	pWaitSemaphores: *const VkSemaphore,
-	bufferBindCount: u32,
-	pBufferBinds: *const VkSparseBufferMemoryBindInfo,
-	imageOpaqueBindCount: u32,
-	pImageOpaqueBinds: *const VkSparseImageOpaqueMemoryBindInfo,
-	imageBindCount: u32,
-	pImageBinds: *const VkSparseImageMemoryBindInfo,
-	signalSemaphoreCount: u32,
-	pSignalSemaphores: *const VkSemaphore,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub waitSemaphoreCount: u32,
+	pub pWaitSemaphores: *const VkSemaphore,
+	pub bufferBindCount: u32,
+	pub pBufferBinds: *const VkSparseBufferMemoryBindInfo,
+	pub imageOpaqueBindCount: u32,
+	pub pImageOpaqueBinds: *const VkSparseImageOpaqueMemoryBindInfo,
+	pub imageBindCount: u32,
+	pub pImageBinds: *const VkSparseImageMemoryBindInfo,
+	pub signalSemaphoreCount: u32,
+	pub pSignalSemaphores: *const VkSemaphore,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkSparseImageFormatProperties {
-	aspectMask: VkImageAspectFlags,
-	imageGranularity: VkExtent3D,
-	flags: VkSparseImageFormatFlags,
+	pub aspectMask: VkImageAspectFlags,
+	pub imageGranularity: VkExtent3D,
+	pub flags: VkSparseImageFormatFlags,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkSparseImageMemoryRequirements {
-	formatProperties: VkSparseImageFormatProperties,
-	imageMipTailFirstLod: u32,
-	imageMipTailSize: VkDeviceSize,
-	imageMipTailOffset: VkDeviceSize,
-	imageMipTailStride: VkDeviceSize,
+	pub formatProperties: VkSparseImageFormatProperties,
+	pub imageMipTailFirstLod: u32,
+	pub imageMipTailSize: VkDeviceSize,
+	pub imageMipTailOffset: VkDeviceSize,
+	pub imageMipTailStride: VkDeviceSize,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkFenceCreateInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkFenceCreateFlags,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkFenceCreateFlags,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkSemaphoreCreateInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkSemaphoreCreateFlags,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkSemaphoreCreateFlags,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkEventCreateInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkEventCreateFlags,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkEventCreateFlags,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkQueryPoolCreateInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkQueryPoolCreateFlags,
-	queryType: VkQueryType,
-	queryCount: u32,
-	pipelineStatistics: VkQueryPipelineStatisticFlags,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkQueryPoolCreateFlags,
+	pub queryType: VkQueryType,
+	pub queryCount: u32,
+	pub pipelineStatistics: VkQueryPipelineStatisticFlags,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkBufferCreateInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkBufferCreateFlags,
-	size: VkDeviceSize,
-	usage: VkBufferUsageFlags,
-	sharingMode: VkSharingMode,
-	queueFamilyIndexCount: u32,
-	pQueueFamilyIndices: *const uint32_t,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkBufferCreateFlags,
+	pub size: VkDeviceSize,
+	pub usage: VkBufferUsageFlags,
+	pub sharingMode: VkSharingMode,
+	pub queueFamilyIndexCount: u32,
+	pub pQueueFamilyIndices: *const uint32_t,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkBufferViewCreateInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkBufferViewCreateFlags,
-	buffer: VkBuffer,
-	format: VkFormat,
-	offset: VkDeviceSize,
-	range: VkDeviceSize,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkBufferViewCreateFlags,
+	pub buffer: VkBuffer,
+	pub format: VkFormat,
+	pub offset: VkDeviceSize,
+	pub range: VkDeviceSize,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkImageCreateInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkImageCreateFlags,
-	imageType: VkImageType,
-	format: VkFormat,
-	extent: VkExtent3D,
-	mipLevels: u32,
-	arrayLayers: u32,
-	samples: VkSampleCountFlagBits,
-	tiling: VkImageTiling,
-	usage: VkImageUsageFlags,
-	sharingMode: VkSharingMode,
-	queueFamilyIndexCount: u32,
-	pQueueFamilyIndices: *const uint32_t,
-	initialLayout: VkImageLayout,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkImageCreateFlags,
+	pub imageType: VkImageType,
+	pub format: VkFormat,
+	pub extent: VkExtent3D,
+	pub mipLevels: u32,
+	pub arrayLayers: u32,
+	pub samples: VkSampleCountFlagBits,
+	pub tiling: VkImageTiling,
+	pub usage: VkImageUsageFlags,
+	pub sharingMode: VkSharingMode,
+	pub queueFamilyIndexCount: u32,
+	pub pQueueFamilyIndices: *const uint32_t,
+	pub initialLayout: VkImageLayout,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkSubresourceLayout {
-	offset: VkDeviceSize,
-	size: VkDeviceSize,
-	rowPitch: VkDeviceSize,
-	arrayPitch: VkDeviceSize,
-	depthPitch: VkDeviceSize,
+	pub offset: VkDeviceSize,
+	pub size: VkDeviceSize,
+	pub rowPitch: VkDeviceSize,
+	pub arrayPitch: VkDeviceSize,
+	pub depthPitch: VkDeviceSize,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkComponentMapping {
-	r: VkComponentSwizzle,
-	g: VkComponentSwizzle,
-	b: VkComponentSwizzle,
-	a: VkComponentSwizzle,
+	pub r: VkComponentSwizzle,
+	pub g: VkComponentSwizzle,
+	pub b: VkComponentSwizzle,
+	pub a: VkComponentSwizzle,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkImageViewCreateInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkImageViewCreateFlags,
-	image: VkImage,
-	viewType: VkImageViewType,
-	format: VkFormat,
-	components: VkComponentMapping,
-	subresourceRange: VkImageSubresourceRange,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkImageViewCreateFlags,
+	pub image: VkImage,
+	pub viewType: VkImageViewType,
+	pub format: VkFormat,
+	pub components: VkComponentMapping,
+	pub subresourceRange: VkImageSubresourceRange,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkShaderModuleCreateInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkShaderModuleCreateFlags,
-	codeSize: usize,
-	pCode: *const uint32_t,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkShaderModuleCreateFlags,
+	pub codeSize: usize,
+	pub pCode: *const uint32_t,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPipelineCacheCreateInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkPipelineCacheCreateFlags,
-	initialDataSize: usize,
-	pInitialData: *const c_void,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkPipelineCacheCreateFlags,
+	pub initialDataSize: usize,
+	pub pInitialData: *const c_void,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkSpecializationMapEntry {
-	constantID: u32,
-	offset: u32,
-	size: usize,
+	pub constantID: u32,
+	pub offset: u32,
+	pub size: usize,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkSpecializationInfo {
-	mapEntryCount: u32,
-	pMapEntries: *const VkSpecializationMapEntry,
-	dataSize: usize,
-	pData: *const c_void,
+	pub mapEntryCount: u32,
+	pub pMapEntries: *const VkSpecializationMapEntry,
+	pub dataSize: usize,
+	pub pData: *const c_void,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPipelineShaderStageCreateInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkPipelineShaderStageCreateFlags,
-	stage: VkShaderStageFlagBits,
-	module: VkShaderModule,
-	pName: *const i8,
-	pSpecializationInfo: *const VkSpecializationInfo,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkPipelineShaderStageCreateFlags,
+	pub stage: VkShaderStageFlagBits,
+	pub module: VkShaderModule,
+	pub pName: *const i8,
+	pub pSpecializationInfo: *const VkSpecializationInfo,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkComputePipelineCreateInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkPipelineCreateFlags,
-	stage: VkPipelineShaderStageCreateInfo,
-	layout: VkPipelineLayout,
-	basePipelineHandle: VkPipeline,
-	basePipelineIndex: i32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkPipelineCreateFlags,
+	pub stage: VkPipelineShaderStageCreateInfo,
+	pub layout: VkPipelineLayout,
+	pub basePipelineHandle: VkPipeline,
+	pub basePipelineIndex: i32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVertexInputBindingDescription {
-	binding: u32,
-	stride: u32,
-	inputRate: VkVertexInputRate,
+	pub binding: u32,
+	pub stride: u32,
+	pub inputRate: VkVertexInputRate,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVertexInputAttributeDescription {
-	location: u32,
-	binding: u32,
-	format: VkFormat,
-	offset: u32,
+	pub location: u32,
+	pub binding: u32,
+	pub format: VkFormat,
+	pub offset: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPipelineVertexInputStateCreateInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkPipelineVertexInputStateCreateFlags,
-	vertexBindingDescriptionCount: u32,
-	pVertexBindingDescriptions: *const VkVertexInputBindingDescription,
-	vertexAttributeDescriptionCount: u32,
-	pVertexAttributeDescriptions: *const VkVertexInputAttributeDescription,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkPipelineVertexInputStateCreateFlags,
+	pub vertexBindingDescriptionCount: u32,
+	pub pVertexBindingDescriptions: *const VkVertexInputBindingDescription,
+	pub vertexAttributeDescriptionCount: u32,
+	pub pVertexAttributeDescriptions: *const VkVertexInputAttributeDescription,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPipelineInputAssemblyStateCreateInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkPipelineInputAssemblyStateCreateFlags,
-	topology: VkPrimitiveTopology,
-	primitiveRestartEnable: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkPipelineInputAssemblyStateCreateFlags,
+	pub topology: VkPrimitiveTopology,
+	pub primitiveRestartEnable: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPipelineTessellationStateCreateInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkPipelineTessellationStateCreateFlags,
-	patchControlPoints: u32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkPipelineTessellationStateCreateFlags,
+	pub patchControlPoints: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkViewport {
-	x: f32,
-	y: f32,
-	width: f32,
-	height: f32,
-	minDepth: f32,
-	maxDepth: f32,
+	pub x: f32,
+	pub y: f32,
+	pub width: f32,
+	pub height: f32,
+	pub minDepth: f32,
+	pub maxDepth: f32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPipelineViewportStateCreateInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkPipelineViewportStateCreateFlags,
-	viewportCount: u32,
-	pViewports: *const VkViewport,
-	scissorCount: u32,
-	pScissors: *const VkRect2D,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkPipelineViewportStateCreateFlags,
+	pub viewportCount: u32,
+	pub pViewports: *const VkViewport,
+	pub scissorCount: u32,
+	pub pScissors: *const VkRect2D,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPipelineRasterizationStateCreateInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkPipelineRasterizationStateCreateFlags,
-	depthClampEnable: VkBool32,
-	rasterizerDiscardEnable: VkBool32,
-	polygonMode: VkPolygonMode,
-	cullMode: VkCullModeFlags,
-	frontFace: VkFrontFace,
-	depthBiasEnable: VkBool32,
-	depthBiasConstantFactor: f32,
-	depthBiasClamp: f32,
-	depthBiasSlopeFactor: f32,
-	lineWidth: f32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkPipelineRasterizationStateCreateFlags,
+	pub depthClampEnable: VkBool32,
+	pub rasterizerDiscardEnable: VkBool32,
+	pub polygonMode: VkPolygonMode,
+	pub cullMode: VkCullModeFlags,
+	pub frontFace: VkFrontFace,
+	pub depthBiasEnable: VkBool32,
+	pub depthBiasConstantFactor: f32,
+	pub depthBiasClamp: f32,
+	pub depthBiasSlopeFactor: f32,
+	pub lineWidth: f32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPipelineMultisampleStateCreateInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkPipelineMultisampleStateCreateFlags,
-	rasterizationSamples: VkSampleCountFlagBits,
-	sampleShadingEnable: VkBool32,
-	minSampleShading: f32,
-	pSampleMask: *const VkSampleMask,
-	alphaToCoverageEnable: VkBool32,
-	alphaToOneEnable: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkPipelineMultisampleStateCreateFlags,
+	pub rasterizationSamples: VkSampleCountFlagBits,
+	pub sampleShadingEnable: VkBool32,
+	pub minSampleShading: f32,
+	pub pSampleMask: *const VkSampleMask,
+	pub alphaToCoverageEnable: VkBool32,
+	pub alphaToOneEnable: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkStencilOpState {
-	failOp: VkStencilOp,
-	passOp: VkStencilOp,
-	depthFailOp: VkStencilOp,
-	compareOp: VkCompareOp,
-	compareMask: u32,
-	writeMask: u32,
-	reference: u32,
+	pub failOp: VkStencilOp,
+	pub passOp: VkStencilOp,
+	pub depthFailOp: VkStencilOp,
+	pub compareOp: VkCompareOp,
+	pub compareMask: u32,
+	pub writeMask: u32,
+	pub reference: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPipelineDepthStencilStateCreateInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkPipelineDepthStencilStateCreateFlags,
-	depthTestEnable: VkBool32,
-	depthWriteEnable: VkBool32,
-	depthCompareOp: VkCompareOp,
-	depthBoundsTestEnable: VkBool32,
-	stencilTestEnable: VkBool32,
-	front: VkStencilOpState,
-	back: VkStencilOpState,
-	minDepthBounds: f32,
-	maxDepthBounds: f32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkPipelineDepthStencilStateCreateFlags,
+	pub depthTestEnable: VkBool32,
+	pub depthWriteEnable: VkBool32,
+	pub depthCompareOp: VkCompareOp,
+	pub depthBoundsTestEnable: VkBool32,
+	pub stencilTestEnable: VkBool32,
+	pub front: VkStencilOpState,
+	pub back: VkStencilOpState,
+	pub minDepthBounds: f32,
+	pub maxDepthBounds: f32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPipelineColorBlendAttachmentState {
-	blendEnable: VkBool32,
-	srcColorBlendFactor: VkBlendFactor,
-	dstColorBlendFactor: VkBlendFactor,
-	colorBlendOp: VkBlendOp,
-	srcAlphaBlendFactor: VkBlendFactor,
-	dstAlphaBlendFactor: VkBlendFactor,
-	alphaBlendOp: VkBlendOp,
-	colorWriteMask: VkColorComponentFlags,
+	pub blendEnable: VkBool32,
+	pub srcColorBlendFactor: VkBlendFactor,
+	pub dstColorBlendFactor: VkBlendFactor,
+	pub colorBlendOp: VkBlendOp,
+	pub srcAlphaBlendFactor: VkBlendFactor,
+	pub dstAlphaBlendFactor: VkBlendFactor,
+	pub alphaBlendOp: VkBlendOp,
+	pub colorWriteMask: VkColorComponentFlags,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPipelineColorBlendStateCreateInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkPipelineColorBlendStateCreateFlags,
-	logicOpEnable: VkBool32,
-	logicOp: VkLogicOp,
-	attachmentCount: u32,
-	pAttachments: *const VkPipelineColorBlendAttachmentState,
-	blendConstants: [f32; 4 as usize],
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkPipelineColorBlendStateCreateFlags,
+	pub logicOpEnable: VkBool32,
+	pub logicOp: VkLogicOp,
+	pub attachmentCount: u32,
+	pub pAttachments: *const VkPipelineColorBlendAttachmentState,
+	pub blendConstants: [f32; 4 as usize],
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPipelineDynamicStateCreateInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkPipelineDynamicStateCreateFlags,
-	dynamicStateCount: u32,
-	pDynamicStates: *const VkDynamicState,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkPipelineDynamicStateCreateFlags,
+	pub dynamicStateCount: u32,
+	pub pDynamicStates: *const VkDynamicState,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkGraphicsPipelineCreateInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkPipelineCreateFlags,
-	stageCount: u32,
-	pStages: *const VkPipelineShaderStageCreateInfo,
-	pVertexInputState: *const VkPipelineVertexInputStateCreateInfo,
-	pInputAssemblyState: *const VkPipelineInputAssemblyStateCreateInfo,
-	pTessellationState: *const VkPipelineTessellationStateCreateInfo,
-	pViewportState: *const VkPipelineViewportStateCreateInfo,
-	pRasterizationState: *const VkPipelineRasterizationStateCreateInfo,
-	pMultisampleState: *const VkPipelineMultisampleStateCreateInfo,
-	pDepthStencilState: *const VkPipelineDepthStencilStateCreateInfo,
-	pColorBlendState: *const VkPipelineColorBlendStateCreateInfo,
-	pDynamicState: *const VkPipelineDynamicStateCreateInfo,
-	layout: VkPipelineLayout,
-	renderPass: VkRenderPass,
-	subpass: u32,
-	basePipelineHandle: VkPipeline,
-	basePipelineIndex: i32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkPipelineCreateFlags,
+	pub stageCount: u32,
+	pub pStages: *const VkPipelineShaderStageCreateInfo,
+	pub pVertexInputState: *const VkPipelineVertexInputStateCreateInfo,
+	pub pInputAssemblyState: *const VkPipelineInputAssemblyStateCreateInfo,
+	pub pTessellationState: *const VkPipelineTessellationStateCreateInfo,
+	pub pViewportState: *const VkPipelineViewportStateCreateInfo,
+	pub pRasterizationState: *const VkPipelineRasterizationStateCreateInfo,
+	pub pMultisampleState: *const VkPipelineMultisampleStateCreateInfo,
+	pub pDepthStencilState: *const VkPipelineDepthStencilStateCreateInfo,
+	pub pColorBlendState: *const VkPipelineColorBlendStateCreateInfo,
+	pub pDynamicState: *const VkPipelineDynamicStateCreateInfo,
+	pub layout: VkPipelineLayout,
+	pub renderPass: VkRenderPass,
+	pub subpass: u32,
+	pub basePipelineHandle: VkPipeline,
+	pub basePipelineIndex: i32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPushConstantRange {
-	stageFlags: VkShaderStageFlags,
-	offset: u32,
-	size: u32,
+	pub stageFlags: VkShaderStageFlags,
+	pub offset: u32,
+	pub size: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPipelineLayoutCreateInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkPipelineLayoutCreateFlags,
-	setLayoutCount: u32,
-	pSetLayouts: *const VkDescriptorSetLayout,
-	pushConstantRangeCount: u32,
-	pPushConstantRanges: *const VkPushConstantRange,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkPipelineLayoutCreateFlags,
+	pub setLayoutCount: u32,
+	pub pSetLayouts: *const VkDescriptorSetLayout,
+	pub pushConstantRangeCount: u32,
+	pub pPushConstantRanges: *const VkPushConstantRange,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkSamplerCreateInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkSamplerCreateFlags,
-	magFilter: VkFilter,
-	minFilter: VkFilter,
-	mipmapMode: VkSamplerMipmapMode,
-	addressModeU: VkSamplerAddressMode,
-	addressModeV: VkSamplerAddressMode,
-	addressModeW: VkSamplerAddressMode,
-	mipLodBias: f32,
-	anisotropyEnable: VkBool32,
-	maxAnisotropy: f32,
-	compareEnable: VkBool32,
-	compareOp: VkCompareOp,
-	minLod: f32,
-	maxLod: f32,
-	borderColor: VkBorderColor,
-	unnormalizedCoordinates: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkSamplerCreateFlags,
+	pub magFilter: VkFilter,
+	pub minFilter: VkFilter,
+	pub mipmapMode: VkSamplerMipmapMode,
+	pub addressModeU: VkSamplerAddressMode,
+	pub addressModeV: VkSamplerAddressMode,
+	pub addressModeW: VkSamplerAddressMode,
+	pub mipLodBias: f32,
+	pub anisotropyEnable: VkBool32,
+	pub maxAnisotropy: f32,
+	pub compareEnable: VkBool32,
+	pub compareOp: VkCompareOp,
+	pub minLod: f32,
+	pub maxLod: f32,
+	pub borderColor: VkBorderColor,
+	pub unnormalizedCoordinates: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkCopyDescriptorSet {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	srcSet: VkDescriptorSet,
-	srcBinding: u32,
-	srcArrayElement: u32,
-	dstSet: VkDescriptorSet,
-	dstBinding: u32,
-	dstArrayElement: u32,
-	descriptorCount: u32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub srcSet: VkDescriptorSet,
+	pub srcBinding: u32,
+	pub srcArrayElement: u32,
+	pub dstSet: VkDescriptorSet,
+	pub dstBinding: u32,
+	pub dstArrayElement: u32,
+	pub descriptorCount: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDescriptorBufferInfo {
-	buffer: VkBuffer,
-	offset: VkDeviceSize,
-	range: VkDeviceSize,
+	pub buffer: VkBuffer,
+	pub offset: VkDeviceSize,
+	pub range: VkDeviceSize,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDescriptorImageInfo {
-	sampler: VkSampler,
-	imageView: VkImageView,
-	imageLayout: VkImageLayout,
+	pub sampler: VkSampler,
+	pub imageView: VkImageView,
+	pub imageLayout: VkImageLayout,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDescriptorPoolSize {
-	type_: VkDescriptorType,
-	descriptorCount: u32,
+	pub type_: VkDescriptorType,
+	pub descriptorCount: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDescriptorPoolCreateInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkDescriptorPoolCreateFlags,
-	maxSets: u32,
-	poolSizeCount: u32,
-	pPoolSizes: *const VkDescriptorPoolSize,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkDescriptorPoolCreateFlags,
+	pub maxSets: u32,
+	pub poolSizeCount: u32,
+	pub pPoolSizes: *const VkDescriptorPoolSize,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDescriptorSetAllocateInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	descriptorPool: VkDescriptorPool,
-	descriptorSetCount: u32,
-	pSetLayouts: *const VkDescriptorSetLayout,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub descriptorPool: VkDescriptorPool,
+	pub descriptorSetCount: u32,
+	pub pSetLayouts: *const VkDescriptorSetLayout,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDescriptorSetLayoutBinding {
-	binding: u32,
-	descriptorType: VkDescriptorType,
-	descriptorCount: u32,
-	stageFlags: VkShaderStageFlags,
-	pImmutableSamplers: *const VkSampler,
+	pub binding: u32,
+	pub descriptorType: VkDescriptorType,
+	pub descriptorCount: u32,
+	pub stageFlags: VkShaderStageFlags,
+	pub pImmutableSamplers: *const VkSampler,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDescriptorSetLayoutCreateInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkDescriptorSetLayoutCreateFlags,
-	bindingCount: u32,
-	pBindings: *const VkDescriptorSetLayoutBinding,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkDescriptorSetLayoutCreateFlags,
+	pub bindingCount: u32,
+	pub pBindings: *const VkDescriptorSetLayoutBinding,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkWriteDescriptorSet {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	dstSet: VkDescriptorSet,
-	dstBinding: u32,
-	dstArrayElement: u32,
-	descriptorCount: u32,
-	descriptorType: VkDescriptorType,
-	pImageInfo: *const VkDescriptorImageInfo,
-	pBufferInfo: *const VkDescriptorBufferInfo,
-	pTexelBufferView: *const VkBufferView,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub dstSet: VkDescriptorSet,
+	pub dstBinding: u32,
+	pub dstArrayElement: u32,
+	pub descriptorCount: u32,
+	pub descriptorType: VkDescriptorType,
+	pub pImageInfo: *const VkDescriptorImageInfo,
+	pub pBufferInfo: *const VkDescriptorBufferInfo,
+	pub pTexelBufferView: *const VkBufferView,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkAttachmentDescription {
-	flags: VkAttachmentDescriptionFlags,
-	format: VkFormat,
-	samples: VkSampleCountFlagBits,
-	loadOp: VkAttachmentLoadOp,
-	storeOp: VkAttachmentStoreOp,
-	stencilLoadOp: VkAttachmentLoadOp,
-	stencilStoreOp: VkAttachmentStoreOp,
-	initialLayout: VkImageLayout,
-	finalLayout: VkImageLayout,
+	pub flags: VkAttachmentDescriptionFlags,
+	pub format: VkFormat,
+	pub samples: VkSampleCountFlagBits,
+	pub loadOp: VkAttachmentLoadOp,
+	pub storeOp: VkAttachmentStoreOp,
+	pub stencilLoadOp: VkAttachmentLoadOp,
+	pub stencilStoreOp: VkAttachmentStoreOp,
+	pub initialLayout: VkImageLayout,
+	pub finalLayout: VkImageLayout,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkAttachmentReference {
-	attachment: u32,
-	layout: VkImageLayout,
+	pub attachment: u32,
+	pub layout: VkImageLayout,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkFramebufferCreateInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkFramebufferCreateFlags,
-	renderPass: VkRenderPass,
-	attachmentCount: u32,
-	pAttachments: *const VkImageView,
-	width: u32,
-	height: u32,
-	layers: u32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkFramebufferCreateFlags,
+	pub renderPass: VkRenderPass,
+	pub attachmentCount: u32,
+	pub pAttachments: *const VkImageView,
+	pub width: u32,
+	pub height: u32,
+	pub layers: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkSubpassDescription {
-	flags: VkSubpassDescriptionFlags,
-	pipelineBindPoint: VkPipelineBindPoint,
-	inputAttachmentCount: u32,
-	pInputAttachments: *const VkAttachmentReference,
-	colorAttachmentCount: u32,
-	pColorAttachments: *const VkAttachmentReference,
-	pResolveAttachments: *const VkAttachmentReference,
-	pDepthStencilAttachment: *const VkAttachmentReference,
-	preserveAttachmentCount: u32,
-	pPreserveAttachments: *const uint32_t,
+	pub flags: VkSubpassDescriptionFlags,
+	pub pipelineBindPoint: VkPipelineBindPoint,
+	pub inputAttachmentCount: u32,
+	pub pInputAttachments: *const VkAttachmentReference,
+	pub colorAttachmentCount: u32,
+	pub pColorAttachments: *const VkAttachmentReference,
+	pub pResolveAttachments: *const VkAttachmentReference,
+	pub pDepthStencilAttachment: *const VkAttachmentReference,
+	pub preserveAttachmentCount: u32,
+	pub pPreserveAttachments: *const uint32_t,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkSubpassDependency {
-	srcSubpass: u32,
-	dstSubpass: u32,
-	srcStageMask: VkPipelineStageFlags,
-	dstStageMask: VkPipelineStageFlags,
-	srcAccessMask: VkAccessFlags,
-	dstAccessMask: VkAccessFlags,
-	dependencyFlags: VkDependencyFlags,
+	pub srcSubpass: u32,
+	pub dstSubpass: u32,
+	pub srcStageMask: VkPipelineStageFlags,
+	pub dstStageMask: VkPipelineStageFlags,
+	pub srcAccessMask: VkAccessFlags,
+	pub dstAccessMask: VkAccessFlags,
+	pub dependencyFlags: VkDependencyFlags,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkRenderPassCreateInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkRenderPassCreateFlags,
-	attachmentCount: u32,
-	pAttachments: *const VkAttachmentDescription,
-	subpassCount: u32,
-	pSubpasses: *const VkSubpassDescription,
-	dependencyCount: u32,
-	pDependencies: *const VkSubpassDependency,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkRenderPassCreateFlags,
+	pub attachmentCount: u32,
+	pub pAttachments: *const VkAttachmentDescription,
+	pub subpassCount: u32,
+	pub pSubpasses: *const VkSubpassDescription,
+	pub dependencyCount: u32,
+	pub pDependencies: *const VkSubpassDependency,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkCommandPoolCreateInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkCommandPoolCreateFlags,
-	queueFamilyIndex: u32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkCommandPoolCreateFlags,
+	pub queueFamilyIndex: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkCommandBufferAllocateInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	commandPool: VkCommandPool,
-	level: VkCommandBufferLevel,
-	commandBufferCount: u32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub commandPool: VkCommandPool,
+	pub level: VkCommandBufferLevel,
+	pub commandBufferCount: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkCommandBufferInheritanceInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	renderPass: VkRenderPass,
-	subpass: u32,
-	framebuffer: VkFramebuffer,
-	occlusionQueryEnable: VkBool32,
-	queryFlags: VkQueryControlFlags,
-	pipelineStatistics: VkQueryPipelineStatisticFlags,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub renderPass: VkRenderPass,
+	pub subpass: u32,
+	pub framebuffer: VkFramebuffer,
+	pub occlusionQueryEnable: VkBool32,
+	pub queryFlags: VkQueryControlFlags,
+	pub pipelineStatistics: VkQueryPipelineStatisticFlags,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkCommandBufferBeginInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkCommandBufferUsageFlags,
-	pInheritanceInfo: *const VkCommandBufferInheritanceInfo,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkCommandBufferUsageFlags,
+	pub pInheritanceInfo: *const VkCommandBufferInheritanceInfo,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkBufferCopy {
-	srcOffset: VkDeviceSize,
-	dstOffset: VkDeviceSize,
-	size: VkDeviceSize,
+	pub srcOffset: VkDeviceSize,
+	pub dstOffset: VkDeviceSize,
+	pub size: VkDeviceSize,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkImageSubresourceLayers {
-	aspectMask: VkImageAspectFlags,
-	mipLevel: u32,
-	baseArrayLayer: u32,
-	layerCount: u32,
+	pub aspectMask: VkImageAspectFlags,
+	pub mipLevel: u32,
+	pub baseArrayLayer: u32,
+	pub layerCount: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkBufferImageCopy {
-	bufferOffset: VkDeviceSize,
-	bufferRowLength: u32,
-	bufferImageHeight: u32,
-	imageSubresource: VkImageSubresourceLayers,
-	imageOffset: VkOffset3D,
-	imageExtent: VkExtent3D,
+	pub bufferOffset: VkDeviceSize,
+	pub bufferRowLength: u32,
+	pub bufferImageHeight: u32,
+	pub imageSubresource: VkImageSubresourceLayers,
+	pub imageOffset: VkOffset3D,
+	pub imageExtent: VkExtent3D,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkClearDepthStencilValue {
-	depth: f32,
-	stencil: u32,
+	pub depth: f32,
+	pub stencil: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkClearAttachment {
-	aspectMask: VkImageAspectFlags,
-	colorAttachment: u32,
-	clearValue: VkClearValue,
+	pub aspectMask: VkImageAspectFlags,
+	pub colorAttachment: u32,
+	pub clearValue: VkClearValue,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkClearRect {
-	rect: VkRect2D,
-	baseArrayLayer: u32,
-	layerCount: u32,
+	pub rect: VkRect2D,
+	pub baseArrayLayer: u32,
+	pub layerCount: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkImageBlit {
-	srcSubresource: VkImageSubresourceLayers,
-	srcOffsets: [VkOffset3D; 2 as usize],
-	dstSubresource: VkImageSubresourceLayers,
-	dstOffsets: [VkOffset3D; 2 as usize],
+	pub srcSubresource: VkImageSubresourceLayers,
+	pub srcOffsets: [VkOffset3D; 2 as usize],
+	pub dstSubresource: VkImageSubresourceLayers,
+	pub dstOffsets: [VkOffset3D; 2 as usize],
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkImageCopy {
-	srcSubresource: VkImageSubresourceLayers,
-	srcOffset: VkOffset3D,
-	dstSubresource: VkImageSubresourceLayers,
-	dstOffset: VkOffset3D,
-	extent: VkExtent3D,
+	pub srcSubresource: VkImageSubresourceLayers,
+	pub srcOffset: VkOffset3D,
+	pub dstSubresource: VkImageSubresourceLayers,
+	pub dstOffset: VkOffset3D,
+	pub extent: VkExtent3D,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkImageResolve {
-	srcSubresource: VkImageSubresourceLayers,
-	srcOffset: VkOffset3D,
-	dstSubresource: VkImageSubresourceLayers,
-	dstOffset: VkOffset3D,
-	extent: VkExtent3D,
+	pub srcSubresource: VkImageSubresourceLayers,
+	pub srcOffset: VkOffset3D,
+	pub dstSubresource: VkImageSubresourceLayers,
+	pub dstOffset: VkOffset3D,
+	pub extent: VkExtent3D,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkRenderPassBeginInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	renderPass: VkRenderPass,
-	framebuffer: VkFramebuffer,
-	renderArea: VkRect2D,
-	clearValueCount: u32,
-	pClearValues: *const VkClearValue,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub renderPass: VkRenderPass,
+	pub framebuffer: VkFramebuffer,
+	pub renderArea: VkRect2D,
+	pub clearValueCount: u32,
+	pub pClearValues: *const VkClearValue,
 }
 type PFN_vkAllocationFunction = extern "system" fn(pUserData: *mut c_void, size: usize, alignment: usize, allocationScope: VkSystemAllocationScope) -> *mut c_void;
 type PFN_vkFreeFunction = extern "system" fn(pUserData: *mut c_void, pMemory: *mut c_void);
@@ -6043,32 +6056,33 @@ impl Vulkan_VERSION_1_0 {
 		}
 	}
 }
+pub const VK_API_VERSION_1_1: u32 = 0x401000;
 pub const VK_MAX_DEVICE_GROUP_SIZE: u32 = 32u32;
 pub const VK_LUID_SIZE: u32 = 8u32;
 pub const VK_QUEUE_FAMILY_EXTERNAL: u32 = !1u32;
-type VkSubgroupFeatureFlags = VkFlags;
-type VkPeerMemoryFeatureFlags = VkFlags;
-type VkMemoryAllocateFlags = VkFlags;
-type VkCommandPoolTrimFlags = VkFlags;
-type VkDescriptorUpdateTemplateCreateFlags = VkFlags;
-type VkExternalMemoryHandleTypeFlags = VkFlags;
-type VkExternalMemoryFeatureFlags = VkFlags;
-type VkExternalFenceHandleTypeFlags = VkFlags;
-type VkExternalFenceFeatureFlags = VkFlags;
-type VkFenceImportFlags = VkFlags;
-type VkSemaphoreImportFlags = VkFlags;
-type VkExternalSemaphoreHandleTypeFlags = VkFlags;
-type VkExternalSemaphoreFeatureFlags = VkFlags;
-type VkPhysicalDeviceVariablePointerFeatures = VkPhysicalDeviceVariablePointersFeatures;
-type VkPhysicalDeviceShaderDrawParameterFeatures = VkPhysicalDeviceShaderDrawParametersFeatures;
+pub type VkSubgroupFeatureFlags = VkFlags;
+pub type VkPeerMemoryFeatureFlags = VkFlags;
+pub type VkMemoryAllocateFlags = VkFlags;
+pub type VkCommandPoolTrimFlags = VkFlags;
+pub type VkDescriptorUpdateTemplateCreateFlags = VkFlags;
+pub type VkExternalMemoryHandleTypeFlags = VkFlags;
+pub type VkExternalMemoryFeatureFlags = VkFlags;
+pub type VkExternalFenceHandleTypeFlags = VkFlags;
+pub type VkExternalFenceFeatureFlags = VkFlags;
+pub type VkFenceImportFlags = VkFlags;
+pub type VkSemaphoreImportFlags = VkFlags;
+pub type VkExternalSemaphoreHandleTypeFlags = VkFlags;
+pub type VkExternalSemaphoreFeatureFlags = VkFlags;
+pub type VkPhysicalDeviceVariablePointerFeatures = VkPhysicalDeviceVariablePointersFeatures;
+pub type VkPhysicalDeviceShaderDrawParameterFeatures = VkPhysicalDeviceShaderDrawParametersFeatures;
 // Define non-dispatchable handle `VkSamplerYcbcrConversion`
-#[cfg(target_pointer_width = "32")] type VkSamplerYcbcrConversion = u64;
+#[cfg(target_pointer_width = "32")] pub type VkSamplerYcbcrConversion = u64;
 #[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkSamplerYcbcrConversion_T {}
-#[cfg(target_pointer_width = "64")] type VkSamplerYcbcrConversion = *const VkSamplerYcbcrConversion_T;
+#[cfg(target_pointer_width = "64")] pub type VkSamplerYcbcrConversion = *const VkSamplerYcbcrConversion_T;
 // Define non-dispatchable handle `VkDescriptorUpdateTemplate`
-#[cfg(target_pointer_width = "32")] type VkDescriptorUpdateTemplate = u64;
+#[cfg(target_pointer_width = "32")] pub type VkDescriptorUpdateTemplate = u64;
 #[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkDescriptorUpdateTemplate_T {}
-#[cfg(target_pointer_width = "64")] type VkDescriptorUpdateTemplate = *const VkDescriptorUpdateTemplate_T;
+#[cfg(target_pointer_width = "64")] pub type VkDescriptorUpdateTemplate = *const VkDescriptorUpdateTemplate_T;
 #[repr(C)]
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum VkPointClippingBehavior {
@@ -6311,554 +6325,554 @@ impl VkExternalSemaphoreFeatureFlagBits {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceSubgroupProperties {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	subgroupSize: u32,
-	supportedStages: VkShaderStageFlags,
-	supportedOperations: VkSubgroupFeatureFlags,
-	quadOperationsInAllStages: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub subgroupSize: u32,
+	pub supportedStages: VkShaderStageFlags,
+	pub supportedOperations: VkSubgroupFeatureFlags,
+	pub quadOperationsInAllStages: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkBindBufferMemoryInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	buffer: VkBuffer,
-	memory: VkDeviceMemory,
-	memoryOffset: VkDeviceSize,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub buffer: VkBuffer,
+	pub memory: VkDeviceMemory,
+	pub memoryOffset: VkDeviceSize,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkBindImageMemoryInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	image: VkImage,
-	memory: VkDeviceMemory,
-	memoryOffset: VkDeviceSize,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub image: VkImage,
+	pub memory: VkDeviceMemory,
+	pub memoryOffset: VkDeviceSize,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDevice16BitStorageFeatures {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	storageBuffer16BitAccess: VkBool32,
-	uniformAndStorageBuffer16BitAccess: VkBool32,
-	storagePushConstant16: VkBool32,
-	storageInputOutput16: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub storageBuffer16BitAccess: VkBool32,
+	pub uniformAndStorageBuffer16BitAccess: VkBool32,
+	pub storagePushConstant16: VkBool32,
+	pub storageInputOutput16: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkMemoryDedicatedRequirements {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	prefersDedicatedAllocation: VkBool32,
-	requiresDedicatedAllocation: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub prefersDedicatedAllocation: VkBool32,
+	pub requiresDedicatedAllocation: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkMemoryDedicatedAllocateInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	image: VkImage,
-	buffer: VkBuffer,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub image: VkImage,
+	pub buffer: VkBuffer,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkMemoryAllocateFlagsInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkMemoryAllocateFlags,
-	deviceMask: u32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkMemoryAllocateFlags,
+	pub deviceMask: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDeviceGroupRenderPassBeginInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	deviceMask: u32,
-	deviceRenderAreaCount: u32,
-	pDeviceRenderAreas: *const VkRect2D,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub deviceMask: u32,
+	pub deviceRenderAreaCount: u32,
+	pub pDeviceRenderAreas: *const VkRect2D,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDeviceGroupCommandBufferBeginInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	deviceMask: u32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub deviceMask: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDeviceGroupSubmitInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	waitSemaphoreCount: u32,
-	pWaitSemaphoreDeviceIndices: *const uint32_t,
-	commandBufferCount: u32,
-	pCommandBufferDeviceMasks: *const uint32_t,
-	signalSemaphoreCount: u32,
-	pSignalSemaphoreDeviceIndices: *const uint32_t,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub waitSemaphoreCount: u32,
+	pub pWaitSemaphoreDeviceIndices: *const uint32_t,
+	pub commandBufferCount: u32,
+	pub pCommandBufferDeviceMasks: *const uint32_t,
+	pub signalSemaphoreCount: u32,
+	pub pSignalSemaphoreDeviceIndices: *const uint32_t,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDeviceGroupBindSparseInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	resourceDeviceIndex: u32,
-	memoryDeviceIndex: u32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub resourceDeviceIndex: u32,
+	pub memoryDeviceIndex: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkBindBufferMemoryDeviceGroupInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	deviceIndexCount: u32,
-	pDeviceIndices: *const uint32_t,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub deviceIndexCount: u32,
+	pub pDeviceIndices: *const uint32_t,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkBindImageMemoryDeviceGroupInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	deviceIndexCount: u32,
-	pDeviceIndices: *const uint32_t,
-	splitInstanceBindRegionCount: u32,
-	pSplitInstanceBindRegions: *const VkRect2D,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub deviceIndexCount: u32,
+	pub pDeviceIndices: *const uint32_t,
+	pub splitInstanceBindRegionCount: u32,
+	pub pSplitInstanceBindRegions: *const VkRect2D,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceGroupProperties {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	physicalDeviceCount: u32,
-	physicalDevices: [VkPhysicalDevice; VK_MAX_DEVICE_GROUP_SIZE as usize],
-	subsetAllocation: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub physicalDeviceCount: u32,
+	pub physicalDevices: [VkPhysicalDevice; VK_MAX_DEVICE_GROUP_SIZE as usize],
+	pub subsetAllocation: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDeviceGroupDeviceCreateInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	physicalDeviceCount: u32,
-	pPhysicalDevices: *const VkPhysicalDevice,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub physicalDeviceCount: u32,
+	pub pPhysicalDevices: *const VkPhysicalDevice,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkBufferMemoryRequirementsInfo2 {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	buffer: VkBuffer,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub buffer: VkBuffer,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkImageMemoryRequirementsInfo2 {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	image: VkImage,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub image: VkImage,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkImageSparseMemoryRequirementsInfo2 {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	image: VkImage,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub image: VkImage,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkMemoryRequirements2 {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	memoryRequirements: VkMemoryRequirements,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub memoryRequirements: VkMemoryRequirements,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkSparseImageMemoryRequirements2 {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	memoryRequirements: VkSparseImageMemoryRequirements,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub memoryRequirements: VkSparseImageMemoryRequirements,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceFeatures2 {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	features: VkPhysicalDeviceFeatures,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub features: VkPhysicalDeviceFeatures,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceProperties2 {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	properties: VkPhysicalDeviceProperties,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub properties: VkPhysicalDeviceProperties,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkFormatProperties2 {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	formatProperties: VkFormatProperties,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub formatProperties: VkFormatProperties,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkImageFormatProperties2 {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	imageFormatProperties: VkImageFormatProperties,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub imageFormatProperties: VkImageFormatProperties,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceImageFormatInfo2 {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	format: VkFormat,
-	type_: VkImageType,
-	tiling: VkImageTiling,
-	usage: VkImageUsageFlags,
-	flags: VkImageCreateFlags,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub format: VkFormat,
+	pub type_: VkImageType,
+	pub tiling: VkImageTiling,
+	pub usage: VkImageUsageFlags,
+	pub flags: VkImageCreateFlags,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkQueueFamilyProperties2 {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	queueFamilyProperties: VkQueueFamilyProperties,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub queueFamilyProperties: VkQueueFamilyProperties,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceMemoryProperties2 {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	memoryProperties: VkPhysicalDeviceMemoryProperties,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub memoryProperties: VkPhysicalDeviceMemoryProperties,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkSparseImageFormatProperties2 {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	properties: VkSparseImageFormatProperties,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub properties: VkSparseImageFormatProperties,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceSparseImageFormatInfo2 {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	format: VkFormat,
-	type_: VkImageType,
-	samples: VkSampleCountFlagBits,
-	usage: VkImageUsageFlags,
-	tiling: VkImageTiling,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub format: VkFormat,
+	pub type_: VkImageType,
+	pub samples: VkSampleCountFlagBits,
+	pub usage: VkImageUsageFlags,
+	pub tiling: VkImageTiling,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDevicePointClippingProperties {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	pointClippingBehavior: VkPointClippingBehavior,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub pointClippingBehavior: VkPointClippingBehavior,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkInputAttachmentAspectReference {
-	subpass: u32,
-	inputAttachmentIndex: u32,
-	aspectMask: VkImageAspectFlags,
+	pub subpass: u32,
+	pub inputAttachmentIndex: u32,
+	pub aspectMask: VkImageAspectFlags,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkRenderPassInputAttachmentAspectCreateInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	aspectReferenceCount: u32,
-	pAspectReferences: *const VkInputAttachmentAspectReference,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub aspectReferenceCount: u32,
+	pub pAspectReferences: *const VkInputAttachmentAspectReference,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkImageViewUsageCreateInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	usage: VkImageUsageFlags,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub usage: VkImageUsageFlags,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPipelineTessellationDomainOriginStateCreateInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	domainOrigin: VkTessellationDomainOrigin,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub domainOrigin: VkTessellationDomainOrigin,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkRenderPassMultiviewCreateInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	subpassCount: u32,
-	pViewMasks: *const uint32_t,
-	dependencyCount: u32,
-	pViewOffsets: *const int32_t,
-	correlationMaskCount: u32,
-	pCorrelationMasks: *const uint32_t,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub subpassCount: u32,
+	pub pViewMasks: *const uint32_t,
+	pub dependencyCount: u32,
+	pub pViewOffsets: *const int32_t,
+	pub correlationMaskCount: u32,
+	pub pCorrelationMasks: *const uint32_t,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceMultiviewFeatures {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	multiview: VkBool32,
-	multiviewGeometryShader: VkBool32,
-	multiviewTessellationShader: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub multiview: VkBool32,
+	pub multiviewGeometryShader: VkBool32,
+	pub multiviewTessellationShader: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceMultiviewProperties {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	maxMultiviewViewCount: u32,
-	maxMultiviewInstanceIndex: u32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub maxMultiviewViewCount: u32,
+	pub maxMultiviewInstanceIndex: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceVariablePointersFeatures {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	variablePointersStorageBuffer: VkBool32,
-	variablePointers: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub variablePointersStorageBuffer: VkBool32,
+	pub variablePointers: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceProtectedMemoryFeatures {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	protectedMemory: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub protectedMemory: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceProtectedMemoryProperties {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	protectedNoFault: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub protectedNoFault: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDeviceQueueInfo2 {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkDeviceQueueCreateFlags,
-	queueFamilyIndex: u32,
-	queueIndex: u32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkDeviceQueueCreateFlags,
+	pub queueFamilyIndex: u32,
+	pub queueIndex: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkProtectedSubmitInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	protectedSubmit: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub protectedSubmit: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkSamplerYcbcrConversionCreateInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	format: VkFormat,
-	ycbcrModel: VkSamplerYcbcrModelConversion,
-	ycbcrRange: VkSamplerYcbcrRange,
-	components: VkComponentMapping,
-	xChromaOffset: VkChromaLocation,
-	yChromaOffset: VkChromaLocation,
-	chromaFilter: VkFilter,
-	forceExplicitReconstruction: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub format: VkFormat,
+	pub ycbcrModel: VkSamplerYcbcrModelConversion,
+	pub ycbcrRange: VkSamplerYcbcrRange,
+	pub components: VkComponentMapping,
+	pub xChromaOffset: VkChromaLocation,
+	pub yChromaOffset: VkChromaLocation,
+	pub chromaFilter: VkFilter,
+	pub forceExplicitReconstruction: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkSamplerYcbcrConversionInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	conversion: VkSamplerYcbcrConversion,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub conversion: VkSamplerYcbcrConversion,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkBindImagePlaneMemoryInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	planeAspect: VkImageAspectFlagBits,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub planeAspect: VkImageAspectFlagBits,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkImagePlaneMemoryRequirementsInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	planeAspect: VkImageAspectFlagBits,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub planeAspect: VkImageAspectFlagBits,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceSamplerYcbcrConversionFeatures {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	samplerYcbcrConversion: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub samplerYcbcrConversion: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkSamplerYcbcrConversionImageFormatProperties {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	combinedImageSamplerDescriptorCount: u32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub combinedImageSamplerDescriptorCount: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDescriptorUpdateTemplateEntry {
-	dstBinding: u32,
-	dstArrayElement: u32,
-	descriptorCount: u32,
-	descriptorType: VkDescriptorType,
-	offset: usize,
-	stride: usize,
+	pub dstBinding: u32,
+	pub dstArrayElement: u32,
+	pub descriptorCount: u32,
+	pub descriptorType: VkDescriptorType,
+	pub offset: usize,
+	pub stride: usize,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDescriptorUpdateTemplateCreateInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkDescriptorUpdateTemplateCreateFlags,
-	descriptorUpdateEntryCount: u32,
-	pDescriptorUpdateEntries: *const VkDescriptorUpdateTemplateEntry,
-	templateType: VkDescriptorUpdateTemplateType,
-	descriptorSetLayout: VkDescriptorSetLayout,
-	pipelineBindPoint: VkPipelineBindPoint,
-	pipelineLayout: VkPipelineLayout,
-	set: u32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkDescriptorUpdateTemplateCreateFlags,
+	pub descriptorUpdateEntryCount: u32,
+	pub pDescriptorUpdateEntries: *const VkDescriptorUpdateTemplateEntry,
+	pub templateType: VkDescriptorUpdateTemplateType,
+	pub descriptorSetLayout: VkDescriptorSetLayout,
+	pub pipelineBindPoint: VkPipelineBindPoint,
+	pub pipelineLayout: VkPipelineLayout,
+	pub set: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkExternalMemoryProperties {
-	externalMemoryFeatures: VkExternalMemoryFeatureFlags,
-	exportFromImportedHandleTypes: VkExternalMemoryHandleTypeFlags,
-	compatibleHandleTypes: VkExternalMemoryHandleTypeFlags,
+	pub externalMemoryFeatures: VkExternalMemoryFeatureFlags,
+	pub exportFromImportedHandleTypes: VkExternalMemoryHandleTypeFlags,
+	pub compatibleHandleTypes: VkExternalMemoryHandleTypeFlags,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceExternalImageFormatInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	handleType: VkExternalMemoryHandleTypeFlagBits,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub handleType: VkExternalMemoryHandleTypeFlagBits,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkExternalImageFormatProperties {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	externalMemoryProperties: VkExternalMemoryProperties,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub externalMemoryProperties: VkExternalMemoryProperties,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceExternalBufferInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkBufferCreateFlags,
-	usage: VkBufferUsageFlags,
-	handleType: VkExternalMemoryHandleTypeFlagBits,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkBufferCreateFlags,
+	pub usage: VkBufferUsageFlags,
+	pub handleType: VkExternalMemoryHandleTypeFlagBits,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkExternalBufferProperties {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	externalMemoryProperties: VkExternalMemoryProperties,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub externalMemoryProperties: VkExternalMemoryProperties,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceIDProperties {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	deviceUUID: [u8; VK_UUID_SIZE as usize],
-	driverUUID: [u8; VK_UUID_SIZE as usize],
-	deviceLUID: [u8; VK_LUID_SIZE as usize],
-	deviceNodeMask: u32,
-	deviceLUIDValid: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub deviceUUID: [u8; VK_UUID_SIZE as usize],
+	pub driverUUID: [u8; VK_UUID_SIZE as usize],
+	pub deviceLUID: [u8; VK_LUID_SIZE as usize],
+	pub deviceNodeMask: u32,
+	pub deviceLUIDValid: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkExternalMemoryImageCreateInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	handleTypes: VkExternalMemoryHandleTypeFlags,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub handleTypes: VkExternalMemoryHandleTypeFlags,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkExternalMemoryBufferCreateInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	handleTypes: VkExternalMemoryHandleTypeFlags,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub handleTypes: VkExternalMemoryHandleTypeFlags,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkExportMemoryAllocateInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	handleTypes: VkExternalMemoryHandleTypeFlags,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub handleTypes: VkExternalMemoryHandleTypeFlags,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceExternalFenceInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	handleType: VkExternalFenceHandleTypeFlagBits,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub handleType: VkExternalFenceHandleTypeFlagBits,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkExternalFenceProperties {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	exportFromImportedHandleTypes: VkExternalFenceHandleTypeFlags,
-	compatibleHandleTypes: VkExternalFenceHandleTypeFlags,
-	externalFenceFeatures: VkExternalFenceFeatureFlags,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub exportFromImportedHandleTypes: VkExternalFenceHandleTypeFlags,
+	pub compatibleHandleTypes: VkExternalFenceHandleTypeFlags,
+	pub externalFenceFeatures: VkExternalFenceFeatureFlags,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkExportFenceCreateInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	handleTypes: VkExternalFenceHandleTypeFlags,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub handleTypes: VkExternalFenceHandleTypeFlags,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkExportSemaphoreCreateInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	handleTypes: VkExternalSemaphoreHandleTypeFlags,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub handleTypes: VkExternalSemaphoreHandleTypeFlags,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceExternalSemaphoreInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	handleType: VkExternalSemaphoreHandleTypeFlagBits,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub handleType: VkExternalSemaphoreHandleTypeFlagBits,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkExternalSemaphoreProperties {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	exportFromImportedHandleTypes: VkExternalSemaphoreHandleTypeFlags,
-	compatibleHandleTypes: VkExternalSemaphoreHandleTypeFlags,
-	externalSemaphoreFeatures: VkExternalSemaphoreFeatureFlags,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub exportFromImportedHandleTypes: VkExternalSemaphoreHandleTypeFlags,
+	pub compatibleHandleTypes: VkExternalSemaphoreHandleTypeFlags,
+	pub externalSemaphoreFeatures: VkExternalSemaphoreFeatureFlags,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceMaintenance3Properties {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	maxPerSetDescriptors: u32,
-	maxMemoryAllocationSize: VkDeviceSize,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub maxPerSetDescriptors: u32,
+	pub maxMemoryAllocationSize: VkDeviceSize,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDescriptorSetLayoutSupport {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	supported: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub supported: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceShaderDrawParametersFeatures {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	shaderDrawParameters: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub shaderDrawParameters: VkBool32,
 }
 type PFN_vkEnumerateInstanceVersion = extern "system" fn(pApiVersion: *mut uint32_t) -> VkResult;
 type PFN_vkBindBufferMemory2 = extern "system" fn(device: VkDevice, bindInfoCount: u32, pBindInfos: *const VkBindBufferMemoryInfo) -> VkResult;
@@ -7187,11 +7201,12 @@ impl Vulkan_VERSION_1_1 {
 		}
 	}
 }
+pub const VK_API_VERSION_1_2: u32 = 0x402000;
 pub const VK_MAX_DRIVER_NAME_SIZE: u32 = 256u32;
 pub const VK_MAX_DRIVER_INFO_SIZE: u32 = 256u32;
-type VkResolveModeFlags = VkFlags;
-type VkDescriptorBindingFlags = VkFlags;
-type VkSemaphoreWaitFlags = VkFlags;
+pub type VkResolveModeFlags = VkFlags;
+pub type VkDescriptorBindingFlags = VkFlags;
+pub type VkSemaphoreWaitFlags = VkFlags;
 #[repr(C)]
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum VkDriverId {
@@ -7322,610 +7337,610 @@ impl VkSemaphoreWaitFlagBits {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceVulkan11Features {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	storageBuffer16BitAccess: VkBool32,
-	uniformAndStorageBuffer16BitAccess: VkBool32,
-	storagePushConstant16: VkBool32,
-	storageInputOutput16: VkBool32,
-	multiview: VkBool32,
-	multiviewGeometryShader: VkBool32,
-	multiviewTessellationShader: VkBool32,
-	variablePointersStorageBuffer: VkBool32,
-	variablePointers: VkBool32,
-	protectedMemory: VkBool32,
-	samplerYcbcrConversion: VkBool32,
-	shaderDrawParameters: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub storageBuffer16BitAccess: VkBool32,
+	pub uniformAndStorageBuffer16BitAccess: VkBool32,
+	pub storagePushConstant16: VkBool32,
+	pub storageInputOutput16: VkBool32,
+	pub multiview: VkBool32,
+	pub multiviewGeometryShader: VkBool32,
+	pub multiviewTessellationShader: VkBool32,
+	pub variablePointersStorageBuffer: VkBool32,
+	pub variablePointers: VkBool32,
+	pub protectedMemory: VkBool32,
+	pub samplerYcbcrConversion: VkBool32,
+	pub shaderDrawParameters: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceVulkan11Properties {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	deviceUUID: [u8; VK_UUID_SIZE as usize],
-	driverUUID: [u8; VK_UUID_SIZE as usize],
-	deviceLUID: [u8; VK_LUID_SIZE as usize],
-	deviceNodeMask: u32,
-	deviceLUIDValid: VkBool32,
-	subgroupSize: u32,
-	subgroupSupportedStages: VkShaderStageFlags,
-	subgroupSupportedOperations: VkSubgroupFeatureFlags,
-	subgroupQuadOperationsInAllStages: VkBool32,
-	pointClippingBehavior: VkPointClippingBehavior,
-	maxMultiviewViewCount: u32,
-	maxMultiviewInstanceIndex: u32,
-	protectedNoFault: VkBool32,
-	maxPerSetDescriptors: u32,
-	maxMemoryAllocationSize: VkDeviceSize,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub deviceUUID: [u8; VK_UUID_SIZE as usize],
+	pub driverUUID: [u8; VK_UUID_SIZE as usize],
+	pub deviceLUID: [u8; VK_LUID_SIZE as usize],
+	pub deviceNodeMask: u32,
+	pub deviceLUIDValid: VkBool32,
+	pub subgroupSize: u32,
+	pub subgroupSupportedStages: VkShaderStageFlags,
+	pub subgroupSupportedOperations: VkSubgroupFeatureFlags,
+	pub subgroupQuadOperationsInAllStages: VkBool32,
+	pub pointClippingBehavior: VkPointClippingBehavior,
+	pub maxMultiviewViewCount: u32,
+	pub maxMultiviewInstanceIndex: u32,
+	pub protectedNoFault: VkBool32,
+	pub maxPerSetDescriptors: u32,
+	pub maxMemoryAllocationSize: VkDeviceSize,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceVulkan12Features {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	samplerMirrorClampToEdge: VkBool32,
-	drawIndirectCount: VkBool32,
-	storageBuffer8BitAccess: VkBool32,
-	uniformAndStorageBuffer8BitAccess: VkBool32,
-	storagePushConstant8: VkBool32,
-	shaderBufferInt64Atomics: VkBool32,
-	shaderSharedInt64Atomics: VkBool32,
-	shaderFloat16: VkBool32,
-	shaderInt8: VkBool32,
-	descriptorIndexing: VkBool32,
-	shaderInputAttachmentArrayDynamicIndexing: VkBool32,
-	shaderUniformTexelBufferArrayDynamicIndexing: VkBool32,
-	shaderStorageTexelBufferArrayDynamicIndexing: VkBool32,
-	shaderUniformBufferArrayNonUniformIndexing: VkBool32,
-	shaderSampledImageArrayNonUniformIndexing: VkBool32,
-	shaderStorageBufferArrayNonUniformIndexing: VkBool32,
-	shaderStorageImageArrayNonUniformIndexing: VkBool32,
-	shaderInputAttachmentArrayNonUniformIndexing: VkBool32,
-	shaderUniformTexelBufferArrayNonUniformIndexing: VkBool32,
-	shaderStorageTexelBufferArrayNonUniformIndexing: VkBool32,
-	descriptorBindingUniformBufferUpdateAfterBind: VkBool32,
-	descriptorBindingSampledImageUpdateAfterBind: VkBool32,
-	descriptorBindingStorageImageUpdateAfterBind: VkBool32,
-	descriptorBindingStorageBufferUpdateAfterBind: VkBool32,
-	descriptorBindingUniformTexelBufferUpdateAfterBind: VkBool32,
-	descriptorBindingStorageTexelBufferUpdateAfterBind: VkBool32,
-	descriptorBindingUpdateUnusedWhilePending: VkBool32,
-	descriptorBindingPartiallyBound: VkBool32,
-	descriptorBindingVariableDescriptorCount: VkBool32,
-	runtimeDescriptorArray: VkBool32,
-	samplerFilterMinmax: VkBool32,
-	scalarBlockLayout: VkBool32,
-	imagelessFramebuffer: VkBool32,
-	uniformBufferStandardLayout: VkBool32,
-	shaderSubgroupExtendedTypes: VkBool32,
-	separateDepthStencilLayouts: VkBool32,
-	hostQueryReset: VkBool32,
-	timelineSemaphore: VkBool32,
-	bufferDeviceAddress: VkBool32,
-	bufferDeviceAddressCaptureReplay: VkBool32,
-	bufferDeviceAddressMultiDevice: VkBool32,
-	vulkanMemoryModel: VkBool32,
-	vulkanMemoryModelDeviceScope: VkBool32,
-	vulkanMemoryModelAvailabilityVisibilityChains: VkBool32,
-	shaderOutputViewportIndex: VkBool32,
-	shaderOutputLayer: VkBool32,
-	subgroupBroadcastDynamicId: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub samplerMirrorClampToEdge: VkBool32,
+	pub drawIndirectCount: VkBool32,
+	pub storageBuffer8BitAccess: VkBool32,
+	pub uniformAndStorageBuffer8BitAccess: VkBool32,
+	pub storagePushConstant8: VkBool32,
+	pub shaderBufferInt64Atomics: VkBool32,
+	pub shaderSharedInt64Atomics: VkBool32,
+	pub shaderFloat16: VkBool32,
+	pub shaderInt8: VkBool32,
+	pub descriptorIndexing: VkBool32,
+	pub shaderInputAttachmentArrayDynamicIndexing: VkBool32,
+	pub shaderUniformTexelBufferArrayDynamicIndexing: VkBool32,
+	pub shaderStorageTexelBufferArrayDynamicIndexing: VkBool32,
+	pub shaderUniformBufferArrayNonUniformIndexing: VkBool32,
+	pub shaderSampledImageArrayNonUniformIndexing: VkBool32,
+	pub shaderStorageBufferArrayNonUniformIndexing: VkBool32,
+	pub shaderStorageImageArrayNonUniformIndexing: VkBool32,
+	pub shaderInputAttachmentArrayNonUniformIndexing: VkBool32,
+	pub shaderUniformTexelBufferArrayNonUniformIndexing: VkBool32,
+	pub shaderStorageTexelBufferArrayNonUniformIndexing: VkBool32,
+	pub descriptorBindingUniformBufferUpdateAfterBind: VkBool32,
+	pub descriptorBindingSampledImageUpdateAfterBind: VkBool32,
+	pub descriptorBindingStorageImageUpdateAfterBind: VkBool32,
+	pub descriptorBindingStorageBufferUpdateAfterBind: VkBool32,
+	pub descriptorBindingUniformTexelBufferUpdateAfterBind: VkBool32,
+	pub descriptorBindingStorageTexelBufferUpdateAfterBind: VkBool32,
+	pub descriptorBindingUpdateUnusedWhilePending: VkBool32,
+	pub descriptorBindingPartiallyBound: VkBool32,
+	pub descriptorBindingVariableDescriptorCount: VkBool32,
+	pub runtimeDescriptorArray: VkBool32,
+	pub samplerFilterMinmax: VkBool32,
+	pub scalarBlockLayout: VkBool32,
+	pub imagelessFramebuffer: VkBool32,
+	pub uniformBufferStandardLayout: VkBool32,
+	pub shaderSubgroupExtendedTypes: VkBool32,
+	pub separateDepthStencilLayouts: VkBool32,
+	pub hostQueryReset: VkBool32,
+	pub timelineSemaphore: VkBool32,
+	pub bufferDeviceAddress: VkBool32,
+	pub bufferDeviceAddressCaptureReplay: VkBool32,
+	pub bufferDeviceAddressMultiDevice: VkBool32,
+	pub vulkanMemoryModel: VkBool32,
+	pub vulkanMemoryModelDeviceScope: VkBool32,
+	pub vulkanMemoryModelAvailabilityVisibilityChains: VkBool32,
+	pub shaderOutputViewportIndex: VkBool32,
+	pub shaderOutputLayer: VkBool32,
+	pub subgroupBroadcastDynamicId: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkConformanceVersion {
-	major: u8,
-	minor: u8,
-	subminor: u8,
-	patch: u8,
+	pub major: u8,
+	pub minor: u8,
+	pub subminor: u8,
+	pub patch: u8,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceVulkan12Properties {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	driverID: VkDriverId,
-	driverName: [i8; VK_MAX_DRIVER_NAME_SIZE as usize],
-	driverInfo: [i8; VK_MAX_DRIVER_INFO_SIZE as usize],
-	conformanceVersion: VkConformanceVersion,
-	denormBehaviorIndependence: VkShaderFloatControlsIndependence,
-	roundingModeIndependence: VkShaderFloatControlsIndependence,
-	shaderSignedZeroInfNanPreserveFloat16: VkBool32,
-	shaderSignedZeroInfNanPreserveFloat32: VkBool32,
-	shaderSignedZeroInfNanPreserveFloat64: VkBool32,
-	shaderDenormPreserveFloat16: VkBool32,
-	shaderDenormPreserveFloat32: VkBool32,
-	shaderDenormPreserveFloat64: VkBool32,
-	shaderDenormFlushToZeroFloat16: VkBool32,
-	shaderDenormFlushToZeroFloat32: VkBool32,
-	shaderDenormFlushToZeroFloat64: VkBool32,
-	shaderRoundingModeRTEFloat16: VkBool32,
-	shaderRoundingModeRTEFloat32: VkBool32,
-	shaderRoundingModeRTEFloat64: VkBool32,
-	shaderRoundingModeRTZFloat16: VkBool32,
-	shaderRoundingModeRTZFloat32: VkBool32,
-	shaderRoundingModeRTZFloat64: VkBool32,
-	maxUpdateAfterBindDescriptorsInAllPools: u32,
-	shaderUniformBufferArrayNonUniformIndexingNative: VkBool32,
-	shaderSampledImageArrayNonUniformIndexingNative: VkBool32,
-	shaderStorageBufferArrayNonUniformIndexingNative: VkBool32,
-	shaderStorageImageArrayNonUniformIndexingNative: VkBool32,
-	shaderInputAttachmentArrayNonUniformIndexingNative: VkBool32,
-	robustBufferAccessUpdateAfterBind: VkBool32,
-	quadDivergentImplicitLod: VkBool32,
-	maxPerStageDescriptorUpdateAfterBindSamplers: u32,
-	maxPerStageDescriptorUpdateAfterBindUniformBuffers: u32,
-	maxPerStageDescriptorUpdateAfterBindStorageBuffers: u32,
-	maxPerStageDescriptorUpdateAfterBindSampledImages: u32,
-	maxPerStageDescriptorUpdateAfterBindStorageImages: u32,
-	maxPerStageDescriptorUpdateAfterBindInputAttachments: u32,
-	maxPerStageUpdateAfterBindResources: u32,
-	maxDescriptorSetUpdateAfterBindSamplers: u32,
-	maxDescriptorSetUpdateAfterBindUniformBuffers: u32,
-	maxDescriptorSetUpdateAfterBindUniformBuffersDynamic: u32,
-	maxDescriptorSetUpdateAfterBindStorageBuffers: u32,
-	maxDescriptorSetUpdateAfterBindStorageBuffersDynamic: u32,
-	maxDescriptorSetUpdateAfterBindSampledImages: u32,
-	maxDescriptorSetUpdateAfterBindStorageImages: u32,
-	maxDescriptorSetUpdateAfterBindInputAttachments: u32,
-	supportedDepthResolveModes: VkResolveModeFlags,
-	supportedStencilResolveModes: VkResolveModeFlags,
-	independentResolveNone: VkBool32,
-	independentResolve: VkBool32,
-	filterMinmaxSingleComponentFormats: VkBool32,
-	filterMinmaxImageComponentMapping: VkBool32,
-	maxTimelineSemaphoreValueDifference: u64,
-	framebufferIntegerColorSampleCounts: VkSampleCountFlags,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub driverID: VkDriverId,
+	pub driverName: [i8; VK_MAX_DRIVER_NAME_SIZE as usize],
+	pub driverInfo: [i8; VK_MAX_DRIVER_INFO_SIZE as usize],
+	pub conformanceVersion: VkConformanceVersion,
+	pub denormBehaviorIndependence: VkShaderFloatControlsIndependence,
+	pub roundingModeIndependence: VkShaderFloatControlsIndependence,
+	pub shaderSignedZeroInfNanPreserveFloat16: VkBool32,
+	pub shaderSignedZeroInfNanPreserveFloat32: VkBool32,
+	pub shaderSignedZeroInfNanPreserveFloat64: VkBool32,
+	pub shaderDenormPreserveFloat16: VkBool32,
+	pub shaderDenormPreserveFloat32: VkBool32,
+	pub shaderDenormPreserveFloat64: VkBool32,
+	pub shaderDenormFlushToZeroFloat16: VkBool32,
+	pub shaderDenormFlushToZeroFloat32: VkBool32,
+	pub shaderDenormFlushToZeroFloat64: VkBool32,
+	pub shaderRoundingModeRTEFloat16: VkBool32,
+	pub shaderRoundingModeRTEFloat32: VkBool32,
+	pub shaderRoundingModeRTEFloat64: VkBool32,
+	pub shaderRoundingModeRTZFloat16: VkBool32,
+	pub shaderRoundingModeRTZFloat32: VkBool32,
+	pub shaderRoundingModeRTZFloat64: VkBool32,
+	pub maxUpdateAfterBindDescriptorsInAllPools: u32,
+	pub shaderUniformBufferArrayNonUniformIndexingNative: VkBool32,
+	pub shaderSampledImageArrayNonUniformIndexingNative: VkBool32,
+	pub shaderStorageBufferArrayNonUniformIndexingNative: VkBool32,
+	pub shaderStorageImageArrayNonUniformIndexingNative: VkBool32,
+	pub shaderInputAttachmentArrayNonUniformIndexingNative: VkBool32,
+	pub robustBufferAccessUpdateAfterBind: VkBool32,
+	pub quadDivergentImplicitLod: VkBool32,
+	pub maxPerStageDescriptorUpdateAfterBindSamplers: u32,
+	pub maxPerStageDescriptorUpdateAfterBindUniformBuffers: u32,
+	pub maxPerStageDescriptorUpdateAfterBindStorageBuffers: u32,
+	pub maxPerStageDescriptorUpdateAfterBindSampledImages: u32,
+	pub maxPerStageDescriptorUpdateAfterBindStorageImages: u32,
+	pub maxPerStageDescriptorUpdateAfterBindInputAttachments: u32,
+	pub maxPerStageUpdateAfterBindResources: u32,
+	pub maxDescriptorSetUpdateAfterBindSamplers: u32,
+	pub maxDescriptorSetUpdateAfterBindUniformBuffers: u32,
+	pub maxDescriptorSetUpdateAfterBindUniformBuffersDynamic: u32,
+	pub maxDescriptorSetUpdateAfterBindStorageBuffers: u32,
+	pub maxDescriptorSetUpdateAfterBindStorageBuffersDynamic: u32,
+	pub maxDescriptorSetUpdateAfterBindSampledImages: u32,
+	pub maxDescriptorSetUpdateAfterBindStorageImages: u32,
+	pub maxDescriptorSetUpdateAfterBindInputAttachments: u32,
+	pub supportedDepthResolveModes: VkResolveModeFlags,
+	pub supportedStencilResolveModes: VkResolveModeFlags,
+	pub independentResolveNone: VkBool32,
+	pub independentResolve: VkBool32,
+	pub filterMinmaxSingleComponentFormats: VkBool32,
+	pub filterMinmaxImageComponentMapping: VkBool32,
+	pub maxTimelineSemaphoreValueDifference: u64,
+	pub framebufferIntegerColorSampleCounts: VkSampleCountFlags,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkImageFormatListCreateInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	viewFormatCount: u32,
-	pViewFormats: *const VkFormat,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub viewFormatCount: u32,
+	pub pViewFormats: *const VkFormat,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkAttachmentDescription2 {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkAttachmentDescriptionFlags,
-	format: VkFormat,
-	samples: VkSampleCountFlagBits,
-	loadOp: VkAttachmentLoadOp,
-	storeOp: VkAttachmentStoreOp,
-	stencilLoadOp: VkAttachmentLoadOp,
-	stencilStoreOp: VkAttachmentStoreOp,
-	initialLayout: VkImageLayout,
-	finalLayout: VkImageLayout,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkAttachmentDescriptionFlags,
+	pub format: VkFormat,
+	pub samples: VkSampleCountFlagBits,
+	pub loadOp: VkAttachmentLoadOp,
+	pub storeOp: VkAttachmentStoreOp,
+	pub stencilLoadOp: VkAttachmentLoadOp,
+	pub stencilStoreOp: VkAttachmentStoreOp,
+	pub initialLayout: VkImageLayout,
+	pub finalLayout: VkImageLayout,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkAttachmentReference2 {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	attachment: u32,
-	layout: VkImageLayout,
-	aspectMask: VkImageAspectFlags,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub attachment: u32,
+	pub layout: VkImageLayout,
+	pub aspectMask: VkImageAspectFlags,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkSubpassDescription2 {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkSubpassDescriptionFlags,
-	pipelineBindPoint: VkPipelineBindPoint,
-	viewMask: u32,
-	inputAttachmentCount: u32,
-	pInputAttachments: *const VkAttachmentReference2,
-	colorAttachmentCount: u32,
-	pColorAttachments: *const VkAttachmentReference2,
-	pResolveAttachments: *const VkAttachmentReference2,
-	pDepthStencilAttachment: *const VkAttachmentReference2,
-	preserveAttachmentCount: u32,
-	pPreserveAttachments: *const uint32_t,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkSubpassDescriptionFlags,
+	pub pipelineBindPoint: VkPipelineBindPoint,
+	pub viewMask: u32,
+	pub inputAttachmentCount: u32,
+	pub pInputAttachments: *const VkAttachmentReference2,
+	pub colorAttachmentCount: u32,
+	pub pColorAttachments: *const VkAttachmentReference2,
+	pub pResolveAttachments: *const VkAttachmentReference2,
+	pub pDepthStencilAttachment: *const VkAttachmentReference2,
+	pub preserveAttachmentCount: u32,
+	pub pPreserveAttachments: *const uint32_t,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkSubpassDependency2 {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	srcSubpass: u32,
-	dstSubpass: u32,
-	srcStageMask: VkPipelineStageFlags,
-	dstStageMask: VkPipelineStageFlags,
-	srcAccessMask: VkAccessFlags,
-	dstAccessMask: VkAccessFlags,
-	dependencyFlags: VkDependencyFlags,
-	viewOffset: i32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub srcSubpass: u32,
+	pub dstSubpass: u32,
+	pub srcStageMask: VkPipelineStageFlags,
+	pub dstStageMask: VkPipelineStageFlags,
+	pub srcAccessMask: VkAccessFlags,
+	pub dstAccessMask: VkAccessFlags,
+	pub dependencyFlags: VkDependencyFlags,
+	pub viewOffset: i32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkRenderPassCreateInfo2 {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkRenderPassCreateFlags,
-	attachmentCount: u32,
-	pAttachments: *const VkAttachmentDescription2,
-	subpassCount: u32,
-	pSubpasses: *const VkSubpassDescription2,
-	dependencyCount: u32,
-	pDependencies: *const VkSubpassDependency2,
-	correlatedViewMaskCount: u32,
-	pCorrelatedViewMasks: *const uint32_t,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkRenderPassCreateFlags,
+	pub attachmentCount: u32,
+	pub pAttachments: *const VkAttachmentDescription2,
+	pub subpassCount: u32,
+	pub pSubpasses: *const VkSubpassDescription2,
+	pub dependencyCount: u32,
+	pub pDependencies: *const VkSubpassDependency2,
+	pub correlatedViewMaskCount: u32,
+	pub pCorrelatedViewMasks: *const uint32_t,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkSubpassBeginInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	contents: VkSubpassContents,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub contents: VkSubpassContents,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkSubpassEndInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDevice8BitStorageFeatures {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	storageBuffer8BitAccess: VkBool32,
-	uniformAndStorageBuffer8BitAccess: VkBool32,
-	storagePushConstant8: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub storageBuffer8BitAccess: VkBool32,
+	pub uniformAndStorageBuffer8BitAccess: VkBool32,
+	pub storagePushConstant8: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceDriverProperties {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	driverID: VkDriverId,
-	driverName: [i8; VK_MAX_DRIVER_NAME_SIZE as usize],
-	driverInfo: [i8; VK_MAX_DRIVER_INFO_SIZE as usize],
-	conformanceVersion: VkConformanceVersion,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub driverID: VkDriverId,
+	pub driverName: [i8; VK_MAX_DRIVER_NAME_SIZE as usize],
+	pub driverInfo: [i8; VK_MAX_DRIVER_INFO_SIZE as usize],
+	pub conformanceVersion: VkConformanceVersion,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceShaderAtomicInt64Features {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	shaderBufferInt64Atomics: VkBool32,
-	shaderSharedInt64Atomics: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub shaderBufferInt64Atomics: VkBool32,
+	pub shaderSharedInt64Atomics: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceShaderFloat16Int8Features {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	shaderFloat16: VkBool32,
-	shaderInt8: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub shaderFloat16: VkBool32,
+	pub shaderInt8: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceFloatControlsProperties {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	denormBehaviorIndependence: VkShaderFloatControlsIndependence,
-	roundingModeIndependence: VkShaderFloatControlsIndependence,
-	shaderSignedZeroInfNanPreserveFloat16: VkBool32,
-	shaderSignedZeroInfNanPreserveFloat32: VkBool32,
-	shaderSignedZeroInfNanPreserveFloat64: VkBool32,
-	shaderDenormPreserveFloat16: VkBool32,
-	shaderDenormPreserveFloat32: VkBool32,
-	shaderDenormPreserveFloat64: VkBool32,
-	shaderDenormFlushToZeroFloat16: VkBool32,
-	shaderDenormFlushToZeroFloat32: VkBool32,
-	shaderDenormFlushToZeroFloat64: VkBool32,
-	shaderRoundingModeRTEFloat16: VkBool32,
-	shaderRoundingModeRTEFloat32: VkBool32,
-	shaderRoundingModeRTEFloat64: VkBool32,
-	shaderRoundingModeRTZFloat16: VkBool32,
-	shaderRoundingModeRTZFloat32: VkBool32,
-	shaderRoundingModeRTZFloat64: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub denormBehaviorIndependence: VkShaderFloatControlsIndependence,
+	pub roundingModeIndependence: VkShaderFloatControlsIndependence,
+	pub shaderSignedZeroInfNanPreserveFloat16: VkBool32,
+	pub shaderSignedZeroInfNanPreserveFloat32: VkBool32,
+	pub shaderSignedZeroInfNanPreserveFloat64: VkBool32,
+	pub shaderDenormPreserveFloat16: VkBool32,
+	pub shaderDenormPreserveFloat32: VkBool32,
+	pub shaderDenormPreserveFloat64: VkBool32,
+	pub shaderDenormFlushToZeroFloat16: VkBool32,
+	pub shaderDenormFlushToZeroFloat32: VkBool32,
+	pub shaderDenormFlushToZeroFloat64: VkBool32,
+	pub shaderRoundingModeRTEFloat16: VkBool32,
+	pub shaderRoundingModeRTEFloat32: VkBool32,
+	pub shaderRoundingModeRTEFloat64: VkBool32,
+	pub shaderRoundingModeRTZFloat16: VkBool32,
+	pub shaderRoundingModeRTZFloat32: VkBool32,
+	pub shaderRoundingModeRTZFloat64: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDescriptorSetLayoutBindingFlagsCreateInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	bindingCount: u32,
-	pBindingFlags: *const VkDescriptorBindingFlags,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub bindingCount: u32,
+	pub pBindingFlags: *const VkDescriptorBindingFlags,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceDescriptorIndexingFeatures {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	shaderInputAttachmentArrayDynamicIndexing: VkBool32,
-	shaderUniformTexelBufferArrayDynamicIndexing: VkBool32,
-	shaderStorageTexelBufferArrayDynamicIndexing: VkBool32,
-	shaderUniformBufferArrayNonUniformIndexing: VkBool32,
-	shaderSampledImageArrayNonUniformIndexing: VkBool32,
-	shaderStorageBufferArrayNonUniformIndexing: VkBool32,
-	shaderStorageImageArrayNonUniformIndexing: VkBool32,
-	shaderInputAttachmentArrayNonUniformIndexing: VkBool32,
-	shaderUniformTexelBufferArrayNonUniformIndexing: VkBool32,
-	shaderStorageTexelBufferArrayNonUniformIndexing: VkBool32,
-	descriptorBindingUniformBufferUpdateAfterBind: VkBool32,
-	descriptorBindingSampledImageUpdateAfterBind: VkBool32,
-	descriptorBindingStorageImageUpdateAfterBind: VkBool32,
-	descriptorBindingStorageBufferUpdateAfterBind: VkBool32,
-	descriptorBindingUniformTexelBufferUpdateAfterBind: VkBool32,
-	descriptorBindingStorageTexelBufferUpdateAfterBind: VkBool32,
-	descriptorBindingUpdateUnusedWhilePending: VkBool32,
-	descriptorBindingPartiallyBound: VkBool32,
-	descriptorBindingVariableDescriptorCount: VkBool32,
-	runtimeDescriptorArray: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub shaderInputAttachmentArrayDynamicIndexing: VkBool32,
+	pub shaderUniformTexelBufferArrayDynamicIndexing: VkBool32,
+	pub shaderStorageTexelBufferArrayDynamicIndexing: VkBool32,
+	pub shaderUniformBufferArrayNonUniformIndexing: VkBool32,
+	pub shaderSampledImageArrayNonUniformIndexing: VkBool32,
+	pub shaderStorageBufferArrayNonUniformIndexing: VkBool32,
+	pub shaderStorageImageArrayNonUniformIndexing: VkBool32,
+	pub shaderInputAttachmentArrayNonUniformIndexing: VkBool32,
+	pub shaderUniformTexelBufferArrayNonUniformIndexing: VkBool32,
+	pub shaderStorageTexelBufferArrayNonUniformIndexing: VkBool32,
+	pub descriptorBindingUniformBufferUpdateAfterBind: VkBool32,
+	pub descriptorBindingSampledImageUpdateAfterBind: VkBool32,
+	pub descriptorBindingStorageImageUpdateAfterBind: VkBool32,
+	pub descriptorBindingStorageBufferUpdateAfterBind: VkBool32,
+	pub descriptorBindingUniformTexelBufferUpdateAfterBind: VkBool32,
+	pub descriptorBindingStorageTexelBufferUpdateAfterBind: VkBool32,
+	pub descriptorBindingUpdateUnusedWhilePending: VkBool32,
+	pub descriptorBindingPartiallyBound: VkBool32,
+	pub descriptorBindingVariableDescriptorCount: VkBool32,
+	pub runtimeDescriptorArray: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceDescriptorIndexingProperties {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	maxUpdateAfterBindDescriptorsInAllPools: u32,
-	shaderUniformBufferArrayNonUniformIndexingNative: VkBool32,
-	shaderSampledImageArrayNonUniformIndexingNative: VkBool32,
-	shaderStorageBufferArrayNonUniformIndexingNative: VkBool32,
-	shaderStorageImageArrayNonUniformIndexingNative: VkBool32,
-	shaderInputAttachmentArrayNonUniformIndexingNative: VkBool32,
-	robustBufferAccessUpdateAfterBind: VkBool32,
-	quadDivergentImplicitLod: VkBool32,
-	maxPerStageDescriptorUpdateAfterBindSamplers: u32,
-	maxPerStageDescriptorUpdateAfterBindUniformBuffers: u32,
-	maxPerStageDescriptorUpdateAfterBindStorageBuffers: u32,
-	maxPerStageDescriptorUpdateAfterBindSampledImages: u32,
-	maxPerStageDescriptorUpdateAfterBindStorageImages: u32,
-	maxPerStageDescriptorUpdateAfterBindInputAttachments: u32,
-	maxPerStageUpdateAfterBindResources: u32,
-	maxDescriptorSetUpdateAfterBindSamplers: u32,
-	maxDescriptorSetUpdateAfterBindUniformBuffers: u32,
-	maxDescriptorSetUpdateAfterBindUniformBuffersDynamic: u32,
-	maxDescriptorSetUpdateAfterBindStorageBuffers: u32,
-	maxDescriptorSetUpdateAfterBindStorageBuffersDynamic: u32,
-	maxDescriptorSetUpdateAfterBindSampledImages: u32,
-	maxDescriptorSetUpdateAfterBindStorageImages: u32,
-	maxDescriptorSetUpdateAfterBindInputAttachments: u32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub maxUpdateAfterBindDescriptorsInAllPools: u32,
+	pub shaderUniformBufferArrayNonUniformIndexingNative: VkBool32,
+	pub shaderSampledImageArrayNonUniformIndexingNative: VkBool32,
+	pub shaderStorageBufferArrayNonUniformIndexingNative: VkBool32,
+	pub shaderStorageImageArrayNonUniformIndexingNative: VkBool32,
+	pub shaderInputAttachmentArrayNonUniformIndexingNative: VkBool32,
+	pub robustBufferAccessUpdateAfterBind: VkBool32,
+	pub quadDivergentImplicitLod: VkBool32,
+	pub maxPerStageDescriptorUpdateAfterBindSamplers: u32,
+	pub maxPerStageDescriptorUpdateAfterBindUniformBuffers: u32,
+	pub maxPerStageDescriptorUpdateAfterBindStorageBuffers: u32,
+	pub maxPerStageDescriptorUpdateAfterBindSampledImages: u32,
+	pub maxPerStageDescriptorUpdateAfterBindStorageImages: u32,
+	pub maxPerStageDescriptorUpdateAfterBindInputAttachments: u32,
+	pub maxPerStageUpdateAfterBindResources: u32,
+	pub maxDescriptorSetUpdateAfterBindSamplers: u32,
+	pub maxDescriptorSetUpdateAfterBindUniformBuffers: u32,
+	pub maxDescriptorSetUpdateAfterBindUniformBuffersDynamic: u32,
+	pub maxDescriptorSetUpdateAfterBindStorageBuffers: u32,
+	pub maxDescriptorSetUpdateAfterBindStorageBuffersDynamic: u32,
+	pub maxDescriptorSetUpdateAfterBindSampledImages: u32,
+	pub maxDescriptorSetUpdateAfterBindStorageImages: u32,
+	pub maxDescriptorSetUpdateAfterBindInputAttachments: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDescriptorSetVariableDescriptorCountAllocateInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	descriptorSetCount: u32,
-	pDescriptorCounts: *const uint32_t,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub descriptorSetCount: u32,
+	pub pDescriptorCounts: *const uint32_t,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDescriptorSetVariableDescriptorCountLayoutSupport {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	maxVariableDescriptorCount: u32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub maxVariableDescriptorCount: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkSubpassDescriptionDepthStencilResolve {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	depthResolveMode: VkResolveModeFlagBits,
-	stencilResolveMode: VkResolveModeFlagBits,
-	pDepthStencilResolveAttachment: *const VkAttachmentReference2,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub depthResolveMode: VkResolveModeFlagBits,
+	pub stencilResolveMode: VkResolveModeFlagBits,
+	pub pDepthStencilResolveAttachment: *const VkAttachmentReference2,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceDepthStencilResolveProperties {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	supportedDepthResolveModes: VkResolveModeFlags,
-	supportedStencilResolveModes: VkResolveModeFlags,
-	independentResolveNone: VkBool32,
-	independentResolve: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub supportedDepthResolveModes: VkResolveModeFlags,
+	pub supportedStencilResolveModes: VkResolveModeFlags,
+	pub independentResolveNone: VkBool32,
+	pub independentResolve: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceScalarBlockLayoutFeatures {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	scalarBlockLayout: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub scalarBlockLayout: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkImageStencilUsageCreateInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	stencilUsage: VkImageUsageFlags,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub stencilUsage: VkImageUsageFlags,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkSamplerReductionModeCreateInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	reductionMode: VkSamplerReductionMode,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub reductionMode: VkSamplerReductionMode,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceSamplerFilterMinmaxProperties {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	filterMinmaxSingleComponentFormats: VkBool32,
-	filterMinmaxImageComponentMapping: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub filterMinmaxSingleComponentFormats: VkBool32,
+	pub filterMinmaxImageComponentMapping: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceVulkanMemoryModelFeatures {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	vulkanMemoryModel: VkBool32,
-	vulkanMemoryModelDeviceScope: VkBool32,
-	vulkanMemoryModelAvailabilityVisibilityChains: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub vulkanMemoryModel: VkBool32,
+	pub vulkanMemoryModelDeviceScope: VkBool32,
+	pub vulkanMemoryModelAvailabilityVisibilityChains: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceImagelessFramebufferFeatures {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	imagelessFramebuffer: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub imagelessFramebuffer: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkFramebufferAttachmentImageInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkImageCreateFlags,
-	usage: VkImageUsageFlags,
-	width: u32,
-	height: u32,
-	layerCount: u32,
-	viewFormatCount: u32,
-	pViewFormats: *const VkFormat,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkImageCreateFlags,
+	pub usage: VkImageUsageFlags,
+	pub width: u32,
+	pub height: u32,
+	pub layerCount: u32,
+	pub viewFormatCount: u32,
+	pub pViewFormats: *const VkFormat,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkFramebufferAttachmentsCreateInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	attachmentImageInfoCount: u32,
-	pAttachmentImageInfos: *const VkFramebufferAttachmentImageInfo,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub attachmentImageInfoCount: u32,
+	pub pAttachmentImageInfos: *const VkFramebufferAttachmentImageInfo,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkRenderPassAttachmentBeginInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	attachmentCount: u32,
-	pAttachments: *const VkImageView,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub attachmentCount: u32,
+	pub pAttachments: *const VkImageView,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceUniformBufferStandardLayoutFeatures {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	uniformBufferStandardLayout: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub uniformBufferStandardLayout: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceShaderSubgroupExtendedTypesFeatures {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	shaderSubgroupExtendedTypes: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub shaderSubgroupExtendedTypes: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceSeparateDepthStencilLayoutsFeatures {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	separateDepthStencilLayouts: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub separateDepthStencilLayouts: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkAttachmentReferenceStencilLayout {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	stencilLayout: VkImageLayout,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub stencilLayout: VkImageLayout,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkAttachmentDescriptionStencilLayout {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	stencilInitialLayout: VkImageLayout,
-	stencilFinalLayout: VkImageLayout,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub stencilInitialLayout: VkImageLayout,
+	pub stencilFinalLayout: VkImageLayout,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceHostQueryResetFeatures {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	hostQueryReset: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub hostQueryReset: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceTimelineSemaphoreFeatures {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	timelineSemaphore: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub timelineSemaphore: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceTimelineSemaphoreProperties {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	maxTimelineSemaphoreValueDifference: u64,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub maxTimelineSemaphoreValueDifference: u64,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkSemaphoreTypeCreateInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	semaphoreType: VkSemaphoreType,
-	initialValue: u64,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub semaphoreType: VkSemaphoreType,
+	pub initialValue: u64,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkTimelineSemaphoreSubmitInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	waitSemaphoreValueCount: u32,
-	pWaitSemaphoreValues: *const uint64_t,
-	signalSemaphoreValueCount: u32,
-	pSignalSemaphoreValues: *const uint64_t,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub waitSemaphoreValueCount: u32,
+	pub pWaitSemaphoreValues: *const uint64_t,
+	pub signalSemaphoreValueCount: u32,
+	pub pSignalSemaphoreValues: *const uint64_t,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkSemaphoreWaitInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkSemaphoreWaitFlags,
-	semaphoreCount: u32,
-	pSemaphores: *const VkSemaphore,
-	pValues: *const uint64_t,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkSemaphoreWaitFlags,
+	pub semaphoreCount: u32,
+	pub pSemaphores: *const VkSemaphore,
+	pub pValues: *const uint64_t,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkSemaphoreSignalInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	semaphore: VkSemaphore,
-	value: u64,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub semaphore: VkSemaphore,
+	pub value: u64,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceBufferDeviceAddressFeatures {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	bufferDeviceAddress: VkBool32,
-	bufferDeviceAddressCaptureReplay: VkBool32,
-	bufferDeviceAddressMultiDevice: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub bufferDeviceAddress: VkBool32,
+	pub bufferDeviceAddressCaptureReplay: VkBool32,
+	pub bufferDeviceAddressMultiDevice: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkBufferDeviceAddressInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	buffer: VkBuffer,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub buffer: VkBuffer,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkBufferOpaqueCaptureAddressCreateInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	opaqueCaptureAddress: u64,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub opaqueCaptureAddress: u64,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkMemoryOpaqueCaptureAddressAllocateInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	opaqueCaptureAddress: u64,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub opaqueCaptureAddress: u64,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDeviceMemoryOpaqueCaptureAddressInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	memory: VkDeviceMemory,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub memory: VkDeviceMemory,
 }
 type PFN_vkCmdDrawIndirectCount = extern "system" fn(commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize, countBuffer: VkBuffer, countBufferOffset: VkDeviceSize, maxDrawCount: u32, stride: u32);
 type PFN_vkCmdDrawIndexedIndirectCount = extern "system" fn(commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize, countBuffer: VkBuffer, countBufferOffset: VkDeviceSize, maxDrawCount: u32, stride: u32);
@@ -8089,22 +8104,23 @@ impl Vulkan_VERSION_1_2 {
 		}
 	}
 }
-type VkFlags64 = u64;
-type VkPipelineCreationFeedbackFlags = VkFlags;
-type VkToolPurposeFlags = VkFlags;
-type VkPrivateDataSlotCreateFlags = VkFlags;
-type VkPipelineStageFlags2 = VkFlags64;
-type VkPipelineStageFlagBits2 = VkFlags64;
-type VkAccessFlags2 = VkFlags64;
-type VkAccessFlagBits2 = VkFlags64;
-type VkSubmitFlags = VkFlags;
-type VkRenderingFlags = VkFlags;
-type VkFormatFeatureFlags2 = VkFlags64;
-type VkFormatFeatureFlagBits2 = VkFlags64;
+pub const VK_API_VERSION_1_3: u32 = 0x403000;
+pub type VkFlags64 = u64;
+pub type VkPipelineCreationFeedbackFlags = VkFlags;
+pub type VkToolPurposeFlags = VkFlags;
+pub type VkPrivateDataSlotCreateFlags = VkFlags;
+pub type VkPipelineStageFlags2 = VkFlags64;
+pub type VkPipelineStageFlagBits2 = VkFlags64;
+pub type VkAccessFlags2 = VkFlags64;
+pub type VkAccessFlagBits2 = VkFlags64;
+pub type VkSubmitFlags = VkFlags;
+pub type VkRenderingFlags = VkFlags;
+pub type VkFormatFeatureFlags2 = VkFlags64;
+pub type VkFormatFeatureFlagBits2 = VkFlags64;
 // Define non-dispatchable handle `VkPrivateDataSlot`
-#[cfg(target_pointer_width = "32")] type VkPrivateDataSlot = u64;
+#[cfg(target_pointer_width = "32")] pub type VkPrivateDataSlot = u64;
 #[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkPrivateDataSlot_T {}
-#[cfg(target_pointer_width = "64")] type VkPrivateDataSlot = *const VkPrivateDataSlot_T;
+#[cfg(target_pointer_width = "64")] pub type VkPrivateDataSlot = *const VkPrivateDataSlot_T;
 #[repr(C)]
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum VkPipelineCreationFeedbackFlagBits {
@@ -8166,586 +8182,586 @@ impl VkRenderingFlagBits {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceVulkan13Features {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	robustImageAccess: VkBool32,
-	inlineUniformBlock: VkBool32,
-	descriptorBindingInlineUniformBlockUpdateAfterBind: VkBool32,
-	pipelineCreationCacheControl: VkBool32,
-	privateData: VkBool32,
-	shaderDemoteToHelperInvocation: VkBool32,
-	shaderTerminateInvocation: VkBool32,
-	subgroupSizeControl: VkBool32,
-	computeFullSubgroups: VkBool32,
-	synchronization2: VkBool32,
-	textureCompressionASTC_HDR: VkBool32,
-	shaderZeroInitializeWorkgroupMemory: VkBool32,
-	dynamicRendering: VkBool32,
-	shaderIntegerDotProduct: VkBool32,
-	maintenance4: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub robustImageAccess: VkBool32,
+	pub inlineUniformBlock: VkBool32,
+	pub descriptorBindingInlineUniformBlockUpdateAfterBind: VkBool32,
+	pub pipelineCreationCacheControl: VkBool32,
+	pub privateData: VkBool32,
+	pub shaderDemoteToHelperInvocation: VkBool32,
+	pub shaderTerminateInvocation: VkBool32,
+	pub subgroupSizeControl: VkBool32,
+	pub computeFullSubgroups: VkBool32,
+	pub synchronization2: VkBool32,
+	pub textureCompressionASTC_HDR: VkBool32,
+	pub shaderZeroInitializeWorkgroupMemory: VkBool32,
+	pub dynamicRendering: VkBool32,
+	pub shaderIntegerDotProduct: VkBool32,
+	pub maintenance4: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceVulkan13Properties {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	minSubgroupSize: u32,
-	maxSubgroupSize: u32,
-	maxComputeWorkgroupSubgroups: u32,
-	requiredSubgroupSizeStages: VkShaderStageFlags,
-	maxInlineUniformBlockSize: u32,
-	maxPerStageDescriptorInlineUniformBlocks: u32,
-	maxPerStageDescriptorUpdateAfterBindInlineUniformBlocks: u32,
-	maxDescriptorSetInlineUniformBlocks: u32,
-	maxDescriptorSetUpdateAfterBindInlineUniformBlocks: u32,
-	maxInlineUniformTotalSize: u32,
-	integerDotProduct8BitUnsignedAccelerated: VkBool32,
-	integerDotProduct8BitSignedAccelerated: VkBool32,
-	integerDotProduct8BitMixedSignednessAccelerated: VkBool32,
-	integerDotProduct4x8BitPackedUnsignedAccelerated: VkBool32,
-	integerDotProduct4x8BitPackedSignedAccelerated: VkBool32,
-	integerDotProduct4x8BitPackedMixedSignednessAccelerated: VkBool32,
-	integerDotProduct16BitUnsignedAccelerated: VkBool32,
-	integerDotProduct16BitSignedAccelerated: VkBool32,
-	integerDotProduct16BitMixedSignednessAccelerated: VkBool32,
-	integerDotProduct32BitUnsignedAccelerated: VkBool32,
-	integerDotProduct32BitSignedAccelerated: VkBool32,
-	integerDotProduct32BitMixedSignednessAccelerated: VkBool32,
-	integerDotProduct64BitUnsignedAccelerated: VkBool32,
-	integerDotProduct64BitSignedAccelerated: VkBool32,
-	integerDotProduct64BitMixedSignednessAccelerated: VkBool32,
-	integerDotProductAccumulatingSaturating8BitUnsignedAccelerated: VkBool32,
-	integerDotProductAccumulatingSaturating8BitSignedAccelerated: VkBool32,
-	integerDotProductAccumulatingSaturating8BitMixedSignednessAccelerated: VkBool32,
-	integerDotProductAccumulatingSaturating4x8BitPackedUnsignedAccelerated: VkBool32,
-	integerDotProductAccumulatingSaturating4x8BitPackedSignedAccelerated: VkBool32,
-	integerDotProductAccumulatingSaturating4x8BitPackedMixedSignednessAccelerated: VkBool32,
-	integerDotProductAccumulatingSaturating16BitUnsignedAccelerated: VkBool32,
-	integerDotProductAccumulatingSaturating16BitSignedAccelerated: VkBool32,
-	integerDotProductAccumulatingSaturating16BitMixedSignednessAccelerated: VkBool32,
-	integerDotProductAccumulatingSaturating32BitUnsignedAccelerated: VkBool32,
-	integerDotProductAccumulatingSaturating32BitSignedAccelerated: VkBool32,
-	integerDotProductAccumulatingSaturating32BitMixedSignednessAccelerated: VkBool32,
-	integerDotProductAccumulatingSaturating64BitUnsignedAccelerated: VkBool32,
-	integerDotProductAccumulatingSaturating64BitSignedAccelerated: VkBool32,
-	integerDotProductAccumulatingSaturating64BitMixedSignednessAccelerated: VkBool32,
-	storageTexelBufferOffsetAlignmentBytes: VkDeviceSize,
-	storageTexelBufferOffsetSingleTexelAlignment: VkBool32,
-	uniformTexelBufferOffsetAlignmentBytes: VkDeviceSize,
-	uniformTexelBufferOffsetSingleTexelAlignment: VkBool32,
-	maxBufferSize: VkDeviceSize,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub minSubgroupSize: u32,
+	pub maxSubgroupSize: u32,
+	pub maxComputeWorkgroupSubgroups: u32,
+	pub requiredSubgroupSizeStages: VkShaderStageFlags,
+	pub maxInlineUniformBlockSize: u32,
+	pub maxPerStageDescriptorInlineUniformBlocks: u32,
+	pub maxPerStageDescriptorUpdateAfterBindInlineUniformBlocks: u32,
+	pub maxDescriptorSetInlineUniformBlocks: u32,
+	pub maxDescriptorSetUpdateAfterBindInlineUniformBlocks: u32,
+	pub maxInlineUniformTotalSize: u32,
+	pub integerDotProduct8BitUnsignedAccelerated: VkBool32,
+	pub integerDotProduct8BitSignedAccelerated: VkBool32,
+	pub integerDotProduct8BitMixedSignednessAccelerated: VkBool32,
+	pub integerDotProduct4x8BitPackedUnsignedAccelerated: VkBool32,
+	pub integerDotProduct4x8BitPackedSignedAccelerated: VkBool32,
+	pub integerDotProduct4x8BitPackedMixedSignednessAccelerated: VkBool32,
+	pub integerDotProduct16BitUnsignedAccelerated: VkBool32,
+	pub integerDotProduct16BitSignedAccelerated: VkBool32,
+	pub integerDotProduct16BitMixedSignednessAccelerated: VkBool32,
+	pub integerDotProduct32BitUnsignedAccelerated: VkBool32,
+	pub integerDotProduct32BitSignedAccelerated: VkBool32,
+	pub integerDotProduct32BitMixedSignednessAccelerated: VkBool32,
+	pub integerDotProduct64BitUnsignedAccelerated: VkBool32,
+	pub integerDotProduct64BitSignedAccelerated: VkBool32,
+	pub integerDotProduct64BitMixedSignednessAccelerated: VkBool32,
+	pub integerDotProductAccumulatingSaturating8BitUnsignedAccelerated: VkBool32,
+	pub integerDotProductAccumulatingSaturating8BitSignedAccelerated: VkBool32,
+	pub integerDotProductAccumulatingSaturating8BitMixedSignednessAccelerated: VkBool32,
+	pub integerDotProductAccumulatingSaturating4x8BitPackedUnsignedAccelerated: VkBool32,
+	pub integerDotProductAccumulatingSaturating4x8BitPackedSignedAccelerated: VkBool32,
+	pub integerDotProductAccumulatingSaturating4x8BitPackedMixedSignednessAccelerated: VkBool32,
+	pub integerDotProductAccumulatingSaturating16BitUnsignedAccelerated: VkBool32,
+	pub integerDotProductAccumulatingSaturating16BitSignedAccelerated: VkBool32,
+	pub integerDotProductAccumulatingSaturating16BitMixedSignednessAccelerated: VkBool32,
+	pub integerDotProductAccumulatingSaturating32BitUnsignedAccelerated: VkBool32,
+	pub integerDotProductAccumulatingSaturating32BitSignedAccelerated: VkBool32,
+	pub integerDotProductAccumulatingSaturating32BitMixedSignednessAccelerated: VkBool32,
+	pub integerDotProductAccumulatingSaturating64BitUnsignedAccelerated: VkBool32,
+	pub integerDotProductAccumulatingSaturating64BitSignedAccelerated: VkBool32,
+	pub integerDotProductAccumulatingSaturating64BitMixedSignednessAccelerated: VkBool32,
+	pub storageTexelBufferOffsetAlignmentBytes: VkDeviceSize,
+	pub storageTexelBufferOffsetSingleTexelAlignment: VkBool32,
+	pub uniformTexelBufferOffsetAlignmentBytes: VkDeviceSize,
+	pub uniformTexelBufferOffsetSingleTexelAlignment: VkBool32,
+	pub maxBufferSize: VkDeviceSize,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPipelineCreationFeedback {
-	flags: VkPipelineCreationFeedbackFlags,
-	duration: u64,
+	pub flags: VkPipelineCreationFeedbackFlags,
+	pub duration: u64,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPipelineCreationFeedbackCreateInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	pPipelineCreationFeedback: *mut VkPipelineCreationFeedback,
-	pipelineStageCreationFeedbackCount: u32,
-	pPipelineStageCreationFeedbacks: *mut VkPipelineCreationFeedback,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub pPipelineCreationFeedback: *mut VkPipelineCreationFeedback,
+	pub pipelineStageCreationFeedbackCount: u32,
+	pub pPipelineStageCreationFeedbacks: *mut VkPipelineCreationFeedback,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceShaderTerminateInvocationFeatures {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	shaderTerminateInvocation: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub shaderTerminateInvocation: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceToolProperties {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	name: [i8; VK_MAX_EXTENSION_NAME_SIZE as usize],
-	version: [i8; VK_MAX_EXTENSION_NAME_SIZE as usize],
-	purposes: VkToolPurposeFlags,
-	description: [i8; VK_MAX_DESCRIPTION_SIZE as usize],
-	layer: [i8; VK_MAX_EXTENSION_NAME_SIZE as usize],
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub name: [i8; VK_MAX_EXTENSION_NAME_SIZE as usize],
+	pub version: [i8; VK_MAX_EXTENSION_NAME_SIZE as usize],
+	pub purposes: VkToolPurposeFlags,
+	pub description: [i8; VK_MAX_DESCRIPTION_SIZE as usize],
+	pub layer: [i8; VK_MAX_EXTENSION_NAME_SIZE as usize],
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceShaderDemoteToHelperInvocationFeatures {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	shaderDemoteToHelperInvocation: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub shaderDemoteToHelperInvocation: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDevicePrivateDataFeatures {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	privateData: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub privateData: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDevicePrivateDataCreateInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	privateDataSlotRequestCount: u32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub privateDataSlotRequestCount: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPrivateDataSlotCreateInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkPrivateDataSlotCreateFlags,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkPrivateDataSlotCreateFlags,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDevicePipelineCreationCacheControlFeatures {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	pipelineCreationCacheControl: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub pipelineCreationCacheControl: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkMemoryBarrier2 {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	srcStageMask: VkPipelineStageFlags2,
-	srcAccessMask: VkAccessFlags2,
-	dstStageMask: VkPipelineStageFlags2,
-	dstAccessMask: VkAccessFlags2,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub srcStageMask: VkPipelineStageFlags2,
+	pub srcAccessMask: VkAccessFlags2,
+	pub dstStageMask: VkPipelineStageFlags2,
+	pub dstAccessMask: VkAccessFlags2,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkBufferMemoryBarrier2 {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	srcStageMask: VkPipelineStageFlags2,
-	srcAccessMask: VkAccessFlags2,
-	dstStageMask: VkPipelineStageFlags2,
-	dstAccessMask: VkAccessFlags2,
-	srcQueueFamilyIndex: u32,
-	dstQueueFamilyIndex: u32,
-	buffer: VkBuffer,
-	offset: VkDeviceSize,
-	size: VkDeviceSize,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub srcStageMask: VkPipelineStageFlags2,
+	pub srcAccessMask: VkAccessFlags2,
+	pub dstStageMask: VkPipelineStageFlags2,
+	pub dstAccessMask: VkAccessFlags2,
+	pub srcQueueFamilyIndex: u32,
+	pub dstQueueFamilyIndex: u32,
+	pub buffer: VkBuffer,
+	pub offset: VkDeviceSize,
+	pub size: VkDeviceSize,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkImageMemoryBarrier2 {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	srcStageMask: VkPipelineStageFlags2,
-	srcAccessMask: VkAccessFlags2,
-	dstStageMask: VkPipelineStageFlags2,
-	dstAccessMask: VkAccessFlags2,
-	oldLayout: VkImageLayout,
-	newLayout: VkImageLayout,
-	srcQueueFamilyIndex: u32,
-	dstQueueFamilyIndex: u32,
-	image: VkImage,
-	subresourceRange: VkImageSubresourceRange,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub srcStageMask: VkPipelineStageFlags2,
+	pub srcAccessMask: VkAccessFlags2,
+	pub dstStageMask: VkPipelineStageFlags2,
+	pub dstAccessMask: VkAccessFlags2,
+	pub oldLayout: VkImageLayout,
+	pub newLayout: VkImageLayout,
+	pub srcQueueFamilyIndex: u32,
+	pub dstQueueFamilyIndex: u32,
+	pub image: VkImage,
+	pub subresourceRange: VkImageSubresourceRange,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDependencyInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	dependencyFlags: VkDependencyFlags,
-	memoryBarrierCount: u32,
-	pMemoryBarriers: *const VkMemoryBarrier2,
-	bufferMemoryBarrierCount: u32,
-	pBufferMemoryBarriers: *const VkBufferMemoryBarrier2,
-	imageMemoryBarrierCount: u32,
-	pImageMemoryBarriers: *const VkImageMemoryBarrier2,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub dependencyFlags: VkDependencyFlags,
+	pub memoryBarrierCount: u32,
+	pub pMemoryBarriers: *const VkMemoryBarrier2,
+	pub bufferMemoryBarrierCount: u32,
+	pub pBufferMemoryBarriers: *const VkBufferMemoryBarrier2,
+	pub imageMemoryBarrierCount: u32,
+	pub pImageMemoryBarriers: *const VkImageMemoryBarrier2,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkSemaphoreSubmitInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	semaphore: VkSemaphore,
-	value: u64,
-	stageMask: VkPipelineStageFlags2,
-	deviceIndex: u32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub semaphore: VkSemaphore,
+	pub value: u64,
+	pub stageMask: VkPipelineStageFlags2,
+	pub deviceIndex: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkCommandBufferSubmitInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	commandBuffer: VkCommandBuffer,
-	deviceMask: u32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub commandBuffer: VkCommandBuffer,
+	pub deviceMask: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkSubmitInfo2 {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkSubmitFlags,
-	waitSemaphoreInfoCount: u32,
-	pWaitSemaphoreInfos: *const VkSemaphoreSubmitInfo,
-	commandBufferInfoCount: u32,
-	pCommandBufferInfos: *const VkCommandBufferSubmitInfo,
-	signalSemaphoreInfoCount: u32,
-	pSignalSemaphoreInfos: *const VkSemaphoreSubmitInfo,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkSubmitFlags,
+	pub waitSemaphoreInfoCount: u32,
+	pub pWaitSemaphoreInfos: *const VkSemaphoreSubmitInfo,
+	pub commandBufferInfoCount: u32,
+	pub pCommandBufferInfos: *const VkCommandBufferSubmitInfo,
+	pub signalSemaphoreInfoCount: u32,
+	pub pSignalSemaphoreInfos: *const VkSemaphoreSubmitInfo,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceSynchronization2Features {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	synchronization2: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub synchronization2: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceZeroInitializeWorkgroupMemoryFeatures {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	shaderZeroInitializeWorkgroupMemory: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub shaderZeroInitializeWorkgroupMemory: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceImageRobustnessFeatures {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	robustImageAccess: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub robustImageAccess: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkBufferCopy2 {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	srcOffset: VkDeviceSize,
-	dstOffset: VkDeviceSize,
-	size: VkDeviceSize,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub srcOffset: VkDeviceSize,
+	pub dstOffset: VkDeviceSize,
+	pub size: VkDeviceSize,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkCopyBufferInfo2 {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	srcBuffer: VkBuffer,
-	dstBuffer: VkBuffer,
-	regionCount: u32,
-	pRegions: *const VkBufferCopy2,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub srcBuffer: VkBuffer,
+	pub dstBuffer: VkBuffer,
+	pub regionCount: u32,
+	pub pRegions: *const VkBufferCopy2,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkImageCopy2 {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	srcSubresource: VkImageSubresourceLayers,
-	srcOffset: VkOffset3D,
-	dstSubresource: VkImageSubresourceLayers,
-	dstOffset: VkOffset3D,
-	extent: VkExtent3D,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub srcSubresource: VkImageSubresourceLayers,
+	pub srcOffset: VkOffset3D,
+	pub dstSubresource: VkImageSubresourceLayers,
+	pub dstOffset: VkOffset3D,
+	pub extent: VkExtent3D,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkCopyImageInfo2 {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	srcImage: VkImage,
-	srcImageLayout: VkImageLayout,
-	dstImage: VkImage,
-	dstImageLayout: VkImageLayout,
-	regionCount: u32,
-	pRegions: *const VkImageCopy2,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub srcImage: VkImage,
+	pub srcImageLayout: VkImageLayout,
+	pub dstImage: VkImage,
+	pub dstImageLayout: VkImageLayout,
+	pub regionCount: u32,
+	pub pRegions: *const VkImageCopy2,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkBufferImageCopy2 {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	bufferOffset: VkDeviceSize,
-	bufferRowLength: u32,
-	bufferImageHeight: u32,
-	imageSubresource: VkImageSubresourceLayers,
-	imageOffset: VkOffset3D,
-	imageExtent: VkExtent3D,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub bufferOffset: VkDeviceSize,
+	pub bufferRowLength: u32,
+	pub bufferImageHeight: u32,
+	pub imageSubresource: VkImageSubresourceLayers,
+	pub imageOffset: VkOffset3D,
+	pub imageExtent: VkExtent3D,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkCopyBufferToImageInfo2 {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	srcBuffer: VkBuffer,
-	dstImage: VkImage,
-	dstImageLayout: VkImageLayout,
-	regionCount: u32,
-	pRegions: *const VkBufferImageCopy2,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub srcBuffer: VkBuffer,
+	pub dstImage: VkImage,
+	pub dstImageLayout: VkImageLayout,
+	pub regionCount: u32,
+	pub pRegions: *const VkBufferImageCopy2,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkCopyImageToBufferInfo2 {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	srcImage: VkImage,
-	srcImageLayout: VkImageLayout,
-	dstBuffer: VkBuffer,
-	regionCount: u32,
-	pRegions: *const VkBufferImageCopy2,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub srcImage: VkImage,
+	pub srcImageLayout: VkImageLayout,
+	pub dstBuffer: VkBuffer,
+	pub regionCount: u32,
+	pub pRegions: *const VkBufferImageCopy2,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkImageBlit2 {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	srcSubresource: VkImageSubresourceLayers,
-	srcOffsets: [VkOffset3D; 2 as usize],
-	dstSubresource: VkImageSubresourceLayers,
-	dstOffsets: [VkOffset3D; 2 as usize],
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub srcSubresource: VkImageSubresourceLayers,
+	pub srcOffsets: [VkOffset3D; 2 as usize],
+	pub dstSubresource: VkImageSubresourceLayers,
+	pub dstOffsets: [VkOffset3D; 2 as usize],
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkBlitImageInfo2 {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	srcImage: VkImage,
-	srcImageLayout: VkImageLayout,
-	dstImage: VkImage,
-	dstImageLayout: VkImageLayout,
-	regionCount: u32,
-	pRegions: *const VkImageBlit2,
-	filter: VkFilter,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub srcImage: VkImage,
+	pub srcImageLayout: VkImageLayout,
+	pub dstImage: VkImage,
+	pub dstImageLayout: VkImageLayout,
+	pub regionCount: u32,
+	pub pRegions: *const VkImageBlit2,
+	pub filter: VkFilter,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkImageResolve2 {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	srcSubresource: VkImageSubresourceLayers,
-	srcOffset: VkOffset3D,
-	dstSubresource: VkImageSubresourceLayers,
-	dstOffset: VkOffset3D,
-	extent: VkExtent3D,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub srcSubresource: VkImageSubresourceLayers,
+	pub srcOffset: VkOffset3D,
+	pub dstSubresource: VkImageSubresourceLayers,
+	pub dstOffset: VkOffset3D,
+	pub extent: VkExtent3D,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkResolveImageInfo2 {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	srcImage: VkImage,
-	srcImageLayout: VkImageLayout,
-	dstImage: VkImage,
-	dstImageLayout: VkImageLayout,
-	regionCount: u32,
-	pRegions: *const VkImageResolve2,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub srcImage: VkImage,
+	pub srcImageLayout: VkImageLayout,
+	pub dstImage: VkImage,
+	pub dstImageLayout: VkImageLayout,
+	pub regionCount: u32,
+	pub pRegions: *const VkImageResolve2,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceSubgroupSizeControlFeatures {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	subgroupSizeControl: VkBool32,
-	computeFullSubgroups: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub subgroupSizeControl: VkBool32,
+	pub computeFullSubgroups: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceSubgroupSizeControlProperties {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	minSubgroupSize: u32,
-	maxSubgroupSize: u32,
-	maxComputeWorkgroupSubgroups: u32,
-	requiredSubgroupSizeStages: VkShaderStageFlags,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub minSubgroupSize: u32,
+	pub maxSubgroupSize: u32,
+	pub maxComputeWorkgroupSubgroups: u32,
+	pub requiredSubgroupSizeStages: VkShaderStageFlags,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPipelineShaderStageRequiredSubgroupSizeCreateInfo {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	requiredSubgroupSize: u32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub requiredSubgroupSize: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceInlineUniformBlockFeatures {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	inlineUniformBlock: VkBool32,
-	descriptorBindingInlineUniformBlockUpdateAfterBind: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub inlineUniformBlock: VkBool32,
+	pub descriptorBindingInlineUniformBlockUpdateAfterBind: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceInlineUniformBlockProperties {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	maxInlineUniformBlockSize: u32,
-	maxPerStageDescriptorInlineUniformBlocks: u32,
-	maxPerStageDescriptorUpdateAfterBindInlineUniformBlocks: u32,
-	maxDescriptorSetInlineUniformBlocks: u32,
-	maxDescriptorSetUpdateAfterBindInlineUniformBlocks: u32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub maxInlineUniformBlockSize: u32,
+	pub maxPerStageDescriptorInlineUniformBlocks: u32,
+	pub maxPerStageDescriptorUpdateAfterBindInlineUniformBlocks: u32,
+	pub maxDescriptorSetInlineUniformBlocks: u32,
+	pub maxDescriptorSetUpdateAfterBindInlineUniformBlocks: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkWriteDescriptorSetInlineUniformBlock {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	dataSize: u32,
-	pData: *const c_void,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub dataSize: u32,
+	pub pData: *const c_void,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDescriptorPoolInlineUniformBlockCreateInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	maxInlineUniformBlockBindings: u32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub maxInlineUniformBlockBindings: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceTextureCompressionASTCHDRFeatures {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	textureCompressionASTC_HDR: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub textureCompressionASTC_HDR: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkRenderingAttachmentInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	imageView: VkImageView,
-	imageLayout: VkImageLayout,
-	resolveMode: VkResolveModeFlagBits,
-	resolveImageView: VkImageView,
-	resolveImageLayout: VkImageLayout,
-	loadOp: VkAttachmentLoadOp,
-	storeOp: VkAttachmentStoreOp,
-	clearValue: VkClearValue,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub imageView: VkImageView,
+	pub imageLayout: VkImageLayout,
+	pub resolveMode: VkResolveModeFlagBits,
+	pub resolveImageView: VkImageView,
+	pub resolveImageLayout: VkImageLayout,
+	pub loadOp: VkAttachmentLoadOp,
+	pub storeOp: VkAttachmentStoreOp,
+	pub clearValue: VkClearValue,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkRenderingInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkRenderingFlags,
-	renderArea: VkRect2D,
-	layerCount: u32,
-	viewMask: u32,
-	colorAttachmentCount: u32,
-	pColorAttachments: *const VkRenderingAttachmentInfo,
-	pDepthAttachment: *const VkRenderingAttachmentInfo,
-	pStencilAttachment: *const VkRenderingAttachmentInfo,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkRenderingFlags,
+	pub renderArea: VkRect2D,
+	pub layerCount: u32,
+	pub viewMask: u32,
+	pub colorAttachmentCount: u32,
+	pub pColorAttachments: *const VkRenderingAttachmentInfo,
+	pub pDepthAttachment: *const VkRenderingAttachmentInfo,
+	pub pStencilAttachment: *const VkRenderingAttachmentInfo,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPipelineRenderingCreateInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	viewMask: u32,
-	colorAttachmentCount: u32,
-	pColorAttachmentFormats: *const VkFormat,
-	depthAttachmentFormat: VkFormat,
-	stencilAttachmentFormat: VkFormat,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub viewMask: u32,
+	pub colorAttachmentCount: u32,
+	pub pColorAttachmentFormats: *const VkFormat,
+	pub depthAttachmentFormat: VkFormat,
+	pub stencilAttachmentFormat: VkFormat,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceDynamicRenderingFeatures {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	dynamicRendering: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub dynamicRendering: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkCommandBufferInheritanceRenderingInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkRenderingFlags,
-	viewMask: u32,
-	colorAttachmentCount: u32,
-	pColorAttachmentFormats: *const VkFormat,
-	depthAttachmentFormat: VkFormat,
-	stencilAttachmentFormat: VkFormat,
-	rasterizationSamples: VkSampleCountFlagBits,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkRenderingFlags,
+	pub viewMask: u32,
+	pub colorAttachmentCount: u32,
+	pub pColorAttachmentFormats: *const VkFormat,
+	pub depthAttachmentFormat: VkFormat,
+	pub stencilAttachmentFormat: VkFormat,
+	pub rasterizationSamples: VkSampleCountFlagBits,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceShaderIntegerDotProductFeatures {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	shaderIntegerDotProduct: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub shaderIntegerDotProduct: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceShaderIntegerDotProductProperties {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	integerDotProduct8BitUnsignedAccelerated: VkBool32,
-	integerDotProduct8BitSignedAccelerated: VkBool32,
-	integerDotProduct8BitMixedSignednessAccelerated: VkBool32,
-	integerDotProduct4x8BitPackedUnsignedAccelerated: VkBool32,
-	integerDotProduct4x8BitPackedSignedAccelerated: VkBool32,
-	integerDotProduct4x8BitPackedMixedSignednessAccelerated: VkBool32,
-	integerDotProduct16BitUnsignedAccelerated: VkBool32,
-	integerDotProduct16BitSignedAccelerated: VkBool32,
-	integerDotProduct16BitMixedSignednessAccelerated: VkBool32,
-	integerDotProduct32BitUnsignedAccelerated: VkBool32,
-	integerDotProduct32BitSignedAccelerated: VkBool32,
-	integerDotProduct32BitMixedSignednessAccelerated: VkBool32,
-	integerDotProduct64BitUnsignedAccelerated: VkBool32,
-	integerDotProduct64BitSignedAccelerated: VkBool32,
-	integerDotProduct64BitMixedSignednessAccelerated: VkBool32,
-	integerDotProductAccumulatingSaturating8BitUnsignedAccelerated: VkBool32,
-	integerDotProductAccumulatingSaturating8BitSignedAccelerated: VkBool32,
-	integerDotProductAccumulatingSaturating8BitMixedSignednessAccelerated: VkBool32,
-	integerDotProductAccumulatingSaturating4x8BitPackedUnsignedAccelerated: VkBool32,
-	integerDotProductAccumulatingSaturating4x8BitPackedSignedAccelerated: VkBool32,
-	integerDotProductAccumulatingSaturating4x8BitPackedMixedSignednessAccelerated: VkBool32,
-	integerDotProductAccumulatingSaturating16BitUnsignedAccelerated: VkBool32,
-	integerDotProductAccumulatingSaturating16BitSignedAccelerated: VkBool32,
-	integerDotProductAccumulatingSaturating16BitMixedSignednessAccelerated: VkBool32,
-	integerDotProductAccumulatingSaturating32BitUnsignedAccelerated: VkBool32,
-	integerDotProductAccumulatingSaturating32BitSignedAccelerated: VkBool32,
-	integerDotProductAccumulatingSaturating32BitMixedSignednessAccelerated: VkBool32,
-	integerDotProductAccumulatingSaturating64BitUnsignedAccelerated: VkBool32,
-	integerDotProductAccumulatingSaturating64BitSignedAccelerated: VkBool32,
-	integerDotProductAccumulatingSaturating64BitMixedSignednessAccelerated: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub integerDotProduct8BitUnsignedAccelerated: VkBool32,
+	pub integerDotProduct8BitSignedAccelerated: VkBool32,
+	pub integerDotProduct8BitMixedSignednessAccelerated: VkBool32,
+	pub integerDotProduct4x8BitPackedUnsignedAccelerated: VkBool32,
+	pub integerDotProduct4x8BitPackedSignedAccelerated: VkBool32,
+	pub integerDotProduct4x8BitPackedMixedSignednessAccelerated: VkBool32,
+	pub integerDotProduct16BitUnsignedAccelerated: VkBool32,
+	pub integerDotProduct16BitSignedAccelerated: VkBool32,
+	pub integerDotProduct16BitMixedSignednessAccelerated: VkBool32,
+	pub integerDotProduct32BitUnsignedAccelerated: VkBool32,
+	pub integerDotProduct32BitSignedAccelerated: VkBool32,
+	pub integerDotProduct32BitMixedSignednessAccelerated: VkBool32,
+	pub integerDotProduct64BitUnsignedAccelerated: VkBool32,
+	pub integerDotProduct64BitSignedAccelerated: VkBool32,
+	pub integerDotProduct64BitMixedSignednessAccelerated: VkBool32,
+	pub integerDotProductAccumulatingSaturating8BitUnsignedAccelerated: VkBool32,
+	pub integerDotProductAccumulatingSaturating8BitSignedAccelerated: VkBool32,
+	pub integerDotProductAccumulatingSaturating8BitMixedSignednessAccelerated: VkBool32,
+	pub integerDotProductAccumulatingSaturating4x8BitPackedUnsignedAccelerated: VkBool32,
+	pub integerDotProductAccumulatingSaturating4x8BitPackedSignedAccelerated: VkBool32,
+	pub integerDotProductAccumulatingSaturating4x8BitPackedMixedSignednessAccelerated: VkBool32,
+	pub integerDotProductAccumulatingSaturating16BitUnsignedAccelerated: VkBool32,
+	pub integerDotProductAccumulatingSaturating16BitSignedAccelerated: VkBool32,
+	pub integerDotProductAccumulatingSaturating16BitMixedSignednessAccelerated: VkBool32,
+	pub integerDotProductAccumulatingSaturating32BitUnsignedAccelerated: VkBool32,
+	pub integerDotProductAccumulatingSaturating32BitSignedAccelerated: VkBool32,
+	pub integerDotProductAccumulatingSaturating32BitMixedSignednessAccelerated: VkBool32,
+	pub integerDotProductAccumulatingSaturating64BitUnsignedAccelerated: VkBool32,
+	pub integerDotProductAccumulatingSaturating64BitSignedAccelerated: VkBool32,
+	pub integerDotProductAccumulatingSaturating64BitMixedSignednessAccelerated: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceTexelBufferAlignmentProperties {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	storageTexelBufferOffsetAlignmentBytes: VkDeviceSize,
-	storageTexelBufferOffsetSingleTexelAlignment: VkBool32,
-	uniformTexelBufferOffsetAlignmentBytes: VkDeviceSize,
-	uniformTexelBufferOffsetSingleTexelAlignment: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub storageTexelBufferOffsetAlignmentBytes: VkDeviceSize,
+	pub storageTexelBufferOffsetSingleTexelAlignment: VkBool32,
+	pub uniformTexelBufferOffsetAlignmentBytes: VkDeviceSize,
+	pub uniformTexelBufferOffsetSingleTexelAlignment: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkFormatProperties3 {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	linearTilingFeatures: VkFormatFeatureFlags2,
-	optimalTilingFeatures: VkFormatFeatureFlags2,
-	bufferFeatures: VkFormatFeatureFlags2,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub linearTilingFeatures: VkFormatFeatureFlags2,
+	pub optimalTilingFeatures: VkFormatFeatureFlags2,
+	pub bufferFeatures: VkFormatFeatureFlags2,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceMaintenance4Features {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	maintenance4: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub maintenance4: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceMaintenance4Properties {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	maxBufferSize: VkDeviceSize,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub maxBufferSize: VkDeviceSize,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDeviceBufferMemoryRequirements {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	pCreateInfo: *const VkBufferCreateInfo,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub pCreateInfo: *const VkBufferCreateInfo,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDeviceImageMemoryRequirements {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	pCreateInfo: *const VkImageCreateInfo,
-	planeAspect: VkImageAspectFlagBits,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub pCreateInfo: *const VkImageCreateInfo,
+	pub planeAspect: VkImageAspectFlagBits,
 }
 type PFN_vkGetPhysicalDeviceToolProperties = extern "system" fn(physicalDevice: VkPhysicalDevice, pToolCount: *mut uint32_t, pToolProperties: *mut VkPhysicalDeviceToolProperties) -> VkResult;
 type PFN_vkCreatePrivateDataSlot = extern "system" fn(device: VkDevice, pCreateInfo: *const VkPrivateDataSlotCreateInfo, pAllocator: *const VkAllocationCallbacks, pPrivateDataSlot: *mut VkPrivateDataSlot) -> VkResult;
@@ -9173,13 +9189,14 @@ impl Vulkan_VERSION_1_3 {
 		}
 	}
 }
+pub const VK_API_VERSION_1_4: u32 = 0x404000;
 pub const VK_MAX_GLOBAL_PRIORITY_SIZE: u32 = 16u32;
-type VkMemoryUnmapFlags = VkFlags;
-type VkPipelineCreateFlags2 = VkFlags64;
-type VkPipelineCreateFlagBits2 = VkFlags64;
-type VkBufferUsageFlags2 = VkFlags64;
-type VkBufferUsageFlagBits2 = VkFlags64;
-type VkHostImageCopyFlags = VkFlags;
+pub type VkMemoryUnmapFlags = VkFlags;
+pub type VkPipelineCreateFlags2 = VkFlags64;
+pub type VkPipelineCreateFlagBits2 = VkFlags64;
+pub type VkBufferUsageFlags2 = VkFlags64;
+pub type VkBufferUsageFlagBits2 = VkFlags64;
+pub type VkHostImageCopyFlags = VkFlags;
 #[repr(C)]
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum VkPipelineRobustnessBufferBehavior {
@@ -9268,491 +9285,491 @@ impl VkHostImageCopyFlagBits {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceVulkan14Features {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	globalPriorityQuery: VkBool32,
-	shaderSubgroupRotate: VkBool32,
-	shaderSubgroupRotateClustered: VkBool32,
-	shaderFloatControls2: VkBool32,
-	shaderExpectAssume: VkBool32,
-	rectangularLines: VkBool32,
-	bresenhamLines: VkBool32,
-	smoothLines: VkBool32,
-	stippledRectangularLines: VkBool32,
-	stippledBresenhamLines: VkBool32,
-	stippledSmoothLines: VkBool32,
-	vertexAttributeInstanceRateDivisor: VkBool32,
-	vertexAttributeInstanceRateZeroDivisor: VkBool32,
-	indexTypeUint8: VkBool32,
-	dynamicRenderingLocalRead: VkBool32,
-	maintenance5: VkBool32,
-	maintenance6: VkBool32,
-	pipelineProtectedAccess: VkBool32,
-	pipelineRobustness: VkBool32,
-	hostImageCopy: VkBool32,
-	pushDescriptor: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub globalPriorityQuery: VkBool32,
+	pub shaderSubgroupRotate: VkBool32,
+	pub shaderSubgroupRotateClustered: VkBool32,
+	pub shaderFloatControls2: VkBool32,
+	pub shaderExpectAssume: VkBool32,
+	pub rectangularLines: VkBool32,
+	pub bresenhamLines: VkBool32,
+	pub smoothLines: VkBool32,
+	pub stippledRectangularLines: VkBool32,
+	pub stippledBresenhamLines: VkBool32,
+	pub stippledSmoothLines: VkBool32,
+	pub vertexAttributeInstanceRateDivisor: VkBool32,
+	pub vertexAttributeInstanceRateZeroDivisor: VkBool32,
+	pub indexTypeUint8: VkBool32,
+	pub dynamicRenderingLocalRead: VkBool32,
+	pub maintenance5: VkBool32,
+	pub maintenance6: VkBool32,
+	pub pipelineProtectedAccess: VkBool32,
+	pub pipelineRobustness: VkBool32,
+	pub hostImageCopy: VkBool32,
+	pub pushDescriptor: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceVulkan14Properties {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	lineSubPixelPrecisionBits: u32,
-	maxVertexAttribDivisor: u32,
-	supportsNonZeroFirstInstance: VkBool32,
-	maxPushDescriptors: u32,
-	dynamicRenderingLocalReadDepthStencilAttachments: VkBool32,
-	dynamicRenderingLocalReadMultisampledAttachments: VkBool32,
-	earlyFragmentMultisampleCoverageAfterSampleCounting: VkBool32,
-	earlyFragmentSampleMaskTestBeforeSampleCounting: VkBool32,
-	depthStencilSwizzleOneSupport: VkBool32,
-	polygonModePointSize: VkBool32,
-	nonStrictSinglePixelWideLinesUseParallelogram: VkBool32,
-	nonStrictWideLinesUseParallelogram: VkBool32,
-	blockTexelViewCompatibleMultipleLayers: VkBool32,
-	maxCombinedImageSamplerDescriptorCount: u32,
-	fragmentShadingRateClampCombinerInputs: VkBool32,
-	defaultRobustnessStorageBuffers: VkPipelineRobustnessBufferBehavior,
-	defaultRobustnessUniformBuffers: VkPipelineRobustnessBufferBehavior,
-	defaultRobustnessVertexInputs: VkPipelineRobustnessBufferBehavior,
-	defaultRobustnessImages: VkPipelineRobustnessImageBehavior,
-	copySrcLayoutCount: u32,
-	pCopySrcLayouts: *mut VkImageLayout,
-	copyDstLayoutCount: u32,
-	pCopyDstLayouts: *mut VkImageLayout,
-	optimalTilingLayoutUUID: [u8; VK_UUID_SIZE as usize],
-	identicalMemoryTypeRequirements: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub lineSubPixelPrecisionBits: u32,
+	pub maxVertexAttribDivisor: u32,
+	pub supportsNonZeroFirstInstance: VkBool32,
+	pub maxPushDescriptors: u32,
+	pub dynamicRenderingLocalReadDepthStencilAttachments: VkBool32,
+	pub dynamicRenderingLocalReadMultisampledAttachments: VkBool32,
+	pub earlyFragmentMultisampleCoverageAfterSampleCounting: VkBool32,
+	pub earlyFragmentSampleMaskTestBeforeSampleCounting: VkBool32,
+	pub depthStencilSwizzleOneSupport: VkBool32,
+	pub polygonModePointSize: VkBool32,
+	pub nonStrictSinglePixelWideLinesUseParallelogram: VkBool32,
+	pub nonStrictWideLinesUseParallelogram: VkBool32,
+	pub blockTexelViewCompatibleMultipleLayers: VkBool32,
+	pub maxCombinedImageSamplerDescriptorCount: u32,
+	pub fragmentShadingRateClampCombinerInputs: VkBool32,
+	pub defaultRobustnessStorageBuffers: VkPipelineRobustnessBufferBehavior,
+	pub defaultRobustnessUniformBuffers: VkPipelineRobustnessBufferBehavior,
+	pub defaultRobustnessVertexInputs: VkPipelineRobustnessBufferBehavior,
+	pub defaultRobustnessImages: VkPipelineRobustnessImageBehavior,
+	pub copySrcLayoutCount: u32,
+	pub pCopySrcLayouts: *mut VkImageLayout,
+	pub copyDstLayoutCount: u32,
+	pub pCopyDstLayouts: *mut VkImageLayout,
+	pub optimalTilingLayoutUUID: [u8; VK_UUID_SIZE as usize],
+	pub identicalMemoryTypeRequirements: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDeviceQueueGlobalPriorityCreateInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	globalPriority: VkQueueGlobalPriority,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub globalPriority: VkQueueGlobalPriority,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceGlobalPriorityQueryFeatures {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	globalPriorityQuery: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub globalPriorityQuery: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkQueueFamilyGlobalPriorityProperties {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	priorityCount: u32,
-	priorities: [VkQueueGlobalPriority; VK_MAX_GLOBAL_PRIORITY_SIZE as usize],
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub priorityCount: u32,
+	pub priorities: [VkQueueGlobalPriority; VK_MAX_GLOBAL_PRIORITY_SIZE as usize],
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceShaderSubgroupRotateFeatures {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	shaderSubgroupRotate: VkBool32,
-	shaderSubgroupRotateClustered: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub shaderSubgroupRotate: VkBool32,
+	pub shaderSubgroupRotateClustered: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceShaderFloatControls2Features {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	shaderFloatControls2: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub shaderFloatControls2: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceShaderExpectAssumeFeatures {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	shaderExpectAssume: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub shaderExpectAssume: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceLineRasterizationFeatures {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	rectangularLines: VkBool32,
-	bresenhamLines: VkBool32,
-	smoothLines: VkBool32,
-	stippledRectangularLines: VkBool32,
-	stippledBresenhamLines: VkBool32,
-	stippledSmoothLines: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub rectangularLines: VkBool32,
+	pub bresenhamLines: VkBool32,
+	pub smoothLines: VkBool32,
+	pub stippledRectangularLines: VkBool32,
+	pub stippledBresenhamLines: VkBool32,
+	pub stippledSmoothLines: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceLineRasterizationProperties {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	lineSubPixelPrecisionBits: u32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub lineSubPixelPrecisionBits: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPipelineRasterizationLineStateCreateInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	lineRasterizationMode: VkLineRasterizationMode,
-	stippledLineEnable: VkBool32,
-	lineStippleFactor: u32,
-	lineStipplePattern: u16,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub lineRasterizationMode: VkLineRasterizationMode,
+	pub stippledLineEnable: VkBool32,
+	pub lineStippleFactor: u32,
+	pub lineStipplePattern: u16,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceVertexAttributeDivisorProperties {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	maxVertexAttribDivisor: u32,
-	supportsNonZeroFirstInstance: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub maxVertexAttribDivisor: u32,
+	pub supportsNonZeroFirstInstance: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVertexInputBindingDivisorDescription {
-	binding: u32,
-	divisor: u32,
+	pub binding: u32,
+	pub divisor: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPipelineVertexInputDivisorStateCreateInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	vertexBindingDivisorCount: u32,
-	pVertexBindingDivisors: *const VkVertexInputBindingDivisorDescription,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub vertexBindingDivisorCount: u32,
+	pub pVertexBindingDivisors: *const VkVertexInputBindingDivisorDescription,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceVertexAttributeDivisorFeatures {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	vertexAttributeInstanceRateDivisor: VkBool32,
-	vertexAttributeInstanceRateZeroDivisor: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub vertexAttributeInstanceRateDivisor: VkBool32,
+	pub vertexAttributeInstanceRateZeroDivisor: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceIndexTypeUint8Features {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	indexTypeUint8: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub indexTypeUint8: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkMemoryMapInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkMemoryMapFlags,
-	memory: VkDeviceMemory,
-	offset: VkDeviceSize,
-	size: VkDeviceSize,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkMemoryMapFlags,
+	pub memory: VkDeviceMemory,
+	pub offset: VkDeviceSize,
+	pub size: VkDeviceSize,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkMemoryUnmapInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkMemoryUnmapFlags,
-	memory: VkDeviceMemory,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkMemoryUnmapFlags,
+	pub memory: VkDeviceMemory,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceMaintenance5Features {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	maintenance5: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub maintenance5: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceMaintenance5Properties {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	earlyFragmentMultisampleCoverageAfterSampleCounting: VkBool32,
-	earlyFragmentSampleMaskTestBeforeSampleCounting: VkBool32,
-	depthStencilSwizzleOneSupport: VkBool32,
-	polygonModePointSize: VkBool32,
-	nonStrictSinglePixelWideLinesUseParallelogram: VkBool32,
-	nonStrictWideLinesUseParallelogram: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub earlyFragmentMultisampleCoverageAfterSampleCounting: VkBool32,
+	pub earlyFragmentSampleMaskTestBeforeSampleCounting: VkBool32,
+	pub depthStencilSwizzleOneSupport: VkBool32,
+	pub polygonModePointSize: VkBool32,
+	pub nonStrictSinglePixelWideLinesUseParallelogram: VkBool32,
+	pub nonStrictWideLinesUseParallelogram: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkRenderingAreaInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	viewMask: u32,
-	colorAttachmentCount: u32,
-	pColorAttachmentFormats: *const VkFormat,
-	depthAttachmentFormat: VkFormat,
-	stencilAttachmentFormat: VkFormat,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub viewMask: u32,
+	pub colorAttachmentCount: u32,
+	pub pColorAttachmentFormats: *const VkFormat,
+	pub depthAttachmentFormat: VkFormat,
+	pub stencilAttachmentFormat: VkFormat,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkImageSubresource2 {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	imageSubresource: VkImageSubresource,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub imageSubresource: VkImageSubresource,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDeviceImageSubresourceInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	pCreateInfo: *const VkImageCreateInfo,
-	pSubresource: *const VkImageSubresource2,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub pCreateInfo: *const VkImageCreateInfo,
+	pub pSubresource: *const VkImageSubresource2,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkSubresourceLayout2 {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	subresourceLayout: VkSubresourceLayout,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub subresourceLayout: VkSubresourceLayout,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPipelineCreateFlags2CreateInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkPipelineCreateFlags2,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkPipelineCreateFlags2,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkBufferUsageFlags2CreateInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	usage: VkBufferUsageFlags2,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub usage: VkBufferUsageFlags2,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDevicePushDescriptorProperties {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	maxPushDescriptors: u32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub maxPushDescriptors: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceDynamicRenderingLocalReadFeatures {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	dynamicRenderingLocalRead: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub dynamicRenderingLocalRead: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkRenderingAttachmentLocationInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	colorAttachmentCount: u32,
-	pColorAttachmentLocations: *const uint32_t,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub colorAttachmentCount: u32,
+	pub pColorAttachmentLocations: *const uint32_t,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkRenderingInputAttachmentIndexInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	colorAttachmentCount: u32,
-	pColorAttachmentInputIndices: *const uint32_t,
-	pDepthInputAttachmentIndex: *const uint32_t,
-	pStencilInputAttachmentIndex: *const uint32_t,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub colorAttachmentCount: u32,
+	pub pColorAttachmentInputIndices: *const uint32_t,
+	pub pDepthInputAttachmentIndex: *const uint32_t,
+	pub pStencilInputAttachmentIndex: *const uint32_t,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceMaintenance6Features {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	maintenance6: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub maintenance6: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceMaintenance6Properties {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	blockTexelViewCompatibleMultipleLayers: VkBool32,
-	maxCombinedImageSamplerDescriptorCount: u32,
-	fragmentShadingRateClampCombinerInputs: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub blockTexelViewCompatibleMultipleLayers: VkBool32,
+	pub maxCombinedImageSamplerDescriptorCount: u32,
+	pub fragmentShadingRateClampCombinerInputs: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkBindMemoryStatus {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	pResult: *mut VkResult,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub pResult: *mut VkResult,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkBindDescriptorSetsInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	stageFlags: VkShaderStageFlags,
-	layout: VkPipelineLayout,
-	firstSet: u32,
-	descriptorSetCount: u32,
-	pDescriptorSets: *const VkDescriptorSet,
-	dynamicOffsetCount: u32,
-	pDynamicOffsets: *const uint32_t,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub stageFlags: VkShaderStageFlags,
+	pub layout: VkPipelineLayout,
+	pub firstSet: u32,
+	pub descriptorSetCount: u32,
+	pub pDescriptorSets: *const VkDescriptorSet,
+	pub dynamicOffsetCount: u32,
+	pub pDynamicOffsets: *const uint32_t,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPushConstantsInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	layout: VkPipelineLayout,
-	stageFlags: VkShaderStageFlags,
-	offset: u32,
-	size: u32,
-	pValues: *const c_void,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub layout: VkPipelineLayout,
+	pub stageFlags: VkShaderStageFlags,
+	pub offset: u32,
+	pub size: u32,
+	pub pValues: *const c_void,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPushDescriptorSetInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	stageFlags: VkShaderStageFlags,
-	layout: VkPipelineLayout,
-	set: u32,
-	descriptorWriteCount: u32,
-	pDescriptorWrites: *const VkWriteDescriptorSet,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub stageFlags: VkShaderStageFlags,
+	pub layout: VkPipelineLayout,
+	pub set: u32,
+	pub descriptorWriteCount: u32,
+	pub pDescriptorWrites: *const VkWriteDescriptorSet,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPushDescriptorSetWithTemplateInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	descriptorUpdateTemplate: VkDescriptorUpdateTemplate,
-	layout: VkPipelineLayout,
-	set: u32,
-	pData: *const c_void,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub descriptorUpdateTemplate: VkDescriptorUpdateTemplate,
+	pub layout: VkPipelineLayout,
+	pub set: u32,
+	pub pData: *const c_void,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDevicePipelineProtectedAccessFeatures {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	pipelineProtectedAccess: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub pipelineProtectedAccess: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDevicePipelineRobustnessFeatures {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	pipelineRobustness: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub pipelineRobustness: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDevicePipelineRobustnessProperties {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	defaultRobustnessStorageBuffers: VkPipelineRobustnessBufferBehavior,
-	defaultRobustnessUniformBuffers: VkPipelineRobustnessBufferBehavior,
-	defaultRobustnessVertexInputs: VkPipelineRobustnessBufferBehavior,
-	defaultRobustnessImages: VkPipelineRobustnessImageBehavior,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub defaultRobustnessStorageBuffers: VkPipelineRobustnessBufferBehavior,
+	pub defaultRobustnessUniformBuffers: VkPipelineRobustnessBufferBehavior,
+	pub defaultRobustnessVertexInputs: VkPipelineRobustnessBufferBehavior,
+	pub defaultRobustnessImages: VkPipelineRobustnessImageBehavior,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPipelineRobustnessCreateInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	storageBuffers: VkPipelineRobustnessBufferBehavior,
-	uniformBuffers: VkPipelineRobustnessBufferBehavior,
-	vertexInputs: VkPipelineRobustnessBufferBehavior,
-	images: VkPipelineRobustnessImageBehavior,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub storageBuffers: VkPipelineRobustnessBufferBehavior,
+	pub uniformBuffers: VkPipelineRobustnessBufferBehavior,
+	pub vertexInputs: VkPipelineRobustnessBufferBehavior,
+	pub images: VkPipelineRobustnessImageBehavior,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceHostImageCopyFeatures {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	hostImageCopy: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub hostImageCopy: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceHostImageCopyProperties {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	copySrcLayoutCount: u32,
-	pCopySrcLayouts: *mut VkImageLayout,
-	copyDstLayoutCount: u32,
-	pCopyDstLayouts: *mut VkImageLayout,
-	optimalTilingLayoutUUID: [u8; VK_UUID_SIZE as usize],
-	identicalMemoryTypeRequirements: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub copySrcLayoutCount: u32,
+	pub pCopySrcLayouts: *mut VkImageLayout,
+	pub copyDstLayoutCount: u32,
+	pub pCopyDstLayouts: *mut VkImageLayout,
+	pub optimalTilingLayoutUUID: [u8; VK_UUID_SIZE as usize],
+	pub identicalMemoryTypeRequirements: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkMemoryToImageCopy {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	pHostPointer: *const c_void,
-	memoryRowLength: u32,
-	memoryImageHeight: u32,
-	imageSubresource: VkImageSubresourceLayers,
-	imageOffset: VkOffset3D,
-	imageExtent: VkExtent3D,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub pHostPointer: *const c_void,
+	pub memoryRowLength: u32,
+	pub memoryImageHeight: u32,
+	pub imageSubresource: VkImageSubresourceLayers,
+	pub imageOffset: VkOffset3D,
+	pub imageExtent: VkExtent3D,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkImageToMemoryCopy {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	pHostPointer: *mut c_void,
-	memoryRowLength: u32,
-	memoryImageHeight: u32,
-	imageSubresource: VkImageSubresourceLayers,
-	imageOffset: VkOffset3D,
-	imageExtent: VkExtent3D,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub pHostPointer: *mut c_void,
+	pub memoryRowLength: u32,
+	pub memoryImageHeight: u32,
+	pub imageSubresource: VkImageSubresourceLayers,
+	pub imageOffset: VkOffset3D,
+	pub imageExtent: VkExtent3D,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkCopyMemoryToImageInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkHostImageCopyFlags,
-	dstImage: VkImage,
-	dstImageLayout: VkImageLayout,
-	regionCount: u32,
-	pRegions: *const VkMemoryToImageCopy,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkHostImageCopyFlags,
+	pub dstImage: VkImage,
+	pub dstImageLayout: VkImageLayout,
+	pub regionCount: u32,
+	pub pRegions: *const VkMemoryToImageCopy,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkCopyImageToMemoryInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkHostImageCopyFlags,
-	srcImage: VkImage,
-	srcImageLayout: VkImageLayout,
-	regionCount: u32,
-	pRegions: *const VkImageToMemoryCopy,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkHostImageCopyFlags,
+	pub srcImage: VkImage,
+	pub srcImageLayout: VkImageLayout,
+	pub regionCount: u32,
+	pub pRegions: *const VkImageToMemoryCopy,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkCopyImageToImageInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkHostImageCopyFlags,
-	srcImage: VkImage,
-	srcImageLayout: VkImageLayout,
-	dstImage: VkImage,
-	dstImageLayout: VkImageLayout,
-	regionCount: u32,
-	pRegions: *const VkImageCopy2,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkHostImageCopyFlags,
+	pub srcImage: VkImage,
+	pub srcImageLayout: VkImageLayout,
+	pub dstImage: VkImage,
+	pub dstImageLayout: VkImageLayout,
+	pub regionCount: u32,
+	pub pRegions: *const VkImageCopy2,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkHostImageLayoutTransitionInfo {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	image: VkImage,
-	oldLayout: VkImageLayout,
-	newLayout: VkImageLayout,
-	subresourceRange: VkImageSubresourceRange,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub image: VkImage,
+	pub oldLayout: VkImageLayout,
+	pub newLayout: VkImageLayout,
+	pub subresourceRange: VkImageSubresourceRange,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkSubresourceHostMemcpySize {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	size: VkDeviceSize,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub size: VkDeviceSize,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkHostImageCopyDevicePerformanceQuery {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	optimalDeviceAccess: VkBool32,
-	identicalMemoryLayout: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub optimalDeviceAccess: VkBool32,
+	pub identicalMemoryLayout: VkBool32,
 }
 type PFN_vkCmdSetLineStipple = extern "system" fn(commandBuffer: VkCommandBuffer, lineStippleFactor: u32, lineStipplePattern: u16);
 type PFN_vkMapMemory2 = extern "system" fn(device: VkDevice, pMemoryMapInfo: *const VkMemoryMapInfo, ppData: *mut *mut c_void) -> VkResult;
@@ -9982,12 +9999,12 @@ impl Vulkan_VERSION_1_4 {
 		}
 	}
 }
-type VkCompositeAlphaFlagsKHR = VkFlags;
-type VkSurfaceTransformFlagsKHR = VkFlags;
+pub type VkCompositeAlphaFlagsKHR = VkFlags;
+pub type VkSurfaceTransformFlagsKHR = VkFlags;
 // Define non-dispatchable handle `VkSurfaceKHR`
-#[cfg(target_pointer_width = "32")] type VkSurfaceKHR = u64;
+#[cfg(target_pointer_width = "32")] pub type VkSurfaceKHR = u64;
 #[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkSurfaceKHR_T {}
-#[cfg(target_pointer_width = "64")] type VkSurfaceKHR = *const VkSurfaceKHR_T;
+#[cfg(target_pointer_width = "64")] pub type VkSurfaceKHR = *const VkSurfaceKHR_T;
 #[repr(C)]
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum VkPresentModeKHR {
@@ -10054,22 +10071,22 @@ pub enum VkCompositeAlphaFlagBitsKHR {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkSurfaceCapabilitiesKHR {
-	minImageCount: u32,
-	maxImageCount: u32,
-	currentExtent: VkExtent2D,
-	minImageExtent: VkExtent2D,
-	maxImageExtent: VkExtent2D,
-	maxImageArrayLayers: u32,
-	supportedTransforms: VkSurfaceTransformFlagsKHR,
-	currentTransform: VkSurfaceTransformFlagBitsKHR,
-	supportedCompositeAlpha: VkCompositeAlphaFlagsKHR,
-	supportedUsageFlags: VkImageUsageFlags,
+	pub minImageCount: u32,
+	pub maxImageCount: u32,
+	pub currentExtent: VkExtent2D,
+	pub minImageExtent: VkExtent2D,
+	pub maxImageExtent: VkExtent2D,
+	pub maxImageArrayLayers: u32,
+	pub supportedTransforms: VkSurfaceTransformFlagsKHR,
+	pub currentTransform: VkSurfaceTransformFlagBitsKHR,
+	pub supportedCompositeAlpha: VkCompositeAlphaFlagsKHR,
+	pub supportedUsageFlags: VkImageUsageFlags,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkSurfaceFormatKHR {
-	format: VkFormat,
-	colorSpace: VkColorSpaceKHR,
+	pub format: VkFormat,
+	pub colorSpace: VkColorSpaceKHR,
 }
 type PFN_vkDestroySurfaceKHR = extern "system" fn(instance: VkInstance, surface: VkSurfaceKHR, pAllocator: *const VkAllocationCallbacks);
 type PFN_vkGetPhysicalDeviceSurfaceSupportKHR = extern "system" fn(physicalDevice: VkPhysicalDevice, queueFamilyIndex: u32, surface: VkSurfaceKHR, pSupported: *mut VkBool32) -> VkResult;
@@ -10105,12 +10122,12 @@ impl Vulkan_KHR_surface {
 		}
 	}
 }
-type VkSwapchainCreateFlagsKHR = VkFlags;
-type VkDeviceGroupPresentModeFlagsKHR = VkFlags;
+pub type VkSwapchainCreateFlagsKHR = VkFlags;
+pub type VkDeviceGroupPresentModeFlagsKHR = VkFlags;
 // Define non-dispatchable handle `VkSwapchainKHR`
-#[cfg(target_pointer_width = "32")] type VkSwapchainKHR = u64;
+#[cfg(target_pointer_width = "32")] pub type VkSwapchainKHR = u64;
 #[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkSwapchainKHR_T {}
-#[cfg(target_pointer_width = "64")] type VkSwapchainKHR = *const VkSwapchainKHR_T;
+#[cfg(target_pointer_width = "64")] pub type VkSwapchainKHR = *const VkSwapchainKHR_T;
 #[repr(C)]
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum VkSwapchainCreateFlagBitsKHR {
@@ -10137,86 +10154,86 @@ pub enum VkDeviceGroupPresentModeFlagBitsKHR {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkSwapchainCreateInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkSwapchainCreateFlagsKHR,
-	surface: VkSurfaceKHR,
-	minImageCount: u32,
-	imageFormat: VkFormat,
-	imageColorSpace: VkColorSpaceKHR,
-	imageExtent: VkExtent2D,
-	imageArrayLayers: u32,
-	imageUsage: VkImageUsageFlags,
-	imageSharingMode: VkSharingMode,
-	queueFamilyIndexCount: u32,
-	pQueueFamilyIndices: *const uint32_t,
-	preTransform: VkSurfaceTransformFlagBitsKHR,
-	compositeAlpha: VkCompositeAlphaFlagBitsKHR,
-	presentMode: VkPresentModeKHR,
-	clipped: VkBool32,
-	oldSwapchain: VkSwapchainKHR,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkSwapchainCreateFlagsKHR,
+	pub surface: VkSurfaceKHR,
+	pub minImageCount: u32,
+	pub imageFormat: VkFormat,
+	pub imageColorSpace: VkColorSpaceKHR,
+	pub imageExtent: VkExtent2D,
+	pub imageArrayLayers: u32,
+	pub imageUsage: VkImageUsageFlags,
+	pub imageSharingMode: VkSharingMode,
+	pub queueFamilyIndexCount: u32,
+	pub pQueueFamilyIndices: *const uint32_t,
+	pub preTransform: VkSurfaceTransformFlagBitsKHR,
+	pub compositeAlpha: VkCompositeAlphaFlagBitsKHR,
+	pub presentMode: VkPresentModeKHR,
+	pub clipped: VkBool32,
+	pub oldSwapchain: VkSwapchainKHR,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPresentInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	waitSemaphoreCount: u32,
-	pWaitSemaphores: *const VkSemaphore,
-	swapchainCount: u32,
-	pSwapchains: *const VkSwapchainKHR,
-	pImageIndices: *const uint32_t,
-	pResults: *mut VkResult,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub waitSemaphoreCount: u32,
+	pub pWaitSemaphores: *const VkSemaphore,
+	pub swapchainCount: u32,
+	pub pSwapchains: *const VkSwapchainKHR,
+	pub pImageIndices: *const uint32_t,
+	pub pResults: *mut VkResult,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkImageSwapchainCreateInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	swapchain: VkSwapchainKHR,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub swapchain: VkSwapchainKHR,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkBindImageMemorySwapchainInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	swapchain: VkSwapchainKHR,
-	imageIndex: u32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub swapchain: VkSwapchainKHR,
+	pub imageIndex: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkAcquireNextImageInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	swapchain: VkSwapchainKHR,
-	timeout: u64,
-	semaphore: VkSemaphore,
-	fence: VkFence,
-	deviceMask: u32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub swapchain: VkSwapchainKHR,
+	pub timeout: u64,
+	pub semaphore: VkSemaphore,
+	pub fence: VkFence,
+	pub deviceMask: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDeviceGroupPresentCapabilitiesKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	presentMask: [u32; VK_MAX_DEVICE_GROUP_SIZE as usize],
-	modes: VkDeviceGroupPresentModeFlagsKHR,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub presentMask: [u32; VK_MAX_DEVICE_GROUP_SIZE as usize],
+	pub modes: VkDeviceGroupPresentModeFlagsKHR,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDeviceGroupPresentInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	swapchainCount: u32,
-	pDeviceMasks: *const uint32_t,
-	mode: VkDeviceGroupPresentModeFlagBitsKHR,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub swapchainCount: u32,
+	pub pDeviceMasks: *const uint32_t,
+	pub mode: VkDeviceGroupPresentModeFlagBitsKHR,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDeviceGroupSwapchainCreateInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	modes: VkDeviceGroupPresentModeFlagsKHR,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub modes: VkDeviceGroupPresentModeFlagsKHR,
 }
 type PFN_vkCreateSwapchainKHR = extern "system" fn(device: VkDevice, pCreateInfo: *const VkSwapchainCreateInfoKHR, pAllocator: *const VkAllocationCallbacks, pSwapchain: *mut VkSwapchainKHR) -> VkResult;
 type PFN_vkDestroySwapchainKHR = extern "system" fn(device: VkDevice, swapchain: VkSwapchainKHR, pAllocator: *const VkAllocationCallbacks);
@@ -10256,17 +10273,17 @@ impl Vulkan_KHR_swapchain {
 		}
 	}
 }
-type VkDisplayModeCreateFlagsKHR = VkFlags;
-type VkDisplayPlaneAlphaFlagsKHR = VkFlags;
-type VkDisplaySurfaceCreateFlagsKHR = VkFlags;
+pub type VkDisplayModeCreateFlagsKHR = VkFlags;
+pub type VkDisplayPlaneAlphaFlagsKHR = VkFlags;
+pub type VkDisplaySurfaceCreateFlagsKHR = VkFlags;
 // Define non-dispatchable handle `VkDisplayKHR`
-#[cfg(target_pointer_width = "32")] type VkDisplayKHR = u64;
+#[cfg(target_pointer_width = "32")] pub type VkDisplayKHR = u64;
 #[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkDisplayKHR_T {}
-#[cfg(target_pointer_width = "64")] type VkDisplayKHR = *const VkDisplayKHR_T;
+#[cfg(target_pointer_width = "64")] pub type VkDisplayKHR = *const VkDisplayKHR_T;
 // Define non-dispatchable handle `VkDisplayModeKHR`
-#[cfg(target_pointer_width = "32")] type VkDisplayModeKHR = u64;
+#[cfg(target_pointer_width = "32")] pub type VkDisplayModeKHR = u64;
 #[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkDisplayModeKHR_T {}
-#[cfg(target_pointer_width = "64")] type VkDisplayModeKHR = *const VkDisplayModeKHR_T;
+#[cfg(target_pointer_width = "64")] pub type VkDisplayModeKHR = *const VkDisplayModeKHR_T;
 #[repr(C)]
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum VkDisplayPlaneAlphaFlagBitsKHR {
@@ -10279,66 +10296,66 @@ pub enum VkDisplayPlaneAlphaFlagBitsKHR {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDisplayModeParametersKHR {
-	visibleRegion: VkExtent2D,
-	refreshRate: u32,
+	pub visibleRegion: VkExtent2D,
+	pub refreshRate: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDisplayModeCreateInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkDisplayModeCreateFlagsKHR,
-	parameters: VkDisplayModeParametersKHR,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkDisplayModeCreateFlagsKHR,
+	pub parameters: VkDisplayModeParametersKHR,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDisplayModePropertiesKHR {
-	displayMode: VkDisplayModeKHR,
-	parameters: VkDisplayModeParametersKHR,
+	pub displayMode: VkDisplayModeKHR,
+	pub parameters: VkDisplayModeParametersKHR,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDisplayPlaneCapabilitiesKHR {
-	supportedAlpha: VkDisplayPlaneAlphaFlagsKHR,
-	minSrcPosition: VkOffset2D,
-	maxSrcPosition: VkOffset2D,
-	minSrcExtent: VkExtent2D,
-	maxSrcExtent: VkExtent2D,
-	minDstPosition: VkOffset2D,
-	maxDstPosition: VkOffset2D,
-	minDstExtent: VkExtent2D,
-	maxDstExtent: VkExtent2D,
+	pub supportedAlpha: VkDisplayPlaneAlphaFlagsKHR,
+	pub minSrcPosition: VkOffset2D,
+	pub maxSrcPosition: VkOffset2D,
+	pub minSrcExtent: VkExtent2D,
+	pub maxSrcExtent: VkExtent2D,
+	pub minDstPosition: VkOffset2D,
+	pub maxDstPosition: VkOffset2D,
+	pub minDstExtent: VkExtent2D,
+	pub maxDstExtent: VkExtent2D,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDisplayPlanePropertiesKHR {
-	currentDisplay: VkDisplayKHR,
-	currentStackIndex: u32,
+	pub currentDisplay: VkDisplayKHR,
+	pub currentStackIndex: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDisplayPropertiesKHR {
-	display: VkDisplayKHR,
-	displayName: *const i8,
-	physicalDimensions: VkExtent2D,
-	physicalResolution: VkExtent2D,
-	supportedTransforms: VkSurfaceTransformFlagsKHR,
-	planeReorderPossible: VkBool32,
-	persistentContent: VkBool32,
+	pub display: VkDisplayKHR,
+	pub displayName: *const i8,
+	pub physicalDimensions: VkExtent2D,
+	pub physicalResolution: VkExtent2D,
+	pub supportedTransforms: VkSurfaceTransformFlagsKHR,
+	pub planeReorderPossible: VkBool32,
+	pub persistentContent: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDisplaySurfaceCreateInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkDisplaySurfaceCreateFlagsKHR,
-	displayMode: VkDisplayModeKHR,
-	planeIndex: u32,
-	planeStackIndex: u32,
-	transform: VkSurfaceTransformFlagBitsKHR,
-	globalAlpha: f32,
-	alphaMode: VkDisplayPlaneAlphaFlagBitsKHR,
-	imageExtent: VkExtent2D,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkDisplaySurfaceCreateFlagsKHR,
+	pub displayMode: VkDisplayModeKHR,
+	pub planeIndex: u32,
+	pub planeStackIndex: u32,
+	pub transform: VkSurfaceTransformFlagBitsKHR,
+	pub globalAlpha: f32,
+	pub alphaMode: VkDisplayPlaneAlphaFlagBitsKHR,
+	pub imageExtent: VkExtent2D,
 }
 type PFN_vkGetPhysicalDeviceDisplayPropertiesKHR = extern "system" fn(physicalDevice: VkPhysicalDevice, pPropertyCount: *mut uint32_t, pProperties: *mut VkDisplayPropertiesKHR) -> VkResult;
 type PFN_vkGetPhysicalDeviceDisplayPlanePropertiesKHR = extern "system" fn(physicalDevice: VkPhysicalDevice, pPropertyCount: *mut uint32_t, pProperties: *mut VkDisplayPlanePropertiesKHR) -> VkResult;
@@ -10379,11 +10396,11 @@ impl Vulkan_KHR_display {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDisplayPresentInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	srcRect: VkRect2D,
-	dstRect: VkRect2D,
-	persistent: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub srcRect: VkRect2D,
+	pub dstRect: VkRect2D,
+	pub persistent: VkBool32,
 }
 type PFN_vkCreateSharedSwapchainsKHR = extern "system" fn(device: VkDevice, swapchainCount: u32, pCreateInfos: *const VkSwapchainCreateInfoKHR, pAllocator: *const VkAllocationCallbacks, pSwapchains: *mut VkSwapchainKHR) -> VkResult;
 extern "system" fn dummy_vkCreateSharedSwapchainsKHR(_: VkDevice, _: u32, _: *const VkSwapchainCreateInfoKHR, _: *const VkAllocationCallbacks, _: *mut VkSwapchainKHR) -> VkResult {
@@ -10417,39 +10434,35 @@ impl Vulkan_KHR_display_swapchain {
 }
 pub trait VK_KHR_sampler_mirror_clamp_to_edge: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_KHR_sampler_mirror_clamp_to_edge {
-}
-impl VK_KHR_sampler_mirror_clamp_to_edge for Vulkan_KHR_sampler_mirror_clamp_to_edge {
-}
+pub struct Vulkan_KHR_sampler_mirror_clamp_to_edge {}
+impl VK_KHR_sampler_mirror_clamp_to_edge for Vulkan_KHR_sampler_mirror_clamp_to_edge {}
 impl Default for Vulkan_KHR_sampler_mirror_clamp_to_edge {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_KHR_sampler_mirror_clamp_to_edge {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-type VkVideoCodecOperationFlagsKHR = VkFlags;
-type VkVideoChromaSubsamplingFlagsKHR = VkFlags;
-type VkVideoComponentBitDepthFlagsKHR = VkFlags;
-type VkVideoCapabilityFlagsKHR = VkFlags;
-type VkVideoSessionCreateFlagsKHR = VkFlags;
-type VkVideoSessionParametersCreateFlagsKHR = VkFlags;
-type VkVideoBeginCodingFlagsKHR = VkFlags;
-type VkVideoEndCodingFlagsKHR = VkFlags;
-type VkVideoCodingControlFlagsKHR = VkFlags;
+pub type VkVideoCodecOperationFlagsKHR = VkFlags;
+pub type VkVideoChromaSubsamplingFlagsKHR = VkFlags;
+pub type VkVideoComponentBitDepthFlagsKHR = VkFlags;
+pub type VkVideoCapabilityFlagsKHR = VkFlags;
+pub type VkVideoSessionCreateFlagsKHR = VkFlags;
+pub type VkVideoSessionParametersCreateFlagsKHR = VkFlags;
+pub type VkVideoBeginCodingFlagsKHR = VkFlags;
+pub type VkVideoEndCodingFlagsKHR = VkFlags;
+pub type VkVideoCodingControlFlagsKHR = VkFlags;
 // Define non-dispatchable handle `VkVideoSessionKHR`
-#[cfg(target_pointer_width = "32")] type VkVideoSessionKHR = u64;
+#[cfg(target_pointer_width = "32")] pub type VkVideoSessionKHR = u64;
 #[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkVideoSessionKHR_T {}
-#[cfg(target_pointer_width = "64")] type VkVideoSessionKHR = *const VkVideoSessionKHR_T;
+#[cfg(target_pointer_width = "64")] pub type VkVideoSessionKHR = *const VkVideoSessionKHR_T;
 // Define non-dispatchable handle `VkVideoSessionParametersKHR`
-#[cfg(target_pointer_width = "32")] type VkVideoSessionParametersKHR = u64;
+#[cfg(target_pointer_width = "32")] pub type VkVideoSessionParametersKHR = u64;
 #[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkVideoSessionParametersKHR_T {}
-#[cfg(target_pointer_width = "64")] type VkVideoSessionParametersKHR = *const VkVideoSessionParametersKHR_T;
+#[cfg(target_pointer_width = "64")] pub type VkVideoSessionParametersKHR = *const VkVideoSessionParametersKHR_T;
 #[repr(C)]
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum VkQueryResultStatusKHR {
@@ -10526,160 +10539,160 @@ pub enum VkVideoCodingControlFlagBitsKHR {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkQueueFamilyQueryResultStatusPropertiesKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	queryResultStatusSupport: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub queryResultStatusSupport: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkQueueFamilyVideoPropertiesKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	videoCodecOperations: VkVideoCodecOperationFlagsKHR,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub videoCodecOperations: VkVideoCodecOperationFlagsKHR,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoProfileInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	videoCodecOperation: VkVideoCodecOperationFlagBitsKHR,
-	chromaSubsampling: VkVideoChromaSubsamplingFlagsKHR,
-	lumaBitDepth: VkVideoComponentBitDepthFlagsKHR,
-	chromaBitDepth: VkVideoComponentBitDepthFlagsKHR,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub videoCodecOperation: VkVideoCodecOperationFlagBitsKHR,
+	pub chromaSubsampling: VkVideoChromaSubsamplingFlagsKHR,
+	pub lumaBitDepth: VkVideoComponentBitDepthFlagsKHR,
+	pub chromaBitDepth: VkVideoComponentBitDepthFlagsKHR,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoProfileListInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	profileCount: u32,
-	pProfiles: *const VkVideoProfileInfoKHR,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub profileCount: u32,
+	pub pProfiles: *const VkVideoProfileInfoKHR,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoCapabilitiesKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	flags: VkVideoCapabilityFlagsKHR,
-	minBitstreamBufferOffsetAlignment: VkDeviceSize,
-	minBitstreamBufferSizeAlignment: VkDeviceSize,
-	pictureAccessGranularity: VkExtent2D,
-	minCodedExtent: VkExtent2D,
-	maxCodedExtent: VkExtent2D,
-	maxDpbSlots: u32,
-	maxActiveReferencePictures: u32,
-	stdHeaderVersion: VkExtensionProperties,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub flags: VkVideoCapabilityFlagsKHR,
+	pub minBitstreamBufferOffsetAlignment: VkDeviceSize,
+	pub minBitstreamBufferSizeAlignment: VkDeviceSize,
+	pub pictureAccessGranularity: VkExtent2D,
+	pub minCodedExtent: VkExtent2D,
+	pub maxCodedExtent: VkExtent2D,
+	pub maxDpbSlots: u32,
+	pub maxActiveReferencePictures: u32,
+	pub stdHeaderVersion: VkExtensionProperties,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceVideoFormatInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	imageUsage: VkImageUsageFlags,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub imageUsage: VkImageUsageFlags,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoFormatPropertiesKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	format: VkFormat,
-	componentMapping: VkComponentMapping,
-	imageCreateFlags: VkImageCreateFlags,
-	imageType: VkImageType,
-	imageTiling: VkImageTiling,
-	imageUsageFlags: VkImageUsageFlags,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub format: VkFormat,
+	pub componentMapping: VkComponentMapping,
+	pub imageCreateFlags: VkImageCreateFlags,
+	pub imageType: VkImageType,
+	pub imageTiling: VkImageTiling,
+	pub imageUsageFlags: VkImageUsageFlags,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoPictureResourceInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	codedOffset: VkOffset2D,
-	codedExtent: VkExtent2D,
-	baseArrayLayer: u32,
-	imageViewBinding: VkImageView,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub codedOffset: VkOffset2D,
+	pub codedExtent: VkExtent2D,
+	pub baseArrayLayer: u32,
+	pub imageViewBinding: VkImageView,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoReferenceSlotInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	slotIndex: i32,
-	pPictureResource: *const VkVideoPictureResourceInfoKHR,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub slotIndex: i32,
+	pub pPictureResource: *const VkVideoPictureResourceInfoKHR,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoSessionMemoryRequirementsKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	memoryBindIndex: u32,
-	memoryRequirements: VkMemoryRequirements,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub memoryBindIndex: u32,
+	pub memoryRequirements: VkMemoryRequirements,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkBindVideoSessionMemoryInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	memoryBindIndex: u32,
-	memory: VkDeviceMemory,
-	memoryOffset: VkDeviceSize,
-	memorySize: VkDeviceSize,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub memoryBindIndex: u32,
+	pub memory: VkDeviceMemory,
+	pub memoryOffset: VkDeviceSize,
+	pub memorySize: VkDeviceSize,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoSessionCreateInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	queueFamilyIndex: u32,
-	flags: VkVideoSessionCreateFlagsKHR,
-	pVideoProfile: *const VkVideoProfileInfoKHR,
-	pictureFormat: VkFormat,
-	maxCodedExtent: VkExtent2D,
-	referencePictureFormat: VkFormat,
-	maxDpbSlots: u32,
-	maxActiveReferencePictures: u32,
-	pStdHeaderVersion: *const VkExtensionProperties,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub queueFamilyIndex: u32,
+	pub flags: VkVideoSessionCreateFlagsKHR,
+	pub pVideoProfile: *const VkVideoProfileInfoKHR,
+	pub pictureFormat: VkFormat,
+	pub maxCodedExtent: VkExtent2D,
+	pub referencePictureFormat: VkFormat,
+	pub maxDpbSlots: u32,
+	pub maxActiveReferencePictures: u32,
+	pub pStdHeaderVersion: *const VkExtensionProperties,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoSessionParametersCreateInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkVideoSessionParametersCreateFlagsKHR,
-	videoSessionParametersTemplate: VkVideoSessionParametersKHR,
-	videoSession: VkVideoSessionKHR,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkVideoSessionParametersCreateFlagsKHR,
+	pub videoSessionParametersTemplate: VkVideoSessionParametersKHR,
+	pub videoSession: VkVideoSessionKHR,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoSessionParametersUpdateInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	updateSequenceCount: u32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub updateSequenceCount: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoBeginCodingInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkVideoBeginCodingFlagsKHR,
-	videoSession: VkVideoSessionKHR,
-	videoSessionParameters: VkVideoSessionParametersKHR,
-	referenceSlotCount: u32,
-	pReferenceSlots: *const VkVideoReferenceSlotInfoKHR,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkVideoBeginCodingFlagsKHR,
+	pub videoSession: VkVideoSessionKHR,
+	pub videoSessionParameters: VkVideoSessionParametersKHR,
+	pub referenceSlotCount: u32,
+	pub pReferenceSlots: *const VkVideoReferenceSlotInfoKHR,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoEndCodingInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkVideoEndCodingFlagsKHR,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkVideoEndCodingFlagsKHR,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoCodingControlInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkVideoCodingControlFlagsKHR,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkVideoCodingControlFlagsKHR,
 }
 type PFN_vkGetPhysicalDeviceVideoCapabilitiesKHR = extern "system" fn(physicalDevice: VkPhysicalDevice, pVideoProfile: *const VkVideoProfileInfoKHR, pCapabilities: *mut VkVideoCapabilitiesKHR) -> VkResult;
 type PFN_vkGetPhysicalDeviceVideoFormatPropertiesKHR = extern "system" fn(physicalDevice: VkPhysicalDevice, pVideoFormatInfo: *const VkPhysicalDeviceVideoFormatInfoKHR, pVideoFormatPropertyCount: *mut uint32_t, pVideoFormatProperties: *mut VkVideoFormatPropertiesKHR) -> VkResult;
@@ -10722,9 +10735,9 @@ impl Vulkan_KHR_video_queue {
 		}
 	}
 }
-type VkVideoDecodeCapabilityFlagsKHR = VkFlags;
-type VkVideoDecodeUsageFlagsKHR = VkFlags;
-type VkVideoDecodeFlagsKHR = VkFlags;
+pub type VkVideoDecodeCapabilityFlagsKHR = VkFlags;
+pub type VkVideoDecodeUsageFlagsKHR = VkFlags;
+pub type VkVideoDecodeFlagsKHR = VkFlags;
 #[repr(C)]
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum VkVideoDecodeCapabilityFlagBitsKHR {
@@ -10744,30 +10757,30 @@ pub enum VkVideoDecodeUsageFlagBitsKHR {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoDecodeCapabilitiesKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	flags: VkVideoDecodeCapabilityFlagsKHR,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub flags: VkVideoDecodeCapabilityFlagsKHR,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoDecodeUsageInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	videoUsageHints: VkVideoDecodeUsageFlagsKHR,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub videoUsageHints: VkVideoDecodeUsageFlagsKHR,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoDecodeInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkVideoDecodeFlagsKHR,
-	srcBuffer: VkBuffer,
-	srcBufferOffset: VkDeviceSize,
-	srcBufferRange: VkDeviceSize,
-	dstPictureResource: VkVideoPictureResourceInfoKHR,
-	pSetupReferenceSlot: *const VkVideoReferenceSlotInfoKHR,
-	referenceSlotCount: u32,
-	pReferenceSlots: *const VkVideoReferenceSlotInfoKHR,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkVideoDecodeFlagsKHR,
+	pub srcBuffer: VkBuffer,
+	pub srcBufferOffset: VkDeviceSize,
+	pub srcBufferRange: VkDeviceSize,
+	pub dstPictureResource: VkVideoPictureResourceInfoKHR,
+	pub pSetupReferenceSlot: *const VkVideoReferenceSlotInfoKHR,
+	pub referenceSlotCount: u32,
+	pub pReferenceSlots: *const VkVideoReferenceSlotInfoKHR,
 }
 type PFN_vkCmdDecodeVideoKHR = extern "system" fn(commandBuffer: VkCommandBuffer, pDecodeInfo: *const VkVideoDecodeInfoKHR);
 extern "system" fn dummy_vkCmdDecodeVideoKHR(_: VkCommandBuffer, _: *const VkVideoDecodeInfoKHR) {
@@ -10799,9 +10812,9 @@ impl Vulkan_KHR_video_decode_queue {
 		}
 	}
 }
-type VkVideoEncodeH264CapabilityFlagsKHR = VkFlags;
-type VkVideoEncodeH264StdFlagsKHR = VkFlags;
-type VkVideoEncodeH264RateControlFlagsKHR = VkFlags;
+pub type VkVideoEncodeH264CapabilityFlagsKHR = VkFlags;
+pub type VkVideoEncodeH264StdFlagsKHR = VkFlags;
+pub type VkVideoEncodeH264RateControlFlagsKHR = VkFlags;
 #[repr(C)]
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum VkVideoEncodeH264CapabilityFlagBitsKHR {
@@ -10856,177 +10869,173 @@ pub enum VkVideoEncodeH264RateControlFlagBitsKHR {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoEncodeH264CapabilitiesKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	flags: VkVideoEncodeH264CapabilityFlagsKHR,
-	maxLevelIdc: StdVideoH264LevelIdc,
-	maxSliceCount: u32,
-	maxPPictureL0ReferenceCount: u32,
-	maxBPictureL0ReferenceCount: u32,
-	maxL1ReferenceCount: u32,
-	maxTemporalLayerCount: u32,
-	expectDyadicTemporalLayerPattern: VkBool32,
-	minQp: i32,
-	maxQp: i32,
-	prefersGopRemainingFrames: VkBool32,
-	requiresGopRemainingFrames: VkBool32,
-	stdSyntaxFlags: VkVideoEncodeH264StdFlagsKHR,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub flags: VkVideoEncodeH264CapabilityFlagsKHR,
+	pub maxLevelIdc: StdVideoH264LevelIdc,
+	pub maxSliceCount: u32,
+	pub maxPPictureL0ReferenceCount: u32,
+	pub maxBPictureL0ReferenceCount: u32,
+	pub maxL1ReferenceCount: u32,
+	pub maxTemporalLayerCount: u32,
+	pub expectDyadicTemporalLayerPattern: VkBool32,
+	pub minQp: i32,
+	pub maxQp: i32,
+	pub prefersGopRemainingFrames: VkBool32,
+	pub requiresGopRemainingFrames: VkBool32,
+	pub stdSyntaxFlags: VkVideoEncodeH264StdFlagsKHR,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoEncodeH264QpKHR {
-	qpI: i32,
-	qpP: i32,
-	qpB: i32,
+	pub qpI: i32,
+	pub qpP: i32,
+	pub qpB: i32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoEncodeH264QualityLevelPropertiesKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	preferredRateControlFlags: VkVideoEncodeH264RateControlFlagsKHR,
-	preferredGopFrameCount: u32,
-	preferredIdrPeriod: u32,
-	preferredConsecutiveBFrameCount: u32,
-	preferredTemporalLayerCount: u32,
-	preferredConstantQp: VkVideoEncodeH264QpKHR,
-	preferredMaxL0ReferenceCount: u32,
-	preferredMaxL1ReferenceCount: u32,
-	preferredStdEntropyCodingModeFlag: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub preferredRateControlFlags: VkVideoEncodeH264RateControlFlagsKHR,
+	pub preferredGopFrameCount: u32,
+	pub preferredIdrPeriod: u32,
+	pub preferredConsecutiveBFrameCount: u32,
+	pub preferredTemporalLayerCount: u32,
+	pub preferredConstantQp: VkVideoEncodeH264QpKHR,
+	pub preferredMaxL0ReferenceCount: u32,
+	pub preferredMaxL1ReferenceCount: u32,
+	pub preferredStdEntropyCodingModeFlag: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoEncodeH264SessionCreateInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	useMaxLevelIdc: VkBool32,
-	maxLevelIdc: StdVideoH264LevelIdc,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub useMaxLevelIdc: VkBool32,
+	pub maxLevelIdc: StdVideoH264LevelIdc,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoEncodeH264SessionParametersAddInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	stdSPSCount: u32,
-	pStdSPSs: *const StdVideoH264SequenceParameterSet,
-	stdPPSCount: u32,
-	pStdPPSs: *const StdVideoH264PictureParameterSet,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub stdSPSCount: u32,
+	pub pStdSPSs: *const StdVideoH264SequenceParameterSet,
+	pub stdPPSCount: u32,
+	pub pStdPPSs: *const StdVideoH264PictureParameterSet,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoEncodeH264SessionParametersCreateInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	maxStdSPSCount: u32,
-	maxStdPPSCount: u32,
-	pParametersAddInfo: *const VkVideoEncodeH264SessionParametersAddInfoKHR,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub maxStdSPSCount: u32,
+	pub maxStdPPSCount: u32,
+	pub pParametersAddInfo: *const VkVideoEncodeH264SessionParametersAddInfoKHR,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoEncodeH264SessionParametersGetInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	writeStdSPS: VkBool32,
-	writeStdPPS: VkBool32,
-	stdSPSId: u32,
-	stdPPSId: u32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub writeStdSPS: VkBool32,
+	pub writeStdPPS: VkBool32,
+	pub stdSPSId: u32,
+	pub stdPPSId: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoEncodeH264SessionParametersFeedbackInfoKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	hasStdSPSOverrides: VkBool32,
-	hasStdPPSOverrides: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub hasStdSPSOverrides: VkBool32,
+	pub hasStdPPSOverrides: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoEncodeH264NaluSliceInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	constantQp: i32,
-	pStdSliceHeader: *const StdVideoEncodeH264SliceHeader,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub constantQp: i32,
+	pub pStdSliceHeader: *const StdVideoEncodeH264SliceHeader,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoEncodeH264PictureInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	naluSliceEntryCount: u32,
-	pNaluSliceEntries: *const VkVideoEncodeH264NaluSliceInfoKHR,
-	pStdPictureInfo: *const StdVideoEncodeH264PictureInfo,
-	generatePrefixNalu: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub naluSliceEntryCount: u32,
+	pub pNaluSliceEntries: *const VkVideoEncodeH264NaluSliceInfoKHR,
+	pub pStdPictureInfo: *const StdVideoEncodeH264PictureInfo,
+	pub generatePrefixNalu: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoEncodeH264DpbSlotInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	pStdReferenceInfo: *const StdVideoEncodeH264ReferenceInfo,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub pStdReferenceInfo: *const StdVideoEncodeH264ReferenceInfo,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoEncodeH264ProfileInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	stdProfileIdc: StdVideoH264ProfileIdc,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub stdProfileIdc: StdVideoH264ProfileIdc,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoEncodeH264RateControlInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkVideoEncodeH264RateControlFlagsKHR,
-	gopFrameCount: u32,
-	idrPeriod: u32,
-	consecutiveBFrameCount: u32,
-	temporalLayerCount: u32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkVideoEncodeH264RateControlFlagsKHR,
+	pub gopFrameCount: u32,
+	pub idrPeriod: u32,
+	pub consecutiveBFrameCount: u32,
+	pub temporalLayerCount: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoEncodeH264FrameSizeKHR {
-	frameISize: u32,
-	framePSize: u32,
-	frameBSize: u32,
+	pub frameISize: u32,
+	pub framePSize: u32,
+	pub frameBSize: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoEncodeH264RateControlLayerInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	useMinQp: VkBool32,
-	minQp: VkVideoEncodeH264QpKHR,
-	useMaxQp: VkBool32,
-	maxQp: VkVideoEncodeH264QpKHR,
-	useMaxFrameSize: VkBool32,
-	maxFrameSize: VkVideoEncodeH264FrameSizeKHR,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub useMinQp: VkBool32,
+	pub minQp: VkVideoEncodeH264QpKHR,
+	pub useMaxQp: VkBool32,
+	pub maxQp: VkVideoEncodeH264QpKHR,
+	pub useMaxFrameSize: VkBool32,
+	pub maxFrameSize: VkVideoEncodeH264FrameSizeKHR,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoEncodeH264GopRemainingFrameInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	useGopRemainingFrames: VkBool32,
-	gopRemainingI: u32,
-	gopRemainingP: u32,
-	gopRemainingB: u32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub useGopRemainingFrames: VkBool32,
+	pub gopRemainingI: u32,
+	pub gopRemainingP: u32,
+	pub gopRemainingB: u32,
 }
 pub trait VK_KHR_video_encode_h264: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_KHR_video_encode_h264 {
-}
-impl VK_KHR_video_encode_h264 for Vulkan_KHR_video_encode_h264 {
-}
+pub struct Vulkan_KHR_video_encode_h264 {}
+impl VK_KHR_video_encode_h264 for Vulkan_KHR_video_encode_h264 {}
 impl Default for Vulkan_KHR_video_encode_h264 {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_KHR_video_encode_h264 {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 pub const STD_VIDEO_H264_CPB_CNT_LIST_SIZE: u32 = 32u32;
@@ -11238,7 +11247,7 @@ pub struct StdVideoH264SpsVuiFlags {
 	/// Bitfield: bitstream_restriction_flag: u32 in 1 bits
 	/// Bitfield: nal_hrd_parameters_present_flag: u32 in 1 bits
 	/// Bitfield: vcl_hrd_parameters_present_flag: u32 in 1 bits
-	bitfield1: u32,
+	pub bitfield1: u32,
 }
 impl StdVideoH264SpsVuiFlags {
 	pub fn get_aspect_ratio_info_present_flag(&self) -> u32 {
@@ -11317,37 +11326,37 @@ impl StdVideoH264SpsVuiFlags {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct StdVideoH264HrdParameters {
-	cpb_cnt_minus1: u8,
-	bit_rate_scale: u8,
-	cpb_size_scale: u8,
-	reserved1: u8,
-	bit_rate_value_minus1: [u32; STD_VIDEO_H264_CPB_CNT_LIST_SIZE as usize],
-	cpb_size_value_minus1: [u32; STD_VIDEO_H264_CPB_CNT_LIST_SIZE as usize],
-	cbr_flag: [u8; STD_VIDEO_H264_CPB_CNT_LIST_SIZE as usize],
-	initial_cpb_removal_delay_length_minus1: u32,
-	cpb_removal_delay_length_minus1: u32,
-	dpb_output_delay_length_minus1: u32,
-	time_offset_length: u32,
+	pub cpb_cnt_minus1: u8,
+	pub bit_rate_scale: u8,
+	pub cpb_size_scale: u8,
+	pub reserved1: u8,
+	pub bit_rate_value_minus1: [u32; STD_VIDEO_H264_CPB_CNT_LIST_SIZE as usize],
+	pub cpb_size_value_minus1: [u32; STD_VIDEO_H264_CPB_CNT_LIST_SIZE as usize],
+	pub cbr_flag: [u8; STD_VIDEO_H264_CPB_CNT_LIST_SIZE as usize],
+	pub initial_cpb_removal_delay_length_minus1: u32,
+	pub cpb_removal_delay_length_minus1: u32,
+	pub dpb_output_delay_length_minus1: u32,
+	pub time_offset_length: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct StdVideoH264SequenceParameterSetVui {
-	flags: StdVideoH264SpsVuiFlags,
-	aspect_ratio_idc: StdVideoH264AspectRatioIdc,
-	sar_width: u16,
-	sar_height: u16,
-	video_format: u8,
-	colour_primaries: u8,
-	transfer_characteristics: u8,
-	matrix_coefficients: u8,
-	num_units_in_tick: u32,
-	time_scale: u32,
-	max_num_reorder_frames: u8,
-	max_dec_frame_buffering: u8,
-	chroma_sample_loc_type_top_field: u8,
-	chroma_sample_loc_type_bottom_field: u8,
-	reserved1: u32,
-	pHrdParameters: *const StdVideoH264HrdParameters,
+	pub flags: StdVideoH264SpsVuiFlags,
+	pub aspect_ratio_idc: StdVideoH264AspectRatioIdc,
+	pub sar_width: u16,
+	pub sar_height: u16,
+	pub video_format: u8,
+	pub colour_primaries: u8,
+	pub transfer_characteristics: u8,
+	pub matrix_coefficients: u8,
+	pub num_units_in_tick: u32,
+	pub time_scale: u32,
+	pub max_num_reorder_frames: u8,
+	pub max_dec_frame_buffering: u8,
+	pub chroma_sample_loc_type_top_field: u8,
+	pub chroma_sample_loc_type_bottom_field: u8,
+	pub reserved1: u32,
+	pub pHrdParameters: *const StdVideoH264HrdParameters,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
@@ -11368,7 +11377,7 @@ pub struct StdVideoH264SpsFlags {
 	/// Bitfield: frame_cropping_flag: u32 in 1 bits
 	/// Bitfield: seq_scaling_matrix_present_flag: u32 in 1 bits
 	/// Bitfield: vui_parameters_present_flag: u32 in 1 bits
-	bitfield1: u32,
+	pub bitfield1: u32,
 }
 impl StdVideoH264SpsFlags {
 	pub fn get_constraint_set0_flag(&self) -> u32 {
@@ -11471,39 +11480,39 @@ impl StdVideoH264SpsFlags {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct StdVideoH264ScalingLists {
-	scaling_list_present_mask: u16,
-	use_default_scaling_matrix_mask: u16,
-	ScalingList4x4: [u8; STD_VIDEO_H264_SCALING_LIST_4X4_NUM_LISTS as usize],
-	ScalingList8x8: [u8; STD_VIDEO_H264_SCALING_LIST_8X8_NUM_LISTS as usize],
+	pub scaling_list_present_mask: u16,
+	pub use_default_scaling_matrix_mask: u16,
+	pub ScalingList4x4: [u8; STD_VIDEO_H264_SCALING_LIST_4X4_NUM_LISTS as usize],
+	pub ScalingList8x8: [u8; STD_VIDEO_H264_SCALING_LIST_8X8_NUM_LISTS as usize],
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct StdVideoH264SequenceParameterSet {
-	flags: StdVideoH264SpsFlags,
-	profile_idc: StdVideoH264ProfileIdc,
-	level_idc: StdVideoH264LevelIdc,
-	chroma_format_idc: StdVideoH264ChromaFormatIdc,
-	seq_parameter_set_id: u8,
-	bit_depth_luma_minus8: u8,
-	bit_depth_chroma_minus8: u8,
-	log2_max_frame_num_minus4: u8,
-	pic_order_cnt_type: StdVideoH264PocType,
-	offset_for_non_ref_pic: i32,
-	offset_for_top_to_bottom_field: i32,
-	log2_max_pic_order_cnt_lsb_minus4: u8,
-	num_ref_frames_in_pic_order_cnt_cycle: u8,
-	max_num_ref_frames: u8,
-	reserved1: u8,
-	pic_width_in_mbs_minus1: u32,
-	pic_height_in_map_units_minus1: u32,
-	frame_crop_left_offset: u32,
-	frame_crop_right_offset: u32,
-	frame_crop_top_offset: u32,
-	frame_crop_bottom_offset: u32,
-	reserved2: u32,
-	pOffsetForRefFrame: *const int32_t,
-	pScalingLists: *const StdVideoH264ScalingLists,
-	pSequenceParameterSetVui: *const StdVideoH264SequenceParameterSetVui,
+	pub flags: StdVideoH264SpsFlags,
+	pub profile_idc: StdVideoH264ProfileIdc,
+	pub level_idc: StdVideoH264LevelIdc,
+	pub chroma_format_idc: StdVideoH264ChromaFormatIdc,
+	pub seq_parameter_set_id: u8,
+	pub bit_depth_luma_minus8: u8,
+	pub bit_depth_chroma_minus8: u8,
+	pub log2_max_frame_num_minus4: u8,
+	pub pic_order_cnt_type: StdVideoH264PocType,
+	pub offset_for_non_ref_pic: i32,
+	pub offset_for_top_to_bottom_field: i32,
+	pub log2_max_pic_order_cnt_lsb_minus4: u8,
+	pub num_ref_frames_in_pic_order_cnt_cycle: u8,
+	pub max_num_ref_frames: u8,
+	pub reserved1: u8,
+	pub pic_width_in_mbs_minus1: u32,
+	pub pic_height_in_map_units_minus1: u32,
+	pub frame_crop_left_offset: u32,
+	pub frame_crop_right_offset: u32,
+	pub frame_crop_top_offset: u32,
+	pub frame_crop_bottom_offset: u32,
+	pub reserved2: u32,
+	pub pOffsetForRefFrame: *const int32_t,
+	pub pScalingLists: *const StdVideoH264ScalingLists,
+	pub pSequenceParameterSetVui: *const StdVideoH264SequenceParameterSetVui,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
@@ -11516,7 +11525,7 @@ pub struct StdVideoH264PpsFlags {
 	/// Bitfield: bottom_field_pic_order_in_frame_present_flag: u32 in 1 bits
 	/// Bitfield: entropy_coding_mode_flag: u32 in 1 bits
 	/// Bitfield: pic_scaling_matrix_present_flag: u32 in 1 bits
-	bitfield1: u32,
+	pub bitfield1: u32,
 }
 impl StdVideoH264PpsFlags {
 	pub fn get_transform_8x8_mode_flag(&self) -> u32 {
@@ -11571,76 +11580,69 @@ impl StdVideoH264PpsFlags {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct StdVideoH264PictureParameterSet {
-	flags: StdVideoH264PpsFlags,
-	seq_parameter_set_id: u8,
-	pic_parameter_set_id: u8,
-	num_ref_idx_l0_default_active_minus1: u8,
-	num_ref_idx_l1_default_active_minus1: u8,
-	weighted_bipred_idc: StdVideoH264WeightedBipredIdc,
-	pic_init_qp_minus26: i8,
-	pic_init_qs_minus26: i8,
-	chroma_qp_index_offset: i8,
-	second_chroma_qp_index_offset: i8,
-	pScalingLists: *const StdVideoH264ScalingLists,
+	pub flags: StdVideoH264PpsFlags,
+	pub seq_parameter_set_id: u8,
+	pub pic_parameter_set_id: u8,
+	pub num_ref_idx_l0_default_active_minus1: u8,
+	pub num_ref_idx_l1_default_active_minus1: u8,
+	pub weighted_bipred_idc: StdVideoH264WeightedBipredIdc,
+	pub pic_init_qp_minus26: i8,
+	pub pic_init_qs_minus26: i8,
+	pub chroma_qp_index_offset: i8,
+	pub second_chroma_qp_index_offset: i8,
+	pub pScalingLists: *const StdVideoH264ScalingLists,
 }
 pub trait vulkan_video_codec_h264std: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_kan_video_codec_h264std {
-}
-impl vulkan_video_codec_h264std for Vulkan_kan_video_codec_h264std {
-}
-impl Default for Vulkan_kan_video_codec_h264std {
+pub struct Vulkan_video_codec_h264std {}
+impl vulkan_video_codec_h264std for Vulkan_video_codec_h264std {}
+impl Default for Vulkan_video_codec_h264std {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-impl Vulkan_kan_video_codec_h264std {
+impl Vulkan_video_codec_h264std {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 pub trait vulkan_video_codecs_common: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_kan_video_codecs_common {
-}
-impl vulkan_video_codecs_common for Vulkan_kan_video_codecs_common {
-}
-impl Default for Vulkan_kan_video_codecs_common {
+pub struct Vulkan_video_codecs_common {}
+impl vulkan_video_codecs_common for Vulkan_video_codecs_common {}
+impl Default for Vulkan_video_codecs_common {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-impl Vulkan_kan_video_codecs_common {
+impl Vulkan_video_codecs_common {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
+pub const VK_STD_VULKAN_VIDEO_CODEC_H264_ENCODE_API_VERSION_1_0_0: u32 = 0x400000;
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct StdVideoEncodeH264WeightTableFlags {
-	luma_weight_l0_flag: u32,
-	chroma_weight_l0_flag: u32,
-	luma_weight_l1_flag: u32,
-	chroma_weight_l1_flag: u32,
+	pub luma_weight_l0_flag: u32,
+	pub chroma_weight_l0_flag: u32,
+	pub luma_weight_l1_flag: u32,
+	pub chroma_weight_l1_flag: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct StdVideoEncodeH264WeightTable {
-	flags: StdVideoEncodeH264WeightTableFlags,
-	luma_log2_weight_denom: u8,
-	chroma_log2_weight_denom: u8,
-	luma_weight_l0: [i8; STD_VIDEO_H264_MAX_NUM_LIST_REF as usize],
-	luma_offset_l0: [i8; STD_VIDEO_H264_MAX_NUM_LIST_REF as usize],
-	chroma_weight_l0: [i8; STD_VIDEO_H264_MAX_NUM_LIST_REF as usize],
-	chroma_offset_l0: [i8; STD_VIDEO_H264_MAX_NUM_LIST_REF as usize],
-	luma_weight_l1: [i8; STD_VIDEO_H264_MAX_NUM_LIST_REF as usize],
-	luma_offset_l1: [i8; STD_VIDEO_H264_MAX_NUM_LIST_REF as usize],
-	chroma_weight_l1: [i8; STD_VIDEO_H264_MAX_NUM_LIST_REF as usize],
-	chroma_offset_l1: [i8; STD_VIDEO_H264_MAX_NUM_LIST_REF as usize],
+	pub flags: StdVideoEncodeH264WeightTableFlags,
+	pub luma_log2_weight_denom: u8,
+	pub chroma_log2_weight_denom: u8,
+	pub luma_weight_l0: [i8; STD_VIDEO_H264_MAX_NUM_LIST_REF as usize],
+	pub luma_offset_l0: [i8; STD_VIDEO_H264_MAX_NUM_LIST_REF as usize],
+	pub chroma_weight_l0: [i8; STD_VIDEO_H264_MAX_NUM_LIST_REF as usize],
+	pub chroma_offset_l0: [i8; STD_VIDEO_H264_MAX_NUM_LIST_REF as usize],
+	pub luma_weight_l1: [i8; STD_VIDEO_H264_MAX_NUM_LIST_REF as usize],
+	pub luma_offset_l1: [i8; STD_VIDEO_H264_MAX_NUM_LIST_REF as usize],
+	pub chroma_weight_l1: [i8; STD_VIDEO_H264_MAX_NUM_LIST_REF as usize],
+	pub chroma_offset_l1: [i8; STD_VIDEO_H264_MAX_NUM_LIST_REF as usize],
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
@@ -11771,97 +11773,93 @@ impl StdVideoEncodeH264ReferenceListsInfoFlags {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct StdVideoEncodeH264RefListModEntry {
-	modification_of_pic_nums_idc: StdVideoH264ModificationOfPicNumsIdc,
-	abs_diff_pic_num_minus1: u16,
-	long_term_pic_num: u16,
+	pub modification_of_pic_nums_idc: StdVideoH264ModificationOfPicNumsIdc,
+	pub abs_diff_pic_num_minus1: u16,
+	pub long_term_pic_num: u16,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct StdVideoEncodeH264RefPicMarkingEntry {
-	memory_management_control_operation: StdVideoH264MemMgmtControlOp,
-	difference_of_pic_nums_minus1: u16,
-	long_term_pic_num: u16,
-	long_term_frame_idx: u16,
-	max_long_term_frame_idx_plus1: u16,
+	pub memory_management_control_operation: StdVideoH264MemMgmtControlOp,
+	pub difference_of_pic_nums_minus1: u16,
+	pub long_term_pic_num: u16,
+	pub long_term_frame_idx: u16,
+	pub max_long_term_frame_idx_plus1: u16,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct StdVideoEncodeH264ReferenceListsInfo {
-	flags: StdVideoEncodeH264ReferenceListsInfoFlags,
-	num_ref_idx_l0_active_minus1: u8,
-	num_ref_idx_l1_active_minus1: u8,
-	RefPicList0: [u8; STD_VIDEO_H264_MAX_NUM_LIST_REF as usize],
-	RefPicList1: [u8; STD_VIDEO_H264_MAX_NUM_LIST_REF as usize],
-	refList0ModOpCount: u8,
-	refList1ModOpCount: u8,
-	refPicMarkingOpCount: u8,
-	reserved1: [u8; 7 as usize],
-	pRefList0ModOperations: *const StdVideoEncodeH264RefListModEntry,
-	pRefList1ModOperations: *const StdVideoEncodeH264RefListModEntry,
-	pRefPicMarkingOperations: *const StdVideoEncodeH264RefPicMarkingEntry,
+	pub flags: StdVideoEncodeH264ReferenceListsInfoFlags,
+	pub num_ref_idx_l0_active_minus1: u8,
+	pub num_ref_idx_l1_active_minus1: u8,
+	pub RefPicList0: [u8; STD_VIDEO_H264_MAX_NUM_LIST_REF as usize],
+	pub RefPicList1: [u8; STD_VIDEO_H264_MAX_NUM_LIST_REF as usize],
+	pub refList0ModOpCount: u8,
+	pub refList1ModOpCount: u8,
+	pub refPicMarkingOpCount: u8,
+	pub reserved1: [u8; 7 as usize],
+	pub pRefList0ModOperations: *const StdVideoEncodeH264RefListModEntry,
+	pub pRefList1ModOperations: *const StdVideoEncodeH264RefListModEntry,
+	pub pRefPicMarkingOperations: *const StdVideoEncodeH264RefPicMarkingEntry,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct StdVideoEncodeH264PictureInfo {
-	flags: StdVideoEncodeH264PictureInfoFlags,
-	seq_parameter_set_id: u8,
-	pic_parameter_set_id: u8,
-	idr_pic_id: u16,
-	primary_pic_type: StdVideoH264PictureType,
-	frame_num: u32,
-	PicOrderCnt: i32,
-	temporal_id: u8,
-	reserved1: [u8; 3 as usize],
-	pRefLists: *const StdVideoEncodeH264ReferenceListsInfo,
+	pub flags: StdVideoEncodeH264PictureInfoFlags,
+	pub seq_parameter_set_id: u8,
+	pub pic_parameter_set_id: u8,
+	pub idr_pic_id: u16,
+	pub primary_pic_type: StdVideoH264PictureType,
+	pub frame_num: u32,
+	pub PicOrderCnt: i32,
+	pub temporal_id: u8,
+	pub reserved1: [u8; 3 as usize],
+	pub pRefLists: *const StdVideoEncodeH264ReferenceListsInfo,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct StdVideoEncodeH264ReferenceInfo {
-	flags: StdVideoEncodeH264ReferenceInfoFlags,
-	primary_pic_type: StdVideoH264PictureType,
-	FrameNum: u32,
-	PicOrderCnt: i32,
-	long_term_pic_num: u16,
-	long_term_frame_idx: u16,
-	temporal_id: u8,
+	pub flags: StdVideoEncodeH264ReferenceInfoFlags,
+	pub primary_pic_type: StdVideoH264PictureType,
+	pub FrameNum: u32,
+	pub PicOrderCnt: i32,
+	pub long_term_pic_num: u16,
+	pub long_term_frame_idx: u16,
+	pub temporal_id: u8,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct StdVideoEncodeH264SliceHeader {
-	flags: StdVideoEncodeH264SliceHeaderFlags,
-	first_mb_in_slice: u32,
-	slice_type: StdVideoH264SliceType,
-	slice_alpha_c0_offset_div2: i8,
-	slice_beta_offset_div2: i8,
-	slice_qp_delta: i8,
-	reserved1: u8,
-	cabac_init_idc: StdVideoH264CabacInitIdc,
-	disable_deblocking_filter_idc: StdVideoH264DisableDeblockingFilterIdc,
-	pWeightTable: *const StdVideoEncodeH264WeightTable,
+	pub flags: StdVideoEncodeH264SliceHeaderFlags,
+	pub first_mb_in_slice: u32,
+	pub slice_type: StdVideoH264SliceType,
+	pub slice_alpha_c0_offset_div2: i8,
+	pub slice_beta_offset_div2: i8,
+	pub slice_qp_delta: i8,
+	pub reserved1: u8,
+	pub cabac_init_idc: StdVideoH264CabacInitIdc,
+	pub disable_deblocking_filter_idc: StdVideoH264DisableDeblockingFilterIdc,
+	pub pWeightTable: *const StdVideoEncodeH264WeightTable,
 }
 pub trait vulkan_video_codec_h264std_encode: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_kan_video_codec_h264std_encode {
-}
-impl vulkan_video_codec_h264std_encode for Vulkan_kan_video_codec_h264std_encode {
-}
-impl Default for Vulkan_kan_video_codec_h264std_encode {
+pub struct Vulkan_video_codec_h264std_encode {}
+impl vulkan_video_codec_h264std_encode for Vulkan_video_codec_h264std_encode {}
+impl Default for Vulkan_video_codec_h264std_encode {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-impl Vulkan_kan_video_codec_h264std_encode {
+impl Vulkan_video_codec_h264std_encode {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-type VkVideoEncodeH265CapabilityFlagsKHR = VkFlags;
-type VkVideoEncodeH265StdFlagsKHR = VkFlags;
-type VkVideoEncodeH265CtbSizeFlagsKHR = VkFlags;
-type VkVideoEncodeH265TransformBlockSizeFlagsKHR = VkFlags;
-type VkVideoEncodeH265RateControlFlagsKHR = VkFlags;
+pub type VkVideoEncodeH265CapabilityFlagsKHR = VkFlags;
+pub type VkVideoEncodeH265StdFlagsKHR = VkFlags;
+pub type VkVideoEncodeH265CtbSizeFlagsKHR = VkFlags;
+pub type VkVideoEncodeH265TransformBlockSizeFlagsKHR = VkFlags;
+pub type VkVideoEncodeH265RateControlFlagsKHR = VkFlags;
 #[repr(C)]
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum VkVideoEncodeH265CapabilityFlagBitsKHR {
@@ -11935,184 +11933,180 @@ pub enum VkVideoEncodeH265RateControlFlagBitsKHR {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoEncodeH265CapabilitiesKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	flags: VkVideoEncodeH265CapabilityFlagsKHR,
-	maxLevelIdc: StdVideoH265LevelIdc,
-	maxSliceSegmentCount: u32,
-	maxTiles: VkExtent2D,
-	ctbSizes: VkVideoEncodeH265CtbSizeFlagsKHR,
-	transformBlockSizes: VkVideoEncodeH265TransformBlockSizeFlagsKHR,
-	maxPPictureL0ReferenceCount: u32,
-	maxBPictureL0ReferenceCount: u32,
-	maxL1ReferenceCount: u32,
-	maxSubLayerCount: u32,
-	expectDyadicTemporalSubLayerPattern: VkBool32,
-	minQp: i32,
-	maxQp: i32,
-	prefersGopRemainingFrames: VkBool32,
-	requiresGopRemainingFrames: VkBool32,
-	stdSyntaxFlags: VkVideoEncodeH265StdFlagsKHR,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub flags: VkVideoEncodeH265CapabilityFlagsKHR,
+	pub maxLevelIdc: StdVideoH265LevelIdc,
+	pub maxSliceSegmentCount: u32,
+	pub maxTiles: VkExtent2D,
+	pub ctbSizes: VkVideoEncodeH265CtbSizeFlagsKHR,
+	pub transformBlockSizes: VkVideoEncodeH265TransformBlockSizeFlagsKHR,
+	pub maxPPictureL0ReferenceCount: u32,
+	pub maxBPictureL0ReferenceCount: u32,
+	pub maxL1ReferenceCount: u32,
+	pub maxSubLayerCount: u32,
+	pub expectDyadicTemporalSubLayerPattern: VkBool32,
+	pub minQp: i32,
+	pub maxQp: i32,
+	pub prefersGopRemainingFrames: VkBool32,
+	pub requiresGopRemainingFrames: VkBool32,
+	pub stdSyntaxFlags: VkVideoEncodeH265StdFlagsKHR,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoEncodeH265SessionCreateInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	useMaxLevelIdc: VkBool32,
-	maxLevelIdc: StdVideoH265LevelIdc,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub useMaxLevelIdc: VkBool32,
+	pub maxLevelIdc: StdVideoH265LevelIdc,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoEncodeH265QpKHR {
-	qpI: i32,
-	qpP: i32,
-	qpB: i32,
+	pub qpI: i32,
+	pub qpP: i32,
+	pub qpB: i32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoEncodeH265QualityLevelPropertiesKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	preferredRateControlFlags: VkVideoEncodeH265RateControlFlagsKHR,
-	preferredGopFrameCount: u32,
-	preferredIdrPeriod: u32,
-	preferredConsecutiveBFrameCount: u32,
-	preferredSubLayerCount: u32,
-	preferredConstantQp: VkVideoEncodeH265QpKHR,
-	preferredMaxL0ReferenceCount: u32,
-	preferredMaxL1ReferenceCount: u32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub preferredRateControlFlags: VkVideoEncodeH265RateControlFlagsKHR,
+	pub preferredGopFrameCount: u32,
+	pub preferredIdrPeriod: u32,
+	pub preferredConsecutiveBFrameCount: u32,
+	pub preferredSubLayerCount: u32,
+	pub preferredConstantQp: VkVideoEncodeH265QpKHR,
+	pub preferredMaxL0ReferenceCount: u32,
+	pub preferredMaxL1ReferenceCount: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoEncodeH265SessionParametersAddInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	stdVPSCount: u32,
-	pStdVPSs: *const StdVideoH265VideoParameterSet,
-	stdSPSCount: u32,
-	pStdSPSs: *const StdVideoH265SequenceParameterSet,
-	stdPPSCount: u32,
-	pStdPPSs: *const StdVideoH265PictureParameterSet,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub stdVPSCount: u32,
+	pub pStdVPSs: *const StdVideoH265VideoParameterSet,
+	pub stdSPSCount: u32,
+	pub pStdSPSs: *const StdVideoH265SequenceParameterSet,
+	pub stdPPSCount: u32,
+	pub pStdPPSs: *const StdVideoH265PictureParameterSet,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoEncodeH265SessionParametersCreateInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	maxStdVPSCount: u32,
-	maxStdSPSCount: u32,
-	maxStdPPSCount: u32,
-	pParametersAddInfo: *const VkVideoEncodeH265SessionParametersAddInfoKHR,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub maxStdVPSCount: u32,
+	pub maxStdSPSCount: u32,
+	pub maxStdPPSCount: u32,
+	pub pParametersAddInfo: *const VkVideoEncodeH265SessionParametersAddInfoKHR,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoEncodeH265SessionParametersGetInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	writeStdVPS: VkBool32,
-	writeStdSPS: VkBool32,
-	writeStdPPS: VkBool32,
-	stdVPSId: u32,
-	stdSPSId: u32,
-	stdPPSId: u32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub writeStdVPS: VkBool32,
+	pub writeStdSPS: VkBool32,
+	pub writeStdPPS: VkBool32,
+	pub stdVPSId: u32,
+	pub stdSPSId: u32,
+	pub stdPPSId: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoEncodeH265SessionParametersFeedbackInfoKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	hasStdVPSOverrides: VkBool32,
-	hasStdSPSOverrides: VkBool32,
-	hasStdPPSOverrides: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub hasStdVPSOverrides: VkBool32,
+	pub hasStdSPSOverrides: VkBool32,
+	pub hasStdPPSOverrides: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoEncodeH265NaluSliceSegmentInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	constantQp: i32,
-	pStdSliceSegmentHeader: *const StdVideoEncodeH265SliceSegmentHeader,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub constantQp: i32,
+	pub pStdSliceSegmentHeader: *const StdVideoEncodeH265SliceSegmentHeader,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoEncodeH265PictureInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	naluSliceSegmentEntryCount: u32,
-	pNaluSliceSegmentEntries: *const VkVideoEncodeH265NaluSliceSegmentInfoKHR,
-	pStdPictureInfo: *const StdVideoEncodeH265PictureInfo,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub naluSliceSegmentEntryCount: u32,
+	pub pNaluSliceSegmentEntries: *const VkVideoEncodeH265NaluSliceSegmentInfoKHR,
+	pub pStdPictureInfo: *const StdVideoEncodeH265PictureInfo,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoEncodeH265DpbSlotInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	pStdReferenceInfo: *const StdVideoEncodeH265ReferenceInfo,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub pStdReferenceInfo: *const StdVideoEncodeH265ReferenceInfo,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoEncodeH265ProfileInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	stdProfileIdc: StdVideoH265ProfileIdc,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub stdProfileIdc: StdVideoH265ProfileIdc,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoEncodeH265RateControlInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkVideoEncodeH265RateControlFlagsKHR,
-	gopFrameCount: u32,
-	idrPeriod: u32,
-	consecutiveBFrameCount: u32,
-	subLayerCount: u32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkVideoEncodeH265RateControlFlagsKHR,
+	pub gopFrameCount: u32,
+	pub idrPeriod: u32,
+	pub consecutiveBFrameCount: u32,
+	pub subLayerCount: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoEncodeH265FrameSizeKHR {
-	frameISize: u32,
-	framePSize: u32,
-	frameBSize: u32,
+	pub frameISize: u32,
+	pub framePSize: u32,
+	pub frameBSize: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoEncodeH265RateControlLayerInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	useMinQp: VkBool32,
-	minQp: VkVideoEncodeH265QpKHR,
-	useMaxQp: VkBool32,
-	maxQp: VkVideoEncodeH265QpKHR,
-	useMaxFrameSize: VkBool32,
-	maxFrameSize: VkVideoEncodeH265FrameSizeKHR,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub useMinQp: VkBool32,
+	pub minQp: VkVideoEncodeH265QpKHR,
+	pub useMaxQp: VkBool32,
+	pub maxQp: VkVideoEncodeH265QpKHR,
+	pub useMaxFrameSize: VkBool32,
+	pub maxFrameSize: VkVideoEncodeH265FrameSizeKHR,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoEncodeH265GopRemainingFrameInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	useGopRemainingFrames: VkBool32,
-	gopRemainingI: u32,
-	gopRemainingP: u32,
-	gopRemainingB: u32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub useGopRemainingFrames: VkBool32,
+	pub gopRemainingI: u32,
+	pub gopRemainingP: u32,
+	pub gopRemainingB: u32,
 }
 pub trait VK_KHR_video_encode_h265: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_KHR_video_encode_h265 {
-}
-impl VK_KHR_video_encode_h265 for Vulkan_KHR_video_encode_h265 {
-}
+pub struct Vulkan_KHR_video_encode_h265 {}
+impl VK_KHR_video_encode_h265 for Vulkan_KHR_video_encode_h265 {}
 impl Default for Vulkan_KHR_video_encode_h265 {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_KHR_video_encode_h265 {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 pub const STD_VIDEO_H265_CPB_CNT_LIST_SIZE: u32 = 32u32;
@@ -12236,18 +12230,18 @@ impl StdVideoH265AspectRatioIdc {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct StdVideoH265DecPicBufMgr {
-	max_latency_increase_plus1: [u32; STD_VIDEO_H265_SUBLAYERS_LIST_SIZE as usize],
-	max_dec_pic_buffering_minus1: [u8; STD_VIDEO_H265_SUBLAYERS_LIST_SIZE as usize],
-	max_num_reorder_pics: [u8; STD_VIDEO_H265_SUBLAYERS_LIST_SIZE as usize],
+	pub max_latency_increase_plus1: [u32; STD_VIDEO_H265_SUBLAYERS_LIST_SIZE as usize],
+	pub max_dec_pic_buffering_minus1: [u8; STD_VIDEO_H265_SUBLAYERS_LIST_SIZE as usize],
+	pub max_num_reorder_pics: [u8; STD_VIDEO_H265_SUBLAYERS_LIST_SIZE as usize],
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct StdVideoH265SubLayerHrdParameters {
-	bit_rate_value_minus1: [u32; STD_VIDEO_H265_CPB_CNT_LIST_SIZE as usize],
-	cpb_size_value_minus1: [u32; STD_VIDEO_H265_CPB_CNT_LIST_SIZE as usize],
-	cpb_size_du_value_minus1: [u32; STD_VIDEO_H265_CPB_CNT_LIST_SIZE as usize],
-	bit_rate_du_value_minus1: [u32; STD_VIDEO_H265_CPB_CNT_LIST_SIZE as usize],
-	cbr_flag: u32,
+	pub bit_rate_value_minus1: [u32; STD_VIDEO_H265_CPB_CNT_LIST_SIZE as usize],
+	pub cpb_size_value_minus1: [u32; STD_VIDEO_H265_CPB_CNT_LIST_SIZE as usize],
+	pub cpb_size_du_value_minus1: [u32; STD_VIDEO_H265_CPB_CNT_LIST_SIZE as usize],
+	pub bit_rate_du_value_minus1: [u32; STD_VIDEO_H265_CPB_CNT_LIST_SIZE as usize],
+	pub cbr_flag: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
@@ -12259,7 +12253,7 @@ pub struct StdVideoH265HrdFlags {
 	/// Bitfield: fixed_pic_rate_general_flag: u32 in 8 bits
 	/// Bitfield: fixed_pic_rate_within_cvs_flag: u32 in 8 bits
 	/// Bitfield: low_delay_hrd_flag: u32 in 8 bits
-	bitfield1: u32,
+	pub bitfield1: u32,
 }
 impl StdVideoH265HrdFlags {
 	pub fn get_nal_hrd_parameters_present_flag(&self) -> u32 {
@@ -12308,21 +12302,21 @@ impl StdVideoH265HrdFlags {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct StdVideoH265HrdParameters {
-	flags: StdVideoH265HrdFlags,
-	tick_divisor_minus2: u8,
-	du_cpb_removal_delay_increment_length_minus1: u8,
-	dpb_output_delay_du_length_minus1: u8,
-	bit_rate_scale: u8,
-	cpb_size_scale: u8,
-	cpb_size_du_scale: u8,
-	initial_cpb_removal_delay_length_minus1: u8,
-	au_cpb_removal_delay_length_minus1: u8,
-	dpb_output_delay_length_minus1: u8,
-	cpb_cnt_minus1: [u8; STD_VIDEO_H265_SUBLAYERS_LIST_SIZE as usize],
-	elemental_duration_in_tc_minus1: [u16; STD_VIDEO_H265_SUBLAYERS_LIST_SIZE as usize],
-	reserved: [u16; 3 as usize],
-	pSubLayerHrdParametersNal: *const StdVideoH265SubLayerHrdParameters,
-	pSubLayerHrdParametersVcl: *const StdVideoH265SubLayerHrdParameters,
+	pub flags: StdVideoH265HrdFlags,
+	pub tick_divisor_minus2: u8,
+	pub du_cpb_removal_delay_increment_length_minus1: u8,
+	pub dpb_output_delay_du_length_minus1: u8,
+	pub bit_rate_scale: u8,
+	pub cpb_size_scale: u8,
+	pub cpb_size_du_scale: u8,
+	pub initial_cpb_removal_delay_length_minus1: u8,
+	pub au_cpb_removal_delay_length_minus1: u8,
+	pub dpb_output_delay_length_minus1: u8,
+	pub cpb_cnt_minus1: [u8; STD_VIDEO_H265_SUBLAYERS_LIST_SIZE as usize],
+	pub elemental_duration_in_tc_minus1: [u16; STD_VIDEO_H265_SUBLAYERS_LIST_SIZE as usize],
+	pub reserved: [u16; 3 as usize],
+	pub pSubLayerHrdParametersNal: *const StdVideoH265SubLayerHrdParameters,
+	pub pSubLayerHrdParametersVcl: *const StdVideoH265SubLayerHrdParameters,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
@@ -12331,7 +12325,7 @@ pub struct StdVideoH265VpsFlags {
 	/// Bitfield: vps_sub_layer_ordering_info_present_flag: u32 in 1 bits
 	/// Bitfield: vps_timing_info_present_flag: u32 in 1 bits
 	/// Bitfield: vps_poc_proportional_to_timing_flag: u32 in 1 bits
-	bitfield1: u32,
+	pub bitfield1: u32,
 }
 impl StdVideoH265VpsFlags {
 	pub fn get_vps_temporal_id_nesting_flag(&self) -> u32 {
@@ -12367,7 +12361,7 @@ pub struct StdVideoH265ProfileTierLevelFlags {
 	/// Bitfield: general_interlaced_source_flag: u32 in 1 bits
 	/// Bitfield: general_non_packed_constraint_flag: u32 in 1 bits
 	/// Bitfield: general_frame_only_constraint_flag: u32 in 1 bits
-	bitfield1: u32,
+	pub bitfield1: u32,
 }
 impl StdVideoH265ProfileTierLevelFlags {
 	pub fn get_general_tier_flag(&self) -> u32 {
@@ -12404,35 +12398,35 @@ impl StdVideoH265ProfileTierLevelFlags {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct StdVideoH265ProfileTierLevel {
-	flags: StdVideoH265ProfileTierLevelFlags,
-	general_profile_idc: StdVideoH265ProfileIdc,
-	general_level_idc: StdVideoH265LevelIdc,
+	pub flags: StdVideoH265ProfileTierLevelFlags,
+	pub general_profile_idc: StdVideoH265ProfileIdc,
+	pub general_level_idc: StdVideoH265LevelIdc,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct StdVideoH265VideoParameterSet {
-	flags: StdVideoH265VpsFlags,
-	vps_video_parameter_set_id: u8,
-	vps_max_sub_layers_minus1: u8,
-	reserved1: u8,
-	reserved2: u8,
-	vps_num_units_in_tick: u32,
-	vps_time_scale: u32,
-	vps_num_ticks_poc_diff_one_minus1: u32,
-	reserved3: u32,
-	pDecPicBufMgr: *const StdVideoH265DecPicBufMgr,
-	pHrdParameters: *const StdVideoH265HrdParameters,
-	pProfileTierLevel: *const StdVideoH265ProfileTierLevel,
+	pub flags: StdVideoH265VpsFlags,
+	pub vps_video_parameter_set_id: u8,
+	pub vps_max_sub_layers_minus1: u8,
+	pub reserved1: u8,
+	pub reserved2: u8,
+	pub vps_num_units_in_tick: u32,
+	pub vps_time_scale: u32,
+	pub vps_num_ticks_poc_diff_one_minus1: u32,
+	pub reserved3: u32,
+	pub pDecPicBufMgr: *const StdVideoH265DecPicBufMgr,
+	pub pHrdParameters: *const StdVideoH265HrdParameters,
+	pub pProfileTierLevel: *const StdVideoH265ProfileTierLevel,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct StdVideoH265ScalingLists {
-	ScalingList4x4: [u8; STD_VIDEO_H265_SCALING_LIST_4X4_NUM_LISTS as usize],
-	ScalingList8x8: [u8; STD_VIDEO_H265_SCALING_LIST_8X8_NUM_LISTS as usize],
-	ScalingList16x16: [u8; STD_VIDEO_H265_SCALING_LIST_16X16_NUM_LISTS as usize],
-	ScalingList32x32: [u8; STD_VIDEO_H265_SCALING_LIST_32X32_NUM_LISTS as usize],
-	ScalingListDCCoef16x16: [u8; STD_VIDEO_H265_SCALING_LIST_16X16_NUM_LISTS as usize],
-	ScalingListDCCoef32x32: [u8; STD_VIDEO_H265_SCALING_LIST_32X32_NUM_LISTS as usize],
+	pub ScalingList4x4: [u8; STD_VIDEO_H265_SCALING_LIST_4X4_NUM_LISTS as usize],
+	pub ScalingList8x8: [u8; STD_VIDEO_H265_SCALING_LIST_8X8_NUM_LISTS as usize],
+	pub ScalingList16x16: [u8; STD_VIDEO_H265_SCALING_LIST_16X16_NUM_LISTS as usize],
+	pub ScalingList32x32: [u8; STD_VIDEO_H265_SCALING_LIST_32X32_NUM_LISTS as usize],
+	pub ScalingListDCCoef16x16: [u8; STD_VIDEO_H265_SCALING_LIST_16X16_NUM_LISTS as usize],
+	pub ScalingListDCCoef32x32: [u8; STD_VIDEO_H265_SCALING_LIST_32X32_NUM_LISTS as usize],
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
@@ -12455,7 +12449,7 @@ pub struct StdVideoH265SpsVuiFlags {
 	/// Bitfield: tiles_fixed_structure_flag: u32 in 1 bits
 	/// Bitfield: motion_vectors_over_pic_boundaries_flag: u32 in 1 bits
 	/// Bitfield: restricted_ref_pic_lists_flag: u32 in 1 bits
-	bitfield1: u32,
+	pub bitfield1: u32,
 }
 impl StdVideoH265SpsVuiFlags {
 	pub fn get_aspect_ratio_info_present_flag(&self) -> u32 {
@@ -12570,37 +12564,37 @@ impl StdVideoH265SpsVuiFlags {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct StdVideoH265SequenceParameterSetVui {
-	flags: StdVideoH265SpsVuiFlags,
-	aspect_ratio_idc: StdVideoH265AspectRatioIdc,
-	sar_width: u16,
-	sar_height: u16,
-	video_format: u8,
-	colour_primaries: u8,
-	transfer_characteristics: u8,
-	matrix_coeffs: u8,
-	chroma_sample_loc_type_top_field: u8,
-	chroma_sample_loc_type_bottom_field: u8,
-	reserved1: u8,
-	reserved2: u8,
-	def_disp_win_left_offset: u16,
-	def_disp_win_right_offset: u16,
-	def_disp_win_top_offset: u16,
-	def_disp_win_bottom_offset: u16,
-	vui_num_units_in_tick: u32,
-	vui_time_scale: u32,
-	vui_num_ticks_poc_diff_one_minus1: u32,
-	min_spatial_segmentation_idc: u16,
-	reserved3: u16,
-	max_bytes_per_pic_denom: u8,
-	max_bits_per_min_cu_denom: u8,
-	log2_max_mv_length_horizontal: u8,
-	log2_max_mv_length_vertical: u8,
-	pHrdParameters: *const StdVideoH265HrdParameters,
+	pub flags: StdVideoH265SpsVuiFlags,
+	pub aspect_ratio_idc: StdVideoH265AspectRatioIdc,
+	pub sar_width: u16,
+	pub sar_height: u16,
+	pub video_format: u8,
+	pub colour_primaries: u8,
+	pub transfer_characteristics: u8,
+	pub matrix_coeffs: u8,
+	pub chroma_sample_loc_type_top_field: u8,
+	pub chroma_sample_loc_type_bottom_field: u8,
+	pub reserved1: u8,
+	pub reserved2: u8,
+	pub def_disp_win_left_offset: u16,
+	pub def_disp_win_right_offset: u16,
+	pub def_disp_win_top_offset: u16,
+	pub def_disp_win_bottom_offset: u16,
+	pub vui_num_units_in_tick: u32,
+	pub vui_time_scale: u32,
+	pub vui_num_ticks_poc_diff_one_minus1: u32,
+	pub min_spatial_segmentation_idc: u16,
+	pub reserved3: u16,
+	pub max_bytes_per_pic_denom: u8,
+	pub max_bits_per_min_cu_denom: u8,
+	pub log2_max_mv_length_horizontal: u8,
+	pub log2_max_mv_length_vertical: u8,
+	pub pHrdParameters: *const StdVideoH265HrdParameters,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct StdVideoH265PredictorPaletteEntries {
-	PredictorPaletteEntries: [u16; STD_VIDEO_H265_PREDICTOR_PALETTE_COMPONENTS_LIST_SIZE as usize],
+	pub PredictorPaletteEntries: [u16; STD_VIDEO_H265_PREDICTOR_PALETTE_COMPONENTS_LIST_SIZE as usize],
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
@@ -12635,7 +12629,7 @@ pub struct StdVideoH265SpsFlags {
 	/// Bitfield: palette_mode_enabled_flag: u32 in 1 bits
 	/// Bitfield: sps_palette_predictor_initializers_present_flag: u32 in 1 bits
 	/// Bitfield: intra_boundary_filtering_disabled_flag: u32 in 1 bits
-	bitfield1: u32,
+	pub bitfield1: u32,
 }
 impl StdVideoH265SpsFlags {
 	pub fn get_sps_temporal_id_nesting_flag(&self) -> u32 {
@@ -12824,7 +12818,7 @@ impl StdVideoH265SpsFlags {
 pub struct StdVideoH265ShortTermRefPicSetFlags {
 	/// Bitfield: inter_ref_pic_set_prediction_flag: u32 in 1 bits
 	/// Bitfield: delta_rps_sign: u32 in 1 bits
-	bitfield1: u32,
+	pub bitfield1: u32,
 }
 impl StdVideoH265ShortTermRefPicSetFlags {
 	pub fn get_inter_ref_pic_set_prediction_flag(&self) -> u32 {
@@ -12843,69 +12837,69 @@ impl StdVideoH265ShortTermRefPicSetFlags {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct StdVideoH265ShortTermRefPicSet {
-	flags: StdVideoH265ShortTermRefPicSetFlags,
-	delta_idx_minus1: u32,
-	use_delta_flag: u16,
-	abs_delta_rps_minus1: u16,
-	used_by_curr_pic_flag: u16,
-	used_by_curr_pic_s0_flag: u16,
-	used_by_curr_pic_s1_flag: u16,
-	reserved1: u16,
-	reserved2: u8,
-	reserved3: u8,
-	num_negative_pics: u8,
-	num_positive_pics: u8,
-	delta_poc_s0_minus1: [u16; STD_VIDEO_H265_MAX_DPB_SIZE as usize],
-	delta_poc_s1_minus1: [u16; STD_VIDEO_H265_MAX_DPB_SIZE as usize],
+	pub flags: StdVideoH265ShortTermRefPicSetFlags,
+	pub delta_idx_minus1: u32,
+	pub use_delta_flag: u16,
+	pub abs_delta_rps_minus1: u16,
+	pub used_by_curr_pic_flag: u16,
+	pub used_by_curr_pic_s0_flag: u16,
+	pub used_by_curr_pic_s1_flag: u16,
+	pub reserved1: u16,
+	pub reserved2: u8,
+	pub reserved3: u8,
+	pub num_negative_pics: u8,
+	pub num_positive_pics: u8,
+	pub delta_poc_s0_minus1: [u16; STD_VIDEO_H265_MAX_DPB_SIZE as usize],
+	pub delta_poc_s1_minus1: [u16; STD_VIDEO_H265_MAX_DPB_SIZE as usize],
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct StdVideoH265LongTermRefPicsSps {
-	used_by_curr_pic_lt_sps_flag: u32,
-	lt_ref_pic_poc_lsb_sps: [u32; STD_VIDEO_H265_MAX_LONG_TERM_REF_PICS_SPS as usize],
+	pub used_by_curr_pic_lt_sps_flag: u32,
+	pub lt_ref_pic_poc_lsb_sps: [u32; STD_VIDEO_H265_MAX_LONG_TERM_REF_PICS_SPS as usize],
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct StdVideoH265SequenceParameterSet {
-	flags: StdVideoH265SpsFlags,
-	chroma_format_idc: StdVideoH265ChromaFormatIdc,
-	pic_width_in_luma_samples: u32,
-	pic_height_in_luma_samples: u32,
-	sps_video_parameter_set_id: u8,
-	sps_max_sub_layers_minus1: u8,
-	sps_seq_parameter_set_id: u8,
-	bit_depth_luma_minus8: u8,
-	bit_depth_chroma_minus8: u8,
-	log2_max_pic_order_cnt_lsb_minus4: u8,
-	log2_min_luma_coding_block_size_minus3: u8,
-	log2_diff_max_min_luma_coding_block_size: u8,
-	log2_min_luma_transform_block_size_minus2: u8,
-	log2_diff_max_min_luma_transform_block_size: u8,
-	max_transform_hierarchy_depth_inter: u8,
-	max_transform_hierarchy_depth_intra: u8,
-	num_short_term_ref_pic_sets: u8,
-	num_long_term_ref_pics_sps: u8,
-	pcm_sample_bit_depth_luma_minus1: u8,
-	pcm_sample_bit_depth_chroma_minus1: u8,
-	log2_min_pcm_luma_coding_block_size_minus3: u8,
-	log2_diff_max_min_pcm_luma_coding_block_size: u8,
-	reserved1: u8,
-	reserved2: u8,
-	palette_max_size: u8,
-	delta_palette_max_predictor_size: u8,
-	motion_vector_resolution_control_idc: u8,
-	sps_num_palette_predictor_initializers_minus1: u8,
-	conf_win_left_offset: u32,
-	conf_win_right_offset: u32,
-	conf_win_top_offset: u32,
-	conf_win_bottom_offset: u32,
-	pProfileTierLevel: *const StdVideoH265ProfileTierLevel,
-	pDecPicBufMgr: *const StdVideoH265DecPicBufMgr,
-	pScalingLists: *const StdVideoH265ScalingLists,
-	pShortTermRefPicSet: *const StdVideoH265ShortTermRefPicSet,
-	pLongTermRefPicsSps: *const StdVideoH265LongTermRefPicsSps,
-	pSequenceParameterSetVui: *const StdVideoH265SequenceParameterSetVui,
-	pPredictorPaletteEntries: *const StdVideoH265PredictorPaletteEntries,
+	pub flags: StdVideoH265SpsFlags,
+	pub chroma_format_idc: StdVideoH265ChromaFormatIdc,
+	pub pic_width_in_luma_samples: u32,
+	pub pic_height_in_luma_samples: u32,
+	pub sps_video_parameter_set_id: u8,
+	pub sps_max_sub_layers_minus1: u8,
+	pub sps_seq_parameter_set_id: u8,
+	pub bit_depth_luma_minus8: u8,
+	pub bit_depth_chroma_minus8: u8,
+	pub log2_max_pic_order_cnt_lsb_minus4: u8,
+	pub log2_min_luma_coding_block_size_minus3: u8,
+	pub log2_diff_max_min_luma_coding_block_size: u8,
+	pub log2_min_luma_transform_block_size_minus2: u8,
+	pub log2_diff_max_min_luma_transform_block_size: u8,
+	pub max_transform_hierarchy_depth_inter: u8,
+	pub max_transform_hierarchy_depth_intra: u8,
+	pub num_short_term_ref_pic_sets: u8,
+	pub num_long_term_ref_pics_sps: u8,
+	pub pcm_sample_bit_depth_luma_minus1: u8,
+	pub pcm_sample_bit_depth_chroma_minus1: u8,
+	pub log2_min_pcm_luma_coding_block_size_minus3: u8,
+	pub log2_diff_max_min_pcm_luma_coding_block_size: u8,
+	pub reserved1: u8,
+	pub reserved2: u8,
+	pub palette_max_size: u8,
+	pub delta_palette_max_predictor_size: u8,
+	pub motion_vector_resolution_control_idc: u8,
+	pub sps_num_palette_predictor_initializers_minus1: u8,
+	pub conf_win_left_offset: u32,
+	pub conf_win_right_offset: u32,
+	pub conf_win_top_offset: u32,
+	pub conf_win_bottom_offset: u32,
+	pub pProfileTierLevel: *const StdVideoH265ProfileTierLevel,
+	pub pDecPicBufMgr: *const StdVideoH265DecPicBufMgr,
+	pub pScalingLists: *const StdVideoH265ScalingLists,
+	pub pShortTermRefPicSet: *const StdVideoH265ShortTermRefPicSet,
+	pub pLongTermRefPicsSps: *const StdVideoH265LongTermRefPicsSps,
+	pub pSequenceParameterSetVui: *const StdVideoH265SequenceParameterSetVui,
+	pub pPredictorPaletteEntries: *const StdVideoH265PredictorPaletteEntries,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
@@ -12941,7 +12935,7 @@ pub struct StdVideoH265PpsFlags {
 	/// Bitfield: pps_palette_predictor_initializers_present_flag: u32 in 1 bits
 	/// Bitfield: monochrome_palette_flag: u32 in 1 bits
 	/// Bitfield: pps_range_extension_flag: u32 in 1 bits
-	bitfield1: u32,
+	pub bitfield1: u32,
 }
 impl StdVideoH265PpsFlags {
 	pub fn get_dependent_slice_segments_enabled_flag(&self) -> u32 {
@@ -13134,83 +13128,80 @@ impl StdVideoH265PpsFlags {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct StdVideoH265PictureParameterSet {
-	flags: StdVideoH265PpsFlags,
-	pps_pic_parameter_set_id: u8,
-	pps_seq_parameter_set_id: u8,
-	sps_video_parameter_set_id: u8,
-	num_extra_slice_header_bits: u8,
-	num_ref_idx_l0_default_active_minus1: u8,
-	num_ref_idx_l1_default_active_minus1: u8,
-	init_qp_minus26: i8,
-	diff_cu_qp_delta_depth: u8,
-	pps_cb_qp_offset: i8,
-	pps_cr_qp_offset: i8,
-	pps_beta_offset_div2: i8,
-	pps_tc_offset_div2: i8,
-	log2_parallel_merge_level_minus2: u8,
-	log2_max_transform_skip_block_size_minus2: u8,
-	diff_cu_chroma_qp_offset_depth: u8,
-	chroma_qp_offset_list_len_minus1: u8,
-	cb_qp_offset_list: [i8; STD_VIDEO_H265_CHROMA_QP_OFFSET_LIST_SIZE as usize],
-	cr_qp_offset_list: [i8; STD_VIDEO_H265_CHROMA_QP_OFFSET_LIST_SIZE as usize],
-	log2_sao_offset_scale_luma: u8,
-	log2_sao_offset_scale_chroma: u8,
-	pps_act_y_qp_offset_plus5: i8,
-	pps_act_cb_qp_offset_plus5: i8,
-	pps_act_cr_qp_offset_plus3: i8,
-	pps_num_palette_predictor_initializers: u8,
-	luma_bit_depth_entry_minus8: u8,
-	chroma_bit_depth_entry_minus8: u8,
-	num_tile_columns_minus1: u8,
-	num_tile_rows_minus1: u8,
-	reserved1: u8,
-	reserved2: u8,
-	column_width_minus1: [u16; STD_VIDEO_H265_CHROMA_QP_OFFSET_TILE_COLS_LIST_SIZE as usize],
-	row_height_minus1: [u16; STD_VIDEO_H265_CHROMA_QP_OFFSET_TILE_ROWS_LIST_SIZE as usize],
-	reserved3: u32,
-	pScalingLists: *const StdVideoH265ScalingLists,
-	pPredictorPaletteEntries: *const StdVideoH265PredictorPaletteEntries,
+	pub flags: StdVideoH265PpsFlags,
+	pub pps_pic_parameter_set_id: u8,
+	pub pps_seq_parameter_set_id: u8,
+	pub sps_video_parameter_set_id: u8,
+	pub num_extra_slice_header_bits: u8,
+	pub num_ref_idx_l0_default_active_minus1: u8,
+	pub num_ref_idx_l1_default_active_minus1: u8,
+	pub init_qp_minus26: i8,
+	pub diff_cu_qp_delta_depth: u8,
+	pub pps_cb_qp_offset: i8,
+	pub pps_cr_qp_offset: i8,
+	pub pps_beta_offset_div2: i8,
+	pub pps_tc_offset_div2: i8,
+	pub log2_parallel_merge_level_minus2: u8,
+	pub log2_max_transform_skip_block_size_minus2: u8,
+	pub diff_cu_chroma_qp_offset_depth: u8,
+	pub chroma_qp_offset_list_len_minus1: u8,
+	pub cb_qp_offset_list: [i8; STD_VIDEO_H265_CHROMA_QP_OFFSET_LIST_SIZE as usize],
+	pub cr_qp_offset_list: [i8; STD_VIDEO_H265_CHROMA_QP_OFFSET_LIST_SIZE as usize],
+	pub log2_sao_offset_scale_luma: u8,
+	pub log2_sao_offset_scale_chroma: u8,
+	pub pps_act_y_qp_offset_plus5: i8,
+	pub pps_act_cb_qp_offset_plus5: i8,
+	pub pps_act_cr_qp_offset_plus3: i8,
+	pub pps_num_palette_predictor_initializers: u8,
+	pub luma_bit_depth_entry_minus8: u8,
+	pub chroma_bit_depth_entry_minus8: u8,
+	pub num_tile_columns_minus1: u8,
+	pub num_tile_rows_minus1: u8,
+	pub reserved1: u8,
+	pub reserved2: u8,
+	pub column_width_minus1: [u16; STD_VIDEO_H265_CHROMA_QP_OFFSET_TILE_COLS_LIST_SIZE as usize],
+	pub row_height_minus1: [u16; STD_VIDEO_H265_CHROMA_QP_OFFSET_TILE_ROWS_LIST_SIZE as usize],
+	pub reserved3: u32,
+	pub pScalingLists: *const StdVideoH265ScalingLists,
+	pub pPredictorPaletteEntries: *const StdVideoH265PredictorPaletteEntries,
 }
 pub trait vulkan_video_codec_h265std: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_kan_video_codec_h265std {
-}
-impl vulkan_video_codec_h265std for Vulkan_kan_video_codec_h265std {
-}
-impl Default for Vulkan_kan_video_codec_h265std {
+pub struct Vulkan_video_codec_h265std {}
+impl vulkan_video_codec_h265std for Vulkan_video_codec_h265std {}
+impl Default for Vulkan_video_codec_h265std {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-impl Vulkan_kan_video_codec_h265std {
+impl Vulkan_video_codec_h265std {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
+pub const VK_STD_VULKAN_VIDEO_CODEC_H265_ENCODE_API_VERSION_1_0_0: u32 = 0x400000;
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct StdVideoEncodeH265WeightTableFlags {
-	luma_weight_l0_flag: u16,
-	chroma_weight_l0_flag: u16,
-	luma_weight_l1_flag: u16,
-	chroma_weight_l1_flag: u16,
+	pub luma_weight_l0_flag: u16,
+	pub chroma_weight_l0_flag: u16,
+	pub luma_weight_l1_flag: u16,
+	pub chroma_weight_l1_flag: u16,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct StdVideoEncodeH265WeightTable {
-	flags: StdVideoEncodeH265WeightTableFlags,
-	luma_log2_weight_denom: u8,
-	delta_chroma_log2_weight_denom: i8,
-	delta_luma_weight_l0: [i8; STD_VIDEO_H265_MAX_NUM_LIST_REF as usize],
-	luma_offset_l0: [i8; STD_VIDEO_H265_MAX_NUM_LIST_REF as usize],
-	delta_chroma_weight_l0: [i8; STD_VIDEO_H265_MAX_NUM_LIST_REF as usize],
-	delta_chroma_offset_l0: [i8; STD_VIDEO_H265_MAX_NUM_LIST_REF as usize],
-	delta_luma_weight_l1: [i8; STD_VIDEO_H265_MAX_NUM_LIST_REF as usize],
-	luma_offset_l1: [i8; STD_VIDEO_H265_MAX_NUM_LIST_REF as usize],
-	delta_chroma_weight_l1: [i8; STD_VIDEO_H265_MAX_NUM_LIST_REF as usize],
-	delta_chroma_offset_l1: [i8; STD_VIDEO_H265_MAX_NUM_LIST_REF as usize],
+	pub flags: StdVideoEncodeH265WeightTableFlags,
+	pub luma_log2_weight_denom: u8,
+	pub delta_chroma_log2_weight_denom: i8,
+	pub delta_luma_weight_l0: [i8; STD_VIDEO_H265_MAX_NUM_LIST_REF as usize],
+	pub luma_offset_l0: [i8; STD_VIDEO_H265_MAX_NUM_LIST_REF as usize],
+	pub delta_chroma_weight_l0: [i8; STD_VIDEO_H265_MAX_NUM_LIST_REF as usize],
+	pub delta_chroma_offset_l0: [i8; STD_VIDEO_H265_MAX_NUM_LIST_REF as usize],
+	pub delta_luma_weight_l1: [i8; STD_VIDEO_H265_MAX_NUM_LIST_REF as usize],
+	pub luma_offset_l1: [i8; STD_VIDEO_H265_MAX_NUM_LIST_REF as usize],
+	pub delta_chroma_weight_l1: [i8; STD_VIDEO_H265_MAX_NUM_LIST_REF as usize],
+	pub delta_chroma_offset_l1: [i8; STD_VIDEO_H265_MAX_NUM_LIST_REF as usize],
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
@@ -13313,21 +13304,21 @@ impl StdVideoEncodeH265SliceSegmentHeaderFlags {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct StdVideoEncodeH265SliceSegmentHeader {
-	flags: StdVideoEncodeH265SliceSegmentHeaderFlags,
-	slice_type: StdVideoH265SliceType,
-	slice_segment_address: u32,
-	collocated_ref_idx: u8,
-	MaxNumMergeCand: u8,
-	slice_cb_qp_offset: i8,
-	slice_cr_qp_offset: i8,
-	slice_beta_offset_div2: i8,
-	slice_tc_offset_div2: i8,
-	slice_act_y_qp_offset: i8,
-	slice_act_cb_qp_offset: i8,
-	slice_act_cr_qp_offset: i8,
-	slice_qp_delta: i8,
-	reserved1: u16,
-	pWeightTable: *const StdVideoEncodeH265WeightTable,
+	pub flags: StdVideoEncodeH265SliceSegmentHeaderFlags,
+	pub slice_type: StdVideoH265SliceType,
+	pub slice_segment_address: u32,
+	pub collocated_ref_idx: u8,
+	pub MaxNumMergeCand: u8,
+	pub slice_cb_qp_offset: i8,
+	pub slice_cr_qp_offset: i8,
+	pub slice_beta_offset_div2: i8,
+	pub slice_tc_offset_div2: i8,
+	pub slice_act_y_qp_offset: i8,
+	pub slice_act_cb_qp_offset: i8,
+	pub slice_act_cr_qp_offset: i8,
+	pub slice_qp_delta: i8,
+	pub reserved1: u16,
+	pub pWeightTable: *const StdVideoEncodeH265WeightTable,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
@@ -13360,13 +13351,13 @@ impl StdVideoEncodeH265ReferenceListsInfoFlags {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct StdVideoEncodeH265ReferenceListsInfo {
-	flags: StdVideoEncodeH265ReferenceListsInfoFlags,
-	num_ref_idx_l0_active_minus1: u8,
-	num_ref_idx_l1_active_minus1: u8,
-	RefPicList0: [u8; STD_VIDEO_H265_MAX_NUM_LIST_REF as usize],
-	RefPicList1: [u8; STD_VIDEO_H265_MAX_NUM_LIST_REF as usize],
-	list_entry_l0: [u8; STD_VIDEO_H265_MAX_NUM_LIST_REF as usize],
-	list_entry_l1: [u8; STD_VIDEO_H265_MAX_NUM_LIST_REF as usize],
+	pub flags: StdVideoEncodeH265ReferenceListsInfoFlags,
+	pub num_ref_idx_l0_active_minus1: u8,
+	pub num_ref_idx_l1_active_minus1: u8,
+	pub RefPicList0: [u8; STD_VIDEO_H265_MAX_NUM_LIST_REF as usize],
+	pub RefPicList1: [u8; STD_VIDEO_H265_MAX_NUM_LIST_REF as usize],
+	pub list_entry_l0: [u8; STD_VIDEO_H265_MAX_NUM_LIST_REF as usize],
+	pub list_entry_l1: [u8; STD_VIDEO_H265_MAX_NUM_LIST_REF as usize],
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
@@ -13448,29 +13439,29 @@ impl StdVideoEncodeH265PictureInfoFlags {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct StdVideoEncodeH265LongTermRefPics {
-	num_long_term_sps: u8,
-	num_long_term_pics: u8,
-	lt_idx_sps: [u8; STD_VIDEO_H265_MAX_LONG_TERM_REF_PICS_SPS as usize],
-	poc_lsb_lt: [u8; STD_VIDEO_H265_MAX_LONG_TERM_PICS as usize],
-	used_by_curr_pic_lt_flag: u16,
-	delta_poc_msb_present_flag: [u8; STD_VIDEO_H265_MAX_DELTA_POC as usize],
-	delta_poc_msb_cycle_lt: [u8; STD_VIDEO_H265_MAX_DELTA_POC as usize],
+	pub num_long_term_sps: u8,
+	pub num_long_term_pics: u8,
+	pub lt_idx_sps: [u8; STD_VIDEO_H265_MAX_LONG_TERM_REF_PICS_SPS as usize],
+	pub poc_lsb_lt: [u8; STD_VIDEO_H265_MAX_LONG_TERM_PICS as usize],
+	pub used_by_curr_pic_lt_flag: u16,
+	pub delta_poc_msb_present_flag: [u8; STD_VIDEO_H265_MAX_DELTA_POC as usize],
+	pub delta_poc_msb_cycle_lt: [u8; STD_VIDEO_H265_MAX_DELTA_POC as usize],
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct StdVideoEncodeH265PictureInfo {
-	flags: StdVideoEncodeH265PictureInfoFlags,
-	pic_type: StdVideoH265PictureType,
-	sps_video_parameter_set_id: u8,
-	pps_seq_parameter_set_id: u8,
-	pps_pic_parameter_set_id: u8,
-	short_term_ref_pic_set_idx: u8,
-	PicOrderCntVal: i32,
-	TemporalId: u8,
-	reserved1: [u8; 7 as usize],
-	pRefLists: *const StdVideoEncodeH265ReferenceListsInfo,
-	pShortTermRefPicSet: *const StdVideoH265ShortTermRefPicSet,
-	pLongTermRefPics: *const StdVideoEncodeH265LongTermRefPics,
+	pub flags: StdVideoEncodeH265PictureInfoFlags,
+	pub pic_type: StdVideoH265PictureType,
+	pub sps_video_parameter_set_id: u8,
+	pub pps_seq_parameter_set_id: u8,
+	pub pps_pic_parameter_set_id: u8,
+	pub short_term_ref_pic_set_idx: u8,
+	pub PicOrderCntVal: i32,
+	pub TemporalId: u8,
+	pub reserved1: [u8; 7 as usize],
+	pub pRefLists: *const StdVideoEncodeH265ReferenceListsInfo,
+	pub pShortTermRefPicSet: *const StdVideoH265ShortTermRefPicSet,
+	pub pLongTermRefPics: *const StdVideoEncodeH265LongTermRefPics,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
@@ -13503,30 +13494,26 @@ impl StdVideoEncodeH265ReferenceInfoFlags {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct StdVideoEncodeH265ReferenceInfo {
-	flags: StdVideoEncodeH265ReferenceInfoFlags,
-	pic_type: StdVideoH265PictureType,
-	PicOrderCntVal: i32,
-	TemporalId: u8,
+	pub flags: StdVideoEncodeH265ReferenceInfoFlags,
+	pub pic_type: StdVideoH265PictureType,
+	pub PicOrderCntVal: i32,
+	pub TemporalId: u8,
 }
 pub trait vulkan_video_codec_h265std_encode: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_kan_video_codec_h265std_encode {
-}
-impl vulkan_video_codec_h265std_encode for Vulkan_kan_video_codec_h265std_encode {
-}
-impl Default for Vulkan_kan_video_codec_h265std_encode {
+pub struct Vulkan_video_codec_h265std_encode {}
+impl vulkan_video_codec_h265std_encode for Vulkan_video_codec_h265std_encode {}
+impl Default for Vulkan_video_codec_h265std_encode {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-impl Vulkan_kan_video_codec_h265std_encode {
+impl Vulkan_video_codec_h265std_encode {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-type VkVideoDecodeH264PictureLayoutFlagsKHR = VkFlags;
+pub type VkVideoDecodeH264PictureLayoutFlagsKHR = VkFlags;
 #[repr(C)]
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum VkVideoDecodeH264PictureLayoutFlagBitsKHR {
@@ -13538,72 +13525,69 @@ pub enum VkVideoDecodeH264PictureLayoutFlagBitsKHR {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoDecodeH264ProfileInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	stdProfileIdc: StdVideoH264ProfileIdc,
-	pictureLayout: VkVideoDecodeH264PictureLayoutFlagBitsKHR,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub stdProfileIdc: StdVideoH264ProfileIdc,
+	pub pictureLayout: VkVideoDecodeH264PictureLayoutFlagBitsKHR,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoDecodeH264CapabilitiesKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	maxLevelIdc: StdVideoH264LevelIdc,
-	fieldOffsetGranularity: VkOffset2D,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub maxLevelIdc: StdVideoH264LevelIdc,
+	pub fieldOffsetGranularity: VkOffset2D,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoDecodeH264SessionParametersAddInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	stdSPSCount: u32,
-	pStdSPSs: *const StdVideoH264SequenceParameterSet,
-	stdPPSCount: u32,
-	pStdPPSs: *const StdVideoH264PictureParameterSet,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub stdSPSCount: u32,
+	pub pStdSPSs: *const StdVideoH264SequenceParameterSet,
+	pub stdPPSCount: u32,
+	pub pStdPPSs: *const StdVideoH264PictureParameterSet,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoDecodeH264SessionParametersCreateInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	maxStdSPSCount: u32,
-	maxStdPPSCount: u32,
-	pParametersAddInfo: *const VkVideoDecodeH264SessionParametersAddInfoKHR,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub maxStdSPSCount: u32,
+	pub maxStdPPSCount: u32,
+	pub pParametersAddInfo: *const VkVideoDecodeH264SessionParametersAddInfoKHR,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoDecodeH264PictureInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	pStdPictureInfo: *const StdVideoDecodeH264PictureInfo,
-	sliceCount: u32,
-	pSliceOffsets: *const uint32_t,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub pStdPictureInfo: *const StdVideoDecodeH264PictureInfo,
+	pub sliceCount: u32,
+	pub pSliceOffsets: *const uint32_t,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoDecodeH264DpbSlotInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	pStdReferenceInfo: *const StdVideoDecodeH264ReferenceInfo,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub pStdReferenceInfo: *const StdVideoDecodeH264ReferenceInfo,
 }
 pub trait VK_KHR_video_decode_h264: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_KHR_video_decode_h264 {
-}
-impl VK_KHR_video_decode_h264 for Vulkan_KHR_video_decode_h264 {
-}
+pub struct Vulkan_KHR_video_decode_h264 {}
+impl VK_KHR_video_decode_h264 for Vulkan_KHR_video_decode_h264 {}
 impl Default for Vulkan_KHR_video_decode_h264 {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_KHR_video_decode_h264 {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
+pub const VK_STD_VULKAN_VIDEO_CODEC_H264_DECODE_API_VERSION_1_0_0: u32 = 0x400000;
 pub const STD_VIDEO_DECODE_H264_FIELD_ORDER_COUNT_LIST_SIZE: u32 = 2u32;
 #[repr(C)]
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -13624,7 +13608,7 @@ pub struct StdVideoDecodeH264PictureInfoFlags {
 	/// Bitfield: bottom_field_flag: u32 in 1 bits
 	/// Bitfield: is_reference: u32 in 1 bits
 	/// Bitfield: complementary_field_pair: u32 in 1 bits
-	bitfield1: u32,
+	pub bitfield1: u32,
 }
 impl StdVideoDecodeH264PictureInfoFlags {
 	pub fn get_field_pic_flag(&self) -> u32 {
@@ -13667,14 +13651,14 @@ impl StdVideoDecodeH264PictureInfoFlags {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct StdVideoDecodeH264PictureInfo {
-	flags: StdVideoDecodeH264PictureInfoFlags,
-	seq_parameter_set_id: u8,
-	pic_parameter_set_id: u8,
-	reserved1: u8,
-	reserved2: u8,
-	frame_num: u16,
-	idr_pic_id: u16,
-	PicOrderCnt: [i32; STD_VIDEO_DECODE_H264_FIELD_ORDER_COUNT_LIST_SIZE as usize],
+	pub flags: StdVideoDecodeH264PictureInfoFlags,
+	pub seq_parameter_set_id: u8,
+	pub pic_parameter_set_id: u8,
+	pub reserved1: u8,
+	pub reserved2: u8,
+	pub frame_num: u16,
+	pub idr_pic_id: u16,
+	pub PicOrderCnt: [i32; STD_VIDEO_DECODE_H264_FIELD_ORDER_COUNT_LIST_SIZE as usize],
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
@@ -13683,7 +13667,7 @@ pub struct StdVideoDecodeH264ReferenceInfoFlags {
 	/// Bitfield: bottom_field_flag: u32 in 1 bits
 	/// Bitfield: used_for_long_term_reference: u32 in 1 bits
 	/// Bitfield: is_non_existing: u32 in 1 bits
-	bitfield1: u32,
+	pub bitfield1: u32,
 }
 impl StdVideoDecodeH264ReferenceInfoFlags {
 	pub fn get_top_field_flag(&self) -> u32 {
@@ -13714,36 +13698,32 @@ impl StdVideoDecodeH264ReferenceInfoFlags {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct StdVideoDecodeH264ReferenceInfo {
-	flags: StdVideoDecodeH264ReferenceInfoFlags,
-	FrameNum: u16,
-	reserved: u16,
-	PicOrderCnt: [i32; STD_VIDEO_DECODE_H264_FIELD_ORDER_COUNT_LIST_SIZE as usize],
+	pub flags: StdVideoDecodeH264ReferenceInfoFlags,
+	pub FrameNum: u16,
+	pub reserved: u16,
+	pub PicOrderCnt: [i32; STD_VIDEO_DECODE_H264_FIELD_ORDER_COUNT_LIST_SIZE as usize],
 }
 pub trait vulkan_video_codec_h264std_decode: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_kan_video_codec_h264std_decode {
-}
-impl vulkan_video_codec_h264std_decode for Vulkan_kan_video_codec_h264std_decode {
-}
-impl Default for Vulkan_kan_video_codec_h264std_decode {
+pub struct Vulkan_video_codec_h264std_decode {}
+impl vulkan_video_codec_h264std_decode for Vulkan_video_codec_h264std_decode {}
+impl Default for Vulkan_video_codec_h264std_decode {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-impl Vulkan_kan_video_codec_h264std_decode {
+impl Vulkan_video_codec_h264std_decode {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-type VkRenderingFlagsKHR = VkRenderingFlags;
-type VkRenderingFlagBitsKHR = VkRenderingFlagBits;
-type VkRenderingInfoKHR = VkRenderingInfo;
-type VkRenderingAttachmentInfoKHR = VkRenderingAttachmentInfo;
-type VkPipelineRenderingCreateInfoKHR = VkPipelineRenderingCreateInfo;
-type VkPhysicalDeviceDynamicRenderingFeaturesKHR = VkPhysicalDeviceDynamicRenderingFeatures;
-type VkCommandBufferInheritanceRenderingInfoKHR = VkCommandBufferInheritanceRenderingInfo;
+pub type VkRenderingFlagsKHR = VkRenderingFlags;
+pub type VkRenderingFlagBitsKHR = VkRenderingFlagBits;
+pub type VkRenderingInfoKHR = VkRenderingInfo;
+pub type VkRenderingAttachmentInfoKHR = VkRenderingAttachmentInfo;
+pub type VkPipelineRenderingCreateInfoKHR = VkPipelineRenderingCreateInfo;
+pub type VkPhysicalDeviceDynamicRenderingFeaturesKHR = VkPhysicalDeviceDynamicRenderingFeatures;
+pub type VkCommandBufferInheritanceRenderingInfoKHR = VkCommandBufferInheritanceRenderingInfo;
 type PFN_vkCmdBeginRenderingKHR = extern "system" fn(commandBuffer: VkCommandBuffer, pRenderingInfo: *const VkRenderingInfo);
 type PFN_vkCmdEndRenderingKHR = extern "system" fn(commandBuffer: VkCommandBuffer);
 extern "system" fn dummy_vkCmdBeginRenderingKHR(_: VkCommandBuffer, _: *const VkRenderingInfo) {
@@ -13775,36 +13755,32 @@ impl Vulkan_KHR_dynamic_rendering {
 		}
 	}
 }
-type VkRenderPassMultiviewCreateInfoKHR = VkRenderPassMultiviewCreateInfo;
-type VkPhysicalDeviceMultiviewFeaturesKHR = VkPhysicalDeviceMultiviewFeatures;
-type VkPhysicalDeviceMultiviewPropertiesKHR = VkPhysicalDeviceMultiviewProperties;
+pub type VkRenderPassMultiviewCreateInfoKHR = VkRenderPassMultiviewCreateInfo;
+pub type VkPhysicalDeviceMultiviewFeaturesKHR = VkPhysicalDeviceMultiviewFeatures;
+pub type VkPhysicalDeviceMultiviewPropertiesKHR = VkPhysicalDeviceMultiviewProperties;
 pub trait VK_KHR_multiview: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_KHR_multiview {
-}
-impl VK_KHR_multiview for Vulkan_KHR_multiview {
-}
+pub struct Vulkan_KHR_multiview {}
+impl VK_KHR_multiview for Vulkan_KHR_multiview {}
 impl Default for Vulkan_KHR_multiview {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_KHR_multiview {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-type VkPhysicalDeviceFeatures2KHR = VkPhysicalDeviceFeatures2;
-type VkPhysicalDeviceProperties2KHR = VkPhysicalDeviceProperties2;
-type VkFormatProperties2KHR = VkFormatProperties2;
-type VkImageFormatProperties2KHR = VkImageFormatProperties2;
-type VkPhysicalDeviceImageFormatInfo2KHR = VkPhysicalDeviceImageFormatInfo2;
-type VkQueueFamilyProperties2KHR = VkQueueFamilyProperties2;
-type VkPhysicalDeviceMemoryProperties2KHR = VkPhysicalDeviceMemoryProperties2;
-type VkSparseImageFormatProperties2KHR = VkSparseImageFormatProperties2;
-type VkPhysicalDeviceSparseImageFormatInfo2KHR = VkPhysicalDeviceSparseImageFormatInfo2;
+pub type VkPhysicalDeviceFeatures2KHR = VkPhysicalDeviceFeatures2;
+pub type VkPhysicalDeviceProperties2KHR = VkPhysicalDeviceProperties2;
+pub type VkFormatProperties2KHR = VkFormatProperties2;
+pub type VkImageFormatProperties2KHR = VkImageFormatProperties2;
+pub type VkPhysicalDeviceImageFormatInfo2KHR = VkPhysicalDeviceImageFormatInfo2;
+pub type VkQueueFamilyProperties2KHR = VkQueueFamilyProperties2;
+pub type VkPhysicalDeviceMemoryProperties2KHR = VkPhysicalDeviceMemoryProperties2;
+pub type VkSparseImageFormatProperties2KHR = VkSparseImageFormatProperties2;
+pub type VkPhysicalDeviceSparseImageFormatInfo2KHR = VkPhysicalDeviceSparseImageFormatInfo2;
 type PFN_vkGetPhysicalDeviceFeatures2KHR = extern "system" fn(physicalDevice: VkPhysicalDevice, pFeatures: *mut VkPhysicalDeviceFeatures2);
 type PFN_vkGetPhysicalDeviceProperties2KHR = extern "system" fn(physicalDevice: VkPhysicalDevice, pProperties: *mut VkPhysicalDeviceProperties2);
 type PFN_vkGetPhysicalDeviceFormatProperties2KHR = extern "system" fn(physicalDevice: VkPhysicalDevice, format: VkFormat, pFormatProperties: *mut VkFormatProperties2);
@@ -13841,17 +13817,17 @@ impl Vulkan_KHR_get_physical_device_properties2 {
 		}
 	}
 }
-type VkPeerMemoryFeatureFlagsKHR = VkPeerMemoryFeatureFlags;
-type VkPeerMemoryFeatureFlagBitsKHR = VkPeerMemoryFeatureFlagBits;
-type VkMemoryAllocateFlagsKHR = VkMemoryAllocateFlags;
-type VkMemoryAllocateFlagBitsKHR = VkMemoryAllocateFlagBits;
-type VkMemoryAllocateFlagsInfoKHR = VkMemoryAllocateFlagsInfo;
-type VkDeviceGroupRenderPassBeginInfoKHR = VkDeviceGroupRenderPassBeginInfo;
-type VkDeviceGroupCommandBufferBeginInfoKHR = VkDeviceGroupCommandBufferBeginInfo;
-type VkDeviceGroupSubmitInfoKHR = VkDeviceGroupSubmitInfo;
-type VkDeviceGroupBindSparseInfoKHR = VkDeviceGroupBindSparseInfo;
-type VkBindBufferMemoryDeviceGroupInfoKHR = VkBindBufferMemoryDeviceGroupInfo;
-type VkBindImageMemoryDeviceGroupInfoKHR = VkBindImageMemoryDeviceGroupInfo;
+pub type VkPeerMemoryFeatureFlagsKHR = VkPeerMemoryFeatureFlags;
+pub type VkPeerMemoryFeatureFlagBitsKHR = VkPeerMemoryFeatureFlagBits;
+pub type VkMemoryAllocateFlagsKHR = VkMemoryAllocateFlags;
+pub type VkMemoryAllocateFlagBitsKHR = VkMemoryAllocateFlagBits;
+pub type VkMemoryAllocateFlagsInfoKHR = VkMemoryAllocateFlagsInfo;
+pub type VkDeviceGroupRenderPassBeginInfoKHR = VkDeviceGroupRenderPassBeginInfo;
+pub type VkDeviceGroupCommandBufferBeginInfoKHR = VkDeviceGroupCommandBufferBeginInfo;
+pub type VkDeviceGroupSubmitInfoKHR = VkDeviceGroupSubmitInfo;
+pub type VkDeviceGroupBindSparseInfoKHR = VkDeviceGroupBindSparseInfo;
+pub type VkBindBufferMemoryDeviceGroupInfoKHR = VkBindBufferMemoryDeviceGroupInfo;
+pub type VkBindImageMemoryDeviceGroupInfoKHR = VkBindImageMemoryDeviceGroupInfo;
 type PFN_vkGetDeviceGroupPeerMemoryFeaturesKHR = extern "system" fn(device: VkDevice, heapIndex: u32, localDeviceIndex: u32, remoteDeviceIndex: u32, pPeerMemoryFeatures: *mut VkPeerMemoryFeatureFlags);
 type PFN_vkCmdSetDeviceMaskKHR = extern "system" fn(commandBuffer: VkCommandBuffer, deviceMask: u32);
 type PFN_vkCmdDispatchBaseKHR = extern "system" fn(commandBuffer: VkCommandBuffer, baseGroupX: u32, baseGroupY: u32, baseGroupZ: u32, groupCountX: u32, groupCountY: u32, groupCountZ: u32);
@@ -13886,23 +13862,19 @@ impl Vulkan_KHR_device_group {
 }
 pub trait VK_KHR_shader_draw_parameters: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_KHR_shader_draw_parameters {
-}
-impl VK_KHR_shader_draw_parameters for Vulkan_KHR_shader_draw_parameters {
-}
+pub struct Vulkan_KHR_shader_draw_parameters {}
+impl VK_KHR_shader_draw_parameters for Vulkan_KHR_shader_draw_parameters {}
 impl Default for Vulkan_KHR_shader_draw_parameters {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_KHR_shader_draw_parameters {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-type VkCommandPoolTrimFlagsKHR = VkCommandPoolTrimFlags;
+pub type VkCommandPoolTrimFlagsKHR = VkCommandPoolTrimFlags;
 type PFN_vkTrimCommandPoolKHR = extern "system" fn(device: VkDevice, commandPool: VkCommandPool, flags: VkCommandPoolTrimFlags);
 extern "system" fn dummy_vkTrimCommandPoolKHR(_: VkDevice, _: VkCommandPool, _: VkCommandPoolTrimFlags) {
 	panic!("Vulkan function pointer of `vkTrimCommandPoolKHR()` is NULL");
@@ -13934,8 +13906,8 @@ impl Vulkan_KHR_maintenance1 {
 	}
 }
 pub const VK_MAX_DEVICE_GROUP_SIZE_KHR: u32 = 32u32;
-type VkPhysicalDeviceGroupPropertiesKHR = VkPhysicalDeviceGroupProperties;
-type VkDeviceGroupDeviceCreateInfoKHR = VkDeviceGroupDeviceCreateInfo;
+pub type VkPhysicalDeviceGroupPropertiesKHR = VkPhysicalDeviceGroupProperties;
+pub type VkDeviceGroupDeviceCreateInfoKHR = VkDeviceGroupDeviceCreateInfo;
 type PFN_vkEnumeratePhysicalDeviceGroupsKHR = extern "system" fn(instance: VkInstance, pPhysicalDeviceGroupCount: *mut uint32_t, pPhysicalDeviceGroupProperties: *mut VkPhysicalDeviceGroupProperties) -> VkResult;
 extern "system" fn dummy_vkEnumeratePhysicalDeviceGroupsKHR(_: VkInstance, _: *mut uint32_t, _: *mut VkPhysicalDeviceGroupProperties) -> VkResult {
 	panic!("Vulkan function pointer of `vkEnumeratePhysicalDeviceGroupsKHR()` is NULL");
@@ -13967,16 +13939,16 @@ impl Vulkan_KHR_device_group_creation {
 	}
 }
 pub const VK_LUID_SIZE_KHR: u32 = 8u32;
-type VkExternalMemoryHandleTypeFlagsKHR = VkExternalMemoryHandleTypeFlags;
-type VkExternalMemoryHandleTypeFlagBitsKHR = VkExternalMemoryHandleTypeFlagBits;
-type VkExternalMemoryFeatureFlagsKHR = VkExternalMemoryFeatureFlags;
-type VkExternalMemoryFeatureFlagBitsKHR = VkExternalMemoryFeatureFlagBits;
-type VkExternalMemoryPropertiesKHR = VkExternalMemoryProperties;
-type VkPhysicalDeviceExternalImageFormatInfoKHR = VkPhysicalDeviceExternalImageFormatInfo;
-type VkExternalImageFormatPropertiesKHR = VkExternalImageFormatProperties;
-type VkPhysicalDeviceExternalBufferInfoKHR = VkPhysicalDeviceExternalBufferInfo;
-type VkExternalBufferPropertiesKHR = VkExternalBufferProperties;
-type VkPhysicalDeviceIDPropertiesKHR = VkPhysicalDeviceIDProperties;
+pub type VkExternalMemoryHandleTypeFlagsKHR = VkExternalMemoryHandleTypeFlags;
+pub type VkExternalMemoryHandleTypeFlagBitsKHR = VkExternalMemoryHandleTypeFlagBits;
+pub type VkExternalMemoryFeatureFlagsKHR = VkExternalMemoryFeatureFlags;
+pub type VkExternalMemoryFeatureFlagBitsKHR = VkExternalMemoryFeatureFlagBits;
+pub type VkExternalMemoryPropertiesKHR = VkExternalMemoryProperties;
+pub type VkPhysicalDeviceExternalImageFormatInfoKHR = VkPhysicalDeviceExternalImageFormatInfo;
+pub type VkExternalImageFormatPropertiesKHR = VkExternalImageFormatProperties;
+pub type VkPhysicalDeviceExternalBufferInfoKHR = VkPhysicalDeviceExternalBufferInfo;
+pub type VkExternalBufferPropertiesKHR = VkExternalBufferProperties;
+pub type VkPhysicalDeviceIDPropertiesKHR = VkPhysicalDeviceIDProperties;
 type PFN_vkGetPhysicalDeviceExternalBufferPropertiesKHR = extern "system" fn(physicalDevice: VkPhysicalDevice, pExternalBufferInfo: *const VkPhysicalDeviceExternalBufferInfo, pExternalBufferProperties: *mut VkExternalBufferProperties);
 extern "system" fn dummy_vkGetPhysicalDeviceExternalBufferPropertiesKHR(_: VkPhysicalDevice, _: *const VkPhysicalDeviceExternalBufferInfo, _: *mut VkExternalBufferProperties) {
 	panic!("Vulkan function pointer of `vkGetPhysicalDeviceExternalBufferPropertiesKHR()` is NULL");
@@ -14008,49 +13980,45 @@ impl Vulkan_KHR_external_memory_capabilities {
 	}
 }
 pub const VK_QUEUE_FAMILY_EXTERNAL_KHR: u32 = !1u32;
-type VkExternalMemoryImageCreateInfoKHR = VkExternalMemoryImageCreateInfo;
-type VkExternalMemoryBufferCreateInfoKHR = VkExternalMemoryBufferCreateInfo;
-type VkExportMemoryAllocateInfoKHR = VkExportMemoryAllocateInfo;
+pub type VkExternalMemoryImageCreateInfoKHR = VkExternalMemoryImageCreateInfo;
+pub type VkExternalMemoryBufferCreateInfoKHR = VkExternalMemoryBufferCreateInfo;
+pub type VkExportMemoryAllocateInfoKHR = VkExportMemoryAllocateInfo;
 pub trait VK_KHR_external_memory: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_KHR_external_memory {
-}
-impl VK_KHR_external_memory for Vulkan_KHR_external_memory {
-}
+pub struct Vulkan_KHR_external_memory {}
+impl VK_KHR_external_memory for Vulkan_KHR_external_memory {}
 impl Default for Vulkan_KHR_external_memory {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_KHR_external_memory {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkImportMemoryFdInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	handleType: VkExternalMemoryHandleTypeFlagBits,
-	fd: i32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub handleType: VkExternalMemoryHandleTypeFlagBits,
+	pub fd: i32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkMemoryFdPropertiesKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	memoryTypeBits: u32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub memoryTypeBits: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkMemoryGetFdInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	memory: VkDeviceMemory,
-	handleType: VkExternalMemoryHandleTypeFlagBits,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub memory: VkDeviceMemory,
+	pub handleType: VkExternalMemoryHandleTypeFlagBits,
 }
 type PFN_vkGetMemoryFdKHR = extern "system" fn(device: VkDevice, pGetFdInfo: *const VkMemoryGetFdInfoKHR, pFd: *mut int) -> VkResult;
 type PFN_vkGetMemoryFdPropertiesKHR = extern "system" fn(device: VkDevice, handleType: VkExternalMemoryHandleTypeFlagBits, fd: i32, pMemoryFdProperties: *mut VkMemoryFdPropertiesKHR) -> VkResult;
@@ -14083,12 +14051,12 @@ impl Vulkan_KHR_external_memory_fd {
 		}
 	}
 }
-type VkExternalSemaphoreHandleTypeFlagsKHR = VkExternalSemaphoreHandleTypeFlags;
-type VkExternalSemaphoreHandleTypeFlagBitsKHR = VkExternalSemaphoreHandleTypeFlagBits;
-type VkExternalSemaphoreFeatureFlagsKHR = VkExternalSemaphoreFeatureFlags;
-type VkExternalSemaphoreFeatureFlagBitsKHR = VkExternalSemaphoreFeatureFlagBits;
-type VkPhysicalDeviceExternalSemaphoreInfoKHR = VkPhysicalDeviceExternalSemaphoreInfo;
-type VkExternalSemaphorePropertiesKHR = VkExternalSemaphoreProperties;
+pub type VkExternalSemaphoreHandleTypeFlagsKHR = VkExternalSemaphoreHandleTypeFlags;
+pub type VkExternalSemaphoreHandleTypeFlagBitsKHR = VkExternalSemaphoreHandleTypeFlagBits;
+pub type VkExternalSemaphoreFeatureFlagsKHR = VkExternalSemaphoreFeatureFlags;
+pub type VkExternalSemaphoreFeatureFlagBitsKHR = VkExternalSemaphoreFeatureFlagBits;
+pub type VkPhysicalDeviceExternalSemaphoreInfoKHR = VkPhysicalDeviceExternalSemaphoreInfo;
+pub type VkExternalSemaphorePropertiesKHR = VkExternalSemaphoreProperties;
 type PFN_vkGetPhysicalDeviceExternalSemaphorePropertiesKHR = extern "system" fn(physicalDevice: VkPhysicalDevice, pExternalSemaphoreInfo: *const VkPhysicalDeviceExternalSemaphoreInfo, pExternalSemaphoreProperties: *mut VkExternalSemaphoreProperties);
 extern "system" fn dummy_vkGetPhysicalDeviceExternalSemaphorePropertiesKHR(_: VkPhysicalDevice, _: *const VkPhysicalDeviceExternalSemaphoreInfo, _: *mut VkExternalSemaphoreProperties) {
 	panic!("Vulkan function pointer of `vkGetPhysicalDeviceExternalSemaphorePropertiesKHR()` is NULL");
@@ -14119,44 +14087,40 @@ impl Vulkan_KHR_external_semaphore_capabilities {
 		}
 	}
 }
-type VkSemaphoreImportFlagsKHR = VkSemaphoreImportFlags;
-type VkSemaphoreImportFlagBitsKHR = VkSemaphoreImportFlagBits;
-type VkExportSemaphoreCreateInfoKHR = VkExportSemaphoreCreateInfo;
+pub type VkSemaphoreImportFlagsKHR = VkSemaphoreImportFlags;
+pub type VkSemaphoreImportFlagBitsKHR = VkSemaphoreImportFlagBits;
+pub type VkExportSemaphoreCreateInfoKHR = VkExportSemaphoreCreateInfo;
 pub trait VK_KHR_external_semaphore: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_KHR_external_semaphore {
-}
-impl VK_KHR_external_semaphore for Vulkan_KHR_external_semaphore {
-}
+pub struct Vulkan_KHR_external_semaphore {}
+impl VK_KHR_external_semaphore for Vulkan_KHR_external_semaphore {}
 impl Default for Vulkan_KHR_external_semaphore {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_KHR_external_semaphore {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkImportSemaphoreFdInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	semaphore: VkSemaphore,
-	flags: VkSemaphoreImportFlags,
-	handleType: VkExternalSemaphoreHandleTypeFlagBits,
-	fd: i32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub semaphore: VkSemaphore,
+	pub flags: VkSemaphoreImportFlags,
+	pub handleType: VkExternalSemaphoreHandleTypeFlagBits,
+	pub fd: i32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkSemaphoreGetFdInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	semaphore: VkSemaphore,
-	handleType: VkExternalSemaphoreHandleTypeFlagBits,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub semaphore: VkSemaphore,
+	pub handleType: VkExternalSemaphoreHandleTypeFlagBits,
 }
 type PFN_vkImportSemaphoreFdKHR = extern "system" fn(device: VkDevice, pImportSemaphoreFdInfo: *const VkImportSemaphoreFdInfoKHR) -> VkResult;
 type PFN_vkGetSemaphoreFdKHR = extern "system" fn(device: VkDevice, pGetFdInfo: *const VkSemaphoreGetFdInfoKHR, pFd: *mut int) -> VkResult;
@@ -14189,7 +14153,7 @@ impl Vulkan_KHR_external_semaphore_fd {
 		}
 	}
 }
-type VkPhysicalDevicePushDescriptorPropertiesKHR = VkPhysicalDevicePushDescriptorProperties;
+pub type VkPhysicalDevicePushDescriptorPropertiesKHR = VkPhysicalDevicePushDescriptorProperties;
 type PFN_vkCmdPushDescriptorSetKHR = extern "system" fn(commandBuffer: VkCommandBuffer, pipelineBindPoint: VkPipelineBindPoint, layout: VkPipelineLayout, set: u32, descriptorWriteCount: u32, pDescriptorWrites: *const VkWriteDescriptorSet);
 type PFN_vkCmdPushDescriptorSetWithTemplateKHR = extern "system" fn(commandBuffer: VkCommandBuffer, descriptorUpdateTemplate: VkDescriptorUpdateTemplate, layout: VkPipelineLayout, set: u32, pData: *const c_void);
 extern "system" fn dummy_vkCmdPushDescriptorSetKHR(_: VkCommandBuffer, _: VkPipelineBindPoint, _: VkPipelineLayout, _: u32, _: u32, _: *const VkWriteDescriptorSet) {
@@ -14221,89 +14185,77 @@ impl Vulkan_KHR_push_descriptor {
 		}
 	}
 }
-type VkPhysicalDeviceShaderFloat16Int8FeaturesKHR = VkPhysicalDeviceShaderFloat16Int8Features;
-type VkPhysicalDeviceFloat16Int8FeaturesKHR = VkPhysicalDeviceShaderFloat16Int8Features;
+pub type VkPhysicalDeviceShaderFloat16Int8FeaturesKHR = VkPhysicalDeviceShaderFloat16Int8Features;
+pub type VkPhysicalDeviceFloat16Int8FeaturesKHR = VkPhysicalDeviceShaderFloat16Int8Features;
 pub trait VK_KHR_shader_float16_int8: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_KHR_shader_float16_int8 {
-}
-impl VK_KHR_shader_float16_int8 for Vulkan_KHR_shader_float16_int8 {
-}
+pub struct Vulkan_KHR_shader_float16_int8 {}
+impl VK_KHR_shader_float16_int8 for Vulkan_KHR_shader_float16_int8 {}
 impl Default for Vulkan_KHR_shader_float16_int8 {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_KHR_shader_float16_int8 {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-type VkPhysicalDevice16BitStorageFeaturesKHR = VkPhysicalDevice16BitStorageFeatures;
+pub type VkPhysicalDevice16BitStorageFeaturesKHR = VkPhysicalDevice16BitStorageFeatures;
 pub trait VK_KHR_16bit_storage: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_KHR_16bit_storage {
-}
-impl VK_KHR_16bit_storage for Vulkan_KHR_16bit_storage {
-}
+pub struct Vulkan_KHR_16bit_storage {}
+impl VK_KHR_16bit_storage for Vulkan_KHR_16bit_storage {}
 impl Default for Vulkan_KHR_16bit_storage {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_KHR_16bit_storage {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkRectLayerKHR {
-	offset: VkOffset2D,
-	extent: VkExtent2D,
-	layer: u32,
+	pub offset: VkOffset2D,
+	pub extent: VkExtent2D,
+	pub layer: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPresentRegionKHR {
-	rectangleCount: u32,
-	pRectangles: *const VkRectLayerKHR,
+	pub rectangleCount: u32,
+	pub pRectangles: *const VkRectLayerKHR,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPresentRegionsKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	swapchainCount: u32,
-	pRegions: *const VkPresentRegionKHR,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub swapchainCount: u32,
+	pub pRegions: *const VkPresentRegionKHR,
 }
 pub trait VK_KHR_incremental_present: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_KHR_incremental_present {
-}
-impl VK_KHR_incremental_present for Vulkan_KHR_incremental_present {
-}
+pub struct Vulkan_KHR_incremental_present {}
+impl VK_KHR_incremental_present for Vulkan_KHR_incremental_present {}
 impl Default for Vulkan_KHR_incremental_present {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_KHR_incremental_present {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-type VkDescriptorUpdateTemplateKHR = VkDescriptorUpdateTemplate;
-type VkDescriptorUpdateTemplateTypeKHR = VkDescriptorUpdateTemplateType;
-type VkDescriptorUpdateTemplateCreateFlagsKHR = VkDescriptorUpdateTemplateCreateFlags;
-type VkDescriptorUpdateTemplateEntryKHR = VkDescriptorUpdateTemplateEntry;
-type VkDescriptorUpdateTemplateCreateInfoKHR = VkDescriptorUpdateTemplateCreateInfo;
+pub type VkDescriptorUpdateTemplateKHR = VkDescriptorUpdateTemplate;
+pub type VkDescriptorUpdateTemplateTypeKHR = VkDescriptorUpdateTemplateType;
+pub type VkDescriptorUpdateTemplateCreateFlagsKHR = VkDescriptorUpdateTemplateCreateFlags;
+pub type VkDescriptorUpdateTemplateEntryKHR = VkDescriptorUpdateTemplateEntry;
+pub type VkDescriptorUpdateTemplateCreateInfoKHR = VkDescriptorUpdateTemplateCreateInfo;
 type PFN_vkCreateDescriptorUpdateTemplateKHR = extern "system" fn(device: VkDevice, pCreateInfo: *const VkDescriptorUpdateTemplateCreateInfo, pAllocator: *const VkAllocationCallbacks, pDescriptorUpdateTemplate: *mut VkDescriptorUpdateTemplate) -> VkResult;
 type PFN_vkDestroyDescriptorUpdateTemplateKHR = extern "system" fn(device: VkDevice, descriptorUpdateTemplate: VkDescriptorUpdateTemplate, pAllocator: *const VkAllocationCallbacks);
 type PFN_vkUpdateDescriptorSetWithTemplateKHR = extern "system" fn(device: VkDevice, descriptorSet: VkDescriptorSet, descriptorUpdateTemplate: VkDescriptorUpdateTemplate, pData: *const c_void);
@@ -14336,35 +14288,31 @@ impl Vulkan_KHR_descriptor_update_template {
 		}
 	}
 }
-type VkPhysicalDeviceImagelessFramebufferFeaturesKHR = VkPhysicalDeviceImagelessFramebufferFeatures;
-type VkFramebufferAttachmentsCreateInfoKHR = VkFramebufferAttachmentsCreateInfo;
-type VkFramebufferAttachmentImageInfoKHR = VkFramebufferAttachmentImageInfo;
-type VkRenderPassAttachmentBeginInfoKHR = VkRenderPassAttachmentBeginInfo;
+pub type VkPhysicalDeviceImagelessFramebufferFeaturesKHR = VkPhysicalDeviceImagelessFramebufferFeatures;
+pub type VkFramebufferAttachmentsCreateInfoKHR = VkFramebufferAttachmentsCreateInfo;
+pub type VkFramebufferAttachmentImageInfoKHR = VkFramebufferAttachmentImageInfo;
+pub type VkRenderPassAttachmentBeginInfoKHR = VkRenderPassAttachmentBeginInfo;
 pub trait VK_KHR_imageless_framebuffer: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_KHR_imageless_framebuffer {
-}
-impl VK_KHR_imageless_framebuffer for Vulkan_KHR_imageless_framebuffer {
-}
+pub struct Vulkan_KHR_imageless_framebuffer {}
+impl VK_KHR_imageless_framebuffer for Vulkan_KHR_imageless_framebuffer {}
 impl Default for Vulkan_KHR_imageless_framebuffer {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_KHR_imageless_framebuffer {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-type VkRenderPassCreateInfo2KHR = VkRenderPassCreateInfo2;
-type VkAttachmentDescription2KHR = VkAttachmentDescription2;
-type VkAttachmentReference2KHR = VkAttachmentReference2;
-type VkSubpassDescription2KHR = VkSubpassDescription2;
-type VkSubpassDependency2KHR = VkSubpassDependency2;
-type VkSubpassBeginInfoKHR = VkSubpassBeginInfo;
-type VkSubpassEndInfoKHR = VkSubpassEndInfo;
+pub type VkRenderPassCreateInfo2KHR = VkRenderPassCreateInfo2;
+pub type VkAttachmentDescription2KHR = VkAttachmentDescription2;
+pub type VkAttachmentReference2KHR = VkAttachmentReference2;
+pub type VkSubpassDescription2KHR = VkSubpassDescription2;
+pub type VkSubpassDependency2KHR = VkSubpassDependency2;
+pub type VkSubpassBeginInfoKHR = VkSubpassBeginInfo;
+pub type VkSubpassEndInfoKHR = VkSubpassEndInfo;
 type PFN_vkCreateRenderPass2KHR = extern "system" fn(device: VkDevice, pCreateInfo: *const VkRenderPassCreateInfo2, pAllocator: *const VkAllocationCallbacks, pRenderPass: *mut VkRenderPass) -> VkResult;
 type PFN_vkCmdBeginRenderPass2KHR = extern "system" fn(commandBuffer: VkCommandBuffer, pRenderPassBegin: *const VkRenderPassBeginInfo, pSubpassBeginInfo: *const VkSubpassBeginInfo);
 type PFN_vkCmdNextSubpass2KHR = extern "system" fn(commandBuffer: VkCommandBuffer, pSubpassBeginInfo: *const VkSubpassBeginInfo, pSubpassEndInfo: *const VkSubpassEndInfo);
@@ -14401,9 +14349,9 @@ impl Vulkan_KHR_create_renderpass2 {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkSharedPresentSurfaceCapabilitiesKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	sharedPresentSupportedUsageFlags: VkImageUsageFlags,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub sharedPresentSupportedUsageFlags: VkImageUsageFlags,
 }
 type PFN_vkGetSwapchainStatusKHR = extern "system" fn(device: VkDevice, swapchain: VkSwapchainKHR) -> VkResult;
 extern "system" fn dummy_vkGetSwapchainStatusKHR(_: VkDevice, _: VkSwapchainKHR) -> VkResult {
@@ -14435,12 +14383,12 @@ impl Vulkan_KHR_shared_presentable_image {
 		}
 	}
 }
-type VkExternalFenceHandleTypeFlagsKHR = VkExternalFenceHandleTypeFlags;
-type VkExternalFenceHandleTypeFlagBitsKHR = VkExternalFenceHandleTypeFlagBits;
-type VkExternalFenceFeatureFlagsKHR = VkExternalFenceFeatureFlags;
-type VkExternalFenceFeatureFlagBitsKHR = VkExternalFenceFeatureFlagBits;
-type VkPhysicalDeviceExternalFenceInfoKHR = VkPhysicalDeviceExternalFenceInfo;
-type VkExternalFencePropertiesKHR = VkExternalFenceProperties;
+pub type VkExternalFenceHandleTypeFlagsKHR = VkExternalFenceHandleTypeFlags;
+pub type VkExternalFenceHandleTypeFlagBitsKHR = VkExternalFenceHandleTypeFlagBits;
+pub type VkExternalFenceFeatureFlagsKHR = VkExternalFenceFeatureFlags;
+pub type VkExternalFenceFeatureFlagBitsKHR = VkExternalFenceFeatureFlagBits;
+pub type VkPhysicalDeviceExternalFenceInfoKHR = VkPhysicalDeviceExternalFenceInfo;
+pub type VkExternalFencePropertiesKHR = VkExternalFenceProperties;
 type PFN_vkGetPhysicalDeviceExternalFencePropertiesKHR = extern "system" fn(physicalDevice: VkPhysicalDevice, pExternalFenceInfo: *const VkPhysicalDeviceExternalFenceInfo, pExternalFenceProperties: *mut VkExternalFenceProperties);
 extern "system" fn dummy_vkGetPhysicalDeviceExternalFencePropertiesKHR(_: VkPhysicalDevice, _: *const VkPhysicalDeviceExternalFenceInfo, _: *mut VkExternalFenceProperties) {
 	panic!("Vulkan function pointer of `vkGetPhysicalDeviceExternalFencePropertiesKHR()` is NULL");
@@ -14471,44 +14419,40 @@ impl Vulkan_KHR_external_fence_capabilities {
 		}
 	}
 }
-type VkFenceImportFlagsKHR = VkFenceImportFlags;
-type VkFenceImportFlagBitsKHR = VkFenceImportFlagBits;
-type VkExportFenceCreateInfoKHR = VkExportFenceCreateInfo;
+pub type VkFenceImportFlagsKHR = VkFenceImportFlags;
+pub type VkFenceImportFlagBitsKHR = VkFenceImportFlagBits;
+pub type VkExportFenceCreateInfoKHR = VkExportFenceCreateInfo;
 pub trait VK_KHR_external_fence: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_KHR_external_fence {
-}
-impl VK_KHR_external_fence for Vulkan_KHR_external_fence {
-}
+pub struct Vulkan_KHR_external_fence {}
+impl VK_KHR_external_fence for Vulkan_KHR_external_fence {}
 impl Default for Vulkan_KHR_external_fence {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_KHR_external_fence {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkImportFenceFdInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	fence: VkFence,
-	flags: VkFenceImportFlags,
-	handleType: VkExternalFenceHandleTypeFlagBits,
-	fd: i32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub fence: VkFence,
+	pub flags: VkFenceImportFlags,
+	pub handleType: VkExternalFenceHandleTypeFlagBits,
+	pub fd: i32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkFenceGetFdInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	fence: VkFence,
-	handleType: VkExternalFenceHandleTypeFlagBits,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub fence: VkFence,
+	pub handleType: VkExternalFenceHandleTypeFlagBits,
 }
 type PFN_vkImportFenceFdKHR = extern "system" fn(device: VkDevice, pImportFenceFdInfo: *const VkImportFenceFdInfoKHR) -> VkResult;
 type PFN_vkGetFenceFdKHR = extern "system" fn(device: VkDevice, pGetFdInfo: *const VkFenceGetFdInfoKHR, pFd: *mut int) -> VkResult;
@@ -14541,8 +14485,8 @@ impl Vulkan_KHR_external_fence_fd {
 		}
 	}
 }
-type VkPerformanceCounterDescriptionFlagsKHR = VkFlags;
-type VkAcquireProfilingLockFlagsKHR = VkFlags;
+pub type VkPerformanceCounterDescriptionFlagsKHR = VkFlags;
+pub type VkAcquireProfilingLockFlagsKHR = VkFlags;
 #[repr(C)]
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum VkPerformanceCounterUnitKHR {
@@ -14602,12 +14546,12 @@ pub enum VkAcquireProfilingLockFlagBitsKHR {
 #[repr(C)]
 #[derive(Clone, Copy)]
 pub union VkPerformanceCounterResultKHR {
-	int32: i32,
-	int64: i64,
-	uint32: u32,
-	uint64: u64,
-	float32: f32,
-	float64: f64,
+	pub int32: i32,
+	pub int64: i64,
+	pub uint32: u32,
+	pub uint64: u64,
+	pub float32: f32,
+	pub float64: f64,
 }
 impl Debug for VkPerformanceCounterResultKHR {
 	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
@@ -14624,61 +14568,61 @@ impl Debug for VkPerformanceCounterResultKHR {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDevicePerformanceQueryFeaturesKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	performanceCounterQueryPools: VkBool32,
-	performanceCounterMultipleQueryPools: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub performanceCounterQueryPools: VkBool32,
+	pub performanceCounterMultipleQueryPools: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDevicePerformanceQueryPropertiesKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	allowCommandBufferQueryCopies: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub allowCommandBufferQueryCopies: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPerformanceCounterKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	unit: VkPerformanceCounterUnitKHR,
-	scope: VkPerformanceCounterScopeKHR,
-	storage: VkPerformanceCounterStorageKHR,
-	uuid: [u8; VK_UUID_SIZE as usize],
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub unit: VkPerformanceCounterUnitKHR,
+	pub scope: VkPerformanceCounterScopeKHR,
+	pub storage: VkPerformanceCounterStorageKHR,
+	pub uuid: [u8; VK_UUID_SIZE as usize],
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPerformanceCounterDescriptionKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	flags: VkPerformanceCounterDescriptionFlagsKHR,
-	name: [i8; VK_MAX_DESCRIPTION_SIZE as usize],
-	category: [i8; VK_MAX_DESCRIPTION_SIZE as usize],
-	description: [i8; VK_MAX_DESCRIPTION_SIZE as usize],
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub flags: VkPerformanceCounterDescriptionFlagsKHR,
+	pub name: [i8; VK_MAX_DESCRIPTION_SIZE as usize],
+	pub category: [i8; VK_MAX_DESCRIPTION_SIZE as usize],
+	pub description: [i8; VK_MAX_DESCRIPTION_SIZE as usize],
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkQueryPoolPerformanceCreateInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	queueFamilyIndex: u32,
-	counterIndexCount: u32,
-	pCounterIndices: *const uint32_t,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub queueFamilyIndex: u32,
+	pub counterIndexCount: u32,
+	pub pCounterIndices: *const uint32_t,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkAcquireProfilingLockInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkAcquireProfilingLockFlagsKHR,
-	timeout: u64,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkAcquireProfilingLockFlagsKHR,
+	pub timeout: u64,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPerformanceQuerySubmitInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	counterPassIndex: u32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub counterPassIndex: u32,
 }
 type PFN_vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR = extern "system" fn(physicalDevice: VkPhysicalDevice, queueFamilyIndex: u32, pCounterCount: *mut uint32_t, pCounters: *mut VkPerformanceCounterKHR, pCounterDescriptions: *mut VkPerformanceCounterDescriptionKHR) -> VkResult;
 type PFN_vkGetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR = extern "system" fn(physicalDevice: VkPhysicalDevice, pPerformanceQueryCreateInfo: *const VkQueryPoolPerformanceCreateInfoKHR, pNumPasses: *mut uint32_t);
@@ -14713,51 +14657,47 @@ impl Vulkan_KHR_performance_query {
 		}
 	}
 }
-type VkPointClippingBehaviorKHR = VkPointClippingBehavior;
-type VkTessellationDomainOriginKHR = VkTessellationDomainOrigin;
-type VkPhysicalDevicePointClippingPropertiesKHR = VkPhysicalDevicePointClippingProperties;
-type VkRenderPassInputAttachmentAspectCreateInfoKHR = VkRenderPassInputAttachmentAspectCreateInfo;
-type VkInputAttachmentAspectReferenceKHR = VkInputAttachmentAspectReference;
-type VkImageViewUsageCreateInfoKHR = VkImageViewUsageCreateInfo;
-type VkPipelineTessellationDomainOriginStateCreateInfoKHR = VkPipelineTessellationDomainOriginStateCreateInfo;
+pub type VkPointClippingBehaviorKHR = VkPointClippingBehavior;
+pub type VkTessellationDomainOriginKHR = VkTessellationDomainOrigin;
+pub type VkPhysicalDevicePointClippingPropertiesKHR = VkPhysicalDevicePointClippingProperties;
+pub type VkRenderPassInputAttachmentAspectCreateInfoKHR = VkRenderPassInputAttachmentAspectCreateInfo;
+pub type VkInputAttachmentAspectReferenceKHR = VkInputAttachmentAspectReference;
+pub type VkImageViewUsageCreateInfoKHR = VkImageViewUsageCreateInfo;
+pub type VkPipelineTessellationDomainOriginStateCreateInfoKHR = VkPipelineTessellationDomainOriginStateCreateInfo;
 pub trait VK_KHR_maintenance2: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_KHR_maintenance2 {
-}
-impl VK_KHR_maintenance2 for Vulkan_KHR_maintenance2 {
-}
+pub struct Vulkan_KHR_maintenance2 {}
+impl VK_KHR_maintenance2 for Vulkan_KHR_maintenance2 {}
 impl Default for Vulkan_KHR_maintenance2 {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_KHR_maintenance2 {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceSurfaceInfo2KHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	surface: VkSurfaceKHR,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub surface: VkSurfaceKHR,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkSurfaceCapabilities2KHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	surfaceCapabilities: VkSurfaceCapabilitiesKHR,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub surfaceCapabilities: VkSurfaceCapabilitiesKHR,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkSurfaceFormat2KHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	surfaceFormat: VkSurfaceFormatKHR,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub surfaceFormat: VkSurfaceFormatKHR,
 }
 type PFN_vkGetPhysicalDeviceSurfaceCapabilities2KHR = extern "system" fn(physicalDevice: VkPhysicalDevice, pSurfaceInfo: *const VkPhysicalDeviceSurfaceInfo2KHR, pSurfaceCapabilities: *mut VkSurfaceCapabilities2KHR) -> VkResult;
 type PFN_vkGetPhysicalDeviceSurfaceFormats2KHR = extern "system" fn(physicalDevice: VkPhysicalDevice, pSurfaceInfo: *const VkPhysicalDeviceSurfaceInfo2KHR, pSurfaceFormatCount: *mut uint32_t, pSurfaceFormats: *mut VkSurfaceFormat2KHR) -> VkResult;
@@ -14790,61 +14730,57 @@ impl Vulkan_KHR_get_surface_capabilities2 {
 		}
 	}
 }
-type VkPhysicalDeviceVariablePointerFeaturesKHR = VkPhysicalDeviceVariablePointersFeatures;
-type VkPhysicalDeviceVariablePointersFeaturesKHR = VkPhysicalDeviceVariablePointersFeatures;
+pub type VkPhysicalDeviceVariablePointerFeaturesKHR = VkPhysicalDeviceVariablePointersFeatures;
+pub type VkPhysicalDeviceVariablePointersFeaturesKHR = VkPhysicalDeviceVariablePointersFeatures;
 pub trait VK_KHR_variable_pointers: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_KHR_variable_pointers {
-}
-impl VK_KHR_variable_pointers for Vulkan_KHR_variable_pointers {
-}
+pub struct Vulkan_KHR_variable_pointers {}
+impl VK_KHR_variable_pointers for Vulkan_KHR_variable_pointers {}
 impl Default for Vulkan_KHR_variable_pointers {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_KHR_variable_pointers {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDisplayProperties2KHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	displayProperties: VkDisplayPropertiesKHR,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub displayProperties: VkDisplayPropertiesKHR,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDisplayPlaneProperties2KHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	displayPlaneProperties: VkDisplayPlanePropertiesKHR,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub displayPlaneProperties: VkDisplayPlanePropertiesKHR,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDisplayModeProperties2KHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	displayModeProperties: VkDisplayModePropertiesKHR,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub displayModeProperties: VkDisplayModePropertiesKHR,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDisplayPlaneInfo2KHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	mode: VkDisplayModeKHR,
-	planeIndex: u32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub mode: VkDisplayModeKHR,
+	pub planeIndex: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDisplayPlaneCapabilities2KHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	capabilities: VkDisplayPlaneCapabilitiesKHR,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub capabilities: VkDisplayPlaneCapabilitiesKHR,
 }
 type PFN_vkGetPhysicalDeviceDisplayProperties2KHR = extern "system" fn(physicalDevice: VkPhysicalDevice, pPropertyCount: *mut uint32_t, pProperties: *mut VkDisplayProperties2KHR) -> VkResult;
 type PFN_vkGetPhysicalDeviceDisplayPlaneProperties2KHR = extern "system" fn(physicalDevice: VkPhysicalDevice, pPropertyCount: *mut uint32_t, pProperties: *mut VkDisplayPlaneProperties2KHR) -> VkResult;
@@ -14879,94 +14815,78 @@ impl Vulkan_KHR_get_display_properties2 {
 		}
 	}
 }
-type VkMemoryDedicatedRequirementsKHR = VkMemoryDedicatedRequirements;
-type VkMemoryDedicatedAllocateInfoKHR = VkMemoryDedicatedAllocateInfo;
+pub type VkMemoryDedicatedRequirementsKHR = VkMemoryDedicatedRequirements;
+pub type VkMemoryDedicatedAllocateInfoKHR = VkMemoryDedicatedAllocateInfo;
 pub trait VK_KHR_dedicated_allocation: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_KHR_dedicated_allocation {
-}
-impl VK_KHR_dedicated_allocation for Vulkan_KHR_dedicated_allocation {
-}
+pub struct Vulkan_KHR_dedicated_allocation {}
+impl VK_KHR_dedicated_allocation for Vulkan_KHR_dedicated_allocation {}
 impl Default for Vulkan_KHR_dedicated_allocation {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_KHR_dedicated_allocation {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 pub trait VK_KHR_storage_buffer_storage_class: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_KHR_storage_buffer_storage_class {
-}
-impl VK_KHR_storage_buffer_storage_class for Vulkan_KHR_storage_buffer_storage_class {
-}
+pub struct Vulkan_KHR_storage_buffer_storage_class {}
+impl VK_KHR_storage_buffer_storage_class for Vulkan_KHR_storage_buffer_storage_class {}
 impl Default for Vulkan_KHR_storage_buffer_storage_class {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_KHR_storage_buffer_storage_class {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceShaderBfloat16FeaturesKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	shaderBFloat16Type: VkBool32,
-	shaderBFloat16DotProduct: VkBool32,
-	shaderBFloat16CooperativeMatrix: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub shaderBFloat16Type: VkBool32,
+	pub shaderBFloat16DotProduct: VkBool32,
+	pub shaderBFloat16CooperativeMatrix: VkBool32,
 }
 pub trait VK_KHR_shader_bfloat16: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_KHR_shader_bfloat16 {
-}
-impl VK_KHR_shader_bfloat16 for Vulkan_KHR_shader_bfloat16 {
-}
+pub struct Vulkan_KHR_shader_bfloat16 {}
+impl VK_KHR_shader_bfloat16 for Vulkan_KHR_shader_bfloat16 {}
 impl Default for Vulkan_KHR_shader_bfloat16 {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_KHR_shader_bfloat16 {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 pub trait VK_KHR_relaxed_block_layout: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_KHR_relaxed_block_layout {
-}
-impl VK_KHR_relaxed_block_layout for Vulkan_KHR_relaxed_block_layout {
-}
+pub struct Vulkan_KHR_relaxed_block_layout {}
+impl VK_KHR_relaxed_block_layout for Vulkan_KHR_relaxed_block_layout {}
 impl Default for Vulkan_KHR_relaxed_block_layout {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_KHR_relaxed_block_layout {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-type VkBufferMemoryRequirementsInfo2KHR = VkBufferMemoryRequirementsInfo2;
-type VkImageMemoryRequirementsInfo2KHR = VkImageMemoryRequirementsInfo2;
-type VkImageSparseMemoryRequirementsInfo2KHR = VkImageSparseMemoryRequirementsInfo2;
-type VkMemoryRequirements2KHR = VkMemoryRequirements2;
-type VkSparseImageMemoryRequirements2KHR = VkSparseImageMemoryRequirements2;
+pub type VkBufferMemoryRequirementsInfo2KHR = VkBufferMemoryRequirementsInfo2;
+pub type VkImageMemoryRequirementsInfo2KHR = VkImageMemoryRequirementsInfo2;
+pub type VkImageSparseMemoryRequirementsInfo2KHR = VkImageSparseMemoryRequirementsInfo2;
+pub type VkMemoryRequirements2KHR = VkMemoryRequirements2;
+pub type VkSparseImageMemoryRequirements2KHR = VkSparseImageMemoryRequirements2;
 type PFN_vkGetImageMemoryRequirements2KHR = extern "system" fn(device: VkDevice, pInfo: *const VkImageMemoryRequirementsInfo2, pMemoryRequirements: *mut VkMemoryRequirements2);
 type PFN_vkGetBufferMemoryRequirements2KHR = extern "system" fn(device: VkDevice, pInfo: *const VkBufferMemoryRequirementsInfo2, pMemoryRequirements: *mut VkMemoryRequirements2);
 type PFN_vkGetImageSparseMemoryRequirements2KHR = extern "system" fn(device: VkDevice, pInfo: *const VkImageSparseMemoryRequirementsInfo2, pSparseMemoryRequirementCount: *mut uint32_t, pSparseMemoryRequirements: *mut VkSparseImageMemoryRequirements2);
@@ -14999,35 +14919,31 @@ impl Vulkan_KHR_get_memory_requirements2 {
 		}
 	}
 }
-type VkImageFormatListCreateInfoKHR = VkImageFormatListCreateInfo;
+pub type VkImageFormatListCreateInfoKHR = VkImageFormatListCreateInfo;
 pub trait VK_KHR_image_format_list: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_KHR_image_format_list {
-}
-impl VK_KHR_image_format_list for Vulkan_KHR_image_format_list {
-}
+pub struct Vulkan_KHR_image_format_list {}
+impl VK_KHR_image_format_list for Vulkan_KHR_image_format_list {}
 impl Default for Vulkan_KHR_image_format_list {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_KHR_image_format_list {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-type VkSamplerYcbcrConversionKHR = VkSamplerYcbcrConversion;
-type VkSamplerYcbcrModelConversionKHR = VkSamplerYcbcrModelConversion;
-type VkSamplerYcbcrRangeKHR = VkSamplerYcbcrRange;
-type VkChromaLocationKHR = VkChromaLocation;
-type VkSamplerYcbcrConversionCreateInfoKHR = VkSamplerYcbcrConversionCreateInfo;
-type VkSamplerYcbcrConversionInfoKHR = VkSamplerYcbcrConversionInfo;
-type VkBindImagePlaneMemoryInfoKHR = VkBindImagePlaneMemoryInfo;
-type VkImagePlaneMemoryRequirementsInfoKHR = VkImagePlaneMemoryRequirementsInfo;
-type VkPhysicalDeviceSamplerYcbcrConversionFeaturesKHR = VkPhysicalDeviceSamplerYcbcrConversionFeatures;
-type VkSamplerYcbcrConversionImageFormatPropertiesKHR = VkSamplerYcbcrConversionImageFormatProperties;
+pub type VkSamplerYcbcrConversionKHR = VkSamplerYcbcrConversion;
+pub type VkSamplerYcbcrModelConversionKHR = VkSamplerYcbcrModelConversion;
+pub type VkSamplerYcbcrRangeKHR = VkSamplerYcbcrRange;
+pub type VkChromaLocationKHR = VkChromaLocation;
+pub type VkSamplerYcbcrConversionCreateInfoKHR = VkSamplerYcbcrConversionCreateInfo;
+pub type VkSamplerYcbcrConversionInfoKHR = VkSamplerYcbcrConversionInfo;
+pub type VkBindImagePlaneMemoryInfoKHR = VkBindImagePlaneMemoryInfo;
+pub type VkImagePlaneMemoryRequirementsInfoKHR = VkImagePlaneMemoryRequirementsInfo;
+pub type VkPhysicalDeviceSamplerYcbcrConversionFeaturesKHR = VkPhysicalDeviceSamplerYcbcrConversionFeatures;
+pub type VkSamplerYcbcrConversionImageFormatPropertiesKHR = VkSamplerYcbcrConversionImageFormatProperties;
 type PFN_vkCreateSamplerYcbcrConversionKHR = extern "system" fn(device: VkDevice, pCreateInfo: *const VkSamplerYcbcrConversionCreateInfo, pAllocator: *const VkAllocationCallbacks, pYcbcrConversion: *mut VkSamplerYcbcrConversion) -> VkResult;
 type PFN_vkDestroySamplerYcbcrConversionKHR = extern "system" fn(device: VkDevice, ycbcrConversion: VkSamplerYcbcrConversion, pAllocator: *const VkAllocationCallbacks);
 extern "system" fn dummy_vkCreateSamplerYcbcrConversionKHR(_: VkDevice, _: *const VkSamplerYcbcrConversionCreateInfo, _: *const VkAllocationCallbacks, _: *mut VkSamplerYcbcrConversion) -> VkResult {
@@ -15059,8 +14975,8 @@ impl Vulkan_KHR_sampler_ycbcr_conversion {
 		}
 	}
 }
-type VkBindBufferMemoryInfoKHR = VkBindBufferMemoryInfo;
-type VkBindImageMemoryInfoKHR = VkBindImageMemoryInfo;
+pub type VkBindBufferMemoryInfoKHR = VkBindBufferMemoryInfo;
+pub type VkBindImageMemoryInfoKHR = VkBindImageMemoryInfo;
 type PFN_vkBindBufferMemory2KHR = extern "system" fn(device: VkDevice, bindInfoCount: u32, pBindInfos: *const VkBindBufferMemoryInfo) -> VkResult;
 type PFN_vkBindImageMemory2KHR = extern "system" fn(device: VkDevice, bindInfoCount: u32, pBindInfos: *const VkBindImageMemoryInfo) -> VkResult;
 extern "system" fn dummy_vkBindBufferMemory2KHR(_: VkDevice, _: u32, _: *const VkBindBufferMemoryInfo) -> VkResult {
@@ -15092,8 +15008,8 @@ impl Vulkan_KHR_bind_memory2 {
 		}
 	}
 }
-type VkPhysicalDeviceMaintenance3PropertiesKHR = VkPhysicalDeviceMaintenance3Properties;
-type VkDescriptorSetLayoutSupportKHR = VkDescriptorSetLayoutSupport;
+pub type VkPhysicalDeviceMaintenance3PropertiesKHR = VkPhysicalDeviceMaintenance3Properties;
+pub type VkDescriptorSetLayoutSupportKHR = VkDescriptorSetLayoutSupport;
 type PFN_vkGetDescriptorSetLayoutSupportKHR = extern "system" fn(device: VkDevice, pCreateInfo: *const VkDescriptorSetLayoutCreateInfo, pSupport: *mut VkDescriptorSetLayoutSupport);
 extern "system" fn dummy_vkGetDescriptorSetLayoutSupportKHR(_: VkDevice, _: *const VkDescriptorSetLayoutCreateInfo, _: *mut VkDescriptorSetLayoutSupport) {
 	panic!("Vulkan function pointer of `vkGetDescriptorSetLayoutSupportKHR()` is NULL");
@@ -15155,159 +15071,140 @@ impl Vulkan_KHR_draw_indirect_count {
 		}
 	}
 }
-type VkPhysicalDeviceShaderSubgroupExtendedTypesFeaturesKHR = VkPhysicalDeviceShaderSubgroupExtendedTypesFeatures;
+pub type VkPhysicalDeviceShaderSubgroupExtendedTypesFeaturesKHR = VkPhysicalDeviceShaderSubgroupExtendedTypesFeatures;
 pub trait VK_KHR_shader_subgroup_extended_types: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_KHR_shader_subgroup_extended_types {
-}
-impl VK_KHR_shader_subgroup_extended_types for Vulkan_KHR_shader_subgroup_extended_types {
-}
+pub struct Vulkan_KHR_shader_subgroup_extended_types {}
+impl VK_KHR_shader_subgroup_extended_types for Vulkan_KHR_shader_subgroup_extended_types {}
 impl Default for Vulkan_KHR_shader_subgroup_extended_types {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_KHR_shader_subgroup_extended_types {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-type VkPhysicalDevice8BitStorageFeaturesKHR = VkPhysicalDevice8BitStorageFeatures;
+pub type VkPhysicalDevice8BitStorageFeaturesKHR = VkPhysicalDevice8BitStorageFeatures;
 pub trait VK_KHR_8bit_storage: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_KHR_8bit_storage {
-}
-impl VK_KHR_8bit_storage for Vulkan_KHR_8bit_storage {
-}
+pub struct Vulkan_KHR_8bit_storage {}
+impl VK_KHR_8bit_storage for Vulkan_KHR_8bit_storage {}
 impl Default for Vulkan_KHR_8bit_storage {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_KHR_8bit_storage {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-type VkPhysicalDeviceShaderAtomicInt64FeaturesKHR = VkPhysicalDeviceShaderAtomicInt64Features;
+pub type VkPhysicalDeviceShaderAtomicInt64FeaturesKHR = VkPhysicalDeviceShaderAtomicInt64Features;
 pub trait VK_KHR_shader_atomic_int64: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_KHR_shader_atomic_int64 {
-}
-impl VK_KHR_shader_atomic_int64 for Vulkan_KHR_shader_atomic_int64 {
-}
+pub struct Vulkan_KHR_shader_atomic_int64 {}
+impl VK_KHR_shader_atomic_int64 for Vulkan_KHR_shader_atomic_int64 {}
 impl Default for Vulkan_KHR_shader_atomic_int64 {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_KHR_shader_atomic_int64 {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceShaderClockFeaturesKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	shaderSubgroupClock: VkBool32,
-	shaderDeviceClock: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub shaderSubgroupClock: VkBool32,
+	pub shaderDeviceClock: VkBool32,
 }
 pub trait VK_KHR_shader_clock: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_KHR_shader_clock {
-}
-impl VK_KHR_shader_clock for Vulkan_KHR_shader_clock {
-}
+pub struct Vulkan_KHR_shader_clock {}
+impl VK_KHR_shader_clock for Vulkan_KHR_shader_clock {}
 impl Default for Vulkan_KHR_shader_clock {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_KHR_shader_clock {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoDecodeH265ProfileInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	stdProfileIdc: StdVideoH265ProfileIdc,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub stdProfileIdc: StdVideoH265ProfileIdc,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoDecodeH265CapabilitiesKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	maxLevelIdc: StdVideoH265LevelIdc,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub maxLevelIdc: StdVideoH265LevelIdc,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoDecodeH265SessionParametersAddInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	stdVPSCount: u32,
-	pStdVPSs: *const StdVideoH265VideoParameterSet,
-	stdSPSCount: u32,
-	pStdSPSs: *const StdVideoH265SequenceParameterSet,
-	stdPPSCount: u32,
-	pStdPPSs: *const StdVideoH265PictureParameterSet,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub stdVPSCount: u32,
+	pub pStdVPSs: *const StdVideoH265VideoParameterSet,
+	pub stdSPSCount: u32,
+	pub pStdSPSs: *const StdVideoH265SequenceParameterSet,
+	pub stdPPSCount: u32,
+	pub pStdPPSs: *const StdVideoH265PictureParameterSet,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoDecodeH265SessionParametersCreateInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	maxStdVPSCount: u32,
-	maxStdSPSCount: u32,
-	maxStdPPSCount: u32,
-	pParametersAddInfo: *const VkVideoDecodeH265SessionParametersAddInfoKHR,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub maxStdVPSCount: u32,
+	pub maxStdSPSCount: u32,
+	pub maxStdPPSCount: u32,
+	pub pParametersAddInfo: *const VkVideoDecodeH265SessionParametersAddInfoKHR,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoDecodeH265PictureInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	pStdPictureInfo: *const StdVideoDecodeH265PictureInfo,
-	sliceSegmentCount: u32,
-	pSliceSegmentOffsets: *const uint32_t,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub pStdPictureInfo: *const StdVideoDecodeH265PictureInfo,
+	pub sliceSegmentCount: u32,
+	pub pSliceSegmentOffsets: *const uint32_t,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoDecodeH265DpbSlotInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	pStdReferenceInfo: *const StdVideoDecodeH265ReferenceInfo,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub pStdReferenceInfo: *const StdVideoDecodeH265ReferenceInfo,
 }
 pub trait VK_KHR_video_decode_h265: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_KHR_video_decode_h265 {
-}
-impl VK_KHR_video_decode_h265 for Vulkan_KHR_video_decode_h265 {
-}
+pub struct Vulkan_KHR_video_decode_h265 {}
+impl VK_KHR_video_decode_h265 for Vulkan_KHR_video_decode_h265 {}
 impl Default for Vulkan_KHR_video_decode_h265 {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_KHR_video_decode_h265 {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
+pub const VK_STD_VULKAN_VIDEO_CODEC_H265_DECODE_API_VERSION_1_0_0: u32 = 0x400000;
 pub const STD_VIDEO_DECODE_H265_REF_PIC_SET_LIST_SIZE: u32 = 8u32;
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
@@ -15316,7 +15213,7 @@ pub struct StdVideoDecodeH265PictureInfoFlags {
 	/// Bitfield: IdrPicFlag: u32 in 1 bits
 	/// Bitfield: IsReference: u32 in 1 bits
 	/// Bitfield: short_term_ref_pic_set_sps_flag: u32 in 1 bits
-	bitfield1: u32,
+	pub bitfield1: u32,
 }
 impl StdVideoDecodeH265PictureInfoFlags {
 	pub fn get_IrapPicFlag(&self) -> u32 {
@@ -15347,24 +15244,24 @@ impl StdVideoDecodeH265PictureInfoFlags {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct StdVideoDecodeH265PictureInfo {
-	flags: StdVideoDecodeH265PictureInfoFlags,
-	sps_video_parameter_set_id: u8,
-	pps_seq_parameter_set_id: u8,
-	pps_pic_parameter_set_id: u8,
-	NumDeltaPocsOfRefRpsIdx: u8,
-	PicOrderCntVal: i32,
-	NumBitsForSTRefPicSetInSlice: u16,
-	reserved: u16,
-	RefPicSetStCurrBefore: [u8; STD_VIDEO_DECODE_H265_REF_PIC_SET_LIST_SIZE as usize],
-	RefPicSetStCurrAfter: [u8; STD_VIDEO_DECODE_H265_REF_PIC_SET_LIST_SIZE as usize],
-	RefPicSetLtCurr: [u8; STD_VIDEO_DECODE_H265_REF_PIC_SET_LIST_SIZE as usize],
+	pub flags: StdVideoDecodeH265PictureInfoFlags,
+	pub sps_video_parameter_set_id: u8,
+	pub pps_seq_parameter_set_id: u8,
+	pub pps_pic_parameter_set_id: u8,
+	pub NumDeltaPocsOfRefRpsIdx: u8,
+	pub PicOrderCntVal: i32,
+	pub NumBitsForSTRefPicSetInSlice: u16,
+	pub reserved: u16,
+	pub RefPicSetStCurrBefore: [u8; STD_VIDEO_DECODE_H265_REF_PIC_SET_LIST_SIZE as usize],
+	pub RefPicSetStCurrAfter: [u8; STD_VIDEO_DECODE_H265_REF_PIC_SET_LIST_SIZE as usize],
+	pub RefPicSetLtCurr: [u8; STD_VIDEO_DECODE_H265_REF_PIC_SET_LIST_SIZE as usize],
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct StdVideoDecodeH265ReferenceInfoFlags {
 	/// Bitfield: used_for_long_term_reference: u32 in 1 bits
 	/// Bitfield: unused_for_reference: u32 in 1 bits
-	bitfield1: u32,
+	pub bitfield1: u32,
 }
 impl StdVideoDecodeH265ReferenceInfoFlags {
 	pub fn get_used_for_long_term_reference(&self) -> u32 {
@@ -15383,142 +15280,118 @@ impl StdVideoDecodeH265ReferenceInfoFlags {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct StdVideoDecodeH265ReferenceInfo {
-	flags: StdVideoDecodeH265ReferenceInfoFlags,
-	PicOrderCntVal: i32,
+	pub flags: StdVideoDecodeH265ReferenceInfoFlags,
+	pub PicOrderCntVal: i32,
 }
 pub trait vulkan_video_codec_h265std_decode: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_kan_video_codec_h265std_decode {
-}
-impl vulkan_video_codec_h265std_decode for Vulkan_kan_video_codec_h265std_decode {
-}
-impl Default for Vulkan_kan_video_codec_h265std_decode {
+pub struct Vulkan_video_codec_h265std_decode {}
+impl vulkan_video_codec_h265std_decode for Vulkan_video_codec_h265std_decode {}
+impl Default for Vulkan_video_codec_h265std_decode {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-impl Vulkan_kan_video_codec_h265std_decode {
+impl Vulkan_video_codec_h265std_decode {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 pub const VK_MAX_GLOBAL_PRIORITY_SIZE_KHR: u32 = 16u32;
-type VkQueueGlobalPriorityKHR = VkQueueGlobalPriority;
-type VkDeviceQueueGlobalPriorityCreateInfoKHR = VkDeviceQueueGlobalPriorityCreateInfo;
-type VkPhysicalDeviceGlobalPriorityQueryFeaturesKHR = VkPhysicalDeviceGlobalPriorityQueryFeatures;
-type VkQueueFamilyGlobalPriorityPropertiesKHR = VkQueueFamilyGlobalPriorityProperties;
+pub type VkQueueGlobalPriorityKHR = VkQueueGlobalPriority;
+pub type VkDeviceQueueGlobalPriorityCreateInfoKHR = VkDeviceQueueGlobalPriorityCreateInfo;
+pub type VkPhysicalDeviceGlobalPriorityQueryFeaturesKHR = VkPhysicalDeviceGlobalPriorityQueryFeatures;
+pub type VkQueueFamilyGlobalPriorityPropertiesKHR = VkQueueFamilyGlobalPriorityProperties;
 pub trait VK_KHR_global_priority: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_KHR_global_priority {
-}
-impl VK_KHR_global_priority for Vulkan_KHR_global_priority {
-}
+pub struct Vulkan_KHR_global_priority {}
+impl VK_KHR_global_priority for Vulkan_KHR_global_priority {}
 impl Default for Vulkan_KHR_global_priority {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_KHR_global_priority {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 pub const VK_MAX_DRIVER_NAME_SIZE_KHR: u32 = 256u32;
 pub const VK_MAX_DRIVER_INFO_SIZE_KHR: u32 = 256u32;
-type VkDriverIdKHR = VkDriverId;
-type VkConformanceVersionKHR = VkConformanceVersion;
-type VkPhysicalDeviceDriverPropertiesKHR = VkPhysicalDeviceDriverProperties;
+pub type VkDriverIdKHR = VkDriverId;
+pub type VkConformanceVersionKHR = VkConformanceVersion;
+pub type VkPhysicalDeviceDriverPropertiesKHR = VkPhysicalDeviceDriverProperties;
 pub trait VK_KHR_driver_properties: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_KHR_driver_properties {
-}
-impl VK_KHR_driver_properties for Vulkan_KHR_driver_properties {
-}
+pub struct Vulkan_KHR_driver_properties {}
+impl VK_KHR_driver_properties for Vulkan_KHR_driver_properties {}
 impl Default for Vulkan_KHR_driver_properties {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_KHR_driver_properties {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-type VkShaderFloatControlsIndependenceKHR = VkShaderFloatControlsIndependence;
-type VkPhysicalDeviceFloatControlsPropertiesKHR = VkPhysicalDeviceFloatControlsProperties;
+pub type VkShaderFloatControlsIndependenceKHR = VkShaderFloatControlsIndependence;
+pub type VkPhysicalDeviceFloatControlsPropertiesKHR = VkPhysicalDeviceFloatControlsProperties;
 pub trait VK_KHR_shader_float_controls: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_KHR_shader_float_controls {
-}
-impl VK_KHR_shader_float_controls for Vulkan_KHR_shader_float_controls {
-}
+pub struct Vulkan_KHR_shader_float_controls {}
+impl VK_KHR_shader_float_controls for Vulkan_KHR_shader_float_controls {}
 impl Default for Vulkan_KHR_shader_float_controls {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_KHR_shader_float_controls {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-type VkResolveModeFlagBitsKHR = VkResolveModeFlagBits;
-type VkResolveModeFlagsKHR = VkResolveModeFlags;
-type VkSubpassDescriptionDepthStencilResolveKHR = VkSubpassDescriptionDepthStencilResolve;
-type VkPhysicalDeviceDepthStencilResolvePropertiesKHR = VkPhysicalDeviceDepthStencilResolveProperties;
+pub type VkResolveModeFlagBitsKHR = VkResolveModeFlagBits;
+pub type VkResolveModeFlagsKHR = VkResolveModeFlags;
+pub type VkSubpassDescriptionDepthStencilResolveKHR = VkSubpassDescriptionDepthStencilResolve;
+pub type VkPhysicalDeviceDepthStencilResolvePropertiesKHR = VkPhysicalDeviceDepthStencilResolveProperties;
 pub trait VK_KHR_depth_stencil_resolve: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_KHR_depth_stencil_resolve {
-}
-impl VK_KHR_depth_stencil_resolve for Vulkan_KHR_depth_stencil_resolve {
-}
+pub struct Vulkan_KHR_depth_stencil_resolve {}
+impl VK_KHR_depth_stencil_resolve for Vulkan_KHR_depth_stencil_resolve {}
 impl Default for Vulkan_KHR_depth_stencil_resolve {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_KHR_depth_stencil_resolve {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 pub trait VK_KHR_swapchain_mutable_format: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_KHR_swapchain_mutable_format {
-}
-impl VK_KHR_swapchain_mutable_format for Vulkan_KHR_swapchain_mutable_format {
-}
+pub struct Vulkan_KHR_swapchain_mutable_format {}
+impl VK_KHR_swapchain_mutable_format for Vulkan_KHR_swapchain_mutable_format {}
 impl Default for Vulkan_KHR_swapchain_mutable_format {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_KHR_swapchain_mutable_format {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-type VkSemaphoreTypeKHR = VkSemaphoreType;
-type VkSemaphoreWaitFlagBitsKHR = VkSemaphoreWaitFlagBits;
-type VkSemaphoreWaitFlagsKHR = VkSemaphoreWaitFlags;
-type VkPhysicalDeviceTimelineSemaphoreFeaturesKHR = VkPhysicalDeviceTimelineSemaphoreFeatures;
-type VkPhysicalDeviceTimelineSemaphorePropertiesKHR = VkPhysicalDeviceTimelineSemaphoreProperties;
-type VkSemaphoreTypeCreateInfoKHR = VkSemaphoreTypeCreateInfo;
-type VkTimelineSemaphoreSubmitInfoKHR = VkTimelineSemaphoreSubmitInfo;
-type VkSemaphoreWaitInfoKHR = VkSemaphoreWaitInfo;
-type VkSemaphoreSignalInfoKHR = VkSemaphoreSignalInfo;
+pub type VkSemaphoreTypeKHR = VkSemaphoreType;
+pub type VkSemaphoreWaitFlagBitsKHR = VkSemaphoreWaitFlagBits;
+pub type VkSemaphoreWaitFlagsKHR = VkSemaphoreWaitFlags;
+pub type VkPhysicalDeviceTimelineSemaphoreFeaturesKHR = VkPhysicalDeviceTimelineSemaphoreFeatures;
+pub type VkPhysicalDeviceTimelineSemaphorePropertiesKHR = VkPhysicalDeviceTimelineSemaphoreProperties;
+pub type VkSemaphoreTypeCreateInfoKHR = VkSemaphoreTypeCreateInfo;
+pub type VkTimelineSemaphoreSubmitInfoKHR = VkTimelineSemaphoreSubmitInfo;
+pub type VkSemaphoreWaitInfoKHR = VkSemaphoreWaitInfo;
+pub type VkSemaphoreSignalInfoKHR = VkSemaphoreSignalInfo;
 type PFN_vkGetSemaphoreCounterValueKHR = extern "system" fn(device: VkDevice, semaphore: VkSemaphore, pValue: *mut uint64_t) -> VkResult;
 type PFN_vkWaitSemaphoresKHR = extern "system" fn(device: VkDevice, pWaitInfo: *const VkSemaphoreWaitInfo, timeout: u64) -> VkResult;
 type PFN_vkSignalSemaphoreKHR = extern "system" fn(device: VkDevice, pSignalInfo: *const VkSemaphoreSignalInfo) -> VkResult;
@@ -15551,42 +15424,34 @@ impl Vulkan_KHR_timeline_semaphore {
 		}
 	}
 }
-type VkPhysicalDeviceVulkanMemoryModelFeaturesKHR = VkPhysicalDeviceVulkanMemoryModelFeatures;
+pub type VkPhysicalDeviceVulkanMemoryModelFeaturesKHR = VkPhysicalDeviceVulkanMemoryModelFeatures;
 pub trait VK_KHR_vulkan_memory_model: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_KHR_vulkan_memory_model {
-}
-impl VK_KHR_vulkan_memory_model for Vulkan_KHR_vulkan_memory_model {
-}
+pub struct Vulkan_KHR_vulkan_memory_model {}
+impl VK_KHR_vulkan_memory_model for Vulkan_KHR_vulkan_memory_model {}
 impl Default for Vulkan_KHR_vulkan_memory_model {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_KHR_vulkan_memory_model {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-type VkPhysicalDeviceShaderTerminateInvocationFeaturesKHR = VkPhysicalDeviceShaderTerminateInvocationFeatures;
+pub type VkPhysicalDeviceShaderTerminateInvocationFeaturesKHR = VkPhysicalDeviceShaderTerminateInvocationFeatures;
 pub trait VK_KHR_shader_terminate_invocation: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_KHR_shader_terminate_invocation {
-}
-impl VK_KHR_shader_terminate_invocation for Vulkan_KHR_shader_terminate_invocation {
-}
+pub struct Vulkan_KHR_shader_terminate_invocation {}
+impl VK_KHR_shader_terminate_invocation for Vulkan_KHR_shader_terminate_invocation {}
 impl Default for Vulkan_KHR_shader_terminate_invocation {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_KHR_shader_terminate_invocation {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
@@ -15602,67 +15467,67 @@ pub enum VkFragmentShadingRateCombinerOpKHR {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkFragmentShadingRateAttachmentInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	pFragmentShadingRateAttachment: *const VkAttachmentReference2,
-	shadingRateAttachmentTexelSize: VkExtent2D,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub pFragmentShadingRateAttachment: *const VkAttachmentReference2,
+	pub shadingRateAttachmentTexelSize: VkExtent2D,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPipelineFragmentShadingRateStateCreateInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	fragmentSize: VkExtent2D,
-	combinerOps: [VkFragmentShadingRateCombinerOpKHR; 2 as usize],
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub fragmentSize: VkExtent2D,
+	pub combinerOps: [VkFragmentShadingRateCombinerOpKHR; 2 as usize],
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceFragmentShadingRateFeaturesKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	pipelineFragmentShadingRate: VkBool32,
-	primitiveFragmentShadingRate: VkBool32,
-	attachmentFragmentShadingRate: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub pipelineFragmentShadingRate: VkBool32,
+	pub primitiveFragmentShadingRate: VkBool32,
+	pub attachmentFragmentShadingRate: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceFragmentShadingRatePropertiesKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	minFragmentShadingRateAttachmentTexelSize: VkExtent2D,
-	maxFragmentShadingRateAttachmentTexelSize: VkExtent2D,
-	maxFragmentShadingRateAttachmentTexelSizeAspectRatio: u32,
-	primitiveFragmentShadingRateWithMultipleViewports: VkBool32,
-	layeredShadingRateAttachments: VkBool32,
-	fragmentShadingRateNonTrivialCombinerOps: VkBool32,
-	maxFragmentSize: VkExtent2D,
-	maxFragmentSizeAspectRatio: u32,
-	maxFragmentShadingRateCoverageSamples: u32,
-	maxFragmentShadingRateRasterizationSamples: VkSampleCountFlagBits,
-	fragmentShadingRateWithShaderDepthStencilWrites: VkBool32,
-	fragmentShadingRateWithSampleMask: VkBool32,
-	fragmentShadingRateWithShaderSampleMask: VkBool32,
-	fragmentShadingRateWithConservativeRasterization: VkBool32,
-	fragmentShadingRateWithFragmentShaderInterlock: VkBool32,
-	fragmentShadingRateWithCustomSampleLocations: VkBool32,
-	fragmentShadingRateStrictMultiplyCombiner: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub minFragmentShadingRateAttachmentTexelSize: VkExtent2D,
+	pub maxFragmentShadingRateAttachmentTexelSize: VkExtent2D,
+	pub maxFragmentShadingRateAttachmentTexelSizeAspectRatio: u32,
+	pub primitiveFragmentShadingRateWithMultipleViewports: VkBool32,
+	pub layeredShadingRateAttachments: VkBool32,
+	pub fragmentShadingRateNonTrivialCombinerOps: VkBool32,
+	pub maxFragmentSize: VkExtent2D,
+	pub maxFragmentSizeAspectRatio: u32,
+	pub maxFragmentShadingRateCoverageSamples: u32,
+	pub maxFragmentShadingRateRasterizationSamples: VkSampleCountFlagBits,
+	pub fragmentShadingRateWithShaderDepthStencilWrites: VkBool32,
+	pub fragmentShadingRateWithSampleMask: VkBool32,
+	pub fragmentShadingRateWithShaderSampleMask: VkBool32,
+	pub fragmentShadingRateWithConservativeRasterization: VkBool32,
+	pub fragmentShadingRateWithFragmentShaderInterlock: VkBool32,
+	pub fragmentShadingRateWithCustomSampleLocations: VkBool32,
+	pub fragmentShadingRateStrictMultiplyCombiner: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceFragmentShadingRateKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	sampleCounts: VkSampleCountFlags,
-	fragmentSize: VkExtent2D,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub sampleCounts: VkSampleCountFlags,
+	pub fragmentSize: VkExtent2D,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkRenderingFragmentShadingRateAttachmentInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	imageView: VkImageView,
-	imageLayout: VkImageLayout,
-	shadingRateAttachmentTexelSize: VkExtent2D,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub imageView: VkImageView,
+	pub imageLayout: VkImageLayout,
+	pub shadingRateAttachmentTexelSize: VkExtent2D,
 }
 type PFN_vkGetPhysicalDeviceFragmentShadingRatesKHR = extern "system" fn(physicalDevice: VkPhysicalDevice, pFragmentShadingRateCount: *mut uint32_t, pFragmentShadingRates: *mut VkPhysicalDeviceFragmentShadingRateKHR) -> VkResult;
 type PFN_vkCmdSetFragmentShadingRateKHR = extern "system" fn(commandBuffer: VkCommandBuffer, pFragmentSize: *const VkExtent2D, combinerOps: &[VkFragmentShadingRateCombinerOpKHR; 2 as usize]);
@@ -15695,9 +15560,9 @@ impl Vulkan_KHR_fragment_shading_rate {
 		}
 	}
 }
-type VkPhysicalDeviceDynamicRenderingLocalReadFeaturesKHR = VkPhysicalDeviceDynamicRenderingLocalReadFeatures;
-type VkRenderingAttachmentLocationInfoKHR = VkRenderingAttachmentLocationInfo;
-type VkRenderingInputAttachmentIndexInfoKHR = VkRenderingInputAttachmentIndexInfo;
+pub type VkPhysicalDeviceDynamicRenderingLocalReadFeaturesKHR = VkPhysicalDeviceDynamicRenderingLocalReadFeatures;
+pub type VkRenderingAttachmentLocationInfoKHR = VkRenderingAttachmentLocationInfo;
+pub type VkRenderingInputAttachmentIndexInfoKHR = VkRenderingInputAttachmentIndexInfo;
 type PFN_vkCmdSetRenderingAttachmentLocationsKHR = extern "system" fn(commandBuffer: VkCommandBuffer, pLocationInfo: *const VkRenderingAttachmentLocationInfo);
 type PFN_vkCmdSetRenderingInputAttachmentIndicesKHR = extern "system" fn(commandBuffer: VkCommandBuffer, pInputAttachmentIndexInfo: *const VkRenderingInputAttachmentIndexInfo);
 extern "system" fn dummy_vkCmdSetRenderingAttachmentLocationsKHR(_: VkCommandBuffer, _: *const VkRenderingAttachmentLocationInfo) {
@@ -15732,98 +15597,82 @@ impl Vulkan_KHR_dynamic_rendering_local_read {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceShaderQuadControlFeaturesKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	shaderQuadControl: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub shaderQuadControl: VkBool32,
 }
 pub trait VK_KHR_shader_quad_control: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_KHR_shader_quad_control {
-}
-impl VK_KHR_shader_quad_control for Vulkan_KHR_shader_quad_control {
-}
+pub struct Vulkan_KHR_shader_quad_control {}
+impl VK_KHR_shader_quad_control for Vulkan_KHR_shader_quad_control {}
 impl Default for Vulkan_KHR_shader_quad_control {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_KHR_shader_quad_control {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 pub trait VK_KHR_spirv_1_4: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_KHR_spirv_1_4 {
-}
-impl VK_KHR_spirv_1_4 for Vulkan_KHR_spirv_1_4 {
-}
+pub struct Vulkan_KHR_spirv_1_4 {}
+impl VK_KHR_spirv_1_4 for Vulkan_KHR_spirv_1_4 {}
 impl Default for Vulkan_KHR_spirv_1_4 {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_KHR_spirv_1_4 {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkSurfaceProtectedCapabilitiesKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	supportsProtected: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub supportsProtected: VkBool32,
 }
 pub trait VK_KHR_surface_protected_capabilities: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_KHR_surface_protected_capabilities {
-}
-impl VK_KHR_surface_protected_capabilities for Vulkan_KHR_surface_protected_capabilities {
-}
+pub struct Vulkan_KHR_surface_protected_capabilities {}
+impl VK_KHR_surface_protected_capabilities for Vulkan_KHR_surface_protected_capabilities {}
 impl Default for Vulkan_KHR_surface_protected_capabilities {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_KHR_surface_protected_capabilities {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-type VkPhysicalDeviceSeparateDepthStencilLayoutsFeaturesKHR = VkPhysicalDeviceSeparateDepthStencilLayoutsFeatures;
-type VkAttachmentReferenceStencilLayoutKHR = VkAttachmentReferenceStencilLayout;
-type VkAttachmentDescriptionStencilLayoutKHR = VkAttachmentDescriptionStencilLayout;
+pub type VkPhysicalDeviceSeparateDepthStencilLayoutsFeaturesKHR = VkPhysicalDeviceSeparateDepthStencilLayoutsFeatures;
+pub type VkAttachmentReferenceStencilLayoutKHR = VkAttachmentReferenceStencilLayout;
+pub type VkAttachmentDescriptionStencilLayoutKHR = VkAttachmentDescriptionStencilLayout;
 pub trait VK_KHR_separate_depth_stencil_layouts: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_KHR_separate_depth_stencil_layouts {
-}
-impl VK_KHR_separate_depth_stencil_layouts for Vulkan_KHR_separate_depth_stencil_layouts {
-}
+pub struct Vulkan_KHR_separate_depth_stencil_layouts {}
+impl VK_KHR_separate_depth_stencil_layouts for Vulkan_KHR_separate_depth_stencil_layouts {}
 impl Default for Vulkan_KHR_separate_depth_stencil_layouts {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_KHR_separate_depth_stencil_layouts {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDevicePresentWaitFeaturesKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	presentWait: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub presentWait: VkBool32,
 }
 type PFN_vkWaitForPresentKHR = extern "system" fn(device: VkDevice, swapchain: VkSwapchainKHR, presentId: u64, timeout: u64) -> VkResult;
 extern "system" fn dummy_vkWaitForPresentKHR(_: VkDevice, _: VkSwapchainKHR, _: u64, _: u64) -> VkResult {
@@ -15855,30 +15704,26 @@ impl Vulkan_KHR_present_wait {
 		}
 	}
 }
-type VkPhysicalDeviceUniformBufferStandardLayoutFeaturesKHR = VkPhysicalDeviceUniformBufferStandardLayoutFeatures;
+pub type VkPhysicalDeviceUniformBufferStandardLayoutFeaturesKHR = VkPhysicalDeviceUniformBufferStandardLayoutFeatures;
 pub trait VK_KHR_uniform_buffer_standard_layout: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_KHR_uniform_buffer_standard_layout {
-}
-impl VK_KHR_uniform_buffer_standard_layout for Vulkan_KHR_uniform_buffer_standard_layout {
-}
+pub struct Vulkan_KHR_uniform_buffer_standard_layout {}
+impl VK_KHR_uniform_buffer_standard_layout for Vulkan_KHR_uniform_buffer_standard_layout {}
 impl Default for Vulkan_KHR_uniform_buffer_standard_layout {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_KHR_uniform_buffer_standard_layout {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-type VkPhysicalDeviceBufferDeviceAddressFeaturesKHR = VkPhysicalDeviceBufferDeviceAddressFeatures;
-type VkBufferDeviceAddressInfoKHR = VkBufferDeviceAddressInfo;
-type VkBufferOpaqueCaptureAddressCreateInfoKHR = VkBufferOpaqueCaptureAddressCreateInfo;
-type VkMemoryOpaqueCaptureAddressAllocateInfoKHR = VkMemoryOpaqueCaptureAddressAllocateInfo;
-type VkDeviceMemoryOpaqueCaptureAddressInfoKHR = VkDeviceMemoryOpaqueCaptureAddressInfo;
+pub type VkPhysicalDeviceBufferDeviceAddressFeaturesKHR = VkPhysicalDeviceBufferDeviceAddressFeatures;
+pub type VkBufferDeviceAddressInfoKHR = VkBufferDeviceAddressInfo;
+pub type VkBufferOpaqueCaptureAddressCreateInfoKHR = VkBufferOpaqueCaptureAddressCreateInfo;
+pub type VkMemoryOpaqueCaptureAddressAllocateInfoKHR = VkMemoryOpaqueCaptureAddressAllocateInfo;
+pub type VkDeviceMemoryOpaqueCaptureAddressInfoKHR = VkDeviceMemoryOpaqueCaptureAddressInfo;
 type PFN_vkGetBufferDeviceAddressKHR = extern "system" fn(device: VkDevice, pInfo: *const VkBufferDeviceAddressInfo) -> VkDeviceAddress;
 type PFN_vkGetBufferOpaqueCaptureAddressKHR = extern "system" fn(device: VkDevice, pInfo: *const VkBufferDeviceAddressInfo) -> u64;
 type PFN_vkGetDeviceMemoryOpaqueCaptureAddressKHR = extern "system" fn(device: VkDevice, pInfo: *const VkDeviceMemoryOpaqueCaptureAddressInfo) -> u64;
@@ -15912,9 +15757,9 @@ impl Vulkan_KHR_buffer_device_address {
 	}
 }
 // Define non-dispatchable handle `VkDeferredOperationKHR`
-#[cfg(target_pointer_width = "32")] type VkDeferredOperationKHR = u64;
+#[cfg(target_pointer_width = "32")] pub type VkDeferredOperationKHR = u64;
 #[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkDeferredOperationKHR_T {}
-#[cfg(target_pointer_width = "64")] type VkDeferredOperationKHR = *const VkDeferredOperationKHR_T;
+#[cfg(target_pointer_width = "64")] pub type VkDeferredOperationKHR = *const VkDeferredOperationKHR_T;
 type PFN_vkCreateDeferredOperationKHR = extern "system" fn(device: VkDevice, pAllocator: *const VkAllocationCallbacks, pDeferredOperation: *mut VkDeferredOperationKHR) -> VkResult;
 type PFN_vkDestroyDeferredOperationKHR = extern "system" fn(device: VkDevice, operation: VkDeferredOperationKHR, pAllocator: *const VkAllocationCallbacks);
 type PFN_vkGetDeferredOperationMaxConcurrencyKHR = extern "system" fn(device: VkDevice, operation: VkDeferredOperationKHR) -> u32;
@@ -15961,10 +15806,10 @@ pub enum VkPipelineExecutableStatisticFormatKHR {
 #[repr(C)]
 #[derive(Clone, Copy)]
 pub union VkPipelineExecutableStatisticValueKHR {
-	b32: VkBool32,
-	i64: i64,
-	u64: u64,
-	f64: f64,
+	pub b32: VkBool32,
+	pub i64: i64,
+	pub u64: u64,
+	pub f64: f64,
 }
 impl Debug for VkPipelineExecutableStatisticValueKHR {
 	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
@@ -15979,55 +15824,55 @@ impl Debug for VkPipelineExecutableStatisticValueKHR {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDevicePipelineExecutablePropertiesFeaturesKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	pipelineExecutableInfo: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub pipelineExecutableInfo: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPipelineInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	pipeline: VkPipeline,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub pipeline: VkPipeline,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPipelineExecutablePropertiesKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	stages: VkShaderStageFlags,
-	name: [i8; VK_MAX_DESCRIPTION_SIZE as usize],
-	description: [i8; VK_MAX_DESCRIPTION_SIZE as usize],
-	subgroupSize: u32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub stages: VkShaderStageFlags,
+	pub name: [i8; VK_MAX_DESCRIPTION_SIZE as usize],
+	pub description: [i8; VK_MAX_DESCRIPTION_SIZE as usize],
+	pub subgroupSize: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPipelineExecutableInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	pipeline: VkPipeline,
-	executableIndex: u32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub pipeline: VkPipeline,
+	pub executableIndex: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPipelineExecutableStatisticKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	name: [i8; VK_MAX_DESCRIPTION_SIZE as usize],
-	description: [i8; VK_MAX_DESCRIPTION_SIZE as usize],
-	format: VkPipelineExecutableStatisticFormatKHR,
-	value: VkPipelineExecutableStatisticValueKHR,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub name: [i8; VK_MAX_DESCRIPTION_SIZE as usize],
+	pub description: [i8; VK_MAX_DESCRIPTION_SIZE as usize],
+	pub format: VkPipelineExecutableStatisticFormatKHR,
+	pub value: VkPipelineExecutableStatisticValueKHR,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPipelineExecutableInternalRepresentationKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	name: [i8; VK_MAX_DESCRIPTION_SIZE as usize],
-	description: [i8; VK_MAX_DESCRIPTION_SIZE as usize],
-	isText: VkBool32,
-	dataSize: usize,
-	pData: *mut c_void,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub name: [i8; VK_MAX_DESCRIPTION_SIZE as usize],
+	pub description: [i8; VK_MAX_DESCRIPTION_SIZE as usize],
+	pub isText: VkBool32,
+	pub dataSize: usize,
+	pub pData: *mut c_void,
 }
 type PFN_vkGetPipelineExecutablePropertiesKHR = extern "system" fn(device: VkDevice, pPipelineInfo: *const VkPipelineInfoKHR, pExecutableCount: *mut uint32_t, pProperties: *mut VkPipelineExecutablePropertiesKHR) -> VkResult;
 type PFN_vkGetPipelineExecutableStatisticsKHR = extern "system" fn(device: VkDevice, pExecutableInfo: *const VkPipelineExecutableInfoKHR, pStatisticCount: *mut uint32_t, pStatistics: *mut VkPipelineExecutableStatisticKHR) -> VkResult;
@@ -16061,10 +15906,10 @@ impl Vulkan_KHR_pipeline_executable_properties {
 		}
 	}
 }
-type VkMemoryUnmapFlagBitsKHR = VkMemoryUnmapFlagBits;
-type VkMemoryUnmapFlagsKHR = VkMemoryUnmapFlags;
-type VkMemoryMapInfoKHR = VkMemoryMapInfo;
-type VkMemoryUnmapInfoKHR = VkMemoryUnmapInfo;
+pub type VkMemoryUnmapFlagBitsKHR = VkMemoryUnmapFlagBits;
+pub type VkMemoryUnmapFlagsKHR = VkMemoryUnmapFlags;
+pub type VkMemoryMapInfoKHR = VkMemoryMapInfo;
+pub type VkMemoryUnmapInfoKHR = VkMemoryUnmapInfo;
 type PFN_vkMapMemory2KHR = extern "system" fn(device: VkDevice, pMemoryMapInfo: *const VkMemoryMapInfo, ppData: *mut *mut c_void) -> VkResult;
 type PFN_vkUnmapMemory2KHR = extern "system" fn(device: VkDevice, pMemoryUnmapInfo: *const VkMemoryUnmapInfo) -> VkResult;
 extern "system" fn dummy_vkMapMemory2KHR(_: VkDevice, _: *const VkMemoryMapInfo, _: *mut *mut c_void) -> VkResult {
@@ -16096,110 +15941,94 @@ impl Vulkan_KHR_map_memory2 {
 		}
 	}
 }
-type VkPhysicalDeviceShaderIntegerDotProductFeaturesKHR = VkPhysicalDeviceShaderIntegerDotProductFeatures;
-type VkPhysicalDeviceShaderIntegerDotProductPropertiesKHR = VkPhysicalDeviceShaderIntegerDotProductProperties;
+pub type VkPhysicalDeviceShaderIntegerDotProductFeaturesKHR = VkPhysicalDeviceShaderIntegerDotProductFeatures;
+pub type VkPhysicalDeviceShaderIntegerDotProductPropertiesKHR = VkPhysicalDeviceShaderIntegerDotProductProperties;
 pub trait VK_KHR_shader_integer_dot_product: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_KHR_shader_integer_dot_product {
-}
-impl VK_KHR_shader_integer_dot_product for Vulkan_KHR_shader_integer_dot_product {
-}
+pub struct Vulkan_KHR_shader_integer_dot_product {}
+impl VK_KHR_shader_integer_dot_product for Vulkan_KHR_shader_integer_dot_product {}
 impl Default for Vulkan_KHR_shader_integer_dot_product {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_KHR_shader_integer_dot_product {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPipelineLibraryCreateInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	libraryCount: u32,
-	pLibraries: *const VkPipeline,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub libraryCount: u32,
+	pub pLibraries: *const VkPipeline,
 }
 pub trait VK_KHR_pipeline_library: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_KHR_pipeline_library {
-}
-impl VK_KHR_pipeline_library for Vulkan_KHR_pipeline_library {
-}
+pub struct Vulkan_KHR_pipeline_library {}
+impl VK_KHR_pipeline_library for Vulkan_KHR_pipeline_library {}
 impl Default for Vulkan_KHR_pipeline_library {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_KHR_pipeline_library {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 pub trait VK_KHR_shader_non_semantic_info: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_KHR_shader_non_semantic_info {
-}
-impl VK_KHR_shader_non_semantic_info for Vulkan_KHR_shader_non_semantic_info {
-}
+pub struct Vulkan_KHR_shader_non_semantic_info {}
+impl VK_KHR_shader_non_semantic_info for Vulkan_KHR_shader_non_semantic_info {}
 impl Default for Vulkan_KHR_shader_non_semantic_info {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_KHR_shader_non_semantic_info {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPresentIdKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	swapchainCount: u32,
-	pPresentIds: *const uint64_t,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub swapchainCount: u32,
+	pub pPresentIds: *const uint64_t,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDevicePresentIdFeaturesKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	presentId: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub presentId: VkBool32,
 }
 pub trait VK_KHR_present_id: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_KHR_present_id {
-}
-impl VK_KHR_present_id for Vulkan_KHR_present_id {
-}
+pub struct Vulkan_KHR_present_id {}
+impl VK_KHR_present_id for Vulkan_KHR_present_id {}
 impl Default for Vulkan_KHR_present_id {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_KHR_present_id {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-type VkVideoEncodeFlagsKHR = VkFlags;
-type VkVideoEncodeCapabilityFlagsKHR = VkFlags;
-type VkVideoEncodeRateControlModeFlagsKHR = VkFlags;
-type VkVideoEncodeFeedbackFlagsKHR = VkFlags;
-type VkVideoEncodeUsageFlagsKHR = VkFlags;
-type VkVideoEncodeContentFlagsKHR = VkFlags;
-type VkVideoEncodeRateControlFlagsKHR = VkFlags;
+pub type VkVideoEncodeFlagsKHR = VkFlags;
+pub type VkVideoEncodeCapabilityFlagsKHR = VkFlags;
+pub type VkVideoEncodeRateControlModeFlagsKHR = VkFlags;
+pub type VkVideoEncodeFeedbackFlagsKHR = VkFlags;
+pub type VkVideoEncodeUsageFlagsKHR = VkFlags;
+pub type VkVideoEncodeContentFlagsKHR = VkFlags;
+pub type VkVideoEncodeRateControlFlagsKHR = VkFlags;
 #[repr(C)]
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum VkVideoEncodeTuningModeKHR {
@@ -16266,105 +16095,105 @@ pub enum VkVideoEncodeContentFlagBitsKHR {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoEncodeInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkVideoEncodeFlagsKHR,
-	dstBuffer: VkBuffer,
-	dstBufferOffset: VkDeviceSize,
-	dstBufferRange: VkDeviceSize,
-	srcPictureResource: VkVideoPictureResourceInfoKHR,
-	pSetupReferenceSlot: *const VkVideoReferenceSlotInfoKHR,
-	referenceSlotCount: u32,
-	pReferenceSlots: *const VkVideoReferenceSlotInfoKHR,
-	precedingExternallyEncodedBytes: u32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkVideoEncodeFlagsKHR,
+	pub dstBuffer: VkBuffer,
+	pub dstBufferOffset: VkDeviceSize,
+	pub dstBufferRange: VkDeviceSize,
+	pub srcPictureResource: VkVideoPictureResourceInfoKHR,
+	pub pSetupReferenceSlot: *const VkVideoReferenceSlotInfoKHR,
+	pub referenceSlotCount: u32,
+	pub pReferenceSlots: *const VkVideoReferenceSlotInfoKHR,
+	pub precedingExternallyEncodedBytes: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoEncodeCapabilitiesKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	flags: VkVideoEncodeCapabilityFlagsKHR,
-	rateControlModes: VkVideoEncodeRateControlModeFlagsKHR,
-	maxRateControlLayers: u32,
-	maxBitrate: u64,
-	maxQualityLevels: u32,
-	encodeInputPictureGranularity: VkExtent2D,
-	supportedEncodeFeedbackFlags: VkVideoEncodeFeedbackFlagsKHR,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub flags: VkVideoEncodeCapabilityFlagsKHR,
+	pub rateControlModes: VkVideoEncodeRateControlModeFlagsKHR,
+	pub maxRateControlLayers: u32,
+	pub maxBitrate: u64,
+	pub maxQualityLevels: u32,
+	pub encodeInputPictureGranularity: VkExtent2D,
+	pub supportedEncodeFeedbackFlags: VkVideoEncodeFeedbackFlagsKHR,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkQueryPoolVideoEncodeFeedbackCreateInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	encodeFeedbackFlags: VkVideoEncodeFeedbackFlagsKHR,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub encodeFeedbackFlags: VkVideoEncodeFeedbackFlagsKHR,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoEncodeUsageInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	videoUsageHints: VkVideoEncodeUsageFlagsKHR,
-	videoContentHints: VkVideoEncodeContentFlagsKHR,
-	tuningMode: VkVideoEncodeTuningModeKHR,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub videoUsageHints: VkVideoEncodeUsageFlagsKHR,
+	pub videoContentHints: VkVideoEncodeContentFlagsKHR,
+	pub tuningMode: VkVideoEncodeTuningModeKHR,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoEncodeRateControlLayerInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	averageBitrate: u64,
-	maxBitrate: u64,
-	frameRateNumerator: u32,
-	frameRateDenominator: u32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub averageBitrate: u64,
+	pub maxBitrate: u64,
+	pub frameRateNumerator: u32,
+	pub frameRateDenominator: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoEncodeRateControlInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkVideoEncodeRateControlFlagsKHR,
-	rateControlMode: VkVideoEncodeRateControlModeFlagBitsKHR,
-	layerCount: u32,
-	pLayers: *const VkVideoEncodeRateControlLayerInfoKHR,
-	virtualBufferSizeInMs: u32,
-	initialVirtualBufferSizeInMs: u32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkVideoEncodeRateControlFlagsKHR,
+	pub rateControlMode: VkVideoEncodeRateControlModeFlagBitsKHR,
+	pub layerCount: u32,
+	pub pLayers: *const VkVideoEncodeRateControlLayerInfoKHR,
+	pub virtualBufferSizeInMs: u32,
+	pub initialVirtualBufferSizeInMs: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceVideoEncodeQualityLevelInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	pVideoProfile: *const VkVideoProfileInfoKHR,
-	qualityLevel: u32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub pVideoProfile: *const VkVideoProfileInfoKHR,
+	pub qualityLevel: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoEncodeQualityLevelPropertiesKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	preferredRateControlMode: VkVideoEncodeRateControlModeFlagBitsKHR,
-	preferredRateControlLayerCount: u32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub preferredRateControlMode: VkVideoEncodeRateControlModeFlagBitsKHR,
+	pub preferredRateControlLayerCount: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoEncodeQualityLevelInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	qualityLevel: u32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub qualityLevel: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoEncodeSessionParametersGetInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	videoSessionParameters: VkVideoSessionParametersKHR,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub videoSessionParameters: VkVideoSessionParametersKHR,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoEncodeSessionParametersFeedbackInfoKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	hasOverrides: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub hasOverrides: VkBool32,
 }
 type PFN_vkGetPhysicalDeviceVideoEncodeQualityLevelPropertiesKHR = extern "system" fn(physicalDevice: VkPhysicalDevice, pQualityLevelInfo: *const VkPhysicalDeviceVideoEncodeQualityLevelInfoKHR, pQualityLevelProperties: *mut VkVideoEncodeQualityLevelPropertiesKHR) -> VkResult;
 type PFN_vkGetEncodedVideoSessionParametersKHR = extern "system" fn(device: VkDevice, pVideoSessionParametersInfo: *const VkVideoEncodeSessionParametersGetInfoKHR, pFeedbackInfo: *mut VkVideoEncodeSessionParametersFeedbackInfoKHR, pDataSize: *mut size_t, pData: *mut c_void) -> VkResult;
@@ -16398,20 +16227,20 @@ impl Vulkan_KHR_video_encode_queue {
 		}
 	}
 }
-type VkPipelineStageFlags2KHR = VkPipelineStageFlags2;
-type VkPipelineStageFlagBits2KHR = VkPipelineStageFlagBits2;
-type VkAccessFlags2KHR = VkAccessFlags2;
-type VkAccessFlagBits2KHR = VkAccessFlagBits2;
-type VkSubmitFlagBitsKHR = VkSubmitFlagBits;
-type VkSubmitFlagsKHR = VkSubmitFlags;
-type VkMemoryBarrier2KHR = VkMemoryBarrier2;
-type VkBufferMemoryBarrier2KHR = VkBufferMemoryBarrier2;
-type VkImageMemoryBarrier2KHR = VkImageMemoryBarrier2;
-type VkDependencyInfoKHR = VkDependencyInfo;
-type VkSubmitInfo2KHR = VkSubmitInfo2;
-type VkSemaphoreSubmitInfoKHR = VkSemaphoreSubmitInfo;
-type VkCommandBufferSubmitInfoKHR = VkCommandBufferSubmitInfo;
-type VkPhysicalDeviceSynchronization2FeaturesKHR = VkPhysicalDeviceSynchronization2Features;
+pub type VkPipelineStageFlags2KHR = VkPipelineStageFlags2;
+pub type VkPipelineStageFlagBits2KHR = VkPipelineStageFlagBits2;
+pub type VkAccessFlags2KHR = VkAccessFlags2;
+pub type VkAccessFlagBits2KHR = VkAccessFlagBits2;
+pub type VkSubmitFlagBitsKHR = VkSubmitFlagBits;
+pub type VkSubmitFlagsKHR = VkSubmitFlags;
+pub type VkMemoryBarrier2KHR = VkMemoryBarrier2;
+pub type VkBufferMemoryBarrier2KHR = VkBufferMemoryBarrier2;
+pub type VkImageMemoryBarrier2KHR = VkImageMemoryBarrier2;
+pub type VkDependencyInfoKHR = VkDependencyInfo;
+pub type VkSubmitInfo2KHR = VkSubmitInfo2;
+pub type VkSemaphoreSubmitInfoKHR = VkSemaphoreSubmitInfo;
+pub type VkCommandBufferSubmitInfoKHR = VkCommandBufferSubmitInfo;
+pub type VkPhysicalDeviceSynchronization2FeaturesKHR = VkPhysicalDeviceSynchronization2Features;
 type PFN_vkCmdSetEvent2KHR = extern "system" fn(commandBuffer: VkCommandBuffer, event: VkEvent, pDependencyInfo: *const VkDependencyInfo);
 type PFN_vkCmdResetEvent2KHR = extern "system" fn(commandBuffer: VkCommandBuffer, event: VkEvent, stageMask: VkPipelineStageFlags2);
 type PFN_vkCmdWaitEvents2KHR = extern "system" fn(commandBuffer: VkCommandBuffer, eventCount: u32, pEvents: *const VkEvent, pDependencyInfos: *const VkDependencyInfo);
@@ -16450,118 +16279,102 @@ impl Vulkan_KHR_synchronization2 {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceFragmentShaderBarycentricFeaturesKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	fragmentShaderBarycentric: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub fragmentShaderBarycentric: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceFragmentShaderBarycentricPropertiesKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	triStripVertexOrderIndependentOfProvokingVertex: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub triStripVertexOrderIndependentOfProvokingVertex: VkBool32,
 }
 pub trait VK_KHR_fragment_shader_barycentric: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_KHR_fragment_shader_barycentric {
-}
-impl VK_KHR_fragment_shader_barycentric for Vulkan_KHR_fragment_shader_barycentric {
-}
+pub struct Vulkan_KHR_fragment_shader_barycentric {}
+impl VK_KHR_fragment_shader_barycentric for Vulkan_KHR_fragment_shader_barycentric {}
 impl Default for Vulkan_KHR_fragment_shader_barycentric {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_KHR_fragment_shader_barycentric {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceShaderSubgroupUniformControlFlowFeaturesKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	shaderSubgroupUniformControlFlow: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub shaderSubgroupUniformControlFlow: VkBool32,
 }
 pub trait VK_KHR_shader_subgroup_uniform_control_flow: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_KHR_shader_subgroup_uniform_control_flow {
-}
-impl VK_KHR_shader_subgroup_uniform_control_flow for Vulkan_KHR_shader_subgroup_uniform_control_flow {
-}
+pub struct Vulkan_KHR_shader_subgroup_uniform_control_flow {}
+impl VK_KHR_shader_subgroup_uniform_control_flow for Vulkan_KHR_shader_subgroup_uniform_control_flow {}
 impl Default for Vulkan_KHR_shader_subgroup_uniform_control_flow {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_KHR_shader_subgroup_uniform_control_flow {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-type VkPhysicalDeviceZeroInitializeWorkgroupMemoryFeaturesKHR = VkPhysicalDeviceZeroInitializeWorkgroupMemoryFeatures;
+pub type VkPhysicalDeviceZeroInitializeWorkgroupMemoryFeaturesKHR = VkPhysicalDeviceZeroInitializeWorkgroupMemoryFeatures;
 pub trait VK_KHR_zero_initialize_workgroup_memory: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_KHR_zero_initialize_workgroup_memory {
-}
-impl VK_KHR_zero_initialize_workgroup_memory for Vulkan_KHR_zero_initialize_workgroup_memory {
-}
+pub struct Vulkan_KHR_zero_initialize_workgroup_memory {}
+impl VK_KHR_zero_initialize_workgroup_memory for Vulkan_KHR_zero_initialize_workgroup_memory {}
 impl Default for Vulkan_KHR_zero_initialize_workgroup_memory {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_KHR_zero_initialize_workgroup_memory {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	workgroupMemoryExplicitLayout: VkBool32,
-	workgroupMemoryExplicitLayoutScalarBlockLayout: VkBool32,
-	workgroupMemoryExplicitLayout8BitAccess: VkBool32,
-	workgroupMemoryExplicitLayout16BitAccess: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub workgroupMemoryExplicitLayout: VkBool32,
+	pub workgroupMemoryExplicitLayoutScalarBlockLayout: VkBool32,
+	pub workgroupMemoryExplicitLayout8BitAccess: VkBool32,
+	pub workgroupMemoryExplicitLayout16BitAccess: VkBool32,
 }
 pub trait VK_KHR_workgroup_memory_explicit_layout: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_KHR_workgroup_memory_explicit_layout {
-}
-impl VK_KHR_workgroup_memory_explicit_layout for Vulkan_KHR_workgroup_memory_explicit_layout {
-}
+pub struct Vulkan_KHR_workgroup_memory_explicit_layout {}
+impl VK_KHR_workgroup_memory_explicit_layout for Vulkan_KHR_workgroup_memory_explicit_layout {}
 impl Default for Vulkan_KHR_workgroup_memory_explicit_layout {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_KHR_workgroup_memory_explicit_layout {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-type VkCopyBufferInfo2KHR = VkCopyBufferInfo2;
-type VkCopyImageInfo2KHR = VkCopyImageInfo2;
-type VkCopyBufferToImageInfo2KHR = VkCopyBufferToImageInfo2;
-type VkCopyImageToBufferInfo2KHR = VkCopyImageToBufferInfo2;
-type VkBlitImageInfo2KHR = VkBlitImageInfo2;
-type VkResolveImageInfo2KHR = VkResolveImageInfo2;
-type VkBufferCopy2KHR = VkBufferCopy2;
-type VkImageCopy2KHR = VkImageCopy2;
-type VkImageBlit2KHR = VkImageBlit2;
-type VkBufferImageCopy2KHR = VkBufferImageCopy2;
-type VkImageResolve2KHR = VkImageResolve2;
+pub type VkCopyBufferInfo2KHR = VkCopyBufferInfo2;
+pub type VkCopyImageInfo2KHR = VkCopyImageInfo2;
+pub type VkCopyBufferToImageInfo2KHR = VkCopyBufferToImageInfo2;
+pub type VkCopyImageToBufferInfo2KHR = VkCopyImageToBufferInfo2;
+pub type VkBlitImageInfo2KHR = VkBlitImageInfo2;
+pub type VkResolveImageInfo2KHR = VkResolveImageInfo2;
+pub type VkBufferCopy2KHR = VkBufferCopy2;
+pub type VkImageCopy2KHR = VkImageCopy2;
+pub type VkImageBlit2KHR = VkImageBlit2;
+pub type VkBufferImageCopy2KHR = VkBufferImageCopy2;
+pub type VkImageResolve2KHR = VkImageResolve2;
 type PFN_vkCmdCopyBuffer2KHR = extern "system" fn(commandBuffer: VkCommandBuffer, pCopyBufferInfo: *const VkCopyBufferInfo2);
 type PFN_vkCmdCopyImage2KHR = extern "system" fn(commandBuffer: VkCommandBuffer, pCopyImageInfo: *const VkCopyImageInfo2);
 type PFN_vkCmdCopyBufferToImage2KHR = extern "system" fn(commandBuffer: VkCommandBuffer, pCopyBufferToImageInfo: *const VkCopyBufferToImageInfo2);
@@ -16597,52 +16410,48 @@ impl Vulkan_KHR_copy_commands2 {
 		}
 	}
 }
-type VkFormatFeatureFlags2KHR = VkFormatFeatureFlags2;
-type VkFormatFeatureFlagBits2KHR = VkFormatFeatureFlagBits2;
-type VkFormatProperties3KHR = VkFormatProperties3;
+pub type VkFormatFeatureFlags2KHR = VkFormatFeatureFlags2;
+pub type VkFormatFeatureFlagBits2KHR = VkFormatFeatureFlagBits2;
+pub type VkFormatProperties3KHR = VkFormatProperties3;
 pub trait VK_KHR_format_feature_flags2: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_KHR_format_feature_flags2 {
-}
-impl VK_KHR_format_feature_flags2 for Vulkan_KHR_format_feature_flags2 {
-}
+pub struct Vulkan_KHR_format_feature_flags2 {}
+impl VK_KHR_format_feature_flags2 for Vulkan_KHR_format_feature_flags2 {}
 impl Default for Vulkan_KHR_format_feature_flags2 {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_KHR_format_feature_flags2 {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceRayTracingMaintenance1FeaturesKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	rayTracingMaintenance1: VkBool32,
-	rayTracingPipelineTraceRaysIndirect2: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub rayTracingMaintenance1: VkBool32,
+	pub rayTracingPipelineTraceRaysIndirect2: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkTraceRaysIndirectCommand2KHR {
-	raygenShaderRecordAddress: VkDeviceAddress,
-	raygenShaderRecordSize: VkDeviceSize,
-	missShaderBindingTableAddress: VkDeviceAddress,
-	missShaderBindingTableSize: VkDeviceSize,
-	missShaderBindingTableStride: VkDeviceSize,
-	hitShaderBindingTableAddress: VkDeviceAddress,
-	hitShaderBindingTableSize: VkDeviceSize,
-	hitShaderBindingTableStride: VkDeviceSize,
-	callableShaderBindingTableAddress: VkDeviceAddress,
-	callableShaderBindingTableSize: VkDeviceSize,
-	callableShaderBindingTableStride: VkDeviceSize,
-	width: u32,
-	height: u32,
-	depth: u32,
+	pub raygenShaderRecordAddress: VkDeviceAddress,
+	pub raygenShaderRecordSize: VkDeviceSize,
+	pub missShaderBindingTableAddress: VkDeviceAddress,
+	pub missShaderBindingTableSize: VkDeviceSize,
+	pub missShaderBindingTableStride: VkDeviceSize,
+	pub hitShaderBindingTableAddress: VkDeviceAddress,
+	pub hitShaderBindingTableSize: VkDeviceSize,
+	pub hitShaderBindingTableStride: VkDeviceSize,
+	pub callableShaderBindingTableAddress: VkDeviceAddress,
+	pub callableShaderBindingTableSize: VkDeviceSize,
+	pub callableShaderBindingTableStride: VkDeviceSize,
+	pub width: u32,
+	pub height: u32,
+	pub depth: u32,
 }
 type PFN_vkCmdTraceRaysIndirect2KHR = extern "system" fn(commandBuffer: VkCommandBuffer, indirectDeviceAddress: VkDeviceAddress);
 extern "system" fn dummy_vkCmdTraceRaysIndirect2KHR(_: VkCommandBuffer, _: VkDeviceAddress) {
@@ -16676,26 +16485,22 @@ impl Vulkan_KHR_ray_tracing_maintenance1 {
 }
 pub trait VK_KHR_portability_enumeration: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_KHR_portability_enumeration {
-}
-impl VK_KHR_portability_enumeration for Vulkan_KHR_portability_enumeration {
-}
+pub struct Vulkan_KHR_portability_enumeration {}
+impl VK_KHR_portability_enumeration for Vulkan_KHR_portability_enumeration {}
 impl Default for Vulkan_KHR_portability_enumeration {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_KHR_portability_enumeration {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-type VkPhysicalDeviceMaintenance4FeaturesKHR = VkPhysicalDeviceMaintenance4Features;
-type VkPhysicalDeviceMaintenance4PropertiesKHR = VkPhysicalDeviceMaintenance4Properties;
-type VkDeviceBufferMemoryRequirementsKHR = VkDeviceBufferMemoryRequirements;
-type VkDeviceImageMemoryRequirementsKHR = VkDeviceImageMemoryRequirements;
+pub type VkPhysicalDeviceMaintenance4FeaturesKHR = VkPhysicalDeviceMaintenance4Features;
+pub type VkPhysicalDeviceMaintenance4PropertiesKHR = VkPhysicalDeviceMaintenance4Properties;
+pub type VkDeviceBufferMemoryRequirementsKHR = VkDeviceBufferMemoryRequirements;
+pub type VkDeviceImageMemoryRequirementsKHR = VkDeviceImageMemoryRequirements;
 type PFN_vkGetDeviceBufferMemoryRequirementsKHR = extern "system" fn(device: VkDevice, pInfo: *const VkDeviceBufferMemoryRequirements, pMemoryRequirements: *mut VkMemoryRequirements2);
 type PFN_vkGetDeviceImageMemoryRequirementsKHR = extern "system" fn(device: VkDevice, pInfo: *const VkDeviceImageMemoryRequirements, pMemoryRequirements: *mut VkMemoryRequirements2);
 type PFN_vkGetDeviceImageSparseMemoryRequirementsKHR = extern "system" fn(device: VkDevice, pInfo: *const VkDeviceImageMemoryRequirements, pSparseMemoryRequirementCount: *mut uint32_t, pSparseMemoryRequirements: *mut VkSparseImageMemoryRequirements2);
@@ -16728,62 +16533,54 @@ impl Vulkan_KHR_maintenance4 {
 		}
 	}
 }
-type VkPhysicalDeviceShaderSubgroupRotateFeaturesKHR = VkPhysicalDeviceShaderSubgroupRotateFeatures;
+pub type VkPhysicalDeviceShaderSubgroupRotateFeaturesKHR = VkPhysicalDeviceShaderSubgroupRotateFeatures;
 pub trait VK_KHR_shader_subgroup_rotate: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_KHR_shader_subgroup_rotate {
-}
-impl VK_KHR_shader_subgroup_rotate for Vulkan_KHR_shader_subgroup_rotate {
-}
+pub struct Vulkan_KHR_shader_subgroup_rotate {}
+impl VK_KHR_shader_subgroup_rotate for Vulkan_KHR_shader_subgroup_rotate {}
 impl Default for Vulkan_KHR_shader_subgroup_rotate {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_KHR_shader_subgroup_rotate {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceShaderMaximalReconvergenceFeaturesKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	shaderMaximalReconvergence: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub shaderMaximalReconvergence: VkBool32,
 }
 pub trait VK_KHR_shader_maximal_reconvergence: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_KHR_shader_maximal_reconvergence {
-}
-impl VK_KHR_shader_maximal_reconvergence for Vulkan_KHR_shader_maximal_reconvergence {
-}
+pub struct Vulkan_KHR_shader_maximal_reconvergence {}
+impl VK_KHR_shader_maximal_reconvergence for Vulkan_KHR_shader_maximal_reconvergence {}
 impl Default for Vulkan_KHR_shader_maximal_reconvergence {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_KHR_shader_maximal_reconvergence {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-type VkPipelineCreateFlags2KHR = VkPipelineCreateFlags2;
-type VkPipelineCreateFlagBits2KHR = VkPipelineCreateFlagBits2;
-type VkBufferUsageFlags2KHR = VkBufferUsageFlags2;
-type VkBufferUsageFlagBits2KHR = VkBufferUsageFlagBits2;
-type VkPhysicalDeviceMaintenance5FeaturesKHR = VkPhysicalDeviceMaintenance5Features;
-type VkPhysicalDeviceMaintenance5PropertiesKHR = VkPhysicalDeviceMaintenance5Properties;
-type VkRenderingAreaInfoKHR = VkRenderingAreaInfo;
-type VkDeviceImageSubresourceInfoKHR = VkDeviceImageSubresourceInfo;
-type VkImageSubresource2KHR = VkImageSubresource2;
-type VkSubresourceLayout2KHR = VkSubresourceLayout2;
-type VkPipelineCreateFlags2CreateInfoKHR = VkPipelineCreateFlags2CreateInfo;
-type VkBufferUsageFlags2CreateInfoKHR = VkBufferUsageFlags2CreateInfo;
+pub type VkPipelineCreateFlags2KHR = VkPipelineCreateFlags2;
+pub type VkPipelineCreateFlagBits2KHR = VkPipelineCreateFlagBits2;
+pub type VkBufferUsageFlags2KHR = VkBufferUsageFlags2;
+pub type VkBufferUsageFlagBits2KHR = VkBufferUsageFlagBits2;
+pub type VkPhysicalDeviceMaintenance5FeaturesKHR = VkPhysicalDeviceMaintenance5Features;
+pub type VkPhysicalDeviceMaintenance5PropertiesKHR = VkPhysicalDeviceMaintenance5Properties;
+pub type VkRenderingAreaInfoKHR = VkRenderingAreaInfo;
+pub type VkDeviceImageSubresourceInfoKHR = VkDeviceImageSubresourceInfo;
+pub type VkImageSubresource2KHR = VkImageSubresource2;
+pub type VkSubresourceLayout2KHR = VkSubresourceLayout2;
+pub type VkPipelineCreateFlags2CreateInfoKHR = VkPipelineCreateFlags2CreateInfo;
+pub type VkBufferUsageFlags2CreateInfoKHR = VkBufferUsageFlags2CreateInfo;
 type PFN_vkCmdBindIndexBuffer2KHR = extern "system" fn(commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize, size: VkDeviceSize, indexType: VkIndexType);
 type PFN_vkGetRenderingAreaGranularityKHR = extern "system" fn(device: VkDevice, pRenderingAreaInfo: *const VkRenderingAreaInfo, pGranularity: *mut VkExtent2D);
 type PFN_vkGetDeviceImageSubresourceLayoutKHR = extern "system" fn(device: VkDevice, pInfo: *const VkDeviceImageSubresourceInfo, pLayout: *mut VkSubresourceLayout2);
@@ -16820,64 +16617,60 @@ impl Vulkan_KHR_maintenance5 {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkSurfaceCapabilitiesPresentId2KHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	presentId2Supported: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub presentId2Supported: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPresentId2KHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	swapchainCount: u32,
-	pPresentIds: *const uint64_t,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub swapchainCount: u32,
+	pub pPresentIds: *const uint64_t,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDevicePresentId2FeaturesKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	presentId2: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub presentId2: VkBool32,
 }
 pub trait VK_KHR_present_id2: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_KHR_present_id2 {
-}
-impl VK_KHR_present_id2 for Vulkan_KHR_present_id2 {
-}
+pub struct Vulkan_KHR_present_id2 {}
+impl VK_KHR_present_id2 for Vulkan_KHR_present_id2 {}
 impl Default for Vulkan_KHR_present_id2 {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_KHR_present_id2 {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkSurfaceCapabilitiesPresentWait2KHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	presentWait2Supported: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub presentWait2Supported: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDevicePresentWait2FeaturesKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	presentWait2: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub presentWait2: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPresentWait2InfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	presentId: u64,
-	timeout: u64,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub presentId: u64,
+	pub timeout: u64,
 }
 type PFN_vkWaitForPresent2KHR = extern "system" fn(device: VkDevice, swapchain: VkSwapchainKHR, pPresentWait2Info: *const VkPresentWait2InfoKHR) -> VkResult;
 extern "system" fn dummy_vkWaitForPresent2KHR(_: VkDevice, _: VkSwapchainKHR, _: *const VkPresentWait2InfoKHR) -> VkResult {
@@ -16912,123 +16705,119 @@ impl Vulkan_KHR_present_wait2 {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceRayTracingPositionFetchFeaturesKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	rayTracingPositionFetch: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub rayTracingPositionFetch: VkBool32,
 }
 pub trait VK_KHR_ray_tracing_position_fetch: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_KHR_ray_tracing_position_fetch {
-}
-impl VK_KHR_ray_tracing_position_fetch for Vulkan_KHR_ray_tracing_position_fetch {
-}
+pub struct Vulkan_KHR_ray_tracing_position_fetch {}
+impl VK_KHR_ray_tracing_position_fetch for Vulkan_KHR_ray_tracing_position_fetch {}
 impl Default for Vulkan_KHR_ray_tracing_position_fetch {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_KHR_ray_tracing_position_fetch {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 pub const VK_MAX_PIPELINE_BINARY_KEY_SIZE_KHR: u32 = 32u32;
 // Define non-dispatchable handle `VkPipelineBinaryKHR`
-#[cfg(target_pointer_width = "32")] type VkPipelineBinaryKHR = u64;
+#[cfg(target_pointer_width = "32")] pub type VkPipelineBinaryKHR = u64;
 #[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkPipelineBinaryKHR_T {}
-#[cfg(target_pointer_width = "64")] type VkPipelineBinaryKHR = *const VkPipelineBinaryKHR_T;
+#[cfg(target_pointer_width = "64")] pub type VkPipelineBinaryKHR = *const VkPipelineBinaryKHR_T;
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDevicePipelineBinaryFeaturesKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	pipelineBinaries: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub pipelineBinaries: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDevicePipelineBinaryPropertiesKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	pipelineBinaryInternalCache: VkBool32,
-	pipelineBinaryInternalCacheControl: VkBool32,
-	pipelineBinaryPrefersInternalCache: VkBool32,
-	pipelineBinaryPrecompiledInternalCache: VkBool32,
-	pipelineBinaryCompressedData: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub pipelineBinaryInternalCache: VkBool32,
+	pub pipelineBinaryInternalCacheControl: VkBool32,
+	pub pipelineBinaryPrefersInternalCache: VkBool32,
+	pub pipelineBinaryPrecompiledInternalCache: VkBool32,
+	pub pipelineBinaryCompressedData: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDevicePipelineBinaryInternalCacheControlKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	disableInternalCache: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub disableInternalCache: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPipelineBinaryKeyKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	keySize: u32,
-	key: [u8; VK_MAX_PIPELINE_BINARY_KEY_SIZE_KHR as usize],
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub keySize: u32,
+	pub key: [u8; VK_MAX_PIPELINE_BINARY_KEY_SIZE_KHR as usize],
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPipelineBinaryDataKHR {
-	dataSize: usize,
-	pData: *mut c_void,
+	pub dataSize: usize,
+	pub pData: *mut c_void,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPipelineBinaryKeysAndDataKHR {
-	binaryCount: u32,
-	pPipelineBinaryKeys: *const VkPipelineBinaryKeyKHR,
-	pPipelineBinaryData: *const VkPipelineBinaryDataKHR,
+	pub binaryCount: u32,
+	pub pPipelineBinaryKeys: *const VkPipelineBinaryKeyKHR,
+	pub pPipelineBinaryData: *const VkPipelineBinaryDataKHR,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPipelineCreateInfoKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPipelineBinaryCreateInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	pKeysAndDataInfo: *const VkPipelineBinaryKeysAndDataKHR,
-	pipeline: VkPipeline,
-	pPipelineCreateInfo: *const VkPipelineCreateInfoKHR,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub pKeysAndDataInfo: *const VkPipelineBinaryKeysAndDataKHR,
+	pub pipeline: VkPipeline,
+	pub pPipelineCreateInfo: *const VkPipelineCreateInfoKHR,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPipelineBinaryInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	binaryCount: u32,
-	pPipelineBinaries: *const VkPipelineBinaryKHR,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub binaryCount: u32,
+	pub pPipelineBinaries: *const VkPipelineBinaryKHR,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkReleaseCapturedPipelineDataInfoKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	pipeline: VkPipeline,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub pipeline: VkPipeline,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPipelineBinaryDataInfoKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	pipelineBinary: VkPipelineBinaryKHR,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub pipelineBinary: VkPipelineBinaryKHR,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPipelineBinaryHandlesInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	pipelineBinaryCount: u32,
-	pPipelineBinaries: *mut VkPipelineBinaryKHR,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub pipelineBinaryCount: u32,
+	pub pPipelineBinaries: *mut VkPipelineBinaryKHR,
 }
 type PFN_vkCreatePipelineBinariesKHR = extern "system" fn(device: VkDevice, pCreateInfo: *const VkPipelineBinaryCreateInfoKHR, pAllocator: *const VkAllocationCallbacks, pBinaries: *mut VkPipelineBinaryHandlesInfoKHR) -> VkResult;
 type PFN_vkDestroyPipelineBinaryKHR = extern "system" fn(device: VkDevice, pipelineBinary: VkPipelineBinaryKHR, pAllocator: *const VkAllocationCallbacks);
@@ -17064,8 +16853,8 @@ impl Vulkan_KHR_pipeline_binary {
 		}
 	}
 }
-type VkPresentScalingFlagsKHR = VkFlags;
-type VkPresentGravityFlagsKHR = VkFlags;
+pub type VkPresentScalingFlagsKHR = VkFlags;
+pub type VkPresentGravityFlagsKHR = VkFlags;
 #[repr(C)]
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum VkPresentScalingFlagBitsKHR {
@@ -17095,95 +16884,91 @@ impl VkPresentGravityFlagBitsKHR {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkSurfacePresentModeKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	presentMode: VkPresentModeKHR,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub presentMode: VkPresentModeKHR,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkSurfacePresentScalingCapabilitiesKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	supportedPresentScaling: VkPresentScalingFlagsKHR,
-	supportedPresentGravityX: VkPresentGravityFlagsKHR,
-	supportedPresentGravityY: VkPresentGravityFlagsKHR,
-	minScaledImageExtent: VkExtent2D,
-	maxScaledImageExtent: VkExtent2D,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub supportedPresentScaling: VkPresentScalingFlagsKHR,
+	pub supportedPresentGravityX: VkPresentGravityFlagsKHR,
+	pub supportedPresentGravityY: VkPresentGravityFlagsKHR,
+	pub minScaledImageExtent: VkExtent2D,
+	pub maxScaledImageExtent: VkExtent2D,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkSurfacePresentModeCompatibilityKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	presentModeCount: u32,
-	pPresentModes: *mut VkPresentModeKHR,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub presentModeCount: u32,
+	pub pPresentModes: *mut VkPresentModeKHR,
 }
 pub trait VK_KHR_surface_maintenance1: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_KHR_surface_maintenance1 {
-}
-impl VK_KHR_surface_maintenance1 for Vulkan_KHR_surface_maintenance1 {
-}
+pub struct Vulkan_KHR_surface_maintenance1 {}
+impl VK_KHR_surface_maintenance1 for Vulkan_KHR_surface_maintenance1 {}
 impl Default for Vulkan_KHR_surface_maintenance1 {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_KHR_surface_maintenance1 {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceSwapchainMaintenance1FeaturesKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	swapchainMaintenance1: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub swapchainMaintenance1: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkSwapchainPresentFenceInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	swapchainCount: u32,
-	pFences: *const VkFence,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub swapchainCount: u32,
+	pub pFences: *const VkFence,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkSwapchainPresentModesCreateInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	presentModeCount: u32,
-	pPresentModes: *const VkPresentModeKHR,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub presentModeCount: u32,
+	pub pPresentModes: *const VkPresentModeKHR,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkSwapchainPresentModeInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	swapchainCount: u32,
-	pPresentModes: *const VkPresentModeKHR,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub swapchainCount: u32,
+	pub pPresentModes: *const VkPresentModeKHR,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkSwapchainPresentScalingCreateInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	scalingBehavior: VkPresentScalingFlagsKHR,
-	presentGravityX: VkPresentGravityFlagsKHR,
-	presentGravityY: VkPresentGravityFlagsKHR,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub scalingBehavior: VkPresentScalingFlagsKHR,
+	pub presentGravityX: VkPresentGravityFlagsKHR,
+	pub presentGravityY: VkPresentGravityFlagsKHR,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkReleaseSwapchainImagesInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	swapchain: VkSwapchainKHR,
-	imageIndexCount: u32,
-	pImageIndices: *const uint32_t,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub swapchain: VkSwapchainKHR,
+	pub imageIndexCount: u32,
+	pub pImageIndices: *const uint32_t,
 }
 type PFN_vkReleaseSwapchainImagesKHR = extern "system" fn(device: VkDevice, pReleaseInfo: *const VkReleaseSwapchainImagesInfoKHR) -> VkResult;
 extern "system" fn dummy_vkReleaseSwapchainImagesKHR(_: VkDevice, _: *const VkReleaseSwapchainImagesInfoKHR) -> VkResult {
@@ -17269,32 +17054,32 @@ impl VkScopeKHR {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkCooperativeMatrixPropertiesKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	MSize: u32,
-	NSize: u32,
-	KSize: u32,
-	AType: VkComponentTypeKHR,
-	BType: VkComponentTypeKHR,
-	CType: VkComponentTypeKHR,
-	ResultType: VkComponentTypeKHR,
-	saturatingAccumulation: VkBool32,
-	scope: VkScopeKHR,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub MSize: u32,
+	pub NSize: u32,
+	pub KSize: u32,
+	pub AType: VkComponentTypeKHR,
+	pub BType: VkComponentTypeKHR,
+	pub CType: VkComponentTypeKHR,
+	pub ResultType: VkComponentTypeKHR,
+	pub saturatingAccumulation: VkBool32,
+	pub scope: VkScopeKHR,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceCooperativeMatrixFeaturesKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	cooperativeMatrix: VkBool32,
-	cooperativeMatrixRobustBufferAccess: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub cooperativeMatrix: VkBool32,
+	pub cooperativeMatrixRobustBufferAccess: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceCooperativeMatrixPropertiesKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	cooperativeMatrixSupportedStages: VkShaderStageFlags,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub cooperativeMatrixSupportedStages: VkShaderStageFlags,
 }
 type PFN_vkGetPhysicalDeviceCooperativeMatrixPropertiesKHR = extern "system" fn(physicalDevice: VkPhysicalDevice, pPropertyCount: *mut uint32_t, pProperties: *mut VkCooperativeMatrixPropertiesKHR) -> VkResult;
 extern "system" fn dummy_vkGetPhysicalDeviceCooperativeMatrixPropertiesKHR(_: VkPhysicalDevice, _: *mut uint32_t, _: *mut VkCooperativeMatrixPropertiesKHR) -> VkResult {
@@ -17329,94 +17114,86 @@ impl Vulkan_KHR_cooperative_matrix {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceComputeShaderDerivativesFeaturesKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	computeDerivativeGroupQuads: VkBool32,
-	computeDerivativeGroupLinear: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub computeDerivativeGroupQuads: VkBool32,
+	pub computeDerivativeGroupLinear: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceComputeShaderDerivativesPropertiesKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	meshAndTaskShaderDerivatives: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub meshAndTaskShaderDerivatives: VkBool32,
 }
 pub trait VK_KHR_compute_shader_derivatives: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_KHR_compute_shader_derivatives {
-}
-impl VK_KHR_compute_shader_derivatives for Vulkan_KHR_compute_shader_derivatives {
-}
+pub struct Vulkan_KHR_compute_shader_derivatives {}
+impl VK_KHR_compute_shader_derivatives for Vulkan_KHR_compute_shader_derivatives {}
 impl Default for Vulkan_KHR_compute_shader_derivatives {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_KHR_compute_shader_derivatives {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 pub const VK_MAX_VIDEO_AV1_REFERENCES_PER_FRAME_KHR: u32 = 7u32;
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoDecodeAV1ProfileInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	stdProfile: StdVideoAV1Profile,
-	filmGrainSupport: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub stdProfile: StdVideoAV1Profile,
+	pub filmGrainSupport: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoDecodeAV1CapabilitiesKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	maxLevel: StdVideoAV1Level,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub maxLevel: StdVideoAV1Level,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoDecodeAV1SessionParametersCreateInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	pStdSequenceHeader: *const StdVideoAV1SequenceHeader,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub pStdSequenceHeader: *const StdVideoAV1SequenceHeader,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoDecodeAV1PictureInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	pStdPictureInfo: *const StdVideoDecodeAV1PictureInfo,
-	referenceNameSlotIndices: [i32; VK_MAX_VIDEO_AV1_REFERENCES_PER_FRAME_KHR as usize],
-	frameHeaderOffset: u32,
-	tileCount: u32,
-	pTileOffsets: *const uint32_t,
-	pTileSizes: *const uint32_t,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub pStdPictureInfo: *const StdVideoDecodeAV1PictureInfo,
+	pub referenceNameSlotIndices: [i32; VK_MAX_VIDEO_AV1_REFERENCES_PER_FRAME_KHR as usize],
+	pub frameHeaderOffset: u32,
+	pub tileCount: u32,
+	pub pTileOffsets: *const uint32_t,
+	pub pTileSizes: *const uint32_t,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoDecodeAV1DpbSlotInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	pStdReferenceInfo: *const StdVideoDecodeAV1ReferenceInfo,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub pStdReferenceInfo: *const StdVideoDecodeAV1ReferenceInfo,
 }
 pub trait VK_KHR_video_decode_av1: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_KHR_video_decode_av1 {
-}
-impl VK_KHR_video_decode_av1 for Vulkan_KHR_video_decode_av1 {
-}
+pub struct Vulkan_KHR_video_decode_av1 {}
+impl VK_KHR_video_decode_av1 for Vulkan_KHR_video_decode_av1 {}
 impl Default for Vulkan_KHR_video_decode_av1 {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_KHR_video_decode_av1 {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 pub const STD_VIDEO_AV1_NUM_REF_FRAMES: u32 = 8u32;
@@ -17675,15 +17452,15 @@ impl StdVideoAV1ColorConfigFlags {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct StdVideoAV1ColorConfig {
-	flags: StdVideoAV1ColorConfigFlags,
-	BitDepth: u8,
-	subsampling_x: u8,
-	subsampling_y: u8,
-	reserved1: u8,
-	color_primaries: StdVideoAV1ColorPrimaries,
-	transfer_characteristics: StdVideoAV1TransferCharacteristics,
-	matrix_coefficients: StdVideoAV1MatrixCoefficients,
-	chroma_sample_position: StdVideoAV1ChromaSamplePosition,
+	pub flags: StdVideoAV1ColorConfigFlags,
+	pub BitDepth: u8,
+	pub subsampling_x: u8,
+	pub subsampling_y: u8,
+	pub reserved1: u8,
+	pub color_primaries: StdVideoAV1ColorPrimaries,
+	pub transfer_characteristics: StdVideoAV1TransferCharacteristics,
+	pub matrix_coefficients: StdVideoAV1MatrixCoefficients,
+	pub chroma_sample_position: StdVideoAV1ChromaSamplePosition,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
@@ -17709,10 +17486,10 @@ impl StdVideoAV1TimingInfoFlags {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct StdVideoAV1TimingInfo {
-	flags: StdVideoAV1TimingInfoFlags,
-	num_units_in_display_tick: u32,
-	time_scale: u32,
-	num_ticks_per_picture_minus_1: u32,
+	pub flags: StdVideoAV1TimingInfoFlags,
+	pub num_units_in_display_tick: u32,
+	pub time_scale: u32,
+	pub num_ticks_per_picture_minus_1: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
@@ -17745,13 +17522,13 @@ impl StdVideoAV1LoopFilterFlags {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct StdVideoAV1LoopFilter {
-	flags: StdVideoAV1LoopFilterFlags,
-	loop_filter_level: [u8; STD_VIDEO_AV1_MAX_LOOP_FILTER_STRENGTHS as usize],
-	loop_filter_sharpness: u8,
-	update_ref_delta: u8,
-	loop_filter_ref_deltas: [i8; STD_VIDEO_AV1_TOTAL_REFS_PER_FRAME as usize],
-	update_mode_delta: u8,
-	loop_filter_mode_deltas: [i8; STD_VIDEO_AV1_LOOP_FILTER_ADJUSTMENTS as usize],
+	pub flags: StdVideoAV1LoopFilterFlags,
+	pub loop_filter_level: [u8; STD_VIDEO_AV1_MAX_LOOP_FILTER_STRENGTHS as usize],
+	pub loop_filter_sharpness: u8,
+	pub update_ref_delta: u8,
+	pub loop_filter_ref_deltas: [i8; STD_VIDEO_AV1_TOTAL_REFS_PER_FRAME as usize],
+	pub update_mode_delta: u8,
+	pub loop_filter_mode_deltas: [i8; STD_VIDEO_AV1_LOOP_FILTER_ADJUSTMENTS as usize],
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
@@ -17784,22 +17561,22 @@ impl StdVideoAV1QuantizationFlags {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct StdVideoAV1Quantization {
-	flags: StdVideoAV1QuantizationFlags,
-	base_q_idx: u8,
-	DeltaQYDc: i8,
-	DeltaQUDc: i8,
-	DeltaQUAc: i8,
-	DeltaQVDc: i8,
-	DeltaQVAc: i8,
-	qm_y: u8,
-	qm_u: u8,
-	qm_v: u8,
+	pub flags: StdVideoAV1QuantizationFlags,
+	pub base_q_idx: u8,
+	pub DeltaQYDc: i8,
+	pub DeltaQUDc: i8,
+	pub DeltaQUAc: i8,
+	pub DeltaQVDc: i8,
+	pub DeltaQVAc: i8,
+	pub qm_y: u8,
+	pub qm_u: u8,
+	pub qm_v: u8,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct StdVideoAV1Segmentation {
-	FeatureEnabled: [u8; STD_VIDEO_AV1_MAX_SEGMENTS as usize],
-	FeatureData: [i16; STD_VIDEO_AV1_MAX_SEGMENTS as usize],
+	pub FeatureEnabled: [u8; STD_VIDEO_AV1_MAX_SEGMENTS as usize],
+	pub FeatureData: [i16; STD_VIDEO_AV1_MAX_SEGMENTS as usize],
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
@@ -17825,38 +17602,38 @@ impl StdVideoAV1TileInfoFlags {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct StdVideoAV1TileInfo {
-	flags: StdVideoAV1TileInfoFlags,
-	TileCols: u8,
-	TileRows: u8,
-	context_update_tile_id: u16,
-	tile_size_bytes_minus_1: u8,
-	reserved1: [u8; 7 as usize],
-	pMiColStarts: *const uint16_t,
-	pMiRowStarts: *const uint16_t,
-	pWidthInSbsMinus1: *const uint16_t,
-	pHeightInSbsMinus1: *const uint16_t,
+	pub flags: StdVideoAV1TileInfoFlags,
+	pub TileCols: u8,
+	pub TileRows: u8,
+	pub context_update_tile_id: u16,
+	pub tile_size_bytes_minus_1: u8,
+	pub reserved1: [u8; 7 as usize],
+	pub pMiColStarts: *const uint16_t,
+	pub pMiRowStarts: *const uint16_t,
+	pub pWidthInSbsMinus1: *const uint16_t,
+	pub pHeightInSbsMinus1: *const uint16_t,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct StdVideoAV1CDEF {
-	cdef_damping_minus_3: u8,
-	cdef_bits: u8,
-	cdef_y_pri_strength: [u8; STD_VIDEO_AV1_MAX_CDEF_FILTER_STRENGTHS as usize],
-	cdef_y_sec_strength: [u8; STD_VIDEO_AV1_MAX_CDEF_FILTER_STRENGTHS as usize],
-	cdef_uv_pri_strength: [u8; STD_VIDEO_AV1_MAX_CDEF_FILTER_STRENGTHS as usize],
-	cdef_uv_sec_strength: [u8; STD_VIDEO_AV1_MAX_CDEF_FILTER_STRENGTHS as usize],
+	pub cdef_damping_minus_3: u8,
+	pub cdef_bits: u8,
+	pub cdef_y_pri_strength: [u8; STD_VIDEO_AV1_MAX_CDEF_FILTER_STRENGTHS as usize],
+	pub cdef_y_sec_strength: [u8; STD_VIDEO_AV1_MAX_CDEF_FILTER_STRENGTHS as usize],
+	pub cdef_uv_pri_strength: [u8; STD_VIDEO_AV1_MAX_CDEF_FILTER_STRENGTHS as usize],
+	pub cdef_uv_sec_strength: [u8; STD_VIDEO_AV1_MAX_CDEF_FILTER_STRENGTHS as usize],
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct StdVideoAV1LoopRestoration {
-	FrameRestorationType: [StdVideoAV1FrameRestorationType; STD_VIDEO_AV1_MAX_NUM_PLANES as usize],
-	LoopRestorationSize: [u16; STD_VIDEO_AV1_MAX_NUM_PLANES as usize],
+	pub FrameRestorationType: [StdVideoAV1FrameRestorationType; STD_VIDEO_AV1_MAX_NUM_PLANES as usize],
+	pub LoopRestorationSize: [u16; STD_VIDEO_AV1_MAX_NUM_PLANES as usize],
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct StdVideoAV1GlobalMotion {
-	GmType: [u8; STD_VIDEO_AV1_NUM_REF_FRAMES as usize],
-	gm_params: [i32; STD_VIDEO_AV1_NUM_REF_FRAMES as usize],
+	pub GmType: [u8; STD_VIDEO_AV1_NUM_REF_FRAMES as usize],
+	pub gm_params: [i32; STD_VIDEO_AV1_NUM_REF_FRAMES as usize],
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
@@ -17903,31 +17680,31 @@ impl StdVideoAV1FilmGrainFlags {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct StdVideoAV1FilmGrain {
-	flags: StdVideoAV1FilmGrainFlags,
-	grain_scaling_minus_8: u8,
-	ar_coeff_lag: u8,
-	ar_coeff_shift_minus_6: u8,
-	grain_scale_shift: u8,
-	grain_seed: u16,
-	film_grain_params_ref_idx: u8,
-	num_y_points: u8,
-	point_y_value: [u8; STD_VIDEO_AV1_MAX_NUM_Y_POINTS as usize],
-	point_y_scaling: [u8; STD_VIDEO_AV1_MAX_NUM_Y_POINTS as usize],
-	num_cb_points: u8,
-	point_cb_value: [u8; STD_VIDEO_AV1_MAX_NUM_CB_POINTS as usize],
-	point_cb_scaling: [u8; STD_VIDEO_AV1_MAX_NUM_CB_POINTS as usize],
-	num_cr_points: u8,
-	point_cr_value: [u8; STD_VIDEO_AV1_MAX_NUM_CR_POINTS as usize],
-	point_cr_scaling: [u8; STD_VIDEO_AV1_MAX_NUM_CR_POINTS as usize],
-	ar_coeffs_y_plus_128: [i8; STD_VIDEO_AV1_MAX_NUM_POS_LUMA as usize],
-	ar_coeffs_cb_plus_128: [i8; STD_VIDEO_AV1_MAX_NUM_POS_CHROMA as usize],
-	ar_coeffs_cr_plus_128: [i8; STD_VIDEO_AV1_MAX_NUM_POS_CHROMA as usize],
-	cb_mult: u8,
-	cb_luma_mult: u8,
-	cb_offset: u16,
-	cr_mult: u8,
-	cr_luma_mult: u8,
-	cr_offset: u16,
+	pub flags: StdVideoAV1FilmGrainFlags,
+	pub grain_scaling_minus_8: u8,
+	pub ar_coeff_lag: u8,
+	pub ar_coeff_shift_minus_6: u8,
+	pub grain_scale_shift: u8,
+	pub grain_seed: u16,
+	pub film_grain_params_ref_idx: u8,
+	pub num_y_points: u8,
+	pub point_y_value: [u8; STD_VIDEO_AV1_MAX_NUM_Y_POINTS as usize],
+	pub point_y_scaling: [u8; STD_VIDEO_AV1_MAX_NUM_Y_POINTS as usize],
+	pub num_cb_points: u8,
+	pub point_cb_value: [u8; STD_VIDEO_AV1_MAX_NUM_CB_POINTS as usize],
+	pub point_cb_scaling: [u8; STD_VIDEO_AV1_MAX_NUM_CB_POINTS as usize],
+	pub num_cr_points: u8,
+	pub point_cr_value: [u8; STD_VIDEO_AV1_MAX_NUM_CR_POINTS as usize],
+	pub point_cr_scaling: [u8; STD_VIDEO_AV1_MAX_NUM_CR_POINTS as usize],
+	pub ar_coeffs_y_plus_128: [i8; STD_VIDEO_AV1_MAX_NUM_POS_LUMA as usize],
+	pub ar_coeffs_cb_plus_128: [i8; STD_VIDEO_AV1_MAX_NUM_POS_CHROMA as usize],
+	pub ar_coeffs_cr_plus_128: [i8; STD_VIDEO_AV1_MAX_NUM_POS_CHROMA as usize],
+	pub cb_mult: u8,
+	pub cb_luma_mult: u8,
+	pub cb_offset: u16,
+	pub cr_mult: u8,
+	pub cr_luma_mult: u8,
+	pub cr_offset: u16,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
@@ -18079,39 +17856,36 @@ impl StdVideoAV1SequenceHeaderFlags {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct StdVideoAV1SequenceHeader {
-	flags: StdVideoAV1SequenceHeaderFlags,
-	seq_profile: StdVideoAV1Profile,
-	frame_width_bits_minus_1: u8,
-	frame_height_bits_minus_1: u8,
-	max_frame_width_minus_1: u16,
-	max_frame_height_minus_1: u16,
-	delta_frame_id_length_minus_2: u8,
-	additional_frame_id_length_minus_1: u8,
-	order_hint_bits_minus_1: u8,
-	seq_force_integer_mv: u8,
-	seq_force_screen_content_tools: u8,
-	reserved1: [u8; 5 as usize],
-	pColorConfig: *const StdVideoAV1ColorConfig,
-	pTimingInfo: *const StdVideoAV1TimingInfo,
+	pub flags: StdVideoAV1SequenceHeaderFlags,
+	pub seq_profile: StdVideoAV1Profile,
+	pub frame_width_bits_minus_1: u8,
+	pub frame_height_bits_minus_1: u8,
+	pub max_frame_width_minus_1: u16,
+	pub max_frame_height_minus_1: u16,
+	pub delta_frame_id_length_minus_2: u8,
+	pub additional_frame_id_length_minus_1: u8,
+	pub order_hint_bits_minus_1: u8,
+	pub seq_force_integer_mv: u8,
+	pub seq_force_screen_content_tools: u8,
+	pub reserved1: [u8; 5 as usize],
+	pub pColorConfig: *const StdVideoAV1ColorConfig,
+	pub pTimingInfo: *const StdVideoAV1TimingInfo,
 }
 pub trait vulkan_video_codec_av1std: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_kan_video_codec_av1std {
-}
-impl vulkan_video_codec_av1std for Vulkan_kan_video_codec_av1std {
-}
-impl Default for Vulkan_kan_video_codec_av1std {
+pub struct Vulkan_video_codec_av1std {}
+impl vulkan_video_codec_av1std for Vulkan_video_codec_av1std {}
+impl Default for Vulkan_video_codec_av1std {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-impl Vulkan_kan_video_codec_av1std {
+impl Vulkan_video_codec_av1std {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
+pub const VK_STD_VULKAN_VIDEO_CODEC_AV1_DECODE_API_VERSION_1_0_0: u32 = 0x400000;
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct StdVideoDecodeAV1PictureInfoFlags {
@@ -18332,30 +18106,30 @@ impl StdVideoDecodeAV1PictureInfoFlags {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct StdVideoDecodeAV1PictureInfo {
-	flags: StdVideoDecodeAV1PictureInfoFlags,
-	frame_type: StdVideoAV1FrameType,
-	current_frame_id: u32,
-	OrderHint: u8,
-	primary_ref_frame: u8,
-	refresh_frame_flags: u8,
-	reserved1: u8,
-	interpolation_filter: StdVideoAV1InterpolationFilter,
-	TxMode: StdVideoAV1TxMode,
-	delta_q_res: u8,
-	delta_lf_res: u8,
-	SkipModeFrame: [u8; STD_VIDEO_AV1_SKIP_MODE_FRAMES as usize],
-	coded_denom: u8,
-	reserved2: [u8; 3 as usize],
-	OrderHints: [u8; STD_VIDEO_AV1_NUM_REF_FRAMES as usize],
-	expectedFrameId: [u32; STD_VIDEO_AV1_NUM_REF_FRAMES as usize],
-	pTileInfo: *const StdVideoAV1TileInfo,
-	pQuantization: *const StdVideoAV1Quantization,
-	pSegmentation: *const StdVideoAV1Segmentation,
-	pLoopFilter: *const StdVideoAV1LoopFilter,
-	pCDEF: *const StdVideoAV1CDEF,
-	pLoopRestoration: *const StdVideoAV1LoopRestoration,
-	pGlobalMotion: *const StdVideoAV1GlobalMotion,
-	pFilmGrain: *const StdVideoAV1FilmGrain,
+	pub flags: StdVideoDecodeAV1PictureInfoFlags,
+	pub frame_type: StdVideoAV1FrameType,
+	pub current_frame_id: u32,
+	pub OrderHint: u8,
+	pub primary_ref_frame: u8,
+	pub refresh_frame_flags: u8,
+	pub reserved1: u8,
+	pub interpolation_filter: StdVideoAV1InterpolationFilter,
+	pub TxMode: StdVideoAV1TxMode,
+	pub delta_q_res: u8,
+	pub delta_lf_res: u8,
+	pub SkipModeFrame: [u8; STD_VIDEO_AV1_SKIP_MODE_FRAMES as usize],
+	pub coded_denom: u8,
+	pub reserved2: [u8; 3 as usize],
+	pub OrderHints: [u8; STD_VIDEO_AV1_NUM_REF_FRAMES as usize],
+	pub expectedFrameId: [u32; STD_VIDEO_AV1_NUM_REF_FRAMES as usize],
+	pub pTileInfo: *const StdVideoAV1TileInfo,
+	pub pQuantization: *const StdVideoAV1Quantization,
+	pub pSegmentation: *const StdVideoAV1Segmentation,
+	pub pLoopFilter: *const StdVideoAV1LoopFilter,
+	pub pCDEF: *const StdVideoAV1CDEF,
+	pub pLoopRestoration: *const StdVideoAV1LoopRestoration,
+	pub pGlobalMotion: *const StdVideoAV1GlobalMotion,
+	pub pFilmGrain: *const StdVideoAV1FilmGrain,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
@@ -18388,34 +18162,30 @@ impl StdVideoDecodeAV1ReferenceInfoFlags {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct StdVideoDecodeAV1ReferenceInfo {
-	flags: StdVideoDecodeAV1ReferenceInfoFlags,
-	frame_type: u8,
-	RefFrameSignBias: u8,
-	OrderHint: u8,
-	SavedOrderHints: [u8; STD_VIDEO_AV1_NUM_REF_FRAMES as usize],
+	pub flags: StdVideoDecodeAV1ReferenceInfoFlags,
+	pub frame_type: u8,
+	pub RefFrameSignBias: u8,
+	pub OrderHint: u8,
+	pub SavedOrderHints: [u8; STD_VIDEO_AV1_NUM_REF_FRAMES as usize],
 }
 pub trait vulkan_video_codec_av1std_decode: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_kan_video_codec_av1std_decode {
-}
-impl vulkan_video_codec_av1std_decode for Vulkan_kan_video_codec_av1std_decode {
-}
-impl Default for Vulkan_kan_video_codec_av1std_decode {
+pub struct Vulkan_video_codec_av1std_decode {}
+impl vulkan_video_codec_av1std_decode for Vulkan_video_codec_av1std_decode {}
+impl Default for Vulkan_video_codec_av1std_decode {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-impl Vulkan_kan_video_codec_av1std_decode {
+impl Vulkan_video_codec_av1std_decode {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-type VkVideoEncodeAV1CapabilityFlagsKHR = VkFlags;
-type VkVideoEncodeAV1StdFlagsKHR = VkFlags;
-type VkVideoEncodeAV1SuperblockSizeFlagsKHR = VkFlags;
-type VkVideoEncodeAV1RateControlFlagsKHR = VkFlags;
+pub type VkVideoEncodeAV1CapabilityFlagsKHR = VkFlags;
+pub type VkVideoEncodeAV1StdFlagsKHR = VkFlags;
+pub type VkVideoEncodeAV1SuperblockSizeFlagsKHR = VkFlags;
+pub type VkVideoEncodeAV1RateControlFlagsKHR = VkFlags;
 #[repr(C)]
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum VkVideoEncodeAV1PredictionModeKHR {
@@ -18472,185 +18242,182 @@ pub enum VkVideoEncodeAV1RateControlFlagBitsKHR {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceVideoEncodeAV1FeaturesKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	videoEncodeAV1: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub videoEncodeAV1: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoEncodeAV1CapabilitiesKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	flags: VkVideoEncodeAV1CapabilityFlagsKHR,
-	maxLevel: StdVideoAV1Level,
-	codedPictureAlignment: VkExtent2D,
-	maxTiles: VkExtent2D,
-	minTileSize: VkExtent2D,
-	maxTileSize: VkExtent2D,
-	superblockSizes: VkVideoEncodeAV1SuperblockSizeFlagsKHR,
-	maxSingleReferenceCount: u32,
-	singleReferenceNameMask: u32,
-	maxUnidirectionalCompoundReferenceCount: u32,
-	maxUnidirectionalCompoundGroup1ReferenceCount: u32,
-	unidirectionalCompoundReferenceNameMask: u32,
-	maxBidirectionalCompoundReferenceCount: u32,
-	maxBidirectionalCompoundGroup1ReferenceCount: u32,
-	maxBidirectionalCompoundGroup2ReferenceCount: u32,
-	bidirectionalCompoundReferenceNameMask: u32,
-	maxTemporalLayerCount: u32,
-	maxSpatialLayerCount: u32,
-	maxOperatingPoints: u32,
-	minQIndex: u32,
-	maxQIndex: u32,
-	prefersGopRemainingFrames: VkBool32,
-	requiresGopRemainingFrames: VkBool32,
-	stdSyntaxFlags: VkVideoEncodeAV1StdFlagsKHR,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub flags: VkVideoEncodeAV1CapabilityFlagsKHR,
+	pub maxLevel: StdVideoAV1Level,
+	pub codedPictureAlignment: VkExtent2D,
+	pub maxTiles: VkExtent2D,
+	pub minTileSize: VkExtent2D,
+	pub maxTileSize: VkExtent2D,
+	pub superblockSizes: VkVideoEncodeAV1SuperblockSizeFlagsKHR,
+	pub maxSingleReferenceCount: u32,
+	pub singleReferenceNameMask: u32,
+	pub maxUnidirectionalCompoundReferenceCount: u32,
+	pub maxUnidirectionalCompoundGroup1ReferenceCount: u32,
+	pub unidirectionalCompoundReferenceNameMask: u32,
+	pub maxBidirectionalCompoundReferenceCount: u32,
+	pub maxBidirectionalCompoundGroup1ReferenceCount: u32,
+	pub maxBidirectionalCompoundGroup2ReferenceCount: u32,
+	pub bidirectionalCompoundReferenceNameMask: u32,
+	pub maxTemporalLayerCount: u32,
+	pub maxSpatialLayerCount: u32,
+	pub maxOperatingPoints: u32,
+	pub minQIndex: u32,
+	pub maxQIndex: u32,
+	pub prefersGopRemainingFrames: VkBool32,
+	pub requiresGopRemainingFrames: VkBool32,
+	pub stdSyntaxFlags: VkVideoEncodeAV1StdFlagsKHR,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoEncodeAV1QIndexKHR {
-	intraQIndex: u32,
-	predictiveQIndex: u32,
-	bipredictiveQIndex: u32,
+	pub intraQIndex: u32,
+	pub predictiveQIndex: u32,
+	pub bipredictiveQIndex: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoEncodeAV1QualityLevelPropertiesKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	preferredRateControlFlags: VkVideoEncodeAV1RateControlFlagsKHR,
-	preferredGopFrameCount: u32,
-	preferredKeyFramePeriod: u32,
-	preferredConsecutiveBipredictiveFrameCount: u32,
-	preferredTemporalLayerCount: u32,
-	preferredConstantQIndex: VkVideoEncodeAV1QIndexKHR,
-	preferredMaxSingleReferenceCount: u32,
-	preferredSingleReferenceNameMask: u32,
-	preferredMaxUnidirectionalCompoundReferenceCount: u32,
-	preferredMaxUnidirectionalCompoundGroup1ReferenceCount: u32,
-	preferredUnidirectionalCompoundReferenceNameMask: u32,
-	preferredMaxBidirectionalCompoundReferenceCount: u32,
-	preferredMaxBidirectionalCompoundGroup1ReferenceCount: u32,
-	preferredMaxBidirectionalCompoundGroup2ReferenceCount: u32,
-	preferredBidirectionalCompoundReferenceNameMask: u32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub preferredRateControlFlags: VkVideoEncodeAV1RateControlFlagsKHR,
+	pub preferredGopFrameCount: u32,
+	pub preferredKeyFramePeriod: u32,
+	pub preferredConsecutiveBipredictiveFrameCount: u32,
+	pub preferredTemporalLayerCount: u32,
+	pub preferredConstantQIndex: VkVideoEncodeAV1QIndexKHR,
+	pub preferredMaxSingleReferenceCount: u32,
+	pub preferredSingleReferenceNameMask: u32,
+	pub preferredMaxUnidirectionalCompoundReferenceCount: u32,
+	pub preferredMaxUnidirectionalCompoundGroup1ReferenceCount: u32,
+	pub preferredUnidirectionalCompoundReferenceNameMask: u32,
+	pub preferredMaxBidirectionalCompoundReferenceCount: u32,
+	pub preferredMaxBidirectionalCompoundGroup1ReferenceCount: u32,
+	pub preferredMaxBidirectionalCompoundGroup2ReferenceCount: u32,
+	pub preferredBidirectionalCompoundReferenceNameMask: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoEncodeAV1SessionCreateInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	useMaxLevel: VkBool32,
-	maxLevel: StdVideoAV1Level,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub useMaxLevel: VkBool32,
+	pub maxLevel: StdVideoAV1Level,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoEncodeAV1SessionParametersCreateInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	pStdSequenceHeader: *const StdVideoAV1SequenceHeader,
-	pStdDecoderModelInfo: *const StdVideoEncodeAV1DecoderModelInfo,
-	stdOperatingPointCount: u32,
-	pStdOperatingPoints: *const StdVideoEncodeAV1OperatingPointInfo,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub pStdSequenceHeader: *const StdVideoAV1SequenceHeader,
+	pub pStdDecoderModelInfo: *const StdVideoEncodeAV1DecoderModelInfo,
+	pub stdOperatingPointCount: u32,
+	pub pStdOperatingPoints: *const StdVideoEncodeAV1OperatingPointInfo,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoEncodeAV1PictureInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	predictionMode: VkVideoEncodeAV1PredictionModeKHR,
-	rateControlGroup: VkVideoEncodeAV1RateControlGroupKHR,
-	constantQIndex: u32,
-	pStdPictureInfo: *const StdVideoEncodeAV1PictureInfo,
-	referenceNameSlotIndices: [i32; VK_MAX_VIDEO_AV1_REFERENCES_PER_FRAME_KHR as usize],
-	primaryReferenceCdfOnly: VkBool32,
-	generateObuExtensionHeader: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub predictionMode: VkVideoEncodeAV1PredictionModeKHR,
+	pub rateControlGroup: VkVideoEncodeAV1RateControlGroupKHR,
+	pub constantQIndex: u32,
+	pub pStdPictureInfo: *const StdVideoEncodeAV1PictureInfo,
+	pub referenceNameSlotIndices: [i32; VK_MAX_VIDEO_AV1_REFERENCES_PER_FRAME_KHR as usize],
+	pub primaryReferenceCdfOnly: VkBool32,
+	pub generateObuExtensionHeader: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoEncodeAV1DpbSlotInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	pStdReferenceInfo: *const StdVideoEncodeAV1ReferenceInfo,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub pStdReferenceInfo: *const StdVideoEncodeAV1ReferenceInfo,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoEncodeAV1ProfileInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	stdProfile: StdVideoAV1Profile,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub stdProfile: StdVideoAV1Profile,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoEncodeAV1FrameSizeKHR {
-	intraFrameSize: u32,
-	predictiveFrameSize: u32,
-	bipredictiveFrameSize: u32,
+	pub intraFrameSize: u32,
+	pub predictiveFrameSize: u32,
+	pub bipredictiveFrameSize: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoEncodeAV1GopRemainingFrameInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	useGopRemainingFrames: VkBool32,
-	gopRemainingIntra: u32,
-	gopRemainingPredictive: u32,
-	gopRemainingBipredictive: u32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub useGopRemainingFrames: VkBool32,
+	pub gopRemainingIntra: u32,
+	pub gopRemainingPredictive: u32,
+	pub gopRemainingBipredictive: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoEncodeAV1RateControlInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkVideoEncodeAV1RateControlFlagsKHR,
-	gopFrameCount: u32,
-	keyFramePeriod: u32,
-	consecutiveBipredictiveFrameCount: u32,
-	temporalLayerCount: u32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkVideoEncodeAV1RateControlFlagsKHR,
+	pub gopFrameCount: u32,
+	pub keyFramePeriod: u32,
+	pub consecutiveBipredictiveFrameCount: u32,
+	pub temporalLayerCount: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoEncodeAV1RateControlLayerInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	useMinQIndex: VkBool32,
-	minQIndex: VkVideoEncodeAV1QIndexKHR,
-	useMaxQIndex: VkBool32,
-	maxQIndex: VkVideoEncodeAV1QIndexKHR,
-	useMaxFrameSize: VkBool32,
-	maxFrameSize: VkVideoEncodeAV1FrameSizeKHR,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub useMinQIndex: VkBool32,
+	pub minQIndex: VkVideoEncodeAV1QIndexKHR,
+	pub useMaxQIndex: VkBool32,
+	pub maxQIndex: VkVideoEncodeAV1QIndexKHR,
+	pub useMaxFrameSize: VkBool32,
+	pub maxFrameSize: VkVideoEncodeAV1FrameSizeKHR,
 }
 pub trait VK_KHR_video_encode_av1: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_KHR_video_encode_av1 {
-}
-impl VK_KHR_video_encode_av1 for Vulkan_KHR_video_encode_av1 {
-}
+pub struct Vulkan_KHR_video_encode_av1 {}
+impl VK_KHR_video_encode_av1 for Vulkan_KHR_video_encode_av1 {}
 impl Default for Vulkan_KHR_video_encode_av1 {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_KHR_video_encode_av1 {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
+pub const VK_STD_VULKAN_VIDEO_CODEC_AV1_ENCODE_API_VERSION_1_0_0: u32 = 0x400000;
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct StdVideoEncodeAV1DecoderModelInfo {
-	buffer_delay_length_minus_1: u8,
-	buffer_removal_time_length_minus_1: u8,
-	frame_presentation_time_length_minus_1: u8,
-	reserved1: u8,
-	num_units_in_decoding_tick: u32,
+	pub buffer_delay_length_minus_1: u8,
+	pub buffer_removal_time_length_minus_1: u8,
+	pub frame_presentation_time_length_minus_1: u8,
+	pub reserved1: u8,
+	pub num_units_in_decoding_tick: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct StdVideoEncodeAV1ExtensionHeader {
-	temporal_id: u8,
-	spatial_id: u8,
+	pub temporal_id: u8,
+	pub spatial_id: u8,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
@@ -18690,13 +18457,13 @@ impl StdVideoEncodeAV1OperatingPointInfoFlags {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct StdVideoEncodeAV1OperatingPointInfo {
-	flags: StdVideoEncodeAV1OperatingPointInfoFlags,
-	operating_point_idc: u16,
-	seq_level_idx: u8,
-	seq_tier: u8,
-	decoder_buffer_delay: u32,
-	encoder_buffer_delay: u32,
-	initial_display_delay_minus_1: u8,
+	pub flags: StdVideoEncodeAV1OperatingPointInfoFlags,
+	pub operating_point_idc: u16,
+	pub seq_level_idx: u8,
+	pub seq_tier: u8,
+	pub decoder_buffer_delay: u32,
+	pub encoder_buffer_delay: u32,
+	pub initial_display_delay_minus_1: u8,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
@@ -18918,33 +18685,33 @@ impl StdVideoEncodeAV1PictureInfoFlags {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct StdVideoEncodeAV1PictureInfo {
-	flags: StdVideoEncodeAV1PictureInfoFlags,
-	frame_type: StdVideoAV1FrameType,
-	frame_presentation_time: u32,
-	current_frame_id: u32,
-	order_hint: u8,
-	primary_ref_frame: u8,
-	refresh_frame_flags: u8,
-	coded_denom: u8,
-	render_width_minus_1: u16,
-	render_height_minus_1: u16,
-	interpolation_filter: StdVideoAV1InterpolationFilter,
-	TxMode: StdVideoAV1TxMode,
-	delta_q_res: u8,
-	delta_lf_res: u8,
-	ref_order_hint: [u8; STD_VIDEO_AV1_NUM_REF_FRAMES as usize],
-	ref_frame_idx: [i8; STD_VIDEO_AV1_REFS_PER_FRAME as usize],
-	reserved1: [u8; 3 as usize],
-	delta_frame_id_minus_1: [u32; STD_VIDEO_AV1_REFS_PER_FRAME as usize],
-	pTileInfo: *const StdVideoAV1TileInfo,
-	pQuantization: *const StdVideoAV1Quantization,
-	pSegmentation: *const StdVideoAV1Segmentation,
-	pLoopFilter: *const StdVideoAV1LoopFilter,
-	pCDEF: *const StdVideoAV1CDEF,
-	pLoopRestoration: *const StdVideoAV1LoopRestoration,
-	pGlobalMotion: *const StdVideoAV1GlobalMotion,
-	pExtensionHeader: *const StdVideoEncodeAV1ExtensionHeader,
-	pBufferRemovalTimes: *const uint32_t,
+	pub flags: StdVideoEncodeAV1PictureInfoFlags,
+	pub frame_type: StdVideoAV1FrameType,
+	pub frame_presentation_time: u32,
+	pub current_frame_id: u32,
+	pub order_hint: u8,
+	pub primary_ref_frame: u8,
+	pub refresh_frame_flags: u8,
+	pub coded_denom: u8,
+	pub render_width_minus_1: u16,
+	pub render_height_minus_1: u16,
+	pub interpolation_filter: StdVideoAV1InterpolationFilter,
+	pub TxMode: StdVideoAV1TxMode,
+	pub delta_q_res: u8,
+	pub delta_lf_res: u8,
+	pub ref_order_hint: [u8; STD_VIDEO_AV1_NUM_REF_FRAMES as usize],
+	pub ref_frame_idx: [i8; STD_VIDEO_AV1_REFS_PER_FRAME as usize],
+	pub reserved1: [u8; 3 as usize],
+	pub delta_frame_id_minus_1: [u32; STD_VIDEO_AV1_REFS_PER_FRAME as usize],
+	pub pTileInfo: *const StdVideoAV1TileInfo,
+	pub pQuantization: *const StdVideoAV1Quantization,
+	pub pSegmentation: *const StdVideoAV1Segmentation,
+	pub pLoopFilter: *const StdVideoAV1LoopFilter,
+	pub pCDEF: *const StdVideoAV1CDEF,
+	pub pLoopRestoration: *const StdVideoAV1LoopRestoration,
+	pub pGlobalMotion: *const StdVideoAV1GlobalMotion,
+	pub pExtensionHeader: *const StdVideoEncodeAV1ExtensionHeader,
+	pub pBufferRemovalTimes: *const uint32_t,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
@@ -18977,80 +18744,72 @@ impl StdVideoEncodeAV1ReferenceInfoFlags {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct StdVideoEncodeAV1ReferenceInfo {
-	flags: StdVideoEncodeAV1ReferenceInfoFlags,
-	RefFrameId: u32,
-	frame_type: StdVideoAV1FrameType,
-	OrderHint: u8,
-	reserved1: [u8; 3 as usize],
-	pExtensionHeader: *const StdVideoEncodeAV1ExtensionHeader,
+	pub flags: StdVideoEncodeAV1ReferenceInfoFlags,
+	pub RefFrameId: u32,
+	pub frame_type: StdVideoAV1FrameType,
+	pub OrderHint: u8,
+	pub reserved1: [u8; 3 as usize],
+	pub pExtensionHeader: *const StdVideoEncodeAV1ExtensionHeader,
 }
 pub trait vulkan_video_codec_av1std_encode: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_kan_video_codec_av1std_encode {
-}
-impl vulkan_video_codec_av1std_encode for Vulkan_kan_video_codec_av1std_encode {
-}
-impl Default for Vulkan_kan_video_codec_av1std_encode {
+pub struct Vulkan_video_codec_av1std_encode {}
+impl vulkan_video_codec_av1std_encode for Vulkan_video_codec_av1std_encode {}
+impl Default for Vulkan_video_codec_av1std_encode {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-impl Vulkan_kan_video_codec_av1std_encode {
+impl Vulkan_video_codec_av1std_encode {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 pub const VK_MAX_VIDEO_VP9_REFERENCES_PER_FRAME_KHR: u32 = 3u32;
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceVideoDecodeVP9FeaturesKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	videoDecodeVP9: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub videoDecodeVP9: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoDecodeVP9ProfileInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	stdProfile: StdVideoVP9Profile,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub stdProfile: StdVideoVP9Profile,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoDecodeVP9CapabilitiesKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	maxLevel: StdVideoVP9Level,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub maxLevel: StdVideoVP9Level,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoDecodeVP9PictureInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	pStdPictureInfo: *const StdVideoDecodeVP9PictureInfo,
-	referenceNameSlotIndices: [i32; VK_MAX_VIDEO_VP9_REFERENCES_PER_FRAME_KHR as usize],
-	uncompressedHeaderOffset: u32,
-	compressedHeaderOffset: u32,
-	tilesOffset: u32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub pStdPictureInfo: *const StdVideoDecodeVP9PictureInfo,
+	pub referenceNameSlotIndices: [i32; VK_MAX_VIDEO_VP9_REFERENCES_PER_FRAME_KHR as usize],
+	pub uncompressedHeaderOffset: u32,
+	pub compressedHeaderOffset: u32,
+	pub tilesOffset: u32,
 }
 pub trait VK_KHR_video_decode_vp9: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_KHR_video_decode_vp9 {
-}
-impl VK_KHR_video_decode_vp9 for Vulkan_KHR_video_decode_vp9 {
-}
+pub struct Vulkan_KHR_video_decode_vp9 {}
+impl VK_KHR_video_decode_vp9 for Vulkan_KHR_video_decode_vp9 {}
 impl Default for Vulkan_KHR_video_decode_vp9 {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_KHR_video_decode_vp9 {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 pub const STD_VIDEO_VP9_NUM_REF_FRAMES: u32 = 8u32;
@@ -19170,12 +18929,12 @@ impl StdVideoVP9ColorConfigFlags {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct StdVideoVP9ColorConfig {
-	flags: StdVideoVP9ColorConfigFlags,
-	BitDepth: u8,
-	subsampling_x: u8,
-	subsampling_y: u8,
-	reserved1: u8,
-	color_space: StdVideoVP9ColorSpace,
+	pub flags: StdVideoVP9ColorConfigFlags,
+	pub BitDepth: u8,
+	pub subsampling_x: u8,
+	pub subsampling_y: u8,
+	pub reserved1: u8,
+	pub color_space: StdVideoVP9ColorSpace,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
@@ -19208,13 +18967,13 @@ impl StdVideoVP9LoopFilterFlags {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct StdVideoVP9LoopFilter {
-	flags: StdVideoVP9LoopFilterFlags,
-	loop_filter_level: u8,
-	loop_filter_sharpness: u8,
-	update_ref_delta: u8,
-	loop_filter_ref_deltas: [i8; STD_VIDEO_VP9_MAX_REF_FRAMES as usize],
-	update_mode_delta: u8,
-	loop_filter_mode_deltas: [i8; STD_VIDEO_VP9_LOOP_FILTER_ADJUSTMENTS as usize],
+	pub flags: StdVideoVP9LoopFilterFlags,
+	pub loop_filter_level: u8,
+	pub loop_filter_sharpness: u8,
+	pub update_ref_delta: u8,
+	pub loop_filter_ref_deltas: [i8; STD_VIDEO_VP9_MAX_REF_FRAMES as usize],
+	pub update_mode_delta: u8,
+	pub loop_filter_mode_deltas: [i8; STD_VIDEO_VP9_LOOP_FILTER_ADJUSTMENTS as usize],
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
@@ -19261,30 +19020,27 @@ impl StdVideoVP9SegmentationFlags {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct StdVideoVP9Segmentation {
-	flags: StdVideoVP9SegmentationFlags,
-	segmentation_tree_probs: [u8; STD_VIDEO_VP9_MAX_SEGMENTATION_TREE_PROBS as usize],
-	segmentation_pred_prob: [u8; STD_VIDEO_VP9_MAX_SEGMENTATION_PRED_PROB as usize],
-	FeatureEnabled: [u8; STD_VIDEO_VP9_MAX_SEGMENTS as usize],
-	FeatureData: [i16; STD_VIDEO_VP9_MAX_SEGMENTS as usize],
+	pub flags: StdVideoVP9SegmentationFlags,
+	pub segmentation_tree_probs: [u8; STD_VIDEO_VP9_MAX_SEGMENTATION_TREE_PROBS as usize],
+	pub segmentation_pred_prob: [u8; STD_VIDEO_VP9_MAX_SEGMENTATION_PRED_PROB as usize],
+	pub FeatureEnabled: [u8; STD_VIDEO_VP9_MAX_SEGMENTS as usize],
+	pub FeatureData: [i16; STD_VIDEO_VP9_MAX_SEGMENTS as usize],
 }
 pub trait vulkan_video_codec_vp9std: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_kan_video_codec_vp9std {
-}
-impl vulkan_video_codec_vp9std for Vulkan_kan_video_codec_vp9std {
-}
-impl Default for Vulkan_kan_video_codec_vp9std {
+pub struct Vulkan_video_codec_vp9std {}
+impl vulkan_video_codec_vp9std for Vulkan_video_codec_vp9std {}
+impl Default for Vulkan_video_codec_vp9std {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-impl Vulkan_kan_video_codec_vp9std {
+impl Vulkan_video_codec_vp9std {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
+pub const VK_STD_VULKAN_VIDEO_CODEC_VP9_DECODE_API_VERSION_1_0_0: u32 = 0x400000;
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct StdVideoDecodeVP9PictureInfoFlags {
@@ -19358,192 +19114,164 @@ impl StdVideoDecodeVP9PictureInfoFlags {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct StdVideoDecodeVP9PictureInfo {
-	flags: StdVideoDecodeVP9PictureInfoFlags,
-	profile: StdVideoVP9Profile,
-	frame_type: StdVideoVP9FrameType,
-	frame_context_idx: u8,
-	reset_frame_context: u8,
-	refresh_frame_flags: u8,
-	ref_frame_sign_bias_mask: u8,
-	interpolation_filter: StdVideoVP9InterpolationFilter,
-	base_q_idx: u8,
-	delta_q_y_dc: i8,
-	delta_q_uv_dc: i8,
-	delta_q_uv_ac: i8,
-	tile_cols_log2: u8,
-	tile_rows_log2: u8,
-	reserved1: [u16; 3 as usize],
-	pColorConfig: *const StdVideoVP9ColorConfig,
-	pLoopFilter: *const StdVideoVP9LoopFilter,
-	pSegmentation: *const StdVideoVP9Segmentation,
+	pub flags: StdVideoDecodeVP9PictureInfoFlags,
+	pub profile: StdVideoVP9Profile,
+	pub frame_type: StdVideoVP9FrameType,
+	pub frame_context_idx: u8,
+	pub reset_frame_context: u8,
+	pub refresh_frame_flags: u8,
+	pub ref_frame_sign_bias_mask: u8,
+	pub interpolation_filter: StdVideoVP9InterpolationFilter,
+	pub base_q_idx: u8,
+	pub delta_q_y_dc: i8,
+	pub delta_q_uv_dc: i8,
+	pub delta_q_uv_ac: i8,
+	pub tile_cols_log2: u8,
+	pub tile_rows_log2: u8,
+	pub reserved1: [u16; 3 as usize],
+	pub pColorConfig: *const StdVideoVP9ColorConfig,
+	pub pLoopFilter: *const StdVideoVP9LoopFilter,
+	pub pSegmentation: *const StdVideoVP9Segmentation,
 }
 pub trait vulkan_video_codec_vp9std_decode: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_kan_video_codec_vp9std_decode {
-}
-impl vulkan_video_codec_vp9std_decode for Vulkan_kan_video_codec_vp9std_decode {
-}
-impl Default for Vulkan_kan_video_codec_vp9std_decode {
+pub struct Vulkan_video_codec_vp9std_decode {}
+impl vulkan_video_codec_vp9std_decode for Vulkan_video_codec_vp9std_decode {}
+impl Default for Vulkan_video_codec_vp9std_decode {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-impl Vulkan_kan_video_codec_vp9std_decode {
+impl Vulkan_video_codec_vp9std_decode {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceVideoMaintenance1FeaturesKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	videoMaintenance1: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub videoMaintenance1: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoInlineQueryInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	queryPool: VkQueryPool,
-	firstQuery: u32,
-	queryCount: u32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub queryPool: VkQueryPool,
+	pub firstQuery: u32,
+	pub queryCount: u32,
 }
 pub trait VK_KHR_video_maintenance1: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_KHR_video_maintenance1 {
-}
-impl VK_KHR_video_maintenance1 for Vulkan_KHR_video_maintenance1 {
-}
+pub struct Vulkan_KHR_video_maintenance1 {}
+impl VK_KHR_video_maintenance1 for Vulkan_KHR_video_maintenance1 {}
 impl Default for Vulkan_KHR_video_maintenance1 {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_KHR_video_maintenance1 {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-type VkPhysicalDeviceVertexAttributeDivisorPropertiesKHR = VkPhysicalDeviceVertexAttributeDivisorProperties;
-type VkVertexInputBindingDivisorDescriptionKHR = VkVertexInputBindingDivisorDescription;
-type VkPipelineVertexInputDivisorStateCreateInfoKHR = VkPipelineVertexInputDivisorStateCreateInfo;
-type VkPhysicalDeviceVertexAttributeDivisorFeaturesKHR = VkPhysicalDeviceVertexAttributeDivisorFeatures;
+pub type VkPhysicalDeviceVertexAttributeDivisorPropertiesKHR = VkPhysicalDeviceVertexAttributeDivisorProperties;
+pub type VkVertexInputBindingDivisorDescriptionKHR = VkVertexInputBindingDivisorDescription;
+pub type VkPipelineVertexInputDivisorStateCreateInfoKHR = VkPipelineVertexInputDivisorStateCreateInfo;
+pub type VkPhysicalDeviceVertexAttributeDivisorFeaturesKHR = VkPhysicalDeviceVertexAttributeDivisorFeatures;
 pub trait VK_KHR_vertex_attribute_divisor: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_KHR_vertex_attribute_divisor {
-}
-impl VK_KHR_vertex_attribute_divisor for Vulkan_KHR_vertex_attribute_divisor {
-}
+pub struct Vulkan_KHR_vertex_attribute_divisor {}
+impl VK_KHR_vertex_attribute_divisor for Vulkan_KHR_vertex_attribute_divisor {}
 impl Default for Vulkan_KHR_vertex_attribute_divisor {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_KHR_vertex_attribute_divisor {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 pub trait VK_KHR_load_store_op_none: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_KHR_load_store_op_none {
-}
-impl VK_KHR_load_store_op_none for Vulkan_KHR_load_store_op_none {
-}
+pub struct Vulkan_KHR_load_store_op_none {}
+impl VK_KHR_load_store_op_none for Vulkan_KHR_load_store_op_none {}
 impl Default for Vulkan_KHR_load_store_op_none {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_KHR_load_store_op_none {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceUnifiedImageLayoutsFeaturesKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	unifiedImageLayouts: VkBool32,
-	unifiedImageLayoutsVideo: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub unifiedImageLayouts: VkBool32,
+	pub unifiedImageLayoutsVideo: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkAttachmentFeedbackLoopInfoEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	feedbackLoopEnable: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub feedbackLoopEnable: VkBool32,
 }
 pub trait VK_KHR_unified_image_layouts: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_KHR_unified_image_layouts {
-}
-impl VK_KHR_unified_image_layouts for Vulkan_KHR_unified_image_layouts {
-}
+pub struct Vulkan_KHR_unified_image_layouts {}
+impl VK_KHR_unified_image_layouts for Vulkan_KHR_unified_image_layouts {}
 impl Default for Vulkan_KHR_unified_image_layouts {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_KHR_unified_image_layouts {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-type VkPhysicalDeviceShaderFloatControls2FeaturesKHR = VkPhysicalDeviceShaderFloatControls2Features;
+pub type VkPhysicalDeviceShaderFloatControls2FeaturesKHR = VkPhysicalDeviceShaderFloatControls2Features;
 pub trait VK_KHR_shader_float_controls2: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_KHR_shader_float_controls2 {
-}
-impl VK_KHR_shader_float_controls2 for Vulkan_KHR_shader_float_controls2 {
-}
+pub struct Vulkan_KHR_shader_float_controls2 {}
+impl VK_KHR_shader_float_controls2 for Vulkan_KHR_shader_float_controls2 {}
 impl Default for Vulkan_KHR_shader_float_controls2 {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_KHR_shader_float_controls2 {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-type VkPhysicalDeviceIndexTypeUint8FeaturesKHR = VkPhysicalDeviceIndexTypeUint8Features;
+pub type VkPhysicalDeviceIndexTypeUint8FeaturesKHR = VkPhysicalDeviceIndexTypeUint8Features;
 pub trait VK_KHR_index_type_uint8: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_KHR_index_type_uint8 {
-}
-impl VK_KHR_index_type_uint8 for Vulkan_KHR_index_type_uint8 {
-}
+pub struct Vulkan_KHR_index_type_uint8 {}
+impl VK_KHR_index_type_uint8 for Vulkan_KHR_index_type_uint8 {}
 impl Default for Vulkan_KHR_index_type_uint8 {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_KHR_index_type_uint8 {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-type VkLineRasterizationModeKHR = VkLineRasterizationMode;
-type VkPhysicalDeviceLineRasterizationFeaturesKHR = VkPhysicalDeviceLineRasterizationFeatures;
-type VkPhysicalDeviceLineRasterizationPropertiesKHR = VkPhysicalDeviceLineRasterizationProperties;
-type VkPipelineRasterizationLineStateCreateInfoKHR = VkPipelineRasterizationLineStateCreateInfo;
+pub type VkLineRasterizationModeKHR = VkLineRasterizationMode;
+pub type VkPhysicalDeviceLineRasterizationFeaturesKHR = VkPhysicalDeviceLineRasterizationFeatures;
+pub type VkPhysicalDeviceLineRasterizationPropertiesKHR = VkPhysicalDeviceLineRasterizationProperties;
+pub type VkPipelineRasterizationLineStateCreateInfoKHR = VkPipelineRasterizationLineStateCreateInfo;
 type PFN_vkCmdSetLineStippleKHR = extern "system" fn(commandBuffer: VkCommandBuffer, lineStippleFactor: u32, lineStipplePattern: u16);
 extern "system" fn dummy_vkCmdSetLineStippleKHR(_: VkCommandBuffer, _: u32, _: u16) {
 	panic!("Vulkan function pointer of `vkCmdSetLineStippleKHR()` is NULL");
@@ -19592,9 +19320,9 @@ impl VkTimeDomainKHR {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkCalibratedTimestampInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	timeDomain: VkTimeDomainKHR,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub timeDomain: VkTimeDomainKHR,
 }
 type PFN_vkGetPhysicalDeviceCalibrateableTimeDomainsKHR = extern "system" fn(physicalDevice: VkPhysicalDevice, pTimeDomainCount: *mut uint32_t, pTimeDomains: *mut VkTimeDomainKHR) -> VkResult;
 type PFN_vkGetCalibratedTimestampsKHR = extern "system" fn(device: VkDevice, timestampCount: u32, pTimestampInfos: *const VkCalibratedTimestampInfoKHR, pTimestamps: *mut uint64_t, pMaxDeviation: *mut uint64_t) -> VkResult;
@@ -19627,52 +19355,48 @@ impl Vulkan_KHR_calibrated_timestamps {
 		}
 	}
 }
-type VkPhysicalDeviceShaderExpectAssumeFeaturesKHR = VkPhysicalDeviceShaderExpectAssumeFeatures;
+pub type VkPhysicalDeviceShaderExpectAssumeFeaturesKHR = VkPhysicalDeviceShaderExpectAssumeFeatures;
 pub trait VK_KHR_shader_expect_assume: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_KHR_shader_expect_assume {
-}
-impl VK_KHR_shader_expect_assume for Vulkan_KHR_shader_expect_assume {
-}
+pub struct Vulkan_KHR_shader_expect_assume {}
+impl VK_KHR_shader_expect_assume for Vulkan_KHR_shader_expect_assume {}
 impl Default for Vulkan_KHR_shader_expect_assume {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_KHR_shader_expect_assume {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-type VkPhysicalDeviceMaintenance6FeaturesKHR = VkPhysicalDeviceMaintenance6Features;
-type VkPhysicalDeviceMaintenance6PropertiesKHR = VkPhysicalDeviceMaintenance6Properties;
-type VkBindMemoryStatusKHR = VkBindMemoryStatus;
-type VkBindDescriptorSetsInfoKHR = VkBindDescriptorSetsInfo;
-type VkPushConstantsInfoKHR = VkPushConstantsInfo;
-type VkPushDescriptorSetInfoKHR = VkPushDescriptorSetInfo;
-type VkPushDescriptorSetWithTemplateInfoKHR = VkPushDescriptorSetWithTemplateInfo;
+pub type VkPhysicalDeviceMaintenance6FeaturesKHR = VkPhysicalDeviceMaintenance6Features;
+pub type VkPhysicalDeviceMaintenance6PropertiesKHR = VkPhysicalDeviceMaintenance6Properties;
+pub type VkBindMemoryStatusKHR = VkBindMemoryStatus;
+pub type VkBindDescriptorSetsInfoKHR = VkBindDescriptorSetsInfo;
+pub type VkPushConstantsInfoKHR = VkPushConstantsInfo;
+pub type VkPushDescriptorSetInfoKHR = VkPushDescriptorSetInfo;
+pub type VkPushDescriptorSetWithTemplateInfoKHR = VkPushDescriptorSetWithTemplateInfo;
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkSetDescriptorBufferOffsetsInfoEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	stageFlags: VkShaderStageFlags,
-	layout: VkPipelineLayout,
-	firstSet: u32,
-	setCount: u32,
-	pBufferIndices: *const uint32_t,
-	pOffsets: *const VkDeviceSize,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub stageFlags: VkShaderStageFlags,
+	pub layout: VkPipelineLayout,
+	pub firstSet: u32,
+	pub setCount: u32,
+	pub pBufferIndices: *const uint32_t,
+	pub pOffsets: *const VkDeviceSize,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkBindDescriptorBufferEmbeddedSamplersInfoEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	stageFlags: VkShaderStageFlags,
-	layout: VkPipelineLayout,
-	set: u32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub stageFlags: VkShaderStageFlags,
+	pub layout: VkPipelineLayout,
+	pub set: u32,
 }
 type PFN_vkCmdBindDescriptorSets2KHR = extern "system" fn(commandBuffer: VkCommandBuffer, pBindDescriptorSetsInfo: *const VkBindDescriptorSetsInfo);
 type PFN_vkCmdPushConstants2KHR = extern "system" fn(commandBuffer: VkCommandBuffer, pPushConstantsInfo: *const VkPushConstantsInfo);
@@ -19709,7 +19433,7 @@ impl Vulkan_KHR_maintenance6 {
 		}
 	}
 }
-type VkVideoEncodeIntraRefreshModeFlagsKHR = VkFlags;
+pub type VkVideoEncodeIntraRefreshModeFlagsKHR = VkFlags;
 #[repr(C)]
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum VkVideoEncodeIntraRefreshModeFlagBitsKHR {
@@ -19723,176 +19447,164 @@ pub enum VkVideoEncodeIntraRefreshModeFlagBitsKHR {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoEncodeIntraRefreshCapabilitiesKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	intraRefreshModes: VkVideoEncodeIntraRefreshModeFlagsKHR,
-	maxIntraRefreshCycleDuration: u32,
-	maxIntraRefreshActiveReferencePictures: u32,
-	partitionIndependentIntraRefreshRegions: VkBool32,
-	nonRectangularIntraRefreshRegions: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub intraRefreshModes: VkVideoEncodeIntraRefreshModeFlagsKHR,
+	pub maxIntraRefreshCycleDuration: u32,
+	pub maxIntraRefreshActiveReferencePictures: u32,
+	pub partitionIndependentIntraRefreshRegions: VkBool32,
+	pub nonRectangularIntraRefreshRegions: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoEncodeSessionIntraRefreshCreateInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	intraRefreshMode: VkVideoEncodeIntraRefreshModeFlagBitsKHR,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub intraRefreshMode: VkVideoEncodeIntraRefreshModeFlagBitsKHR,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoEncodeIntraRefreshInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	intraRefreshCycleDuration: u32,
-	intraRefreshIndex: u32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub intraRefreshCycleDuration: u32,
+	pub intraRefreshIndex: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoReferenceIntraRefreshInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	dirtyIntraRefreshRegions: u32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub dirtyIntraRefreshRegions: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceVideoEncodeIntraRefreshFeaturesKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	videoEncodeIntraRefresh: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub videoEncodeIntraRefresh: VkBool32,
 }
 pub trait VK_KHR_video_encode_intra_refresh: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_KHR_video_encode_intra_refresh {
-}
-impl VK_KHR_video_encode_intra_refresh for Vulkan_KHR_video_encode_intra_refresh {
-}
+pub struct Vulkan_KHR_video_encode_intra_refresh {}
+impl VK_KHR_video_encode_intra_refresh for Vulkan_KHR_video_encode_intra_refresh {}
 impl Default for Vulkan_KHR_video_encode_intra_refresh {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_KHR_video_encode_intra_refresh {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoEncodeQuantizationMapCapabilitiesKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	maxQuantizationMapExtent: VkExtent2D,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub maxQuantizationMapExtent: VkExtent2D,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoFormatQuantizationMapPropertiesKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	quantizationMapTexelSize: VkExtent2D,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub quantizationMapTexelSize: VkExtent2D,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoEncodeQuantizationMapInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	quantizationMap: VkImageView,
-	quantizationMapExtent: VkExtent2D,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub quantizationMap: VkImageView,
+	pub quantizationMapExtent: VkExtent2D,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoEncodeQuantizationMapSessionParametersCreateInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	quantizationMapTexelSize: VkExtent2D,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub quantizationMapTexelSize: VkExtent2D,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceVideoEncodeQuantizationMapFeaturesKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	videoEncodeQuantizationMap: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub videoEncodeQuantizationMap: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoEncodeH264QuantizationMapCapabilitiesKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	minQpDelta: i32,
-	maxQpDelta: i32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub minQpDelta: i32,
+	pub maxQpDelta: i32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoEncodeH265QuantizationMapCapabilitiesKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	minQpDelta: i32,
-	maxQpDelta: i32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub minQpDelta: i32,
+	pub maxQpDelta: i32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoFormatH265QuantizationMapPropertiesKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	compatibleCtbSizes: VkVideoEncodeH265CtbSizeFlagsKHR,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub compatibleCtbSizes: VkVideoEncodeH265CtbSizeFlagsKHR,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoEncodeAV1QuantizationMapCapabilitiesKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	minQIndexDelta: i32,
-	maxQIndexDelta: i32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub minQIndexDelta: i32,
+	pub maxQIndexDelta: i32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoFormatAV1QuantizationMapPropertiesKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	compatibleSuperblockSizes: VkVideoEncodeAV1SuperblockSizeFlagsKHR,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub compatibleSuperblockSizes: VkVideoEncodeAV1SuperblockSizeFlagsKHR,
 }
 pub trait VK_KHR_video_encode_quantization_map: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_KHR_video_encode_quantization_map {
-}
-impl VK_KHR_video_encode_quantization_map for Vulkan_KHR_video_encode_quantization_map {
-}
+pub struct Vulkan_KHR_video_encode_quantization_map {}
+impl VK_KHR_video_encode_quantization_map for Vulkan_KHR_video_encode_quantization_map {}
 impl Default for Vulkan_KHR_video_encode_quantization_map {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_KHR_video_encode_quantization_map {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceShaderRelaxedExtendedInstructionFeaturesKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	shaderRelaxedExtendedInstruction: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub shaderRelaxedExtendedInstruction: VkBool32,
 }
 pub trait VK_KHR_shader_relaxed_extended_instruction: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_KHR_shader_relaxed_extended_instruction {
-}
-impl VK_KHR_shader_relaxed_extended_instruction for Vulkan_KHR_shader_relaxed_extended_instruction {
-}
+pub struct Vulkan_KHR_shader_relaxed_extended_instruction {}
+impl VK_KHR_shader_relaxed_extended_instruction for Vulkan_KHR_shader_relaxed_extended_instruction {}
 impl Default for Vulkan_KHR_shader_relaxed_extended_instruction {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_KHR_shader_relaxed_extended_instruction {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
@@ -19908,100 +19620,92 @@ pub enum VkPhysicalDeviceLayeredApiKHR {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceMaintenance7FeaturesKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	maintenance7: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub maintenance7: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceMaintenance7PropertiesKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	robustFragmentShadingRateAttachmentAccess: VkBool32,
-	separateDepthStencilAttachmentAccess: VkBool32,
-	maxDescriptorSetTotalUniformBuffersDynamic: u32,
-	maxDescriptorSetTotalStorageBuffersDynamic: u32,
-	maxDescriptorSetTotalBuffersDynamic: u32,
-	maxDescriptorSetUpdateAfterBindTotalUniformBuffersDynamic: u32,
-	maxDescriptorSetUpdateAfterBindTotalStorageBuffersDynamic: u32,
-	maxDescriptorSetUpdateAfterBindTotalBuffersDynamic: u32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub robustFragmentShadingRateAttachmentAccess: VkBool32,
+	pub separateDepthStencilAttachmentAccess: VkBool32,
+	pub maxDescriptorSetTotalUniformBuffersDynamic: u32,
+	pub maxDescriptorSetTotalStorageBuffersDynamic: u32,
+	pub maxDescriptorSetTotalBuffersDynamic: u32,
+	pub maxDescriptorSetUpdateAfterBindTotalUniformBuffersDynamic: u32,
+	pub maxDescriptorSetUpdateAfterBindTotalStorageBuffersDynamic: u32,
+	pub maxDescriptorSetUpdateAfterBindTotalBuffersDynamic: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceLayeredApiPropertiesKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	vendorID: u32,
-	deviceID: u32,
-	layeredAPI: VkPhysicalDeviceLayeredApiKHR,
-	deviceName: [i8; VK_MAX_PHYSICAL_DEVICE_NAME_SIZE as usize],
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub vendorID: u32,
+	pub deviceID: u32,
+	pub layeredAPI: VkPhysicalDeviceLayeredApiKHR,
+	pub deviceName: [i8; VK_MAX_PHYSICAL_DEVICE_NAME_SIZE as usize],
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceLayeredApiPropertiesListKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	layeredApiCount: u32,
-	pLayeredApis: *mut VkPhysicalDeviceLayeredApiPropertiesKHR,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub layeredApiCount: u32,
+	pub pLayeredApis: *mut VkPhysicalDeviceLayeredApiPropertiesKHR,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceLayeredApiVulkanPropertiesKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	properties: VkPhysicalDeviceProperties2,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub properties: VkPhysicalDeviceProperties2,
 }
 pub trait VK_KHR_maintenance7: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_KHR_maintenance7 {
-}
-impl VK_KHR_maintenance7 for Vulkan_KHR_maintenance7 {
-}
+pub struct Vulkan_KHR_maintenance7 {}
+impl VK_KHR_maintenance7 for Vulkan_KHR_maintenance7 {}
 impl Default for Vulkan_KHR_maintenance7 {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_KHR_maintenance7 {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-type VkAccessFlags3KHR = VkFlags64;
-type VkAccessFlagBits3KHR = VkFlags64;
+pub type VkAccessFlags3KHR = VkFlags64;
+pub type VkAccessFlagBits3KHR = VkFlags64;
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkMemoryBarrierAccessFlags3KHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	srcAccessMask3: VkAccessFlags3KHR,
-	dstAccessMask3: VkAccessFlags3KHR,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub srcAccessMask3: VkAccessFlags3KHR,
+	pub dstAccessMask3: VkAccessFlags3KHR,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceMaintenance8FeaturesKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	maintenance8: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub maintenance8: VkBool32,
 }
 pub trait VK_KHR_maintenance8: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_KHR_maintenance8 {
-}
-impl VK_KHR_maintenance8 for Vulkan_KHR_maintenance8 {
-}
+pub struct Vulkan_KHR_maintenance8 {}
+impl VK_KHR_maintenance8 for Vulkan_KHR_maintenance8 {}
 impl Default for Vulkan_KHR_maintenance8 {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_KHR_maintenance8 {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
@@ -20014,182 +19718,162 @@ pub enum VkDefaultVertexAttributeValueKHR {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceMaintenance9FeaturesKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	maintenance9: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub maintenance9: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceMaintenance9PropertiesKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	image2DViewOf3DSparse: VkBool32,
-	defaultVertexAttributeValue: VkDefaultVertexAttributeValueKHR,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub image2DViewOf3DSparse: VkBool32,
+	pub defaultVertexAttributeValue: VkDefaultVertexAttributeValueKHR,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkQueueFamilyOwnershipTransferPropertiesKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	optimalImageTransferToQueueFamilies: u32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub optimalImageTransferToQueueFamilies: u32,
 }
 pub trait VK_KHR_maintenance9: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_KHR_maintenance9 {
-}
-impl VK_KHR_maintenance9 for Vulkan_KHR_maintenance9 {
-}
+pub struct Vulkan_KHR_maintenance9 {}
+impl VK_KHR_maintenance9 for Vulkan_KHR_maintenance9 {}
 impl Default for Vulkan_KHR_maintenance9 {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_KHR_maintenance9 {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceVideoMaintenance2FeaturesKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	videoMaintenance2: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub videoMaintenance2: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoDecodeH264InlineSessionParametersInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	pStdSPS: *const StdVideoH264SequenceParameterSet,
-	pStdPPS: *const StdVideoH264PictureParameterSet,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub pStdSPS: *const StdVideoH264SequenceParameterSet,
+	pub pStdPPS: *const StdVideoH264PictureParameterSet,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoDecodeH265InlineSessionParametersInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	pStdVPS: *const StdVideoH265VideoParameterSet,
-	pStdSPS: *const StdVideoH265SequenceParameterSet,
-	pStdPPS: *const StdVideoH265PictureParameterSet,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub pStdVPS: *const StdVideoH265VideoParameterSet,
+	pub pStdSPS: *const StdVideoH265SequenceParameterSet,
+	pub pStdPPS: *const StdVideoH265PictureParameterSet,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVideoDecodeAV1InlineSessionParametersInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	pStdSequenceHeader: *const StdVideoAV1SequenceHeader,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub pStdSequenceHeader: *const StdVideoAV1SequenceHeader,
 }
 pub trait VK_KHR_video_maintenance2: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_KHR_video_maintenance2 {
-}
-impl VK_KHR_video_maintenance2 for Vulkan_KHR_video_maintenance2 {
-}
+pub struct Vulkan_KHR_video_maintenance2 {}
+impl VK_KHR_video_maintenance2 for Vulkan_KHR_video_maintenance2 {}
 impl Default for Vulkan_KHR_video_maintenance2 {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_KHR_video_maintenance2 {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceDepthClampZeroOneFeaturesKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	depthClampZeroOne: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub depthClampZeroOne: VkBool32,
 }
 pub trait VK_KHR_depth_clamp_zero_one: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_KHR_depth_clamp_zero_one {
-}
-impl VK_KHR_depth_clamp_zero_one for Vulkan_KHR_depth_clamp_zero_one {
-}
+pub struct Vulkan_KHR_depth_clamp_zero_one {}
+impl VK_KHR_depth_clamp_zero_one for Vulkan_KHR_depth_clamp_zero_one {}
 impl Default for Vulkan_KHR_depth_clamp_zero_one {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_KHR_depth_clamp_zero_one {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceRobustness2FeaturesKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	robustBufferAccess2: VkBool32,
-	robustImageAccess2: VkBool32,
-	nullDescriptor: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub robustBufferAccess2: VkBool32,
+	pub robustImageAccess2: VkBool32,
+	pub nullDescriptor: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceRobustness2PropertiesKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	robustStorageBufferAccessSizeAlignment: VkDeviceSize,
-	robustUniformBufferAccessSizeAlignment: VkDeviceSize,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub robustStorageBufferAccessSizeAlignment: VkDeviceSize,
+	pub robustUniformBufferAccessSizeAlignment: VkDeviceSize,
 }
 pub trait VK_KHR_robustness2: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_KHR_robustness2 {
-}
-impl VK_KHR_robustness2 for Vulkan_KHR_robustness2 {
-}
+pub struct Vulkan_KHR_robustness2 {}
+impl VK_KHR_robustness2 for Vulkan_KHR_robustness2 {}
 impl Default for Vulkan_KHR_robustness2 {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_KHR_robustness2 {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDevicePresentModeFifoLatestReadyFeaturesKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	presentModeFifoLatestReady: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub presentModeFifoLatestReady: VkBool32,
 }
 pub trait VK_KHR_present_mode_fifo_latest_ready: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_KHR_present_mode_fifo_latest_ready {
-}
-impl VK_KHR_present_mode_fifo_latest_ready for Vulkan_KHR_present_mode_fifo_latest_ready {
-}
+pub struct Vulkan_KHR_present_mode_fifo_latest_ready {}
+impl VK_KHR_present_mode_fifo_latest_ready for Vulkan_KHR_present_mode_fifo_latest_ready {}
 impl Default for Vulkan_KHR_present_mode_fifo_latest_ready {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_KHR_present_mode_fifo_latest_ready {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-type VkDebugReportFlagsEXT = VkFlags;
+pub type VkDebugReportFlagsEXT = VkFlags;
 // Define non-dispatchable handle `VkDebugReportCallbackEXT`
-#[cfg(target_pointer_width = "32")] type VkDebugReportCallbackEXT = u64;
+#[cfg(target_pointer_width = "32")] pub type VkDebugReportCallbackEXT = u64;
 #[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkDebugReportCallbackEXT_T {}
-#[cfg(target_pointer_width = "64")] type VkDebugReportCallbackEXT = *const VkDebugReportCallbackEXT_T;
+#[cfg(target_pointer_width = "64")] pub type VkDebugReportCallbackEXT = *const VkDebugReportCallbackEXT_T;
 #[repr(C)]
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum VkDebugReportObjectTypeEXT {
@@ -20255,11 +19939,11 @@ pub enum VkDebugReportFlagBitsEXT {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDebugReportCallbackCreateInfoEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkDebugReportFlagsEXT,
-	pfnCallback: PFN_vkDebugReportCallbackEXT,
-	pUserData: *mut c_void,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkDebugReportFlagsEXT,
+	pub pfnCallback: PFN_vkDebugReportCallbackEXT,
+	pub pUserData: *mut c_void,
 }
 type PFN_vkDebugReportCallbackEXT = extern "system" fn(flags: VkDebugReportFlagsEXT, objectType: VkDebugReportObjectTypeEXT, object: u64, location: usize, messageCode: i32, pLayerPrefix: *const i8, pMessage: *const i8, pUserData: *mut c_void) -> VkBool32;
 type PFN_vkCreateDebugReportCallbackEXT = extern "system" fn(instance: VkInstance, pCreateInfo: *const VkDebugReportCallbackCreateInfoEXT, pAllocator: *const VkAllocationCallbacks, pCallback: *mut VkDebugReportCallbackEXT) -> VkResult;
@@ -20296,56 +19980,44 @@ impl Vulkan_EXT_debug_report {
 }
 pub trait VK_NV_glsl_shader: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_NV_glsl_shader {
-}
-impl VK_NV_glsl_shader for Vulkan_NV_glsl_shader {
-}
+pub struct Vulkan_NV_glsl_shader {}
+impl VK_NV_glsl_shader for Vulkan_NV_glsl_shader {}
 impl Default for Vulkan_NV_glsl_shader {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_NV_glsl_shader {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 pub trait VK_EXT_depth_range_unrestricted: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_depth_range_unrestricted {
-}
-impl VK_EXT_depth_range_unrestricted for Vulkan_EXT_depth_range_unrestricted {
-}
+pub struct Vulkan_EXT_depth_range_unrestricted {}
+impl VK_EXT_depth_range_unrestricted for Vulkan_EXT_depth_range_unrestricted {}
 impl Default for Vulkan_EXT_depth_range_unrestricted {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_depth_range_unrestricted {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 pub trait VK_IMG_filter_cubic: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_IMG_filter_cubic {
-}
-impl VK_IMG_filter_cubic for Vulkan_IMG_filter_cubic {
-}
+pub struct Vulkan_IMG_filter_cubic {}
+impl VK_IMG_filter_cubic for Vulkan_IMG_filter_cubic {}
 impl Default for Vulkan_IMG_filter_cubic {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_IMG_filter_cubic {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
@@ -20358,91 +20030,79 @@ pub enum VkRasterizationOrderAMD {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPipelineRasterizationStateRasterizationOrderAMD {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	rasterizationOrder: VkRasterizationOrderAMD,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub rasterizationOrder: VkRasterizationOrderAMD,
 }
 pub trait VK_AMD_rasterization_order: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_AMD_rasterization_order {
-}
-impl VK_AMD_rasterization_order for Vulkan_AMD_rasterization_order {
-}
+pub struct Vulkan_AMD_rasterization_order {}
+impl VK_AMD_rasterization_order for Vulkan_AMD_rasterization_order {}
 impl Default for Vulkan_AMD_rasterization_order {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_AMD_rasterization_order {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 pub trait VK_AMD_shader_trinary_minmax: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_AMD_shader_trinary_minmax {
-}
-impl VK_AMD_shader_trinary_minmax for Vulkan_AMD_shader_trinary_minmax {
-}
+pub struct Vulkan_AMD_shader_trinary_minmax {}
+impl VK_AMD_shader_trinary_minmax for Vulkan_AMD_shader_trinary_minmax {}
 impl Default for Vulkan_AMD_shader_trinary_minmax {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_AMD_shader_trinary_minmax {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 pub trait VK_AMD_shader_explicit_vertex_parameter: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_AMD_shader_explicit_vertex_parameter {
-}
-impl VK_AMD_shader_explicit_vertex_parameter for Vulkan_AMD_shader_explicit_vertex_parameter {
-}
+pub struct Vulkan_AMD_shader_explicit_vertex_parameter {}
+impl VK_AMD_shader_explicit_vertex_parameter for Vulkan_AMD_shader_explicit_vertex_parameter {}
 impl Default for Vulkan_AMD_shader_explicit_vertex_parameter {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_AMD_shader_explicit_vertex_parameter {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDebugMarkerObjectNameInfoEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	objectType: VkDebugReportObjectTypeEXT,
-	object: u64,
-	pObjectName: *const i8,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub objectType: VkDebugReportObjectTypeEXT,
+	pub object: u64,
+	pub pObjectName: *const i8,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDebugMarkerObjectTagInfoEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	objectType: VkDebugReportObjectTypeEXT,
-	object: u64,
-	tagName: u64,
-	tagSize: usize,
-	pTag: *const c_void,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub objectType: VkDebugReportObjectTypeEXT,
+	pub object: u64,
+	pub tagName: u64,
+	pub tagSize: usize,
+	pub pTag: *const c_void,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDebugMarkerMarkerInfoEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	pMarkerName: *const i8,
-	color: [f32; 4 as usize],
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub pMarkerName: *const i8,
+	pub color: [f32; 4 as usize],
 }
 type PFN_vkDebugMarkerSetObjectTagEXT = extern "system" fn(device: VkDevice, pTagInfo: *const VkDebugMarkerObjectTagInfoEXT) -> VkResult;
 type PFN_vkDebugMarkerSetObjectNameEXT = extern "system" fn(device: VkDevice, pNameInfo: *const VkDebugMarkerObjectNameInfoEXT) -> VkResult;
@@ -20480,94 +20140,86 @@ impl Vulkan_EXT_debug_marker {
 }
 pub trait VK_AMD_gcn_shader: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_AMD_gcn_shader {
-}
-impl VK_AMD_gcn_shader for Vulkan_AMD_gcn_shader {
-}
+pub struct Vulkan_AMD_gcn_shader {}
+impl VK_AMD_gcn_shader for Vulkan_AMD_gcn_shader {}
 impl Default for Vulkan_AMD_gcn_shader {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_AMD_gcn_shader {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDedicatedAllocationImageCreateInfoNV {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	dedicatedAllocation: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub dedicatedAllocation: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDedicatedAllocationBufferCreateInfoNV {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	dedicatedAllocation: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub dedicatedAllocation: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDedicatedAllocationMemoryAllocateInfoNV {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	image: VkImage,
-	buffer: VkBuffer,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub image: VkImage,
+	pub buffer: VkBuffer,
 }
 pub trait VK_NV_dedicated_allocation: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_NV_dedicated_allocation {
-}
-impl VK_NV_dedicated_allocation for Vulkan_NV_dedicated_allocation {
-}
+pub struct Vulkan_NV_dedicated_allocation {}
+impl VK_NV_dedicated_allocation for Vulkan_NV_dedicated_allocation {}
 impl Default for Vulkan_NV_dedicated_allocation {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_NV_dedicated_allocation {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-type VkPipelineRasterizationStateStreamCreateFlagsEXT = VkFlags;
+pub type VkPipelineRasterizationStateStreamCreateFlagsEXT = VkFlags;
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceTransformFeedbackFeaturesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	transformFeedback: VkBool32,
-	geometryStreams: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub transformFeedback: VkBool32,
+	pub geometryStreams: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceTransformFeedbackPropertiesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	maxTransformFeedbackStreams: u32,
-	maxTransformFeedbackBuffers: u32,
-	maxTransformFeedbackBufferSize: VkDeviceSize,
-	maxTransformFeedbackStreamDataSize: u32,
-	maxTransformFeedbackBufferDataSize: u32,
-	maxTransformFeedbackBufferDataStride: u32,
-	transformFeedbackQueries: VkBool32,
-	transformFeedbackStreamsLinesTriangles: VkBool32,
-	transformFeedbackRasterizationStreamSelect: VkBool32,
-	transformFeedbackDraw: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub maxTransformFeedbackStreams: u32,
+	pub maxTransformFeedbackBuffers: u32,
+	pub maxTransformFeedbackBufferSize: VkDeviceSize,
+	pub maxTransformFeedbackStreamDataSize: u32,
+	pub maxTransformFeedbackBufferDataSize: u32,
+	pub maxTransformFeedbackBufferDataStride: u32,
+	pub transformFeedbackQueries: VkBool32,
+	pub transformFeedbackStreamsLinesTriangles: VkBool32,
+	pub transformFeedbackRasterizationStreamSelect: VkBool32,
+	pub transformFeedbackDraw: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPipelineRasterizationStateStreamCreateInfoEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkPipelineRasterizationStateStreamCreateFlagsEXT,
-	rasterizationStream: u32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkPipelineRasterizationStateStreamCreateFlagsEXT,
+	pub rasterizationStream: u32,
 }
 type PFN_vkCmdBindTransformFeedbackBuffersEXT = extern "system" fn(commandBuffer: VkCommandBuffer, firstBinding: u32, bindingCount: u32, pBuffers: *const VkBuffer, pOffsets: *const VkDeviceSize, pSizes: *const VkDeviceSize);
 type PFN_vkCmdBeginTransformFeedbackEXT = extern "system" fn(commandBuffer: VkCommandBuffer, firstCounterBuffer: u32, counterBufferCount: u32, pCounterBuffers: *const VkBuffer, pCounterBufferOffsets: *const VkDeviceSize);
@@ -20605,53 +20257,53 @@ impl Vulkan_EXT_transform_feedback {
 	}
 }
 // Define non-dispatchable handle `VkCuModuleNVX`
-#[cfg(target_pointer_width = "32")] type VkCuModuleNVX = u64;
+#[cfg(target_pointer_width = "32")] pub type VkCuModuleNVX = u64;
 #[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkCuModuleNVX_T {}
-#[cfg(target_pointer_width = "64")] type VkCuModuleNVX = *const VkCuModuleNVX_T;
+#[cfg(target_pointer_width = "64")] pub type VkCuModuleNVX = *const VkCuModuleNVX_T;
 // Define non-dispatchable handle `VkCuFunctionNVX`
-#[cfg(target_pointer_width = "32")] type VkCuFunctionNVX = u64;
+#[cfg(target_pointer_width = "32")] pub type VkCuFunctionNVX = u64;
 #[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkCuFunctionNVX_T {}
-#[cfg(target_pointer_width = "64")] type VkCuFunctionNVX = *const VkCuFunctionNVX_T;
+#[cfg(target_pointer_width = "64")] pub type VkCuFunctionNVX = *const VkCuFunctionNVX_T;
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkCuModuleCreateInfoNVX {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	dataSize: usize,
-	pData: *const c_void,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub dataSize: usize,
+	pub pData: *const c_void,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkCuModuleTexturingModeCreateInfoNVX {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	use64bitTexturing: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub use64bitTexturing: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkCuFunctionCreateInfoNVX {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	module: VkCuModuleNVX,
-	pName: *const i8,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub module: VkCuModuleNVX,
+	pub pName: *const i8,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkCuLaunchInfoNVX {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	function: VkCuFunctionNVX,
-	gridDimX: u32,
-	gridDimY: u32,
-	gridDimZ: u32,
-	blockDimX: u32,
-	blockDimY: u32,
-	blockDimZ: u32,
-	sharedMemBytes: u32,
-	paramCount: usize,
-	pParams: *const *const c_void,
-	extraCount: usize,
-	pExtras: *const *const c_void,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub function: VkCuFunctionNVX,
+	pub gridDimX: u32,
+	pub gridDimY: u32,
+	pub gridDimZ: u32,
+	pub blockDimX: u32,
+	pub blockDimY: u32,
+	pub blockDimZ: u32,
+	pub sharedMemBytes: u32,
+	pub paramCount: usize,
+	pub pParams: *const *const c_void,
+	pub extraCount: usize,
+	pub pExtras: *const *const c_void,
 }
 type PFN_vkCreateCuModuleNVX = extern "system" fn(device: VkDevice, pCreateInfo: *const VkCuModuleCreateInfoNVX, pAllocator: *const VkAllocationCallbacks, pModule: *mut VkCuModuleNVX) -> VkResult;
 type PFN_vkCreateCuFunctionNVX = extern "system" fn(device: VkDevice, pCreateInfo: *const VkCuFunctionCreateInfoNVX, pAllocator: *const VkAllocationCallbacks, pFunction: *mut VkCuFunctionNVX) -> VkResult;
@@ -20690,19 +20342,19 @@ impl Vulkan_NVX_binary_import {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkImageViewHandleInfoNVX {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	imageView: VkImageView,
-	descriptorType: VkDescriptorType,
-	sampler: VkSampler,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub imageView: VkImageView,
+	pub descriptorType: VkDescriptorType,
+	pub sampler: VkSampler,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkImageViewAddressPropertiesNVX {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	deviceAddress: VkDeviceAddress,
-	size: VkDeviceSize,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub deviceAddress: VkDeviceAddress,
+	pub size: VkDeviceSize,
 }
 type PFN_vkGetImageViewHandleNVX = extern "system" fn(device: VkDevice, pInfo: *const VkImageViewHandleInfoNVX) -> u32;
 type PFN_vkGetImageViewHandle64NVX = extern "system" fn(device: VkDevice, pInfo: *const VkImageViewHandleInfoNVX) -> u64;
@@ -20769,81 +20421,65 @@ impl Vulkan_AMD_draw_indirect_count {
 }
 pub trait VK_AMD_negative_viewport_height: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_AMD_negative_viewport_height {
-}
-impl VK_AMD_negative_viewport_height for Vulkan_AMD_negative_viewport_height {
-}
+pub struct Vulkan_AMD_negative_viewport_height {}
+impl VK_AMD_negative_viewport_height for Vulkan_AMD_negative_viewport_height {}
 impl Default for Vulkan_AMD_negative_viewport_height {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_AMD_negative_viewport_height {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 pub trait VK_AMD_gpu_shader_half_float: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_AMD_gpu_shader_half_float {
-}
-impl VK_AMD_gpu_shader_half_float for Vulkan_AMD_gpu_shader_half_float {
-}
+pub struct Vulkan_AMD_gpu_shader_half_float {}
+impl VK_AMD_gpu_shader_half_float for Vulkan_AMD_gpu_shader_half_float {}
 impl Default for Vulkan_AMD_gpu_shader_half_float {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_AMD_gpu_shader_half_float {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 pub trait VK_AMD_shader_ballot: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_AMD_shader_ballot {
-}
-impl VK_AMD_shader_ballot for Vulkan_AMD_shader_ballot {
-}
+pub struct Vulkan_AMD_shader_ballot {}
+impl VK_AMD_shader_ballot for Vulkan_AMD_shader_ballot {}
 impl Default for Vulkan_AMD_shader_ballot {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_AMD_shader_ballot {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkTextureLODGatherFormatPropertiesAMD {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	supportsTextureGatherLODBiasAMD: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub supportsTextureGatherLODBiasAMD: VkBool32,
 }
 pub trait VK_AMD_texture_gather_bias_lod: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_AMD_texture_gather_bias_lod {
-}
-impl VK_AMD_texture_gather_bias_lod for Vulkan_AMD_texture_gather_bias_lod {
-}
+pub struct Vulkan_AMD_texture_gather_bias_lod {}
+impl VK_AMD_texture_gather_bias_lod for Vulkan_AMD_texture_gather_bias_lod {}
 impl Default for Vulkan_AMD_texture_gather_bias_lod {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_AMD_texture_gather_bias_lod {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
@@ -20857,22 +20493,22 @@ pub enum VkShaderInfoTypeAMD {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkShaderResourceUsageAMD {
-	numUsedVgprs: u32,
-	numUsedSgprs: u32,
-	ldsSizePerLocalWorkGroup: u32,
-	ldsUsageSizeInBytes: usize,
-	scratchMemUsageInBytes: usize,
+	pub numUsedVgprs: u32,
+	pub numUsedSgprs: u32,
+	pub ldsSizePerLocalWorkGroup: u32,
+	pub ldsUsageSizeInBytes: usize,
+	pub scratchMemUsageInBytes: usize,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkShaderStatisticsInfoAMD {
-	shaderStageMask: VkShaderStageFlags,
-	resourceUsage: VkShaderResourceUsageAMD,
-	numPhysicalVgprs: u32,
-	numPhysicalSgprs: u32,
-	numAvailableVgprs: u32,
-	numAvailableSgprs: u32,
-	computeWorkGroupSize: [u32; 3 as usize],
+	pub shaderStageMask: VkShaderStageFlags,
+	pub resourceUsage: VkShaderResourceUsageAMD,
+	pub numPhysicalVgprs: u32,
+	pub numPhysicalSgprs: u32,
+	pub numAvailableVgprs: u32,
+	pub numAvailableSgprs: u32,
+	pub computeWorkGroupSize: [u32; 3 as usize],
 }
 type PFN_vkGetShaderInfoAMD = extern "system" fn(device: VkDevice, pipeline: VkPipeline, shaderStage: VkShaderStageFlagBits, infoType: VkShaderInfoTypeAMD, pInfoSize: *mut size_t, pInfo: *mut c_void) -> VkResult;
 extern "system" fn dummy_vkGetShaderInfoAMD(_: VkDevice, _: VkPipeline, _: VkShaderStageFlagBits, _: VkShaderInfoTypeAMD, _: *mut size_t, _: *mut c_void) -> VkResult {
@@ -20906,67 +20542,55 @@ impl Vulkan_AMD_shader_info {
 }
 pub trait VK_AMD_shader_image_load_store_lod: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_AMD_shader_image_load_store_lod {
-}
-impl VK_AMD_shader_image_load_store_lod for Vulkan_AMD_shader_image_load_store_lod {
-}
+pub struct Vulkan_AMD_shader_image_load_store_lod {}
+impl VK_AMD_shader_image_load_store_lod for Vulkan_AMD_shader_image_load_store_lod {}
 impl Default for Vulkan_AMD_shader_image_load_store_lod {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_AMD_shader_image_load_store_lod {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceCornerSampledImageFeaturesNV {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	cornerSampledImage: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub cornerSampledImage: VkBool32,
 }
 pub trait VK_NV_corner_sampled_image: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_NV_corner_sampled_image {
-}
-impl VK_NV_corner_sampled_image for Vulkan_NV_corner_sampled_image {
-}
+pub struct Vulkan_NV_corner_sampled_image {}
+impl VK_NV_corner_sampled_image for Vulkan_NV_corner_sampled_image {}
 impl Default for Vulkan_NV_corner_sampled_image {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_NV_corner_sampled_image {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 pub trait VK_IMG_format_pvrtc: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_IMG_format_pvrtc {
-}
-impl VK_IMG_format_pvrtc for Vulkan_IMG_format_pvrtc {
-}
+pub struct Vulkan_IMG_format_pvrtc {}
+impl VK_IMG_format_pvrtc for Vulkan_IMG_format_pvrtc {}
 impl Default for Vulkan_IMG_format_pvrtc {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_IMG_format_pvrtc {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-type VkExternalMemoryHandleTypeFlagsNV = VkFlags;
-type VkExternalMemoryFeatureFlagsNV = VkFlags;
+pub type VkExternalMemoryHandleTypeFlagsNV = VkFlags;
+pub type VkExternalMemoryFeatureFlagsNV = VkFlags;
 #[repr(C)]
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum VkExternalMemoryHandleTypeFlagBitsNV {
@@ -20987,10 +20611,10 @@ pub enum VkExternalMemoryFeatureFlagBitsNV {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkExternalImageFormatPropertiesNV {
-	imageFormatProperties: VkImageFormatProperties,
-	externalMemoryFeatures: VkExternalMemoryFeatureFlagsNV,
-	exportFromImportedHandleTypes: VkExternalMemoryHandleTypeFlagsNV,
-	compatibleHandleTypes: VkExternalMemoryHandleTypeFlagsNV,
+	pub imageFormatProperties: VkImageFormatProperties,
+	pub externalMemoryFeatures: VkExternalMemoryFeatureFlagsNV,
+	pub exportFromImportedHandleTypes: VkExternalMemoryHandleTypeFlagsNV,
+	pub compatibleHandleTypes: VkExternalMemoryHandleTypeFlagsNV,
 }
 type PFN_vkGetPhysicalDeviceExternalImageFormatPropertiesNV = extern "system" fn(physicalDevice: VkPhysicalDevice, format: VkFormat, type_: VkImageType, tiling: VkImageTiling, usage: VkImageUsageFlags, flags: VkImageCreateFlags, externalHandleType: VkExternalMemoryHandleTypeFlagsNV, pExternalImageFormatProperties: *mut VkExternalImageFormatPropertiesNV) -> VkResult;
 extern "system" fn dummy_vkGetPhysicalDeviceExternalImageFormatPropertiesNV(_: VkPhysicalDevice, _: VkFormat, _: VkImageType, _: VkImageTiling, _: VkImageUsageFlags, _: VkImageCreateFlags, _: VkExternalMemoryHandleTypeFlagsNV, _: *mut VkExternalImageFormatPropertiesNV) -> VkResult {
@@ -21025,33 +20649,29 @@ impl Vulkan_NV_external_memory_capabilities {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkExternalMemoryImageCreateInfoNV {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	handleTypes: VkExternalMemoryHandleTypeFlagsNV,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub handleTypes: VkExternalMemoryHandleTypeFlagsNV,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkExportMemoryAllocateInfoNV {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	handleTypes: VkExternalMemoryHandleTypeFlagsNV,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub handleTypes: VkExternalMemoryHandleTypeFlagsNV,
 }
 pub trait VK_NV_external_memory: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_NV_external_memory {
-}
-impl VK_NV_external_memory for Vulkan_NV_external_memory {
-}
+pub struct Vulkan_NV_external_memory {}
+impl VK_NV_external_memory for Vulkan_NV_external_memory {}
 impl Default for Vulkan_NV_external_memory {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_NV_external_memory {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
@@ -21064,140 +20684,116 @@ pub enum VkValidationCheckEXT {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkValidationFlagsEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	disabledValidationCheckCount: u32,
-	pDisabledValidationChecks: *const VkValidationCheckEXT,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub disabledValidationCheckCount: u32,
+	pub pDisabledValidationChecks: *const VkValidationCheckEXT,
 }
 pub trait VK_EXT_validation_flags: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_validation_flags {
-}
-impl VK_EXT_validation_flags for Vulkan_EXT_validation_flags {
-}
+pub struct Vulkan_EXT_validation_flags {}
+impl VK_EXT_validation_flags for Vulkan_EXT_validation_flags {}
 impl Default for Vulkan_EXT_validation_flags {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_validation_flags {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 pub trait VK_EXT_shader_subgroup_ballot: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_shader_subgroup_ballot {
-}
-impl VK_EXT_shader_subgroup_ballot for Vulkan_EXT_shader_subgroup_ballot {
-}
+pub struct Vulkan_EXT_shader_subgroup_ballot {}
+impl VK_EXT_shader_subgroup_ballot for Vulkan_EXT_shader_subgroup_ballot {}
 impl Default for Vulkan_EXT_shader_subgroup_ballot {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_shader_subgroup_ballot {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 pub trait VK_EXT_shader_subgroup_vote: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_shader_subgroup_vote {
-}
-impl VK_EXT_shader_subgroup_vote for Vulkan_EXT_shader_subgroup_vote {
-}
+pub struct Vulkan_EXT_shader_subgroup_vote {}
+impl VK_EXT_shader_subgroup_vote for Vulkan_EXT_shader_subgroup_vote {}
 impl Default for Vulkan_EXT_shader_subgroup_vote {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_shader_subgroup_vote {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-type VkPhysicalDeviceTextureCompressionASTCHDRFeaturesEXT = VkPhysicalDeviceTextureCompressionASTCHDRFeatures;
+pub type VkPhysicalDeviceTextureCompressionASTCHDRFeaturesEXT = VkPhysicalDeviceTextureCompressionASTCHDRFeatures;
 pub trait VK_EXT_texture_compression_astc_hdr: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_texture_compression_astc_hdr {
-}
-impl VK_EXT_texture_compression_astc_hdr for Vulkan_EXT_texture_compression_astc_hdr {
-}
+pub struct Vulkan_EXT_texture_compression_astc_hdr {}
+impl VK_EXT_texture_compression_astc_hdr for Vulkan_EXT_texture_compression_astc_hdr {}
 impl Default for Vulkan_EXT_texture_compression_astc_hdr {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_texture_compression_astc_hdr {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkImageViewASTCDecodeModeEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	decodeMode: VkFormat,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub decodeMode: VkFormat,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceASTCDecodeFeaturesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	decodeModeSharedExponent: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub decodeModeSharedExponent: VkBool32,
 }
 pub trait VK_EXT_astc_decode_mode: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_astc_decode_mode {
-}
-impl VK_EXT_astc_decode_mode for Vulkan_EXT_astc_decode_mode {
-}
+pub struct Vulkan_EXT_astc_decode_mode {}
+impl VK_EXT_astc_decode_mode for Vulkan_EXT_astc_decode_mode {}
 impl Default for Vulkan_EXT_astc_decode_mode {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_astc_decode_mode {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-type VkPipelineRobustnessBufferBehaviorEXT = VkPipelineRobustnessBufferBehavior;
-type VkPipelineRobustnessImageBehaviorEXT = VkPipelineRobustnessImageBehavior;
-type VkPhysicalDevicePipelineRobustnessFeaturesEXT = VkPhysicalDevicePipelineRobustnessFeatures;
-type VkPhysicalDevicePipelineRobustnessPropertiesEXT = VkPhysicalDevicePipelineRobustnessProperties;
-type VkPipelineRobustnessCreateInfoEXT = VkPipelineRobustnessCreateInfo;
+pub type VkPipelineRobustnessBufferBehaviorEXT = VkPipelineRobustnessBufferBehavior;
+pub type VkPipelineRobustnessImageBehaviorEXT = VkPipelineRobustnessImageBehavior;
+pub type VkPhysicalDevicePipelineRobustnessFeaturesEXT = VkPhysicalDevicePipelineRobustnessFeatures;
+pub type VkPhysicalDevicePipelineRobustnessPropertiesEXT = VkPhysicalDevicePipelineRobustnessProperties;
+pub type VkPipelineRobustnessCreateInfoEXT = VkPipelineRobustnessCreateInfo;
 pub trait VK_EXT_pipeline_robustness: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_pipeline_robustness {
-}
-impl VK_EXT_pipeline_robustness for Vulkan_EXT_pipeline_robustness {
-}
+pub struct Vulkan_EXT_pipeline_robustness {}
+impl VK_EXT_pipeline_robustness for Vulkan_EXT_pipeline_robustness {}
 impl Default for Vulkan_EXT_pipeline_robustness {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_pipeline_robustness {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-type VkConditionalRenderingFlagsEXT = VkFlags;
+pub type VkConditionalRenderingFlagsEXT = VkFlags;
 #[repr(C)]
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum VkConditionalRenderingFlagBitsEXT {
@@ -21207,26 +20803,26 @@ pub enum VkConditionalRenderingFlagBitsEXT {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkConditionalRenderingBeginInfoEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	buffer: VkBuffer,
-	offset: VkDeviceSize,
-	flags: VkConditionalRenderingFlagsEXT,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub buffer: VkBuffer,
+	pub offset: VkDeviceSize,
+	pub flags: VkConditionalRenderingFlagsEXT,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceConditionalRenderingFeaturesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	conditionalRendering: VkBool32,
-	inheritedConditionalRendering: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub conditionalRendering: VkBool32,
+	pub inheritedConditionalRendering: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkCommandBufferInheritanceConditionalRenderingInfoEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	conditionalRenderingEnable: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub conditionalRenderingEnable: VkBool32,
 }
 type PFN_vkCmdBeginConditionalRenderingEXT = extern "system" fn(commandBuffer: VkCommandBuffer, pConditionalRenderingBegin: *const VkConditionalRenderingBeginInfoEXT);
 type PFN_vkCmdEndConditionalRenderingEXT = extern "system" fn(commandBuffer: VkCommandBuffer);
@@ -21262,17 +20858,17 @@ impl Vulkan_EXT_conditional_rendering {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkViewportWScalingNV {
-	xcoeff: f32,
-	ycoeff: f32,
+	pub xcoeff: f32,
+	pub ycoeff: f32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPipelineViewportWScalingStateCreateInfoNV {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	viewportWScalingEnable: VkBool32,
-	viewportCount: u32,
-	pViewportWScalings: *const VkViewportWScalingNV,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub viewportWScalingEnable: VkBool32,
+	pub viewportCount: u32,
+	pub pViewportWScalings: *const VkViewportWScalingNV,
 }
 type PFN_vkCmdSetViewportWScalingNV = extern "system" fn(commandBuffer: VkCommandBuffer, firstViewport: u32, viewportCount: u32, pViewportWScalings: *const VkViewportWScalingNV);
 extern "system" fn dummy_vkCmdSetViewportWScalingNV(_: VkCommandBuffer, _: u32, _: u32, _: *const VkViewportWScalingNV) {
@@ -21334,7 +20930,7 @@ impl Vulkan_EXT_direct_mode_display {
 		}
 	}
 }
-type VkSurfaceCounterFlagsEXT = VkFlags;
+pub type VkSurfaceCounterFlagsEXT = VkFlags;
 #[repr(C)]
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum VkSurfaceCounterFlagBitsEXT {
@@ -21347,19 +20943,19 @@ impl VkSurfaceCounterFlagBitsEXT {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkSurfaceCapabilities2EXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	minImageCount: u32,
-	maxImageCount: u32,
-	currentExtent: VkExtent2D,
-	minImageExtent: VkExtent2D,
-	maxImageExtent: VkExtent2D,
-	maxImageArrayLayers: u32,
-	supportedTransforms: VkSurfaceTransformFlagsKHR,
-	currentTransform: VkSurfaceTransformFlagBitsKHR,
-	supportedCompositeAlpha: VkCompositeAlphaFlagsKHR,
-	supportedUsageFlags: VkImageUsageFlags,
-	supportedSurfaceCounters: VkSurfaceCounterFlagsEXT,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub minImageCount: u32,
+	pub maxImageCount: u32,
+	pub currentExtent: VkExtent2D,
+	pub minImageExtent: VkExtent2D,
+	pub maxImageExtent: VkExtent2D,
+	pub maxImageArrayLayers: u32,
+	pub supportedTransforms: VkSurfaceTransformFlagsKHR,
+	pub currentTransform: VkSurfaceTransformFlagBitsKHR,
+	pub supportedCompositeAlpha: VkCompositeAlphaFlagsKHR,
+	pub supportedUsageFlags: VkImageUsageFlags,
+	pub supportedSurfaceCounters: VkSurfaceCounterFlagsEXT,
 }
 type PFN_vkGetPhysicalDeviceSurfaceCapabilities2EXT = extern "system" fn(physicalDevice: VkPhysicalDevice, surface: VkSurfaceKHR, pSurfaceCapabilities: *mut VkSurfaceCapabilities2EXT) -> VkResult;
 extern "system" fn dummy_vkGetPhysicalDeviceSurfaceCapabilities2EXT(_: VkPhysicalDevice, _: VkSurfaceKHR, _: *mut VkSurfaceCapabilities2EXT) -> VkResult {
@@ -21414,30 +21010,30 @@ pub enum VkDisplayEventTypeEXT {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDisplayPowerInfoEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	powerState: VkDisplayPowerStateEXT,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub powerState: VkDisplayPowerStateEXT,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDeviceEventInfoEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	deviceEvent: VkDeviceEventTypeEXT,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub deviceEvent: VkDeviceEventTypeEXT,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDisplayEventInfoEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	displayEvent: VkDisplayEventTypeEXT,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub displayEvent: VkDisplayEventTypeEXT,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkSwapchainCounterCreateInfoEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	surfaceCounters: VkSurfaceCounterFlagsEXT,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub surfaceCounters: VkSurfaceCounterFlagsEXT,
 }
 type PFN_vkDisplayPowerControlEXT = extern "system" fn(device: VkDevice, display: VkDisplayKHR, pDisplayPowerInfo: *const VkDisplayPowerInfoEXT) -> VkResult;
 type PFN_vkRegisterDeviceEventEXT = extern "system" fn(device: VkDevice, pDeviceEventInfo: *const VkDeviceEventInfoEXT, pAllocator: *const VkAllocationCallbacks, pFence: *mut VkFence) -> VkResult;
@@ -21475,30 +21071,30 @@ impl Vulkan_EXT_display_control {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkRefreshCycleDurationGOOGLE {
-	refreshDuration: u64,
+	pub refreshDuration: u64,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPastPresentationTimingGOOGLE {
-	presentID: u32,
-	desiredPresentTime: u64,
-	actualPresentTime: u64,
-	earliestPresentTime: u64,
-	presentMargin: u64,
+	pub presentID: u32,
+	pub desiredPresentTime: u64,
+	pub actualPresentTime: u64,
+	pub earliestPresentTime: u64,
+	pub presentMargin: u64,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPresentTimeGOOGLE {
-	presentID: u32,
-	desiredPresentTime: u64,
+	pub presentID: u32,
+	pub desiredPresentTime: u64,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPresentTimesInfoGOOGLE {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	swapchainCount: u32,
-	pTimes: *const VkPresentTimeGOOGLE,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub swapchainCount: u32,
+	pub pTimes: *const VkPresentTimeGOOGLE,
 }
 type PFN_vkGetRefreshCycleDurationGOOGLE = extern "system" fn(device: VkDevice, swapchain: VkSwapchainKHR, pDisplayTimingProperties: *mut VkRefreshCycleDurationGOOGLE) -> VkResult;
 type PFN_vkGetPastPresentationTimingGOOGLE = extern "system" fn(device: VkDevice, swapchain: VkSwapchainKHR, pPresentationTimingCount: *mut uint32_t, pPresentationTimings: *mut VkPastPresentationTimingGOOGLE) -> VkResult;
@@ -21533,92 +21129,76 @@ impl Vulkan_GOOGLE_display_timing {
 }
 pub trait VK_NV_sample_mask_override_coverage: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_NV_sample_mask_override_coverage {
-}
-impl VK_NV_sample_mask_override_coverage for Vulkan_NV_sample_mask_override_coverage {
-}
+pub struct Vulkan_NV_sample_mask_override_coverage {}
+impl VK_NV_sample_mask_override_coverage for Vulkan_NV_sample_mask_override_coverage {}
 impl Default for Vulkan_NV_sample_mask_override_coverage {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_NV_sample_mask_override_coverage {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 pub trait VK_NV_geometry_shader_passthrough: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_NV_geometry_shader_passthrough {
-}
-impl VK_NV_geometry_shader_passthrough for Vulkan_NV_geometry_shader_passthrough {
-}
+pub struct Vulkan_NV_geometry_shader_passthrough {}
+impl VK_NV_geometry_shader_passthrough for Vulkan_NV_geometry_shader_passthrough {}
 impl Default for Vulkan_NV_geometry_shader_passthrough {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_NV_geometry_shader_passthrough {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 pub trait VK_NV_viewport_array2: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_NV_viewport_array2 {
-}
-impl VK_NV_viewport_array2 for Vulkan_NV_viewport_array2 {
-}
+pub struct Vulkan_NV_viewport_array2 {}
+impl VK_NV_viewport_array2 for Vulkan_NV_viewport_array2 {}
 impl Default for Vulkan_NV_viewport_array2 {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_NV_viewport_array2 {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceMultiviewPerViewAttributesPropertiesNVX {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	perViewPositionAllComponents: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub perViewPositionAllComponents: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkMultiviewPerViewAttributesInfoNVX {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	perViewAttributes: VkBool32,
-	perViewAttributesPositionXOnly: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub perViewAttributes: VkBool32,
+	pub perViewAttributesPositionXOnly: VkBool32,
 }
 pub trait VK_NVX_multiview_per_view_attributes: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_NVX_multiview_per_view_attributes {
-}
-impl VK_NVX_multiview_per_view_attributes for Vulkan_NVX_multiview_per_view_attributes {
-}
+pub struct Vulkan_NVX_multiview_per_view_attributes {}
+impl VK_NVX_multiview_per_view_attributes for Vulkan_NVX_multiview_per_view_attributes {}
 impl Default for Vulkan_NVX_multiview_per_view_attributes {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_NVX_multiview_per_view_attributes {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-type VkPipelineViewportSwizzleStateCreateFlagsNV = VkFlags;
+pub type VkPipelineViewportSwizzleStateCreateFlagsNV = VkFlags;
 #[repr(C)]
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum VkViewportCoordinateSwizzleNV {
@@ -21635,39 +21215,35 @@ pub enum VkViewportCoordinateSwizzleNV {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkViewportSwizzleNV {
-	x: VkViewportCoordinateSwizzleNV,
-	y: VkViewportCoordinateSwizzleNV,
-	z: VkViewportCoordinateSwizzleNV,
-	w: VkViewportCoordinateSwizzleNV,
+	pub x: VkViewportCoordinateSwizzleNV,
+	pub y: VkViewportCoordinateSwizzleNV,
+	pub z: VkViewportCoordinateSwizzleNV,
+	pub w: VkViewportCoordinateSwizzleNV,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPipelineViewportSwizzleStateCreateInfoNV {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkPipelineViewportSwizzleStateCreateFlagsNV,
-	viewportCount: u32,
-	pViewportSwizzles: *const VkViewportSwizzleNV,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkPipelineViewportSwizzleStateCreateFlagsNV,
+	pub viewportCount: u32,
+	pub pViewportSwizzles: *const VkViewportSwizzleNV,
 }
 pub trait VK_NV_viewport_swizzle: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_NV_viewport_swizzle {
-}
-impl VK_NV_viewport_swizzle for Vulkan_NV_viewport_swizzle {
-}
+pub struct Vulkan_NV_viewport_swizzle {}
+impl VK_NV_viewport_swizzle for Vulkan_NV_viewport_swizzle {}
 impl Default for Vulkan_NV_viewport_swizzle {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_NV_viewport_swizzle {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-type VkPipelineDiscardRectangleStateCreateFlagsEXT = VkFlags;
+pub type VkPipelineDiscardRectangleStateCreateFlagsEXT = VkFlags;
 #[repr(C)]
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum VkDiscardRectangleModeEXT {
@@ -21678,19 +21254,19 @@ pub enum VkDiscardRectangleModeEXT {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceDiscardRectanglePropertiesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	maxDiscardRectangles: u32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub maxDiscardRectangles: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPipelineDiscardRectangleStateCreateInfoEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkPipelineDiscardRectangleStateCreateFlagsEXT,
-	discardRectangleMode: VkDiscardRectangleModeEXT,
-	discardRectangleCount: u32,
-	pDiscardRectangles: *const VkRect2D,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkPipelineDiscardRectangleStateCreateFlagsEXT,
+	pub discardRectangleMode: VkDiscardRectangleModeEXT,
+	pub discardRectangleCount: u32,
+	pub pDiscardRectangles: *const VkRect2D,
 }
 type PFN_vkCmdSetDiscardRectangleEXT = extern "system" fn(commandBuffer: VkCommandBuffer, firstDiscardRectangle: u32, discardRectangleCount: u32, pDiscardRectangles: *const VkRect2D);
 type PFN_vkCmdSetDiscardRectangleEnableEXT = extern "system" fn(commandBuffer: VkCommandBuffer, discardRectangleEnable: VkBool32);
@@ -21724,7 +21300,7 @@ impl Vulkan_EXT_discard_rectangles {
 		}
 	}
 }
-type VkPipelineRasterizationConservativeStateCreateFlagsEXT = VkFlags;
+pub type VkPipelineRasterizationConservativeStateCreateFlagsEXT = VkFlags;
 #[repr(C)]
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum VkConservativeRasterizationModeEXT {
@@ -21736,116 +21312,104 @@ pub enum VkConservativeRasterizationModeEXT {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceConservativeRasterizationPropertiesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	primitiveOverestimationSize: f32,
-	maxExtraPrimitiveOverestimationSize: f32,
-	extraPrimitiveOverestimationSizeGranularity: f32,
-	primitiveUnderestimation: VkBool32,
-	conservativePointAndLineRasterization: VkBool32,
-	degenerateTrianglesRasterized: VkBool32,
-	degenerateLinesRasterized: VkBool32,
-	fullyCoveredFragmentShaderInputVariable: VkBool32,
-	conservativeRasterizationPostDepthCoverage: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub primitiveOverestimationSize: f32,
+	pub maxExtraPrimitiveOverestimationSize: f32,
+	pub extraPrimitiveOverestimationSizeGranularity: f32,
+	pub primitiveUnderestimation: VkBool32,
+	pub conservativePointAndLineRasterization: VkBool32,
+	pub degenerateTrianglesRasterized: VkBool32,
+	pub degenerateLinesRasterized: VkBool32,
+	pub fullyCoveredFragmentShaderInputVariable: VkBool32,
+	pub conservativeRasterizationPostDepthCoverage: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPipelineRasterizationConservativeStateCreateInfoEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkPipelineRasterizationConservativeStateCreateFlagsEXT,
-	conservativeRasterizationMode: VkConservativeRasterizationModeEXT,
-	extraPrimitiveOverestimationSize: f32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkPipelineRasterizationConservativeStateCreateFlagsEXT,
+	pub conservativeRasterizationMode: VkConservativeRasterizationModeEXT,
+	pub extraPrimitiveOverestimationSize: f32,
 }
 pub trait VK_EXT_conservative_rasterization: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_conservative_rasterization {
-}
-impl VK_EXT_conservative_rasterization for Vulkan_EXT_conservative_rasterization {
-}
+pub struct Vulkan_EXT_conservative_rasterization {}
+impl VK_EXT_conservative_rasterization for Vulkan_EXT_conservative_rasterization {}
 impl Default for Vulkan_EXT_conservative_rasterization {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_conservative_rasterization {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-type VkPipelineRasterizationDepthClipStateCreateFlagsEXT = VkFlags;
+pub type VkPipelineRasterizationDepthClipStateCreateFlagsEXT = VkFlags;
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceDepthClipEnableFeaturesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	depthClipEnable: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub depthClipEnable: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPipelineRasterizationDepthClipStateCreateInfoEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkPipelineRasterizationDepthClipStateCreateFlagsEXT,
-	depthClipEnable: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkPipelineRasterizationDepthClipStateCreateFlagsEXT,
+	pub depthClipEnable: VkBool32,
 }
 pub trait VK_EXT_depth_clip_enable: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_depth_clip_enable {
-}
-impl VK_EXT_depth_clip_enable for Vulkan_EXT_depth_clip_enable {
-}
+pub struct Vulkan_EXT_depth_clip_enable {}
+impl VK_EXT_depth_clip_enable for Vulkan_EXT_depth_clip_enable {}
 impl Default for Vulkan_EXT_depth_clip_enable {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_depth_clip_enable {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 pub trait VK_EXT_swapchain_colorspace: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_swapchain_colorspace {
-}
-impl VK_EXT_swapchain_colorspace for Vulkan_EXT_swapchain_colorspace {
-}
+pub struct Vulkan_EXT_swapchain_colorspace {}
+impl VK_EXT_swapchain_colorspace for Vulkan_EXT_swapchain_colorspace {}
 impl Default for Vulkan_EXT_swapchain_colorspace {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_swapchain_colorspace {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkXYColorEXT {
-	x: f32,
-	y: f32,
+	pub x: f32,
+	pub y: f32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkHdrMetadataEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	displayPrimaryRed: VkXYColorEXT,
-	displayPrimaryGreen: VkXYColorEXT,
-	displayPrimaryBlue: VkXYColorEXT,
-	whitePoint: VkXYColorEXT,
-	maxLuminance: f32,
-	minLuminance: f32,
-	maxContentLightLevel: f32,
-	maxFrameAverageLightLevel: f32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub displayPrimaryRed: VkXYColorEXT,
+	pub displayPrimaryGreen: VkXYColorEXT,
+	pub displayPrimaryBlue: VkXYColorEXT,
+	pub whitePoint: VkXYColorEXT,
+	pub maxLuminance: f32,
+	pub minLuminance: f32,
+	pub maxContentLightLevel: f32,
+	pub maxFrameAverageLightLevel: f32,
 }
 type PFN_vkSetHdrMetadataEXT = extern "system" fn(device: VkDevice, swapchainCount: u32, pSwapchains: *const VkSwapchainKHR, pMetadata: *const VkHdrMetadataEXT);
 extern "system" fn dummy_vkSetHdrMetadataEXT(_: VkDevice, _: u32, _: *const VkSwapchainKHR, _: *const VkHdrMetadataEXT) {
@@ -21880,73 +21444,61 @@ impl Vulkan_EXT_hdr_metadata {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceRelaxedLineRasterizationFeaturesIMG {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	relaxedLineRasterization: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub relaxedLineRasterization: VkBool32,
 }
 pub trait VK_IMG_relaxed_line_rasterization: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_IMG_relaxed_line_rasterization {
-}
-impl VK_IMG_relaxed_line_rasterization for Vulkan_IMG_relaxed_line_rasterization {
-}
+pub struct Vulkan_IMG_relaxed_line_rasterization {}
+impl VK_IMG_relaxed_line_rasterization for Vulkan_IMG_relaxed_line_rasterization {}
 impl Default for Vulkan_IMG_relaxed_line_rasterization {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_IMG_relaxed_line_rasterization {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 pub trait VK_EXT_external_memory_dma_buf: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_external_memory_dma_buf {
-}
-impl VK_EXT_external_memory_dma_buf for Vulkan_EXT_external_memory_dma_buf {
-}
+pub struct Vulkan_EXT_external_memory_dma_buf {}
+impl VK_EXT_external_memory_dma_buf for Vulkan_EXT_external_memory_dma_buf {}
 impl Default for Vulkan_EXT_external_memory_dma_buf {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_external_memory_dma_buf {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 pub const VK_QUEUE_FAMILY_FOREIGN_EXT: u32 = !2u32;
 pub trait VK_EXT_queue_family_foreign: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_queue_family_foreign {
-}
-impl VK_EXT_queue_family_foreign for Vulkan_EXT_queue_family_foreign {
-}
+pub struct Vulkan_EXT_queue_family_foreign {}
+impl VK_EXT_queue_family_foreign for Vulkan_EXT_queue_family_foreign {}
 impl Default for Vulkan_EXT_queue_family_foreign {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_queue_family_foreign {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-type VkDebugUtilsMessengerCallbackDataFlagsEXT = VkFlags;
-type VkDebugUtilsMessageTypeFlagsEXT = VkFlags;
-type VkDebugUtilsMessageSeverityFlagsEXT = VkFlags;
-type VkDebugUtilsMessengerCreateFlagsEXT = VkFlags;
+pub type VkDebugUtilsMessengerCallbackDataFlagsEXT = VkFlags;
+pub type VkDebugUtilsMessageTypeFlagsEXT = VkFlags;
+pub type VkDebugUtilsMessageSeverityFlagsEXT = VkFlags;
+pub type VkDebugUtilsMessengerCreateFlagsEXT = VkFlags;
 // Define non-dispatchable handle `VkDebugUtilsMessengerEXT`
-#[cfg(target_pointer_width = "32")] type VkDebugUtilsMessengerEXT = u64;
+#[cfg(target_pointer_width = "32")] pub type VkDebugUtilsMessengerEXT = u64;
 #[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkDebugUtilsMessengerEXT_T {}
-#[cfg(target_pointer_width = "64")] type VkDebugUtilsMessengerEXT = *const VkDebugUtilsMessengerEXT_T;
+#[cfg(target_pointer_width = "64")] pub type VkDebugUtilsMessengerEXT = *const VkDebugUtilsMessengerEXT_T;
 #[repr(C)]
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum VkDebugUtilsMessageSeverityFlagBitsEXT {
@@ -21968,57 +21520,57 @@ pub enum VkDebugUtilsMessageTypeFlagBitsEXT {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDebugUtilsLabelEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	pLabelName: *const i8,
-	color: [f32; 4 as usize],
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub pLabelName: *const i8,
+	pub color: [f32; 4 as usize],
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDebugUtilsObjectNameInfoEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	objectType: VkObjectType,
-	objectHandle: u64,
-	pObjectName: *const i8,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub objectType: VkObjectType,
+	pub objectHandle: u64,
+	pub pObjectName: *const i8,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDebugUtilsMessengerCallbackDataEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkDebugUtilsMessengerCallbackDataFlagsEXT,
-	pMessageIdName: *const i8,
-	messageIdNumber: i32,
-	pMessage: *const i8,
-	queueLabelCount: u32,
-	pQueueLabels: *const VkDebugUtilsLabelEXT,
-	cmdBufLabelCount: u32,
-	pCmdBufLabels: *const VkDebugUtilsLabelEXT,
-	objectCount: u32,
-	pObjects: *const VkDebugUtilsObjectNameInfoEXT,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkDebugUtilsMessengerCallbackDataFlagsEXT,
+	pub pMessageIdName: *const i8,
+	pub messageIdNumber: i32,
+	pub pMessage: *const i8,
+	pub queueLabelCount: u32,
+	pub pQueueLabels: *const VkDebugUtilsLabelEXT,
+	pub cmdBufLabelCount: u32,
+	pub pCmdBufLabels: *const VkDebugUtilsLabelEXT,
+	pub objectCount: u32,
+	pub pObjects: *const VkDebugUtilsObjectNameInfoEXT,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDebugUtilsMessengerCreateInfoEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkDebugUtilsMessengerCreateFlagsEXT,
-	messageSeverity: VkDebugUtilsMessageSeverityFlagsEXT,
-	messageType: VkDebugUtilsMessageTypeFlagsEXT,
-	pfnUserCallback: PFN_vkDebugUtilsMessengerCallbackEXT,
-	pUserData: *mut c_void,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkDebugUtilsMessengerCreateFlagsEXT,
+	pub messageSeverity: VkDebugUtilsMessageSeverityFlagsEXT,
+	pub messageType: VkDebugUtilsMessageTypeFlagsEXT,
+	pub pfnUserCallback: PFN_vkDebugUtilsMessengerCallbackEXT,
+	pub pUserData: *mut c_void,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDebugUtilsObjectTagInfoEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	objectType: VkObjectType,
-	objectHandle: u64,
-	tagName: u64,
-	tagSize: usize,
-	pTag: *const c_void,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub objectType: VkObjectType,
+	pub objectHandle: u64,
+	pub tagName: u64,
+	pub tagSize: usize,
+	pub pTag: *const c_void,
 }
 type PFN_vkDebugUtilsMessengerCallbackEXT = extern "system" fn(messageSeverity: VkDebugUtilsMessageSeverityFlagBitsEXT, messageTypes: VkDebugUtilsMessageTypeFlagsEXT, pCallbackData: *const VkDebugUtilsMessengerCallbackDataEXT, pUserData: *mut c_void) -> VkBool32;
 type PFN_vkSetDebugUtilsObjectNameEXT = extern "system" fn(device: VkDevice, pNameInfo: *const VkDebugUtilsObjectNameInfoEXT) -> VkResult;
@@ -22061,193 +21613,169 @@ impl Vulkan_EXT_debug_utils {
 		}
 	}
 }
-type VkSamplerReductionModeEXT = VkSamplerReductionMode;
-type VkSamplerReductionModeCreateInfoEXT = VkSamplerReductionModeCreateInfo;
-type VkPhysicalDeviceSamplerFilterMinmaxPropertiesEXT = VkPhysicalDeviceSamplerFilterMinmaxProperties;
+pub type VkSamplerReductionModeEXT = VkSamplerReductionMode;
+pub type VkSamplerReductionModeCreateInfoEXT = VkSamplerReductionModeCreateInfo;
+pub type VkPhysicalDeviceSamplerFilterMinmaxPropertiesEXT = VkPhysicalDeviceSamplerFilterMinmaxProperties;
 pub trait VK_EXT_sampler_filter_minmax: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_sampler_filter_minmax {
-}
-impl VK_EXT_sampler_filter_minmax for Vulkan_EXT_sampler_filter_minmax {
-}
+pub struct Vulkan_EXT_sampler_filter_minmax {}
+impl VK_EXT_sampler_filter_minmax for Vulkan_EXT_sampler_filter_minmax {}
 impl Default for Vulkan_EXT_sampler_filter_minmax {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_sampler_filter_minmax {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 pub trait VK_AMD_gpu_shader_int16: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_AMD_gpu_shader_int16 {
-}
-impl VK_AMD_gpu_shader_int16 for Vulkan_AMD_gpu_shader_int16 {
-}
+pub struct Vulkan_AMD_gpu_shader_int16 {}
+impl VK_AMD_gpu_shader_int16 for Vulkan_AMD_gpu_shader_int16 {}
 impl Default for Vulkan_AMD_gpu_shader_int16 {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_AMD_gpu_shader_int16 {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkAttachmentSampleCountInfoAMD {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	colorAttachmentCount: u32,
-	pColorAttachmentSamples: *const VkSampleCountFlagBits,
-	depthStencilAttachmentSamples: VkSampleCountFlagBits,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub colorAttachmentCount: u32,
+	pub pColorAttachmentSamples: *const VkSampleCountFlagBits,
+	pub depthStencilAttachmentSamples: VkSampleCountFlagBits,
 }
 pub trait VK_AMD_mixed_attachment_samples: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_AMD_mixed_attachment_samples {
-}
-impl VK_AMD_mixed_attachment_samples for Vulkan_AMD_mixed_attachment_samples {
-}
+pub struct Vulkan_AMD_mixed_attachment_samples {}
+impl VK_AMD_mixed_attachment_samples for Vulkan_AMD_mixed_attachment_samples {}
 impl Default for Vulkan_AMD_mixed_attachment_samples {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_AMD_mixed_attachment_samples {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 pub trait VK_AMD_shader_fragment_mask: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_AMD_shader_fragment_mask {
-}
-impl VK_AMD_shader_fragment_mask for Vulkan_AMD_shader_fragment_mask {
-}
+pub struct Vulkan_AMD_shader_fragment_mask {}
+impl VK_AMD_shader_fragment_mask for Vulkan_AMD_shader_fragment_mask {}
 impl Default for Vulkan_AMD_shader_fragment_mask {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_AMD_shader_fragment_mask {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-type VkPhysicalDeviceInlineUniformBlockFeaturesEXT = VkPhysicalDeviceInlineUniformBlockFeatures;
-type VkPhysicalDeviceInlineUniformBlockPropertiesEXT = VkPhysicalDeviceInlineUniformBlockProperties;
-type VkWriteDescriptorSetInlineUniformBlockEXT = VkWriteDescriptorSetInlineUniformBlock;
-type VkDescriptorPoolInlineUniformBlockCreateInfoEXT = VkDescriptorPoolInlineUniformBlockCreateInfo;
+pub type VkPhysicalDeviceInlineUniformBlockFeaturesEXT = VkPhysicalDeviceInlineUniformBlockFeatures;
+pub type VkPhysicalDeviceInlineUniformBlockPropertiesEXT = VkPhysicalDeviceInlineUniformBlockProperties;
+pub type VkWriteDescriptorSetInlineUniformBlockEXT = VkWriteDescriptorSetInlineUniformBlock;
+pub type VkDescriptorPoolInlineUniformBlockCreateInfoEXT = VkDescriptorPoolInlineUniformBlockCreateInfo;
 pub trait VK_EXT_inline_uniform_block: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_inline_uniform_block {
-}
-impl VK_EXT_inline_uniform_block for Vulkan_EXT_inline_uniform_block {
-}
+pub struct Vulkan_EXT_inline_uniform_block {}
+impl VK_EXT_inline_uniform_block for Vulkan_EXT_inline_uniform_block {}
 impl Default for Vulkan_EXT_inline_uniform_block {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_inline_uniform_block {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 pub trait VK_EXT_shader_stencil_export: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_shader_stencil_export {
-}
-impl VK_EXT_shader_stencil_export for Vulkan_EXT_shader_stencil_export {
-}
+pub struct Vulkan_EXT_shader_stencil_export {}
+impl VK_EXT_shader_stencil_export for Vulkan_EXT_shader_stencil_export {}
 impl Default for Vulkan_EXT_shader_stencil_export {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_shader_stencil_export {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkSampleLocationEXT {
-	x: f32,
-	y: f32,
+	pub x: f32,
+	pub y: f32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkSampleLocationsInfoEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	sampleLocationsPerPixel: VkSampleCountFlagBits,
-	sampleLocationGridSize: VkExtent2D,
-	sampleLocationsCount: u32,
-	pSampleLocations: *const VkSampleLocationEXT,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub sampleLocationsPerPixel: VkSampleCountFlagBits,
+	pub sampleLocationGridSize: VkExtent2D,
+	pub sampleLocationsCount: u32,
+	pub pSampleLocations: *const VkSampleLocationEXT,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkAttachmentSampleLocationsEXT {
-	attachmentIndex: u32,
-	sampleLocationsInfo: VkSampleLocationsInfoEXT,
+	pub attachmentIndex: u32,
+	pub sampleLocationsInfo: VkSampleLocationsInfoEXT,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkSubpassSampleLocationsEXT {
-	subpassIndex: u32,
-	sampleLocationsInfo: VkSampleLocationsInfoEXT,
+	pub subpassIndex: u32,
+	pub sampleLocationsInfo: VkSampleLocationsInfoEXT,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkRenderPassSampleLocationsBeginInfoEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	attachmentInitialSampleLocationsCount: u32,
-	pAttachmentInitialSampleLocations: *const VkAttachmentSampleLocationsEXT,
-	postSubpassSampleLocationsCount: u32,
-	pPostSubpassSampleLocations: *const VkSubpassSampleLocationsEXT,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub attachmentInitialSampleLocationsCount: u32,
+	pub pAttachmentInitialSampleLocations: *const VkAttachmentSampleLocationsEXT,
+	pub postSubpassSampleLocationsCount: u32,
+	pub pPostSubpassSampleLocations: *const VkSubpassSampleLocationsEXT,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPipelineSampleLocationsStateCreateInfoEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	sampleLocationsEnable: VkBool32,
-	sampleLocationsInfo: VkSampleLocationsInfoEXT,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub sampleLocationsEnable: VkBool32,
+	pub sampleLocationsInfo: VkSampleLocationsInfoEXT,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceSampleLocationsPropertiesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	sampleLocationSampleCounts: VkSampleCountFlags,
-	maxSampleLocationGridSize: VkExtent2D,
-	sampleLocationCoordinateRange: [f32; 2 as usize],
-	sampleLocationSubPixelBits: u32,
-	variableSampleLocations: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub sampleLocationSampleCounts: VkSampleCountFlags,
+	pub maxSampleLocationGridSize: VkExtent2D,
+	pub sampleLocationCoordinateRange: [f32; 2 as usize],
+	pub sampleLocationSubPixelBits: u32,
+	pub variableSampleLocations: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkMultisamplePropertiesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	maxSampleLocationGridSize: VkExtent2D,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub maxSampleLocationGridSize: VkExtent2D,
 }
 type PFN_vkCmdSetSampleLocationsEXT = extern "system" fn(commandBuffer: VkCommandBuffer, pSampleLocationsInfo: *const VkSampleLocationsInfoEXT);
 type PFN_vkGetPhysicalDeviceMultisamplePropertiesEXT = extern "system" fn(physicalDevice: VkPhysicalDevice, samples: VkSampleCountFlagBits, pMultisampleProperties: *mut VkMultisamplePropertiesEXT);
@@ -22291,79 +21819,71 @@ pub enum VkBlendOverlapEXT {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	advancedBlendCoherentOperations: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub advancedBlendCoherentOperations: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceBlendOperationAdvancedPropertiesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	advancedBlendMaxColorAttachments: u32,
-	advancedBlendIndependentBlend: VkBool32,
-	advancedBlendNonPremultipliedSrcColor: VkBool32,
-	advancedBlendNonPremultipliedDstColor: VkBool32,
-	advancedBlendCorrelatedOverlap: VkBool32,
-	advancedBlendAllOperations: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub advancedBlendMaxColorAttachments: u32,
+	pub advancedBlendIndependentBlend: VkBool32,
+	pub advancedBlendNonPremultipliedSrcColor: VkBool32,
+	pub advancedBlendNonPremultipliedDstColor: VkBool32,
+	pub advancedBlendCorrelatedOverlap: VkBool32,
+	pub advancedBlendAllOperations: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPipelineColorBlendAdvancedStateCreateInfoEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	srcPremultiplied: VkBool32,
-	dstPremultiplied: VkBool32,
-	blendOverlap: VkBlendOverlapEXT,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub srcPremultiplied: VkBool32,
+	pub dstPremultiplied: VkBool32,
+	pub blendOverlap: VkBlendOverlapEXT,
 }
 pub trait VK_EXT_blend_operation_advanced: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_blend_operation_advanced {
-}
-impl VK_EXT_blend_operation_advanced for Vulkan_EXT_blend_operation_advanced {
-}
+pub struct Vulkan_EXT_blend_operation_advanced {}
+impl VK_EXT_blend_operation_advanced for Vulkan_EXT_blend_operation_advanced {}
 impl Default for Vulkan_EXT_blend_operation_advanced {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_blend_operation_advanced {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-type VkPipelineCoverageToColorStateCreateFlagsNV = VkFlags;
+pub type VkPipelineCoverageToColorStateCreateFlagsNV = VkFlags;
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPipelineCoverageToColorStateCreateInfoNV {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkPipelineCoverageToColorStateCreateFlagsNV,
-	coverageToColorEnable: VkBool32,
-	coverageToColorLocation: u32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkPipelineCoverageToColorStateCreateFlagsNV,
+	pub coverageToColorEnable: VkBool32,
+	pub coverageToColorLocation: u32,
 }
 pub trait VK_NV_fragment_coverage_to_color: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_NV_fragment_coverage_to_color {
-}
-impl VK_NV_fragment_coverage_to_color for Vulkan_NV_fragment_coverage_to_color {
-}
+pub struct Vulkan_NV_fragment_coverage_to_color {}
+impl VK_NV_fragment_coverage_to_color for Vulkan_NV_fragment_coverage_to_color {}
 impl Default for Vulkan_NV_fragment_coverage_to_color {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_NV_fragment_coverage_to_color {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-type VkPipelineCoverageModulationStateCreateFlagsNV = VkFlags;
-type VkAttachmentSampleCountInfoNV = VkAttachmentSampleCountInfoAMD;
+pub type VkPipelineCoverageModulationStateCreateFlagsNV = VkFlags;
+pub type VkAttachmentSampleCountInfoNV = VkAttachmentSampleCountInfoAMD;
 #[repr(C)]
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum VkCoverageModulationModeNV {
@@ -22376,164 +21896,148 @@ pub enum VkCoverageModulationModeNV {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPipelineCoverageModulationStateCreateInfoNV {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkPipelineCoverageModulationStateCreateFlagsNV,
-	coverageModulationMode: VkCoverageModulationModeNV,
-	coverageModulationTableEnable: VkBool32,
-	coverageModulationTableCount: u32,
-	pCoverageModulationTable: *const float,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkPipelineCoverageModulationStateCreateFlagsNV,
+	pub coverageModulationMode: VkCoverageModulationModeNV,
+	pub coverageModulationTableEnable: VkBool32,
+	pub coverageModulationTableCount: u32,
+	pub pCoverageModulationTable: *const float,
 }
 pub trait VK_NV_framebuffer_mixed_samples: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_NV_framebuffer_mixed_samples {
-}
-impl VK_NV_framebuffer_mixed_samples for Vulkan_NV_framebuffer_mixed_samples {
-}
+pub struct Vulkan_NV_framebuffer_mixed_samples {}
+impl VK_NV_framebuffer_mixed_samples for Vulkan_NV_framebuffer_mixed_samples {}
 impl Default for Vulkan_NV_framebuffer_mixed_samples {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_NV_framebuffer_mixed_samples {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 pub trait VK_NV_fill_rectangle: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_NV_fill_rectangle {
-}
-impl VK_NV_fill_rectangle for Vulkan_NV_fill_rectangle {
-}
+pub struct Vulkan_NV_fill_rectangle {}
+impl VK_NV_fill_rectangle for Vulkan_NV_fill_rectangle {}
 impl Default for Vulkan_NV_fill_rectangle {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_NV_fill_rectangle {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceShaderSMBuiltinsPropertiesNV {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	shaderSMCount: u32,
-	shaderWarpsPerSM: u32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub shaderSMCount: u32,
+	pub shaderWarpsPerSM: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceShaderSMBuiltinsFeaturesNV {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	shaderSMBuiltins: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub shaderSMBuiltins: VkBool32,
 }
 pub trait VK_NV_shader_sm_builtins: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_NV_shader_sm_builtins {
-}
-impl VK_NV_shader_sm_builtins for Vulkan_NV_shader_sm_builtins {
-}
+pub struct Vulkan_NV_shader_sm_builtins {}
+impl VK_NV_shader_sm_builtins for Vulkan_NV_shader_sm_builtins {}
 impl Default for Vulkan_NV_shader_sm_builtins {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_NV_shader_sm_builtins {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 pub trait VK_EXT_post_depth_coverage: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_post_depth_coverage {
-}
-impl VK_EXT_post_depth_coverage for Vulkan_EXT_post_depth_coverage {
-}
+pub struct Vulkan_EXT_post_depth_coverage {}
+impl VK_EXT_post_depth_coverage for Vulkan_EXT_post_depth_coverage {}
 impl Default for Vulkan_EXT_post_depth_coverage {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_post_depth_coverage {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDrmFormatModifierPropertiesEXT {
-	drmFormatModifier: u64,
-	drmFormatModifierPlaneCount: u32,
-	drmFormatModifierTilingFeatures: VkFormatFeatureFlags,
+	pub drmFormatModifier: u64,
+	pub drmFormatModifierPlaneCount: u32,
+	pub drmFormatModifierTilingFeatures: VkFormatFeatureFlags,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDrmFormatModifierPropertiesListEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	drmFormatModifierCount: u32,
-	pDrmFormatModifierProperties: *mut VkDrmFormatModifierPropertiesEXT,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub drmFormatModifierCount: u32,
+	pub pDrmFormatModifierProperties: *mut VkDrmFormatModifierPropertiesEXT,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceImageDrmFormatModifierInfoEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	drmFormatModifier: u64,
-	sharingMode: VkSharingMode,
-	queueFamilyIndexCount: u32,
-	pQueueFamilyIndices: *const uint32_t,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub drmFormatModifier: u64,
+	pub sharingMode: VkSharingMode,
+	pub queueFamilyIndexCount: u32,
+	pub pQueueFamilyIndices: *const uint32_t,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkImageDrmFormatModifierListCreateInfoEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	drmFormatModifierCount: u32,
-	pDrmFormatModifiers: *const uint64_t,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub drmFormatModifierCount: u32,
+	pub pDrmFormatModifiers: *const uint64_t,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkImageDrmFormatModifierExplicitCreateInfoEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	drmFormatModifier: u64,
-	drmFormatModifierPlaneCount: u32,
-	pPlaneLayouts: *const VkSubresourceLayout,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub drmFormatModifier: u64,
+	pub drmFormatModifierPlaneCount: u32,
+	pub pPlaneLayouts: *const VkSubresourceLayout,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkImageDrmFormatModifierPropertiesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	drmFormatModifier: u64,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub drmFormatModifier: u64,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDrmFormatModifierProperties2EXT {
-	drmFormatModifier: u64,
-	drmFormatModifierPlaneCount: u32,
-	drmFormatModifierTilingFeatures: VkFormatFeatureFlags2,
+	pub drmFormatModifier: u64,
+	pub drmFormatModifierPlaneCount: u32,
+	pub drmFormatModifierTilingFeatures: VkFormatFeatureFlags2,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDrmFormatModifierPropertiesList2EXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	drmFormatModifierCount: u32,
-	pDrmFormatModifierProperties: *mut VkDrmFormatModifierProperties2EXT,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub drmFormatModifierCount: u32,
+	pub pDrmFormatModifierProperties: *mut VkDrmFormatModifierProperties2EXT,
 }
 type PFN_vkGetImageDrmFormatModifierPropertiesEXT = extern "system" fn(device: VkDevice, image: VkImage, pProperties: *mut VkImageDrmFormatModifierPropertiesEXT) -> VkResult;
 extern "system" fn dummy_vkGetImageDrmFormatModifierPropertiesEXT(_: VkDevice, _: VkImage, _: *mut VkImageDrmFormatModifierPropertiesEXT) -> VkResult {
@@ -22565,11 +22069,11 @@ impl Vulkan_EXT_image_drm_format_modifier {
 		}
 	}
 }
-type VkValidationCacheCreateFlagsEXT = VkFlags;
+pub type VkValidationCacheCreateFlagsEXT = VkFlags;
 // Define non-dispatchable handle `VkValidationCacheEXT`
-#[cfg(target_pointer_width = "32")] type VkValidationCacheEXT = u64;
+#[cfg(target_pointer_width = "32")] pub type VkValidationCacheEXT = u64;
 #[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkValidationCacheEXT_T {}
-#[cfg(target_pointer_width = "64")] type VkValidationCacheEXT = *const VkValidationCacheEXT_T;
+#[cfg(target_pointer_width = "64")] pub type VkValidationCacheEXT = *const VkValidationCacheEXT_T;
 #[repr(C)]
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum VkValidationCacheHeaderVersionEXT {
@@ -22579,18 +22083,18 @@ pub enum VkValidationCacheHeaderVersionEXT {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkValidationCacheCreateInfoEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkValidationCacheCreateFlagsEXT,
-	initialDataSize: usize,
-	pInitialData: *const c_void,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkValidationCacheCreateFlagsEXT,
+	pub initialDataSize: usize,
+	pub pInitialData: *const c_void,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkShaderModuleValidationCacheCreateInfoEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	validationCache: VkValidationCacheEXT,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub validationCache: VkValidationCacheEXT,
 }
 type PFN_vkCreateValidationCacheEXT = extern "system" fn(device: VkDevice, pCreateInfo: *const VkValidationCacheCreateInfoEXT, pAllocator: *const VkAllocationCallbacks, pValidationCache: *mut VkValidationCacheEXT) -> VkResult;
 type PFN_vkDestroyValidationCacheEXT = extern "system" fn(device: VkDevice, validationCache: VkValidationCacheEXT, pAllocator: *const VkAllocationCallbacks);
@@ -22625,47 +22129,39 @@ impl Vulkan_EXT_validation_cache {
 		}
 	}
 }
-type VkDescriptorBindingFlagBitsEXT = VkDescriptorBindingFlagBits;
-type VkDescriptorBindingFlagsEXT = VkDescriptorBindingFlags;
-type VkDescriptorSetLayoutBindingFlagsCreateInfoEXT = VkDescriptorSetLayoutBindingFlagsCreateInfo;
-type VkPhysicalDeviceDescriptorIndexingFeaturesEXT = VkPhysicalDeviceDescriptorIndexingFeatures;
-type VkPhysicalDeviceDescriptorIndexingPropertiesEXT = VkPhysicalDeviceDescriptorIndexingProperties;
-type VkDescriptorSetVariableDescriptorCountAllocateInfoEXT = VkDescriptorSetVariableDescriptorCountAllocateInfo;
-type VkDescriptorSetVariableDescriptorCountLayoutSupportEXT = VkDescriptorSetVariableDescriptorCountLayoutSupport;
+pub type VkDescriptorBindingFlagBitsEXT = VkDescriptorBindingFlagBits;
+pub type VkDescriptorBindingFlagsEXT = VkDescriptorBindingFlags;
+pub type VkDescriptorSetLayoutBindingFlagsCreateInfoEXT = VkDescriptorSetLayoutBindingFlagsCreateInfo;
+pub type VkPhysicalDeviceDescriptorIndexingFeaturesEXT = VkPhysicalDeviceDescriptorIndexingFeatures;
+pub type VkPhysicalDeviceDescriptorIndexingPropertiesEXT = VkPhysicalDeviceDescriptorIndexingProperties;
+pub type VkDescriptorSetVariableDescriptorCountAllocateInfoEXT = VkDescriptorSetVariableDescriptorCountAllocateInfo;
+pub type VkDescriptorSetVariableDescriptorCountLayoutSupportEXT = VkDescriptorSetVariableDescriptorCountLayoutSupport;
 pub trait VK_EXT_descriptor_indexing: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_descriptor_indexing {
-}
-impl VK_EXT_descriptor_indexing for Vulkan_EXT_descriptor_indexing {
-}
+pub struct Vulkan_EXT_descriptor_indexing {}
+impl VK_EXT_descriptor_indexing for Vulkan_EXT_descriptor_indexing {}
 impl Default for Vulkan_EXT_descriptor_indexing {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_descriptor_indexing {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 pub trait VK_EXT_shader_viewport_index_layer: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_shader_viewport_index_layer {
-}
-impl VK_EXT_shader_viewport_index_layer for Vulkan_EXT_shader_viewport_index_layer {
-}
+pub struct Vulkan_EXT_shader_viewport_index_layer {}
+impl VK_EXT_shader_viewport_index_layer for Vulkan_EXT_shader_viewport_index_layer {}
 impl Default for Vulkan_EXT_shader_viewport_index_layer {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_shader_viewport_index_layer {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
@@ -22697,58 +22193,58 @@ pub enum VkCoarseSampleOrderTypeNV {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkShadingRatePaletteNV {
-	shadingRatePaletteEntryCount: u32,
-	pShadingRatePaletteEntries: *const VkShadingRatePaletteEntryNV,
+	pub shadingRatePaletteEntryCount: u32,
+	pub pShadingRatePaletteEntries: *const VkShadingRatePaletteEntryNV,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPipelineViewportShadingRateImageStateCreateInfoNV {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	shadingRateImageEnable: VkBool32,
-	viewportCount: u32,
-	pShadingRatePalettes: *const VkShadingRatePaletteNV,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub shadingRateImageEnable: VkBool32,
+	pub viewportCount: u32,
+	pub pShadingRatePalettes: *const VkShadingRatePaletteNV,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceShadingRateImageFeaturesNV {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	shadingRateImage: VkBool32,
-	shadingRateCoarseSampleOrder: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub shadingRateImage: VkBool32,
+	pub shadingRateCoarseSampleOrder: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceShadingRateImagePropertiesNV {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	shadingRateTexelSize: VkExtent2D,
-	shadingRatePaletteSize: u32,
-	shadingRateMaxCoarseSamples: u32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub shadingRateTexelSize: VkExtent2D,
+	pub shadingRatePaletteSize: u32,
+	pub shadingRateMaxCoarseSamples: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkCoarseSampleLocationNV {
-	pixelX: u32,
-	pixelY: u32,
-	sample: u32,
+	pub pixelX: u32,
+	pub pixelY: u32,
+	pub sample: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkCoarseSampleOrderCustomNV {
-	shadingRate: VkShadingRatePaletteEntryNV,
-	sampleCount: u32,
-	sampleLocationCount: u32,
-	pSampleLocations: *const VkCoarseSampleLocationNV,
+	pub shadingRate: VkShadingRatePaletteEntryNV,
+	pub sampleCount: u32,
+	pub sampleLocationCount: u32,
+	pub pSampleLocations: *const VkCoarseSampleLocationNV,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPipelineViewportCoarseSampleOrderStateCreateInfoNV {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	sampleOrderType: VkCoarseSampleOrderTypeNV,
-	customSampleOrderCount: u32,
-	pCustomSampleOrders: *const VkCoarseSampleOrderCustomNV,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub sampleOrderType: VkCoarseSampleOrderTypeNV,
+	pub customSampleOrderCount: u32,
+	pub pCustomSampleOrders: *const VkCoarseSampleOrderCustomNV,
 }
 type PFN_vkCmdBindShadingRateImageNV = extern "system" fn(commandBuffer: VkCommandBuffer, imageView: VkImageView, imageLayout: VkImageLayout);
 type PFN_vkCmdSetViewportShadingRatePaletteNV = extern "system" fn(commandBuffer: VkCommandBuffer, firstViewport: u32, viewportCount: u32, pShadingRatePalettes: *const VkShadingRatePaletteNV);
@@ -22784,26 +22280,26 @@ impl Vulkan_NV_shading_rate_image {
 }
 pub const VK_SHADER_UNUSED_KHR: u32 = !0u32;
 pub const VK_SHADER_UNUSED_NV: u32 = !0u32;
-type VkRayTracingShaderGroupTypeNV = VkRayTracingShaderGroupTypeKHR;
-type VkGeometryTypeNV = VkGeometryTypeKHR;
-type VkAccelerationStructureTypeNV = VkAccelerationStructureTypeKHR;
-type VkCopyAccelerationStructureModeNV = VkCopyAccelerationStructureModeKHR;
-type VkGeometryFlagsKHR = VkFlags;
-type VkGeometryFlagsNV = VkGeometryFlagsKHR;
-type VkGeometryFlagBitsNV = VkGeometryFlagBitsKHR;
-type VkGeometryInstanceFlagsKHR = VkFlags;
-type VkGeometryInstanceFlagsNV = VkGeometryInstanceFlagsKHR;
-type VkGeometryInstanceFlagBitsNV = VkGeometryInstanceFlagBitsKHR;
-type VkBuildAccelerationStructureFlagsKHR = VkFlags;
-type VkBuildAccelerationStructureFlagsNV = VkBuildAccelerationStructureFlagsKHR;
-type VkBuildAccelerationStructureFlagBitsNV = VkBuildAccelerationStructureFlagBitsKHR;
-type VkTransformMatrixNV = VkTransformMatrixKHR;
-type VkAabbPositionsNV = VkAabbPositionsKHR;
-type VkAccelerationStructureInstanceNV = VkAccelerationStructureInstanceKHR;
+pub type VkRayTracingShaderGroupTypeNV = VkRayTracingShaderGroupTypeKHR;
+pub type VkGeometryTypeNV = VkGeometryTypeKHR;
+pub type VkAccelerationStructureTypeNV = VkAccelerationStructureTypeKHR;
+pub type VkCopyAccelerationStructureModeNV = VkCopyAccelerationStructureModeKHR;
+pub type VkGeometryFlagsKHR = VkFlags;
+pub type VkGeometryFlagsNV = VkGeometryFlagsKHR;
+pub type VkGeometryFlagBitsNV = VkGeometryFlagBitsKHR;
+pub type VkGeometryInstanceFlagsKHR = VkFlags;
+pub type VkGeometryInstanceFlagsNV = VkGeometryInstanceFlagsKHR;
+pub type VkGeometryInstanceFlagBitsNV = VkGeometryInstanceFlagBitsKHR;
+pub type VkBuildAccelerationStructureFlagsKHR = VkFlags;
+pub type VkBuildAccelerationStructureFlagsNV = VkBuildAccelerationStructureFlagsKHR;
+pub type VkBuildAccelerationStructureFlagBitsNV = VkBuildAccelerationStructureFlagBitsKHR;
+pub type VkTransformMatrixNV = VkTransformMatrixKHR;
+pub type VkAabbPositionsNV = VkAabbPositionsKHR;
+pub type VkAccelerationStructureInstanceNV = VkAccelerationStructureInstanceKHR;
 // Define non-dispatchable handle `VkAccelerationStructureNV`
-#[cfg(target_pointer_width = "32")] type VkAccelerationStructureNV = u64;
+#[cfg(target_pointer_width = "32")] pub type VkAccelerationStructureNV = u64;
 #[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkAccelerationStructureNV_T {}
-#[cfg(target_pointer_width = "64")] type VkAccelerationStructureNV = *const VkAccelerationStructureNV_T;
+#[cfg(target_pointer_width = "64")] pub type VkAccelerationStructureNV = *const VkAccelerationStructureNV_T;
 #[repr(C)]
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum VkRayTracingShaderGroupTypeKHR {
@@ -22928,157 +22424,157 @@ impl VkBuildAccelerationStructureFlagBitsKHR {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkRayTracingShaderGroupCreateInfoNV {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	type_: VkRayTracingShaderGroupTypeKHR,
-	generalShader: u32,
-	closestHitShader: u32,
-	anyHitShader: u32,
-	intersectionShader: u32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub type_: VkRayTracingShaderGroupTypeKHR,
+	pub generalShader: u32,
+	pub closestHitShader: u32,
+	pub anyHitShader: u32,
+	pub intersectionShader: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkRayTracingPipelineCreateInfoNV {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkPipelineCreateFlags,
-	stageCount: u32,
-	pStages: *const VkPipelineShaderStageCreateInfo,
-	groupCount: u32,
-	pGroups: *const VkRayTracingShaderGroupCreateInfoNV,
-	maxRecursionDepth: u32,
-	layout: VkPipelineLayout,
-	basePipelineHandle: VkPipeline,
-	basePipelineIndex: i32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkPipelineCreateFlags,
+	pub stageCount: u32,
+	pub pStages: *const VkPipelineShaderStageCreateInfo,
+	pub groupCount: u32,
+	pub pGroups: *const VkRayTracingShaderGroupCreateInfoNV,
+	pub maxRecursionDepth: u32,
+	pub layout: VkPipelineLayout,
+	pub basePipelineHandle: VkPipeline,
+	pub basePipelineIndex: i32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkGeometryTrianglesNV {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	vertexData: VkBuffer,
-	vertexOffset: VkDeviceSize,
-	vertexCount: u32,
-	vertexStride: VkDeviceSize,
-	vertexFormat: VkFormat,
-	indexData: VkBuffer,
-	indexOffset: VkDeviceSize,
-	indexCount: u32,
-	indexType: VkIndexType,
-	transformData: VkBuffer,
-	transformOffset: VkDeviceSize,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub vertexData: VkBuffer,
+	pub vertexOffset: VkDeviceSize,
+	pub vertexCount: u32,
+	pub vertexStride: VkDeviceSize,
+	pub vertexFormat: VkFormat,
+	pub indexData: VkBuffer,
+	pub indexOffset: VkDeviceSize,
+	pub indexCount: u32,
+	pub indexType: VkIndexType,
+	pub transformData: VkBuffer,
+	pub transformOffset: VkDeviceSize,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkGeometryAABBNV {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	aabbData: VkBuffer,
-	numAABBs: u32,
-	stride: u32,
-	offset: VkDeviceSize,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub aabbData: VkBuffer,
+	pub numAABBs: u32,
+	pub stride: u32,
+	pub offset: VkDeviceSize,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkGeometryDataNV {
-	triangles: VkGeometryTrianglesNV,
-	aabbs: VkGeometryAABBNV,
+	pub triangles: VkGeometryTrianglesNV,
+	pub aabbs: VkGeometryAABBNV,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkGeometryNV {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	geometryType: VkGeometryTypeKHR,
-	geometry: VkGeometryDataNV,
-	flags: VkGeometryFlagsKHR,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub geometryType: VkGeometryTypeKHR,
+	pub geometry: VkGeometryDataNV,
+	pub flags: VkGeometryFlagsKHR,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkAccelerationStructureInfoNV {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	type_: VkAccelerationStructureTypeNV,
-	flags: VkBuildAccelerationStructureFlagsNV,
-	instanceCount: u32,
-	geometryCount: u32,
-	pGeometries: *const VkGeometryNV,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub type_: VkAccelerationStructureTypeNV,
+	pub flags: VkBuildAccelerationStructureFlagsNV,
+	pub instanceCount: u32,
+	pub geometryCount: u32,
+	pub pGeometries: *const VkGeometryNV,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkAccelerationStructureCreateInfoNV {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	compactedSize: VkDeviceSize,
-	info: VkAccelerationStructureInfoNV,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub compactedSize: VkDeviceSize,
+	pub info: VkAccelerationStructureInfoNV,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkBindAccelerationStructureMemoryInfoNV {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	accelerationStructure: VkAccelerationStructureNV,
-	memory: VkDeviceMemory,
-	memoryOffset: VkDeviceSize,
-	deviceIndexCount: u32,
-	pDeviceIndices: *const uint32_t,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub accelerationStructure: VkAccelerationStructureNV,
+	pub memory: VkDeviceMemory,
+	pub memoryOffset: VkDeviceSize,
+	pub deviceIndexCount: u32,
+	pub pDeviceIndices: *const uint32_t,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkWriteDescriptorSetAccelerationStructureNV {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	accelerationStructureCount: u32,
-	pAccelerationStructures: *const VkAccelerationStructureNV,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub accelerationStructureCount: u32,
+	pub pAccelerationStructures: *const VkAccelerationStructureNV,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkAccelerationStructureMemoryRequirementsInfoNV {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	type_: VkAccelerationStructureMemoryRequirementsTypeNV,
-	accelerationStructure: VkAccelerationStructureNV,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub type_: VkAccelerationStructureMemoryRequirementsTypeNV,
+	pub accelerationStructure: VkAccelerationStructureNV,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceRayTracingPropertiesNV {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	shaderGroupHandleSize: u32,
-	maxRecursionDepth: u32,
-	maxShaderGroupStride: u32,
-	shaderGroupBaseAlignment: u32,
-	maxGeometryCount: u64,
-	maxInstanceCount: u64,
-	maxTriangleCount: u64,
-	maxDescriptorSetAccelerationStructures: u32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub shaderGroupHandleSize: u32,
+	pub maxRecursionDepth: u32,
+	pub maxShaderGroupStride: u32,
+	pub shaderGroupBaseAlignment: u32,
+	pub maxGeometryCount: u64,
+	pub maxInstanceCount: u64,
+	pub maxTriangleCount: u64,
+	pub maxDescriptorSetAccelerationStructures: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkTransformMatrixKHR {
-	matrix: [f32; 3 as usize],
+	pub matrix: [f32; 3 as usize],
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkAabbPositionsKHR {
-	minX: f32,
-	minY: f32,
-	minZ: f32,
-	maxX: f32,
-	maxY: f32,
-	maxZ: f32,
+	pub minX: f32,
+	pub minY: f32,
+	pub minZ: f32,
+	pub maxX: f32,
+	pub maxY: f32,
+	pub maxZ: f32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkAccelerationStructureInstanceKHR {
-	transform: VkTransformMatrixKHR,
+	pub transform: VkTransformMatrixKHR,
 	/// Bitfield: instanceCustomIndex: u32 in 24 bits
 	/// Bitfield: mask: u32 in 8 bits
 	bitfield1: u32,
 	/// Bitfield: instanceShaderBindingTableRecordOffset: u32 in 24 bits
 	/// Bitfield: flags: VkGeometryInstanceFlagsKHR in 8 bits
 	bitfield2: u32,
-	accelerationStructureReference: u64,
+	pub accelerationStructureReference: u64,
 }
 impl VkAccelerationStructureInstanceKHR {
 	pub fn get_instanceCustomIndex(&self) -> u32 {
@@ -23151,127 +22647,111 @@ impl Vulkan_NV_ray_tracing {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	representativeFragmentTest: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub representativeFragmentTest: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPipelineRepresentativeFragmentTestStateCreateInfoNV {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	representativeFragmentTestEnable: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub representativeFragmentTestEnable: VkBool32,
 }
 pub trait VK_NV_representative_fragment_test: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_NV_representative_fragment_test {
-}
-impl VK_NV_representative_fragment_test for Vulkan_NV_representative_fragment_test {
-}
+pub struct Vulkan_NV_representative_fragment_test {}
+impl VK_NV_representative_fragment_test for Vulkan_NV_representative_fragment_test {}
 impl Default for Vulkan_NV_representative_fragment_test {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_NV_representative_fragment_test {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceImageViewImageFormatInfoEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	imageViewType: VkImageViewType,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub imageViewType: VkImageViewType,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkFilterCubicImageViewImageFormatPropertiesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	filterCubic: VkBool32,
-	filterCubicMinmax: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub filterCubic: VkBool32,
+	pub filterCubicMinmax: VkBool32,
 }
 pub trait VK_EXT_filter_cubic: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_filter_cubic {
-}
-impl VK_EXT_filter_cubic for Vulkan_EXT_filter_cubic {
-}
+pub struct Vulkan_EXT_filter_cubic {}
+impl VK_EXT_filter_cubic for Vulkan_EXT_filter_cubic {}
 impl Default for Vulkan_EXT_filter_cubic {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_filter_cubic {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 pub trait VK_QCOM_render_pass_shader_resolve: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_QCOM_render_pass_shader_resolve {
-}
-impl VK_QCOM_render_pass_shader_resolve for Vulkan_QCOM_render_pass_shader_resolve {
-}
+pub struct Vulkan_QCOM_render_pass_shader_resolve {}
+impl VK_QCOM_render_pass_shader_resolve for Vulkan_QCOM_render_pass_shader_resolve {}
 impl Default for Vulkan_QCOM_render_pass_shader_resolve {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_QCOM_render_pass_shader_resolve {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-type VkQueueGlobalPriorityEXT = VkQueueGlobalPriority;
-type VkDeviceQueueGlobalPriorityCreateInfoEXT = VkDeviceQueueGlobalPriorityCreateInfo;
+pub type VkQueueGlobalPriorityEXT = VkQueueGlobalPriority;
+pub type VkDeviceQueueGlobalPriorityCreateInfoEXT = VkDeviceQueueGlobalPriorityCreateInfo;
 pub trait VK_EXT_global_priority: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_global_priority {
-}
-impl VK_EXT_global_priority for Vulkan_EXT_global_priority {
-}
+pub struct Vulkan_EXT_global_priority {}
+impl VK_EXT_global_priority for Vulkan_EXT_global_priority {}
 impl Default for Vulkan_EXT_global_priority {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_global_priority {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkImportMemoryHostPointerInfoEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	handleType: VkExternalMemoryHandleTypeFlagBits,
-	pHostPointer: *mut c_void,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub handleType: VkExternalMemoryHandleTypeFlagBits,
+	pub pHostPointer: *mut c_void,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkMemoryHostPointerPropertiesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	memoryTypeBits: u32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub memoryTypeBits: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceExternalMemoryHostPropertiesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	minImportedHostPointerAlignment: VkDeviceSize,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub minImportedHostPointerAlignment: VkDeviceSize,
 }
 type PFN_vkGetMemoryHostPointerPropertiesEXT = extern "system" fn(device: VkDevice, handleType: VkExternalMemoryHandleTypeFlagBits, pHostPointer: *const c_void, pMemoryHostPointerProperties: *mut VkMemoryHostPointerPropertiesEXT) -> VkResult;
 extern "system" fn dummy_vkGetMemoryHostPointerPropertiesEXT(_: VkDevice, _: VkExternalMemoryHandleTypeFlagBits, _: *const c_void, _: *mut VkMemoryHostPointerPropertiesEXT) -> VkResult {
@@ -23334,7 +22814,7 @@ impl Vulkan_AMD_buffer_marker {
 		}
 	}
 }
-type VkPipelineCompilerControlFlagsAMD = VkFlags;
+pub type VkPipelineCompilerControlFlagsAMD = VkFlags;
 #[repr(C)]
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum VkPipelineCompilerControlFlagBitsAMD {
@@ -23343,30 +22823,26 @@ pub enum VkPipelineCompilerControlFlagBitsAMD {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPipelineCompilerControlCreateInfoAMD {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	compilerControlFlags: VkPipelineCompilerControlFlagsAMD,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub compilerControlFlags: VkPipelineCompilerControlFlagsAMD,
 }
 pub trait VK_AMD_pipeline_compiler_control: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_AMD_pipeline_compiler_control {
-}
-impl VK_AMD_pipeline_compiler_control for Vulkan_AMD_pipeline_compiler_control {
-}
+pub struct Vulkan_AMD_pipeline_compiler_control {}
+impl VK_AMD_pipeline_compiler_control for Vulkan_AMD_pipeline_compiler_control {}
 impl Default for Vulkan_AMD_pipeline_compiler_control {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_AMD_pipeline_compiler_control {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-type VkTimeDomainEXT = VkTimeDomainKHR;
-type VkCalibratedTimestampInfoEXT = VkCalibratedTimestampInfoKHR;
+pub type VkTimeDomainEXT = VkTimeDomainKHR;
+pub type VkCalibratedTimestampInfoEXT = VkCalibratedTimestampInfoKHR;
 type PFN_vkGetPhysicalDeviceCalibrateableTimeDomainsEXT = extern "system" fn(physicalDevice: VkPhysicalDevice, pTimeDomainCount: *mut uint32_t, pTimeDomains: *mut VkTimeDomainKHR) -> VkResult;
 type PFN_vkGetCalibratedTimestampsEXT = extern "system" fn(device: VkDevice, timestampCount: u32, pTimestampInfos: *const VkCalibratedTimestampInfoKHR, pTimestamps: *mut uint64_t, pMaxDeviation: *mut uint64_t) -> VkResult;
 extern "system" fn dummy_vkGetPhysicalDeviceCalibrateableTimeDomainsEXT(_: VkPhysicalDevice, _: *mut uint32_t, _: *mut VkTimeDomainKHR) -> VkResult {
@@ -23401,39 +22877,35 @@ impl Vulkan_EXT_calibrated_timestamps {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceShaderCorePropertiesAMD {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	shaderEngineCount: u32,
-	shaderArraysPerEngineCount: u32,
-	computeUnitsPerShaderArray: u32,
-	simdPerComputeUnit: u32,
-	wavefrontsPerSimd: u32,
-	wavefrontSize: u32,
-	sgprsPerSimd: u32,
-	minSgprAllocation: u32,
-	maxSgprAllocation: u32,
-	sgprAllocationGranularity: u32,
-	vgprsPerSimd: u32,
-	minVgprAllocation: u32,
-	maxVgprAllocation: u32,
-	vgprAllocationGranularity: u32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub shaderEngineCount: u32,
+	pub shaderArraysPerEngineCount: u32,
+	pub computeUnitsPerShaderArray: u32,
+	pub simdPerComputeUnit: u32,
+	pub wavefrontsPerSimd: u32,
+	pub wavefrontSize: u32,
+	pub sgprsPerSimd: u32,
+	pub minSgprAllocation: u32,
+	pub maxSgprAllocation: u32,
+	pub sgprAllocationGranularity: u32,
+	pub vgprsPerSimd: u32,
+	pub minVgprAllocation: u32,
+	pub maxVgprAllocation: u32,
+	pub vgprAllocationGranularity: u32,
 }
 pub trait VK_AMD_shader_core_properties: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_AMD_shader_core_properties {
-}
-impl VK_AMD_shader_core_properties for Vulkan_AMD_shader_core_properties {
-}
+pub struct Vulkan_AMD_shader_core_properties {}
+impl VK_AMD_shader_core_properties for Vulkan_AMD_shader_core_properties {}
 impl Default for Vulkan_AMD_shader_core_properties {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_AMD_shader_core_properties {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
@@ -23447,147 +22919,127 @@ pub enum VkMemoryOverallocationBehaviorAMD {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDeviceMemoryOverallocationCreateInfoAMD {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	overallocationBehavior: VkMemoryOverallocationBehaviorAMD,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub overallocationBehavior: VkMemoryOverallocationBehaviorAMD,
 }
 pub trait VK_AMD_memory_overallocation_behavior: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_AMD_memory_overallocation_behavior {
-}
-impl VK_AMD_memory_overallocation_behavior for Vulkan_AMD_memory_overallocation_behavior {
-}
+pub struct Vulkan_AMD_memory_overallocation_behavior {}
+impl VK_AMD_memory_overallocation_behavior for Vulkan_AMD_memory_overallocation_behavior {}
 impl Default for Vulkan_AMD_memory_overallocation_behavior {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_AMD_memory_overallocation_behavior {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-type VkVertexInputBindingDivisorDescriptionEXT = VkVertexInputBindingDivisorDescription;
-type VkPipelineVertexInputDivisorStateCreateInfoEXT = VkPipelineVertexInputDivisorStateCreateInfo;
-type VkPhysicalDeviceVertexAttributeDivisorFeaturesEXT = VkPhysicalDeviceVertexAttributeDivisorFeatures;
+pub type VkVertexInputBindingDivisorDescriptionEXT = VkVertexInputBindingDivisorDescription;
+pub type VkPipelineVertexInputDivisorStateCreateInfoEXT = VkPipelineVertexInputDivisorStateCreateInfo;
+pub type VkPhysicalDeviceVertexAttributeDivisorFeaturesEXT = VkPhysicalDeviceVertexAttributeDivisorFeatures;
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceVertexAttributeDivisorPropertiesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	maxVertexAttribDivisor: u32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub maxVertexAttribDivisor: u32,
 }
 pub trait VK_EXT_vertex_attribute_divisor: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_vertex_attribute_divisor {
-}
-impl VK_EXT_vertex_attribute_divisor for Vulkan_EXT_vertex_attribute_divisor {
-}
+pub struct Vulkan_EXT_vertex_attribute_divisor {}
+impl VK_EXT_vertex_attribute_divisor for Vulkan_EXT_vertex_attribute_divisor {}
 impl Default for Vulkan_EXT_vertex_attribute_divisor {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_vertex_attribute_divisor {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-type VkPipelineCreationFeedbackFlagBitsEXT = VkPipelineCreationFeedbackFlagBits;
-type VkPipelineCreationFeedbackFlagsEXT = VkPipelineCreationFeedbackFlags;
-type VkPipelineCreationFeedbackCreateInfoEXT = VkPipelineCreationFeedbackCreateInfo;
-type VkPipelineCreationFeedbackEXT = VkPipelineCreationFeedback;
+pub type VkPipelineCreationFeedbackFlagBitsEXT = VkPipelineCreationFeedbackFlagBits;
+pub type VkPipelineCreationFeedbackFlagsEXT = VkPipelineCreationFeedbackFlags;
+pub type VkPipelineCreationFeedbackCreateInfoEXT = VkPipelineCreationFeedbackCreateInfo;
+pub type VkPipelineCreationFeedbackEXT = VkPipelineCreationFeedback;
 pub trait VK_EXT_pipeline_creation_feedback: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_pipeline_creation_feedback {
-}
-impl VK_EXT_pipeline_creation_feedback for Vulkan_EXT_pipeline_creation_feedback {
-}
+pub struct Vulkan_EXT_pipeline_creation_feedback {}
+impl VK_EXT_pipeline_creation_feedback for Vulkan_EXT_pipeline_creation_feedback {}
 impl Default for Vulkan_EXT_pipeline_creation_feedback {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_pipeline_creation_feedback {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 pub trait VK_NV_shader_subgroup_partitioned: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_NV_shader_subgroup_partitioned {
-}
-impl VK_NV_shader_subgroup_partitioned for Vulkan_NV_shader_subgroup_partitioned {
-}
+pub struct Vulkan_NV_shader_subgroup_partitioned {}
+impl VK_NV_shader_subgroup_partitioned for Vulkan_NV_shader_subgroup_partitioned {}
 impl Default for Vulkan_NV_shader_subgroup_partitioned {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_NV_shader_subgroup_partitioned {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-type VkPhysicalDeviceComputeShaderDerivativesFeaturesNV = VkPhysicalDeviceComputeShaderDerivativesFeaturesKHR;
+pub type VkPhysicalDeviceComputeShaderDerivativesFeaturesNV = VkPhysicalDeviceComputeShaderDerivativesFeaturesKHR;
 pub trait VK_NV_compute_shader_derivatives: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_NV_compute_shader_derivatives {
-}
-impl VK_NV_compute_shader_derivatives for Vulkan_NV_compute_shader_derivatives {
-}
+pub struct Vulkan_NV_compute_shader_derivatives {}
+impl VK_NV_compute_shader_derivatives for Vulkan_NV_compute_shader_derivatives {}
 impl Default for Vulkan_NV_compute_shader_derivatives {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_NV_compute_shader_derivatives {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceMeshShaderFeaturesNV {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	taskShader: VkBool32,
-	meshShader: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub taskShader: VkBool32,
+	pub meshShader: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceMeshShaderPropertiesNV {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	maxDrawMeshTasksCount: u32,
-	maxTaskWorkGroupInvocations: u32,
-	maxTaskWorkGroupSize: [u32; 3 as usize],
-	maxTaskTotalMemorySize: u32,
-	maxTaskOutputCount: u32,
-	maxMeshWorkGroupInvocations: u32,
-	maxMeshWorkGroupSize: [u32; 3 as usize],
-	maxMeshTotalMemorySize: u32,
-	maxMeshOutputVertices: u32,
-	maxMeshOutputPrimitives: u32,
-	maxMeshMultiviewViewCount: u32,
-	meshOutputPerVertexGranularity: u32,
-	meshOutputPerPrimitiveGranularity: u32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub maxDrawMeshTasksCount: u32,
+	pub maxTaskWorkGroupInvocations: u32,
+	pub maxTaskWorkGroupSize: [u32; 3 as usize],
+	pub maxTaskTotalMemorySize: u32,
+	pub maxTaskOutputCount: u32,
+	pub maxMeshWorkGroupInvocations: u32,
+	pub maxMeshWorkGroupSize: [u32; 3 as usize],
+	pub maxMeshTotalMemorySize: u32,
+	pub maxMeshOutputVertices: u32,
+	pub maxMeshOutputPrimitives: u32,
+	pub maxMeshMultiviewViewCount: u32,
+	pub meshOutputPerVertexGranularity: u32,
+	pub meshOutputPerPrimitiveGranularity: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDrawMeshTasksIndirectCommandNV {
-	taskCount: u32,
-	firstTask: u32,
+	pub taskCount: u32,
+	pub firstTask: u32,
 }
 type PFN_vkCmdDrawMeshTasksNV = extern "system" fn(commandBuffer: VkCommandBuffer, taskCount: u32, firstTask: u32);
 type PFN_vkCmdDrawMeshTasksIndirectNV = extern "system" fn(commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize, drawCount: u32, stride: u32);
@@ -23621,64 +23073,56 @@ impl Vulkan_NV_mesh_shader {
 		}
 	}
 }
-type VkPhysicalDeviceFragmentShaderBarycentricFeaturesNV = VkPhysicalDeviceFragmentShaderBarycentricFeaturesKHR;
+pub type VkPhysicalDeviceFragmentShaderBarycentricFeaturesNV = VkPhysicalDeviceFragmentShaderBarycentricFeaturesKHR;
 pub trait VK_NV_fragment_shader_barycentric: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_NV_fragment_shader_barycentric {
-}
-impl VK_NV_fragment_shader_barycentric for Vulkan_NV_fragment_shader_barycentric {
-}
+pub struct Vulkan_NV_fragment_shader_barycentric {}
+impl VK_NV_fragment_shader_barycentric for Vulkan_NV_fragment_shader_barycentric {}
 impl Default for Vulkan_NV_fragment_shader_barycentric {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_NV_fragment_shader_barycentric {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceShaderImageFootprintFeaturesNV {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	imageFootprint: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub imageFootprint: VkBool32,
 }
 pub trait VK_NV_shader_image_footprint: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_NV_shader_image_footprint {
-}
-impl VK_NV_shader_image_footprint for Vulkan_NV_shader_image_footprint {
-}
+pub struct Vulkan_NV_shader_image_footprint {}
+impl VK_NV_shader_image_footprint for Vulkan_NV_shader_image_footprint {}
 impl Default for Vulkan_NV_shader_image_footprint {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_NV_shader_image_footprint {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPipelineViewportExclusiveScissorStateCreateInfoNV {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	exclusiveScissorCount: u32,
-	pExclusiveScissors: *const VkRect2D,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub exclusiveScissorCount: u32,
+	pub pExclusiveScissors: *const VkRect2D,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceExclusiveScissorFeaturesNV {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	exclusiveScissor: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub exclusiveScissor: VkBool32,
 }
 type PFN_vkCmdSetExclusiveScissorEnableNV = extern "system" fn(commandBuffer: VkCommandBuffer, firstExclusiveScissor: u32, exclusiveScissorCount: u32, pExclusiveScissorEnables: *const VkBool32);
 type PFN_vkCmdSetExclusiveScissorNV = extern "system" fn(commandBuffer: VkCommandBuffer, firstExclusiveScissor: u32, exclusiveScissorCount: u32, pExclusiveScissors: *const VkRect2D);
@@ -23714,32 +23158,32 @@ impl Vulkan_NV_scissor_exclusive {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkQueueFamilyCheckpointPropertiesNV {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	checkpointExecutionStageMask: VkPipelineStageFlags,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub checkpointExecutionStageMask: VkPipelineStageFlags,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkCheckpointDataNV {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	stage: VkPipelineStageFlagBits,
-	pCheckpointMarker: *mut c_void,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub stage: VkPipelineStageFlagBits,
+	pub pCheckpointMarker: *mut c_void,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkQueueFamilyCheckpointProperties2NV {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	checkpointExecutionStageMask: VkPipelineStageFlags2,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub checkpointExecutionStageMask: VkPipelineStageFlags2,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkCheckpointData2NV {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	stage: VkPipelineStageFlags2,
-	pCheckpointMarker: *mut c_void,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub stage: VkPipelineStageFlags2,
+	pub pCheckpointMarker: *mut c_void,
 }
 type PFN_vkCmdSetCheckpointNV = extern "system" fn(commandBuffer: VkCommandBuffer, pCheckpointMarker: *const c_void);
 type PFN_vkGetQueueCheckpointDataNV = extern "system" fn(queue: VkQueue, pCheckpointDataCount: *mut uint32_t, pCheckpointData: *mut VkCheckpointDataNV);
@@ -23776,33 +23220,29 @@ impl Vulkan_NV_device_diagnostic_checkpoints {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceShaderIntegerFunctions2FeaturesINTEL {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	shaderIntegerFunctions2: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub shaderIntegerFunctions2: VkBool32,
 }
 pub trait VK_INTEL_shader_integer_functions2: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_INTEL_shader_integer_functions2 {
-}
-impl VK_INTEL_shader_integer_functions2 for Vulkan_INTEL_shader_integer_functions2 {
-}
+pub struct Vulkan_INTEL_shader_integer_functions2 {}
+impl VK_INTEL_shader_integer_functions2 for Vulkan_INTEL_shader_integer_functions2 {}
 impl Default for Vulkan_INTEL_shader_integer_functions2 {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_INTEL_shader_integer_functions2 {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-type VkQueryPoolCreateInfoINTEL = VkQueryPoolPerformanceQueryCreateInfoINTEL;
+pub type VkQueryPoolCreateInfoINTEL = VkQueryPoolPerformanceQueryCreateInfoINTEL;
 // Define non-dispatchable handle `VkPerformanceConfigurationINTEL`
-#[cfg(target_pointer_width = "32")] type VkPerformanceConfigurationINTEL = u64;
+#[cfg(target_pointer_width = "32")] pub type VkPerformanceConfigurationINTEL = u64;
 #[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkPerformanceConfigurationINTEL_T {}
-#[cfg(target_pointer_width = "64")] type VkPerformanceConfigurationINTEL = *const VkPerformanceConfigurationINTEL_T;
+#[cfg(target_pointer_width = "64")] pub type VkPerformanceConfigurationINTEL = *const VkPerformanceConfigurationINTEL_T;
 #[repr(C)]
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum VkPerformanceConfigurationTypeINTEL {
@@ -23842,11 +23282,11 @@ pub enum VkPerformanceValueTypeINTEL {
 #[repr(C)]
 #[derive(Clone, Copy)]
 pub union VkPerformanceValueDataINTEL {
-	value32: u32,
-	value64: u64,
-	valueFloat: f32,
-	valueBool: VkBool32,
-	valueString: *const i8,
+	pub value32: u32,
+	pub value64: u64,
+	pub valueFloat: f32,
+	pub valueBool: VkBool32,
+	pub valueString: *const i8,
 }
 impl Debug for VkPerformanceValueDataINTEL {
 	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
@@ -23862,52 +23302,52 @@ impl Debug for VkPerformanceValueDataINTEL {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPerformanceValueINTEL {
-	type_: VkPerformanceValueTypeINTEL,
-	data: VkPerformanceValueDataINTEL,
+	pub type_: VkPerformanceValueTypeINTEL,
+	pub data: VkPerformanceValueDataINTEL,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkInitializePerformanceApiInfoINTEL {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	pUserData: *mut c_void,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub pUserData: *mut c_void,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkQueryPoolPerformanceQueryCreateInfoINTEL {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	performanceCountersSampling: VkQueryPoolSamplingModeINTEL,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub performanceCountersSampling: VkQueryPoolSamplingModeINTEL,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPerformanceMarkerInfoINTEL {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	marker: u64,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub marker: u64,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPerformanceStreamMarkerInfoINTEL {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	marker: u32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub marker: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPerformanceOverrideInfoINTEL {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	type_: VkPerformanceOverrideTypeINTEL,
-	enable: VkBool32,
-	parameter: u64,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub type_: VkPerformanceOverrideTypeINTEL,
+	pub enable: VkBool32,
+	pub parameter: u64,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPerformanceConfigurationAcquireInfoINTEL {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	type_: VkPerformanceConfigurationTypeINTEL,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub type_: VkPerformanceConfigurationTypeINTEL,
 }
 type PFN_vkInitializePerformanceApiINTEL = extern "system" fn(device: VkDevice, pInitializeInfo: *const VkInitializePerformanceApiInfoINTEL) -> VkResult;
 type PFN_vkUninitializePerformanceApiINTEL = extern "system" fn(device: VkDevice);
@@ -23950,44 +23390,40 @@ impl Vulkan_INTEL_performance_query {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDevicePCIBusInfoPropertiesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	pciDomain: u32,
-	pciBus: u32,
-	pciDevice: u32,
-	pciFunction: u32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub pciDomain: u32,
+	pub pciBus: u32,
+	pub pciDevice: u32,
+	pub pciFunction: u32,
 }
 pub trait VK_EXT_pci_bus_info: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_pci_bus_info {
-}
-impl VK_EXT_pci_bus_info for Vulkan_EXT_pci_bus_info {
-}
+pub struct Vulkan_EXT_pci_bus_info {}
+impl VK_EXT_pci_bus_info for Vulkan_EXT_pci_bus_info {}
 impl Default for Vulkan_EXT_pci_bus_info {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_pci_bus_info {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDisplayNativeHdrSurfaceCapabilitiesAMD {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	localDimmingSupport: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub localDimmingSupport: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkSwapchainDisplayNativeHdrCreateInfoAMD {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	localDimmingEnable: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub localDimmingEnable: VkBool32,
 }
 type PFN_vkSetLocalDimmingAMD = extern "system" fn(device: VkDevice, swapChain: VkSwapchainKHR, localDimmingEnable: VkBool32);
 extern "system" fn dummy_vkSetLocalDimmingAMD(_: VkDevice, _: VkSwapchainKHR, _: VkBool32) {
@@ -24022,131 +23458,111 @@ impl Vulkan_AMD_display_native_hdr {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceFragmentDensityMapFeaturesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	fragmentDensityMap: VkBool32,
-	fragmentDensityMapDynamic: VkBool32,
-	fragmentDensityMapNonSubsampledImages: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub fragmentDensityMap: VkBool32,
+	pub fragmentDensityMapDynamic: VkBool32,
+	pub fragmentDensityMapNonSubsampledImages: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceFragmentDensityMapPropertiesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	minFragmentDensityTexelSize: VkExtent2D,
-	maxFragmentDensityTexelSize: VkExtent2D,
-	fragmentDensityInvocations: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub minFragmentDensityTexelSize: VkExtent2D,
+	pub maxFragmentDensityTexelSize: VkExtent2D,
+	pub fragmentDensityInvocations: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkRenderPassFragmentDensityMapCreateInfoEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	fragmentDensityMapAttachment: VkAttachmentReference,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub fragmentDensityMapAttachment: VkAttachmentReference,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkRenderingFragmentDensityMapAttachmentInfoEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	imageView: VkImageView,
-	imageLayout: VkImageLayout,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub imageView: VkImageView,
+	pub imageLayout: VkImageLayout,
 }
 pub trait VK_EXT_fragment_density_map: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_fragment_density_map {
-}
-impl VK_EXT_fragment_density_map for Vulkan_EXT_fragment_density_map {
-}
+pub struct Vulkan_EXT_fragment_density_map {}
+impl VK_EXT_fragment_density_map for Vulkan_EXT_fragment_density_map {}
 impl Default for Vulkan_EXT_fragment_density_map {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_fragment_density_map {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-type VkPhysicalDeviceScalarBlockLayoutFeaturesEXT = VkPhysicalDeviceScalarBlockLayoutFeatures;
+pub type VkPhysicalDeviceScalarBlockLayoutFeaturesEXT = VkPhysicalDeviceScalarBlockLayoutFeatures;
 pub trait VK_EXT_scalar_block_layout: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_scalar_block_layout {
-}
-impl VK_EXT_scalar_block_layout for Vulkan_EXT_scalar_block_layout {
-}
+pub struct Vulkan_EXT_scalar_block_layout {}
+impl VK_EXT_scalar_block_layout for Vulkan_EXT_scalar_block_layout {}
 impl Default for Vulkan_EXT_scalar_block_layout {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_scalar_block_layout {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 pub trait VK_GOOGLE_hlsl_functionality1: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_GOOGLE_hlsl_functionality1 {
-}
-impl VK_GOOGLE_hlsl_functionality1 for Vulkan_GOOGLE_hlsl_functionality1 {
-}
+pub struct Vulkan_GOOGLE_hlsl_functionality1 {}
+impl VK_GOOGLE_hlsl_functionality1 for Vulkan_GOOGLE_hlsl_functionality1 {}
 impl Default for Vulkan_GOOGLE_hlsl_functionality1 {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_GOOGLE_hlsl_functionality1 {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 pub trait VK_GOOGLE_decorate_string: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_GOOGLE_decorate_string {
-}
-impl VK_GOOGLE_decorate_string for Vulkan_GOOGLE_decorate_string {
-}
+pub struct Vulkan_GOOGLE_decorate_string {}
+impl VK_GOOGLE_decorate_string for Vulkan_GOOGLE_decorate_string {}
 impl Default for Vulkan_GOOGLE_decorate_string {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_GOOGLE_decorate_string {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-type VkPhysicalDeviceSubgroupSizeControlFeaturesEXT = VkPhysicalDeviceSubgroupSizeControlFeatures;
-type VkPhysicalDeviceSubgroupSizeControlPropertiesEXT = VkPhysicalDeviceSubgroupSizeControlProperties;
-type VkPipelineShaderStageRequiredSubgroupSizeCreateInfoEXT = VkPipelineShaderStageRequiredSubgroupSizeCreateInfo;
+pub type VkPhysicalDeviceSubgroupSizeControlFeaturesEXT = VkPhysicalDeviceSubgroupSizeControlFeatures;
+pub type VkPhysicalDeviceSubgroupSizeControlPropertiesEXT = VkPhysicalDeviceSubgroupSizeControlProperties;
+pub type VkPipelineShaderStageRequiredSubgroupSizeCreateInfoEXT = VkPipelineShaderStageRequiredSubgroupSizeCreateInfo;
 pub trait VK_EXT_subgroup_size_control: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_subgroup_size_control {
-}
-impl VK_EXT_subgroup_size_control for Vulkan_EXT_subgroup_size_control {
-}
+pub struct Vulkan_EXT_subgroup_size_control {}
+impl VK_EXT_subgroup_size_control for Vulkan_EXT_subgroup_size_control {}
 impl Default for Vulkan_EXT_subgroup_size_control {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_subgroup_size_control {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-type VkShaderCorePropertiesFlagsAMD = VkFlags;
+pub type VkShaderCorePropertiesFlagsAMD = VkFlags;
 #[repr(C)]
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum VkShaderCorePropertiesFlagBitsAMD {
@@ -24155,180 +23571,156 @@ pub enum VkShaderCorePropertiesFlagBitsAMD {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceShaderCoreProperties2AMD {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	shaderCoreFeatures: VkShaderCorePropertiesFlagsAMD,
-	activeComputeUnitCount: u32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub shaderCoreFeatures: VkShaderCorePropertiesFlagsAMD,
+	pub activeComputeUnitCount: u32,
 }
 pub trait VK_AMD_shader_core_properties2: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_AMD_shader_core_properties2 {
-}
-impl VK_AMD_shader_core_properties2 for Vulkan_AMD_shader_core_properties2 {
-}
+pub struct Vulkan_AMD_shader_core_properties2 {}
+impl VK_AMD_shader_core_properties2 for Vulkan_AMD_shader_core_properties2 {}
 impl Default for Vulkan_AMD_shader_core_properties2 {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_AMD_shader_core_properties2 {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceCoherentMemoryFeaturesAMD {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	deviceCoherentMemory: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub deviceCoherentMemory: VkBool32,
 }
 pub trait VK_AMD_device_coherent_memory: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_AMD_device_coherent_memory {
-}
-impl VK_AMD_device_coherent_memory for Vulkan_AMD_device_coherent_memory {
-}
+pub struct Vulkan_AMD_device_coherent_memory {}
+impl VK_AMD_device_coherent_memory for Vulkan_AMD_device_coherent_memory {}
 impl Default for Vulkan_AMD_device_coherent_memory {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_AMD_device_coherent_memory {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceShaderImageAtomicInt64FeaturesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	shaderImageInt64Atomics: VkBool32,
-	sparseImageInt64Atomics: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub shaderImageInt64Atomics: VkBool32,
+	pub sparseImageInt64Atomics: VkBool32,
 }
 pub trait VK_EXT_shader_image_atomic_int64: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_shader_image_atomic_int64 {
-}
-impl VK_EXT_shader_image_atomic_int64 for Vulkan_EXT_shader_image_atomic_int64 {
-}
+pub struct Vulkan_EXT_shader_image_atomic_int64 {}
+impl VK_EXT_shader_image_atomic_int64 for Vulkan_EXT_shader_image_atomic_int64 {}
 impl Default for Vulkan_EXT_shader_image_atomic_int64 {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_shader_image_atomic_int64 {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceMemoryBudgetPropertiesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	heapBudget: [VkDeviceSize; VK_MAX_MEMORY_HEAPS as usize],
-	heapUsage: [VkDeviceSize; VK_MAX_MEMORY_HEAPS as usize],
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub heapBudget: [VkDeviceSize; VK_MAX_MEMORY_HEAPS as usize],
+	pub heapUsage: [VkDeviceSize; VK_MAX_MEMORY_HEAPS as usize],
 }
 pub trait VK_EXT_memory_budget: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_memory_budget {
-}
-impl VK_EXT_memory_budget for Vulkan_EXT_memory_budget {
-}
+pub struct Vulkan_EXT_memory_budget {}
+impl VK_EXT_memory_budget for Vulkan_EXT_memory_budget {}
 impl Default for Vulkan_EXT_memory_budget {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_memory_budget {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceMemoryPriorityFeaturesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	memoryPriority: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub memoryPriority: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkMemoryPriorityAllocateInfoEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	priority: f32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub priority: f32,
 }
 pub trait VK_EXT_memory_priority: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_memory_priority {
-}
-impl VK_EXT_memory_priority for Vulkan_EXT_memory_priority {
-}
+pub struct Vulkan_EXT_memory_priority {}
+impl VK_EXT_memory_priority for Vulkan_EXT_memory_priority {}
 impl Default for Vulkan_EXT_memory_priority {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_memory_priority {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	dedicatedAllocationImageAliasing: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub dedicatedAllocationImageAliasing: VkBool32,
 }
 pub trait VK_NV_dedicated_allocation_image_aliasing: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_NV_dedicated_allocation_image_aliasing {
-}
-impl VK_NV_dedicated_allocation_image_aliasing for Vulkan_NV_dedicated_allocation_image_aliasing {
-}
+pub struct Vulkan_NV_dedicated_allocation_image_aliasing {}
+impl VK_NV_dedicated_allocation_image_aliasing for Vulkan_NV_dedicated_allocation_image_aliasing {}
 impl Default for Vulkan_NV_dedicated_allocation_image_aliasing {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_NV_dedicated_allocation_image_aliasing {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-type VkPhysicalDeviceBufferAddressFeaturesEXT = VkPhysicalDeviceBufferDeviceAddressFeaturesEXT;
-type VkBufferDeviceAddressInfoEXT = VkBufferDeviceAddressInfo;
+pub type VkPhysicalDeviceBufferAddressFeaturesEXT = VkPhysicalDeviceBufferDeviceAddressFeaturesEXT;
+pub type VkBufferDeviceAddressInfoEXT = VkBufferDeviceAddressInfo;
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceBufferDeviceAddressFeaturesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	bufferDeviceAddress: VkBool32,
-	bufferDeviceAddressCaptureReplay: VkBool32,
-	bufferDeviceAddressMultiDevice: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub bufferDeviceAddress: VkBool32,
+	pub bufferDeviceAddressCaptureReplay: VkBool32,
+	pub bufferDeviceAddressMultiDevice: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkBufferDeviceAddressCreateInfoEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	deviceAddress: VkDeviceAddress,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub deviceAddress: VkDeviceAddress,
 }
 type PFN_vkGetBufferDeviceAddressEXT = extern "system" fn(device: VkDevice, pInfo: *const VkBufferDeviceAddressInfo) -> VkDeviceAddress;
 extern "system" fn dummy_vkGetBufferDeviceAddressEXT(_: VkDevice, _: *const VkBufferDeviceAddressInfo) -> VkDeviceAddress {
@@ -24360,9 +23752,9 @@ impl Vulkan_EXT_buffer_device_address {
 		}
 	}
 }
-type VkToolPurposeFlagBitsEXT = VkToolPurposeFlagBits;
-type VkToolPurposeFlagsEXT = VkToolPurposeFlags;
-type VkPhysicalDeviceToolPropertiesEXT = VkPhysicalDeviceToolProperties;
+pub type VkToolPurposeFlagBitsEXT = VkToolPurposeFlagBits;
+pub type VkToolPurposeFlagsEXT = VkToolPurposeFlags;
+pub type VkPhysicalDeviceToolPropertiesEXT = VkPhysicalDeviceToolProperties;
 type PFN_vkGetPhysicalDeviceToolPropertiesEXT = extern "system" fn(physicalDevice: VkPhysicalDevice, pToolCount: *mut uint32_t, pToolProperties: *mut VkPhysicalDeviceToolProperties) -> VkResult;
 extern "system" fn dummy_vkGetPhysicalDeviceToolPropertiesEXT(_: VkPhysicalDevice, _: *mut uint32_t, _: *mut VkPhysicalDeviceToolProperties) -> VkResult {
 	panic!("Vulkan function pointer of `vkGetPhysicalDeviceToolPropertiesEXT()` is NULL");
@@ -24393,23 +23785,19 @@ impl Vulkan_EXT_tooling_info {
 		}
 	}
 }
-type VkImageStencilUsageCreateInfoEXT = VkImageStencilUsageCreateInfo;
+pub type VkImageStencilUsageCreateInfoEXT = VkImageStencilUsageCreateInfo;
 pub trait VK_EXT_separate_stencil_usage: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_separate_stencil_usage {
-}
-impl VK_EXT_separate_stencil_usage for Vulkan_EXT_separate_stencil_usage {
-}
+pub struct Vulkan_EXT_separate_stencil_usage {}
+impl VK_EXT_separate_stencil_usage for Vulkan_EXT_separate_stencil_usage {}
 impl Default for Vulkan_EXT_separate_stencil_usage {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_separate_stencil_usage {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
@@ -24438,61 +23826,57 @@ pub enum VkValidationFeatureDisableEXT {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkValidationFeaturesEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	enabledValidationFeatureCount: u32,
-	pEnabledValidationFeatures: *const VkValidationFeatureEnableEXT,
-	disabledValidationFeatureCount: u32,
-	pDisabledValidationFeatures: *const VkValidationFeatureDisableEXT,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub enabledValidationFeatureCount: u32,
+	pub pEnabledValidationFeatures: *const VkValidationFeatureEnableEXT,
+	pub disabledValidationFeatureCount: u32,
+	pub pDisabledValidationFeatures: *const VkValidationFeatureDisableEXT,
 }
 pub trait VK_EXT_validation_features: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_validation_features {
-}
-impl VK_EXT_validation_features for Vulkan_EXT_validation_features {
-}
+pub struct Vulkan_EXT_validation_features {}
+impl VK_EXT_validation_features for Vulkan_EXT_validation_features {}
 impl Default for Vulkan_EXT_validation_features {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_validation_features {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-type VkComponentTypeNV = VkComponentTypeKHR;
-type VkScopeNV = VkScopeKHR;
+pub type VkComponentTypeNV = VkComponentTypeKHR;
+pub type VkScopeNV = VkScopeKHR;
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkCooperativeMatrixPropertiesNV {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	MSize: u32,
-	NSize: u32,
-	KSize: u32,
-	AType: VkComponentTypeNV,
-	BType: VkComponentTypeNV,
-	CType: VkComponentTypeNV,
-	DType: VkComponentTypeNV,
-	scope: VkScopeNV,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub MSize: u32,
+	pub NSize: u32,
+	pub KSize: u32,
+	pub AType: VkComponentTypeNV,
+	pub BType: VkComponentTypeNV,
+	pub CType: VkComponentTypeNV,
+	pub DType: VkComponentTypeNV,
+	pub scope: VkScopeNV,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceCooperativeMatrixFeaturesNV {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	cooperativeMatrix: VkBool32,
-	cooperativeMatrixRobustBufferAccess: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub cooperativeMatrix: VkBool32,
+	pub cooperativeMatrixRobustBufferAccess: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceCooperativeMatrixPropertiesNV {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	cooperativeMatrixSupportedStages: VkShaderStageFlags,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub cooperativeMatrixSupportedStages: VkShaderStageFlags,
 }
 type PFN_vkGetPhysicalDeviceCooperativeMatrixPropertiesNV = extern "system" fn(physicalDevice: VkPhysicalDevice, pPropertyCount: *mut uint32_t, pProperties: *mut VkCooperativeMatrixPropertiesNV) -> VkResult;
 extern "system" fn dummy_vkGetPhysicalDeviceCooperativeMatrixPropertiesNV(_: VkPhysicalDevice, _: *mut uint32_t, _: *mut VkCooperativeMatrixPropertiesNV) -> VkResult {
@@ -24524,7 +23908,7 @@ impl Vulkan_NV_cooperative_matrix {
 		}
 	}
 }
-type VkPipelineCoverageReductionStateCreateFlagsNV = VkFlags;
+pub type VkPipelineCoverageReductionStateCreateFlagsNV = VkFlags;
 #[repr(C)]
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum VkCoverageReductionModeNV {
@@ -24535,27 +23919,27 @@ pub enum VkCoverageReductionModeNV {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceCoverageReductionModeFeaturesNV {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	coverageReductionMode: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub coverageReductionMode: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPipelineCoverageReductionStateCreateInfoNV {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkPipelineCoverageReductionStateCreateFlagsNV,
-	coverageReductionMode: VkCoverageReductionModeNV,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkPipelineCoverageReductionStateCreateFlagsNV,
+	pub coverageReductionMode: VkCoverageReductionModeNV,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkFramebufferMixedSamplesCombinationNV {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	coverageReductionMode: VkCoverageReductionModeNV,
-	rasterizationSamples: VkSampleCountFlagBits,
-	depthStencilSamples: VkSampleCountFlags,
-	colorSamples: VkSampleCountFlags,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub coverageReductionMode: VkCoverageReductionModeNV,
+	pub rasterizationSamples: VkSampleCountFlagBits,
+	pub depthStencilSamples: VkSampleCountFlags,
+	pub colorSamples: VkSampleCountFlags,
 }
 type PFN_vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV = extern "system" fn(physicalDevice: VkPhysicalDevice, pCombinationCount: *mut uint32_t, pCombinations: *mut VkFramebufferMixedSamplesCombinationNV) -> VkResult;
 extern "system" fn dummy_vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV(_: VkPhysicalDevice, _: *mut uint32_t, _: *mut VkFramebufferMixedSamplesCombinationNV) -> VkResult {
@@ -24590,53 +23974,45 @@ impl Vulkan_NV_coverage_reduction_mode {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceFragmentShaderInterlockFeaturesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	fragmentShaderSampleInterlock: VkBool32,
-	fragmentShaderPixelInterlock: VkBool32,
-	fragmentShaderShadingRateInterlock: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub fragmentShaderSampleInterlock: VkBool32,
+	pub fragmentShaderPixelInterlock: VkBool32,
+	pub fragmentShaderShadingRateInterlock: VkBool32,
 }
 pub trait VK_EXT_fragment_shader_interlock: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_fragment_shader_interlock {
-}
-impl VK_EXT_fragment_shader_interlock for Vulkan_EXT_fragment_shader_interlock {
-}
+pub struct Vulkan_EXT_fragment_shader_interlock {}
+impl VK_EXT_fragment_shader_interlock for Vulkan_EXT_fragment_shader_interlock {}
 impl Default for Vulkan_EXT_fragment_shader_interlock {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_fragment_shader_interlock {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceYcbcrImageArraysFeaturesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	ycbcrImageArrays: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub ycbcrImageArrays: VkBool32,
 }
 pub trait VK_EXT_ycbcr_image_arrays: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_ycbcr_image_arrays {
-}
-impl VK_EXT_ycbcr_image_arrays for Vulkan_EXT_ycbcr_image_arrays {
-}
+pub struct Vulkan_EXT_ycbcr_image_arrays {}
+impl VK_EXT_ycbcr_image_arrays for Vulkan_EXT_ycbcr_image_arrays {}
 impl Default for Vulkan_EXT_ycbcr_image_arrays {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_ycbcr_image_arrays {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
@@ -24649,51 +24025,47 @@ pub enum VkProvokingVertexModeEXT {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceProvokingVertexFeaturesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	provokingVertexLast: VkBool32,
-	transformFeedbackPreservesProvokingVertex: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub provokingVertexLast: VkBool32,
+	pub transformFeedbackPreservesProvokingVertex: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceProvokingVertexPropertiesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	provokingVertexModePerPipeline: VkBool32,
-	transformFeedbackPreservesTriangleFanProvokingVertex: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub provokingVertexModePerPipeline: VkBool32,
+	pub transformFeedbackPreservesTriangleFanProvokingVertex: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPipelineRasterizationProvokingVertexStateCreateInfoEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	provokingVertexMode: VkProvokingVertexModeEXT,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub provokingVertexMode: VkProvokingVertexModeEXT,
 }
 pub trait VK_EXT_provoking_vertex: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_provoking_vertex {
-}
-impl VK_EXT_provoking_vertex for Vulkan_EXT_provoking_vertex {
-}
+pub struct Vulkan_EXT_provoking_vertex {}
+impl VK_EXT_provoking_vertex for Vulkan_EXT_provoking_vertex {}
 impl Default for Vulkan_EXT_provoking_vertex {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_provoking_vertex {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-type VkHeadlessSurfaceCreateFlagsEXT = VkFlags;
+pub type VkHeadlessSurfaceCreateFlagsEXT = VkFlags;
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkHeadlessSurfaceCreateInfoEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkHeadlessSurfaceCreateFlagsEXT,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkHeadlessSurfaceCreateFlagsEXT,
 }
 type PFN_vkCreateHeadlessSurfaceEXT = extern "system" fn(instance: VkInstance, pCreateInfo: *const VkHeadlessSurfaceCreateInfoEXT, pAllocator: *const VkAllocationCallbacks, pSurface: *mut VkSurfaceKHR) -> VkResult;
 extern "system" fn dummy_vkCreateHeadlessSurfaceEXT(_: VkInstance, _: *const VkHeadlessSurfaceCreateInfoEXT, _: *const VkAllocationCallbacks, _: *mut VkSurfaceKHR) -> VkResult {
@@ -24725,10 +24097,10 @@ impl Vulkan_EXT_headless_surface {
 		}
 	}
 }
-type VkLineRasterizationModeEXT = VkLineRasterizationMode;
-type VkPhysicalDeviceLineRasterizationFeaturesEXT = VkPhysicalDeviceLineRasterizationFeatures;
-type VkPhysicalDeviceLineRasterizationPropertiesEXT = VkPhysicalDeviceLineRasterizationProperties;
-type VkPipelineRasterizationLineStateCreateInfoEXT = VkPipelineRasterizationLineStateCreateInfo;
+pub type VkLineRasterizationModeEXT = VkLineRasterizationMode;
+pub type VkPhysicalDeviceLineRasterizationFeaturesEXT = VkPhysicalDeviceLineRasterizationFeatures;
+pub type VkPhysicalDeviceLineRasterizationPropertiesEXT = VkPhysicalDeviceLineRasterizationProperties;
+pub type VkPipelineRasterizationLineStateCreateInfoEXT = VkPipelineRasterizationLineStateCreateInfo;
 type PFN_vkCmdSetLineStippleEXT = extern "system" fn(commandBuffer: VkCommandBuffer, lineStippleFactor: u32, lineStipplePattern: u16);
 extern "system" fn dummy_vkCmdSetLineStippleEXT(_: VkCommandBuffer, _: u32, _: u16) {
 	panic!("Vulkan function pointer of `vkCmdSetLineStippleEXT()` is NULL");
@@ -24762,40 +24134,36 @@ impl Vulkan_EXT_line_rasterization {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceShaderAtomicFloatFeaturesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	shaderBufferFloat32Atomics: VkBool32,
-	shaderBufferFloat32AtomicAdd: VkBool32,
-	shaderBufferFloat64Atomics: VkBool32,
-	shaderBufferFloat64AtomicAdd: VkBool32,
-	shaderSharedFloat32Atomics: VkBool32,
-	shaderSharedFloat32AtomicAdd: VkBool32,
-	shaderSharedFloat64Atomics: VkBool32,
-	shaderSharedFloat64AtomicAdd: VkBool32,
-	shaderImageFloat32Atomics: VkBool32,
-	shaderImageFloat32AtomicAdd: VkBool32,
-	sparseImageFloat32Atomics: VkBool32,
-	sparseImageFloat32AtomicAdd: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub shaderBufferFloat32Atomics: VkBool32,
+	pub shaderBufferFloat32AtomicAdd: VkBool32,
+	pub shaderBufferFloat64Atomics: VkBool32,
+	pub shaderBufferFloat64AtomicAdd: VkBool32,
+	pub shaderSharedFloat32Atomics: VkBool32,
+	pub shaderSharedFloat32AtomicAdd: VkBool32,
+	pub shaderSharedFloat64Atomics: VkBool32,
+	pub shaderSharedFloat64AtomicAdd: VkBool32,
+	pub shaderImageFloat32Atomics: VkBool32,
+	pub shaderImageFloat32AtomicAdd: VkBool32,
+	pub sparseImageFloat32Atomics: VkBool32,
+	pub sparseImageFloat32AtomicAdd: VkBool32,
 }
 pub trait VK_EXT_shader_atomic_float: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_shader_atomic_float {
-}
-impl VK_EXT_shader_atomic_float for Vulkan_EXT_shader_atomic_float {
-}
+pub struct Vulkan_EXT_shader_atomic_float {}
+impl VK_EXT_shader_atomic_float for Vulkan_EXT_shader_atomic_float {}
 impl Default for Vulkan_EXT_shader_atomic_float {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_shader_atomic_float {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-type VkPhysicalDeviceHostQueryResetFeaturesEXT = VkPhysicalDeviceHostQueryResetFeatures;
+pub type VkPhysicalDeviceHostQueryResetFeaturesEXT = VkPhysicalDeviceHostQueryResetFeatures;
 type PFN_vkResetQueryPoolEXT = extern "system" fn(device: VkDevice, queryPool: VkQueryPool, firstQuery: u32, queryCount: u32);
 extern "system" fn dummy_vkResetQueryPoolEXT(_: VkDevice, _: VkQueryPool, _: u32, _: u32) {
 	panic!("Vulkan function pointer of `vkResetQueryPoolEXT()` is NULL");
@@ -24826,31 +24194,27 @@ impl Vulkan_EXT_host_query_reset {
 		}
 	}
 }
-type VkPhysicalDeviceIndexTypeUint8FeaturesEXT = VkPhysicalDeviceIndexTypeUint8Features;
+pub type VkPhysicalDeviceIndexTypeUint8FeaturesEXT = VkPhysicalDeviceIndexTypeUint8Features;
 pub trait VK_EXT_index_type_uint8: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_index_type_uint8 {
-}
-impl VK_EXT_index_type_uint8 for Vulkan_EXT_index_type_uint8 {
-}
+pub struct Vulkan_EXT_index_type_uint8 {}
+impl VK_EXT_index_type_uint8 for Vulkan_EXT_index_type_uint8 {}
 impl Default for Vulkan_EXT_index_type_uint8 {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_index_type_uint8 {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceExtendedDynamicStateFeaturesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	extendedDynamicState: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub extendedDynamicState: VkBool32,
 }
 type PFN_vkCmdSetCullModeEXT = extern "system" fn(commandBuffer: VkCommandBuffer, cullMode: VkCullModeFlags);
 type PFN_vkCmdSetFrontFaceEXT = extern "system" fn(commandBuffer: VkCommandBuffer, frontFace: VkFrontFace);
@@ -24893,20 +24257,20 @@ impl Vulkan_EXT_extended_dynamic_state {
 		}
 	}
 }
-type VkHostImageCopyFlagBitsEXT = VkHostImageCopyFlagBits;
-type VkHostImageCopyFlagsEXT = VkHostImageCopyFlags;
-type VkPhysicalDeviceHostImageCopyFeaturesEXT = VkPhysicalDeviceHostImageCopyFeatures;
-type VkPhysicalDeviceHostImageCopyPropertiesEXT = VkPhysicalDeviceHostImageCopyProperties;
-type VkMemoryToImageCopyEXT = VkMemoryToImageCopy;
-type VkImageToMemoryCopyEXT = VkImageToMemoryCopy;
-type VkCopyMemoryToImageInfoEXT = VkCopyMemoryToImageInfo;
-type VkCopyImageToMemoryInfoEXT = VkCopyImageToMemoryInfo;
-type VkCopyImageToImageInfoEXT = VkCopyImageToImageInfo;
-type VkHostImageLayoutTransitionInfoEXT = VkHostImageLayoutTransitionInfo;
-type VkSubresourceHostMemcpySizeEXT = VkSubresourceHostMemcpySize;
-type VkHostImageCopyDevicePerformanceQueryEXT = VkHostImageCopyDevicePerformanceQuery;
-type VkSubresourceLayout2EXT = VkSubresourceLayout2;
-type VkImageSubresource2EXT = VkImageSubresource2;
+pub type VkHostImageCopyFlagBitsEXT = VkHostImageCopyFlagBits;
+pub type VkHostImageCopyFlagsEXT = VkHostImageCopyFlags;
+pub type VkPhysicalDeviceHostImageCopyFeaturesEXT = VkPhysicalDeviceHostImageCopyFeatures;
+pub type VkPhysicalDeviceHostImageCopyPropertiesEXT = VkPhysicalDeviceHostImageCopyProperties;
+pub type VkMemoryToImageCopyEXT = VkMemoryToImageCopy;
+pub type VkImageToMemoryCopyEXT = VkImageToMemoryCopy;
+pub type VkCopyMemoryToImageInfoEXT = VkCopyMemoryToImageInfo;
+pub type VkCopyImageToMemoryInfoEXT = VkCopyImageToMemoryInfo;
+pub type VkCopyImageToImageInfoEXT = VkCopyImageToImageInfo;
+pub type VkHostImageLayoutTransitionInfoEXT = VkHostImageLayoutTransitionInfo;
+pub type VkSubresourceHostMemcpySizeEXT = VkSubresourceHostMemcpySize;
+pub type VkHostImageCopyDevicePerformanceQueryEXT = VkHostImageCopyDevicePerformanceQuery;
+pub type VkSubresourceLayout2EXT = VkSubresourceLayout2;
+pub type VkImageSubresource2EXT = VkImageSubresource2;
 type PFN_vkCopyMemoryToImageEXT = extern "system" fn(device: VkDevice, pCopyMemoryToImageInfo: *const VkCopyMemoryToImageInfo) -> VkResult;
 type PFN_vkCopyImageToMemoryEXT = extern "system" fn(device: VkDevice, pCopyImageToMemoryInfo: *const VkCopyImageToMemoryInfo) -> VkResult;
 type PFN_vkCopyImageToImageEXT = extern "system" fn(device: VkDevice, pCopyImageToImageInfo: *const VkCopyImageToImageInfo) -> VkResult;
@@ -24944,111 +24308,99 @@ impl Vulkan_EXT_host_image_copy {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceMapMemoryPlacedFeaturesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	memoryMapPlaced: VkBool32,
-	memoryMapRangePlaced: VkBool32,
-	memoryUnmapReserve: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub memoryMapPlaced: VkBool32,
+	pub memoryMapRangePlaced: VkBool32,
+	pub memoryUnmapReserve: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceMapMemoryPlacedPropertiesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	minPlacedMemoryMapAlignment: VkDeviceSize,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub minPlacedMemoryMapAlignment: VkDeviceSize,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkMemoryMapPlacedInfoEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	pPlacedAddress: *mut c_void,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub pPlacedAddress: *mut c_void,
 }
 pub trait VK_EXT_map_memory_placed: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_map_memory_placed {
-}
-impl VK_EXT_map_memory_placed for Vulkan_EXT_map_memory_placed {
-}
+pub struct Vulkan_EXT_map_memory_placed {}
+impl VK_EXT_map_memory_placed for Vulkan_EXT_map_memory_placed {}
 impl Default for Vulkan_EXT_map_memory_placed {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_map_memory_placed {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceShaderAtomicFloat2FeaturesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	shaderBufferFloat16Atomics: VkBool32,
-	shaderBufferFloat16AtomicAdd: VkBool32,
-	shaderBufferFloat16AtomicMinMax: VkBool32,
-	shaderBufferFloat32AtomicMinMax: VkBool32,
-	shaderBufferFloat64AtomicMinMax: VkBool32,
-	shaderSharedFloat16Atomics: VkBool32,
-	shaderSharedFloat16AtomicAdd: VkBool32,
-	shaderSharedFloat16AtomicMinMax: VkBool32,
-	shaderSharedFloat32AtomicMinMax: VkBool32,
-	shaderSharedFloat64AtomicMinMax: VkBool32,
-	shaderImageFloat32AtomicMinMax: VkBool32,
-	sparseImageFloat32AtomicMinMax: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub shaderBufferFloat16Atomics: VkBool32,
+	pub shaderBufferFloat16AtomicAdd: VkBool32,
+	pub shaderBufferFloat16AtomicMinMax: VkBool32,
+	pub shaderBufferFloat32AtomicMinMax: VkBool32,
+	pub shaderBufferFloat64AtomicMinMax: VkBool32,
+	pub shaderSharedFloat16Atomics: VkBool32,
+	pub shaderSharedFloat16AtomicAdd: VkBool32,
+	pub shaderSharedFloat16AtomicMinMax: VkBool32,
+	pub shaderSharedFloat32AtomicMinMax: VkBool32,
+	pub shaderSharedFloat64AtomicMinMax: VkBool32,
+	pub shaderImageFloat32AtomicMinMax: VkBool32,
+	pub sparseImageFloat32AtomicMinMax: VkBool32,
 }
 pub trait VK_EXT_shader_atomic_float2: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_shader_atomic_float2 {
-}
-impl VK_EXT_shader_atomic_float2 for Vulkan_EXT_shader_atomic_float2 {
-}
+pub struct Vulkan_EXT_shader_atomic_float2 {}
+impl VK_EXT_shader_atomic_float2 for Vulkan_EXT_shader_atomic_float2 {}
 impl Default for Vulkan_EXT_shader_atomic_float2 {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_shader_atomic_float2 {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-type VkPresentScalingFlagBitsEXT = VkPresentScalingFlagBitsKHR;
-type VkPresentScalingFlagsEXT = VkPresentScalingFlagsKHR;
-type VkPresentGravityFlagBitsEXT = VkPresentGravityFlagBitsKHR;
-type VkPresentGravityFlagsEXT = VkPresentGravityFlagsKHR;
-type VkSurfacePresentModeEXT = VkSurfacePresentModeKHR;
-type VkSurfacePresentScalingCapabilitiesEXT = VkSurfacePresentScalingCapabilitiesKHR;
-type VkSurfacePresentModeCompatibilityEXT = VkSurfacePresentModeCompatibilityKHR;
+pub type VkPresentScalingFlagBitsEXT = VkPresentScalingFlagBitsKHR;
+pub type VkPresentScalingFlagsEXT = VkPresentScalingFlagsKHR;
+pub type VkPresentGravityFlagBitsEXT = VkPresentGravityFlagBitsKHR;
+pub type VkPresentGravityFlagsEXT = VkPresentGravityFlagsKHR;
+pub type VkSurfacePresentModeEXT = VkSurfacePresentModeKHR;
+pub type VkSurfacePresentScalingCapabilitiesEXT = VkSurfacePresentScalingCapabilitiesKHR;
+pub type VkSurfacePresentModeCompatibilityEXT = VkSurfacePresentModeCompatibilityKHR;
 pub trait VK_EXT_surface_maintenance1: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_surface_maintenance1 {
-}
-impl VK_EXT_surface_maintenance1 for Vulkan_EXT_surface_maintenance1 {
-}
+pub struct Vulkan_EXT_surface_maintenance1 {}
+impl VK_EXT_surface_maintenance1 for Vulkan_EXT_surface_maintenance1 {}
 impl Default for Vulkan_EXT_surface_maintenance1 {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_surface_maintenance1 {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-type VkPhysicalDeviceSwapchainMaintenance1FeaturesEXT = VkPhysicalDeviceSwapchainMaintenance1FeaturesKHR;
-type VkSwapchainPresentFenceInfoEXT = VkSwapchainPresentFenceInfoKHR;
-type VkSwapchainPresentModesCreateInfoEXT = VkSwapchainPresentModesCreateInfoKHR;
-type VkSwapchainPresentModeInfoEXT = VkSwapchainPresentModeInfoKHR;
-type VkSwapchainPresentScalingCreateInfoEXT = VkSwapchainPresentScalingCreateInfoKHR;
-type VkReleaseSwapchainImagesInfoEXT = VkReleaseSwapchainImagesInfoKHR;
+pub type VkPhysicalDeviceSwapchainMaintenance1FeaturesEXT = VkPhysicalDeviceSwapchainMaintenance1FeaturesKHR;
+pub type VkSwapchainPresentFenceInfoEXT = VkSwapchainPresentFenceInfoKHR;
+pub type VkSwapchainPresentModesCreateInfoEXT = VkSwapchainPresentModesCreateInfoKHR;
+pub type VkSwapchainPresentModeInfoEXT = VkSwapchainPresentModeInfoKHR;
+pub type VkSwapchainPresentScalingCreateInfoEXT = VkSwapchainPresentScalingCreateInfoKHR;
+pub type VkReleaseSwapchainImagesInfoEXT = VkReleaseSwapchainImagesInfoKHR;
 type PFN_vkReleaseSwapchainImagesEXT = extern "system" fn(device: VkDevice, pReleaseInfo: *const VkReleaseSwapchainImagesInfoKHR) -> VkResult;
 extern "system" fn dummy_vkReleaseSwapchainImagesEXT(_: VkDevice, _: *const VkReleaseSwapchainImagesInfoKHR) -> VkResult {
 	panic!("Vulkan function pointer of `vkReleaseSwapchainImagesEXT()` is NULL");
@@ -25079,31 +24431,27 @@ impl Vulkan_EXT_swapchain_maintenance1 {
 		}
 	}
 }
-type VkPhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT = VkPhysicalDeviceShaderDemoteToHelperInvocationFeatures;
+pub type VkPhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT = VkPhysicalDeviceShaderDemoteToHelperInvocationFeatures;
 pub trait VK_EXT_shader_demote_to_helper_invocation: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_shader_demote_to_helper_invocation {
-}
-impl VK_EXT_shader_demote_to_helper_invocation for Vulkan_EXT_shader_demote_to_helper_invocation {
-}
+pub struct Vulkan_EXT_shader_demote_to_helper_invocation {}
+impl VK_EXT_shader_demote_to_helper_invocation for Vulkan_EXT_shader_demote_to_helper_invocation {}
 impl Default for Vulkan_EXT_shader_demote_to_helper_invocation {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_shader_demote_to_helper_invocation {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-type VkIndirectStateFlagsNV = VkFlags;
-type VkIndirectCommandsLayoutUsageFlagsNV = VkFlags;
+pub type VkIndirectStateFlagsNV = VkFlags;
+pub type VkIndirectCommandsLayoutUsageFlagsNV = VkFlags;
 // Define non-dispatchable handle `VkIndirectCommandsLayoutNV`
-#[cfg(target_pointer_width = "32")] type VkIndirectCommandsLayoutNV = u64;
+#[cfg(target_pointer_width = "32")] pub type VkIndirectCommandsLayoutNV = u64;
 #[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkIndirectCommandsLayoutNV_T {}
-#[cfg(target_pointer_width = "64")] type VkIndirectCommandsLayoutNV = *const VkIndirectCommandsLayoutNV_T;
+#[cfg(target_pointer_width = "64")] pub type VkIndirectCommandsLayoutNV = *const VkIndirectCommandsLayoutNV_T;
 #[repr(C)]
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum VkIndirectCommandsTokenTypeNV {
@@ -25137,134 +24485,134 @@ pub enum VkIndirectCommandsLayoutUsageFlagBitsNV {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceDeviceGeneratedCommandsPropertiesNV {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	maxGraphicsShaderGroupCount: u32,
-	maxIndirectSequenceCount: u32,
-	maxIndirectCommandsTokenCount: u32,
-	maxIndirectCommandsStreamCount: u32,
-	maxIndirectCommandsTokenOffset: u32,
-	maxIndirectCommandsStreamStride: u32,
-	minSequencesCountBufferOffsetAlignment: u32,
-	minSequencesIndexBufferOffsetAlignment: u32,
-	minIndirectCommandsBufferOffsetAlignment: u32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub maxGraphicsShaderGroupCount: u32,
+	pub maxIndirectSequenceCount: u32,
+	pub maxIndirectCommandsTokenCount: u32,
+	pub maxIndirectCommandsStreamCount: u32,
+	pub maxIndirectCommandsTokenOffset: u32,
+	pub maxIndirectCommandsStreamStride: u32,
+	pub minSequencesCountBufferOffsetAlignment: u32,
+	pub minSequencesIndexBufferOffsetAlignment: u32,
+	pub minIndirectCommandsBufferOffsetAlignment: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceDeviceGeneratedCommandsFeaturesNV {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	deviceGeneratedCommands: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub deviceGeneratedCommands: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkGraphicsShaderGroupCreateInfoNV {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	stageCount: u32,
-	pStages: *const VkPipelineShaderStageCreateInfo,
-	pVertexInputState: *const VkPipelineVertexInputStateCreateInfo,
-	pTessellationState: *const VkPipelineTessellationStateCreateInfo,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub stageCount: u32,
+	pub pStages: *const VkPipelineShaderStageCreateInfo,
+	pub pVertexInputState: *const VkPipelineVertexInputStateCreateInfo,
+	pub pTessellationState: *const VkPipelineTessellationStateCreateInfo,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkGraphicsPipelineShaderGroupsCreateInfoNV {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	groupCount: u32,
-	pGroups: *const VkGraphicsShaderGroupCreateInfoNV,
-	pipelineCount: u32,
-	pPipelines: *const VkPipeline,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub groupCount: u32,
+	pub pGroups: *const VkGraphicsShaderGroupCreateInfoNV,
+	pub pipelineCount: u32,
+	pub pPipelines: *const VkPipeline,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkBindShaderGroupIndirectCommandNV {
-	groupIndex: u32,
+	pub groupIndex: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkBindIndexBufferIndirectCommandNV {
-	bufferAddress: VkDeviceAddress,
-	size: u32,
-	indexType: VkIndexType,
+	pub bufferAddress: VkDeviceAddress,
+	pub size: u32,
+	pub indexType: VkIndexType,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkBindVertexBufferIndirectCommandNV {
-	bufferAddress: VkDeviceAddress,
-	size: u32,
-	stride: u32,
+	pub bufferAddress: VkDeviceAddress,
+	pub size: u32,
+	pub stride: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkSetStateFlagsIndirectCommandNV {
-	data: u32,
+	pub data: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkIndirectCommandsStreamNV {
-	buffer: VkBuffer,
-	offset: VkDeviceSize,
+	pub buffer: VkBuffer,
+	pub offset: VkDeviceSize,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkIndirectCommandsLayoutTokenNV {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	tokenType: VkIndirectCommandsTokenTypeNV,
-	stream: u32,
-	offset: u32,
-	vertexBindingUnit: u32,
-	vertexDynamicStride: VkBool32,
-	pushconstantPipelineLayout: VkPipelineLayout,
-	pushconstantShaderStageFlags: VkShaderStageFlags,
-	pushconstantOffset: u32,
-	pushconstantSize: u32,
-	indirectStateFlags: VkIndirectStateFlagsNV,
-	indexTypeCount: u32,
-	pIndexTypes: *const VkIndexType,
-	pIndexTypeValues: *const uint32_t,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub tokenType: VkIndirectCommandsTokenTypeNV,
+	pub stream: u32,
+	pub offset: u32,
+	pub vertexBindingUnit: u32,
+	pub vertexDynamicStride: VkBool32,
+	pub pushconstantPipelineLayout: VkPipelineLayout,
+	pub pushconstantShaderStageFlags: VkShaderStageFlags,
+	pub pushconstantOffset: u32,
+	pub pushconstantSize: u32,
+	pub indirectStateFlags: VkIndirectStateFlagsNV,
+	pub indexTypeCount: u32,
+	pub pIndexTypes: *const VkIndexType,
+	pub pIndexTypeValues: *const uint32_t,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkIndirectCommandsLayoutCreateInfoNV {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkIndirectCommandsLayoutUsageFlagsNV,
-	pipelineBindPoint: VkPipelineBindPoint,
-	tokenCount: u32,
-	pTokens: *const VkIndirectCommandsLayoutTokenNV,
-	streamCount: u32,
-	pStreamStrides: *const uint32_t,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkIndirectCommandsLayoutUsageFlagsNV,
+	pub pipelineBindPoint: VkPipelineBindPoint,
+	pub tokenCount: u32,
+	pub pTokens: *const VkIndirectCommandsLayoutTokenNV,
+	pub streamCount: u32,
+	pub pStreamStrides: *const uint32_t,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkGeneratedCommandsInfoNV {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	pipelineBindPoint: VkPipelineBindPoint,
-	pipeline: VkPipeline,
-	indirectCommandsLayout: VkIndirectCommandsLayoutNV,
-	streamCount: u32,
-	pStreams: *const VkIndirectCommandsStreamNV,
-	sequencesCount: u32,
-	preprocessBuffer: VkBuffer,
-	preprocessOffset: VkDeviceSize,
-	preprocessSize: VkDeviceSize,
-	sequencesCountBuffer: VkBuffer,
-	sequencesCountOffset: VkDeviceSize,
-	sequencesIndexBuffer: VkBuffer,
-	sequencesIndexOffset: VkDeviceSize,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub pipelineBindPoint: VkPipelineBindPoint,
+	pub pipeline: VkPipeline,
+	pub indirectCommandsLayout: VkIndirectCommandsLayoutNV,
+	pub streamCount: u32,
+	pub pStreams: *const VkIndirectCommandsStreamNV,
+	pub sequencesCount: u32,
+	pub preprocessBuffer: VkBuffer,
+	pub preprocessOffset: VkDeviceSize,
+	pub preprocessSize: VkDeviceSize,
+	pub sequencesCountBuffer: VkBuffer,
+	pub sequencesCountOffset: VkDeviceSize,
+	pub sequencesIndexBuffer: VkBuffer,
+	pub sequencesIndexOffset: VkDeviceSize,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkGeneratedCommandsMemoryRequirementsInfoNV {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	pipelineBindPoint: VkPipelineBindPoint,
-	pipeline: VkPipeline,
-	indirectCommandsLayout: VkIndirectCommandsLayoutNV,
-	maxSequencesCount: u32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub pipelineBindPoint: VkPipelineBindPoint,
+	pub pipeline: VkPipeline,
+	pub indirectCommandsLayout: VkIndirectCommandsLayoutNV,
+	pub maxSequencesCount: u32,
 }
 type PFN_vkGetGeneratedCommandsMemoryRequirementsNV = extern "system" fn(device: VkDevice, pInfo: *const VkGeneratedCommandsMemoryRequirementsInfoNV, pMemoryRequirements: *mut VkMemoryRequirements2);
 type PFN_vkCmdPreprocessGeneratedCommandsNV = extern "system" fn(commandBuffer: VkCommandBuffer, pGeneratedCommandsInfo: *const VkGeneratedCommandsInfoNV);
@@ -25304,94 +24652,82 @@ impl Vulkan_NV_device_generated_commands {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceInheritedViewportScissorFeaturesNV {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	inheritedViewportScissor2D: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub inheritedViewportScissor2D: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkCommandBufferInheritanceViewportScissorInfoNV {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	viewportScissor2D: VkBool32,
-	viewportDepthCount: u32,
-	pViewportDepths: *const VkViewport,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub viewportScissor2D: VkBool32,
+	pub viewportDepthCount: u32,
+	pub pViewportDepths: *const VkViewport,
 }
 pub trait VK_NV_inherited_viewport_scissor: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_NV_inherited_viewport_scissor {
-}
-impl VK_NV_inherited_viewport_scissor for Vulkan_NV_inherited_viewport_scissor {
-}
+pub struct Vulkan_NV_inherited_viewport_scissor {}
+impl VK_NV_inherited_viewport_scissor for Vulkan_NV_inherited_viewport_scissor {}
 impl Default for Vulkan_NV_inherited_viewport_scissor {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_NV_inherited_viewport_scissor {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-type VkPhysicalDeviceTexelBufferAlignmentPropertiesEXT = VkPhysicalDeviceTexelBufferAlignmentProperties;
+pub type VkPhysicalDeviceTexelBufferAlignmentPropertiesEXT = VkPhysicalDeviceTexelBufferAlignmentProperties;
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceTexelBufferAlignmentFeaturesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	texelBufferAlignment: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub texelBufferAlignment: VkBool32,
 }
 pub trait VK_EXT_texel_buffer_alignment: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_texel_buffer_alignment {
-}
-impl VK_EXT_texel_buffer_alignment for Vulkan_EXT_texel_buffer_alignment {
-}
+pub struct Vulkan_EXT_texel_buffer_alignment {}
+impl VK_EXT_texel_buffer_alignment for Vulkan_EXT_texel_buffer_alignment {}
 impl Default for Vulkan_EXT_texel_buffer_alignment {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_texel_buffer_alignment {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkRenderPassTransformBeginInfoQCOM {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	transform: VkSurfaceTransformFlagBitsKHR,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub transform: VkSurfaceTransformFlagBitsKHR,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkCommandBufferInheritanceRenderPassTransformInfoQCOM {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	transform: VkSurfaceTransformFlagBitsKHR,
-	renderArea: VkRect2D,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub transform: VkSurfaceTransformFlagBitsKHR,
+	pub renderArea: VkRect2D,
 }
 pub trait VK_QCOM_render_pass_transform: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_QCOM_render_pass_transform {
-}
-impl VK_QCOM_render_pass_transform for Vulkan_QCOM_render_pass_transform {
-}
+pub struct Vulkan_QCOM_render_pass_transform {}
+impl VK_QCOM_render_pass_transform for Vulkan_QCOM_render_pass_transform {}
 impl Default for Vulkan_QCOM_render_pass_transform {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_QCOM_render_pass_transform {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
@@ -25405,29 +24741,29 @@ pub enum VkDepthBiasRepresentationEXT {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceDepthBiasControlFeaturesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	depthBiasControl: VkBool32,
-	leastRepresentableValueForceUnormRepresentation: VkBool32,
-	floatRepresentation: VkBool32,
-	depthBiasExact: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub depthBiasControl: VkBool32,
+	pub leastRepresentableValueForceUnormRepresentation: VkBool32,
+	pub floatRepresentation: VkBool32,
+	pub depthBiasExact: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDepthBiasInfoEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	depthBiasConstantFactor: f32,
-	depthBiasClamp: f32,
-	depthBiasSlopeFactor: f32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub depthBiasConstantFactor: f32,
+	pub depthBiasClamp: f32,
+	pub depthBiasSlopeFactor: f32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDepthBiasRepresentationInfoEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	depthBiasRepresentation: VkDepthBiasRepresentationEXT,
-	depthBiasExact: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub depthBiasRepresentation: VkDepthBiasRepresentationEXT,
+	pub depthBiasExact: VkBool32,
 }
 type PFN_vkCmdSetDepthBias2EXT = extern "system" fn(commandBuffer: VkCommandBuffer, pDepthBiasInfo: *const VkDepthBiasInfoEXT);
 extern "system" fn dummy_vkCmdSetDepthBias2EXT(_: VkCommandBuffer, _: *const VkDepthBiasInfoEXT) {
@@ -25459,7 +24795,7 @@ impl Vulkan_EXT_depth_bias_control {
 		}
 	}
 }
-type VkDeviceMemoryReportFlagsEXT = VkFlags;
+pub type VkDeviceMemoryReportFlagsEXT = VkFlags;
 #[repr(C)]
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum VkDeviceMemoryReportEventTypeEXT {
@@ -25473,49 +24809,45 @@ pub enum VkDeviceMemoryReportEventTypeEXT {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceDeviceMemoryReportFeaturesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	deviceMemoryReport: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub deviceMemoryReport: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDeviceMemoryReportCallbackDataEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	flags: VkDeviceMemoryReportFlagsEXT,
-	type_: VkDeviceMemoryReportEventTypeEXT,
-	memoryObjectId: u64,
-	size: VkDeviceSize,
-	objectType: VkObjectType,
-	objectHandle: u64,
-	heapIndex: u32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub flags: VkDeviceMemoryReportFlagsEXT,
+	pub type_: VkDeviceMemoryReportEventTypeEXT,
+	pub memoryObjectId: u64,
+	pub size: VkDeviceSize,
+	pub objectType: VkObjectType,
+	pub objectHandle: u64,
+	pub heapIndex: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDeviceDeviceMemoryReportCreateInfoEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkDeviceMemoryReportFlagsEXT,
-	pfnUserCallback: PFN_vkDeviceMemoryReportCallbackEXT,
-	pUserData: *mut c_void,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkDeviceMemoryReportFlagsEXT,
+	pub pfnUserCallback: PFN_vkDeviceMemoryReportCallbackEXT,
+	pub pUserData: *mut c_void,
 }
 type PFN_vkDeviceMemoryReportCallbackEXT = extern "system" fn(pCallbackData: *const VkDeviceMemoryReportCallbackDataEXT, pUserData: *mut c_void);
 pub trait VK_EXT_device_memory_report: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_device_memory_report {
-}
-impl VK_EXT_device_memory_report for Vulkan_EXT_device_memory_report {
-}
+pub struct Vulkan_EXT_device_memory_report {}
+impl VK_EXT_device_memory_report for Vulkan_EXT_device_memory_report {}
 impl Default for Vulkan_EXT_device_memory_report {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_device_memory_report {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 type PFN_vkAcquireDrmDisplayEXT = extern "system" fn(physicalDevice: VkPhysicalDevice, drmFd: i32, display: VkDisplayKHR) -> VkResult;
@@ -25549,129 +24881,113 @@ impl Vulkan_EXT_acquire_drm_display {
 		}
 	}
 }
-type VkPhysicalDeviceRobustness2FeaturesEXT = VkPhysicalDeviceRobustness2FeaturesKHR;
-type VkPhysicalDeviceRobustness2PropertiesEXT = VkPhysicalDeviceRobustness2PropertiesKHR;
+pub type VkPhysicalDeviceRobustness2FeaturesEXT = VkPhysicalDeviceRobustness2FeaturesKHR;
+pub type VkPhysicalDeviceRobustness2PropertiesEXT = VkPhysicalDeviceRobustness2PropertiesKHR;
 pub trait VK_EXT_robustness2: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_robustness2 {
-}
-impl VK_EXT_robustness2 for Vulkan_EXT_robustness2 {
-}
+pub struct Vulkan_EXT_robustness2 {}
+impl VK_EXT_robustness2 for Vulkan_EXT_robustness2 {}
 impl Default for Vulkan_EXT_robustness2 {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_robustness2 {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkSamplerCustomBorderColorCreateInfoEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	customBorderColor: VkClearColorValue,
-	format: VkFormat,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub customBorderColor: VkClearColorValue,
+	pub format: VkFormat,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceCustomBorderColorPropertiesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	maxCustomBorderColorSamplers: u32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub maxCustomBorderColorSamplers: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceCustomBorderColorFeaturesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	customBorderColors: VkBool32,
-	customBorderColorWithoutFormat: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub customBorderColors: VkBool32,
+	pub customBorderColorWithoutFormat: VkBool32,
 }
 pub trait VK_EXT_custom_border_color: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_custom_border_color {
-}
-impl VK_EXT_custom_border_color for Vulkan_EXT_custom_border_color {
-}
+pub struct Vulkan_EXT_custom_border_color {}
+impl VK_EXT_custom_border_color for Vulkan_EXT_custom_border_color {}
 impl Default for Vulkan_EXT_custom_border_color {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_custom_border_color {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 pub trait VK_GOOGLE_user_type: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_GOOGLE_user_type {
-}
-impl VK_GOOGLE_user_type for Vulkan_GOOGLE_user_type {
-}
+pub struct Vulkan_GOOGLE_user_type {}
+impl VK_GOOGLE_user_type for Vulkan_GOOGLE_user_type {}
 impl Default for Vulkan_GOOGLE_user_type {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_GOOGLE_user_type {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDevicePresentBarrierFeaturesNV {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	presentBarrier: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub presentBarrier: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkSurfaceCapabilitiesPresentBarrierNV {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	presentBarrierSupported: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub presentBarrierSupported: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkSwapchainPresentBarrierCreateInfoNV {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	presentBarrierEnable: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub presentBarrierEnable: VkBool32,
 }
 pub trait VK_NV_present_barrier: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_NV_present_barrier {
-}
-impl VK_NV_present_barrier for Vulkan_NV_present_barrier {
-}
+pub struct Vulkan_NV_present_barrier {}
+impl VK_NV_present_barrier for Vulkan_NV_present_barrier {}
 impl Default for Vulkan_NV_present_barrier {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_NV_present_barrier {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-type VkPrivateDataSlotEXT = VkPrivateDataSlot;
-type VkPrivateDataSlotCreateFlagsEXT = VkPrivateDataSlotCreateFlags;
-type VkPhysicalDevicePrivateDataFeaturesEXT = VkPhysicalDevicePrivateDataFeatures;
-type VkDevicePrivateDataCreateInfoEXT = VkDevicePrivateDataCreateInfo;
-type VkPrivateDataSlotCreateInfoEXT = VkPrivateDataSlotCreateInfo;
+pub type VkPrivateDataSlotEXT = VkPrivateDataSlot;
+pub type VkPrivateDataSlotCreateFlagsEXT = VkPrivateDataSlotCreateFlags;
+pub type VkPhysicalDevicePrivateDataFeaturesEXT = VkPhysicalDevicePrivateDataFeatures;
+pub type VkDevicePrivateDataCreateInfoEXT = VkDevicePrivateDataCreateInfo;
+pub type VkPrivateDataSlotCreateInfoEXT = VkPrivateDataSlotCreateInfo;
 type PFN_vkCreatePrivateDataSlotEXT = extern "system" fn(device: VkDevice, pCreateInfo: *const VkPrivateDataSlotCreateInfo, pAllocator: *const VkAllocationCallbacks, pPrivateDataSlot: *mut VkPrivateDataSlot) -> VkResult;
 type PFN_vkDestroyPrivateDataSlotEXT = extern "system" fn(device: VkDevice, privateDataSlot: VkPrivateDataSlot, pAllocator: *const VkAllocationCallbacks);
 type PFN_vkSetPrivateDataEXT = extern "system" fn(device: VkDevice, objectType: VkObjectType, objectHandle: u64, privateDataSlot: VkPrivateDataSlot, data: u64) -> VkResult;
@@ -25705,26 +25021,22 @@ impl Vulkan_EXT_private_data {
 		}
 	}
 }
-type VkPhysicalDevicePipelineCreationCacheControlFeaturesEXT = VkPhysicalDevicePipelineCreationCacheControlFeatures;
+pub type VkPhysicalDevicePipelineCreationCacheControlFeaturesEXT = VkPhysicalDevicePipelineCreationCacheControlFeatures;
 pub trait VK_EXT_pipeline_creation_cache_control: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_pipeline_creation_cache_control {
-}
-impl VK_EXT_pipeline_creation_cache_control for Vulkan_EXT_pipeline_creation_cache_control {
-}
+pub struct Vulkan_EXT_pipeline_creation_cache_control {}
+impl VK_EXT_pipeline_creation_cache_control for Vulkan_EXT_pipeline_creation_cache_control {}
 impl Default for Vulkan_EXT_pipeline_creation_cache_control {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_pipeline_creation_cache_control {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-type VkDeviceDiagnosticsConfigFlagsNV = VkFlags;
+pub type VkDeviceDiagnosticsConfigFlagsNV = VkFlags;
 #[repr(C)]
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum VkDeviceDiagnosticsConfigFlagBitsNV {
@@ -25737,54 +25049,46 @@ pub enum VkDeviceDiagnosticsConfigFlagBitsNV {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceDiagnosticsConfigFeaturesNV {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	diagnosticsConfig: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub diagnosticsConfig: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDeviceDiagnosticsConfigCreateInfoNV {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkDeviceDiagnosticsConfigFlagsNV,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkDeviceDiagnosticsConfigFlagsNV,
 }
 pub trait VK_NV_device_diagnostics_config: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_NV_device_diagnostics_config {
-}
-impl VK_NV_device_diagnostics_config for Vulkan_NV_device_diagnostics_config {
-}
+pub struct Vulkan_NV_device_diagnostics_config {}
+impl VK_NV_device_diagnostics_config for Vulkan_NV_device_diagnostics_config {}
 impl Default for Vulkan_NV_device_diagnostics_config {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_NV_device_diagnostics_config {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 pub trait VK_QCOM_render_pass_store_ops: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_QCOM_render_pass_store_ops {
-}
-impl VK_QCOM_render_pass_store_ops for Vulkan_QCOM_render_pass_store_ops {
-}
+pub struct Vulkan_QCOM_render_pass_store_ops {}
+impl VK_QCOM_render_pass_store_ops for Vulkan_QCOM_render_pass_store_ops {}
 impl Default for Vulkan_QCOM_render_pass_store_ops {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_QCOM_render_pass_store_ops {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-type VkTileShadingRenderPassFlagsQCOM = VkFlags;
+pub type VkTileShadingRenderPassFlagsQCOM = VkFlags;
 #[repr(C)]
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum VkTileShadingRenderPassFlagBitsQCOM {
@@ -25795,58 +25099,58 @@ pub enum VkTileShadingRenderPassFlagBitsQCOM {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceTileShadingFeaturesQCOM {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	tileShading: VkBool32,
-	tileShadingFragmentStage: VkBool32,
-	tileShadingColorAttachments: VkBool32,
-	tileShadingDepthAttachments: VkBool32,
-	tileShadingStencilAttachments: VkBool32,
-	tileShadingInputAttachments: VkBool32,
-	tileShadingSampledAttachments: VkBool32,
-	tileShadingPerTileDraw: VkBool32,
-	tileShadingPerTileDispatch: VkBool32,
-	tileShadingDispatchTile: VkBool32,
-	tileShadingApron: VkBool32,
-	tileShadingAnisotropicApron: VkBool32,
-	tileShadingAtomicOps: VkBool32,
-	tileShadingImageProcessing: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub tileShading: VkBool32,
+	pub tileShadingFragmentStage: VkBool32,
+	pub tileShadingColorAttachments: VkBool32,
+	pub tileShadingDepthAttachments: VkBool32,
+	pub tileShadingStencilAttachments: VkBool32,
+	pub tileShadingInputAttachments: VkBool32,
+	pub tileShadingSampledAttachments: VkBool32,
+	pub tileShadingPerTileDraw: VkBool32,
+	pub tileShadingPerTileDispatch: VkBool32,
+	pub tileShadingDispatchTile: VkBool32,
+	pub tileShadingApron: VkBool32,
+	pub tileShadingAnisotropicApron: VkBool32,
+	pub tileShadingAtomicOps: VkBool32,
+	pub tileShadingImageProcessing: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceTileShadingPropertiesQCOM {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	maxApronSize: u32,
-	preferNonCoherent: VkBool32,
-	tileGranularity: VkExtent2D,
-	maxTileShadingRate: VkExtent2D,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub maxApronSize: u32,
+	pub preferNonCoherent: VkBool32,
+	pub tileGranularity: VkExtent2D,
+	pub maxTileShadingRate: VkExtent2D,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkRenderPassTileShadingCreateInfoQCOM {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkTileShadingRenderPassFlagsQCOM,
-	tileApronSize: VkExtent2D,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkTileShadingRenderPassFlagsQCOM,
+	pub tileApronSize: VkExtent2D,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPerTileBeginInfoQCOM {
-	sType: VkStructureType,
-	pNext: *const c_void,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPerTileEndInfoQCOM {
-	sType: VkStructureType,
-	pNext: *const c_void,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDispatchTileInfoQCOM {
-	sType: VkStructureType,
-	pNext: *const c_void,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
 }
 type PFN_vkCmdDispatchTileQCOM = extern "system" fn(commandBuffer: VkCommandBuffer, pDispatchTileInfo: *const VkDispatchTileInfoQCOM);
 type PFN_vkCmdBeginPerTileExecutionQCOM = extern "system" fn(commandBuffer: VkCommandBuffer, pPerTileBeginInfo: *const VkPerTileBeginInfoQCOM);
@@ -25883,45 +25187,41 @@ impl Vulkan_QCOM_tile_shading {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkQueryLowLatencySupportNV {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	pQueriedLowLatencyData: *mut c_void,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub pQueriedLowLatencyData: *mut c_void,
 }
 pub trait VK_NV_low_latency: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_NV_low_latency {
-}
-impl VK_NV_low_latency for Vulkan_NV_low_latency {
-}
+pub struct Vulkan_NV_low_latency {}
+impl VK_NV_low_latency for Vulkan_NV_low_latency {}
 impl Default for Vulkan_NV_low_latency {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_NV_low_latency {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 // Define non-dispatchable handle `VkAccelerationStructureKHR`
-#[cfg(target_pointer_width = "32")] type VkAccelerationStructureKHR = u64;
+#[cfg(target_pointer_width = "32")] pub type VkAccelerationStructureKHR = u64;
 #[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkAccelerationStructureKHR_T {}
-#[cfg(target_pointer_width = "64")] type VkAccelerationStructureKHR = *const VkAccelerationStructureKHR_T;
+#[cfg(target_pointer_width = "64")] pub type VkAccelerationStructureKHR = *const VkAccelerationStructureKHR_T;
 #[repr(C)]
 #[derive(Clone, Copy)]
 pub union VkDescriptorDataEXT {
-	pSampler: *const VkSampler,
-	pCombinedImageSampler: *const VkDescriptorImageInfo,
-	pInputAttachmentImage: *const VkDescriptorImageInfo,
-	pSampledImage: *const VkDescriptorImageInfo,
-	pStorageImage: *const VkDescriptorImageInfo,
-	pUniformTexelBuffer: *const VkDescriptorAddressInfoEXT,
-	pStorageTexelBuffer: *const VkDescriptorAddressInfoEXT,
-	pUniformBuffer: *const VkDescriptorAddressInfoEXT,
-	pStorageBuffer: *const VkDescriptorAddressInfoEXT,
-	accelerationStructure: VkDeviceAddress,
+	pub pSampler: *const VkSampler,
+	pub pCombinedImageSampler: *const VkDescriptorImageInfo,
+	pub pInputAttachmentImage: *const VkDescriptorImageInfo,
+	pub pSampledImage: *const VkDescriptorImageInfo,
+	pub pStorageImage: *const VkDescriptorImageInfo,
+	pub pUniformTexelBuffer: *const VkDescriptorAddressInfoEXT,
+	pub pStorageTexelBuffer: *const VkDescriptorAddressInfoEXT,
+	pub pUniformBuffer: *const VkDescriptorAddressInfoEXT,
+	pub pStorageBuffer: *const VkDescriptorAddressInfoEXT,
+	pub accelerationStructure: VkDeviceAddress,
 }
 impl Debug for VkDescriptorDataEXT {
 	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
@@ -25942,133 +25242,133 @@ impl Debug for VkDescriptorDataEXT {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceDescriptorBufferPropertiesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	combinedImageSamplerDescriptorSingleArray: VkBool32,
-	bufferlessPushDescriptors: VkBool32,
-	allowSamplerImageViewPostSubmitCreation: VkBool32,
-	descriptorBufferOffsetAlignment: VkDeviceSize,
-	maxDescriptorBufferBindings: u32,
-	maxResourceDescriptorBufferBindings: u32,
-	maxSamplerDescriptorBufferBindings: u32,
-	maxEmbeddedImmutableSamplerBindings: u32,
-	maxEmbeddedImmutableSamplers: u32,
-	bufferCaptureReplayDescriptorDataSize: usize,
-	imageCaptureReplayDescriptorDataSize: usize,
-	imageViewCaptureReplayDescriptorDataSize: usize,
-	samplerCaptureReplayDescriptorDataSize: usize,
-	accelerationStructureCaptureReplayDescriptorDataSize: usize,
-	samplerDescriptorSize: usize,
-	combinedImageSamplerDescriptorSize: usize,
-	sampledImageDescriptorSize: usize,
-	storageImageDescriptorSize: usize,
-	uniformTexelBufferDescriptorSize: usize,
-	robustUniformTexelBufferDescriptorSize: usize,
-	storageTexelBufferDescriptorSize: usize,
-	robustStorageTexelBufferDescriptorSize: usize,
-	uniformBufferDescriptorSize: usize,
-	robustUniformBufferDescriptorSize: usize,
-	storageBufferDescriptorSize: usize,
-	robustStorageBufferDescriptorSize: usize,
-	inputAttachmentDescriptorSize: usize,
-	accelerationStructureDescriptorSize: usize,
-	maxSamplerDescriptorBufferRange: VkDeviceSize,
-	maxResourceDescriptorBufferRange: VkDeviceSize,
-	samplerDescriptorBufferAddressSpaceSize: VkDeviceSize,
-	resourceDescriptorBufferAddressSpaceSize: VkDeviceSize,
-	descriptorBufferAddressSpaceSize: VkDeviceSize,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub combinedImageSamplerDescriptorSingleArray: VkBool32,
+	pub bufferlessPushDescriptors: VkBool32,
+	pub allowSamplerImageViewPostSubmitCreation: VkBool32,
+	pub descriptorBufferOffsetAlignment: VkDeviceSize,
+	pub maxDescriptorBufferBindings: u32,
+	pub maxResourceDescriptorBufferBindings: u32,
+	pub maxSamplerDescriptorBufferBindings: u32,
+	pub maxEmbeddedImmutableSamplerBindings: u32,
+	pub maxEmbeddedImmutableSamplers: u32,
+	pub bufferCaptureReplayDescriptorDataSize: usize,
+	pub imageCaptureReplayDescriptorDataSize: usize,
+	pub imageViewCaptureReplayDescriptorDataSize: usize,
+	pub samplerCaptureReplayDescriptorDataSize: usize,
+	pub accelerationStructureCaptureReplayDescriptorDataSize: usize,
+	pub samplerDescriptorSize: usize,
+	pub combinedImageSamplerDescriptorSize: usize,
+	pub sampledImageDescriptorSize: usize,
+	pub storageImageDescriptorSize: usize,
+	pub uniformTexelBufferDescriptorSize: usize,
+	pub robustUniformTexelBufferDescriptorSize: usize,
+	pub storageTexelBufferDescriptorSize: usize,
+	pub robustStorageTexelBufferDescriptorSize: usize,
+	pub uniformBufferDescriptorSize: usize,
+	pub robustUniformBufferDescriptorSize: usize,
+	pub storageBufferDescriptorSize: usize,
+	pub robustStorageBufferDescriptorSize: usize,
+	pub inputAttachmentDescriptorSize: usize,
+	pub accelerationStructureDescriptorSize: usize,
+	pub maxSamplerDescriptorBufferRange: VkDeviceSize,
+	pub maxResourceDescriptorBufferRange: VkDeviceSize,
+	pub samplerDescriptorBufferAddressSpaceSize: VkDeviceSize,
+	pub resourceDescriptorBufferAddressSpaceSize: VkDeviceSize,
+	pub descriptorBufferAddressSpaceSize: VkDeviceSize,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceDescriptorBufferDensityMapPropertiesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	combinedImageSamplerDensityMapDescriptorSize: usize,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub combinedImageSamplerDensityMapDescriptorSize: usize,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceDescriptorBufferFeaturesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	descriptorBuffer: VkBool32,
-	descriptorBufferCaptureReplay: VkBool32,
-	descriptorBufferImageLayoutIgnored: VkBool32,
-	descriptorBufferPushDescriptors: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub descriptorBuffer: VkBool32,
+	pub descriptorBufferCaptureReplay: VkBool32,
+	pub descriptorBufferImageLayoutIgnored: VkBool32,
+	pub descriptorBufferPushDescriptors: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDescriptorAddressInfoEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	address: VkDeviceAddress,
-	range: VkDeviceSize,
-	format: VkFormat,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub address: VkDeviceAddress,
+	pub range: VkDeviceSize,
+	pub format: VkFormat,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDescriptorBufferBindingInfoEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	address: VkDeviceAddress,
-	usage: VkBufferUsageFlags,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub address: VkDeviceAddress,
+	pub usage: VkBufferUsageFlags,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDescriptorBufferBindingPushDescriptorBufferHandleEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	buffer: VkBuffer,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub buffer: VkBuffer,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDescriptorGetInfoEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	type_: VkDescriptorType,
-	data: VkDescriptorDataEXT,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub type_: VkDescriptorType,
+	pub data: VkDescriptorDataEXT,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkBufferCaptureDescriptorDataInfoEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	buffer: VkBuffer,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub buffer: VkBuffer,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkImageCaptureDescriptorDataInfoEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	image: VkImage,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub image: VkImage,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkImageViewCaptureDescriptorDataInfoEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	imageView: VkImageView,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub imageView: VkImageView,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkSamplerCaptureDescriptorDataInfoEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	sampler: VkSampler,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub sampler: VkSampler,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkOpaqueCaptureDescriptorDataCreateInfoEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	opaqueCaptureDescriptorData: *const c_void,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub opaqueCaptureDescriptorData: *const c_void,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkAccelerationStructureCaptureDescriptorDataInfoEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	accelerationStructure: VkAccelerationStructureKHR,
-	accelerationStructureNV: VkAccelerationStructureNV,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub accelerationStructure: VkAccelerationStructureKHR,
+	pub accelerationStructureNV: VkAccelerationStructureNV,
 }
 type PFN_vkGetDescriptorSetLayoutSizeEXT = extern "system" fn(device: VkDevice, layout: VkDescriptorSetLayout, pLayoutSizeInBytes: *mut VkDeviceSize);
 type PFN_vkGetDescriptorSetLayoutBindingOffsetEXT = extern "system" fn(device: VkDevice, layout: VkDescriptorSetLayout, binding: u32, pOffset: *mut VkDeviceSize);
@@ -26110,7 +25410,7 @@ impl Vulkan_EXT_descriptor_buffer {
 		}
 	}
 }
-type VkGraphicsPipelineLibraryFlagsEXT = VkFlags;
+pub type VkGraphicsPipelineLibraryFlagsEXT = VkFlags;
 #[repr(C)]
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum VkGraphicsPipelineLibraryFlagBitsEXT {
@@ -26123,66 +25423,58 @@ pub enum VkGraphicsPipelineLibraryFlagBitsEXT {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceGraphicsPipelineLibraryFeaturesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	graphicsPipelineLibrary: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub graphicsPipelineLibrary: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceGraphicsPipelineLibraryPropertiesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	graphicsPipelineLibraryFastLinking: VkBool32,
-	graphicsPipelineLibraryIndependentInterpolationDecoration: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub graphicsPipelineLibraryFastLinking: VkBool32,
+	pub graphicsPipelineLibraryIndependentInterpolationDecoration: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkGraphicsPipelineLibraryCreateInfoEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkGraphicsPipelineLibraryFlagsEXT,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkGraphicsPipelineLibraryFlagsEXT,
 }
 pub trait VK_EXT_graphics_pipeline_library: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_graphics_pipeline_library {
-}
-impl VK_EXT_graphics_pipeline_library for Vulkan_EXT_graphics_pipeline_library {
-}
+pub struct Vulkan_EXT_graphics_pipeline_library {}
+impl VK_EXT_graphics_pipeline_library for Vulkan_EXT_graphics_pipeline_library {}
 impl Default for Vulkan_EXT_graphics_pipeline_library {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_graphics_pipeline_library {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesAMD {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	shaderEarlyAndLateFragmentTests: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub shaderEarlyAndLateFragmentTests: VkBool32,
 }
 pub trait VK_AMD_shader_early_and_late_fragment_tests: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_AMD_shader_early_and_late_fragment_tests {
-}
-impl VK_AMD_shader_early_and_late_fragment_tests for Vulkan_AMD_shader_early_and_late_fragment_tests {
-}
+pub struct Vulkan_AMD_shader_early_and_late_fragment_tests {}
+impl VK_AMD_shader_early_and_late_fragment_tests for Vulkan_AMD_shader_early_and_late_fragment_tests {}
 impl Default for Vulkan_AMD_shader_early_and_late_fragment_tests {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_AMD_shader_early_and_late_fragment_tests {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
@@ -26212,27 +25504,27 @@ pub enum VkFragmentShadingRateNV {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceFragmentShadingRateEnumsFeaturesNV {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	fragmentShadingRateEnums: VkBool32,
-	supersampleFragmentShadingRates: VkBool32,
-	noInvocationFragmentShadingRates: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub fragmentShadingRateEnums: VkBool32,
+	pub supersampleFragmentShadingRates: VkBool32,
+	pub noInvocationFragmentShadingRates: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceFragmentShadingRateEnumsPropertiesNV {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	maxFragmentShadingRateInvocationCount: VkSampleCountFlagBits,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub maxFragmentShadingRateInvocationCount: VkSampleCountFlagBits,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPipelineFragmentShadingRateEnumStateCreateInfoNV {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	shadingRateType: VkFragmentShadingRateTypeNV,
-	shadingRate: VkFragmentShadingRateNV,
-	combinerOps: [VkFragmentShadingRateCombinerOpKHR; 2 as usize],
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub shadingRateType: VkFragmentShadingRateTypeNV,
+	pub shadingRate: VkFragmentShadingRateNV,
+	pub combinerOps: [VkFragmentShadingRateCombinerOpKHR; 2 as usize],
 }
 type PFN_vkCmdSetFragmentShadingRateEnumNV = extern "system" fn(commandBuffer: VkCommandBuffer, shadingRate: VkFragmentShadingRateNV, combinerOps: &[VkFragmentShadingRateCombinerOpKHR; 2 as usize]);
 extern "system" fn dummy_vkCmdSetFragmentShadingRateEnumNV(_: VkCommandBuffer, _: VkFragmentShadingRateNV, _: &[VkFragmentShadingRateCombinerOpKHR; 2 as usize]) {
@@ -26264,8 +25556,8 @@ impl Vulkan_NV_fragment_shading_rate_enums {
 		}
 	}
 }
-type VkAccelerationStructureMotionInfoFlagsNV = VkFlags;
-type VkAccelerationStructureMotionInstanceFlagsNV = VkFlags;
+pub type VkAccelerationStructureMotionInfoFlagsNV = VkFlags;
+pub type VkAccelerationStructureMotionInstanceFlagsNV = VkFlags;
 #[repr(C)]
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum VkAccelerationStructureMotionInstanceTypeNV {
@@ -26277,8 +25569,8 @@ pub enum VkAccelerationStructureMotionInstanceTypeNV {
 #[repr(C)]
 #[derive(Clone, Copy)]
 pub union VkDeviceOrHostAddressConstKHR {
-	deviceAddress: VkDeviceAddress,
-	hostAddress: *const c_void,
+	pub deviceAddress: VkDeviceAddress,
+	pub hostAddress: *const c_void,
 }
 impl Debug for VkDeviceOrHostAddressConstKHR {
 	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
@@ -26291,9 +25583,9 @@ impl Debug for VkDeviceOrHostAddressConstKHR {
 #[repr(C)]
 #[derive(Clone, Copy)]
 pub union VkAccelerationStructureMotionInstanceDataNV {
-	staticInstance: VkAccelerationStructureInstanceKHR,
-	matrixMotionInstance: VkAccelerationStructureMatrixMotionInstanceNV,
-	srtMotionInstance: VkAccelerationStructureSRTMotionInstanceNV,
+	pub staticInstance: VkAccelerationStructureInstanceKHR,
+	pub matrixMotionInstance: VkAccelerationStructureMatrixMotionInstanceNV,
+	pub srtMotionInstance: VkAccelerationStructureSRTMotionInstanceNV,
 }
 impl Debug for VkAccelerationStructureMotionInstanceDataNV {
 	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
@@ -26307,30 +25599,30 @@ impl Debug for VkAccelerationStructureMotionInstanceDataNV {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkAccelerationStructureGeometryMotionTrianglesDataNV {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	vertexData: VkDeviceOrHostAddressConstKHR,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub vertexData: VkDeviceOrHostAddressConstKHR,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkAccelerationStructureMotionInfoNV {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	maxInstances: u32,
-	flags: VkAccelerationStructureMotionInfoFlagsNV,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub maxInstances: u32,
+	pub flags: VkAccelerationStructureMotionInfoFlagsNV,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkAccelerationStructureMatrixMotionInstanceNV {
-	transformT0: VkTransformMatrixKHR,
-	transformT1: VkTransformMatrixKHR,
+	pub transformT0: VkTransformMatrixKHR,
+	pub transformT1: VkTransformMatrixKHR,
 	/// Bitfield: instanceCustomIndex: u32 in 24 bits
 	/// Bitfield: mask: u32 in 8 bits
 	bitfield1: u32,
 	/// Bitfield: instanceShaderBindingTableRecordOffset: u32 in 24 bits
 	/// Bitfield: flags: VkGeometryInstanceFlagsKHR in 8 bits
 	bitfield2: u32,
-	accelerationStructureReference: u64,
+	pub accelerationStructureReference: u64,
 }
 impl VkAccelerationStructureMatrixMotionInstanceNV {
 	pub fn get_instanceCustomIndex(&self) -> u32 {
@@ -26361,35 +25653,35 @@ impl VkAccelerationStructureMatrixMotionInstanceNV {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkSRTDataNV {
-	sx: f32,
-	a: f32,
-	b: f32,
-	pvx: f32,
-	sy: f32,
-	c: f32,
-	pvy: f32,
-	sz: f32,
-	pvz: f32,
-	qx: f32,
-	qy: f32,
-	qz: f32,
-	qw: f32,
-	tx: f32,
-	ty: f32,
-	tz: f32,
+	pub sx: f32,
+	pub a: f32,
+	pub b: f32,
+	pub pvx: f32,
+	pub sy: f32,
+	pub c: f32,
+	pub pvy: f32,
+	pub sz: f32,
+	pub pvz: f32,
+	pub qx: f32,
+	pub qy: f32,
+	pub qz: f32,
+	pub qw: f32,
+	pub tx: f32,
+	pub ty: f32,
+	pub tz: f32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkAccelerationStructureSRTMotionInstanceNV {
-	transformT0: VkSRTDataNV,
-	transformT1: VkSRTDataNV,
+	pub transformT0: VkSRTDataNV,
+	pub transformT1: VkSRTDataNV,
 	/// Bitfield: instanceCustomIndex: u32 in 24 bits
 	/// Bitfield: mask: u32 in 8 bits
 	bitfield1: u32,
 	/// Bitfield: instanceShaderBindingTableRecordOffset: u32 in 24 bits
 	/// Bitfield: flags: VkGeometryInstanceFlagsKHR in 8 bits
 	bitfield2: u32,
-	accelerationStructureReference: u64,
+	pub accelerationStructureReference: u64,
 }
 impl VkAccelerationStructureSRTMotionInstanceNV {
 	pub fn get_instanceCustomIndex(&self) -> u32 {
@@ -26420,142 +25712,122 @@ impl VkAccelerationStructureSRTMotionInstanceNV {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkAccelerationStructureMotionInstanceNV {
-	type_: VkAccelerationStructureMotionInstanceTypeNV,
-	flags: VkAccelerationStructureMotionInstanceFlagsNV,
-	data: VkAccelerationStructureMotionInstanceDataNV,
+	pub type_: VkAccelerationStructureMotionInstanceTypeNV,
+	pub flags: VkAccelerationStructureMotionInstanceFlagsNV,
+	pub data: VkAccelerationStructureMotionInstanceDataNV,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceRayTracingMotionBlurFeaturesNV {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	rayTracingMotionBlur: VkBool32,
-	rayTracingMotionBlurPipelineTraceRaysIndirect: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub rayTracingMotionBlur: VkBool32,
+	pub rayTracingMotionBlurPipelineTraceRaysIndirect: VkBool32,
 }
 pub trait VK_NV_ray_tracing_motion_blur: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_NV_ray_tracing_motion_blur {
-}
-impl VK_NV_ray_tracing_motion_blur for Vulkan_NV_ray_tracing_motion_blur {
-}
+pub struct Vulkan_NV_ray_tracing_motion_blur {}
+impl VK_NV_ray_tracing_motion_blur for Vulkan_NV_ray_tracing_motion_blur {}
 impl Default for Vulkan_NV_ray_tracing_motion_blur {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_NV_ray_tracing_motion_blur {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceYcbcr2Plane444FormatsFeaturesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	ycbcr2plane444Formats: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub ycbcr2plane444Formats: VkBool32,
 }
 pub trait VK_EXT_ycbcr_2plane_444_formats: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_ycbcr_2plane_444_formats {
-}
-impl VK_EXT_ycbcr_2plane_444_formats for Vulkan_EXT_ycbcr_2plane_444_formats {
-}
+pub struct Vulkan_EXT_ycbcr_2plane_444_formats {}
+impl VK_EXT_ycbcr_2plane_444_formats for Vulkan_EXT_ycbcr_2plane_444_formats {}
 impl Default for Vulkan_EXT_ycbcr_2plane_444_formats {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_ycbcr_2plane_444_formats {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceFragmentDensityMap2FeaturesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	fragmentDensityMapDeferred: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub fragmentDensityMapDeferred: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceFragmentDensityMap2PropertiesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	subsampledLoads: VkBool32,
-	subsampledCoarseReconstructionEarlyAccess: VkBool32,
-	maxSubsampledArrayLayers: u32,
-	maxDescriptorSetSubsampledSamplers: u32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub subsampledLoads: VkBool32,
+	pub subsampledCoarseReconstructionEarlyAccess: VkBool32,
+	pub maxSubsampledArrayLayers: u32,
+	pub maxDescriptorSetSubsampledSamplers: u32,
 }
 pub trait VK_EXT_fragment_density_map2: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_fragment_density_map2 {
-}
-impl VK_EXT_fragment_density_map2 for Vulkan_EXT_fragment_density_map2 {
-}
+pub struct Vulkan_EXT_fragment_density_map2 {}
+impl VK_EXT_fragment_density_map2 for Vulkan_EXT_fragment_density_map2 {}
 impl Default for Vulkan_EXT_fragment_density_map2 {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_fragment_density_map2 {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkCopyCommandTransformInfoQCOM {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	transform: VkSurfaceTransformFlagBitsKHR,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub transform: VkSurfaceTransformFlagBitsKHR,
 }
 pub trait VK_QCOM_rotated_copy_commands: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_QCOM_rotated_copy_commands {
-}
-impl VK_QCOM_rotated_copy_commands for Vulkan_QCOM_rotated_copy_commands {
-}
+pub struct Vulkan_QCOM_rotated_copy_commands {}
+impl VK_QCOM_rotated_copy_commands for Vulkan_QCOM_rotated_copy_commands {}
 impl Default for Vulkan_QCOM_rotated_copy_commands {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_QCOM_rotated_copy_commands {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-type VkPhysicalDeviceImageRobustnessFeaturesEXT = VkPhysicalDeviceImageRobustnessFeatures;
+pub type VkPhysicalDeviceImageRobustnessFeaturesEXT = VkPhysicalDeviceImageRobustnessFeatures;
 pub trait VK_EXT_image_robustness: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_image_robustness {
-}
-impl VK_EXT_image_robustness for Vulkan_EXT_image_robustness {
-}
+pub struct Vulkan_EXT_image_robustness {}
+impl VK_EXT_image_robustness for Vulkan_EXT_image_robustness {}
 impl Default for Vulkan_EXT_image_robustness {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_image_robustness {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-type VkImageCompressionFlagsEXT = VkFlags;
-type VkImageCompressionFixedRateFlagsEXT = VkFlags;
+pub type VkImageCompressionFlagsEXT = VkFlags;
+pub type VkImageCompressionFixedRateFlagsEXT = VkFlags;
 #[repr(C)]
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum VkImageCompressionFlagBitsEXT {
@@ -26598,94 +25870,82 @@ pub enum VkImageCompressionFixedRateFlagBitsEXT {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceImageCompressionControlFeaturesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	imageCompressionControl: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub imageCompressionControl: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkImageCompressionControlEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkImageCompressionFlagsEXT,
-	compressionControlPlaneCount: u32,
-	pFixedRateFlags: *mut VkImageCompressionFixedRateFlagsEXT,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkImageCompressionFlagsEXT,
+	pub compressionControlPlaneCount: u32,
+	pub pFixedRateFlags: *mut VkImageCompressionFixedRateFlagsEXT,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkImageCompressionPropertiesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	imageCompressionFlags: VkImageCompressionFlagsEXT,
-	imageCompressionFixedRateFlags: VkImageCompressionFixedRateFlagsEXT,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub imageCompressionFlags: VkImageCompressionFlagsEXT,
+	pub imageCompressionFixedRateFlags: VkImageCompressionFixedRateFlagsEXT,
 }
 pub trait VK_EXT_image_compression_control: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_image_compression_control {
-}
-impl VK_EXT_image_compression_control for Vulkan_EXT_image_compression_control {
-}
+pub struct Vulkan_EXT_image_compression_control {}
+impl VK_EXT_image_compression_control for Vulkan_EXT_image_compression_control {}
 impl Default for Vulkan_EXT_image_compression_control {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_image_compression_control {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceAttachmentFeedbackLoopLayoutFeaturesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	attachmentFeedbackLoopLayout: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub attachmentFeedbackLoopLayout: VkBool32,
 }
 pub trait VK_EXT_attachment_feedback_loop_layout: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_attachment_feedback_loop_layout {
-}
-impl VK_EXT_attachment_feedback_loop_layout for Vulkan_EXT_attachment_feedback_loop_layout {
-}
+pub struct Vulkan_EXT_attachment_feedback_loop_layout {}
+impl VK_EXT_attachment_feedback_loop_layout for Vulkan_EXT_attachment_feedback_loop_layout {}
 impl Default for Vulkan_EXT_attachment_feedback_loop_layout {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_attachment_feedback_loop_layout {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDevice4444FormatsFeaturesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	formatA4R4G4B4: VkBool32,
-	formatA4B4G4R4: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub formatA4R4G4B4: VkBool32,
+	pub formatA4B4G4R4: VkBool32,
 }
 pub trait VK_EXT_4444_formats: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_4444_formats {
-}
-impl VK_EXT_4444_formats for Vulkan_EXT_4444_formats {
-}
+pub struct Vulkan_EXT_4444_formats {}
+impl VK_EXT_4444_formats for Vulkan_EXT_4444_formats {}
 impl Default for Vulkan_EXT_4444_formats {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_4444_formats {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
@@ -26709,58 +25969,58 @@ pub enum VkDeviceFaultVendorBinaryHeaderVersionEXT {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceFaultFeaturesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	deviceFault: VkBool32,
-	deviceFaultVendorBinary: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub deviceFault: VkBool32,
+	pub deviceFaultVendorBinary: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDeviceFaultCountsEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	addressInfoCount: u32,
-	vendorInfoCount: u32,
-	vendorBinarySize: VkDeviceSize,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub addressInfoCount: u32,
+	pub vendorInfoCount: u32,
+	pub vendorBinarySize: VkDeviceSize,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDeviceFaultAddressInfoEXT {
-	addressType: VkDeviceFaultAddressTypeEXT,
-	reportedAddress: VkDeviceAddress,
-	addressPrecision: VkDeviceSize,
+	pub addressType: VkDeviceFaultAddressTypeEXT,
+	pub reportedAddress: VkDeviceAddress,
+	pub addressPrecision: VkDeviceSize,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDeviceFaultVendorInfoEXT {
-	description: [i8; VK_MAX_DESCRIPTION_SIZE as usize],
-	vendorFaultCode: u64,
-	vendorFaultData: u64,
+	pub description: [i8; VK_MAX_DESCRIPTION_SIZE as usize],
+	pub vendorFaultCode: u64,
+	pub vendorFaultData: u64,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDeviceFaultInfoEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	description: [i8; VK_MAX_DESCRIPTION_SIZE as usize],
-	pAddressInfos: *mut VkDeviceFaultAddressInfoEXT,
-	pVendorInfos: *mut VkDeviceFaultVendorInfoEXT,
-	pVendorBinaryData: *mut c_void,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub description: [i8; VK_MAX_DESCRIPTION_SIZE as usize],
+	pub pAddressInfos: *mut VkDeviceFaultAddressInfoEXT,
+	pub pVendorInfos: *mut VkDeviceFaultVendorInfoEXT,
+	pub pVendorBinaryData: *mut c_void,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDeviceFaultVendorBinaryHeaderVersionOneEXT {
-	headerSize: u32,
-	headerVersion: VkDeviceFaultVendorBinaryHeaderVersionEXT,
-	vendorID: u32,
-	deviceID: u32,
-	driverVersion: u32,
-	pipelineCacheUUID: [u8; VK_UUID_SIZE as usize],
-	applicationNameOffset: u32,
-	applicationVersion: u32,
-	engineNameOffset: u32,
-	engineVersion: u32,
-	apiVersion: u32,
+	pub headerSize: u32,
+	pub headerVersion: VkDeviceFaultVendorBinaryHeaderVersionEXT,
+	pub vendorID: u32,
+	pub deviceID: u32,
+	pub driverVersion: u32,
+	pub pipelineCacheUUID: [u8; VK_UUID_SIZE as usize],
+	pub applicationNameOffset: u32,
+	pub applicationVersion: u32,
+	pub engineNameOffset: u32,
+	pub engineVersion: u32,
+	pub apiVersion: u32,
 }
 type PFN_vkGetDeviceFaultInfoEXT = extern "system" fn(device: VkDevice, pFaultCounts: *mut VkDeviceFaultCountsEXT, pFaultInfo: *mut VkDeviceFaultInfoEXT) -> VkResult;
 extern "system" fn dummy_vkGetDeviceFaultInfoEXT(_: VkDevice, _: *mut VkDeviceFaultCountsEXT, _: *mut VkDeviceFaultInfoEXT) -> VkResult {
@@ -26792,127 +26052,115 @@ impl Vulkan_EXT_device_fault {
 		}
 	}
 }
-type VkPhysicalDeviceRasterizationOrderAttachmentAccessFeaturesARM = VkPhysicalDeviceRasterizationOrderAttachmentAccessFeaturesEXT;
+pub type VkPhysicalDeviceRasterizationOrderAttachmentAccessFeaturesARM = VkPhysicalDeviceRasterizationOrderAttachmentAccessFeaturesEXT;
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceRasterizationOrderAttachmentAccessFeaturesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	rasterizationOrderColorAttachmentAccess: VkBool32,
-	rasterizationOrderDepthAttachmentAccess: VkBool32,
-	rasterizationOrderStencilAttachmentAccess: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub rasterizationOrderColorAttachmentAccess: VkBool32,
+	pub rasterizationOrderDepthAttachmentAccess: VkBool32,
+	pub rasterizationOrderStencilAttachmentAccess: VkBool32,
 }
 pub trait VK_ARM_rasterization_order_attachment_access: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_ARM_rasterization_order_attachment_access {
-}
-impl VK_ARM_rasterization_order_attachment_access for Vulkan_ARM_rasterization_order_attachment_access {
-}
+pub struct Vulkan_ARM_rasterization_order_attachment_access {}
+impl VK_ARM_rasterization_order_attachment_access for Vulkan_ARM_rasterization_order_attachment_access {}
 impl Default for Vulkan_ARM_rasterization_order_attachment_access {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_ARM_rasterization_order_attachment_access {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceRGBA10X6FormatsFeaturesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	formatRgba10x6WithoutYCbCrSampler: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub formatRgba10x6WithoutYCbCrSampler: VkBool32,
 }
 pub trait VK_EXT_rgba10x6_formats: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_rgba10x6_formats {
-}
-impl VK_EXT_rgba10x6_formats for Vulkan_EXT_rgba10x6_formats {
-}
+pub struct Vulkan_EXT_rgba10x6_formats {}
+impl VK_EXT_rgba10x6_formats for Vulkan_EXT_rgba10x6_formats {}
 impl Default for Vulkan_EXT_rgba10x6_formats {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_rgba10x6_formats {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-type VkPhysicalDeviceMutableDescriptorTypeFeaturesVALVE = VkPhysicalDeviceMutableDescriptorTypeFeaturesEXT;
-type VkMutableDescriptorTypeListVALVE = VkMutableDescriptorTypeListEXT;
-type VkMutableDescriptorTypeCreateInfoVALVE = VkMutableDescriptorTypeCreateInfoEXT;
+pub type VkPhysicalDeviceMutableDescriptorTypeFeaturesVALVE = VkPhysicalDeviceMutableDescriptorTypeFeaturesEXT;
+pub type VkMutableDescriptorTypeListVALVE = VkMutableDescriptorTypeListEXT;
+pub type VkMutableDescriptorTypeCreateInfoVALVE = VkMutableDescriptorTypeCreateInfoEXT;
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceMutableDescriptorTypeFeaturesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	mutableDescriptorType: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub mutableDescriptorType: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkMutableDescriptorTypeListEXT {
-	descriptorTypeCount: u32,
-	pDescriptorTypes: *const VkDescriptorType,
+	pub descriptorTypeCount: u32,
+	pub pDescriptorTypes: *const VkDescriptorType,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkMutableDescriptorTypeCreateInfoEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	mutableDescriptorTypeListCount: u32,
-	pMutableDescriptorTypeLists: *const VkMutableDescriptorTypeListEXT,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub mutableDescriptorTypeListCount: u32,
+	pub pMutableDescriptorTypeLists: *const VkMutableDescriptorTypeListEXT,
 }
 pub trait VK_VALVE_mutable_descriptor_type: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_VALVE_mutable_descriptor_type {
-}
-impl VK_VALVE_mutable_descriptor_type for Vulkan_VALVE_mutable_descriptor_type {
-}
+pub struct Vulkan_VALVE_mutable_descriptor_type {}
+impl VK_VALVE_mutable_descriptor_type for Vulkan_VALVE_mutable_descriptor_type {}
 impl Default for Vulkan_VALVE_mutable_descriptor_type {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_VALVE_mutable_descriptor_type {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceVertexInputDynamicStateFeaturesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	vertexInputDynamicState: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub vertexInputDynamicState: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVertexInputBindingDescription2EXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	binding: u32,
-	stride: u32,
-	inputRate: VkVertexInputRate,
-	divisor: u32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub binding: u32,
+	pub stride: u32,
+	pub inputRate: VkVertexInputRate,
+	pub divisor: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkVertexInputAttributeDescription2EXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	location: u32,
-	binding: u32,
-	format: VkFormat,
-	offset: u32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub location: u32,
+	pub binding: u32,
+	pub format: VkFormat,
+	pub offset: u32,
 }
 type PFN_vkCmdSetVertexInputEXT = extern "system" fn(commandBuffer: VkCommandBuffer, vertexBindingDescriptionCount: u32, pVertexBindingDescriptions: *const VkVertexInputBindingDescription2EXT, vertexAttributeDescriptionCount: u32, pVertexAttributeDescriptions: *const VkVertexInputAttributeDescription2EXT);
 extern "system" fn dummy_vkCmdSetVertexInputEXT(_: VkCommandBuffer, _: u32, _: *const VkVertexInputBindingDescription2EXT, _: u32, _: *const VkVertexInputAttributeDescription2EXT) {
@@ -26947,34 +26195,30 @@ impl Vulkan_EXT_vertex_input_dynamic_state {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceDrmPropertiesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	hasPrimary: VkBool32,
-	hasRender: VkBool32,
-	primaryMajor: i64,
-	primaryMinor: i64,
-	renderMajor: i64,
-	renderMinor: i64,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub hasPrimary: VkBool32,
+	pub hasRender: VkBool32,
+	pub primaryMajor: i64,
+	pub primaryMinor: i64,
+	pub renderMajor: i64,
+	pub renderMinor: i64,
 }
 pub trait VK_EXT_physical_device_drm: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_physical_device_drm {
-}
-impl VK_EXT_physical_device_drm for Vulkan_EXT_physical_device_drm {
-}
+pub struct Vulkan_EXT_physical_device_drm {}
+impl VK_EXT_physical_device_drm for Vulkan_EXT_physical_device_drm {}
 impl Default for Vulkan_EXT_physical_device_drm {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_physical_device_drm {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-type VkDeviceAddressBindingFlagsEXT = VkFlags;
+pub type VkDeviceAddressBindingFlagsEXT = VkFlags;
 #[repr(C)]
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum VkDeviceAddressBindingTypeEXT {
@@ -26991,136 +26235,120 @@ pub enum VkDeviceAddressBindingFlagBitsEXT {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceAddressBindingReportFeaturesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	reportAddressBinding: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub reportAddressBinding: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDeviceAddressBindingCallbackDataEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	flags: VkDeviceAddressBindingFlagsEXT,
-	baseAddress: VkDeviceAddress,
-	size: VkDeviceSize,
-	bindingType: VkDeviceAddressBindingTypeEXT,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub flags: VkDeviceAddressBindingFlagsEXT,
+	pub baseAddress: VkDeviceAddress,
+	pub size: VkDeviceSize,
+	pub bindingType: VkDeviceAddressBindingTypeEXT,
 }
 pub trait VK_EXT_device_address_binding_report: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_device_address_binding_report {
-}
-impl VK_EXT_device_address_binding_report for Vulkan_EXT_device_address_binding_report {
-}
+pub struct Vulkan_EXT_device_address_binding_report {}
+impl VK_EXT_device_address_binding_report for Vulkan_EXT_device_address_binding_report {}
 impl Default for Vulkan_EXT_device_address_binding_report {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_device_address_binding_report {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceDepthClipControlFeaturesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	depthClipControl: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub depthClipControl: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPipelineViewportDepthClipControlCreateInfoEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	negativeOneToOne: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub negativeOneToOne: VkBool32,
 }
 pub trait VK_EXT_depth_clip_control: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_depth_clip_control {
-}
-impl VK_EXT_depth_clip_control for Vulkan_EXT_depth_clip_control {
-}
+pub struct Vulkan_EXT_depth_clip_control {}
+impl VK_EXT_depth_clip_control for Vulkan_EXT_depth_clip_control {}
 impl Default for Vulkan_EXT_depth_clip_control {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_depth_clip_control {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDevicePrimitiveTopologyListRestartFeaturesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	primitiveTopologyListRestart: VkBool32,
-	primitiveTopologyPatchListRestart: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub primitiveTopologyListRestart: VkBool32,
+	pub primitiveTopologyPatchListRestart: VkBool32,
 }
 pub trait VK_EXT_primitive_topology_list_restart: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_primitive_topology_list_restart {
-}
-impl VK_EXT_primitive_topology_list_restart for Vulkan_EXT_primitive_topology_list_restart {
-}
+pub struct Vulkan_EXT_primitive_topology_list_restart {}
+impl VK_EXT_primitive_topology_list_restart for Vulkan_EXT_primitive_topology_list_restart {}
 impl Default for Vulkan_EXT_primitive_topology_list_restart {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_primitive_topology_list_restart {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-type VkPhysicalDevicePresentModeFifoLatestReadyFeaturesEXT = VkPhysicalDevicePresentModeFifoLatestReadyFeaturesKHR;
+pub type VkPhysicalDevicePresentModeFifoLatestReadyFeaturesEXT = VkPhysicalDevicePresentModeFifoLatestReadyFeaturesKHR;
 pub trait VK_EXT_present_mode_fifo_latest_ready: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_present_mode_fifo_latest_ready {
-}
-impl VK_EXT_present_mode_fifo_latest_ready for Vulkan_EXT_present_mode_fifo_latest_ready {
-}
+pub struct Vulkan_EXT_present_mode_fifo_latest_ready {}
+impl VK_EXT_present_mode_fifo_latest_ready for Vulkan_EXT_present_mode_fifo_latest_ready {}
 impl Default for Vulkan_EXT_present_mode_fifo_latest_ready {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_present_mode_fifo_latest_ready {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkSubpassShadingPipelineCreateInfoHUAWEI {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	renderPass: VkRenderPass,
-	subpass: u32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub renderPass: VkRenderPass,
+	pub subpass: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceSubpassShadingFeaturesHUAWEI {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	subpassShading: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub subpassShading: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceSubpassShadingPropertiesHUAWEI {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	maxSubpassShadingWorkgroupSizeAspectRatio: u32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub maxSubpassShadingWorkgroupSizeAspectRatio: u32,
 }
 type PFN_vkGetDeviceSubpassShadingMaxWorkgroupSizeHUAWEI = extern "system" fn(device: VkDevice, renderpass: VkRenderPass, pMaxWorkgroupSize: *mut VkExtent2D) -> VkResult;
 type PFN_vkCmdSubpassShadingHUAWEI = extern "system" fn(commandBuffer: VkCommandBuffer);
@@ -27156,9 +26384,9 @@ impl Vulkan_HUAWEI_subpass_shading {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceInvocationMaskFeaturesHUAWEI {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	invocationMask: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub invocationMask: VkBool32,
 }
 type PFN_vkCmdBindInvocationMaskHUAWEI = extern "system" fn(commandBuffer: VkCommandBuffer, imageView: VkImageView, imageLayout: VkImageLayout);
 extern "system" fn dummy_vkCmdBindInvocationMaskHUAWEI(_: VkCommandBuffer, _: VkImageView, _: VkImageLayout) {
@@ -27190,21 +26418,21 @@ impl Vulkan_HUAWEI_invocation_mask {
 		}
 	}
 }
-type VkRemoteAddressNV = *mut c_void;
+pub type VkRemoteAddressNV = *mut c_void;
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkMemoryGetRemoteAddressInfoNV {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	memory: VkDeviceMemory,
-	handleType: VkExternalMemoryHandleTypeFlagBits,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub memory: VkDeviceMemory,
+	pub handleType: VkExternalMemoryHandleTypeFlagBits,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceExternalMemoryRDMAFeaturesNV {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	externalMemoryRDMA: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub externalMemoryRDMA: VkBool32,
 }
 type PFN_vkGetMemoryRemoteAddressNV = extern "system" fn(device: VkDevice, pMemoryGetRemoteAddressInfo: *const VkMemoryGetRemoteAddressInfoNV, pAddress: *mut VkRemoteAddressNV) -> VkResult;
 extern "system" fn dummy_vkGetMemoryRemoteAddressNV(_: VkDevice, _: *const VkMemoryGetRemoteAddressInfoNV, _: *mut VkRemoteAddressNV) -> VkResult {
@@ -27236,20 +26464,20 @@ impl Vulkan_NV_external_memory_rdma {
 		}
 	}
 }
-type VkPipelineInfoEXT = VkPipelineInfoKHR;
+pub type VkPipelineInfoEXT = VkPipelineInfoKHR;
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPipelinePropertiesIdentifierEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	pipelineIdentifier: [u8; VK_UUID_SIZE as usize],
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub pipelineIdentifier: [u8; VK_UUID_SIZE as usize],
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDevicePipelinePropertiesFeaturesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	pipelinePropertiesIdentifier: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub pipelinePropertiesIdentifier: VkBool32,
 }
 type PFN_vkGetPipelinePropertiesEXT = extern "system" fn(device: VkDevice, pPipelineInfo: *const VkPipelineInfoEXT, pPipelineProperties: *mut VkBaseOutStructure) -> VkResult;
 extern "system" fn dummy_vkGetPipelinePropertiesEXT(_: VkDevice, _: *const VkPipelineInfoEXT, _: *mut VkBaseOutStructure) -> VkResult {
@@ -27281,7 +26509,7 @@ impl Vulkan_EXT_pipeline_properties {
 		}
 	}
 }
-type VkFrameBoundaryFlagsEXT = VkFlags;
+pub type VkFrameBoundaryFlagsEXT = VkFlags;
 #[repr(C)]
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum VkFrameBoundaryFlagBitsEXT {
@@ -27291,91 +26519,83 @@ pub enum VkFrameBoundaryFlagBitsEXT {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceFrameBoundaryFeaturesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	frameBoundary: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub frameBoundary: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkFrameBoundaryEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkFrameBoundaryFlagsEXT,
-	frameID: u64,
-	imageCount: u32,
-	pImages: *const VkImage,
-	bufferCount: u32,
-	pBuffers: *const VkBuffer,
-	tagName: u64,
-	tagSize: usize,
-	pTag: *const c_void,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkFrameBoundaryFlagsEXT,
+	pub frameID: u64,
+	pub imageCount: u32,
+	pub pImages: *const VkImage,
+	pub bufferCount: u32,
+	pub pBuffers: *const VkBuffer,
+	pub tagName: u64,
+	pub tagSize: usize,
+	pub pTag: *const c_void,
 }
 pub trait VK_EXT_frame_boundary: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_frame_boundary {
-}
-impl VK_EXT_frame_boundary for Vulkan_EXT_frame_boundary {
-}
+pub struct Vulkan_EXT_frame_boundary {}
+impl VK_EXT_frame_boundary for Vulkan_EXT_frame_boundary {}
 impl Default for Vulkan_EXT_frame_boundary {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_frame_boundary {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceMultisampledRenderToSingleSampledFeaturesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	multisampledRenderToSingleSampled: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub multisampledRenderToSingleSampled: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkSubpassResolvePerformanceQueryEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	optimal: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub optimal: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkMultisampledRenderToSingleSampledInfoEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	multisampledRenderToSingleSampledEnable: VkBool32,
-	rasterizationSamples: VkSampleCountFlagBits,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub multisampledRenderToSingleSampledEnable: VkBool32,
+	pub rasterizationSamples: VkSampleCountFlagBits,
 }
 pub trait VK_EXT_multisampled_render_to_single_sampled: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_multisampled_render_to_single_sampled {
-}
-impl VK_EXT_multisampled_render_to_single_sampled for Vulkan_EXT_multisampled_render_to_single_sampled {
-}
+pub struct Vulkan_EXT_multisampled_render_to_single_sampled {}
+impl VK_EXT_multisampled_render_to_single_sampled for Vulkan_EXT_multisampled_render_to_single_sampled {}
 impl Default for Vulkan_EXT_multisampled_render_to_single_sampled {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_multisampled_render_to_single_sampled {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceExtendedDynamicState2FeaturesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	extendedDynamicState2: VkBool32,
-	extendedDynamicState2LogicOp: VkBool32,
-	extendedDynamicState2PatchControlPoints: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub extendedDynamicState2: VkBool32,
+	pub extendedDynamicState2LogicOp: VkBool32,
+	pub extendedDynamicState2PatchControlPoints: VkBool32,
 }
 type PFN_vkCmdSetPatchControlPointsEXT = extern "system" fn(commandBuffer: VkCommandBuffer, patchControlPoints: u32);
 type PFN_vkCmdSetRasterizerDiscardEnableEXT = extern "system" fn(commandBuffer: VkCommandBuffer, rasterizerDiscardEnable: VkBool32);
@@ -27414,17 +26634,17 @@ impl Vulkan_EXT_extended_dynamic_state2 {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceColorWriteEnableFeaturesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	colorWriteEnable: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub colorWriteEnable: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPipelineColorWriteCreateInfoEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	attachmentCount: u32,
-	pColorWriteEnables: *const VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub attachmentCount: u32,
+	pub pColorWriteEnables: *const VkBool32,
 }
 type PFN_vkCmdSetColorWriteEnableEXT = extern "system" fn(commandBuffer: VkCommandBuffer, attachmentCount: u32, pColorWriteEnables: *const VkBool32);
 extern "system" fn dummy_vkCmdSetColorWriteEnableEXT(_: VkCommandBuffer, _: u32, _: *const VkBool32) {
@@ -27459,109 +26679,97 @@ impl Vulkan_EXT_color_write_enable {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDevicePrimitivesGeneratedQueryFeaturesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	primitivesGeneratedQuery: VkBool32,
-	primitivesGeneratedQueryWithRasterizerDiscard: VkBool32,
-	primitivesGeneratedQueryWithNonZeroStreams: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub primitivesGeneratedQuery: VkBool32,
+	pub primitivesGeneratedQueryWithRasterizerDiscard: VkBool32,
+	pub primitivesGeneratedQueryWithNonZeroStreams: VkBool32,
 }
 pub trait VK_EXT_primitives_generated_query: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_primitives_generated_query {
-}
-impl VK_EXT_primitives_generated_query for Vulkan_EXT_primitives_generated_query {
-}
+pub struct Vulkan_EXT_primitives_generated_query {}
+impl VK_EXT_primitives_generated_query for Vulkan_EXT_primitives_generated_query {}
 impl Default for Vulkan_EXT_primitives_generated_query {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_primitives_generated_query {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 pub const VK_MAX_GLOBAL_PRIORITY_SIZE_EXT: u32 = 16u32;
-type VkPhysicalDeviceGlobalPriorityQueryFeaturesEXT = VkPhysicalDeviceGlobalPriorityQueryFeatures;
-type VkQueueFamilyGlobalPriorityPropertiesEXT = VkQueueFamilyGlobalPriorityProperties;
+pub type VkPhysicalDeviceGlobalPriorityQueryFeaturesEXT = VkPhysicalDeviceGlobalPriorityQueryFeatures;
+pub type VkQueueFamilyGlobalPriorityPropertiesEXT = VkQueueFamilyGlobalPriorityProperties;
 pub trait VK_EXT_global_priority_query: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_global_priority_query {
-}
-impl VK_EXT_global_priority_query for Vulkan_EXT_global_priority_query {
-}
+pub struct Vulkan_EXT_global_priority_query {}
+impl VK_EXT_global_priority_query for Vulkan_EXT_global_priority_query {}
 impl Default for Vulkan_EXT_global_priority_query {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_global_priority_query {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceImageViewMinLodFeaturesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	minLod: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub minLod: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkImageViewMinLodCreateInfoEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	minLod: f32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub minLod: f32,
 }
 pub trait VK_EXT_image_view_min_lod: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_image_view_min_lod {
-}
-impl VK_EXT_image_view_min_lod for Vulkan_EXT_image_view_min_lod {
-}
+pub struct Vulkan_EXT_image_view_min_lod {}
+impl VK_EXT_image_view_min_lod for Vulkan_EXT_image_view_min_lod {}
 impl Default for Vulkan_EXT_image_view_min_lod {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_image_view_min_lod {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceMultiDrawFeaturesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	multiDraw: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub multiDraw: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceMultiDrawPropertiesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	maxMultiDrawCount: u32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub maxMultiDrawCount: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkMultiDrawInfoEXT {
-	firstVertex: u32,
-	vertexCount: u32,
+	pub firstVertex: u32,
+	pub vertexCount: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkMultiDrawIndexedInfoEXT {
-	firstIndex: u32,
-	indexCount: u32,
-	vertexOffset: i32,
+	pub firstIndex: u32,
+	pub indexCount: u32,
+	pub vertexOffset: i32,
 }
 type PFN_vkCmdDrawMultiEXT = extern "system" fn(commandBuffer: VkCommandBuffer, drawCount: u32, pVertexInfo: *const VkMultiDrawInfoEXT, instanceCount: u32, firstInstance: u32, stride: u32);
 type PFN_vkCmdDrawMultiIndexedEXT = extern "system" fn(commandBuffer: VkCommandBuffer, drawCount: u32, pIndexInfo: *const VkMultiDrawIndexedInfoEXT, instanceCount: u32, firstInstance: u32, stride: u32, pVertexOffset: *const int32_t);
@@ -27597,71 +26805,63 @@ impl Vulkan_EXT_multi_draw {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceImage2DViewOf3DFeaturesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	image2DViewOf3D: VkBool32,
-	sampler2DViewOf3D: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub image2DViewOf3D: VkBool32,
+	pub sampler2DViewOf3D: VkBool32,
 }
 pub trait VK_EXT_image_2d_view_of_3d: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_image_2d_view_of_3d {
-}
-impl VK_EXT_image_2d_view_of_3d for Vulkan_EXT_image_2d_view_of_3d {
-}
+pub struct Vulkan_EXT_image_2d_view_of_3d {}
+impl VK_EXT_image_2d_view_of_3d for Vulkan_EXT_image_2d_view_of_3d {}
 impl Default for Vulkan_EXT_image_2d_view_of_3d {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_image_2d_view_of_3d {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceShaderTileImageFeaturesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	shaderTileImageColorReadAccess: VkBool32,
-	shaderTileImageDepthReadAccess: VkBool32,
-	shaderTileImageStencilReadAccess: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub shaderTileImageColorReadAccess: VkBool32,
+	pub shaderTileImageDepthReadAccess: VkBool32,
+	pub shaderTileImageStencilReadAccess: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceShaderTileImagePropertiesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	shaderTileImageCoherentReadAccelerated: VkBool32,
-	shaderTileImageReadSampleFromPixelRateInvocation: VkBool32,
-	shaderTileImageReadFromHelperInvocation: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub shaderTileImageCoherentReadAccelerated: VkBool32,
+	pub shaderTileImageReadSampleFromPixelRateInvocation: VkBool32,
+	pub shaderTileImageReadFromHelperInvocation: VkBool32,
 }
 pub trait VK_EXT_shader_tile_image: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_shader_tile_image {
-}
-impl VK_EXT_shader_tile_image for Vulkan_EXT_shader_tile_image {
-}
+pub struct Vulkan_EXT_shader_tile_image {}
+impl VK_EXT_shader_tile_image for Vulkan_EXT_shader_tile_image {}
 impl Default for Vulkan_EXT_shader_tile_image {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_shader_tile_image {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-type VkBuildMicromapFlagsEXT = VkFlags;
-type VkMicromapCreateFlagsEXT = VkFlags;
+pub type VkBuildMicromapFlagsEXT = VkFlags;
+pub type VkMicromapCreateFlagsEXT = VkFlags;
 // Define non-dispatchable handle `VkMicromapEXT`
-#[cfg(target_pointer_width = "32")] type VkMicromapEXT = u64;
+#[cfg(target_pointer_width = "32")] pub type VkMicromapEXT = u64;
 #[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkMicromapEXT_T {}
-#[cfg(target_pointer_width = "64")] type VkMicromapEXT = *const VkMicromapEXT_T;
+#[cfg(target_pointer_width = "64")] pub type VkMicromapEXT = *const VkMicromapEXT_T;
 #[repr(C)]
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum VkMicromapTypeEXT {
@@ -27733,8 +26933,8 @@ pub enum VkMicromapCreateFlagBitsEXT {
 #[repr(C)]
 #[derive(Clone, Copy)]
 pub union VkDeviceOrHostAddressKHR {
-	deviceAddress: VkDeviceAddress,
-	hostAddress: *mut c_void,
+	pub deviceAddress: VkDeviceAddress,
+	pub hostAddress: *mut c_void,
 }
 impl Debug for VkDeviceOrHostAddressKHR {
 	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
@@ -27747,119 +26947,119 @@ impl Debug for VkDeviceOrHostAddressKHR {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkMicromapUsageEXT {
-	count: u32,
-	subdivisionLevel: u32,
-	format: u32,
+	pub count: u32,
+	pub subdivisionLevel: u32,
+	pub format: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkMicromapBuildInfoEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	type_: VkMicromapTypeEXT,
-	flags: VkBuildMicromapFlagsEXT,
-	mode: VkBuildMicromapModeEXT,
-	dstMicromap: VkMicromapEXT,
-	usageCountsCount: u32,
-	pUsageCounts: *const VkMicromapUsageEXT,
-	ppUsageCounts: *const *const VkMicromapUsageEXT,
-	data: VkDeviceOrHostAddressConstKHR,
-	scratchData: VkDeviceOrHostAddressKHR,
-	triangleArray: VkDeviceOrHostAddressConstKHR,
-	triangleArrayStride: VkDeviceSize,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub type_: VkMicromapTypeEXT,
+	pub flags: VkBuildMicromapFlagsEXT,
+	pub mode: VkBuildMicromapModeEXT,
+	pub dstMicromap: VkMicromapEXT,
+	pub usageCountsCount: u32,
+	pub pUsageCounts: *const VkMicromapUsageEXT,
+	pub ppUsageCounts: *const *const VkMicromapUsageEXT,
+	pub data: VkDeviceOrHostAddressConstKHR,
+	pub scratchData: VkDeviceOrHostAddressKHR,
+	pub triangleArray: VkDeviceOrHostAddressConstKHR,
+	pub triangleArrayStride: VkDeviceSize,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkMicromapCreateInfoEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	createFlags: VkMicromapCreateFlagsEXT,
-	buffer: VkBuffer,
-	offset: VkDeviceSize,
-	size: VkDeviceSize,
-	type_: VkMicromapTypeEXT,
-	deviceAddress: VkDeviceAddress,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub createFlags: VkMicromapCreateFlagsEXT,
+	pub buffer: VkBuffer,
+	pub offset: VkDeviceSize,
+	pub size: VkDeviceSize,
+	pub type_: VkMicromapTypeEXT,
+	pub deviceAddress: VkDeviceAddress,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceOpacityMicromapFeaturesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	micromap: VkBool32,
-	micromapCaptureReplay: VkBool32,
-	micromapHostCommands: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub micromap: VkBool32,
+	pub micromapCaptureReplay: VkBool32,
+	pub micromapHostCommands: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceOpacityMicromapPropertiesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	maxOpacity2StateSubdivisionLevel: u32,
-	maxOpacity4StateSubdivisionLevel: u32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub maxOpacity2StateSubdivisionLevel: u32,
+	pub maxOpacity4StateSubdivisionLevel: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkMicromapVersionInfoEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	pVersionData: *const uint8_t,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub pVersionData: *const uint8_t,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkCopyMicromapToMemoryInfoEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	src: VkMicromapEXT,
-	dst: VkDeviceOrHostAddressKHR,
-	mode: VkCopyMicromapModeEXT,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub src: VkMicromapEXT,
+	pub dst: VkDeviceOrHostAddressKHR,
+	pub mode: VkCopyMicromapModeEXT,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkCopyMemoryToMicromapInfoEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	src: VkDeviceOrHostAddressConstKHR,
-	dst: VkMicromapEXT,
-	mode: VkCopyMicromapModeEXT,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub src: VkDeviceOrHostAddressConstKHR,
+	pub dst: VkMicromapEXT,
+	pub mode: VkCopyMicromapModeEXT,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkCopyMicromapInfoEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	src: VkMicromapEXT,
-	dst: VkMicromapEXT,
-	mode: VkCopyMicromapModeEXT,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub src: VkMicromapEXT,
+	pub dst: VkMicromapEXT,
+	pub mode: VkCopyMicromapModeEXT,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkMicromapBuildSizesInfoEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	micromapSize: VkDeviceSize,
-	buildScratchSize: VkDeviceSize,
-	discardable: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub micromapSize: VkDeviceSize,
+	pub buildScratchSize: VkDeviceSize,
+	pub discardable: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkAccelerationStructureTrianglesOpacityMicromapEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	indexType: VkIndexType,
-	indexBuffer: VkDeviceOrHostAddressConstKHR,
-	indexStride: VkDeviceSize,
-	baseTriangle: u32,
-	usageCountsCount: u32,
-	pUsageCounts: *const VkMicromapUsageEXT,
-	ppUsageCounts: *const *const VkMicromapUsageEXT,
-	micromap: VkMicromapEXT,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub indexType: VkIndexType,
+	pub indexBuffer: VkDeviceOrHostAddressConstKHR,
+	pub indexStride: VkDeviceSize,
+	pub baseTriangle: u32,
+	pub usageCountsCount: u32,
+	pub pUsageCounts: *const VkMicromapUsageEXT,
+	pub ppUsageCounts: *const *const VkMicromapUsageEXT,
+	pub micromap: VkMicromapEXT,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkMicromapTriangleEXT {
-	dataOffset: u32,
-	subdivisionLevel: u16,
-	format: u16,
+	pub dataOffset: u32,
+	pub subdivisionLevel: u16,
+	pub format: u16,
 }
 type PFN_vkCreateMicromapEXT = extern "system" fn(device: VkDevice, pCreateInfo: *const VkMicromapCreateInfoEXT, pAllocator: *const VkAllocationCallbacks, pMicromap: *mut VkMicromapEXT) -> VkResult;
 type PFN_vkDestroyMicromapEXT = extern "system" fn(device: VkDevice, micromap: VkMicromapEXT, pAllocator: *const VkAllocationCallbacks);
@@ -27906,46 +27106,42 @@ impl Vulkan_EXT_opacity_micromap {
 }
 pub trait VK_EXT_load_store_op_none: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_load_store_op_none {
-}
-impl VK_EXT_load_store_op_none for Vulkan_EXT_load_store_op_none {
-}
+pub struct Vulkan_EXT_load_store_op_none {}
+impl VK_EXT_load_store_op_none for Vulkan_EXT_load_store_op_none {}
 impl Default for Vulkan_EXT_load_store_op_none {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_load_store_op_none {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceClusterCullingShaderFeaturesHUAWEI {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	clustercullingShader: VkBool32,
-	multiviewClusterCullingShader: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub clustercullingShader: VkBool32,
+	pub multiviewClusterCullingShader: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceClusterCullingShaderPropertiesHUAWEI {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	maxWorkGroupCount: [u32; 3 as usize],
-	maxWorkGroupSize: [u32; 3 as usize],
-	maxOutputClusterCount: u32,
-	indirectBufferOffsetAlignment: VkDeviceSize,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub maxWorkGroupCount: [u32; 3 as usize],
+	pub maxWorkGroupSize: [u32; 3 as usize],
+	pub maxOutputClusterCount: u32,
+	pub indirectBufferOffsetAlignment: VkDeviceSize,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceClusterCullingShaderVrsFeaturesHUAWEI {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	clusterShadingRate: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub clusterShadingRate: VkBool32,
 }
 type PFN_vkCmdDrawClusterHUAWEI = extern "system" fn(commandBuffer: VkCommandBuffer, groupCountX: u32, groupCountY: u32, groupCountZ: u32);
 type PFN_vkCmdDrawClusterIndirectHUAWEI = extern "system" fn(commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize);
@@ -27981,43 +27177,39 @@ impl Vulkan_HUAWEI_cluster_culling_shader {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceBorderColorSwizzleFeaturesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	borderColorSwizzle: VkBool32,
-	borderColorSwizzleFromImage: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub borderColorSwizzle: VkBool32,
+	pub borderColorSwizzleFromImage: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkSamplerBorderColorComponentMappingCreateInfoEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	components: VkComponentMapping,
-	srgb: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub components: VkComponentMapping,
+	pub srgb: VkBool32,
 }
 pub trait VK_EXT_border_color_swizzle: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_border_color_swizzle {
-}
-impl VK_EXT_border_color_swizzle for Vulkan_EXT_border_color_swizzle {
-}
+pub struct Vulkan_EXT_border_color_swizzle {}
+impl VK_EXT_border_color_swizzle for Vulkan_EXT_border_color_swizzle {}
 impl Default for Vulkan_EXT_border_color_swizzle {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_border_color_swizzle {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDevicePageableDeviceLocalMemoryFeaturesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	pageableDeviceLocalMemory: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub pageableDeviceLocalMemory: VkBool32,
 }
 type PFN_vkSetDeviceMemoryPriorityEXT = extern "system" fn(device: VkDevice, memory: VkDeviceMemory, priority: f32);
 extern "system" fn dummy_vkSetDeviceMemoryPriorityEXT(_: VkDevice, _: VkDeviceMemory, _: f32) {
@@ -28052,127 +27244,115 @@ impl Vulkan_EXT_pageable_device_local_memory {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceShaderCorePropertiesARM {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	pixelRate: u32,
-	texelRate: u32,
-	fmaRate: u32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub pixelRate: u32,
+	pub texelRate: u32,
+	pub fmaRate: u32,
 }
 pub trait VK_ARM_shader_core_properties: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_ARM_shader_core_properties {
-}
-impl VK_ARM_shader_core_properties for Vulkan_ARM_shader_core_properties {
-}
+pub struct Vulkan_ARM_shader_core_properties {}
+impl VK_ARM_shader_core_properties for Vulkan_ARM_shader_core_properties {}
 impl Default for Vulkan_ARM_shader_core_properties {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_ARM_shader_core_properties {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-type VkPhysicalDeviceSchedulingControlsFlagsARM = VkFlags64;
-type VkPhysicalDeviceSchedulingControlsFlagBitsARM = VkFlags64;
+pub type VkPhysicalDeviceSchedulingControlsFlagsARM = VkFlags64;
+pub type VkPhysicalDeviceSchedulingControlsFlagBitsARM = VkFlags64;
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDeviceQueueShaderCoreControlCreateInfoARM {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	shaderCoreCount: u32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub shaderCoreCount: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceSchedulingControlsFeaturesARM {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	schedulingControls: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub schedulingControls: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceSchedulingControlsPropertiesARM {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	schedulingControlsFlags: VkPhysicalDeviceSchedulingControlsFlagsARM,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub schedulingControlsFlags: VkPhysicalDeviceSchedulingControlsFlagsARM,
 }
 pub trait VK_ARM_scheduling_controls: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_ARM_scheduling_controls {
-}
-impl VK_ARM_scheduling_controls for Vulkan_ARM_scheduling_controls {
-}
+pub struct Vulkan_ARM_scheduling_controls {}
+impl VK_ARM_scheduling_controls for Vulkan_ARM_scheduling_controls {}
 impl Default for Vulkan_ARM_scheduling_controls {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_ARM_scheduling_controls {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 pub const VK_REMAINING_3D_SLICES_EXT: u32 = !0u32;
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceImageSlicedViewOf3DFeaturesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	imageSlicedViewOf3D: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub imageSlicedViewOf3D: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkImageViewSlicedCreateInfoEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	sliceOffset: u32,
-	sliceCount: u32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub sliceOffset: u32,
+	pub sliceCount: u32,
 }
 pub trait VK_EXT_image_sliced_view_of_3d: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_image_sliced_view_of_3d {
-}
-impl VK_EXT_image_sliced_view_of_3d for Vulkan_EXT_image_sliced_view_of_3d {
-}
+pub struct Vulkan_EXT_image_sliced_view_of_3d {}
+impl VK_EXT_image_sliced_view_of_3d for Vulkan_EXT_image_sliced_view_of_3d {}
 impl Default for Vulkan_EXT_image_sliced_view_of_3d {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_image_sliced_view_of_3d {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceDescriptorSetHostMappingFeaturesVALVE {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	descriptorSetHostMapping: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub descriptorSetHostMapping: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDescriptorSetBindingReferenceVALVE {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	descriptorSetLayout: VkDescriptorSetLayout,
-	binding: u32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub descriptorSetLayout: VkDescriptorSetLayout,
+	pub binding: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDescriptorSetLayoutHostMappingInfoVALVE {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	descriptorOffset: usize,
-	descriptorSize: u32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub descriptorOffset: usize,
+	pub descriptorSize: u32,
 }
 type PFN_vkGetDescriptorSetLayoutHostMappingInfoVALVE = extern "system" fn(device: VkDevice, pBindingReference: *const VkDescriptorSetBindingReferenceVALVE, pHostMapping: *mut VkDescriptorSetLayoutHostMappingInfoVALVE);
 type PFN_vkGetDescriptorSetHostMappingVALVE = extern "system" fn(device: VkDevice, descriptorSet: VkDescriptorSet, ppData: *mut *mut c_void);
@@ -28205,179 +27385,163 @@ impl Vulkan_VALVE_descriptor_set_host_mapping {
 		}
 	}
 }
-type VkPhysicalDeviceDepthClampZeroOneFeaturesEXT = VkPhysicalDeviceDepthClampZeroOneFeaturesKHR;
+pub type VkPhysicalDeviceDepthClampZeroOneFeaturesEXT = VkPhysicalDeviceDepthClampZeroOneFeaturesKHR;
 pub trait VK_EXT_depth_clamp_zero_one: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_depth_clamp_zero_one {
-}
-impl VK_EXT_depth_clamp_zero_one for Vulkan_EXT_depth_clamp_zero_one {
-}
+pub struct Vulkan_EXT_depth_clamp_zero_one {}
+impl VK_EXT_depth_clamp_zero_one for Vulkan_EXT_depth_clamp_zero_one {}
 impl Default for Vulkan_EXT_depth_clamp_zero_one {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_depth_clamp_zero_one {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceNonSeamlessCubeMapFeaturesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	nonSeamlessCubeMap: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub nonSeamlessCubeMap: VkBool32,
 }
 pub trait VK_EXT_non_seamless_cube_map: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_non_seamless_cube_map {
-}
-impl VK_EXT_non_seamless_cube_map for Vulkan_EXT_non_seamless_cube_map {
-}
+pub struct Vulkan_EXT_non_seamless_cube_map {}
+impl VK_EXT_non_seamless_cube_map for Vulkan_EXT_non_seamless_cube_map {}
 impl Default for Vulkan_EXT_non_seamless_cube_map {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_non_seamless_cube_map {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceRenderPassStripedFeaturesARM {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	renderPassStriped: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub renderPassStriped: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceRenderPassStripedPropertiesARM {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	renderPassStripeGranularity: VkExtent2D,
-	maxRenderPassStripes: u32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub renderPassStripeGranularity: VkExtent2D,
+	pub maxRenderPassStripes: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkRenderPassStripeInfoARM {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	stripeArea: VkRect2D,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub stripeArea: VkRect2D,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkRenderPassStripeBeginInfoARM {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	stripeInfoCount: u32,
-	pStripeInfos: *const VkRenderPassStripeInfoARM,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub stripeInfoCount: u32,
+	pub pStripeInfos: *const VkRenderPassStripeInfoARM,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkRenderPassStripeSubmitInfoARM {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	stripeSemaphoreInfoCount: u32,
-	pStripeSemaphoreInfos: *const VkSemaphoreSubmitInfo,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub stripeSemaphoreInfoCount: u32,
+	pub pStripeSemaphoreInfos: *const VkSemaphoreSubmitInfo,
 }
 pub trait VK_ARM_render_pass_striped: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_ARM_render_pass_striped {
-}
-impl VK_ARM_render_pass_striped for Vulkan_ARM_render_pass_striped {
-}
+pub struct Vulkan_ARM_render_pass_striped {}
+impl VK_ARM_render_pass_striped for Vulkan_ARM_render_pass_striped {}
 impl Default for Vulkan_ARM_render_pass_striped {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_ARM_render_pass_striped {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-type VkPhysicalDeviceFragmentDensityMapOffsetFeaturesQCOM = VkPhysicalDeviceFragmentDensityMapOffsetFeaturesEXT;
-type VkPhysicalDeviceFragmentDensityMapOffsetPropertiesQCOM = VkPhysicalDeviceFragmentDensityMapOffsetPropertiesEXT;
-type VkSubpassFragmentDensityMapOffsetEndInfoQCOM = VkRenderPassFragmentDensityMapOffsetEndInfoEXT;
+pub type VkPhysicalDeviceFragmentDensityMapOffsetFeaturesQCOM = VkPhysicalDeviceFragmentDensityMapOffsetFeaturesEXT;
+pub type VkPhysicalDeviceFragmentDensityMapOffsetPropertiesQCOM = VkPhysicalDeviceFragmentDensityMapOffsetPropertiesEXT;
+pub type VkSubpassFragmentDensityMapOffsetEndInfoQCOM = VkRenderPassFragmentDensityMapOffsetEndInfoEXT;
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceFragmentDensityMapOffsetFeaturesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	fragmentDensityMapOffset: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub fragmentDensityMapOffset: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceFragmentDensityMapOffsetPropertiesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	fragmentDensityOffsetGranularity: VkExtent2D,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub fragmentDensityOffsetGranularity: VkExtent2D,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkRenderPassFragmentDensityMapOffsetEndInfoEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	fragmentDensityOffsetCount: u32,
-	pFragmentDensityOffsets: *const VkOffset2D,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub fragmentDensityOffsetCount: u32,
+	pub pFragmentDensityOffsets: *const VkOffset2D,
 }
 pub trait VK_QCOM_fragment_density_map_offset: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_QCOM_fragment_density_map_offset {
-}
-impl VK_QCOM_fragment_density_map_offset for Vulkan_QCOM_fragment_density_map_offset {
-}
+pub struct Vulkan_QCOM_fragment_density_map_offset {}
+impl VK_QCOM_fragment_density_map_offset for Vulkan_QCOM_fragment_density_map_offset {}
 impl Default for Vulkan_QCOM_fragment_density_map_offset {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_QCOM_fragment_density_map_offset {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkCopyMemoryIndirectCommandNV {
-	srcAddress: VkDeviceAddress,
-	dstAddress: VkDeviceAddress,
-	size: VkDeviceSize,
+	pub srcAddress: VkDeviceAddress,
+	pub dstAddress: VkDeviceAddress,
+	pub size: VkDeviceSize,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkCopyMemoryToImageIndirectCommandNV {
-	srcAddress: VkDeviceAddress,
-	bufferRowLength: u32,
-	bufferImageHeight: u32,
-	imageSubresource: VkImageSubresourceLayers,
-	imageOffset: VkOffset3D,
-	imageExtent: VkExtent3D,
+	pub srcAddress: VkDeviceAddress,
+	pub bufferRowLength: u32,
+	pub bufferImageHeight: u32,
+	pub imageSubresource: VkImageSubresourceLayers,
+	pub imageOffset: VkOffset3D,
+	pub imageExtent: VkExtent3D,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceCopyMemoryIndirectFeaturesNV {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	indirectCopy: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub indirectCopy: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceCopyMemoryIndirectPropertiesNV {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	supportedQueues: VkQueueFlags,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub supportedQueues: VkQueueFlags,
 }
 type PFN_vkCmdCopyMemoryIndirectNV = extern "system" fn(commandBuffer: VkCommandBuffer, copyBufferAddress: VkDeviceAddress, copyCount: u32, stride: u32);
 type PFN_vkCmdCopyMemoryToImageIndirectNV = extern "system" fn(commandBuffer: VkCommandBuffer, copyBufferAddress: VkDeviceAddress, copyCount: u32, stride: u32, dstImage: VkImage, dstImageLayout: VkImageLayout, pImageSubresources: *const VkImageSubresourceLayers);
@@ -28410,31 +27574,31 @@ impl Vulkan_NV_copy_memory_indirect {
 		}
 	}
 }
-type VkMemoryDecompressionMethodFlagBitsNV = VkFlags64;
-type VkMemoryDecompressionMethodFlagsNV = VkFlags64;
+pub type VkMemoryDecompressionMethodFlagBitsNV = VkFlags64;
+pub type VkMemoryDecompressionMethodFlagsNV = VkFlags64;
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDecompressMemoryRegionNV {
-	srcAddress: VkDeviceAddress,
-	dstAddress: VkDeviceAddress,
-	compressedSize: VkDeviceSize,
-	decompressedSize: VkDeviceSize,
-	decompressionMethod: VkMemoryDecompressionMethodFlagsNV,
+	pub srcAddress: VkDeviceAddress,
+	pub dstAddress: VkDeviceAddress,
+	pub compressedSize: VkDeviceSize,
+	pub decompressedSize: VkDeviceSize,
+	pub decompressionMethod: VkMemoryDecompressionMethodFlagsNV,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceMemoryDecompressionFeaturesNV {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	memoryDecompression: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub memoryDecompression: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceMemoryDecompressionPropertiesNV {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	decompressionMethods: VkMemoryDecompressionMethodFlagsNV,
-	maxDecompressionIndirectCount: u64,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub decompressionMethods: VkMemoryDecompressionMethodFlagsNV,
+	pub maxDecompressionIndirectCount: u64,
 }
 type PFN_vkCmdDecompressMemoryNV = extern "system" fn(commandBuffer: VkCommandBuffer, decompressRegionCount: u32, pDecompressMemoryRegions: *const VkDecompressMemoryRegionNV);
 type PFN_vkCmdDecompressMemoryIndirectCountNV = extern "system" fn(commandBuffer: VkCommandBuffer, indirectCommandsAddress: VkDeviceAddress, indirectCommandsCountAddress: VkDeviceAddress, stride: u32);
@@ -28470,33 +27634,33 @@ impl Vulkan_NV_memory_decompression {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceDeviceGeneratedCommandsComputeFeaturesNV {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	deviceGeneratedCompute: VkBool32,
-	deviceGeneratedComputePipelines: VkBool32,
-	deviceGeneratedComputeCaptureReplay: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub deviceGeneratedCompute: VkBool32,
+	pub deviceGeneratedComputePipelines: VkBool32,
+	pub deviceGeneratedComputeCaptureReplay: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkComputePipelineIndirectBufferInfoNV {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	deviceAddress: VkDeviceAddress,
-	size: VkDeviceSize,
-	pipelineDeviceAddressCaptureReplay: VkDeviceAddress,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub deviceAddress: VkDeviceAddress,
+	pub size: VkDeviceSize,
+	pub pipelineDeviceAddressCaptureReplay: VkDeviceAddress,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPipelineIndirectDeviceAddressInfoNV {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	pipelineBindPoint: VkPipelineBindPoint,
-	pipeline: VkPipeline,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub pipelineBindPoint: VkPipelineBindPoint,
+	pub pipeline: VkPipeline,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkBindPipelineIndirectCommandNV {
-	pipelineAddress: VkDeviceAddress,
+	pub pipelineAddress: VkDeviceAddress,
 }
 type PFN_vkGetPipelineIndirectMemoryRequirementsNV = extern "system" fn(device: VkDevice, pCreateInfo: *const VkComputePipelineCreateInfo, pMemoryRequirements: *mut VkMemoryRequirements2);
 type PFN_vkCmdUpdatePipelineIndirectBufferNV = extern "system" fn(commandBuffer: VkCommandBuffer, pipelineBindPoint: VkPipelineBindPoint, pipeline: VkPipeline);
@@ -28547,296 +27711,268 @@ pub enum VkRayTracingLssPrimitiveEndCapsModeNV {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceRayTracingLinearSweptSpheresFeaturesNV {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	spheres: VkBool32,
-	linearSweptSpheres: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub spheres: VkBool32,
+	pub linearSweptSpheres: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkAccelerationStructureGeometryLinearSweptSpheresDataNV {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	vertexFormat: VkFormat,
-	vertexData: VkDeviceOrHostAddressConstKHR,
-	vertexStride: VkDeviceSize,
-	radiusFormat: VkFormat,
-	radiusData: VkDeviceOrHostAddressConstKHR,
-	radiusStride: VkDeviceSize,
-	indexType: VkIndexType,
-	indexData: VkDeviceOrHostAddressConstKHR,
-	indexStride: VkDeviceSize,
-	indexingMode: VkRayTracingLssIndexingModeNV,
-	endCapsMode: VkRayTracingLssPrimitiveEndCapsModeNV,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub vertexFormat: VkFormat,
+	pub vertexData: VkDeviceOrHostAddressConstKHR,
+	pub vertexStride: VkDeviceSize,
+	pub radiusFormat: VkFormat,
+	pub radiusData: VkDeviceOrHostAddressConstKHR,
+	pub radiusStride: VkDeviceSize,
+	pub indexType: VkIndexType,
+	pub indexData: VkDeviceOrHostAddressConstKHR,
+	pub indexStride: VkDeviceSize,
+	pub indexingMode: VkRayTracingLssIndexingModeNV,
+	pub endCapsMode: VkRayTracingLssPrimitiveEndCapsModeNV,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkAccelerationStructureGeometrySpheresDataNV {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	vertexFormat: VkFormat,
-	vertexData: VkDeviceOrHostAddressConstKHR,
-	vertexStride: VkDeviceSize,
-	radiusFormat: VkFormat,
-	radiusData: VkDeviceOrHostAddressConstKHR,
-	radiusStride: VkDeviceSize,
-	indexType: VkIndexType,
-	indexData: VkDeviceOrHostAddressConstKHR,
-	indexStride: VkDeviceSize,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub vertexFormat: VkFormat,
+	pub vertexData: VkDeviceOrHostAddressConstKHR,
+	pub vertexStride: VkDeviceSize,
+	pub radiusFormat: VkFormat,
+	pub radiusData: VkDeviceOrHostAddressConstKHR,
+	pub radiusStride: VkDeviceSize,
+	pub indexType: VkIndexType,
+	pub indexData: VkDeviceOrHostAddressConstKHR,
+	pub indexStride: VkDeviceSize,
 }
 pub trait VK_NV_ray_tracing_linear_swept_spheres: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_NV_ray_tracing_linear_swept_spheres {
-}
-impl VK_NV_ray_tracing_linear_swept_spheres for Vulkan_NV_ray_tracing_linear_swept_spheres {
-}
+pub struct Vulkan_NV_ray_tracing_linear_swept_spheres {}
+impl VK_NV_ray_tracing_linear_swept_spheres for Vulkan_NV_ray_tracing_linear_swept_spheres {}
 impl Default for Vulkan_NV_ray_tracing_linear_swept_spheres {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_NV_ray_tracing_linear_swept_spheres {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceLinearColorAttachmentFeaturesNV {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	linearColorAttachment: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub linearColorAttachment: VkBool32,
 }
 pub trait VK_NV_linear_color_attachment: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_NV_linear_color_attachment {
-}
-impl VK_NV_linear_color_attachment for Vulkan_NV_linear_color_attachment {
-}
+pub struct Vulkan_NV_linear_color_attachment {}
+impl VK_NV_linear_color_attachment for Vulkan_NV_linear_color_attachment {}
 impl Default for Vulkan_NV_linear_color_attachment {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_NV_linear_color_attachment {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 pub trait VK_GOOGLE_surfaceless_query: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_GOOGLE_surfaceless_query {
-}
-impl VK_GOOGLE_surfaceless_query for Vulkan_GOOGLE_surfaceless_query {
-}
+pub struct Vulkan_GOOGLE_surfaceless_query {}
+impl VK_GOOGLE_surfaceless_query for Vulkan_GOOGLE_surfaceless_query {}
 impl Default for Vulkan_GOOGLE_surfaceless_query {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_GOOGLE_surfaceless_query {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceImageCompressionControlSwapchainFeaturesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	imageCompressionControlSwapchain: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub imageCompressionControlSwapchain: VkBool32,
 }
 pub trait VK_EXT_image_compression_control_swapchain: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_image_compression_control_swapchain {
-}
-impl VK_EXT_image_compression_control_swapchain for Vulkan_EXT_image_compression_control_swapchain {
-}
+pub struct Vulkan_EXT_image_compression_control_swapchain {}
+impl VK_EXT_image_compression_control_swapchain for Vulkan_EXT_image_compression_control_swapchain {}
 impl Default for Vulkan_EXT_image_compression_control_swapchain {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_image_compression_control_swapchain {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkImageViewSampleWeightCreateInfoQCOM {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	filterCenter: VkOffset2D,
-	filterSize: VkExtent2D,
-	numPhases: u32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub filterCenter: VkOffset2D,
+	pub filterSize: VkExtent2D,
+	pub numPhases: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceImageProcessingFeaturesQCOM {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	textureSampleWeighted: VkBool32,
-	textureBoxFilter: VkBool32,
-	textureBlockMatch: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub textureSampleWeighted: VkBool32,
+	pub textureBoxFilter: VkBool32,
+	pub textureBlockMatch: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceImageProcessingPropertiesQCOM {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	maxWeightFilterPhases: u32,
-	maxWeightFilterDimension: VkExtent2D,
-	maxBlockMatchRegion: VkExtent2D,
-	maxBoxFilterBlockSize: VkExtent2D,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub maxWeightFilterPhases: u32,
+	pub maxWeightFilterDimension: VkExtent2D,
+	pub maxBlockMatchRegion: VkExtent2D,
+	pub maxBoxFilterBlockSize: VkExtent2D,
 }
 pub trait VK_QCOM_image_processing: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_QCOM_image_processing {
-}
-impl VK_QCOM_image_processing for Vulkan_QCOM_image_processing {
-}
+pub struct Vulkan_QCOM_image_processing {}
+impl VK_QCOM_image_processing for Vulkan_QCOM_image_processing {}
 impl Default for Vulkan_QCOM_image_processing {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_QCOM_image_processing {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceNestedCommandBufferFeaturesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	nestedCommandBuffer: VkBool32,
-	nestedCommandBufferRendering: VkBool32,
-	nestedCommandBufferSimultaneousUse: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub nestedCommandBuffer: VkBool32,
+	pub nestedCommandBufferRendering: VkBool32,
+	pub nestedCommandBufferSimultaneousUse: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceNestedCommandBufferPropertiesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	maxCommandBufferNestingLevel: u32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub maxCommandBufferNestingLevel: u32,
 }
 pub trait VK_EXT_nested_command_buffer: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_nested_command_buffer {
-}
-impl VK_EXT_nested_command_buffer for Vulkan_EXT_nested_command_buffer {
-}
+pub struct Vulkan_EXT_nested_command_buffer {}
+impl VK_EXT_nested_command_buffer for Vulkan_EXT_nested_command_buffer {}
 impl Default for Vulkan_EXT_nested_command_buffer {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_nested_command_buffer {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkExternalMemoryAcquireUnmodifiedEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	acquireUnmodifiedMemory: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub acquireUnmodifiedMemory: VkBool32,
 }
 pub trait VK_EXT_external_memory_acquire_unmodified: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_external_memory_acquire_unmodified {
-}
-impl VK_EXT_external_memory_acquire_unmodified for Vulkan_EXT_external_memory_acquire_unmodified {
-}
+pub struct Vulkan_EXT_external_memory_acquire_unmodified {}
+impl VK_EXT_external_memory_acquire_unmodified for Vulkan_EXT_external_memory_acquire_unmodified {}
 impl Default for Vulkan_EXT_external_memory_acquire_unmodified {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_external_memory_acquire_unmodified {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceExtendedDynamicState3FeaturesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	extendedDynamicState3TessellationDomainOrigin: VkBool32,
-	extendedDynamicState3DepthClampEnable: VkBool32,
-	extendedDynamicState3PolygonMode: VkBool32,
-	extendedDynamicState3RasterizationSamples: VkBool32,
-	extendedDynamicState3SampleMask: VkBool32,
-	extendedDynamicState3AlphaToCoverageEnable: VkBool32,
-	extendedDynamicState3AlphaToOneEnable: VkBool32,
-	extendedDynamicState3LogicOpEnable: VkBool32,
-	extendedDynamicState3ColorBlendEnable: VkBool32,
-	extendedDynamicState3ColorBlendEquation: VkBool32,
-	extendedDynamicState3ColorWriteMask: VkBool32,
-	extendedDynamicState3RasterizationStream: VkBool32,
-	extendedDynamicState3ConservativeRasterizationMode: VkBool32,
-	extendedDynamicState3ExtraPrimitiveOverestimationSize: VkBool32,
-	extendedDynamicState3DepthClipEnable: VkBool32,
-	extendedDynamicState3SampleLocationsEnable: VkBool32,
-	extendedDynamicState3ColorBlendAdvanced: VkBool32,
-	extendedDynamicState3ProvokingVertexMode: VkBool32,
-	extendedDynamicState3LineRasterizationMode: VkBool32,
-	extendedDynamicState3LineStippleEnable: VkBool32,
-	extendedDynamicState3DepthClipNegativeOneToOne: VkBool32,
-	extendedDynamicState3ViewportWScalingEnable: VkBool32,
-	extendedDynamicState3ViewportSwizzle: VkBool32,
-	extendedDynamicState3CoverageToColorEnable: VkBool32,
-	extendedDynamicState3CoverageToColorLocation: VkBool32,
-	extendedDynamicState3CoverageModulationMode: VkBool32,
-	extendedDynamicState3CoverageModulationTableEnable: VkBool32,
-	extendedDynamicState3CoverageModulationTable: VkBool32,
-	extendedDynamicState3CoverageReductionMode: VkBool32,
-	extendedDynamicState3RepresentativeFragmentTestEnable: VkBool32,
-	extendedDynamicState3ShadingRateImageEnable: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub extendedDynamicState3TessellationDomainOrigin: VkBool32,
+	pub extendedDynamicState3DepthClampEnable: VkBool32,
+	pub extendedDynamicState3PolygonMode: VkBool32,
+	pub extendedDynamicState3RasterizationSamples: VkBool32,
+	pub extendedDynamicState3SampleMask: VkBool32,
+	pub extendedDynamicState3AlphaToCoverageEnable: VkBool32,
+	pub extendedDynamicState3AlphaToOneEnable: VkBool32,
+	pub extendedDynamicState3LogicOpEnable: VkBool32,
+	pub extendedDynamicState3ColorBlendEnable: VkBool32,
+	pub extendedDynamicState3ColorBlendEquation: VkBool32,
+	pub extendedDynamicState3ColorWriteMask: VkBool32,
+	pub extendedDynamicState3RasterizationStream: VkBool32,
+	pub extendedDynamicState3ConservativeRasterizationMode: VkBool32,
+	pub extendedDynamicState3ExtraPrimitiveOverestimationSize: VkBool32,
+	pub extendedDynamicState3DepthClipEnable: VkBool32,
+	pub extendedDynamicState3SampleLocationsEnable: VkBool32,
+	pub extendedDynamicState3ColorBlendAdvanced: VkBool32,
+	pub extendedDynamicState3ProvokingVertexMode: VkBool32,
+	pub extendedDynamicState3LineRasterizationMode: VkBool32,
+	pub extendedDynamicState3LineStippleEnable: VkBool32,
+	pub extendedDynamicState3DepthClipNegativeOneToOne: VkBool32,
+	pub extendedDynamicState3ViewportWScalingEnable: VkBool32,
+	pub extendedDynamicState3ViewportSwizzle: VkBool32,
+	pub extendedDynamicState3CoverageToColorEnable: VkBool32,
+	pub extendedDynamicState3CoverageToColorLocation: VkBool32,
+	pub extendedDynamicState3CoverageModulationMode: VkBool32,
+	pub extendedDynamicState3CoverageModulationTableEnable: VkBool32,
+	pub extendedDynamicState3CoverageModulationTable: VkBool32,
+	pub extendedDynamicState3CoverageReductionMode: VkBool32,
+	pub extendedDynamicState3RepresentativeFragmentTestEnable: VkBool32,
+	pub extendedDynamicState3ShadingRateImageEnable: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceExtendedDynamicState3PropertiesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	dynamicPrimitiveTopologyUnrestricted: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub dynamicPrimitiveTopologyUnrestricted: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkColorBlendEquationEXT {
-	srcColorBlendFactor: VkBlendFactor,
-	dstColorBlendFactor: VkBlendFactor,
-	colorBlendOp: VkBlendOp,
-	srcAlphaBlendFactor: VkBlendFactor,
-	dstAlphaBlendFactor: VkBlendFactor,
-	alphaBlendOp: VkBlendOp,
+	pub srcColorBlendFactor: VkBlendFactor,
+	pub dstColorBlendFactor: VkBlendFactor,
+	pub colorBlendOp: VkBlendOp,
+	pub srcAlphaBlendFactor: VkBlendFactor,
+	pub dstAlphaBlendFactor: VkBlendFactor,
+	pub alphaBlendOp: VkBlendOp,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkColorBlendAdvancedEXT {
-	advancedBlendOp: VkBlendOp,
-	srcPremultiplied: VkBool32,
-	dstPremultiplied: VkBool32,
-	blendOverlap: VkBlendOverlapEXT,
-	clampResults: VkBool32,
+	pub advancedBlendOp: VkBlendOp,
+	pub srcPremultiplied: VkBool32,
+	pub dstPremultiplied: VkBool32,
+	pub blendOverlap: VkBlendOverlapEXT,
+	pub clampResults: VkBool32,
 }
 type PFN_vkCmdSetDepthClampEnableEXT = extern "system" fn(commandBuffer: VkCommandBuffer, depthClampEnable: VkBool32);
 type PFN_vkCmdSetPolygonModeEXT = extern "system" fn(commandBuffer: VkCommandBuffer, polygonMode: VkPolygonMode);
@@ -28920,62 +28056,58 @@ pub enum VkSubpassMergeStatusEXT {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceSubpassMergeFeedbackFeaturesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	subpassMergeFeedback: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub subpassMergeFeedback: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkRenderPassCreationControlEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	disallowMerging: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub disallowMerging: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkRenderPassCreationFeedbackInfoEXT {
-	postMergeSubpassCount: u32,
+	pub postMergeSubpassCount: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkRenderPassCreationFeedbackCreateInfoEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	pRenderPassFeedback: *mut VkRenderPassCreationFeedbackInfoEXT,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub pRenderPassFeedback: *mut VkRenderPassCreationFeedbackInfoEXT,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkRenderPassSubpassFeedbackInfoEXT {
-	subpassMergeStatus: VkSubpassMergeStatusEXT,
-	description: [i8; VK_MAX_DESCRIPTION_SIZE as usize],
-	postMergeIndex: u32,
+	pub subpassMergeStatus: VkSubpassMergeStatusEXT,
+	pub description: [i8; VK_MAX_DESCRIPTION_SIZE as usize],
+	pub postMergeIndex: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkRenderPassSubpassFeedbackCreateInfoEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	pSubpassFeedback: *mut VkRenderPassSubpassFeedbackInfoEXT,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub pSubpassFeedback: *mut VkRenderPassSubpassFeedbackInfoEXT,
 }
 pub trait VK_EXT_subpass_merge_feedback: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_subpass_merge_feedback {
-}
-impl VK_EXT_subpass_merge_feedback for Vulkan_EXT_subpass_merge_feedback {
-}
+pub struct Vulkan_EXT_subpass_merge_feedback {}
+impl VK_EXT_subpass_merge_feedback for Vulkan_EXT_subpass_merge_feedback {}
 impl Default for Vulkan_EXT_subpass_merge_feedback {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_subpass_merge_feedback {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-type VkDirectDriverLoadingFlagsLUNARG = VkFlags;
+pub type VkDirectDriverLoadingFlagsLUNARG = VkFlags;
 #[repr(C)]
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum VkDirectDriverLoadingModeLUNARG {
@@ -28986,53 +28118,49 @@ pub enum VkDirectDriverLoadingModeLUNARG {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDirectDriverLoadingInfoLUNARG {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	flags: VkDirectDriverLoadingFlagsLUNARG,
-	pfnGetInstanceProcAddr: PFN_vkGetInstanceProcAddrLUNARG,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub flags: VkDirectDriverLoadingFlagsLUNARG,
+	pub pfnGetInstanceProcAddr: PFN_vkGetInstanceProcAddrLUNARG,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDirectDriverLoadingListLUNARG {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	mode: VkDirectDriverLoadingModeLUNARG,
-	driverCount: u32,
-	pDrivers: *const VkDirectDriverLoadingInfoLUNARG,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub mode: VkDirectDriverLoadingModeLUNARG,
+	pub driverCount: u32,
+	pub pDrivers: *const VkDirectDriverLoadingInfoLUNARG,
 }
 type PFN_vkGetInstanceProcAddrLUNARG = extern "system" fn(instance: VkInstance, pName: *const i8) -> PFN_vkVoidFunction;
 pub trait VK_LUNARG_direct_driver_loading: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_LUNARG_direct_driver_loading {
-}
-impl VK_LUNARG_direct_driver_loading for Vulkan_LUNARG_direct_driver_loading {
-}
+pub struct Vulkan_LUNARG_direct_driver_loading {}
+impl VK_LUNARG_direct_driver_loading for Vulkan_LUNARG_direct_driver_loading {}
 impl Default for Vulkan_LUNARG_direct_driver_loading {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_LUNARG_direct_driver_loading {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-type VkTensorCreateFlagsARM = VkFlags64;
-type VkTensorCreateFlagBitsARM = VkFlags64;
-type VkTensorViewCreateFlagsARM = VkFlags64;
-type VkTensorViewCreateFlagBitsARM = VkFlags64;
-type VkTensorUsageFlagsARM = VkFlags64;
-type VkTensorUsageFlagBitsARM = VkFlags64;
+pub type VkTensorCreateFlagsARM = VkFlags64;
+pub type VkTensorCreateFlagBitsARM = VkFlags64;
+pub type VkTensorViewCreateFlagsARM = VkFlags64;
+pub type VkTensorViewCreateFlagBitsARM = VkFlags64;
+pub type VkTensorUsageFlagsARM = VkFlags64;
+pub type VkTensorUsageFlagBitsARM = VkFlags64;
 // Define non-dispatchable handle `VkTensorARM`
-#[cfg(target_pointer_width = "32")] type VkTensorARM = u64;
+#[cfg(target_pointer_width = "32")] pub type VkTensorARM = u64;
 #[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkTensorARM_T {}
-#[cfg(target_pointer_width = "64")] type VkTensorARM = *const VkTensorARM_T;
+#[cfg(target_pointer_width = "64")] pub type VkTensorARM = *const VkTensorARM_T;
 // Define non-dispatchable handle `VkTensorViewARM`
-#[cfg(target_pointer_width = "32")] type VkTensorViewARM = u64;
+#[cfg(target_pointer_width = "32")] pub type VkTensorViewARM = u64;
 #[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkTensorViewARM_T {}
-#[cfg(target_pointer_width = "64")] type VkTensorViewARM = *const VkTensorViewARM_T;
+#[cfg(target_pointer_width = "64")] pub type VkTensorViewARM = *const VkTensorViewARM_T;
 #[repr(C)]
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum VkTensorTilingARM {
@@ -29043,220 +28171,220 @@ pub enum VkTensorTilingARM {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkTensorDescriptionARM {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	tiling: VkTensorTilingARM,
-	format: VkFormat,
-	dimensionCount: u32,
-	pDimensions: *const int64_t,
-	pStrides: *const int64_t,
-	usage: VkTensorUsageFlagsARM,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub tiling: VkTensorTilingARM,
+	pub format: VkFormat,
+	pub dimensionCount: u32,
+	pub pDimensions: *const int64_t,
+	pub pStrides: *const int64_t,
+	pub usage: VkTensorUsageFlagsARM,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkTensorCreateInfoARM {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkTensorCreateFlagsARM,
-	pDescription: *const VkTensorDescriptionARM,
-	sharingMode: VkSharingMode,
-	queueFamilyIndexCount: u32,
-	pQueueFamilyIndices: *const uint32_t,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkTensorCreateFlagsARM,
+	pub pDescription: *const VkTensorDescriptionARM,
+	pub sharingMode: VkSharingMode,
+	pub queueFamilyIndexCount: u32,
+	pub pQueueFamilyIndices: *const uint32_t,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkTensorViewCreateInfoARM {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkTensorViewCreateFlagsARM,
-	tensor: VkTensorARM,
-	format: VkFormat,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkTensorViewCreateFlagsARM,
+	pub tensor: VkTensorARM,
+	pub format: VkFormat,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkTensorMemoryRequirementsInfoARM {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	tensor: VkTensorARM,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub tensor: VkTensorARM,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkBindTensorMemoryInfoARM {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	tensor: VkTensorARM,
-	memory: VkDeviceMemory,
-	memoryOffset: VkDeviceSize,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub tensor: VkTensorARM,
+	pub memory: VkDeviceMemory,
+	pub memoryOffset: VkDeviceSize,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkWriteDescriptorSetTensorARM {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	tensorViewCount: u32,
-	pTensorViews: *const VkTensorViewARM,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub tensorViewCount: u32,
+	pub pTensorViews: *const VkTensorViewARM,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkTensorFormatPropertiesARM {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	optimalTilingTensorFeatures: VkFormatFeatureFlags2,
-	linearTilingTensorFeatures: VkFormatFeatureFlags2,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub optimalTilingTensorFeatures: VkFormatFeatureFlags2,
+	pub linearTilingTensorFeatures: VkFormatFeatureFlags2,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceTensorPropertiesARM {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	maxTensorDimensionCount: u32,
-	maxTensorElements: u64,
-	maxPerDimensionTensorElements: u64,
-	maxTensorStride: i64,
-	maxTensorSize: u64,
-	maxTensorShaderAccessArrayLength: u32,
-	maxTensorShaderAccessSize: u32,
-	maxDescriptorSetStorageTensors: u32,
-	maxPerStageDescriptorSetStorageTensors: u32,
-	maxDescriptorSetUpdateAfterBindStorageTensors: u32,
-	maxPerStageDescriptorUpdateAfterBindStorageTensors: u32,
-	shaderStorageTensorArrayNonUniformIndexingNative: VkBool32,
-	shaderTensorSupportedStages: VkShaderStageFlags,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub maxTensorDimensionCount: u32,
+	pub maxTensorElements: u64,
+	pub maxPerDimensionTensorElements: u64,
+	pub maxTensorStride: i64,
+	pub maxTensorSize: u64,
+	pub maxTensorShaderAccessArrayLength: u32,
+	pub maxTensorShaderAccessSize: u32,
+	pub maxDescriptorSetStorageTensors: u32,
+	pub maxPerStageDescriptorSetStorageTensors: u32,
+	pub maxDescriptorSetUpdateAfterBindStorageTensors: u32,
+	pub maxPerStageDescriptorUpdateAfterBindStorageTensors: u32,
+	pub shaderStorageTensorArrayNonUniformIndexingNative: VkBool32,
+	pub shaderTensorSupportedStages: VkShaderStageFlags,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkTensorMemoryBarrierARM {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	srcStageMask: VkPipelineStageFlags2,
-	srcAccessMask: VkAccessFlags2,
-	dstStageMask: VkPipelineStageFlags2,
-	dstAccessMask: VkAccessFlags2,
-	srcQueueFamilyIndex: u32,
-	dstQueueFamilyIndex: u32,
-	tensor: VkTensorARM,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub srcStageMask: VkPipelineStageFlags2,
+	pub srcAccessMask: VkAccessFlags2,
+	pub dstStageMask: VkPipelineStageFlags2,
+	pub dstAccessMask: VkAccessFlags2,
+	pub srcQueueFamilyIndex: u32,
+	pub dstQueueFamilyIndex: u32,
+	pub tensor: VkTensorARM,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkTensorDependencyInfoARM {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	tensorMemoryBarrierCount: u32,
-	pTensorMemoryBarriers: *const VkTensorMemoryBarrierARM,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub tensorMemoryBarrierCount: u32,
+	pub pTensorMemoryBarriers: *const VkTensorMemoryBarrierARM,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceTensorFeaturesARM {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	tensorNonPacked: VkBool32,
-	shaderTensorAccess: VkBool32,
-	shaderStorageTensorArrayDynamicIndexing: VkBool32,
-	shaderStorageTensorArrayNonUniformIndexing: VkBool32,
-	descriptorBindingStorageTensorUpdateAfterBind: VkBool32,
-	tensors: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub tensorNonPacked: VkBool32,
+	pub shaderTensorAccess: VkBool32,
+	pub shaderStorageTensorArrayDynamicIndexing: VkBool32,
+	pub shaderStorageTensorArrayNonUniformIndexing: VkBool32,
+	pub descriptorBindingStorageTensorUpdateAfterBind: VkBool32,
+	pub tensors: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDeviceTensorMemoryRequirementsARM {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	pCreateInfo: *const VkTensorCreateInfoARM,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub pCreateInfo: *const VkTensorCreateInfoARM,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkTensorCopyARM {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	dimensionCount: u32,
-	pSrcOffset: *const uint64_t,
-	pDstOffset: *const uint64_t,
-	pExtent: *const uint64_t,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub dimensionCount: u32,
+	pub pSrcOffset: *const uint64_t,
+	pub pDstOffset: *const uint64_t,
+	pub pExtent: *const uint64_t,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkCopyTensorInfoARM {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	srcTensor: VkTensorARM,
-	dstTensor: VkTensorARM,
-	regionCount: u32,
-	pRegions: *const VkTensorCopyARM,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub srcTensor: VkTensorARM,
+	pub dstTensor: VkTensorARM,
+	pub regionCount: u32,
+	pub pRegions: *const VkTensorCopyARM,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkMemoryDedicatedAllocateInfoTensorARM {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	tensor: VkTensorARM,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub tensor: VkTensorARM,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceExternalTensorInfoARM {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkTensorCreateFlagsARM,
-	pDescription: *const VkTensorDescriptionARM,
-	handleType: VkExternalMemoryHandleTypeFlagBits,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkTensorCreateFlagsARM,
+	pub pDescription: *const VkTensorDescriptionARM,
+	pub handleType: VkExternalMemoryHandleTypeFlagBits,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkExternalTensorPropertiesARM {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	externalMemoryProperties: VkExternalMemoryProperties,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub externalMemoryProperties: VkExternalMemoryProperties,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkExternalMemoryTensorCreateInfoARM {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	handleTypes: VkExternalMemoryHandleTypeFlags,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub handleTypes: VkExternalMemoryHandleTypeFlags,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceDescriptorBufferTensorFeaturesARM {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	descriptorBufferTensorDescriptors: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub descriptorBufferTensorDescriptors: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceDescriptorBufferTensorPropertiesARM {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	tensorCaptureReplayDescriptorDataSize: usize,
-	tensorViewCaptureReplayDescriptorDataSize: usize,
-	tensorDescriptorSize: usize,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub tensorCaptureReplayDescriptorDataSize: usize,
+	pub tensorViewCaptureReplayDescriptorDataSize: usize,
+	pub tensorDescriptorSize: usize,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDescriptorGetTensorInfoARM {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	tensorView: VkTensorViewARM,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub tensorView: VkTensorViewARM,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkTensorCaptureDescriptorDataInfoARM {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	tensor: VkTensorARM,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub tensor: VkTensorARM,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkTensorViewCaptureDescriptorDataInfoARM {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	tensorView: VkTensorViewARM,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub tensorView: VkTensorViewARM,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkFrameBoundaryTensorsARM {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	tensorCount: u32,
-	pTensors: *const VkTensorARM,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub tensorCount: u32,
+	pub pTensors: *const VkTensorARM,
 }
 type PFN_vkCreateTensorARM = extern "system" fn(device: VkDevice, pCreateInfo: *const VkTensorCreateInfoARM, pAllocator: *const VkAllocationCallbacks, pTensor: *mut VkTensorARM) -> VkResult;
 type PFN_vkDestroyTensorARM = extern "system" fn(device: VkDevice, tensor: VkTensorARM, pAllocator: *const VkAllocationCallbacks);
@@ -29302,32 +28430,32 @@ pub const VK_MAX_SHADER_MODULE_IDENTIFIER_SIZE_EXT: u32 = 32u32;
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceShaderModuleIdentifierFeaturesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	shaderModuleIdentifier: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub shaderModuleIdentifier: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceShaderModuleIdentifierPropertiesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	shaderModuleIdentifierAlgorithmUUID: [u8; VK_UUID_SIZE as usize],
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub shaderModuleIdentifierAlgorithmUUID: [u8; VK_UUID_SIZE as usize],
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPipelineShaderStageModuleIdentifierCreateInfoEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	identifierSize: u32,
-	pIdentifier: *const uint8_t,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub identifierSize: u32,
+	pub pIdentifier: *const uint8_t,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkShaderModuleIdentifierEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	identifierSize: u32,
-	identifier: [u8; VK_MAX_SHADER_MODULE_IDENTIFIER_SIZE_EXT as usize],
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub identifierSize: u32,
+	pub identifier: [u8; VK_MAX_SHADER_MODULE_IDENTIFIER_SIZE_EXT as usize],
 }
 type PFN_vkGetShaderModuleIdentifierEXT = extern "system" fn(device: VkDevice, shaderModule: VkShaderModule, pIdentifier: *mut VkShaderModuleIdentifierEXT);
 type PFN_vkGetShaderModuleCreateInfoIdentifierEXT = extern "system" fn(device: VkDevice, pCreateInfo: *const VkShaderModuleCreateInfo, pIdentifier: *mut VkShaderModuleIdentifierEXT);
@@ -29362,30 +28490,26 @@ impl Vulkan_EXT_shader_module_identifier {
 }
 pub trait VK_EXT_rasterization_order_attachment_access: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_rasterization_order_attachment_access {
-}
-impl VK_EXT_rasterization_order_attachment_access for Vulkan_EXT_rasterization_order_attachment_access {
-}
+pub struct Vulkan_EXT_rasterization_order_attachment_access {}
+impl VK_EXT_rasterization_order_attachment_access for Vulkan_EXT_rasterization_order_attachment_access {}
 impl Default for Vulkan_EXT_rasterization_order_attachment_access {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_rasterization_order_attachment_access {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-type VkOpticalFlowGridSizeFlagsNV = VkFlags;
-type VkOpticalFlowUsageFlagsNV = VkFlags;
-type VkOpticalFlowSessionCreateFlagsNV = VkFlags;
-type VkOpticalFlowExecuteFlagsNV = VkFlags;
+pub type VkOpticalFlowGridSizeFlagsNV = VkFlags;
+pub type VkOpticalFlowUsageFlagsNV = VkFlags;
+pub type VkOpticalFlowSessionCreateFlagsNV = VkFlags;
+pub type VkOpticalFlowExecuteFlagsNV = VkFlags;
 // Define non-dispatchable handle `VkOpticalFlowSessionNV`
-#[cfg(target_pointer_width = "32")] type VkOpticalFlowSessionNV = u64;
+#[cfg(target_pointer_width = "32")] pub type VkOpticalFlowSessionNV = u64;
 #[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkOpticalFlowSessionNV_T {}
-#[cfg(target_pointer_width = "64")] type VkOpticalFlowSessionNV = *const VkOpticalFlowSessionNV_T;
+#[cfg(target_pointer_width = "64")] pub type VkOpticalFlowSessionNV = *const VkOpticalFlowSessionNV_T;
 #[repr(C)]
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum VkOpticalFlowPerformanceLevelNV {
@@ -29449,73 +28573,73 @@ pub enum VkOpticalFlowExecuteFlagBitsNV {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceOpticalFlowFeaturesNV {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	opticalFlow: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub opticalFlow: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceOpticalFlowPropertiesNV {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	supportedOutputGridSizes: VkOpticalFlowGridSizeFlagsNV,
-	supportedHintGridSizes: VkOpticalFlowGridSizeFlagsNV,
-	hintSupported: VkBool32,
-	costSupported: VkBool32,
-	bidirectionalFlowSupported: VkBool32,
-	globalFlowSupported: VkBool32,
-	minWidth: u32,
-	minHeight: u32,
-	maxWidth: u32,
-	maxHeight: u32,
-	maxNumRegionsOfInterest: u32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub supportedOutputGridSizes: VkOpticalFlowGridSizeFlagsNV,
+	pub supportedHintGridSizes: VkOpticalFlowGridSizeFlagsNV,
+	pub hintSupported: VkBool32,
+	pub costSupported: VkBool32,
+	pub bidirectionalFlowSupported: VkBool32,
+	pub globalFlowSupported: VkBool32,
+	pub minWidth: u32,
+	pub minHeight: u32,
+	pub maxWidth: u32,
+	pub maxHeight: u32,
+	pub maxNumRegionsOfInterest: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkOpticalFlowImageFormatInfoNV {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	usage: VkOpticalFlowUsageFlagsNV,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub usage: VkOpticalFlowUsageFlagsNV,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkOpticalFlowImageFormatPropertiesNV {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	format: VkFormat,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub format: VkFormat,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkOpticalFlowSessionCreateInfoNV {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	width: u32,
-	height: u32,
-	imageFormat: VkFormat,
-	flowVectorFormat: VkFormat,
-	costFormat: VkFormat,
-	outputGridSize: VkOpticalFlowGridSizeFlagsNV,
-	hintGridSize: VkOpticalFlowGridSizeFlagsNV,
-	performanceLevel: VkOpticalFlowPerformanceLevelNV,
-	flags: VkOpticalFlowSessionCreateFlagsNV,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub width: u32,
+	pub height: u32,
+	pub imageFormat: VkFormat,
+	pub flowVectorFormat: VkFormat,
+	pub costFormat: VkFormat,
+	pub outputGridSize: VkOpticalFlowGridSizeFlagsNV,
+	pub hintGridSize: VkOpticalFlowGridSizeFlagsNV,
+	pub performanceLevel: VkOpticalFlowPerformanceLevelNV,
+	pub flags: VkOpticalFlowSessionCreateFlagsNV,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkOpticalFlowSessionCreatePrivateDataInfoNV {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	id: u32,
-	size: u32,
-	pPrivateData: *const c_void,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub id: u32,
+	pub size: u32,
+	pub pPrivateData: *const c_void,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkOpticalFlowExecuteInfoNV {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	flags: VkOpticalFlowExecuteFlagsNV,
-	regionCount: u32,
-	pRegions: *const VkRect2D,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub flags: VkOpticalFlowExecuteFlagsNV,
+	pub regionCount: u32,
+	pub pRegions: *const VkRect2D,
 }
 type PFN_vkGetPhysicalDeviceOpticalFlowImageFormatsNV = extern "system" fn(physicalDevice: VkPhysicalDevice, pOpticalFlowImageFormatInfo: *const VkOpticalFlowImageFormatInfoNV, pFormatCount: *mut uint32_t, pImageFormatProperties: *mut VkOpticalFlowImageFormatPropertiesNV) -> VkResult;
 type PFN_vkCreateOpticalFlowSessionNV = extern "system" fn(device: VkDevice, pCreateInfo: *const VkOpticalFlowSessionCreateInfoNV, pAllocator: *const VkAllocationCallbacks, pSession: *mut VkOpticalFlowSessionNV) -> VkResult;
@@ -29554,45 +28678,37 @@ impl Vulkan_NV_optical_flow {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceLegacyDitheringFeaturesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	legacyDithering: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub legacyDithering: VkBool32,
 }
 pub trait VK_EXT_legacy_dithering: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_legacy_dithering {
-}
-impl VK_EXT_legacy_dithering for Vulkan_EXT_legacy_dithering {
-}
+pub struct Vulkan_EXT_legacy_dithering {}
+impl VK_EXT_legacy_dithering for Vulkan_EXT_legacy_dithering {}
 impl Default for Vulkan_EXT_legacy_dithering {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_legacy_dithering {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-type VkPhysicalDevicePipelineProtectedAccessFeaturesEXT = VkPhysicalDevicePipelineProtectedAccessFeatures;
+pub type VkPhysicalDevicePipelineProtectedAccessFeaturesEXT = VkPhysicalDevicePipelineProtectedAccessFeatures;
 pub trait VK_EXT_pipeline_protected_access: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_pipeline_protected_access {
-}
-impl VK_EXT_pipeline_protected_access for Vulkan_EXT_pipeline_protected_access {
-}
+pub struct Vulkan_EXT_pipeline_protected_access {}
+impl VK_EXT_pipeline_protected_access for Vulkan_EXT_pipeline_protected_access {}
 impl Default for Vulkan_EXT_pipeline_protected_access {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_pipeline_protected_access {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
@@ -29613,26 +28729,26 @@ pub enum VkAntiLagStageAMD {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceAntiLagFeaturesAMD {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	antiLag: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub antiLag: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkAntiLagPresentationInfoAMD {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	stage: VkAntiLagStageAMD,
-	frameIndex: u64,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub stage: VkAntiLagStageAMD,
+	pub frameIndex: u64,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkAntiLagDataAMD {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	mode: VkAntiLagModeAMD,
-	maxFPS: u32,
-	pPresentationInfo: *const VkAntiLagPresentationInfoAMD,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub mode: VkAntiLagModeAMD,
+	pub maxFPS: u32,
+	pub pPresentationInfo: *const VkAntiLagPresentationInfoAMD,
 }
 type PFN_vkAntiLagUpdateAMD = extern "system" fn(device: VkDevice, pData: *const VkAntiLagDataAMD);
 extern "system" fn dummy_vkAntiLagUpdateAMD(_: VkDevice, _: *const VkAntiLagDataAMD) {
@@ -29664,12 +28780,12 @@ impl Vulkan_AMD_anti_lag {
 		}
 	}
 }
-type VkShaderCreateFlagsEXT = VkFlags;
-type VkShaderRequiredSubgroupSizeCreateInfoEXT = VkPipelineShaderStageRequiredSubgroupSizeCreateInfo;
+pub type VkShaderCreateFlagsEXT = VkFlags;
+pub type VkShaderRequiredSubgroupSizeCreateInfoEXT = VkPipelineShaderStageRequiredSubgroupSizeCreateInfo;
 // Define non-dispatchable handle `VkShaderEXT`
-#[cfg(target_pointer_width = "32")] type VkShaderEXT = u64;
+#[cfg(target_pointer_width = "32")] pub type VkShaderEXT = u64;
 #[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkShaderEXT_T {}
-#[cfg(target_pointer_width = "64")] type VkShaderEXT = *const VkShaderEXT_T;
+#[cfg(target_pointer_width = "64")] pub type VkShaderEXT = *const VkShaderEXT_T;
 #[repr(C)]
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum VkShaderCodeTypeEXT {
@@ -29700,41 +28816,41 @@ pub enum VkShaderCreateFlagBitsEXT {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceShaderObjectFeaturesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	shaderObject: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub shaderObject: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceShaderObjectPropertiesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	shaderBinaryUUID: [u8; VK_UUID_SIZE as usize],
-	shaderBinaryVersion: u32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub shaderBinaryUUID: [u8; VK_UUID_SIZE as usize],
+	pub shaderBinaryVersion: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkShaderCreateInfoEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkShaderCreateFlagsEXT,
-	stage: VkShaderStageFlagBits,
-	nextStage: VkShaderStageFlags,
-	codeType: VkShaderCodeTypeEXT,
-	codeSize: usize,
-	pCode: *const c_void,
-	pName: *const i8,
-	setLayoutCount: u32,
-	pSetLayouts: *const VkDescriptorSetLayout,
-	pushConstantRangeCount: u32,
-	pPushConstantRanges: *const VkPushConstantRange,
-	pSpecializationInfo: *const VkSpecializationInfo,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkShaderCreateFlagsEXT,
+	pub stage: VkShaderStageFlagBits,
+	pub nextStage: VkShaderStageFlags,
+	pub codeType: VkShaderCodeTypeEXT,
+	pub codeSize: usize,
+	pub pCode: *const c_void,
+	pub pName: *const i8,
+	pub setLayoutCount: u32,
+	pub pSetLayouts: *const VkDescriptorSetLayout,
+	pub pushConstantRangeCount: u32,
+	pub pPushConstantRanges: *const VkPushConstantRange,
+	pub pSpecializationInfo: *const VkSpecializationInfo,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDepthClampRangeEXT {
-	minDepthClamp: f32,
-	maxDepthClamp: f32,
+	pub minDepthClamp: f32,
+	pub maxDepthClamp: f32,
 }
 type PFN_vkCreateShadersEXT = extern "system" fn(device: VkDevice, createInfoCount: u32, pCreateInfos: *const VkShaderCreateInfoEXT, pAllocator: *const VkAllocationCallbacks, pShaders: *mut VkShaderEXT) -> VkResult;
 type PFN_vkDestroyShaderEXT = extern "system" fn(device: VkDevice, shader: VkShaderEXT, pAllocator: *const VkAllocationCallbacks);
@@ -29773,18 +28889,18 @@ impl Vulkan_EXT_shader_object {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceTilePropertiesFeaturesQCOM {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	tileProperties: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub tileProperties: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkTilePropertiesQCOM {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	tileSize: VkExtent3D,
-	apronSize: VkExtent2D,
-	origin: VkOffset2D,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub tileSize: VkExtent3D,
+	pub apronSize: VkExtent2D,
+	pub origin: VkOffset2D,
 }
 type PFN_vkGetFramebufferTilePropertiesQCOM = extern "system" fn(device: VkDevice, framebuffer: VkFramebuffer, pPropertiesCount: *mut uint32_t, pProperties: *mut VkTilePropertiesQCOM) -> VkResult;
 type PFN_vkGetDynamicRenderingTilePropertiesQCOM = extern "system" fn(device: VkDevice, pRenderingInfo: *const VkRenderingInfo, pProperties: *mut VkTilePropertiesQCOM) -> VkResult;
@@ -29820,59 +28936,51 @@ impl Vulkan_QCOM_tile_properties {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceAmigoProfilingFeaturesSEC {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	amigoProfiling: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub amigoProfiling: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkAmigoProfilingSubmitInfoSEC {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	firstDrawTimestamp: u64,
-	swapBufferTimestamp: u64,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub firstDrawTimestamp: u64,
+	pub swapBufferTimestamp: u64,
 }
 pub trait VK_SEC_amigo_profiling: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_SEC_amigo_profiling {
-}
-impl VK_SEC_amigo_profiling for Vulkan_SEC_amigo_profiling {
-}
+pub struct Vulkan_SEC_amigo_profiling {}
+impl VK_SEC_amigo_profiling for Vulkan_SEC_amigo_profiling {}
 impl Default for Vulkan_SEC_amigo_profiling {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_SEC_amigo_profiling {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceMultiviewPerViewViewportsFeaturesQCOM {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	multiviewPerViewViewports: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub multiviewPerViewViewports: VkBool32,
 }
 pub trait VK_QCOM_multiview_per_view_viewports: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_QCOM_multiview_per_view_viewports {
-}
-impl VK_QCOM_multiview_per_view_viewports for Vulkan_QCOM_multiview_per_view_viewports {
-}
+pub struct Vulkan_QCOM_multiview_per_view_viewports {}
+impl VK_QCOM_multiview_per_view_viewports for Vulkan_QCOM_multiview_per_view_viewports {}
 impl Default for Vulkan_QCOM_multiview_per_view_viewports {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_QCOM_multiview_per_view_viewports {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
@@ -29885,33 +28993,29 @@ pub enum VkRayTracingInvocationReorderModeNV {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceRayTracingInvocationReorderPropertiesNV {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	rayTracingInvocationReorderReorderingHint: VkRayTracingInvocationReorderModeNV,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub rayTracingInvocationReorderReorderingHint: VkRayTracingInvocationReorderModeNV,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceRayTracingInvocationReorderFeaturesNV {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	rayTracingInvocationReorder: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub rayTracingInvocationReorder: VkBool32,
 }
 pub trait VK_NV_ray_tracing_invocation_reorder: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_NV_ray_tracing_invocation_reorder {
-}
-impl VK_NV_ray_tracing_invocation_reorder for Vulkan_NV_ray_tracing_invocation_reorder {
-}
+pub struct Vulkan_NV_ray_tracing_invocation_reorder {}
+impl VK_NV_ray_tracing_invocation_reorder for Vulkan_NV_ray_tracing_invocation_reorder {}
 impl Default for Vulkan_NV_ray_tracing_invocation_reorder {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_NV_ray_tracing_invocation_reorder {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
@@ -29926,50 +29030,50 @@ pub enum VkCooperativeVectorMatrixLayoutNV {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceCooperativeVectorPropertiesNV {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	cooperativeVectorSupportedStages: VkShaderStageFlags,
-	cooperativeVectorTrainingFloat16Accumulation: VkBool32,
-	cooperativeVectorTrainingFloat32Accumulation: VkBool32,
-	maxCooperativeVectorComponents: u32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub cooperativeVectorSupportedStages: VkShaderStageFlags,
+	pub cooperativeVectorTrainingFloat16Accumulation: VkBool32,
+	pub cooperativeVectorTrainingFloat32Accumulation: VkBool32,
+	pub maxCooperativeVectorComponents: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceCooperativeVectorFeaturesNV {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	cooperativeVector: VkBool32,
-	cooperativeVectorTraining: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub cooperativeVector: VkBool32,
+	pub cooperativeVectorTraining: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkCooperativeVectorPropertiesNV {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	inputType: VkComponentTypeKHR,
-	inputInterpretation: VkComponentTypeKHR,
-	matrixInterpretation: VkComponentTypeKHR,
-	biasInterpretation: VkComponentTypeKHR,
-	resultType: VkComponentTypeKHR,
-	transpose: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub inputType: VkComponentTypeKHR,
+	pub inputInterpretation: VkComponentTypeKHR,
+	pub matrixInterpretation: VkComponentTypeKHR,
+	pub biasInterpretation: VkComponentTypeKHR,
+	pub resultType: VkComponentTypeKHR,
+	pub transpose: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkConvertCooperativeVectorMatrixInfoNV {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	srcSize: usize,
-	srcData: VkDeviceOrHostAddressConstKHR,
-	pDstSize: *mut size_t,
-	dstData: VkDeviceOrHostAddressKHR,
-	srcComponentType: VkComponentTypeKHR,
-	dstComponentType: VkComponentTypeKHR,
-	numRows: u32,
-	numColumns: u32,
-	srcLayout: VkCooperativeVectorMatrixLayoutNV,
-	srcStride: usize,
-	dstLayout: VkCooperativeVectorMatrixLayoutNV,
-	dstStride: usize,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub srcSize: usize,
+	pub srcData: VkDeviceOrHostAddressConstKHR,
+	pub pDstSize: *mut size_t,
+	pub dstData: VkDeviceOrHostAddressKHR,
+	pub srcComponentType: VkComponentTypeKHR,
+	pub dstComponentType: VkComponentTypeKHR,
+	pub numRows: u32,
+	pub numColumns: u32,
+	pub srcLayout: VkCooperativeVectorMatrixLayoutNV,
+	pub srcStride: usize,
+	pub dstLayout: VkCooperativeVectorMatrixLayoutNV,
+	pub dstStride: usize,
 }
 type PFN_vkGetPhysicalDeviceCooperativeVectorPropertiesNV = extern "system" fn(physicalDevice: VkPhysicalDevice, pPropertyCount: *mut uint32_t, pProperties: *mut VkCooperativeVectorPropertiesNV) -> VkResult;
 type PFN_vkConvertCooperativeVectorMatrixNV = extern "system" fn(device: VkDevice, pInfo: *const VkConvertCooperativeVectorMatrixInfoNV) -> VkResult;
@@ -30006,85 +29110,73 @@ impl Vulkan_NV_cooperative_vector {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceExtendedSparseAddressSpaceFeaturesNV {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	extendedSparseAddressSpace: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub extendedSparseAddressSpace: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceExtendedSparseAddressSpacePropertiesNV {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	extendedSparseAddressSpaceSize: VkDeviceSize,
-	extendedSparseImageUsageFlags: VkImageUsageFlags,
-	extendedSparseBufferUsageFlags: VkBufferUsageFlags,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub extendedSparseAddressSpaceSize: VkDeviceSize,
+	pub extendedSparseImageUsageFlags: VkImageUsageFlags,
+	pub extendedSparseBufferUsageFlags: VkBufferUsageFlags,
 }
 pub trait VK_NV_extended_sparse_address_space: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_NV_extended_sparse_address_space {
-}
-impl VK_NV_extended_sparse_address_space for Vulkan_NV_extended_sparse_address_space {
-}
+pub struct Vulkan_NV_extended_sparse_address_space {}
+impl VK_NV_extended_sparse_address_space for Vulkan_NV_extended_sparse_address_space {}
 impl Default for Vulkan_NV_extended_sparse_address_space {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_NV_extended_sparse_address_space {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 pub trait VK_EXT_mutable_descriptor_type: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_mutable_descriptor_type {
-}
-impl VK_EXT_mutable_descriptor_type for Vulkan_EXT_mutable_descriptor_type {
-}
+pub struct Vulkan_EXT_mutable_descriptor_type {}
+impl VK_EXT_mutable_descriptor_type for Vulkan_EXT_mutable_descriptor_type {}
 impl Default for Vulkan_EXT_mutable_descriptor_type {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_mutable_descriptor_type {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceLegacyVertexAttributesFeaturesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	legacyVertexAttributes: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub legacyVertexAttributes: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceLegacyVertexAttributesPropertiesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	nativeUnalignedPerformance: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub nativeUnalignedPerformance: VkBool32,
 }
 pub trait VK_EXT_legacy_vertex_attributes: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_legacy_vertex_attributes {
-}
-impl VK_EXT_legacy_vertex_attributes for Vulkan_EXT_legacy_vertex_attributes {
-}
+pub struct Vulkan_EXT_legacy_vertex_attributes {}
+impl VK_EXT_legacy_vertex_attributes for Vulkan_EXT_legacy_vertex_attributes {}
 impl Default for Vulkan_EXT_legacy_vertex_attributes {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_legacy_vertex_attributes {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
@@ -30103,120 +29195,104 @@ pub enum VkLayerSettingTypeEXT {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkLayerSettingEXT {
-	pLayerName: *const i8,
-	pSettingName: *const i8,
-	type_: VkLayerSettingTypeEXT,
-	valueCount: u32,
-	pValues: *const c_void,
+	pub pLayerName: *const i8,
+	pub pSettingName: *const i8,
+	pub type_: VkLayerSettingTypeEXT,
+	pub valueCount: u32,
+	pub pValues: *const c_void,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkLayerSettingsCreateInfoEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	settingCount: u32,
-	pSettings: *const VkLayerSettingEXT,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub settingCount: u32,
+	pub pSettings: *const VkLayerSettingEXT,
 }
 pub trait VK_EXT_layer_settings: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_layer_settings {
-}
-impl VK_EXT_layer_settings for Vulkan_EXT_layer_settings {
-}
+pub struct Vulkan_EXT_layer_settings {}
+impl VK_EXT_layer_settings for Vulkan_EXT_layer_settings {}
 impl Default for Vulkan_EXT_layer_settings {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_layer_settings {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceShaderCoreBuiltinsFeaturesARM {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	shaderCoreBuiltins: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub shaderCoreBuiltins: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceShaderCoreBuiltinsPropertiesARM {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	shaderCoreMask: u64,
-	shaderCoreCount: u32,
-	shaderWarpsPerCore: u32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub shaderCoreMask: u64,
+	pub shaderCoreCount: u32,
+	pub shaderWarpsPerCore: u32,
 }
 pub trait VK_ARM_shader_core_builtins: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_ARM_shader_core_builtins {
-}
-impl VK_ARM_shader_core_builtins for Vulkan_ARM_shader_core_builtins {
-}
+pub struct Vulkan_ARM_shader_core_builtins {}
+impl VK_ARM_shader_core_builtins for Vulkan_ARM_shader_core_builtins {}
 impl Default for Vulkan_ARM_shader_core_builtins {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_ARM_shader_core_builtins {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDevicePipelineLibraryGroupHandlesFeaturesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	pipelineLibraryGroupHandles: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub pipelineLibraryGroupHandles: VkBool32,
 }
 pub trait VK_EXT_pipeline_library_group_handles: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_pipeline_library_group_handles {
-}
-impl VK_EXT_pipeline_library_group_handles for Vulkan_EXT_pipeline_library_group_handles {
-}
+pub struct Vulkan_EXT_pipeline_library_group_handles {}
+impl VK_EXT_pipeline_library_group_handles for Vulkan_EXT_pipeline_library_group_handles {}
 impl Default for Vulkan_EXT_pipeline_library_group_handles {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_pipeline_library_group_handles {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceDynamicRenderingUnusedAttachmentsFeaturesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	dynamicRenderingUnusedAttachments: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub dynamicRenderingUnusedAttachments: VkBool32,
 }
 pub trait VK_EXT_dynamic_rendering_unused_attachments: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_dynamic_rendering_unused_attachments {
-}
-impl VK_EXT_dynamic_rendering_unused_attachments for Vulkan_EXT_dynamic_rendering_unused_attachments {
-}
+pub struct Vulkan_EXT_dynamic_rendering_unused_attachments {}
+impl VK_EXT_dynamic_rendering_unused_attachments for Vulkan_EXT_dynamic_rendering_unused_attachments {}
 impl Default for Vulkan_EXT_dynamic_rendering_unused_attachments {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_dynamic_rendering_unused_attachments {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
@@ -30246,84 +29322,84 @@ pub enum VkOutOfBandQueueTypeNV {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkLatencySleepModeInfoNV {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	lowLatencyMode: VkBool32,
-	lowLatencyBoost: VkBool32,
-	minimumIntervalUs: u32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub lowLatencyMode: VkBool32,
+	pub lowLatencyBoost: VkBool32,
+	pub minimumIntervalUs: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkLatencySleepInfoNV {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	signalSemaphore: VkSemaphore,
-	value: u64,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub signalSemaphore: VkSemaphore,
+	pub value: u64,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkSetLatencyMarkerInfoNV {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	presentID: u64,
-	marker: VkLatencyMarkerNV,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub presentID: u64,
+	pub marker: VkLatencyMarkerNV,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkLatencyTimingsFrameReportNV {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	presentID: u64,
-	inputSampleTimeUs: u64,
-	simStartTimeUs: u64,
-	simEndTimeUs: u64,
-	renderSubmitStartTimeUs: u64,
-	renderSubmitEndTimeUs: u64,
-	presentStartTimeUs: u64,
-	presentEndTimeUs: u64,
-	driverStartTimeUs: u64,
-	driverEndTimeUs: u64,
-	osRenderQueueStartTimeUs: u64,
-	osRenderQueueEndTimeUs: u64,
-	gpuRenderStartTimeUs: u64,
-	gpuRenderEndTimeUs: u64,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub presentID: u64,
+	pub inputSampleTimeUs: u64,
+	pub simStartTimeUs: u64,
+	pub simEndTimeUs: u64,
+	pub renderSubmitStartTimeUs: u64,
+	pub renderSubmitEndTimeUs: u64,
+	pub presentStartTimeUs: u64,
+	pub presentEndTimeUs: u64,
+	pub driverStartTimeUs: u64,
+	pub driverEndTimeUs: u64,
+	pub osRenderQueueStartTimeUs: u64,
+	pub osRenderQueueEndTimeUs: u64,
+	pub gpuRenderStartTimeUs: u64,
+	pub gpuRenderEndTimeUs: u64,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkGetLatencyMarkerInfoNV {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	timingCount: u32,
-	pTimings: *mut VkLatencyTimingsFrameReportNV,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub timingCount: u32,
+	pub pTimings: *mut VkLatencyTimingsFrameReportNV,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkLatencySubmissionPresentIdNV {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	presentID: u64,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub presentID: u64,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkSwapchainLatencyCreateInfoNV {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	latencyModeEnable: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub latencyModeEnable: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkOutOfBandQueueTypeInfoNV {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	queueType: VkOutOfBandQueueTypeNV,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub queueType: VkOutOfBandQueueTypeNV,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkLatencySurfaceCapabilitiesNV {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	presentModeCount: u32,
-	pPresentModes: *mut VkPresentModeKHR,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub presentModeCount: u32,
+	pub pPresentModes: *mut VkPresentModeKHR,
 }
 type PFN_vkSetLatencySleepModeNV = extern "system" fn(device: VkDevice, swapchain: VkSwapchainKHR, pSleepModeInfo: *const VkLatencySleepModeInfoNV) -> VkResult;
 type PFN_vkLatencySleepNV = extern "system" fn(device: VkDevice, swapchain: VkSwapchainKHR, pSleepInfo: *const VkLatencySleepInfoNV) -> VkResult;
@@ -30360,14 +29436,14 @@ impl Vulkan_NV_low_latency2 {
 	}
 }
 pub const VK_MAX_PHYSICAL_DEVICE_DATA_GRAPH_OPERATION_SET_NAME_SIZE_ARM: u32 = 128u32;
-type VkDataGraphPipelineSessionCreateFlagsARM = VkFlags64;
-type VkDataGraphPipelineSessionCreateFlagBitsARM = VkFlags64;
-type VkDataGraphPipelineDispatchFlagsARM = VkFlags64;
-type VkDataGraphPipelineDispatchFlagBitsARM = VkFlags64;
+pub type VkDataGraphPipelineSessionCreateFlagsARM = VkFlags64;
+pub type VkDataGraphPipelineSessionCreateFlagBitsARM = VkFlags64;
+pub type VkDataGraphPipelineDispatchFlagsARM = VkFlags64;
+pub type VkDataGraphPipelineDispatchFlagBitsARM = VkFlags64;
 // Define non-dispatchable handle `VkDataGraphPipelineSessionARM`
-#[cfg(target_pointer_width = "32")] type VkDataGraphPipelineSessionARM = u64;
+#[cfg(target_pointer_width = "32")] pub type VkDataGraphPipelineSessionARM = u64;
 #[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkDataGraphPipelineSessionARM_T {}
-#[cfg(target_pointer_width = "64")] type VkDataGraphPipelineSessionARM = *const VkDataGraphPipelineSessionARM_T;
+#[cfg(target_pointer_width = "64")] pub type VkDataGraphPipelineSessionARM = *const VkDataGraphPipelineSessionARM_T;
 #[repr(C)]
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum VkDataGraphPipelineSessionBindPointARM {
@@ -30402,188 +29478,188 @@ pub enum VkPhysicalDeviceDataGraphOperationTypeARM {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceDataGraphFeaturesARM {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	dataGraph: VkBool32,
-	dataGraphUpdateAfterBind: VkBool32,
-	dataGraphSpecializationConstants: VkBool32,
-	dataGraphDescriptorBuffer: VkBool32,
-	dataGraphShaderModule: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub dataGraph: VkBool32,
+	pub dataGraphUpdateAfterBind: VkBool32,
+	pub dataGraphSpecializationConstants: VkBool32,
+	pub dataGraphDescriptorBuffer: VkBool32,
+	pub dataGraphShaderModule: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDataGraphPipelineConstantARM {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	id: u32,
-	pConstantData: *const c_void,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub id: u32,
+	pub pConstantData: *const c_void,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDataGraphPipelineResourceInfoARM {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	descriptorSet: u32,
-	binding: u32,
-	arrayElement: u32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub descriptorSet: u32,
+	pub binding: u32,
+	pub arrayElement: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDataGraphPipelineCompilerControlCreateInfoARM {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	pVendorOptions: *const i8,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub pVendorOptions: *const i8,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDataGraphPipelineCreateInfoARM {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkPipelineCreateFlags2KHR,
-	layout: VkPipelineLayout,
-	resourceInfoCount: u32,
-	pResourceInfos: *const VkDataGraphPipelineResourceInfoARM,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkPipelineCreateFlags2KHR,
+	pub layout: VkPipelineLayout,
+	pub resourceInfoCount: u32,
+	pub pResourceInfos: *const VkDataGraphPipelineResourceInfoARM,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDataGraphPipelineShaderModuleCreateInfoARM {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	module: VkShaderModule,
-	pName: *const i8,
-	pSpecializationInfo: *const VkSpecializationInfo,
-	constantCount: u32,
-	pConstants: *const VkDataGraphPipelineConstantARM,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub module: VkShaderModule,
+	pub pName: *const i8,
+	pub pSpecializationInfo: *const VkSpecializationInfo,
+	pub constantCount: u32,
+	pub pConstants: *const VkDataGraphPipelineConstantARM,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDataGraphPipelineSessionCreateInfoARM {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkDataGraphPipelineSessionCreateFlagsARM,
-	dataGraphPipeline: VkPipeline,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkDataGraphPipelineSessionCreateFlagsARM,
+	pub dataGraphPipeline: VkPipeline,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDataGraphPipelineSessionBindPointRequirementsInfoARM {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	session: VkDataGraphPipelineSessionARM,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub session: VkDataGraphPipelineSessionARM,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDataGraphPipelineSessionBindPointRequirementARM {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	bindPoint: VkDataGraphPipelineSessionBindPointARM,
-	bindPointType: VkDataGraphPipelineSessionBindPointTypeARM,
-	numObjects: u32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub bindPoint: VkDataGraphPipelineSessionBindPointARM,
+	pub bindPointType: VkDataGraphPipelineSessionBindPointTypeARM,
+	pub numObjects: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDataGraphPipelineSessionMemoryRequirementsInfoARM {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	session: VkDataGraphPipelineSessionARM,
-	bindPoint: VkDataGraphPipelineSessionBindPointARM,
-	objectIndex: u32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub session: VkDataGraphPipelineSessionARM,
+	pub bindPoint: VkDataGraphPipelineSessionBindPointARM,
+	pub objectIndex: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkBindDataGraphPipelineSessionMemoryInfoARM {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	session: VkDataGraphPipelineSessionARM,
-	bindPoint: VkDataGraphPipelineSessionBindPointARM,
-	objectIndex: u32,
-	memory: VkDeviceMemory,
-	memoryOffset: VkDeviceSize,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub session: VkDataGraphPipelineSessionARM,
+	pub bindPoint: VkDataGraphPipelineSessionBindPointARM,
+	pub objectIndex: u32,
+	pub memory: VkDeviceMemory,
+	pub memoryOffset: VkDeviceSize,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDataGraphPipelineInfoARM {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	dataGraphPipeline: VkPipeline,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub dataGraphPipeline: VkPipeline,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDataGraphPipelinePropertyQueryResultARM {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	property: VkDataGraphPipelinePropertyARM,
-	isText: VkBool32,
-	dataSize: usize,
-	pData: *mut c_void,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub property: VkDataGraphPipelinePropertyARM,
+	pub isText: VkBool32,
+	pub dataSize: usize,
+	pub pData: *mut c_void,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDataGraphPipelineIdentifierCreateInfoARM {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	identifierSize: u32,
-	pIdentifier: *const uint8_t,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub identifierSize: u32,
+	pub pIdentifier: *const uint8_t,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDataGraphPipelineDispatchInfoARM {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	flags: VkDataGraphPipelineDispatchFlagsARM,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub flags: VkDataGraphPipelineDispatchFlagsARM,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceDataGraphProcessingEngineARM {
-	type_: VkPhysicalDeviceDataGraphProcessingEngineTypeARM,
-	isForeign: VkBool32,
+	pub type_: VkPhysicalDeviceDataGraphProcessingEngineTypeARM,
+	pub isForeign: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceDataGraphOperationSupportARM {
-	operationType: VkPhysicalDeviceDataGraphOperationTypeARM,
-	name: [i8; VK_MAX_PHYSICAL_DEVICE_DATA_GRAPH_OPERATION_SET_NAME_SIZE_ARM as usize],
-	version: u32,
+	pub operationType: VkPhysicalDeviceDataGraphOperationTypeARM,
+	pub name: [i8; VK_MAX_PHYSICAL_DEVICE_DATA_GRAPH_OPERATION_SET_NAME_SIZE_ARM as usize],
+	pub version: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkQueueFamilyDataGraphPropertiesARM {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	engine: VkPhysicalDeviceDataGraphProcessingEngineARM,
-	operation: VkPhysicalDeviceDataGraphOperationSupportARM,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub engine: VkPhysicalDeviceDataGraphProcessingEngineARM,
+	pub operation: VkPhysicalDeviceDataGraphOperationSupportARM,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDataGraphProcessingEngineCreateInfoARM {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	processingEngineCount: u32,
-	pProcessingEngines: *mut VkPhysicalDeviceDataGraphProcessingEngineARM,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub processingEngineCount: u32,
+	pub pProcessingEngines: *mut VkPhysicalDeviceDataGraphProcessingEngineARM,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceQueueFamilyDataGraphProcessingEngineInfoARM {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	queueFamilyIndex: u32,
-	engineType: VkPhysicalDeviceDataGraphProcessingEngineTypeARM,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub queueFamilyIndex: u32,
+	pub engineType: VkPhysicalDeviceDataGraphProcessingEngineTypeARM,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkQueueFamilyDataGraphProcessingEnginePropertiesARM {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	foreignSemaphoreHandleTypes: VkExternalSemaphoreHandleTypeFlags,
-	foreignMemoryHandleTypes: VkExternalMemoryHandleTypeFlags,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub foreignSemaphoreHandleTypes: VkExternalSemaphoreHandleTypeFlags,
+	pub foreignMemoryHandleTypes: VkExternalMemoryHandleTypeFlags,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDataGraphPipelineConstantTensorSemiStructuredSparsityInfoARM {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	dimension: u32,
-	zeroCount: u32,
-	groupSize: u32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub dimension: u32,
+	pub zeroCount: u32,
+	pub groupSize: u32,
 }
 type PFN_vkCreateDataGraphPipelinesARM = extern "system" fn(device: VkDevice, deferredOperation: VkDeferredOperationKHR, pipelineCache: VkPipelineCache, createInfoCount: u32, pCreateInfos: *const VkDataGraphPipelineCreateInfoARM, pAllocator: *const VkAllocationCallbacks, pPipelines: *mut VkPipeline) -> VkResult;
 type PFN_vkCreateDataGraphPipelineSessionARM = extern "system" fn(device: VkDevice, pCreateInfo: *const VkDataGraphPipelineSessionCreateInfoARM, pAllocator: *const VkAllocationCallbacks, pSession: *mut VkDataGraphPipelineSessionARM) -> VkResult;
@@ -30628,60 +29704,52 @@ impl Vulkan_ARM_data_graph {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceMultiviewPerViewRenderAreasFeaturesQCOM {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	multiviewPerViewRenderAreas: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub multiviewPerViewRenderAreas: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkMultiviewPerViewRenderAreasRenderPassBeginInfoQCOM {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	perViewRenderAreaCount: u32,
-	pPerViewRenderAreas: *const VkRect2D,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub perViewRenderAreaCount: u32,
+	pub pPerViewRenderAreas: *const VkRect2D,
 }
 pub trait VK_QCOM_multiview_per_view_render_areas: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_QCOM_multiview_per_view_render_areas {
-}
-impl VK_QCOM_multiview_per_view_render_areas for Vulkan_QCOM_multiview_per_view_render_areas {
-}
+pub struct Vulkan_QCOM_multiview_per_view_render_areas {}
+impl VK_QCOM_multiview_per_view_render_areas for Vulkan_QCOM_multiview_per_view_render_areas {}
 impl Default for Vulkan_QCOM_multiview_per_view_render_areas {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_QCOM_multiview_per_view_render_areas {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDevicePerStageDescriptorSetFeaturesNV {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	perStageDescriptorSet: VkBool32,
-	dynamicPipelineLayout: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub perStageDescriptorSet: VkBool32,
+	pub dynamicPipelineLayout: VkBool32,
 }
 pub trait VK_NV_per_stage_descriptor_set: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_NV_per_stage_descriptor_set {
-}
-impl VK_NV_per_stage_descriptor_set for Vulkan_NV_per_stage_descriptor_set {
-}
+pub struct Vulkan_NV_per_stage_descriptor_set {}
+impl VK_NV_per_stage_descriptor_set for Vulkan_NV_per_stage_descriptor_set {}
 impl Default for Vulkan_NV_per_stage_descriptor_set {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_NV_per_stage_descriptor_set {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
@@ -30694,41 +29762,37 @@ pub enum VkBlockMatchWindowCompareModeQCOM {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceImageProcessing2FeaturesQCOM {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	textureBlockMatch2: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub textureBlockMatch2: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceImageProcessing2PropertiesQCOM {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	maxBlockMatchWindow: VkExtent2D,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub maxBlockMatchWindow: VkExtent2D,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkSamplerBlockMatchWindowCreateInfoQCOM {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	windowExtent: VkExtent2D,
-	windowCompareMode: VkBlockMatchWindowCompareModeQCOM,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub windowExtent: VkExtent2D,
+	pub windowCompareMode: VkBlockMatchWindowCompareModeQCOM,
 }
 pub trait VK_QCOM_image_processing2: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_QCOM_image_processing2 {
-}
-impl VK_QCOM_image_processing2 for Vulkan_QCOM_image_processing2 {
-}
+pub struct Vulkan_QCOM_image_processing2 {}
+impl VK_QCOM_image_processing2 for Vulkan_QCOM_image_processing2 {}
 impl Default for Vulkan_QCOM_image_processing2 {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_QCOM_image_processing2 {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
@@ -30743,106 +29807,94 @@ pub enum VkCubicFilterWeightsQCOM {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceCubicWeightsFeaturesQCOM {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	selectableCubicWeights: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub selectableCubicWeights: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkSamplerCubicWeightsCreateInfoQCOM {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	cubicWeights: VkCubicFilterWeightsQCOM,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub cubicWeights: VkCubicFilterWeightsQCOM,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkBlitImageCubicWeightsInfoQCOM {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	cubicWeights: VkCubicFilterWeightsQCOM,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub cubicWeights: VkCubicFilterWeightsQCOM,
 }
 pub trait VK_QCOM_filter_cubic_weights: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_QCOM_filter_cubic_weights {
-}
-impl VK_QCOM_filter_cubic_weights for Vulkan_QCOM_filter_cubic_weights {
-}
+pub struct Vulkan_QCOM_filter_cubic_weights {}
+impl VK_QCOM_filter_cubic_weights for Vulkan_QCOM_filter_cubic_weights {}
 impl Default for Vulkan_QCOM_filter_cubic_weights {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_QCOM_filter_cubic_weights {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceYcbcrDegammaFeaturesQCOM {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	ycbcrDegamma: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub ycbcrDegamma: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkSamplerYcbcrConversionYcbcrDegammaCreateInfoQCOM {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	enableYDegamma: VkBool32,
-	enableCbCrDegamma: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub enableYDegamma: VkBool32,
+	pub enableCbCrDegamma: VkBool32,
 }
 pub trait VK_QCOM_ycbcr_degamma: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_QCOM_ycbcr_degamma {
-}
-impl VK_QCOM_ycbcr_degamma for Vulkan_QCOM_ycbcr_degamma {
-}
+pub struct Vulkan_QCOM_ycbcr_degamma {}
+impl VK_QCOM_ycbcr_degamma for Vulkan_QCOM_ycbcr_degamma {}
 impl Default for Vulkan_QCOM_ycbcr_degamma {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_QCOM_ycbcr_degamma {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceCubicClampFeaturesQCOM {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	cubicRangeClamp: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub cubicRangeClamp: VkBool32,
 }
 pub trait VK_QCOM_filter_cubic_clamp: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_QCOM_filter_cubic_clamp {
-}
-impl VK_QCOM_filter_cubic_clamp for Vulkan_QCOM_filter_cubic_clamp {
-}
+pub struct Vulkan_QCOM_filter_cubic_clamp {}
+impl VK_QCOM_filter_cubic_clamp for Vulkan_QCOM_filter_cubic_clamp {}
 impl Default for Vulkan_QCOM_filter_cubic_clamp {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_QCOM_filter_cubic_clamp {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceAttachmentFeedbackLoopDynamicStateFeaturesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	attachmentFeedbackLoopDynamicState: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub attachmentFeedbackLoopDynamicState: VkBool32,
 }
 type PFN_vkCmdSetAttachmentFeedbackLoopEnableEXT = extern "system" fn(commandBuffer: VkCommandBuffer, aspectMask: VkImageAspectFlags);
 extern "system" fn dummy_vkCmdSetAttachmentFeedbackLoopEnableEXT(_: VkCommandBuffer, _: VkImageAspectFlags) {
@@ -30884,89 +29936,81 @@ pub enum VkLayeredDriverUnderlyingApiMSFT {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceLayeredDriverPropertiesMSFT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	underlyingAPI: VkLayeredDriverUnderlyingApiMSFT,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub underlyingAPI: VkLayeredDriverUnderlyingApiMSFT,
 }
 pub trait VK_MSFT_layered_driver: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_MSFT_layered_driver {
-}
-impl VK_MSFT_layered_driver for Vulkan_MSFT_layered_driver {
-}
+pub struct Vulkan_MSFT_layered_driver {}
+impl VK_MSFT_layered_driver for Vulkan_MSFT_layered_driver {}
 impl Default for Vulkan_MSFT_layered_driver {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_MSFT_layered_driver {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceDescriptorPoolOverallocationFeaturesNV {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	descriptorPoolOverallocation: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub descriptorPoolOverallocation: VkBool32,
 }
 pub trait VK_NV_descriptor_pool_overallocation: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_NV_descriptor_pool_overallocation {
-}
-impl VK_NV_descriptor_pool_overallocation for Vulkan_NV_descriptor_pool_overallocation {
-}
+pub struct Vulkan_NV_descriptor_pool_overallocation {}
+impl VK_NV_descriptor_pool_overallocation for Vulkan_NV_descriptor_pool_overallocation {}
 impl Default for Vulkan_NV_descriptor_pool_overallocation {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_NV_descriptor_pool_overallocation {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceTileMemoryHeapFeaturesQCOM {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	tileMemoryHeap: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub tileMemoryHeap: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceTileMemoryHeapPropertiesQCOM {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	queueSubmitBoundary: VkBool32,
-	tileBufferTransfers: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub queueSubmitBoundary: VkBool32,
+	pub tileBufferTransfers: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkTileMemoryRequirementsQCOM {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	size: VkDeviceSize,
-	alignment: VkDeviceSize,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub size: VkDeviceSize,
+	pub alignment: VkDeviceSize,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkTileMemoryBindInfoQCOM {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	memory: VkDeviceMemory,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub memory: VkDeviceMemory,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkTileMemorySizeInfoQCOM {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	size: VkDeviceSize,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub size: VkDeviceSize,
 }
 type PFN_vkCmdBindTileMemoryQCOM = extern "system" fn(commandBuffer: VkCommandBuffer, pTileMemoryBindInfo: *const VkTileMemoryBindInfoQCOM);
 extern "system" fn dummy_vkCmdBindTileMemoryQCOM(_: VkCommandBuffer, _: *const VkTileMemoryBindInfoQCOM) {
@@ -31010,91 +30054,83 @@ pub enum VkDisplaySurfaceStereoTypeNV {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDisplaySurfaceStereoCreateInfoNV {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	stereoType: VkDisplaySurfaceStereoTypeNV,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub stereoType: VkDisplaySurfaceStereoTypeNV,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDisplayModeStereoPropertiesNV {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	hdmi3DSupported: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub hdmi3DSupported: VkBool32,
 }
 pub trait VK_NV_display_stereo: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_NV_display_stereo {
-}
-impl VK_NV_display_stereo for Vulkan_NV_display_stereo {
-}
+pub struct Vulkan_NV_display_stereo {}
+impl VK_NV_display_stereo for Vulkan_NV_display_stereo {}
 impl Default for Vulkan_NV_display_stereo {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_NV_display_stereo {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceRawAccessChainsFeaturesNV {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	shaderRawAccessChains: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub shaderRawAccessChains: VkBool32,
 }
 pub trait VK_NV_raw_access_chains: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_NV_raw_access_chains {
-}
-impl VK_NV_raw_access_chains for Vulkan_NV_raw_access_chains {
-}
+pub struct Vulkan_NV_raw_access_chains {}
+impl VK_NV_raw_access_chains for Vulkan_NV_raw_access_chains {}
 impl Default for Vulkan_NV_raw_access_chains {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_NV_raw_access_chains {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 // Define handle `VkExternalComputeQueueNV`
 #[derive(Debug, Clone, Copy)] pub struct VkExternalComputeQueueNV_T {}
-type VkExternalComputeQueueNV = *const VkExternalComputeQueueNV_T;
+pub type VkExternalComputeQueueNV = *const VkExternalComputeQueueNV_T;
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkExternalComputeQueueDeviceCreateInfoNV {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	reservedExternalQueues: u32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub reservedExternalQueues: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkExternalComputeQueueCreateInfoNV {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	preferredQueue: VkQueue,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub preferredQueue: VkQueue,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkExternalComputeQueueDataParamsNV {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	deviceIndex: u32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub deviceIndex: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceExternalComputeQueuePropertiesNV {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	externalDataSize: u32,
-	maxExternalQueues: u32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub externalDataSize: u32,
+	pub maxExternalQueues: u32,
 }
 type PFN_vkCreateExternalComputeQueueNV = extern "system" fn(device: VkDevice, pCreateInfo: *const VkExternalComputeQueueCreateInfoNV, pAllocator: *const VkAllocationCallbacks, pExternalQueue: *mut VkExternalComputeQueueNV) -> VkResult;
 type PFN_vkDestroyExternalComputeQueueNV = extern "system" fn(device: VkDevice, externalQueue: VkExternalComputeQueueNV, pAllocator: *const VkAllocationCallbacks);
@@ -31131,133 +30167,113 @@ impl Vulkan_NV_external_compute_queue {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceCommandBufferInheritanceFeaturesNV {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	commandBufferInheritance: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub commandBufferInheritance: VkBool32,
 }
 pub trait VK_NV_command_buffer_inheritance: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_NV_command_buffer_inheritance {
-}
-impl VK_NV_command_buffer_inheritance for Vulkan_NV_command_buffer_inheritance {
-}
+pub struct Vulkan_NV_command_buffer_inheritance {}
+impl VK_NV_command_buffer_inheritance for Vulkan_NV_command_buffer_inheritance {}
 impl Default for Vulkan_NV_command_buffer_inheritance {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_NV_command_buffer_inheritance {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceShaderAtomicFloat16VectorFeaturesNV {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	shaderFloat16VectorAtomics: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub shaderFloat16VectorAtomics: VkBool32,
 }
 pub trait VK_NV_shader_atomic_float16_vector: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_NV_shader_atomic_float16_vector {
-}
-impl VK_NV_shader_atomic_float16_vector for Vulkan_NV_shader_atomic_float16_vector {
-}
+pub struct Vulkan_NV_shader_atomic_float16_vector {}
+impl VK_NV_shader_atomic_float16_vector for Vulkan_NV_shader_atomic_float16_vector {}
 impl Default for Vulkan_NV_shader_atomic_float16_vector {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_NV_shader_atomic_float16_vector {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceShaderReplicatedCompositesFeaturesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	shaderReplicatedComposites: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub shaderReplicatedComposites: VkBool32,
 }
 pub trait VK_EXT_shader_replicated_composites: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_shader_replicated_composites {
-}
-impl VK_EXT_shader_replicated_composites for Vulkan_EXT_shader_replicated_composites {
-}
+pub struct Vulkan_EXT_shader_replicated_composites {}
+impl VK_EXT_shader_replicated_composites for Vulkan_EXT_shader_replicated_composites {}
 impl Default for Vulkan_EXT_shader_replicated_composites {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_shader_replicated_composites {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceShaderFloat8FeaturesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	shaderFloat8: VkBool32,
-	shaderFloat8CooperativeMatrix: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub shaderFloat8: VkBool32,
+	pub shaderFloat8CooperativeMatrix: VkBool32,
 }
 pub trait VK_EXT_shader_float8: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_shader_float8 {
-}
-impl VK_EXT_shader_float8 for Vulkan_EXT_shader_float8 {
-}
+pub struct Vulkan_EXT_shader_float8 {}
+impl VK_EXT_shader_float8 for Vulkan_EXT_shader_float8 {}
 impl Default for Vulkan_EXT_shader_float8 {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_shader_float8 {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceRayTracingValidationFeaturesNV {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	rayTracingValidation: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub rayTracingValidation: VkBool32,
 }
 pub trait VK_NV_ray_tracing_validation: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_NV_ray_tracing_validation {
-}
-impl VK_NV_ray_tracing_validation for Vulkan_NV_ray_tracing_validation {
-}
+pub struct Vulkan_NV_ray_tracing_validation {}
+impl VK_NV_ray_tracing_validation for Vulkan_NV_ray_tracing_validation {}
 impl Default for Vulkan_NV_ray_tracing_validation {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_NV_ray_tracing_validation {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-type VkClusterAccelerationStructureAddressResolutionFlagsNV = VkFlags;
-type VkClusterAccelerationStructureClusterFlagsNV = VkFlags;
-type VkClusterAccelerationStructureGeometryFlagsNV = VkFlags;
-type VkClusterAccelerationStructureIndexFormatFlagsNV = VkFlags;
+pub type VkClusterAccelerationStructureAddressResolutionFlagsNV = VkFlags;
+pub type VkClusterAccelerationStructureClusterFlagsNV = VkFlags;
+pub type VkClusterAccelerationStructureGeometryFlagsNV = VkFlags;
+pub type VkClusterAccelerationStructureIndexFormatFlagsNV = VkFlags;
 #[repr(C)]
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum VkClusterAccelerationStructureTypeNV {
@@ -31322,9 +30338,9 @@ pub enum VkClusterAccelerationStructureIndexFormatFlagBitsNV {
 #[repr(C)]
 #[derive(Clone, Copy)]
 pub union VkClusterAccelerationStructureOpInputNV {
-	pClustersBottomLevel: *mut VkClusterAccelerationStructureClustersBottomLevelInputNV,
-	pTriangleClusters: *mut VkClusterAccelerationStructureTriangleClusterInputNV,
-	pMoveObjects: *mut VkClusterAccelerationStructureMoveObjectsInputNV,
+	pub pClustersBottomLevel: *mut VkClusterAccelerationStructureClustersBottomLevelInputNV,
+	pub pTriangleClusters: *mut VkClusterAccelerationStructureTriangleClusterInputNV,
+	pub pMoveObjects: *mut VkClusterAccelerationStructureMoveObjectsInputNV,
 }
 impl Debug for VkClusterAccelerationStructureOpInputNV {
 	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
@@ -31338,92 +30354,92 @@ impl Debug for VkClusterAccelerationStructureOpInputNV {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceClusterAccelerationStructureFeaturesNV {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	clusterAccelerationStructure: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub clusterAccelerationStructure: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceClusterAccelerationStructurePropertiesNV {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	maxVerticesPerCluster: u32,
-	maxTrianglesPerCluster: u32,
-	clusterScratchByteAlignment: u32,
-	clusterByteAlignment: u32,
-	clusterTemplateByteAlignment: u32,
-	clusterBottomLevelByteAlignment: u32,
-	clusterTemplateBoundsByteAlignment: u32,
-	maxClusterGeometryIndex: u32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub maxVerticesPerCluster: u32,
+	pub maxTrianglesPerCluster: u32,
+	pub clusterScratchByteAlignment: u32,
+	pub clusterByteAlignment: u32,
+	pub clusterTemplateByteAlignment: u32,
+	pub clusterBottomLevelByteAlignment: u32,
+	pub clusterTemplateBoundsByteAlignment: u32,
+	pub maxClusterGeometryIndex: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkClusterAccelerationStructureClustersBottomLevelInputNV {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	maxTotalClusterCount: u32,
-	maxClusterCountPerAccelerationStructure: u32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub maxTotalClusterCount: u32,
+	pub maxClusterCountPerAccelerationStructure: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkClusterAccelerationStructureTriangleClusterInputNV {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	vertexFormat: VkFormat,
-	maxGeometryIndexValue: u32,
-	maxClusterUniqueGeometryCount: u32,
-	maxClusterTriangleCount: u32,
-	maxClusterVertexCount: u32,
-	maxTotalTriangleCount: u32,
-	maxTotalVertexCount: u32,
-	minPositionTruncateBitCount: u32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub vertexFormat: VkFormat,
+	pub maxGeometryIndexValue: u32,
+	pub maxClusterUniqueGeometryCount: u32,
+	pub maxClusterTriangleCount: u32,
+	pub maxClusterVertexCount: u32,
+	pub maxTotalTriangleCount: u32,
+	pub maxTotalVertexCount: u32,
+	pub minPositionTruncateBitCount: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkClusterAccelerationStructureMoveObjectsInputNV {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	type_: VkClusterAccelerationStructureTypeNV,
-	noMoveOverlap: VkBool32,
-	maxMovedBytes: VkDeviceSize,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub type_: VkClusterAccelerationStructureTypeNV,
+	pub noMoveOverlap: VkBool32,
+	pub maxMovedBytes: VkDeviceSize,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkClusterAccelerationStructureInputInfoNV {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	maxAccelerationStructureCount: u32,
-	flags: VkBuildAccelerationStructureFlagsKHR,
-	opType: VkClusterAccelerationStructureOpTypeNV,
-	opMode: VkClusterAccelerationStructureOpModeNV,
-	opInput: VkClusterAccelerationStructureOpInputNV,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub maxAccelerationStructureCount: u32,
+	pub flags: VkBuildAccelerationStructureFlagsKHR,
+	pub opType: VkClusterAccelerationStructureOpTypeNV,
+	pub opMode: VkClusterAccelerationStructureOpModeNV,
+	pub opInput: VkClusterAccelerationStructureOpInputNV,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkStridedDeviceAddressRegionKHR {
-	deviceAddress: VkDeviceAddress,
-	stride: VkDeviceSize,
-	size: VkDeviceSize,
+	pub deviceAddress: VkDeviceAddress,
+	pub stride: VkDeviceSize,
+	pub size: VkDeviceSize,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkClusterAccelerationStructureCommandsInfoNV {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	input: VkClusterAccelerationStructureInputInfoNV,
-	dstImplicitData: VkDeviceAddress,
-	scratchData: VkDeviceAddress,
-	dstAddressesArray: VkStridedDeviceAddressRegionKHR,
-	dstSizesArray: VkStridedDeviceAddressRegionKHR,
-	srcInfosArray: VkStridedDeviceAddressRegionKHR,
-	srcInfosCount: VkDeviceAddress,
-	addressResolutionFlags: VkClusterAccelerationStructureAddressResolutionFlagsNV,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub input: VkClusterAccelerationStructureInputInfoNV,
+	pub dstImplicitData: VkDeviceAddress,
+	pub scratchData: VkDeviceAddress,
+	pub dstAddressesArray: VkStridedDeviceAddressRegionKHR,
+	pub dstSizesArray: VkStridedDeviceAddressRegionKHR,
+	pub srcInfosArray: VkStridedDeviceAddressRegionKHR,
+	pub srcInfosCount: VkDeviceAddress,
+	pub addressResolutionFlags: VkClusterAccelerationStructureAddressResolutionFlagsNV,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkStridedDeviceAddressNV {
-	startAddress: VkDeviceAddress,
-	strideInBytes: VkDeviceSize,
+	pub startAddress: VkDeviceAddress,
+	pub strideInBytes: VkDeviceSize,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
@@ -31456,36 +30472,36 @@ impl VkClusterAccelerationStructureGeometryIndexAndGeometryFlagsNV {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkClusterAccelerationStructureMoveObjectsInfoNV {
-	srcAccelerationStructure: VkDeviceAddress,
+	pub srcAccelerationStructure: VkDeviceAddress,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkClusterAccelerationStructureBuildClustersBottomLevelInfoNV {
-	clusterReferencesCount: u32,
-	clusterReferencesStride: u32,
-	clusterReferences: VkDeviceAddress,
+	pub clusterReferencesCount: u32,
+	pub clusterReferencesStride: u32,
+	pub clusterReferences: VkDeviceAddress,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkClusterAccelerationStructureBuildTriangleClusterInfoNV {
-	clusterID: u32,
-	clusterFlags: VkClusterAccelerationStructureClusterFlagsNV,
+	pub clusterID: u32,
+	pub clusterFlags: VkClusterAccelerationStructureClusterFlagsNV,
 	/// Bitfield: triangleCount: u32 in 9 bits
 	/// Bitfield: vertexCount: u32 in 9 bits
 	/// Bitfield: positionTruncateBitCount: u32 in 6 bits
 	/// Bitfield: indexType: u32 in 4 bits
 	/// Bitfield: opacityMicromapIndexType: u32 in 4 bits
 	bitfield1: u32,
-	baseGeometryIndexAndGeometryFlags: VkClusterAccelerationStructureGeometryIndexAndGeometryFlagsNV,
-	indexBufferStride: u16,
-	vertexBufferStride: u16,
-	geometryIndexAndFlagsBufferStride: u16,
-	opacityMicromapIndexBufferStride: u16,
-	indexBuffer: VkDeviceAddress,
-	vertexBuffer: VkDeviceAddress,
-	geometryIndexAndFlagsBuffer: VkDeviceAddress,
-	opacityMicromapArray: VkDeviceAddress,
-	opacityMicromapIndexBuffer: VkDeviceAddress,
+	pub baseGeometryIndexAndGeometryFlags: VkClusterAccelerationStructureGeometryIndexAndGeometryFlagsNV,
+	pub indexBufferStride: u16,
+	pub vertexBufferStride: u16,
+	pub geometryIndexAndFlagsBufferStride: u16,
+	pub opacityMicromapIndexBufferStride: u16,
+	pub indexBuffer: VkDeviceAddress,
+	pub vertexBuffer: VkDeviceAddress,
+	pub geometryIndexAndFlagsBuffer: VkDeviceAddress,
+	pub opacityMicromapArray: VkDeviceAddress,
+	pub opacityMicromapIndexBuffer: VkDeviceAddress,
 }
 impl VkClusterAccelerationStructureBuildTriangleClusterInfoNV {
 	pub fn get_triangleCount(&self) -> u32 {
@@ -31522,25 +30538,25 @@ impl VkClusterAccelerationStructureBuildTriangleClusterInfoNV {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkClusterAccelerationStructureBuildTriangleClusterTemplateInfoNV {
-	clusterID: u32,
-	clusterFlags: VkClusterAccelerationStructureClusterFlagsNV,
+	pub clusterID: u32,
+	pub clusterFlags: VkClusterAccelerationStructureClusterFlagsNV,
 	/// Bitfield: triangleCount: u32 in 9 bits
 	/// Bitfield: vertexCount: u32 in 9 bits
 	/// Bitfield: positionTruncateBitCount: u32 in 6 bits
 	/// Bitfield: indexType: u32 in 4 bits
 	/// Bitfield: opacityMicromapIndexType: u32 in 4 bits
 	bitfield1: u32,
-	baseGeometryIndexAndGeometryFlags: VkClusterAccelerationStructureGeometryIndexAndGeometryFlagsNV,
-	indexBufferStride: u16,
-	vertexBufferStride: u16,
-	geometryIndexAndFlagsBufferStride: u16,
-	opacityMicromapIndexBufferStride: u16,
-	indexBuffer: VkDeviceAddress,
-	vertexBuffer: VkDeviceAddress,
-	geometryIndexAndFlagsBuffer: VkDeviceAddress,
-	opacityMicromapArray: VkDeviceAddress,
-	opacityMicromapIndexBuffer: VkDeviceAddress,
-	instantiationBoundingBoxLimit: VkDeviceAddress,
+	pub baseGeometryIndexAndGeometryFlags: VkClusterAccelerationStructureGeometryIndexAndGeometryFlagsNV,
+	pub indexBufferStride: u16,
+	pub vertexBufferStride: u16,
+	pub geometryIndexAndFlagsBufferStride: u16,
+	pub opacityMicromapIndexBufferStride: u16,
+	pub indexBuffer: VkDeviceAddress,
+	pub vertexBuffer: VkDeviceAddress,
+	pub geometryIndexAndFlagsBuffer: VkDeviceAddress,
+	pub opacityMicromapArray: VkDeviceAddress,
+	pub opacityMicromapIndexBuffer: VkDeviceAddress,
+	pub instantiationBoundingBoxLimit: VkDeviceAddress,
 }
 impl VkClusterAccelerationStructureBuildTriangleClusterTemplateInfoNV {
 	pub fn get_triangleCount(&self) -> u32 {
@@ -31577,12 +30593,12 @@ impl VkClusterAccelerationStructureBuildTriangleClusterTemplateInfoNV {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkClusterAccelerationStructureInstantiateClusterInfoNV {
-	clusterIdOffset: u32,
+	pub clusterIdOffset: u32,
 	/// Bitfield: geometryIndexOffset: u32 in 24 bits
 	/// Bitfield: reserved: u32 in 8 bits
 	bitfield1: u32,
-	clusterTemplateAddress: VkDeviceAddress,
-	vertexBuffer: VkStridedDeviceAddressNV,
+	pub clusterTemplateAddress: VkDeviceAddress,
+	pub vertexBuffer: VkStridedDeviceAddressNV,
 }
 impl VkClusterAccelerationStructureInstantiateClusterInfoNV {
 	pub fn get_geometryIndexOffset(&self) -> u32 {
@@ -31601,23 +30617,23 @@ impl VkClusterAccelerationStructureInstantiateClusterInfoNV {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkClusterAccelerationStructureGetTemplateIndicesInfoNV {
-	clusterTemplateAddress: VkDeviceAddress,
+	pub clusterTemplateAddress: VkDeviceAddress,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkAccelerationStructureBuildSizesInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	accelerationStructureSize: VkDeviceSize,
-	updateScratchSize: VkDeviceSize,
-	buildScratchSize: VkDeviceSize,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub accelerationStructureSize: VkDeviceSize,
+	pub updateScratchSize: VkDeviceSize,
+	pub buildScratchSize: VkDeviceSize,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkRayTracingPipelineClusterAccelerationStructureCreateInfoNV {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	allowClusterAccelerationStructure: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub allowClusterAccelerationStructure: VkBool32,
 }
 type PFN_vkGetClusterAccelerationStructureBuildSizesNV = extern "system" fn(device: VkDevice, pInfo: *const VkClusterAccelerationStructureInputInfoNV, pSizeInfo: *mut VkAccelerationStructureBuildSizesInfoKHR);
 type PFN_vkCmdBuildClusterAccelerationStructureIndirectNV = extern "system" fn(commandBuffer: VkCommandBuffer, pCommandInfos: *const VkClusterAccelerationStructureCommandsInfoNV);
@@ -31651,7 +30667,7 @@ impl Vulkan_NV_cluster_acceleration_structure {
 	}
 }
 pub const VK_PARTITIONED_ACCELERATION_STRUCTURE_PARTITION_INDEX_GLOBAL_NV: u32 = !0u32;
-type VkPartitionedAccelerationStructureInstanceFlagsNV = VkFlags;
+pub type VkPartitionedAccelerationStructureInstanceFlagsNV = VkFlags;
 #[repr(C)]
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum VkPartitionedAccelerationStructureOpTypeNV {
@@ -31673,87 +30689,87 @@ pub enum VkPartitionedAccelerationStructureInstanceFlagBitsNV {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDevicePartitionedAccelerationStructureFeaturesNV {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	partitionedAccelerationStructure: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub partitionedAccelerationStructure: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDevicePartitionedAccelerationStructurePropertiesNV {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	maxPartitionCount: u32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub maxPartitionCount: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPartitionedAccelerationStructureFlagsNV {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	enablePartitionTranslation: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub enablePartitionTranslation: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkBuildPartitionedAccelerationStructureIndirectCommandNV {
-	opType: VkPartitionedAccelerationStructureOpTypeNV,
-	argCount: u32,
-	argData: VkStridedDeviceAddressNV,
+	pub opType: VkPartitionedAccelerationStructureOpTypeNV,
+	pub argCount: u32,
+	pub argData: VkStridedDeviceAddressNV,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPartitionedAccelerationStructureWriteInstanceDataNV {
-	transform: VkTransformMatrixKHR,
-	explicitAABB: [f32; 6 as usize],
-	instanceID: u32,
-	instanceMask: u32,
-	instanceContributionToHitGroupIndex: u32,
-	instanceFlags: VkPartitionedAccelerationStructureInstanceFlagsNV,
-	instanceIndex: u32,
-	partitionIndex: u32,
-	accelerationStructure: VkDeviceAddress,
+	pub transform: VkTransformMatrixKHR,
+	pub explicitAABB: [f32; 6 as usize],
+	pub instanceID: u32,
+	pub instanceMask: u32,
+	pub instanceContributionToHitGroupIndex: u32,
+	pub instanceFlags: VkPartitionedAccelerationStructureInstanceFlagsNV,
+	pub instanceIndex: u32,
+	pub partitionIndex: u32,
+	pub accelerationStructure: VkDeviceAddress,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPartitionedAccelerationStructureUpdateInstanceDataNV {
-	instanceIndex: u32,
-	instanceContributionToHitGroupIndex: u32,
-	accelerationStructure: VkDeviceAddress,
+	pub instanceIndex: u32,
+	pub instanceContributionToHitGroupIndex: u32,
+	pub accelerationStructure: VkDeviceAddress,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPartitionedAccelerationStructureWritePartitionTranslationDataNV {
-	partitionIndex: u32,
-	partitionTranslation: [f32; 3 as usize],
+	pub partitionIndex: u32,
+	pub partitionTranslation: [f32; 3 as usize],
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkWriteDescriptorSetPartitionedAccelerationStructureNV {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	accelerationStructureCount: u32,
-	pAccelerationStructures: *const VkDeviceAddress,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub accelerationStructureCount: u32,
+	pub pAccelerationStructures: *const VkDeviceAddress,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPartitionedAccelerationStructureInstancesInputNV {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	flags: VkBuildAccelerationStructureFlagsKHR,
-	instanceCount: u32,
-	maxInstancePerPartitionCount: u32,
-	partitionCount: u32,
-	maxInstanceInGlobalPartitionCount: u32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub flags: VkBuildAccelerationStructureFlagsKHR,
+	pub instanceCount: u32,
+	pub maxInstancePerPartitionCount: u32,
+	pub partitionCount: u32,
+	pub maxInstanceInGlobalPartitionCount: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkBuildPartitionedAccelerationStructureInfoNV {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	input: VkPartitionedAccelerationStructureInstancesInputNV,
-	srcAccelerationStructureData: VkDeviceAddress,
-	dstAccelerationStructureData: VkDeviceAddress,
-	scratchData: VkDeviceAddress,
-	srcInfos: VkDeviceAddress,
-	srcInfosCount: VkDeviceAddress,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub input: VkPartitionedAccelerationStructureInstancesInputNV,
+	pub srcAccelerationStructureData: VkDeviceAddress,
+	pub dstAccelerationStructureData: VkDeviceAddress,
+	pub scratchData: VkDeviceAddress,
+	pub srcInfos: VkDeviceAddress,
+	pub srcInfosCount: VkDeviceAddress,
 }
 type PFN_vkGetPartitionedAccelerationStructuresBuildSizesNV = extern "system" fn(device: VkDevice, pInfo: *const VkPartitionedAccelerationStructureInstancesInputNV, pSizeInfo: *mut VkAccelerationStructureBuildSizesInfoKHR);
 type PFN_vkCmdBuildPartitionedAccelerationStructuresNV = extern "system" fn(commandBuffer: VkCommandBuffer, pBuildInfo: *const VkBuildPartitionedAccelerationStructureInfoNV);
@@ -31786,16 +30802,16 @@ impl Vulkan_NV_partitioned_acceleration_structure {
 		}
 	}
 }
-type VkIndirectCommandsInputModeFlagsEXT = VkFlags;
-type VkIndirectCommandsLayoutUsageFlagsEXT = VkFlags;
+pub type VkIndirectCommandsInputModeFlagsEXT = VkFlags;
+pub type VkIndirectCommandsLayoutUsageFlagsEXT = VkFlags;
 // Define non-dispatchable handle `VkIndirectExecutionSetEXT`
-#[cfg(target_pointer_width = "32")] type VkIndirectExecutionSetEXT = u64;
+#[cfg(target_pointer_width = "32")] pub type VkIndirectExecutionSetEXT = u64;
 #[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkIndirectExecutionSetEXT_T {}
-#[cfg(target_pointer_width = "64")] type VkIndirectExecutionSetEXT = *const VkIndirectExecutionSetEXT_T;
+#[cfg(target_pointer_width = "64")] pub type VkIndirectExecutionSetEXT = *const VkIndirectExecutionSetEXT_T;
 // Define non-dispatchable handle `VkIndirectCommandsLayoutEXT`
-#[cfg(target_pointer_width = "32")] type VkIndirectCommandsLayoutEXT = u64;
+#[cfg(target_pointer_width = "32")] pub type VkIndirectCommandsLayoutEXT = u64;
 #[cfg(target_pointer_width = "64")] #[derive(Debug, Clone, Copy)] pub struct VkIndirectCommandsLayoutEXT_T {}
-#[cfg(target_pointer_width = "64")] type VkIndirectCommandsLayoutEXT = *const VkIndirectCommandsLayoutEXT_T;
+#[cfg(target_pointer_width = "64")] pub type VkIndirectCommandsLayoutEXT = *const VkIndirectCommandsLayoutEXT_T;
 #[repr(C)]
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum VkIndirectExecutionSetInfoTypeEXT {
@@ -31840,8 +30856,8 @@ pub enum VkIndirectCommandsLayoutUsageFlagBitsEXT {
 #[repr(C)]
 #[derive(Clone, Copy)]
 pub union VkIndirectExecutionSetInfoEXT {
-	pPipelineInfo: *const VkIndirectExecutionSetPipelineInfoEXT,
-	pShaderInfo: *const VkIndirectExecutionSetShaderInfoEXT,
+	pub pPipelineInfo: *const VkIndirectExecutionSetPipelineInfoEXT,
+	pub pShaderInfo: *const VkIndirectExecutionSetShaderInfoEXT,
 }
 impl Debug for VkIndirectExecutionSetInfoEXT {
 	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
@@ -31854,10 +30870,10 @@ impl Debug for VkIndirectExecutionSetInfoEXT {
 #[repr(C)]
 #[derive(Clone, Copy)]
 pub union VkIndirectCommandsTokenDataEXT {
-	pPushConstant: *const VkIndirectCommandsPushConstantTokenEXT,
-	pVertexBuffer: *const VkIndirectCommandsVertexBufferTokenEXT,
-	pIndexBuffer: *const VkIndirectCommandsIndexBufferTokenEXT,
-	pExecutionSet: *const VkIndirectCommandsExecutionSetTokenEXT,
+	pub pPushConstant: *const VkIndirectCommandsPushConstantTokenEXT,
+	pub pVertexBuffer: *const VkIndirectCommandsVertexBufferTokenEXT,
+	pub pIndexBuffer: *const VkIndirectCommandsIndexBufferTokenEXT,
+	pub pExecutionSet: *const VkIndirectCommandsExecutionSetTokenEXT,
 }
 impl Debug for VkIndirectCommandsTokenDataEXT {
 	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
@@ -31872,184 +30888,184 @@ impl Debug for VkIndirectCommandsTokenDataEXT {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceDeviceGeneratedCommandsFeaturesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	deviceGeneratedCommands: VkBool32,
-	dynamicGeneratedPipelineLayout: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub deviceGeneratedCommands: VkBool32,
+	pub dynamicGeneratedPipelineLayout: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceDeviceGeneratedCommandsPropertiesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	maxIndirectPipelineCount: u32,
-	maxIndirectShaderObjectCount: u32,
-	maxIndirectSequenceCount: u32,
-	maxIndirectCommandsTokenCount: u32,
-	maxIndirectCommandsTokenOffset: u32,
-	maxIndirectCommandsIndirectStride: u32,
-	supportedIndirectCommandsInputModes: VkIndirectCommandsInputModeFlagsEXT,
-	supportedIndirectCommandsShaderStages: VkShaderStageFlags,
-	supportedIndirectCommandsShaderStagesPipelineBinding: VkShaderStageFlags,
-	supportedIndirectCommandsShaderStagesShaderBinding: VkShaderStageFlags,
-	deviceGeneratedCommandsTransformFeedback: VkBool32,
-	deviceGeneratedCommandsMultiDrawIndirectCount: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub maxIndirectPipelineCount: u32,
+	pub maxIndirectShaderObjectCount: u32,
+	pub maxIndirectSequenceCount: u32,
+	pub maxIndirectCommandsTokenCount: u32,
+	pub maxIndirectCommandsTokenOffset: u32,
+	pub maxIndirectCommandsIndirectStride: u32,
+	pub supportedIndirectCommandsInputModes: VkIndirectCommandsInputModeFlagsEXT,
+	pub supportedIndirectCommandsShaderStages: VkShaderStageFlags,
+	pub supportedIndirectCommandsShaderStagesPipelineBinding: VkShaderStageFlags,
+	pub supportedIndirectCommandsShaderStagesShaderBinding: VkShaderStageFlags,
+	pub deviceGeneratedCommandsTransformFeedback: VkBool32,
+	pub deviceGeneratedCommandsMultiDrawIndirectCount: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkGeneratedCommandsMemoryRequirementsInfoEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	indirectExecutionSet: VkIndirectExecutionSetEXT,
-	indirectCommandsLayout: VkIndirectCommandsLayoutEXT,
-	maxSequenceCount: u32,
-	maxDrawCount: u32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub indirectExecutionSet: VkIndirectExecutionSetEXT,
+	pub indirectCommandsLayout: VkIndirectCommandsLayoutEXT,
+	pub maxSequenceCount: u32,
+	pub maxDrawCount: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkIndirectExecutionSetPipelineInfoEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	initialPipeline: VkPipeline,
-	maxPipelineCount: u32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub initialPipeline: VkPipeline,
+	pub maxPipelineCount: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkIndirectExecutionSetShaderLayoutInfoEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	setLayoutCount: u32,
-	pSetLayouts: *const VkDescriptorSetLayout,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub setLayoutCount: u32,
+	pub pSetLayouts: *const VkDescriptorSetLayout,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkIndirectExecutionSetShaderInfoEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	shaderCount: u32,
-	pInitialShaders: *const VkShaderEXT,
-	pSetLayoutInfos: *const VkIndirectExecutionSetShaderLayoutInfoEXT,
-	maxShaderCount: u32,
-	pushConstantRangeCount: u32,
-	pPushConstantRanges: *const VkPushConstantRange,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub shaderCount: u32,
+	pub pInitialShaders: *const VkShaderEXT,
+	pub pSetLayoutInfos: *const VkIndirectExecutionSetShaderLayoutInfoEXT,
+	pub maxShaderCount: u32,
+	pub pushConstantRangeCount: u32,
+	pub pPushConstantRanges: *const VkPushConstantRange,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkIndirectExecutionSetCreateInfoEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	type_: VkIndirectExecutionSetInfoTypeEXT,
-	info: VkIndirectExecutionSetInfoEXT,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub type_: VkIndirectExecutionSetInfoTypeEXT,
+	pub info: VkIndirectExecutionSetInfoEXT,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkGeneratedCommandsInfoEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	shaderStages: VkShaderStageFlags,
-	indirectExecutionSet: VkIndirectExecutionSetEXT,
-	indirectCommandsLayout: VkIndirectCommandsLayoutEXT,
-	indirectAddress: VkDeviceAddress,
-	indirectAddressSize: VkDeviceSize,
-	preprocessAddress: VkDeviceAddress,
-	preprocessSize: VkDeviceSize,
-	maxSequenceCount: u32,
-	sequenceCountAddress: VkDeviceAddress,
-	maxDrawCount: u32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub shaderStages: VkShaderStageFlags,
+	pub indirectExecutionSet: VkIndirectExecutionSetEXT,
+	pub indirectCommandsLayout: VkIndirectCommandsLayoutEXT,
+	pub indirectAddress: VkDeviceAddress,
+	pub indirectAddressSize: VkDeviceSize,
+	pub preprocessAddress: VkDeviceAddress,
+	pub preprocessSize: VkDeviceSize,
+	pub maxSequenceCount: u32,
+	pub sequenceCountAddress: VkDeviceAddress,
+	pub maxDrawCount: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkWriteIndirectExecutionSetPipelineEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	index: u32,
-	pipeline: VkPipeline,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub index: u32,
+	pub pipeline: VkPipeline,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkIndirectCommandsPushConstantTokenEXT {
-	updateRange: VkPushConstantRange,
+	pub updateRange: VkPushConstantRange,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkIndirectCommandsVertexBufferTokenEXT {
-	vertexBindingUnit: u32,
+	pub vertexBindingUnit: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkIndirectCommandsIndexBufferTokenEXT {
-	mode: VkIndirectCommandsInputModeFlagBitsEXT,
+	pub mode: VkIndirectCommandsInputModeFlagBitsEXT,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkIndirectCommandsExecutionSetTokenEXT {
-	type_: VkIndirectExecutionSetInfoTypeEXT,
-	shaderStages: VkShaderStageFlags,
+	pub type_: VkIndirectExecutionSetInfoTypeEXT,
+	pub shaderStages: VkShaderStageFlags,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkIndirectCommandsLayoutTokenEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	type_: VkIndirectCommandsTokenTypeEXT,
-	data: VkIndirectCommandsTokenDataEXT,
-	offset: u32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub type_: VkIndirectCommandsTokenTypeEXT,
+	pub data: VkIndirectCommandsTokenDataEXT,
+	pub offset: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkIndirectCommandsLayoutCreateInfoEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkIndirectCommandsLayoutUsageFlagsEXT,
-	shaderStages: VkShaderStageFlags,
-	indirectStride: u32,
-	pipelineLayout: VkPipelineLayout,
-	tokenCount: u32,
-	pTokens: *const VkIndirectCommandsLayoutTokenEXT,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkIndirectCommandsLayoutUsageFlagsEXT,
+	pub shaderStages: VkShaderStageFlags,
+	pub indirectStride: u32,
+	pub pipelineLayout: VkPipelineLayout,
+	pub tokenCount: u32,
+	pub pTokens: *const VkIndirectCommandsLayoutTokenEXT,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDrawIndirectCountIndirectCommandEXT {
-	bufferAddress: VkDeviceAddress,
-	stride: u32,
-	commandCount: u32,
+	pub bufferAddress: VkDeviceAddress,
+	pub stride: u32,
+	pub commandCount: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkBindVertexBufferIndirectCommandEXT {
-	bufferAddress: VkDeviceAddress,
-	size: u32,
-	stride: u32,
+	pub bufferAddress: VkDeviceAddress,
+	pub size: u32,
+	pub stride: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkBindIndexBufferIndirectCommandEXT {
-	bufferAddress: VkDeviceAddress,
-	size: u32,
-	indexType: VkIndexType,
+	pub bufferAddress: VkDeviceAddress,
+	pub size: u32,
+	pub indexType: VkIndexType,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkGeneratedCommandsPipelineInfoEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	pipeline: VkPipeline,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub pipeline: VkPipeline,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkGeneratedCommandsShaderInfoEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	shaderCount: u32,
-	pShaders: *const VkShaderEXT,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub shaderCount: u32,
+	pub pShaders: *const VkShaderEXT,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkWriteIndirectExecutionSetShaderEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	index: u32,
-	shader: VkShaderEXT,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub index: u32,
+	pub shader: VkShaderEXT,
 }
 type PFN_vkGetGeneratedCommandsMemoryRequirementsEXT = extern "system" fn(device: VkDevice, pInfo: *const VkGeneratedCommandsMemoryRequirementsInfoEXT, pMemoryRequirements: *mut VkMemoryRequirements2);
 type PFN_vkCmdPreprocessGeneratedCommandsEXT = extern "system" fn(commandBuffer: VkCommandBuffer, pGeneratedCommandsInfo: *const VkGeneratedCommandsInfoEXT, stateCommandBuffer: VkCommandBuffer);
@@ -32092,145 +31108,133 @@ impl Vulkan_EXT_device_generated_commands {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceImageAlignmentControlFeaturesMESA {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	imageAlignmentControl: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub imageAlignmentControl: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceImageAlignmentControlPropertiesMESA {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	supportedImageAlignmentMask: u32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub supportedImageAlignmentMask: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkImageAlignmentControlCreateInfoMESA {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	maximumRequestedAlignment: u32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub maximumRequestedAlignment: u32,
 }
 pub trait VK_MESA_image_alignment_control: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_MESA_image_alignment_control {
-}
-impl VK_MESA_image_alignment_control for Vulkan_MESA_image_alignment_control {
-}
+pub struct Vulkan_MESA_image_alignment_control {}
+impl VK_MESA_image_alignment_control for Vulkan_MESA_image_alignment_control {}
 impl Default for Vulkan_MESA_image_alignment_control {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_MESA_image_alignment_control {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceDepthClampControlFeaturesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	depthClampControl: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub depthClampControl: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPipelineViewportDepthClampControlCreateInfoEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	depthClampMode: VkDepthClampModeEXT,
-	pDepthClampRange: *const VkDepthClampRangeEXT,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub depthClampMode: VkDepthClampModeEXT,
+	pub pDepthClampRange: *const VkDepthClampRangeEXT,
 }
 pub trait VK_EXT_depth_clamp_control: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_depth_clamp_control {
-}
-impl VK_EXT_depth_clamp_control for Vulkan_EXT_depth_clamp_control {
-}
+pub struct Vulkan_EXT_depth_clamp_control {}
+impl VK_EXT_depth_clamp_control for Vulkan_EXT_depth_clamp_control {}
 impl Default for Vulkan_EXT_depth_clamp_control {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_depth_clamp_control {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceHdrVividFeaturesHUAWEI {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	hdrVivid: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub hdrVivid: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkHdrVividDynamicMetadataHUAWEI {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	dynamicMetadataSize: usize,
-	pDynamicMetadata: *const c_void,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub dynamicMetadataSize: usize,
+	pub pDynamicMetadata: *const c_void,
 }
 pub trait VK_HUAWEI_hdr_vivid: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_HUAWEI_hdr_vivid {
-}
-impl VK_HUAWEI_hdr_vivid for Vulkan_HUAWEI_hdr_vivid {
-}
+pub struct Vulkan_HUAWEI_hdr_vivid {}
+impl VK_HUAWEI_hdr_vivid for Vulkan_HUAWEI_hdr_vivid {}
 impl Default for Vulkan_HUAWEI_hdr_vivid {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_HUAWEI_hdr_vivid {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkCooperativeMatrixFlexibleDimensionsPropertiesNV {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	MGranularity: u32,
-	NGranularity: u32,
-	KGranularity: u32,
-	AType: VkComponentTypeKHR,
-	BType: VkComponentTypeKHR,
-	CType: VkComponentTypeKHR,
-	ResultType: VkComponentTypeKHR,
-	saturatingAccumulation: VkBool32,
-	scope: VkScopeKHR,
-	workgroupInvocations: u32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub MGranularity: u32,
+	pub NGranularity: u32,
+	pub KGranularity: u32,
+	pub AType: VkComponentTypeKHR,
+	pub BType: VkComponentTypeKHR,
+	pub CType: VkComponentTypeKHR,
+	pub ResultType: VkComponentTypeKHR,
+	pub saturatingAccumulation: VkBool32,
+	pub scope: VkScopeKHR,
+	pub workgroupInvocations: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceCooperativeMatrix2FeaturesNV {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	cooperativeMatrixWorkgroupScope: VkBool32,
-	cooperativeMatrixFlexibleDimensions: VkBool32,
-	cooperativeMatrixReductions: VkBool32,
-	cooperativeMatrixConversions: VkBool32,
-	cooperativeMatrixPerElementOperations: VkBool32,
-	cooperativeMatrixTensorAddressing: VkBool32,
-	cooperativeMatrixBlockLoads: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub cooperativeMatrixWorkgroupScope: VkBool32,
+	pub cooperativeMatrixFlexibleDimensions: VkBool32,
+	pub cooperativeMatrixReductions: VkBool32,
+	pub cooperativeMatrixConversions: VkBool32,
+	pub cooperativeMatrixPerElementOperations: VkBool32,
+	pub cooperativeMatrixTensorAddressing: VkBool32,
+	pub cooperativeMatrixBlockLoads: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceCooperativeMatrix2PropertiesNV {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	cooperativeMatrixWorkgroupScopeMaxWorkgroupSize: u32,
-	cooperativeMatrixFlexibleDimensionsMaxDimension: u32,
-	cooperativeMatrixWorkgroupScopeReservedSharedMemory: u32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub cooperativeMatrixWorkgroupScopeMaxWorkgroupSize: u32,
+	pub cooperativeMatrixFlexibleDimensionsMaxDimension: u32,
+	pub cooperativeMatrixWorkgroupScopeReservedSharedMemory: u32,
 }
 type PFN_vkGetPhysicalDeviceCooperativeMatrixFlexibleDimensionsPropertiesNV = extern "system" fn(physicalDevice: VkPhysicalDevice, pPropertyCount: *mut uint32_t, pProperties: *mut VkCooperativeMatrixFlexibleDimensionsPropertiesNV) -> VkResult;
 extern "system" fn dummy_vkGetPhysicalDeviceCooperativeMatrixFlexibleDimensionsPropertiesNV(_: VkPhysicalDevice, _: *mut uint32_t, _: *mut VkCooperativeMatrixFlexibleDimensionsPropertiesNV) -> VkResult {
@@ -32265,155 +31269,135 @@ impl Vulkan_NV_cooperative_matrix2 {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDevicePipelineOpacityMicromapFeaturesARM {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	pipelineOpacityMicromap: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub pipelineOpacityMicromap: VkBool32,
 }
 pub trait VK_ARM_pipeline_opacity_micromap: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_ARM_pipeline_opacity_micromap {
-}
-impl VK_ARM_pipeline_opacity_micromap for Vulkan_ARM_pipeline_opacity_micromap {
-}
+pub struct Vulkan_ARM_pipeline_opacity_micromap {}
+impl VK_ARM_pipeline_opacity_micromap for Vulkan_ARM_pipeline_opacity_micromap {}
 impl Default for Vulkan_ARM_pipeline_opacity_micromap {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_ARM_pipeline_opacity_micromap {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceVertexAttributeRobustnessFeaturesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	vertexAttributeRobustness: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub vertexAttributeRobustness: VkBool32,
 }
 pub trait VK_EXT_vertex_attribute_robustness: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_vertex_attribute_robustness {
-}
-impl VK_EXT_vertex_attribute_robustness for Vulkan_EXT_vertex_attribute_robustness {
-}
+pub struct Vulkan_EXT_vertex_attribute_robustness {}
+impl VK_EXT_vertex_attribute_robustness for Vulkan_EXT_vertex_attribute_robustness {}
 impl Default for Vulkan_EXT_vertex_attribute_robustness {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_vertex_attribute_robustness {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceFormatPackFeaturesARM {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	formatPack: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub formatPack: VkBool32,
 }
 pub trait VK_ARM_format_pack: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_ARM_format_pack {
-}
-impl VK_ARM_format_pack for Vulkan_ARM_format_pack {
-}
+pub struct Vulkan_ARM_format_pack {}
+impl VK_ARM_format_pack for Vulkan_ARM_format_pack {}
 impl Default for Vulkan_ARM_format_pack {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_ARM_format_pack {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceFragmentDensityMapLayeredFeaturesVALVE {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	fragmentDensityMapLayered: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub fragmentDensityMapLayered: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceFragmentDensityMapLayeredPropertiesVALVE {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	maxFragmentDensityMapLayers: u32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub maxFragmentDensityMapLayers: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPipelineFragmentDensityMapLayeredCreateInfoVALVE {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	maxFragmentDensityMapLayers: u32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub maxFragmentDensityMapLayers: u32,
 }
 pub trait VK_VALVE_fragment_density_map_layered: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_VALVE_fragment_density_map_layered {
-}
-impl VK_VALVE_fragment_density_map_layered for Vulkan_VALVE_fragment_density_map_layered {
-}
+pub struct Vulkan_VALVE_fragment_density_map_layered {}
+impl VK_VALVE_fragment_density_map_layered for Vulkan_VALVE_fragment_density_map_layered {}
 impl Default for Vulkan_VALVE_fragment_density_map_layered {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_VALVE_fragment_density_map_layered {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkSetPresentConfigNV {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	numFramesPerBatch: u32,
-	presentConfigFeedback: u32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub numFramesPerBatch: u32,
+	pub presentConfigFeedback: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDevicePresentMeteringFeaturesNV {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	presentMetering: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub presentMetering: VkBool32,
 }
 pub trait VK_NV_present_metering: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_NV_present_metering {
-}
-impl VK_NV_present_metering for Vulkan_NV_present_metering {
-}
+pub struct Vulkan_NV_present_metering {}
+impl VK_NV_present_metering for Vulkan_NV_present_metering {}
 impl Default for Vulkan_NV_present_metering {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_NV_present_metering {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkRenderingEndInfoEXT {
-	sType: VkStructureType,
-	pNext: *const c_void,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
 }
 type PFN_vkCmdEndRendering2EXT = extern "system" fn(commandBuffer: VkCommandBuffer, pRenderingEndInfo: *const VkRenderingEndInfoEXT);
 extern "system" fn dummy_vkCmdEndRendering2EXT(_: VkCommandBuffer, _: *const VkRenderingEndInfoEXT) {
@@ -32448,54 +31432,46 @@ impl Vulkan_EXT_fragment_density_map_offset {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceZeroInitializeDeviceMemoryFeaturesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	zeroInitializeDeviceMemory: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub zeroInitializeDeviceMemory: VkBool32,
 }
 pub trait VK_EXT_zero_initialize_device_memory: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_EXT_zero_initialize_device_memory {
-}
-impl VK_EXT_zero_initialize_device_memory for Vulkan_EXT_zero_initialize_device_memory {
-}
+pub struct Vulkan_EXT_zero_initialize_device_memory {}
+impl VK_EXT_zero_initialize_device_memory for Vulkan_EXT_zero_initialize_device_memory {}
 impl Default for Vulkan_EXT_zero_initialize_device_memory {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_EXT_zero_initialize_device_memory {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDevicePipelineCacheIncrementalModeFeaturesSEC {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	pipelineCacheIncrementalMode: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub pipelineCacheIncrementalMode: VkBool32,
 }
 pub trait VK_SEC_pipeline_cache_incremental_mode: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_SEC_pipeline_cache_incremental_mode {
-}
-impl VK_SEC_pipeline_cache_incremental_mode for Vulkan_SEC_pipeline_cache_incremental_mode {
-}
+pub struct Vulkan_SEC_pipeline_cache_incremental_mode {}
+impl VK_SEC_pipeline_cache_incremental_mode for Vulkan_SEC_pipeline_cache_incremental_mode {}
 impl Default for Vulkan_SEC_pipeline_cache_incremental_mode {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_SEC_pipeline_cache_incremental_mode {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
-type VkAccelerationStructureCreateFlagsKHR = VkFlags;
+pub type VkAccelerationStructureCreateFlagsKHR = VkFlags;
 #[repr(C)]
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum VkBuildAccelerationStructureModeKHR {
@@ -32514,9 +31490,9 @@ pub enum VkAccelerationStructureCreateFlagBitsKHR {
 #[repr(C)]
 #[derive(Clone, Copy)]
 pub union VkAccelerationStructureGeometryDataKHR {
-	triangles: VkAccelerationStructureGeometryTrianglesDataKHR,
-	aabbs: VkAccelerationStructureGeometryAabbsDataKHR,
-	instances: VkAccelerationStructureGeometryInstancesDataKHR,
+	pub triangles: VkAccelerationStructureGeometryTrianglesDataKHR,
+	pub aabbs: VkAccelerationStructureGeometryAabbsDataKHR,
+	pub instances: VkAccelerationStructureGeometryInstancesDataKHR,
 }
 impl Debug for VkAccelerationStructureGeometryDataKHR {
 	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
@@ -32530,149 +31506,149 @@ impl Debug for VkAccelerationStructureGeometryDataKHR {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkAccelerationStructureBuildRangeInfoKHR {
-	primitiveCount: u32,
-	primitiveOffset: u32,
-	firstVertex: u32,
-	transformOffset: u32,
+	pub primitiveCount: u32,
+	pub primitiveOffset: u32,
+	pub firstVertex: u32,
+	pub transformOffset: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkAccelerationStructureGeometryTrianglesDataKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	vertexFormat: VkFormat,
-	vertexData: VkDeviceOrHostAddressConstKHR,
-	vertexStride: VkDeviceSize,
-	maxVertex: u32,
-	indexType: VkIndexType,
-	indexData: VkDeviceOrHostAddressConstKHR,
-	transformData: VkDeviceOrHostAddressConstKHR,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub vertexFormat: VkFormat,
+	pub vertexData: VkDeviceOrHostAddressConstKHR,
+	pub vertexStride: VkDeviceSize,
+	pub maxVertex: u32,
+	pub indexType: VkIndexType,
+	pub indexData: VkDeviceOrHostAddressConstKHR,
+	pub transformData: VkDeviceOrHostAddressConstKHR,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkAccelerationStructureGeometryAabbsDataKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	data: VkDeviceOrHostAddressConstKHR,
-	stride: VkDeviceSize,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub data: VkDeviceOrHostAddressConstKHR,
+	pub stride: VkDeviceSize,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkAccelerationStructureGeometryInstancesDataKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	arrayOfPointers: VkBool32,
-	data: VkDeviceOrHostAddressConstKHR,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub arrayOfPointers: VkBool32,
+	pub data: VkDeviceOrHostAddressConstKHR,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkAccelerationStructureGeometryKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	geometryType: VkGeometryTypeKHR,
-	geometry: VkAccelerationStructureGeometryDataKHR,
-	flags: VkGeometryFlagsKHR,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub geometryType: VkGeometryTypeKHR,
+	pub geometry: VkAccelerationStructureGeometryDataKHR,
+	pub flags: VkGeometryFlagsKHR,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkAccelerationStructureBuildGeometryInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	type_: VkAccelerationStructureTypeKHR,
-	flags: VkBuildAccelerationStructureFlagsKHR,
-	mode: VkBuildAccelerationStructureModeKHR,
-	srcAccelerationStructure: VkAccelerationStructureKHR,
-	dstAccelerationStructure: VkAccelerationStructureKHR,
-	geometryCount: u32,
-	pGeometries: *const VkAccelerationStructureGeometryKHR,
-	ppGeometries: *const *const VkAccelerationStructureGeometryKHR,
-	scratchData: VkDeviceOrHostAddressKHR,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub type_: VkAccelerationStructureTypeKHR,
+	pub flags: VkBuildAccelerationStructureFlagsKHR,
+	pub mode: VkBuildAccelerationStructureModeKHR,
+	pub srcAccelerationStructure: VkAccelerationStructureKHR,
+	pub dstAccelerationStructure: VkAccelerationStructureKHR,
+	pub geometryCount: u32,
+	pub pGeometries: *const VkAccelerationStructureGeometryKHR,
+	pub ppGeometries: *const *const VkAccelerationStructureGeometryKHR,
+	pub scratchData: VkDeviceOrHostAddressKHR,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkAccelerationStructureCreateInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	createFlags: VkAccelerationStructureCreateFlagsKHR,
-	buffer: VkBuffer,
-	offset: VkDeviceSize,
-	size: VkDeviceSize,
-	type_: VkAccelerationStructureTypeKHR,
-	deviceAddress: VkDeviceAddress,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub createFlags: VkAccelerationStructureCreateFlagsKHR,
+	pub buffer: VkBuffer,
+	pub offset: VkDeviceSize,
+	pub size: VkDeviceSize,
+	pub type_: VkAccelerationStructureTypeKHR,
+	pub deviceAddress: VkDeviceAddress,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkWriteDescriptorSetAccelerationStructureKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	accelerationStructureCount: u32,
-	pAccelerationStructures: *const VkAccelerationStructureKHR,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub accelerationStructureCount: u32,
+	pub pAccelerationStructures: *const VkAccelerationStructureKHR,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceAccelerationStructureFeaturesKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	accelerationStructure: VkBool32,
-	accelerationStructureCaptureReplay: VkBool32,
-	accelerationStructureIndirectBuild: VkBool32,
-	accelerationStructureHostCommands: VkBool32,
-	descriptorBindingAccelerationStructureUpdateAfterBind: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub accelerationStructure: VkBool32,
+	pub accelerationStructureCaptureReplay: VkBool32,
+	pub accelerationStructureIndirectBuild: VkBool32,
+	pub accelerationStructureHostCommands: VkBool32,
+	pub descriptorBindingAccelerationStructureUpdateAfterBind: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceAccelerationStructurePropertiesKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	maxGeometryCount: u64,
-	maxInstanceCount: u64,
-	maxPrimitiveCount: u64,
-	maxPerStageDescriptorAccelerationStructures: u32,
-	maxPerStageDescriptorUpdateAfterBindAccelerationStructures: u32,
-	maxDescriptorSetAccelerationStructures: u32,
-	maxDescriptorSetUpdateAfterBindAccelerationStructures: u32,
-	minAccelerationStructureScratchOffsetAlignment: u32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub maxGeometryCount: u64,
+	pub maxInstanceCount: u64,
+	pub maxPrimitiveCount: u64,
+	pub maxPerStageDescriptorAccelerationStructures: u32,
+	pub maxPerStageDescriptorUpdateAfterBindAccelerationStructures: u32,
+	pub maxDescriptorSetAccelerationStructures: u32,
+	pub maxDescriptorSetUpdateAfterBindAccelerationStructures: u32,
+	pub minAccelerationStructureScratchOffsetAlignment: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkAccelerationStructureDeviceAddressInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	accelerationStructure: VkAccelerationStructureKHR,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub accelerationStructure: VkAccelerationStructureKHR,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkAccelerationStructureVersionInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	pVersionData: *const uint8_t,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub pVersionData: *const uint8_t,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkCopyAccelerationStructureToMemoryInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	src: VkAccelerationStructureKHR,
-	dst: VkDeviceOrHostAddressKHR,
-	mode: VkCopyAccelerationStructureModeKHR,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub src: VkAccelerationStructureKHR,
+	pub dst: VkDeviceOrHostAddressKHR,
+	pub mode: VkCopyAccelerationStructureModeKHR,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkCopyMemoryToAccelerationStructureInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	src: VkDeviceOrHostAddressConstKHR,
-	dst: VkAccelerationStructureKHR,
-	mode: VkCopyAccelerationStructureModeKHR,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub src: VkDeviceOrHostAddressConstKHR,
+	pub dst: VkAccelerationStructureKHR,
+	pub mode: VkCopyAccelerationStructureModeKHR,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkCopyAccelerationStructureInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	src: VkAccelerationStructureKHR,
-	dst: VkAccelerationStructureKHR,
-	mode: VkCopyAccelerationStructureModeKHR,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub src: VkAccelerationStructureKHR,
+	pub dst: VkAccelerationStructureKHR,
+	pub mode: VkCopyAccelerationStructureModeKHR,
 }
 type PFN_vkCreateAccelerationStructureKHR = extern "system" fn(device: VkDevice, pCreateInfo: *const VkAccelerationStructureCreateInfoKHR, pAllocator: *const VkAllocationCallbacks, pAccelerationStructure: *mut VkAccelerationStructureKHR) -> VkResult;
 type PFN_vkDestroyAccelerationStructureKHR = extern "system" fn(device: VkDevice, accelerationStructure: VkAccelerationStructureKHR, pAllocator: *const VkAllocationCallbacks);
@@ -32731,72 +31707,72 @@ pub enum VkShaderGroupShaderKHR {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkRayTracingShaderGroupCreateInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	type_: VkRayTracingShaderGroupTypeKHR,
-	generalShader: u32,
-	closestHitShader: u32,
-	anyHitShader: u32,
-	intersectionShader: u32,
-	pShaderGroupCaptureReplayHandle: *const c_void,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub type_: VkRayTracingShaderGroupTypeKHR,
+	pub generalShader: u32,
+	pub closestHitShader: u32,
+	pub anyHitShader: u32,
+	pub intersectionShader: u32,
+	pub pShaderGroupCaptureReplayHandle: *const c_void,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkRayTracingPipelineInterfaceCreateInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	maxPipelineRayPayloadSize: u32,
-	maxPipelineRayHitAttributeSize: u32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub maxPipelineRayPayloadSize: u32,
+	pub maxPipelineRayHitAttributeSize: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkRayTracingPipelineCreateInfoKHR {
-	sType: VkStructureType,
-	pNext: *const c_void,
-	flags: VkPipelineCreateFlags,
-	stageCount: u32,
-	pStages: *const VkPipelineShaderStageCreateInfo,
-	groupCount: u32,
-	pGroups: *const VkRayTracingShaderGroupCreateInfoKHR,
-	maxPipelineRayRecursionDepth: u32,
-	pLibraryInfo: *const VkPipelineLibraryCreateInfoKHR,
-	pLibraryInterface: *const VkRayTracingPipelineInterfaceCreateInfoKHR,
-	pDynamicState: *const VkPipelineDynamicStateCreateInfo,
-	layout: VkPipelineLayout,
-	basePipelineHandle: VkPipeline,
-	basePipelineIndex: i32,
+	pub sType: VkStructureType,
+	pub pNext: *const c_void,
+	pub flags: VkPipelineCreateFlags,
+	pub stageCount: u32,
+	pub pStages: *const VkPipelineShaderStageCreateInfo,
+	pub groupCount: u32,
+	pub pGroups: *const VkRayTracingShaderGroupCreateInfoKHR,
+	pub maxPipelineRayRecursionDepth: u32,
+	pub pLibraryInfo: *const VkPipelineLibraryCreateInfoKHR,
+	pub pLibraryInterface: *const VkRayTracingPipelineInterfaceCreateInfoKHR,
+	pub pDynamicState: *const VkPipelineDynamicStateCreateInfo,
+	pub layout: VkPipelineLayout,
+	pub basePipelineHandle: VkPipeline,
+	pub basePipelineIndex: i32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceRayTracingPipelineFeaturesKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	rayTracingPipeline: VkBool32,
-	rayTracingPipelineShaderGroupHandleCaptureReplay: VkBool32,
-	rayTracingPipelineShaderGroupHandleCaptureReplayMixed: VkBool32,
-	rayTracingPipelineTraceRaysIndirect: VkBool32,
-	rayTraversalPrimitiveCulling: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub rayTracingPipeline: VkBool32,
+	pub rayTracingPipelineShaderGroupHandleCaptureReplay: VkBool32,
+	pub rayTracingPipelineShaderGroupHandleCaptureReplayMixed: VkBool32,
+	pub rayTracingPipelineTraceRaysIndirect: VkBool32,
+	pub rayTraversalPrimitiveCulling: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceRayTracingPipelinePropertiesKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	shaderGroupHandleSize: u32,
-	maxRayRecursionDepth: u32,
-	maxShaderGroupStride: u32,
-	shaderGroupBaseAlignment: u32,
-	shaderGroupHandleCaptureReplaySize: u32,
-	maxRayDispatchInvocationCount: u32,
-	shaderGroupHandleAlignment: u32,
-	maxRayHitAttributeSize: u32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub shaderGroupHandleSize: u32,
+	pub maxRayRecursionDepth: u32,
+	pub maxShaderGroupStride: u32,
+	pub shaderGroupBaseAlignment: u32,
+	pub shaderGroupHandleCaptureReplaySize: u32,
+	pub maxRayDispatchInvocationCount: u32,
+	pub shaderGroupHandleAlignment: u32,
+	pub maxRayHitAttributeSize: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkTraceRaysIndirectCommandKHR {
-	width: u32,
-	height: u32,
-	depth: u32,
+	pub width: u32,
+	pub height: u32,
+	pub depth: u32,
 }
 type PFN_vkCmdTraceRaysKHR = extern "system" fn(commandBuffer: VkCommandBuffer, pRaygenShaderBindingTable: *const VkStridedDeviceAddressRegionKHR, pMissShaderBindingTable: *const VkStridedDeviceAddressRegionKHR, pHitShaderBindingTable: *const VkStridedDeviceAddressRegionKHR, pCallableShaderBindingTable: *const VkStridedDeviceAddressRegionKHR, width: u32, height: u32, depth: u32);
 type PFN_vkCreateRayTracingPipelinesKHR = extern "system" fn(device: VkDevice, deferredOperation: VkDeferredOperationKHR, pipelineCache: VkPipelineCache, createInfoCount: u32, pCreateInfos: *const VkRayTracingPipelineCreateInfoKHR, pAllocator: *const VkAllocationCallbacks, pPipelines: *mut VkPipeline) -> VkResult;
@@ -32836,79 +31812,75 @@ impl Vulkan_KHR_ray_tracing_pipeline {
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceRayQueryFeaturesKHR {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	rayQuery: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub rayQuery: VkBool32,
 }
 pub trait VK_KHR_ray_query: Debug {}
 #[derive(Debug, Clone, Copy)]
-pub struct Vulkan_KHR_ray_query {
-}
-impl VK_KHR_ray_query for Vulkan_KHR_ray_query {
-}
+pub struct Vulkan_KHR_ray_query {}
+impl VK_KHR_ray_query for Vulkan_KHR_ray_query {}
 impl Default for Vulkan_KHR_ray_query {
 	fn default() -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 impl Vulkan_KHR_ray_query {
 	pub fn new(_instance: VkInstance, _get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
-		Self {
-		}
+		Self {}
 	}
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceMeshShaderFeaturesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	taskShader: VkBool32,
-	meshShader: VkBool32,
-	multiviewMeshShader: VkBool32,
-	primitiveFragmentShadingRateMeshShader: VkBool32,
-	meshShaderQueries: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub taskShader: VkBool32,
+	pub meshShader: VkBool32,
+	pub multiviewMeshShader: VkBool32,
+	pub primitiveFragmentShadingRateMeshShader: VkBool32,
+	pub meshShaderQueries: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkPhysicalDeviceMeshShaderPropertiesEXT {
-	sType: VkStructureType,
-	pNext: *mut c_void,
-	maxTaskWorkGroupTotalCount: u32,
-	maxTaskWorkGroupCount: [u32; 3 as usize],
-	maxTaskWorkGroupInvocations: u32,
-	maxTaskWorkGroupSize: [u32; 3 as usize],
-	maxTaskPayloadSize: u32,
-	maxTaskSharedMemorySize: u32,
-	maxTaskPayloadAndSharedMemorySize: u32,
-	maxMeshWorkGroupTotalCount: u32,
-	maxMeshWorkGroupCount: [u32; 3 as usize],
-	maxMeshWorkGroupInvocations: u32,
-	maxMeshWorkGroupSize: [u32; 3 as usize],
-	maxMeshSharedMemorySize: u32,
-	maxMeshPayloadAndSharedMemorySize: u32,
-	maxMeshOutputMemorySize: u32,
-	maxMeshPayloadAndOutputMemorySize: u32,
-	maxMeshOutputComponents: u32,
-	maxMeshOutputVertices: u32,
-	maxMeshOutputPrimitives: u32,
-	maxMeshOutputLayers: u32,
-	maxMeshMultiviewViewCount: u32,
-	meshOutputPerVertexGranularity: u32,
-	meshOutputPerPrimitiveGranularity: u32,
-	maxPreferredTaskWorkGroupInvocations: u32,
-	maxPreferredMeshWorkGroupInvocations: u32,
-	prefersLocalInvocationVertexOutput: VkBool32,
-	prefersLocalInvocationPrimitiveOutput: VkBool32,
-	prefersCompactVertexOutput: VkBool32,
-	prefersCompactPrimitiveOutput: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: *mut c_void,
+	pub maxTaskWorkGroupTotalCount: u32,
+	pub maxTaskWorkGroupCount: [u32; 3 as usize],
+	pub maxTaskWorkGroupInvocations: u32,
+	pub maxTaskWorkGroupSize: [u32; 3 as usize],
+	pub maxTaskPayloadSize: u32,
+	pub maxTaskSharedMemorySize: u32,
+	pub maxTaskPayloadAndSharedMemorySize: u32,
+	pub maxMeshWorkGroupTotalCount: u32,
+	pub maxMeshWorkGroupCount: [u32; 3 as usize],
+	pub maxMeshWorkGroupInvocations: u32,
+	pub maxMeshWorkGroupSize: [u32; 3 as usize],
+	pub maxMeshSharedMemorySize: u32,
+	pub maxMeshPayloadAndSharedMemorySize: u32,
+	pub maxMeshOutputMemorySize: u32,
+	pub maxMeshPayloadAndOutputMemorySize: u32,
+	pub maxMeshOutputComponents: u32,
+	pub maxMeshOutputVertices: u32,
+	pub maxMeshOutputPrimitives: u32,
+	pub maxMeshOutputLayers: u32,
+	pub maxMeshMultiviewViewCount: u32,
+	pub meshOutputPerVertexGranularity: u32,
+	pub meshOutputPerPrimitiveGranularity: u32,
+	pub maxPreferredTaskWorkGroupInvocations: u32,
+	pub maxPreferredMeshWorkGroupInvocations: u32,
+	pub prefersLocalInvocationVertexOutput: VkBool32,
+	pub prefersLocalInvocationPrimitiveOutput: VkBool32,
+	pub prefersCompactVertexOutput: VkBool32,
+	pub prefersCompactPrimitiveOutput: VkBool32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct VkDrawMeshTasksIndirectCommandEXT {
-	groupCountX: u32,
-	groupCountY: u32,
-	groupCountZ: u32,
+	pub groupCountX: u32,
+	pub groupCountY: u32,
+	pub groupCountZ: u32,
 }
 type PFN_vkCmdDrawMeshTasksEXT = extern "system" fn(commandBuffer: VkCommandBuffer, groupCountX: u32, groupCountY: u32, groupCountZ: u32);
 type PFN_vkCmdDrawMeshTasksIndirectEXT = extern "system" fn(commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize, drawCount: u32, stride: u32);
@@ -32942,8 +31914,10 @@ impl Vulkan_EXT_mesh_shader {
 		}
 	}
 }
-#[derive(Default, Debug, Clone, Copy)]
+#[derive(Default, Debug, Clone)]
 pub struct VkCore {
+	pub instance: VkInstance,
+	pub extensions: BTreeSet<String>,
 	pub vk_version_1_0: Vulkan_VERSION_1_0,
 	pub vk_version_1_1: Vulkan_VERSION_1_1,
 	pub vk_version_1_2: Vulkan_VERSION_1_2,
@@ -32957,14 +31931,14 @@ pub struct VkCore {
 	pub vk_khr_video_queue: Vulkan_KHR_video_queue,
 	pub vk_khr_video_decode_queue: Vulkan_KHR_video_decode_queue,
 	pub vk_khr_video_encode_h264: Vulkan_KHR_video_encode_h264,
-	pub vulkan_video_codec_h264std: Vulkan_kan_video_codec_h264std,
-	pub vulkan_video_codecs_common: Vulkan_kan_video_codecs_common,
-	pub vulkan_video_codec_h264std_encode: Vulkan_kan_video_codec_h264std_encode,
+	pub vulkan_video_codec_h264std: Vulkan_video_codec_h264std,
+	pub vulkan_video_codecs_common: Vulkan_video_codecs_common,
+	pub vulkan_video_codec_h264std_encode: Vulkan_video_codec_h264std_encode,
 	pub vk_khr_video_encode_h265: Vulkan_KHR_video_encode_h265,
-	pub vulkan_video_codec_h265std: Vulkan_kan_video_codec_h265std,
-	pub vulkan_video_codec_h265std_encode: Vulkan_kan_video_codec_h265std_encode,
+	pub vulkan_video_codec_h265std: Vulkan_video_codec_h265std,
+	pub vulkan_video_codec_h265std_encode: Vulkan_video_codec_h265std_encode,
 	pub vk_khr_video_decode_h264: Vulkan_KHR_video_decode_h264,
-	pub vulkan_video_codec_h264std_decode: Vulkan_kan_video_codec_h264std_decode,
+	pub vulkan_video_codec_h264std_decode: Vulkan_video_codec_h264std_decode,
 	pub vk_khr_dynamic_rendering: Vulkan_KHR_dynamic_rendering,
 	pub vk_khr_multiview: Vulkan_KHR_multiview,
 	pub vk_khr_get_physical_device_properties2: Vulkan_KHR_get_physical_device_properties2,
@@ -33009,7 +31983,7 @@ pub struct VkCore {
 	pub vk_khr_shader_atomic_int64: Vulkan_KHR_shader_atomic_int64,
 	pub vk_khr_shader_clock: Vulkan_KHR_shader_clock,
 	pub vk_khr_video_decode_h265: Vulkan_KHR_video_decode_h265,
-	pub vulkan_video_codec_h265std_decode: Vulkan_kan_video_codec_h265std_decode,
+	pub vulkan_video_codec_h265std_decode: Vulkan_video_codec_h265std_decode,
 	pub vk_khr_global_priority: Vulkan_KHR_global_priority,
 	pub vk_khr_driver_properties: Vulkan_KHR_driver_properties,
 	pub vk_khr_shader_float_controls: Vulkan_KHR_shader_float_controls,
@@ -33057,13 +32031,13 @@ pub struct VkCore {
 	pub vk_khr_cooperative_matrix: Vulkan_KHR_cooperative_matrix,
 	pub vk_khr_compute_shader_derivatives: Vulkan_KHR_compute_shader_derivatives,
 	pub vk_khr_video_decode_av1: Vulkan_KHR_video_decode_av1,
-	pub vulkan_video_codec_av1std: Vulkan_kan_video_codec_av1std,
-	pub vulkan_video_codec_av1std_decode: Vulkan_kan_video_codec_av1std_decode,
+	pub vulkan_video_codec_av1std: Vulkan_video_codec_av1std,
+	pub vulkan_video_codec_av1std_decode: Vulkan_video_codec_av1std_decode,
 	pub vk_khr_video_encode_av1: Vulkan_KHR_video_encode_av1,
-	pub vulkan_video_codec_av1std_encode: Vulkan_kan_video_codec_av1std_encode,
+	pub vulkan_video_codec_av1std_encode: Vulkan_video_codec_av1std_encode,
 	pub vk_khr_video_decode_vp9: Vulkan_KHR_video_decode_vp9,
-	pub vulkan_video_codec_vp9std: Vulkan_kan_video_codec_vp9std,
-	pub vulkan_video_codec_vp9std_decode: Vulkan_kan_video_codec_vp9std_decode,
+	pub vulkan_video_codec_vp9std: Vulkan_video_codec_vp9std,
+	pub vulkan_video_codec_vp9std_decode: Vulkan_video_codec_vp9std_decode,
 	pub vk_khr_video_maintenance1: Vulkan_KHR_video_maintenance1,
 	pub vk_khr_vertex_attribute_divisor: Vulkan_KHR_vertex_attribute_divisor,
 	pub vk_khr_load_store_op_none: Vulkan_KHR_load_store_op_none,
@@ -34993,8 +33967,47 @@ impl VK_EXT_mesh_shader for VkCore {
 	}
 }
 impl VkCore {
-	pub fn new(instance: VkInstance, mut get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
+	pub fn new(app_info: VkApplicationInfo, mut get_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
+		let vkEnumerateInstanceExtensionProperties = get_proc_address(null(), "vkEnumerateInstanceExtensionProperties");
+		if vkEnumerateInstanceExtensionProperties == null() {
+			panic!("Initialize Vulkan failed: couldn't get the address of `vkEnumerateInstanceExtensionProperties()`");
+		}
+		let vkEnumerateInstanceExtensionProperties: PFN_vkEnumerateInstanceExtensionProperties = unsafe{transmute(vkEnumerateInstanceExtensionProperties)};
+		let mut count: u32 = 0;
+		let err = vkEnumerateInstanceExtensionProperties(null(), &mut count as *mut _, null_mut());
+		if err != VkResult::VK_SUCCESS {
+			panic!("Initialize Vulkan failed: couldn't get the number of the Vulkan extensions: {err:?}")
+		}
+		let mut extensions: Vec<VkExtensionProperties> = Vec::with_capacity(count as usize);
+		unsafe {extensions.set_len(count as usize)};
+		let err = vkEnumerateInstanceExtensionProperties(null(), &mut count as *mut _, extensions.as_mut_ptr());
+		if err != VkResult::VK_SUCCESS {
+			panic!("Initialize Vulkan failed: couldn't get the list of the Vulkan extensions: {err:?}")
+		}
+		let create_info = VkInstanceCreateInfo {
+			sType: VkStructureType::VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO,
+			pNext: null(),
+			flags: 0,
+			enabledLayerCount: 0,
+			pApplicationInfo: &app_info as *const _,
+			ppEnabledLayerNames: null(),
+			enabledExtensionCount: count,
+			ppEnabledExtensionNames: extensions.as_ptr() as *const _
+		};
+		let vkCreateInstance = get_proc_address(null(), "vkCreateInstance");
+		if vkCreateInstance == null() {
+			panic!("Initialize Vulkan failed: couldn't get a valid `vkCreateInstance()` function pointer.")
+		}
+		let vkCreateInstance: PFN_vkCreateInstance = unsafe{transmute(vkCreateInstance)};
+		let mut instance: VkInstance = null();
+		let result = vkCreateInstance(&create_info, null(), &mut instance);
+		if result != VkResult::VK_SUCCESS {
+			panic!("Initialize Vulkan failed: `vkCreateInstance()` failed: {result:?}")
+		}
+		
 		Self {
+			instance,
+			extensions: extensions.into_iter().map(|prop|unsafe {CStr::from_ptr(prop.extensionName.as_ptr())}.to_string_lossy().to_string()).collect(),
 			vk_version_1_0: Vulkan_VERSION_1_0::new(instance, &mut get_proc_address),
 			vk_version_1_1: Vulkan_VERSION_1_1::new(instance, &mut get_proc_address),
 			vk_version_1_2: Vulkan_VERSION_1_2::new(instance, &mut get_proc_address),
@@ -35008,14 +34021,14 @@ impl VkCore {
 			vk_khr_video_queue: Vulkan_KHR_video_queue::new(instance, &mut get_proc_address),
 			vk_khr_video_decode_queue: Vulkan_KHR_video_decode_queue::new(instance, &mut get_proc_address),
 			vk_khr_video_encode_h264: Vulkan_KHR_video_encode_h264::new(instance, &mut get_proc_address),
-			vulkan_video_codec_h264std: Vulkan_kan_video_codec_h264std::new(instance, &mut get_proc_address),
-			vulkan_video_codecs_common: Vulkan_kan_video_codecs_common::new(instance, &mut get_proc_address),
-			vulkan_video_codec_h264std_encode: Vulkan_kan_video_codec_h264std_encode::new(instance, &mut get_proc_address),
+			vulkan_video_codec_h264std: Vulkan_video_codec_h264std::new(instance, &mut get_proc_address),
+			vulkan_video_codecs_common: Vulkan_video_codecs_common::new(instance, &mut get_proc_address),
+			vulkan_video_codec_h264std_encode: Vulkan_video_codec_h264std_encode::new(instance, &mut get_proc_address),
 			vk_khr_video_encode_h265: Vulkan_KHR_video_encode_h265::new(instance, &mut get_proc_address),
-			vulkan_video_codec_h265std: Vulkan_kan_video_codec_h265std::new(instance, &mut get_proc_address),
-			vulkan_video_codec_h265std_encode: Vulkan_kan_video_codec_h265std_encode::new(instance, &mut get_proc_address),
+			vulkan_video_codec_h265std: Vulkan_video_codec_h265std::new(instance, &mut get_proc_address),
+			vulkan_video_codec_h265std_encode: Vulkan_video_codec_h265std_encode::new(instance, &mut get_proc_address),
 			vk_khr_video_decode_h264: Vulkan_KHR_video_decode_h264::new(instance, &mut get_proc_address),
-			vulkan_video_codec_h264std_decode: Vulkan_kan_video_codec_h264std_decode::new(instance, &mut get_proc_address),
+			vulkan_video_codec_h264std_decode: Vulkan_video_codec_h264std_decode::new(instance, &mut get_proc_address),
 			vk_khr_dynamic_rendering: Vulkan_KHR_dynamic_rendering::new(instance, &mut get_proc_address),
 			vk_khr_multiview: Vulkan_KHR_multiview::new(instance, &mut get_proc_address),
 			vk_khr_get_physical_device_properties2: Vulkan_KHR_get_physical_device_properties2::new(instance, &mut get_proc_address),
@@ -35060,7 +34073,7 @@ impl VkCore {
 			vk_khr_shader_atomic_int64: Vulkan_KHR_shader_atomic_int64::new(instance, &mut get_proc_address),
 			vk_khr_shader_clock: Vulkan_KHR_shader_clock::new(instance, &mut get_proc_address),
 			vk_khr_video_decode_h265: Vulkan_KHR_video_decode_h265::new(instance, &mut get_proc_address),
-			vulkan_video_codec_h265std_decode: Vulkan_kan_video_codec_h265std_decode::new(instance, &mut get_proc_address),
+			vulkan_video_codec_h265std_decode: Vulkan_video_codec_h265std_decode::new(instance, &mut get_proc_address),
 			vk_khr_global_priority: Vulkan_KHR_global_priority::new(instance, &mut get_proc_address),
 			vk_khr_driver_properties: Vulkan_KHR_driver_properties::new(instance, &mut get_proc_address),
 			vk_khr_shader_float_controls: Vulkan_KHR_shader_float_controls::new(instance, &mut get_proc_address),
@@ -35108,13 +34121,13 @@ impl VkCore {
 			vk_khr_cooperative_matrix: Vulkan_KHR_cooperative_matrix::new(instance, &mut get_proc_address),
 			vk_khr_compute_shader_derivatives: Vulkan_KHR_compute_shader_derivatives::new(instance, &mut get_proc_address),
 			vk_khr_video_decode_av1: Vulkan_KHR_video_decode_av1::new(instance, &mut get_proc_address),
-			vulkan_video_codec_av1std: Vulkan_kan_video_codec_av1std::new(instance, &mut get_proc_address),
-			vulkan_video_codec_av1std_decode: Vulkan_kan_video_codec_av1std_decode::new(instance, &mut get_proc_address),
+			vulkan_video_codec_av1std: Vulkan_video_codec_av1std::new(instance, &mut get_proc_address),
+			vulkan_video_codec_av1std_decode: Vulkan_video_codec_av1std_decode::new(instance, &mut get_proc_address),
 			vk_khr_video_encode_av1: Vulkan_KHR_video_encode_av1::new(instance, &mut get_proc_address),
-			vulkan_video_codec_av1std_encode: Vulkan_kan_video_codec_av1std_encode::new(instance, &mut get_proc_address),
+			vulkan_video_codec_av1std_encode: Vulkan_video_codec_av1std_encode::new(instance, &mut get_proc_address),
 			vk_khr_video_decode_vp9: Vulkan_KHR_video_decode_vp9::new(instance, &mut get_proc_address),
-			vulkan_video_codec_vp9std: Vulkan_kan_video_codec_vp9std::new(instance, &mut get_proc_address),
-			vulkan_video_codec_vp9std_decode: Vulkan_kan_video_codec_vp9std_decode::new(instance, &mut get_proc_address),
+			vulkan_video_codec_vp9std: Vulkan_video_codec_vp9std::new(instance, &mut get_proc_address),
+			vulkan_video_codec_vp9std_decode: Vulkan_video_codec_vp9std_decode::new(instance, &mut get_proc_address),
 			vk_khr_video_maintenance1: Vulkan_KHR_video_maintenance1::new(instance, &mut get_proc_address),
 			vk_khr_vertex_attribute_divisor: Vulkan_KHR_vertex_attribute_divisor::new(instance, &mut get_proc_address),
 			vk_khr_load_store_op_none: Vulkan_KHR_load_store_op_none::new(instance, &mut get_proc_address),
