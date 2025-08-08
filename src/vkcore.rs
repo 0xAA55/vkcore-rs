@@ -6,7 +6,7 @@
 
 use std::{
 	collections::BTreeSet,
-	ffi::{c_void, CStr},
+	ffi::{c_void, CStr, CString},
 	fmt::{self, Debug, Formatter},
 	mem::transmute,
 	ptr::{null, null_mut},
@@ -33984,15 +33984,24 @@ impl VkCore {
 		if err != VkResult::VK_SUCCESS {
 			panic!("Initialize Vulkan failed: couldn't get the list of the Vulkan extensions: {err:?}")
 		}
+		let extensions: Vec<String> = extensions.into_iter().map(|prop|unsafe {CStr::from_ptr(prop.extensionName.as_ptr())}.to_string_lossy().to_string()).collect();
+		let mut c_strings: Vec<CString> = Vec::with_capacity(extensions.len());
+		for extension in extensions.iter() {
+			c_strings.push(CString::new(&**extension).unwrap());
+		}
+		let mut ext_pointers: Vec<*const i8> = Vec::with_capacity(extensions.len());
+		for (i, _) in extensions.iter().enumerate() {
+			ext_pointers.push(c_strings[i].as_ptr());
+		}
 		let create_info = VkInstanceCreateInfo {
 			sType: VkStructureType::VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO,
 			pNext: null(),
 			flags: 0,
 			enabledLayerCount: 0,
-			pApplicationInfo: &app_info as *const _,
+			pApplicationInfo: &app_info,
 			ppEnabledLayerNames: null(),
 			enabledExtensionCount: count,
-			ppEnabledExtensionNames: extensions.as_ptr() as *const _
+			ppEnabledExtensionNames: ext_pointers.as_ptr()
 		};
 		let vkCreateInstance = get_proc_address(null(), "vkCreateInstance");
 		if vkCreateInstance == null() {
@@ -34007,7 +34016,7 @@ impl VkCore {
 		
 		Self {
 			instance,
-			extensions: extensions.into_iter().map(|prop|unsafe {CStr::from_ptr(prop.extensionName.as_ptr())}.to_string_lossy().to_string()).collect(),
+			extensions: extensions.into_iter().collect(),
 			vk_version_1_0: Vulkan_VERSION_1_0::new(instance, &mut get_proc_address),
 			vk_version_1_1: Vulkan_VERSION_1_1::new(instance, &mut get_proc_address),
 			vk_version_1_2: Vulkan_VERSION_1_2::new(instance, &mut get_proc_address),
