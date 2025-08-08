@@ -9,4 +9,6 @@ description = "The Vulkan core functions for Rust"
 repository = "https://github.com/0xAA55-rs/vkcore-rs"
 keywords = ["Vulkan", "GLFW", "GameEngine", "Render", "GPU"]
 
-[dependencies]
+[dev-dependencies]
+glfw = { version = "0.59.0", features = ["vulkan", "image"] }
+
