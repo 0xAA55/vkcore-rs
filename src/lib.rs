@@ -15,10 +15,12 @@ mod tests {
         fn glfwGetInstanceProcAddress(instance: VkInstance, procname: *const i8) -> *const c_void;
     }
 
+    const TEST_TIME: f64 = 10.0;
+
     #[test]
     fn test() {
+        let test_time: Option<f64> = Some(TEST_TIME);
         let mut glfw = glfw::init(glfw::fail_on_errors).unwrap();
-
         let (mut window, events) = glfw.create_window(1024, 768, "GLFW Window", glfw::WindowMode::Windowed).expect("Failed to create VKFW window.");
 
         window.set_key_polling(true);
@@ -39,24 +41,25 @@ mod tests {
         let vkcore = VkCore::new(app_info, |instance, proc_name|unsafe {glfwGetInstanceProcAddress(instance, CString::new(proc_name).unwrap().as_ptr())});
         dbg!(vkcore);
 
+        let start_time = glfw.get_time();
         while !window.should_close() {
             let cur_frame_time = glfw.get_time();
 
             window.swap_buffers();
             glfw.poll_events();
             for (_, event) in glfw::flush_messages(&events) {
-                handle_window_event(&mut window, event);
+                match event {
+                    glfw::WindowEvent::Key(Key::Escape, _, Action::Press, _) => {
+                        window.set_should_close(true)
+                    }
+                    _ => {}
+                }
             }
-        }
-    }
-
-    #[allow(dead_code)]
-    fn handle_window_event(window: &mut glfw::Window, event: glfw::WindowEvent) {
-        match event {
-            glfw::WindowEvent::Key(Key::Escape, _, Action::Press, _) => {
-                window.set_should_close(true)
+            if let Some(test_time) = test_time {
+                if cur_frame_time - start_time >= test_time {
+                    window.set_should_close(true)
+                }
             }
-            _ => {}
         }
     }
 }
