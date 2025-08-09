@@ -22,6 +22,13 @@ pub fn vk_make_video_std_version(major: u32, minor: u32, patch: u32) -> u32 {
 	(major << 22) | (minor << 12) | patch
 }
 
+pub fn vk_convert_result(result: VkResult) -> Result<(), VkResult> {
+	match result {
+		VkResult::VK_SUCCESS => Ok(()),
+		_ => Err(result),
+	}
+}
+
 pub const VK_USE_64_BIT_PTR_DEFINES: u32 = 0;
 pub const VK_NULL_HANDLE: u32 = 0;
 pub const VK_API_VERSION_1_0: u32 = 0x400000;
@@ -5079,99 +5086,99 @@ extern "system" fn dummy_vkCmdExecuteCommands(_: VkCommandBuffer, _: u32, _: *co
 	panic!("Vulkan function pointer of `vkCmdExecuteCommands()` is NULL");
 }
 pub trait VK_VERSION_1_0: Debug {
-	fn vkCreateInstance(&self, pCreateInfo: *const VkInstanceCreateInfo, pAllocator: *const VkAllocationCallbacks, pInstance: *mut VkInstance) -> VkResult;
+	fn vkCreateInstance(&self, pCreateInfo: *const VkInstanceCreateInfo, pAllocator: *const VkAllocationCallbacks, pInstance: *mut VkInstance) -> Result<(), VkResult>;
 	fn vkDestroyInstance(&self, instance: VkInstance, pAllocator: *const VkAllocationCallbacks);
-	fn vkEnumeratePhysicalDevices(&self, instance: VkInstance, pPhysicalDeviceCount: *mut uint32_t, pPhysicalDevices: *mut VkPhysicalDevice) -> VkResult;
+	fn vkEnumeratePhysicalDevices(&self, instance: VkInstance, pPhysicalDeviceCount: *mut uint32_t, pPhysicalDevices: *mut VkPhysicalDevice) -> Result<(), VkResult>;
 	fn vkGetPhysicalDeviceFeatures(&self, physicalDevice: VkPhysicalDevice, pFeatures: *mut VkPhysicalDeviceFeatures);
 	fn vkGetPhysicalDeviceFormatProperties(&self, physicalDevice: VkPhysicalDevice, format: VkFormat, pFormatProperties: *mut VkFormatProperties);
-	fn vkGetPhysicalDeviceImageFormatProperties(&self, physicalDevice: VkPhysicalDevice, format: VkFormat, type_: VkImageType, tiling: VkImageTiling, usage: VkImageUsageFlags, flags: VkImageCreateFlags, pImageFormatProperties: *mut VkImageFormatProperties) -> VkResult;
+	fn vkGetPhysicalDeviceImageFormatProperties(&self, physicalDevice: VkPhysicalDevice, format: VkFormat, type_: VkImageType, tiling: VkImageTiling, usage: VkImageUsageFlags, flags: VkImageCreateFlags, pImageFormatProperties: *mut VkImageFormatProperties) -> Result<(), VkResult>;
 	fn vkGetPhysicalDeviceProperties(&self, physicalDevice: VkPhysicalDevice, pProperties: *mut VkPhysicalDeviceProperties);
 	fn vkGetPhysicalDeviceQueueFamilyProperties(&self, physicalDevice: VkPhysicalDevice, pQueueFamilyPropertyCount: *mut uint32_t, pQueueFamilyProperties: *mut VkQueueFamilyProperties);
 	fn vkGetPhysicalDeviceMemoryProperties(&self, physicalDevice: VkPhysicalDevice, pMemoryProperties: *mut VkPhysicalDeviceMemoryProperties);
 	fn vkGetInstanceProcAddr(&self, instance: VkInstance, pName: *const i8) -> PFN_vkVoidFunction;
 	fn vkGetDeviceProcAddr(&self, device: VkDevice, pName: *const i8) -> PFN_vkVoidFunction;
-	fn vkCreateDevice(&self, physicalDevice: VkPhysicalDevice, pCreateInfo: *const VkDeviceCreateInfo, pAllocator: *const VkAllocationCallbacks, pDevice: *mut VkDevice) -> VkResult;
+	fn vkCreateDevice(&self, physicalDevice: VkPhysicalDevice, pCreateInfo: *const VkDeviceCreateInfo, pAllocator: *const VkAllocationCallbacks, pDevice: *mut VkDevice) -> Result<(), VkResult>;
 	fn vkDestroyDevice(&self, device: VkDevice, pAllocator: *const VkAllocationCallbacks);
-	fn vkEnumerateInstanceExtensionProperties(&self, pLayerName: *const i8, pPropertyCount: *mut uint32_t, pProperties: *mut VkExtensionProperties) -> VkResult;
-	fn vkEnumerateDeviceExtensionProperties(&self, physicalDevice: VkPhysicalDevice, pLayerName: *const i8, pPropertyCount: *mut uint32_t, pProperties: *mut VkExtensionProperties) -> VkResult;
-	fn vkEnumerateInstanceLayerProperties(&self, pPropertyCount: *mut uint32_t, pProperties: *mut VkLayerProperties) -> VkResult;
-	fn vkEnumerateDeviceLayerProperties(&self, physicalDevice: VkPhysicalDevice, pPropertyCount: *mut uint32_t, pProperties: *mut VkLayerProperties) -> VkResult;
+	fn vkEnumerateInstanceExtensionProperties(&self, pLayerName: *const i8, pPropertyCount: *mut uint32_t, pProperties: *mut VkExtensionProperties) -> Result<(), VkResult>;
+	fn vkEnumerateDeviceExtensionProperties(&self, physicalDevice: VkPhysicalDevice, pLayerName: *const i8, pPropertyCount: *mut uint32_t, pProperties: *mut VkExtensionProperties) -> Result<(), VkResult>;
+	fn vkEnumerateInstanceLayerProperties(&self, pPropertyCount: *mut uint32_t, pProperties: *mut VkLayerProperties) -> Result<(), VkResult>;
+	fn vkEnumerateDeviceLayerProperties(&self, physicalDevice: VkPhysicalDevice, pPropertyCount: *mut uint32_t, pProperties: *mut VkLayerProperties) -> Result<(), VkResult>;
 	fn vkGetDeviceQueue(&self, device: VkDevice, queueFamilyIndex: u32, queueIndex: u32, pQueue: *mut VkQueue);
-	fn vkQueueSubmit(&self, queue: VkQueue, submitCount: u32, pSubmits: *const VkSubmitInfo, fence: VkFence) -> VkResult;
-	fn vkQueueWaitIdle(&self, queue: VkQueue) -> VkResult;
-	fn vkDeviceWaitIdle(&self, device: VkDevice) -> VkResult;
-	fn vkAllocateMemory(&self, device: VkDevice, pAllocateInfo: *const VkMemoryAllocateInfo, pAllocator: *const VkAllocationCallbacks, pMemory: *mut VkDeviceMemory) -> VkResult;
+	fn vkQueueSubmit(&self, queue: VkQueue, submitCount: u32, pSubmits: *const VkSubmitInfo, fence: VkFence) -> Result<(), VkResult>;
+	fn vkQueueWaitIdle(&self, queue: VkQueue) -> Result<(), VkResult>;
+	fn vkDeviceWaitIdle(&self, device: VkDevice) -> Result<(), VkResult>;
+	fn vkAllocateMemory(&self, device: VkDevice, pAllocateInfo: *const VkMemoryAllocateInfo, pAllocator: *const VkAllocationCallbacks, pMemory: *mut VkDeviceMemory) -> Result<(), VkResult>;
 	fn vkFreeMemory(&self, device: VkDevice, memory: VkDeviceMemory, pAllocator: *const VkAllocationCallbacks);
-	fn vkMapMemory(&self, device: VkDevice, memory: VkDeviceMemory, offset: VkDeviceSize, size: VkDeviceSize, flags: VkMemoryMapFlags, ppData: *mut *mut c_void) -> VkResult;
+	fn vkMapMemory(&self, device: VkDevice, memory: VkDeviceMemory, offset: VkDeviceSize, size: VkDeviceSize, flags: VkMemoryMapFlags, ppData: *mut *mut c_void) -> Result<(), VkResult>;
 	fn vkUnmapMemory(&self, device: VkDevice, memory: VkDeviceMemory);
-	fn vkFlushMappedMemoryRanges(&self, device: VkDevice, memoryRangeCount: u32, pMemoryRanges: *const VkMappedMemoryRange) -> VkResult;
-	fn vkInvalidateMappedMemoryRanges(&self, device: VkDevice, memoryRangeCount: u32, pMemoryRanges: *const VkMappedMemoryRange) -> VkResult;
+	fn vkFlushMappedMemoryRanges(&self, device: VkDevice, memoryRangeCount: u32, pMemoryRanges: *const VkMappedMemoryRange) -> Result<(), VkResult>;
+	fn vkInvalidateMappedMemoryRanges(&self, device: VkDevice, memoryRangeCount: u32, pMemoryRanges: *const VkMappedMemoryRange) -> Result<(), VkResult>;
 	fn vkGetDeviceMemoryCommitment(&self, device: VkDevice, memory: VkDeviceMemory, pCommittedMemoryInBytes: *mut VkDeviceSize);
-	fn vkBindBufferMemory(&self, device: VkDevice, buffer: VkBuffer, memory: VkDeviceMemory, memoryOffset: VkDeviceSize) -> VkResult;
-	fn vkBindImageMemory(&self, device: VkDevice, image: VkImage, memory: VkDeviceMemory, memoryOffset: VkDeviceSize) -> VkResult;
+	fn vkBindBufferMemory(&self, device: VkDevice, buffer: VkBuffer, memory: VkDeviceMemory, memoryOffset: VkDeviceSize) -> Result<(), VkResult>;
+	fn vkBindImageMemory(&self, device: VkDevice, image: VkImage, memory: VkDeviceMemory, memoryOffset: VkDeviceSize) -> Result<(), VkResult>;
 	fn vkGetBufferMemoryRequirements(&self, device: VkDevice, buffer: VkBuffer, pMemoryRequirements: *mut VkMemoryRequirements);
 	fn vkGetImageMemoryRequirements(&self, device: VkDevice, image: VkImage, pMemoryRequirements: *mut VkMemoryRequirements);
 	fn vkGetImageSparseMemoryRequirements(&self, device: VkDevice, image: VkImage, pSparseMemoryRequirementCount: *mut uint32_t, pSparseMemoryRequirements: *mut VkSparseImageMemoryRequirements);
 	fn vkGetPhysicalDeviceSparseImageFormatProperties(&self, physicalDevice: VkPhysicalDevice, format: VkFormat, type_: VkImageType, samples: VkSampleCountFlagBits, usage: VkImageUsageFlags, tiling: VkImageTiling, pPropertyCount: *mut uint32_t, pProperties: *mut VkSparseImageFormatProperties);
-	fn vkQueueBindSparse(&self, queue: VkQueue, bindInfoCount: u32, pBindInfo: *const VkBindSparseInfo, fence: VkFence) -> VkResult;
-	fn vkCreateFence(&self, device: VkDevice, pCreateInfo: *const VkFenceCreateInfo, pAllocator: *const VkAllocationCallbacks, pFence: *mut VkFence) -> VkResult;
+	fn vkQueueBindSparse(&self, queue: VkQueue, bindInfoCount: u32, pBindInfo: *const VkBindSparseInfo, fence: VkFence) -> Result<(), VkResult>;
+	fn vkCreateFence(&self, device: VkDevice, pCreateInfo: *const VkFenceCreateInfo, pAllocator: *const VkAllocationCallbacks, pFence: *mut VkFence) -> Result<(), VkResult>;
 	fn vkDestroyFence(&self, device: VkDevice, fence: VkFence, pAllocator: *const VkAllocationCallbacks);
-	fn vkResetFences(&self, device: VkDevice, fenceCount: u32, pFences: *const VkFence) -> VkResult;
-	fn vkGetFenceStatus(&self, device: VkDevice, fence: VkFence) -> VkResult;
-	fn vkWaitForFences(&self, device: VkDevice, fenceCount: u32, pFences: *const VkFence, waitAll: VkBool32, timeout: u64) -> VkResult;
-	fn vkCreateSemaphore(&self, device: VkDevice, pCreateInfo: *const VkSemaphoreCreateInfo, pAllocator: *const VkAllocationCallbacks, pSemaphore: *mut VkSemaphore) -> VkResult;
+	fn vkResetFences(&self, device: VkDevice, fenceCount: u32, pFences: *const VkFence) -> Result<(), VkResult>;
+	fn vkGetFenceStatus(&self, device: VkDevice, fence: VkFence) -> Result<(), VkResult>;
+	fn vkWaitForFences(&self, device: VkDevice, fenceCount: u32, pFences: *const VkFence, waitAll: VkBool32, timeout: u64) -> Result<(), VkResult>;
+	fn vkCreateSemaphore(&self, device: VkDevice, pCreateInfo: *const VkSemaphoreCreateInfo, pAllocator: *const VkAllocationCallbacks, pSemaphore: *mut VkSemaphore) -> Result<(), VkResult>;
 	fn vkDestroySemaphore(&self, device: VkDevice, semaphore: VkSemaphore, pAllocator: *const VkAllocationCallbacks);
-	fn vkCreateEvent(&self, device: VkDevice, pCreateInfo: *const VkEventCreateInfo, pAllocator: *const VkAllocationCallbacks, pEvent: *mut VkEvent) -> VkResult;
+	fn vkCreateEvent(&self, device: VkDevice, pCreateInfo: *const VkEventCreateInfo, pAllocator: *const VkAllocationCallbacks, pEvent: *mut VkEvent) -> Result<(), VkResult>;
 	fn vkDestroyEvent(&self, device: VkDevice, event: VkEvent, pAllocator: *const VkAllocationCallbacks);
-	fn vkGetEventStatus(&self, device: VkDevice, event: VkEvent) -> VkResult;
-	fn vkSetEvent(&self, device: VkDevice, event: VkEvent) -> VkResult;
-	fn vkResetEvent(&self, device: VkDevice, event: VkEvent) -> VkResult;
-	fn vkCreateQueryPool(&self, device: VkDevice, pCreateInfo: *const VkQueryPoolCreateInfo, pAllocator: *const VkAllocationCallbacks, pQueryPool: *mut VkQueryPool) -> VkResult;
+	fn vkGetEventStatus(&self, device: VkDevice, event: VkEvent) -> Result<(), VkResult>;
+	fn vkSetEvent(&self, device: VkDevice, event: VkEvent) -> Result<(), VkResult>;
+	fn vkResetEvent(&self, device: VkDevice, event: VkEvent) -> Result<(), VkResult>;
+	fn vkCreateQueryPool(&self, device: VkDevice, pCreateInfo: *const VkQueryPoolCreateInfo, pAllocator: *const VkAllocationCallbacks, pQueryPool: *mut VkQueryPool) -> Result<(), VkResult>;
 	fn vkDestroyQueryPool(&self, device: VkDevice, queryPool: VkQueryPool, pAllocator: *const VkAllocationCallbacks);
-	fn vkGetQueryPoolResults(&self, device: VkDevice, queryPool: VkQueryPool, firstQuery: u32, queryCount: u32, dataSize: usize, pData: *mut c_void, stride: VkDeviceSize, flags: VkQueryResultFlags) -> VkResult;
-	fn vkCreateBuffer(&self, device: VkDevice, pCreateInfo: *const VkBufferCreateInfo, pAllocator: *const VkAllocationCallbacks, pBuffer: *mut VkBuffer) -> VkResult;
+	fn vkGetQueryPoolResults(&self, device: VkDevice, queryPool: VkQueryPool, firstQuery: u32, queryCount: u32, dataSize: usize, pData: *mut c_void, stride: VkDeviceSize, flags: VkQueryResultFlags) -> Result<(), VkResult>;
+	fn vkCreateBuffer(&self, device: VkDevice, pCreateInfo: *const VkBufferCreateInfo, pAllocator: *const VkAllocationCallbacks, pBuffer: *mut VkBuffer) -> Result<(), VkResult>;
 	fn vkDestroyBuffer(&self, device: VkDevice, buffer: VkBuffer, pAllocator: *const VkAllocationCallbacks);
-	fn vkCreateBufferView(&self, device: VkDevice, pCreateInfo: *const VkBufferViewCreateInfo, pAllocator: *const VkAllocationCallbacks, pView: *mut VkBufferView) -> VkResult;
+	fn vkCreateBufferView(&self, device: VkDevice, pCreateInfo: *const VkBufferViewCreateInfo, pAllocator: *const VkAllocationCallbacks, pView: *mut VkBufferView) -> Result<(), VkResult>;
 	fn vkDestroyBufferView(&self, device: VkDevice, bufferView: VkBufferView, pAllocator: *const VkAllocationCallbacks);
-	fn vkCreateImage(&self, device: VkDevice, pCreateInfo: *const VkImageCreateInfo, pAllocator: *const VkAllocationCallbacks, pImage: *mut VkImage) -> VkResult;
+	fn vkCreateImage(&self, device: VkDevice, pCreateInfo: *const VkImageCreateInfo, pAllocator: *const VkAllocationCallbacks, pImage: *mut VkImage) -> Result<(), VkResult>;
 	fn vkDestroyImage(&self, device: VkDevice, image: VkImage, pAllocator: *const VkAllocationCallbacks);
 	fn vkGetImageSubresourceLayout(&self, device: VkDevice, image: VkImage, pSubresource: *const VkImageSubresource, pLayout: *mut VkSubresourceLayout);
-	fn vkCreateImageView(&self, device: VkDevice, pCreateInfo: *const VkImageViewCreateInfo, pAllocator: *const VkAllocationCallbacks, pView: *mut VkImageView) -> VkResult;
+	fn vkCreateImageView(&self, device: VkDevice, pCreateInfo: *const VkImageViewCreateInfo, pAllocator: *const VkAllocationCallbacks, pView: *mut VkImageView) -> Result<(), VkResult>;
 	fn vkDestroyImageView(&self, device: VkDevice, imageView: VkImageView, pAllocator: *const VkAllocationCallbacks);
-	fn vkCreateShaderModule(&self, device: VkDevice, pCreateInfo: *const VkShaderModuleCreateInfo, pAllocator: *const VkAllocationCallbacks, pShaderModule: *mut VkShaderModule) -> VkResult;
+	fn vkCreateShaderModule(&self, device: VkDevice, pCreateInfo: *const VkShaderModuleCreateInfo, pAllocator: *const VkAllocationCallbacks, pShaderModule: *mut VkShaderModule) -> Result<(), VkResult>;
 	fn vkDestroyShaderModule(&self, device: VkDevice, shaderModule: VkShaderModule, pAllocator: *const VkAllocationCallbacks);
-	fn vkCreatePipelineCache(&self, device: VkDevice, pCreateInfo: *const VkPipelineCacheCreateInfo, pAllocator: *const VkAllocationCallbacks, pPipelineCache: *mut VkPipelineCache) -> VkResult;
+	fn vkCreatePipelineCache(&self, device: VkDevice, pCreateInfo: *const VkPipelineCacheCreateInfo, pAllocator: *const VkAllocationCallbacks, pPipelineCache: *mut VkPipelineCache) -> Result<(), VkResult>;
 	fn vkDestroyPipelineCache(&self, device: VkDevice, pipelineCache: VkPipelineCache, pAllocator: *const VkAllocationCallbacks);
-	fn vkGetPipelineCacheData(&self, device: VkDevice, pipelineCache: VkPipelineCache, pDataSize: *mut size_t, pData: *mut c_void) -> VkResult;
-	fn vkMergePipelineCaches(&self, device: VkDevice, dstCache: VkPipelineCache, srcCacheCount: u32, pSrcCaches: *const VkPipelineCache) -> VkResult;
-	fn vkCreateGraphicsPipelines(&self, device: VkDevice, pipelineCache: VkPipelineCache, createInfoCount: u32, pCreateInfos: *const VkGraphicsPipelineCreateInfo, pAllocator: *const VkAllocationCallbacks, pPipelines: *mut VkPipeline) -> VkResult;
-	fn vkCreateComputePipelines(&self, device: VkDevice, pipelineCache: VkPipelineCache, createInfoCount: u32, pCreateInfos: *const VkComputePipelineCreateInfo, pAllocator: *const VkAllocationCallbacks, pPipelines: *mut VkPipeline) -> VkResult;
+	fn vkGetPipelineCacheData(&self, device: VkDevice, pipelineCache: VkPipelineCache, pDataSize: *mut size_t, pData: *mut c_void) -> Result<(), VkResult>;
+	fn vkMergePipelineCaches(&self, device: VkDevice, dstCache: VkPipelineCache, srcCacheCount: u32, pSrcCaches: *const VkPipelineCache) -> Result<(), VkResult>;
+	fn vkCreateGraphicsPipelines(&self, device: VkDevice, pipelineCache: VkPipelineCache, createInfoCount: u32, pCreateInfos: *const VkGraphicsPipelineCreateInfo, pAllocator: *const VkAllocationCallbacks, pPipelines: *mut VkPipeline) -> Result<(), VkResult>;
+	fn vkCreateComputePipelines(&self, device: VkDevice, pipelineCache: VkPipelineCache, createInfoCount: u32, pCreateInfos: *const VkComputePipelineCreateInfo, pAllocator: *const VkAllocationCallbacks, pPipelines: *mut VkPipeline) -> Result<(), VkResult>;
 	fn vkDestroyPipeline(&self, device: VkDevice, pipeline: VkPipeline, pAllocator: *const VkAllocationCallbacks);
-	fn vkCreatePipelineLayout(&self, device: VkDevice, pCreateInfo: *const VkPipelineLayoutCreateInfo, pAllocator: *const VkAllocationCallbacks, pPipelineLayout: *mut VkPipelineLayout) -> VkResult;
+	fn vkCreatePipelineLayout(&self, device: VkDevice, pCreateInfo: *const VkPipelineLayoutCreateInfo, pAllocator: *const VkAllocationCallbacks, pPipelineLayout: *mut VkPipelineLayout) -> Result<(), VkResult>;
 	fn vkDestroyPipelineLayout(&self, device: VkDevice, pipelineLayout: VkPipelineLayout, pAllocator: *const VkAllocationCallbacks);
-	fn vkCreateSampler(&self, device: VkDevice, pCreateInfo: *const VkSamplerCreateInfo, pAllocator: *const VkAllocationCallbacks, pSampler: *mut VkSampler) -> VkResult;
+	fn vkCreateSampler(&self, device: VkDevice, pCreateInfo: *const VkSamplerCreateInfo, pAllocator: *const VkAllocationCallbacks, pSampler: *mut VkSampler) -> Result<(), VkResult>;
 	fn vkDestroySampler(&self, device: VkDevice, sampler: VkSampler, pAllocator: *const VkAllocationCallbacks);
-	fn vkCreateDescriptorSetLayout(&self, device: VkDevice, pCreateInfo: *const VkDescriptorSetLayoutCreateInfo, pAllocator: *const VkAllocationCallbacks, pSetLayout: *mut VkDescriptorSetLayout) -> VkResult;
+	fn vkCreateDescriptorSetLayout(&self, device: VkDevice, pCreateInfo: *const VkDescriptorSetLayoutCreateInfo, pAllocator: *const VkAllocationCallbacks, pSetLayout: *mut VkDescriptorSetLayout) -> Result<(), VkResult>;
 	fn vkDestroyDescriptorSetLayout(&self, device: VkDevice, descriptorSetLayout: VkDescriptorSetLayout, pAllocator: *const VkAllocationCallbacks);
-	fn vkCreateDescriptorPool(&self, device: VkDevice, pCreateInfo: *const VkDescriptorPoolCreateInfo, pAllocator: *const VkAllocationCallbacks, pDescriptorPool: *mut VkDescriptorPool) -> VkResult;
+	fn vkCreateDescriptorPool(&self, device: VkDevice, pCreateInfo: *const VkDescriptorPoolCreateInfo, pAllocator: *const VkAllocationCallbacks, pDescriptorPool: *mut VkDescriptorPool) -> Result<(), VkResult>;
 	fn vkDestroyDescriptorPool(&self, device: VkDevice, descriptorPool: VkDescriptorPool, pAllocator: *const VkAllocationCallbacks);
-	fn vkResetDescriptorPool(&self, device: VkDevice, descriptorPool: VkDescriptorPool, flags: VkDescriptorPoolResetFlags) -> VkResult;
-	fn vkAllocateDescriptorSets(&self, device: VkDevice, pAllocateInfo: *const VkDescriptorSetAllocateInfo, pDescriptorSets: *mut VkDescriptorSet) -> VkResult;
-	fn vkFreeDescriptorSets(&self, device: VkDevice, descriptorPool: VkDescriptorPool, descriptorSetCount: u32, pDescriptorSets: *const VkDescriptorSet) -> VkResult;
+	fn vkResetDescriptorPool(&self, device: VkDevice, descriptorPool: VkDescriptorPool, flags: VkDescriptorPoolResetFlags) -> Result<(), VkResult>;
+	fn vkAllocateDescriptorSets(&self, device: VkDevice, pAllocateInfo: *const VkDescriptorSetAllocateInfo, pDescriptorSets: *mut VkDescriptorSet) -> Result<(), VkResult>;
+	fn vkFreeDescriptorSets(&self, device: VkDevice, descriptorPool: VkDescriptorPool, descriptorSetCount: u32, pDescriptorSets: *const VkDescriptorSet) -> Result<(), VkResult>;
 	fn vkUpdateDescriptorSets(&self, device: VkDevice, descriptorWriteCount: u32, pDescriptorWrites: *const VkWriteDescriptorSet, descriptorCopyCount: u32, pDescriptorCopies: *const VkCopyDescriptorSet);
-	fn vkCreateFramebuffer(&self, device: VkDevice, pCreateInfo: *const VkFramebufferCreateInfo, pAllocator: *const VkAllocationCallbacks, pFramebuffer: *mut VkFramebuffer) -> VkResult;
+	fn vkCreateFramebuffer(&self, device: VkDevice, pCreateInfo: *const VkFramebufferCreateInfo, pAllocator: *const VkAllocationCallbacks, pFramebuffer: *mut VkFramebuffer) -> Result<(), VkResult>;
 	fn vkDestroyFramebuffer(&self, device: VkDevice, framebuffer: VkFramebuffer, pAllocator: *const VkAllocationCallbacks);
-	fn vkCreateRenderPass(&self, device: VkDevice, pCreateInfo: *const VkRenderPassCreateInfo, pAllocator: *const VkAllocationCallbacks, pRenderPass: *mut VkRenderPass) -> VkResult;
+	fn vkCreateRenderPass(&self, device: VkDevice, pCreateInfo: *const VkRenderPassCreateInfo, pAllocator: *const VkAllocationCallbacks, pRenderPass: *mut VkRenderPass) -> Result<(), VkResult>;
 	fn vkDestroyRenderPass(&self, device: VkDevice, renderPass: VkRenderPass, pAllocator: *const VkAllocationCallbacks);
 	fn vkGetRenderAreaGranularity(&self, device: VkDevice, renderPass: VkRenderPass, pGranularity: *mut VkExtent2D);
-	fn vkCreateCommandPool(&self, device: VkDevice, pCreateInfo: *const VkCommandPoolCreateInfo, pAllocator: *const VkAllocationCallbacks, pCommandPool: *mut VkCommandPool) -> VkResult;
+	fn vkCreateCommandPool(&self, device: VkDevice, pCreateInfo: *const VkCommandPoolCreateInfo, pAllocator: *const VkAllocationCallbacks, pCommandPool: *mut VkCommandPool) -> Result<(), VkResult>;
 	fn vkDestroyCommandPool(&self, device: VkDevice, commandPool: VkCommandPool, pAllocator: *const VkAllocationCallbacks);
-	fn vkResetCommandPool(&self, device: VkDevice, commandPool: VkCommandPool, flags: VkCommandPoolResetFlags) -> VkResult;
-	fn vkAllocateCommandBuffers(&self, device: VkDevice, pAllocateInfo: *const VkCommandBufferAllocateInfo, pCommandBuffers: *mut VkCommandBuffer) -> VkResult;
+	fn vkResetCommandPool(&self, device: VkDevice, commandPool: VkCommandPool, flags: VkCommandPoolResetFlags) -> Result<(), VkResult>;
+	fn vkAllocateCommandBuffers(&self, device: VkDevice, pAllocateInfo: *const VkCommandBufferAllocateInfo, pCommandBuffers: *mut VkCommandBuffer) -> Result<(), VkResult>;
 	fn vkFreeCommandBuffers(&self, device: VkDevice, commandPool: VkCommandPool, commandBufferCount: u32, pCommandBuffers: *const VkCommandBuffer);
-	fn vkBeginCommandBuffer(&self, commandBuffer: VkCommandBuffer, pBeginInfo: *const VkCommandBufferBeginInfo) -> VkResult;
-	fn vkEndCommandBuffer(&self, commandBuffer: VkCommandBuffer) -> VkResult;
-	fn vkResetCommandBuffer(&self, commandBuffer: VkCommandBuffer, flags: VkCommandBufferResetFlags) -> VkResult;
+	fn vkBeginCommandBuffer(&self, commandBuffer: VkCommandBuffer, pBeginInfo: *const VkCommandBufferBeginInfo) -> Result<(), VkResult>;
+	fn vkEndCommandBuffer(&self, commandBuffer: VkCommandBuffer) -> Result<(), VkResult>;
+	fn vkResetCommandBuffer(&self, commandBuffer: VkCommandBuffer, flags: VkCommandBufferResetFlags) -> Result<(), VkResult>;
 	fn vkCmdBindPipeline(&self, commandBuffer: VkCommandBuffer, pipelineBindPoint: VkPipelineBindPoint, pipeline: VkPipeline);
 	fn vkCmdSetViewport(&self, commandBuffer: VkCommandBuffer, firstViewport: u32, viewportCount: u32, pViewports: *const VkViewport);
 	fn vkCmdSetScissor(&self, commandBuffer: VkCommandBuffer, firstScissor: u32, scissorCount: u32, pScissors: *const VkRect2D);
@@ -5358,14 +5365,14 @@ pub struct Vulkan_VERSION_1_0 {
 	vk_cmd_execute_commands: PFN_vkCmdExecuteCommands,
 }
 impl VK_VERSION_1_0 for Vulkan_VERSION_1_0 {
-	fn vkCreateInstance(&self, pCreateInfo: *const VkInstanceCreateInfo, pAllocator: *const VkAllocationCallbacks, pInstance: *mut VkInstance) -> VkResult {
-		(self.vk_create_instance)(pCreateInfo, pAllocator, pInstance)
+	fn vkCreateInstance(&self, pCreateInfo: *const VkInstanceCreateInfo, pAllocator: *const VkAllocationCallbacks, pInstance: *mut VkInstance) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_create_instance)(pCreateInfo, pAllocator, pInstance))
 	}
 	fn vkDestroyInstance(&self, instance: VkInstance, pAllocator: *const VkAllocationCallbacks) {
 		(self.vk_destroy_instance)(instance, pAllocator)
 	}
-	fn vkEnumeratePhysicalDevices(&self, instance: VkInstance, pPhysicalDeviceCount: *mut uint32_t, pPhysicalDevices: *mut VkPhysicalDevice) -> VkResult {
-		(self.vk_enumerate_physical_devices)(instance, pPhysicalDeviceCount, pPhysicalDevices)
+	fn vkEnumeratePhysicalDevices(&self, instance: VkInstance, pPhysicalDeviceCount: *mut uint32_t, pPhysicalDevices: *mut VkPhysicalDevice) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_enumerate_physical_devices)(instance, pPhysicalDeviceCount, pPhysicalDevices))
 	}
 	fn vkGetPhysicalDeviceFeatures(&self, physicalDevice: VkPhysicalDevice, pFeatures: *mut VkPhysicalDeviceFeatures) {
 		(self.vk_get_physical_device_features)(physicalDevice, pFeatures)
@@ -5373,8 +5380,8 @@ impl VK_VERSION_1_0 for Vulkan_VERSION_1_0 {
 	fn vkGetPhysicalDeviceFormatProperties(&self, physicalDevice: VkPhysicalDevice, format: VkFormat, pFormatProperties: *mut VkFormatProperties) {
 		(self.vk_get_physical_device_format_properties)(physicalDevice, format, pFormatProperties)
 	}
-	fn vkGetPhysicalDeviceImageFormatProperties(&self, physicalDevice: VkPhysicalDevice, format: VkFormat, type_: VkImageType, tiling: VkImageTiling, usage: VkImageUsageFlags, flags: VkImageCreateFlags, pImageFormatProperties: *mut VkImageFormatProperties) -> VkResult {
-		(self.vk_get_physical_device_image_format_properties)(physicalDevice, format, type_, tiling, usage, flags, pImageFormatProperties)
+	fn vkGetPhysicalDeviceImageFormatProperties(&self, physicalDevice: VkPhysicalDevice, format: VkFormat, type_: VkImageType, tiling: VkImageTiling, usage: VkImageUsageFlags, flags: VkImageCreateFlags, pImageFormatProperties: *mut VkImageFormatProperties) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_get_physical_device_image_format_properties)(physicalDevice, format, type_, tiling, usage, flags, pImageFormatProperties))
 	}
 	fn vkGetPhysicalDeviceProperties(&self, physicalDevice: VkPhysicalDevice, pProperties: *mut VkPhysicalDeviceProperties) {
 		(self.vk_get_physical_device_properties)(physicalDevice, pProperties)
@@ -5391,62 +5398,62 @@ impl VK_VERSION_1_0 for Vulkan_VERSION_1_0 {
 	fn vkGetDeviceProcAddr(&self, device: VkDevice, pName: *const i8) -> PFN_vkVoidFunction {
 		(self.vk_get_device_proc_addr)(device, pName)
 	}
-	fn vkCreateDevice(&self, physicalDevice: VkPhysicalDevice, pCreateInfo: *const VkDeviceCreateInfo, pAllocator: *const VkAllocationCallbacks, pDevice: *mut VkDevice) -> VkResult {
-		(self.vk_create_device)(physicalDevice, pCreateInfo, pAllocator, pDevice)
+	fn vkCreateDevice(&self, physicalDevice: VkPhysicalDevice, pCreateInfo: *const VkDeviceCreateInfo, pAllocator: *const VkAllocationCallbacks, pDevice: *mut VkDevice) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_create_device)(physicalDevice, pCreateInfo, pAllocator, pDevice))
 	}
 	fn vkDestroyDevice(&self, device: VkDevice, pAllocator: *const VkAllocationCallbacks) {
 		(self.vk_destroy_device)(device, pAllocator)
 	}
-	fn vkEnumerateInstanceExtensionProperties(&self, pLayerName: *const i8, pPropertyCount: *mut uint32_t, pProperties: *mut VkExtensionProperties) -> VkResult {
-		(self.vk_enumerate_instance_extension_properties)(pLayerName, pPropertyCount, pProperties)
+	fn vkEnumerateInstanceExtensionProperties(&self, pLayerName: *const i8, pPropertyCount: *mut uint32_t, pProperties: *mut VkExtensionProperties) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_enumerate_instance_extension_properties)(pLayerName, pPropertyCount, pProperties))
 	}
-	fn vkEnumerateDeviceExtensionProperties(&self, physicalDevice: VkPhysicalDevice, pLayerName: *const i8, pPropertyCount: *mut uint32_t, pProperties: *mut VkExtensionProperties) -> VkResult {
-		(self.vk_enumerate_device_extension_properties)(physicalDevice, pLayerName, pPropertyCount, pProperties)
+	fn vkEnumerateDeviceExtensionProperties(&self, physicalDevice: VkPhysicalDevice, pLayerName: *const i8, pPropertyCount: *mut uint32_t, pProperties: *mut VkExtensionProperties) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_enumerate_device_extension_properties)(physicalDevice, pLayerName, pPropertyCount, pProperties))
 	}
-	fn vkEnumerateInstanceLayerProperties(&self, pPropertyCount: *mut uint32_t, pProperties: *mut VkLayerProperties) -> VkResult {
-		(self.vk_enumerate_instance_layer_properties)(pPropertyCount, pProperties)
+	fn vkEnumerateInstanceLayerProperties(&self, pPropertyCount: *mut uint32_t, pProperties: *mut VkLayerProperties) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_enumerate_instance_layer_properties)(pPropertyCount, pProperties))
 	}
-	fn vkEnumerateDeviceLayerProperties(&self, physicalDevice: VkPhysicalDevice, pPropertyCount: *mut uint32_t, pProperties: *mut VkLayerProperties) -> VkResult {
-		(self.vk_enumerate_device_layer_properties)(physicalDevice, pPropertyCount, pProperties)
+	fn vkEnumerateDeviceLayerProperties(&self, physicalDevice: VkPhysicalDevice, pPropertyCount: *mut uint32_t, pProperties: *mut VkLayerProperties) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_enumerate_device_layer_properties)(physicalDevice, pPropertyCount, pProperties))
 	}
 	fn vkGetDeviceQueue(&self, device: VkDevice, queueFamilyIndex: u32, queueIndex: u32, pQueue: *mut VkQueue) {
 		(self.vk_get_device_queue)(device, queueFamilyIndex, queueIndex, pQueue)
 	}
-	fn vkQueueSubmit(&self, queue: VkQueue, submitCount: u32, pSubmits: *const VkSubmitInfo, fence: VkFence) -> VkResult {
-		(self.vk_queue_submit)(queue, submitCount, pSubmits, fence)
+	fn vkQueueSubmit(&self, queue: VkQueue, submitCount: u32, pSubmits: *const VkSubmitInfo, fence: VkFence) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_queue_submit)(queue, submitCount, pSubmits, fence))
 	}
-	fn vkQueueWaitIdle(&self, queue: VkQueue) -> VkResult {
-		(self.vk_queue_wait_idle)(queue)
+	fn vkQueueWaitIdle(&self, queue: VkQueue) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_queue_wait_idle)(queue))
 	}
-	fn vkDeviceWaitIdle(&self, device: VkDevice) -> VkResult {
-		(self.vk_device_wait_idle)(device)
+	fn vkDeviceWaitIdle(&self, device: VkDevice) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_device_wait_idle)(device))
 	}
-	fn vkAllocateMemory(&self, device: VkDevice, pAllocateInfo: *const VkMemoryAllocateInfo, pAllocator: *const VkAllocationCallbacks, pMemory: *mut VkDeviceMemory) -> VkResult {
-		(self.vk_allocate_memory)(device, pAllocateInfo, pAllocator, pMemory)
+	fn vkAllocateMemory(&self, device: VkDevice, pAllocateInfo: *const VkMemoryAllocateInfo, pAllocator: *const VkAllocationCallbacks, pMemory: *mut VkDeviceMemory) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_allocate_memory)(device, pAllocateInfo, pAllocator, pMemory))
 	}
 	fn vkFreeMemory(&self, device: VkDevice, memory: VkDeviceMemory, pAllocator: *const VkAllocationCallbacks) {
 		(self.vk_free_memory)(device, memory, pAllocator)
 	}
-	fn vkMapMemory(&self, device: VkDevice, memory: VkDeviceMemory, offset: VkDeviceSize, size: VkDeviceSize, flags: VkMemoryMapFlags, ppData: *mut *mut c_void) -> VkResult {
-		(self.vk_map_memory)(device, memory, offset, size, flags, ppData)
+	fn vkMapMemory(&self, device: VkDevice, memory: VkDeviceMemory, offset: VkDeviceSize, size: VkDeviceSize, flags: VkMemoryMapFlags, ppData: *mut *mut c_void) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_map_memory)(device, memory, offset, size, flags, ppData))
 	}
 	fn vkUnmapMemory(&self, device: VkDevice, memory: VkDeviceMemory) {
 		(self.vk_unmap_memory)(device, memory)
 	}
-	fn vkFlushMappedMemoryRanges(&self, device: VkDevice, memoryRangeCount: u32, pMemoryRanges: *const VkMappedMemoryRange) -> VkResult {
-		(self.vk_flush_mapped_memory_ranges)(device, memoryRangeCount, pMemoryRanges)
+	fn vkFlushMappedMemoryRanges(&self, device: VkDevice, memoryRangeCount: u32, pMemoryRanges: *const VkMappedMemoryRange) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_flush_mapped_memory_ranges)(device, memoryRangeCount, pMemoryRanges))
 	}
-	fn vkInvalidateMappedMemoryRanges(&self, device: VkDevice, memoryRangeCount: u32, pMemoryRanges: *const VkMappedMemoryRange) -> VkResult {
-		(self.vk_invalidate_mapped_memory_ranges)(device, memoryRangeCount, pMemoryRanges)
+	fn vkInvalidateMappedMemoryRanges(&self, device: VkDevice, memoryRangeCount: u32, pMemoryRanges: *const VkMappedMemoryRange) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_invalidate_mapped_memory_ranges)(device, memoryRangeCount, pMemoryRanges))
 	}
 	fn vkGetDeviceMemoryCommitment(&self, device: VkDevice, memory: VkDeviceMemory, pCommittedMemoryInBytes: *mut VkDeviceSize) {
 		(self.vk_get_device_memory_commitment)(device, memory, pCommittedMemoryInBytes)
 	}
-	fn vkBindBufferMemory(&self, device: VkDevice, buffer: VkBuffer, memory: VkDeviceMemory, memoryOffset: VkDeviceSize) -> VkResult {
-		(self.vk_bind_buffer_memory)(device, buffer, memory, memoryOffset)
+	fn vkBindBufferMemory(&self, device: VkDevice, buffer: VkBuffer, memory: VkDeviceMemory, memoryOffset: VkDeviceSize) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_bind_buffer_memory)(device, buffer, memory, memoryOffset))
 	}
-	fn vkBindImageMemory(&self, device: VkDevice, image: VkImage, memory: VkDeviceMemory, memoryOffset: VkDeviceSize) -> VkResult {
-		(self.vk_bind_image_memory)(device, image, memory, memoryOffset)
+	fn vkBindImageMemory(&self, device: VkDevice, image: VkImage, memory: VkDeviceMemory, memoryOffset: VkDeviceSize) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_bind_image_memory)(device, image, memory, memoryOffset))
 	}
 	fn vkGetBufferMemoryRequirements(&self, device: VkDevice, buffer: VkBuffer, pMemoryRequirements: *mut VkMemoryRequirements) {
 		(self.vk_get_buffer_memory_requirements)(device, buffer, pMemoryRequirements)
@@ -5460,68 +5467,68 @@ impl VK_VERSION_1_0 for Vulkan_VERSION_1_0 {
 	fn vkGetPhysicalDeviceSparseImageFormatProperties(&self, physicalDevice: VkPhysicalDevice, format: VkFormat, type_: VkImageType, samples: VkSampleCountFlagBits, usage: VkImageUsageFlags, tiling: VkImageTiling, pPropertyCount: *mut uint32_t, pProperties: *mut VkSparseImageFormatProperties) {
 		(self.vk_get_physical_device_sparse_image_format_properties)(physicalDevice, format, type_, samples, usage, tiling, pPropertyCount, pProperties)
 	}
-	fn vkQueueBindSparse(&self, queue: VkQueue, bindInfoCount: u32, pBindInfo: *const VkBindSparseInfo, fence: VkFence) -> VkResult {
-		(self.vk_queue_bind_sparse)(queue, bindInfoCount, pBindInfo, fence)
+	fn vkQueueBindSparse(&self, queue: VkQueue, bindInfoCount: u32, pBindInfo: *const VkBindSparseInfo, fence: VkFence) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_queue_bind_sparse)(queue, bindInfoCount, pBindInfo, fence))
 	}
-	fn vkCreateFence(&self, device: VkDevice, pCreateInfo: *const VkFenceCreateInfo, pAllocator: *const VkAllocationCallbacks, pFence: *mut VkFence) -> VkResult {
-		(self.vk_create_fence)(device, pCreateInfo, pAllocator, pFence)
+	fn vkCreateFence(&self, device: VkDevice, pCreateInfo: *const VkFenceCreateInfo, pAllocator: *const VkAllocationCallbacks, pFence: *mut VkFence) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_create_fence)(device, pCreateInfo, pAllocator, pFence))
 	}
 	fn vkDestroyFence(&self, device: VkDevice, fence: VkFence, pAllocator: *const VkAllocationCallbacks) {
 		(self.vk_destroy_fence)(device, fence, pAllocator)
 	}
-	fn vkResetFences(&self, device: VkDevice, fenceCount: u32, pFences: *const VkFence) -> VkResult {
-		(self.vk_reset_fences)(device, fenceCount, pFences)
+	fn vkResetFences(&self, device: VkDevice, fenceCount: u32, pFences: *const VkFence) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_reset_fences)(device, fenceCount, pFences))
 	}
-	fn vkGetFenceStatus(&self, device: VkDevice, fence: VkFence) -> VkResult {
-		(self.vk_get_fence_status)(device, fence)
+	fn vkGetFenceStatus(&self, device: VkDevice, fence: VkFence) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_get_fence_status)(device, fence))
 	}
-	fn vkWaitForFences(&self, device: VkDevice, fenceCount: u32, pFences: *const VkFence, waitAll: VkBool32, timeout: u64) -> VkResult {
-		(self.vk_wait_for_fences)(device, fenceCount, pFences, waitAll, timeout)
+	fn vkWaitForFences(&self, device: VkDevice, fenceCount: u32, pFences: *const VkFence, waitAll: VkBool32, timeout: u64) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_wait_for_fences)(device, fenceCount, pFences, waitAll, timeout))
 	}
-	fn vkCreateSemaphore(&self, device: VkDevice, pCreateInfo: *const VkSemaphoreCreateInfo, pAllocator: *const VkAllocationCallbacks, pSemaphore: *mut VkSemaphore) -> VkResult {
-		(self.vk_create_semaphore)(device, pCreateInfo, pAllocator, pSemaphore)
+	fn vkCreateSemaphore(&self, device: VkDevice, pCreateInfo: *const VkSemaphoreCreateInfo, pAllocator: *const VkAllocationCallbacks, pSemaphore: *mut VkSemaphore) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_create_semaphore)(device, pCreateInfo, pAllocator, pSemaphore))
 	}
 	fn vkDestroySemaphore(&self, device: VkDevice, semaphore: VkSemaphore, pAllocator: *const VkAllocationCallbacks) {
 		(self.vk_destroy_semaphore)(device, semaphore, pAllocator)
 	}
-	fn vkCreateEvent(&self, device: VkDevice, pCreateInfo: *const VkEventCreateInfo, pAllocator: *const VkAllocationCallbacks, pEvent: *mut VkEvent) -> VkResult {
-		(self.vk_create_event)(device, pCreateInfo, pAllocator, pEvent)
+	fn vkCreateEvent(&self, device: VkDevice, pCreateInfo: *const VkEventCreateInfo, pAllocator: *const VkAllocationCallbacks, pEvent: *mut VkEvent) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_create_event)(device, pCreateInfo, pAllocator, pEvent))
 	}
 	fn vkDestroyEvent(&self, device: VkDevice, event: VkEvent, pAllocator: *const VkAllocationCallbacks) {
 		(self.vk_destroy_event)(device, event, pAllocator)
 	}
-	fn vkGetEventStatus(&self, device: VkDevice, event: VkEvent) -> VkResult {
-		(self.vk_get_event_status)(device, event)
+	fn vkGetEventStatus(&self, device: VkDevice, event: VkEvent) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_get_event_status)(device, event))
 	}
-	fn vkSetEvent(&self, device: VkDevice, event: VkEvent) -> VkResult {
-		(self.vk_set_event)(device, event)
+	fn vkSetEvent(&self, device: VkDevice, event: VkEvent) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_set_event)(device, event))
 	}
-	fn vkResetEvent(&self, device: VkDevice, event: VkEvent) -> VkResult {
-		(self.vk_reset_event)(device, event)
+	fn vkResetEvent(&self, device: VkDevice, event: VkEvent) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_reset_event)(device, event))
 	}
-	fn vkCreateQueryPool(&self, device: VkDevice, pCreateInfo: *const VkQueryPoolCreateInfo, pAllocator: *const VkAllocationCallbacks, pQueryPool: *mut VkQueryPool) -> VkResult {
-		(self.vk_create_query_pool)(device, pCreateInfo, pAllocator, pQueryPool)
+	fn vkCreateQueryPool(&self, device: VkDevice, pCreateInfo: *const VkQueryPoolCreateInfo, pAllocator: *const VkAllocationCallbacks, pQueryPool: *mut VkQueryPool) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_create_query_pool)(device, pCreateInfo, pAllocator, pQueryPool))
 	}
 	fn vkDestroyQueryPool(&self, device: VkDevice, queryPool: VkQueryPool, pAllocator: *const VkAllocationCallbacks) {
 		(self.vk_destroy_query_pool)(device, queryPool, pAllocator)
 	}
-	fn vkGetQueryPoolResults(&self, device: VkDevice, queryPool: VkQueryPool, firstQuery: u32, queryCount: u32, dataSize: usize, pData: *mut c_void, stride: VkDeviceSize, flags: VkQueryResultFlags) -> VkResult {
-		(self.vk_get_query_pool_results)(device, queryPool, firstQuery, queryCount, dataSize, pData, stride, flags)
+	fn vkGetQueryPoolResults(&self, device: VkDevice, queryPool: VkQueryPool, firstQuery: u32, queryCount: u32, dataSize: usize, pData: *mut c_void, stride: VkDeviceSize, flags: VkQueryResultFlags) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_get_query_pool_results)(device, queryPool, firstQuery, queryCount, dataSize, pData, stride, flags))
 	}
-	fn vkCreateBuffer(&self, device: VkDevice, pCreateInfo: *const VkBufferCreateInfo, pAllocator: *const VkAllocationCallbacks, pBuffer: *mut VkBuffer) -> VkResult {
-		(self.vk_create_buffer)(device, pCreateInfo, pAllocator, pBuffer)
+	fn vkCreateBuffer(&self, device: VkDevice, pCreateInfo: *const VkBufferCreateInfo, pAllocator: *const VkAllocationCallbacks, pBuffer: *mut VkBuffer) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_create_buffer)(device, pCreateInfo, pAllocator, pBuffer))
 	}
 	fn vkDestroyBuffer(&self, device: VkDevice, buffer: VkBuffer, pAllocator: *const VkAllocationCallbacks) {
 		(self.vk_destroy_buffer)(device, buffer, pAllocator)
 	}
-	fn vkCreateBufferView(&self, device: VkDevice, pCreateInfo: *const VkBufferViewCreateInfo, pAllocator: *const VkAllocationCallbacks, pView: *mut VkBufferView) -> VkResult {
-		(self.vk_create_buffer_view)(device, pCreateInfo, pAllocator, pView)
+	fn vkCreateBufferView(&self, device: VkDevice, pCreateInfo: *const VkBufferViewCreateInfo, pAllocator: *const VkAllocationCallbacks, pView: *mut VkBufferView) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_create_buffer_view)(device, pCreateInfo, pAllocator, pView))
 	}
 	fn vkDestroyBufferView(&self, device: VkDevice, bufferView: VkBufferView, pAllocator: *const VkAllocationCallbacks) {
 		(self.vk_destroy_buffer_view)(device, bufferView, pAllocator)
 	}
-	fn vkCreateImage(&self, device: VkDevice, pCreateInfo: *const VkImageCreateInfo, pAllocator: *const VkAllocationCallbacks, pImage: *mut VkImage) -> VkResult {
-		(self.vk_create_image)(device, pCreateInfo, pAllocator, pImage)
+	fn vkCreateImage(&self, device: VkDevice, pCreateInfo: *const VkImageCreateInfo, pAllocator: *const VkAllocationCallbacks, pImage: *mut VkImage) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_create_image)(device, pCreateInfo, pAllocator, pImage))
 	}
 	fn vkDestroyImage(&self, device: VkDevice, image: VkImage, pAllocator: *const VkAllocationCallbacks) {
 		(self.vk_destroy_image)(device, image, pAllocator)
@@ -5529,83 +5536,83 @@ impl VK_VERSION_1_0 for Vulkan_VERSION_1_0 {
 	fn vkGetImageSubresourceLayout(&self, device: VkDevice, image: VkImage, pSubresource: *const VkImageSubresource, pLayout: *mut VkSubresourceLayout) {
 		(self.vk_get_image_subresource_layout)(device, image, pSubresource, pLayout)
 	}
-	fn vkCreateImageView(&self, device: VkDevice, pCreateInfo: *const VkImageViewCreateInfo, pAllocator: *const VkAllocationCallbacks, pView: *mut VkImageView) -> VkResult {
-		(self.vk_create_image_view)(device, pCreateInfo, pAllocator, pView)
+	fn vkCreateImageView(&self, device: VkDevice, pCreateInfo: *const VkImageViewCreateInfo, pAllocator: *const VkAllocationCallbacks, pView: *mut VkImageView) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_create_image_view)(device, pCreateInfo, pAllocator, pView))
 	}
 	fn vkDestroyImageView(&self, device: VkDevice, imageView: VkImageView, pAllocator: *const VkAllocationCallbacks) {
 		(self.vk_destroy_image_view)(device, imageView, pAllocator)
 	}
-	fn vkCreateShaderModule(&self, device: VkDevice, pCreateInfo: *const VkShaderModuleCreateInfo, pAllocator: *const VkAllocationCallbacks, pShaderModule: *mut VkShaderModule) -> VkResult {
-		(self.vk_create_shader_module)(device, pCreateInfo, pAllocator, pShaderModule)
+	fn vkCreateShaderModule(&self, device: VkDevice, pCreateInfo: *const VkShaderModuleCreateInfo, pAllocator: *const VkAllocationCallbacks, pShaderModule: *mut VkShaderModule) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_create_shader_module)(device, pCreateInfo, pAllocator, pShaderModule))
 	}
 	fn vkDestroyShaderModule(&self, device: VkDevice, shaderModule: VkShaderModule, pAllocator: *const VkAllocationCallbacks) {
 		(self.vk_destroy_shader_module)(device, shaderModule, pAllocator)
 	}
-	fn vkCreatePipelineCache(&self, device: VkDevice, pCreateInfo: *const VkPipelineCacheCreateInfo, pAllocator: *const VkAllocationCallbacks, pPipelineCache: *mut VkPipelineCache) -> VkResult {
-		(self.vk_create_pipeline_cache)(device, pCreateInfo, pAllocator, pPipelineCache)
+	fn vkCreatePipelineCache(&self, device: VkDevice, pCreateInfo: *const VkPipelineCacheCreateInfo, pAllocator: *const VkAllocationCallbacks, pPipelineCache: *mut VkPipelineCache) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_create_pipeline_cache)(device, pCreateInfo, pAllocator, pPipelineCache))
 	}
 	fn vkDestroyPipelineCache(&self, device: VkDevice, pipelineCache: VkPipelineCache, pAllocator: *const VkAllocationCallbacks) {
 		(self.vk_destroy_pipeline_cache)(device, pipelineCache, pAllocator)
 	}
-	fn vkGetPipelineCacheData(&self, device: VkDevice, pipelineCache: VkPipelineCache, pDataSize: *mut size_t, pData: *mut c_void) -> VkResult {
-		(self.vk_get_pipeline_cache_data)(device, pipelineCache, pDataSize, pData)
+	fn vkGetPipelineCacheData(&self, device: VkDevice, pipelineCache: VkPipelineCache, pDataSize: *mut size_t, pData: *mut c_void) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_get_pipeline_cache_data)(device, pipelineCache, pDataSize, pData))
 	}
-	fn vkMergePipelineCaches(&self, device: VkDevice, dstCache: VkPipelineCache, srcCacheCount: u32, pSrcCaches: *const VkPipelineCache) -> VkResult {
-		(self.vk_merge_pipeline_caches)(device, dstCache, srcCacheCount, pSrcCaches)
+	fn vkMergePipelineCaches(&self, device: VkDevice, dstCache: VkPipelineCache, srcCacheCount: u32, pSrcCaches: *const VkPipelineCache) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_merge_pipeline_caches)(device, dstCache, srcCacheCount, pSrcCaches))
 	}
-	fn vkCreateGraphicsPipelines(&self, device: VkDevice, pipelineCache: VkPipelineCache, createInfoCount: u32, pCreateInfos: *const VkGraphicsPipelineCreateInfo, pAllocator: *const VkAllocationCallbacks, pPipelines: *mut VkPipeline) -> VkResult {
-		(self.vk_create_graphics_pipelines)(device, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines)
+	fn vkCreateGraphicsPipelines(&self, device: VkDevice, pipelineCache: VkPipelineCache, createInfoCount: u32, pCreateInfos: *const VkGraphicsPipelineCreateInfo, pAllocator: *const VkAllocationCallbacks, pPipelines: *mut VkPipeline) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_create_graphics_pipelines)(device, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines))
 	}
-	fn vkCreateComputePipelines(&self, device: VkDevice, pipelineCache: VkPipelineCache, createInfoCount: u32, pCreateInfos: *const VkComputePipelineCreateInfo, pAllocator: *const VkAllocationCallbacks, pPipelines: *mut VkPipeline) -> VkResult {
-		(self.vk_create_compute_pipelines)(device, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines)
+	fn vkCreateComputePipelines(&self, device: VkDevice, pipelineCache: VkPipelineCache, createInfoCount: u32, pCreateInfos: *const VkComputePipelineCreateInfo, pAllocator: *const VkAllocationCallbacks, pPipelines: *mut VkPipeline) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_create_compute_pipelines)(device, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines))
 	}
 	fn vkDestroyPipeline(&self, device: VkDevice, pipeline: VkPipeline, pAllocator: *const VkAllocationCallbacks) {
 		(self.vk_destroy_pipeline)(device, pipeline, pAllocator)
 	}
-	fn vkCreatePipelineLayout(&self, device: VkDevice, pCreateInfo: *const VkPipelineLayoutCreateInfo, pAllocator: *const VkAllocationCallbacks, pPipelineLayout: *mut VkPipelineLayout) -> VkResult {
-		(self.vk_create_pipeline_layout)(device, pCreateInfo, pAllocator, pPipelineLayout)
+	fn vkCreatePipelineLayout(&self, device: VkDevice, pCreateInfo: *const VkPipelineLayoutCreateInfo, pAllocator: *const VkAllocationCallbacks, pPipelineLayout: *mut VkPipelineLayout) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_create_pipeline_layout)(device, pCreateInfo, pAllocator, pPipelineLayout))
 	}
 	fn vkDestroyPipelineLayout(&self, device: VkDevice, pipelineLayout: VkPipelineLayout, pAllocator: *const VkAllocationCallbacks) {
 		(self.vk_destroy_pipeline_layout)(device, pipelineLayout, pAllocator)
 	}
-	fn vkCreateSampler(&self, device: VkDevice, pCreateInfo: *const VkSamplerCreateInfo, pAllocator: *const VkAllocationCallbacks, pSampler: *mut VkSampler) -> VkResult {
-		(self.vk_create_sampler)(device, pCreateInfo, pAllocator, pSampler)
+	fn vkCreateSampler(&self, device: VkDevice, pCreateInfo: *const VkSamplerCreateInfo, pAllocator: *const VkAllocationCallbacks, pSampler: *mut VkSampler) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_create_sampler)(device, pCreateInfo, pAllocator, pSampler))
 	}
 	fn vkDestroySampler(&self, device: VkDevice, sampler: VkSampler, pAllocator: *const VkAllocationCallbacks) {
 		(self.vk_destroy_sampler)(device, sampler, pAllocator)
 	}
-	fn vkCreateDescriptorSetLayout(&self, device: VkDevice, pCreateInfo: *const VkDescriptorSetLayoutCreateInfo, pAllocator: *const VkAllocationCallbacks, pSetLayout: *mut VkDescriptorSetLayout) -> VkResult {
-		(self.vk_create_descriptor_set_layout)(device, pCreateInfo, pAllocator, pSetLayout)
+	fn vkCreateDescriptorSetLayout(&self, device: VkDevice, pCreateInfo: *const VkDescriptorSetLayoutCreateInfo, pAllocator: *const VkAllocationCallbacks, pSetLayout: *mut VkDescriptorSetLayout) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_create_descriptor_set_layout)(device, pCreateInfo, pAllocator, pSetLayout))
 	}
 	fn vkDestroyDescriptorSetLayout(&self, device: VkDevice, descriptorSetLayout: VkDescriptorSetLayout, pAllocator: *const VkAllocationCallbacks) {
 		(self.vk_destroy_descriptor_set_layout)(device, descriptorSetLayout, pAllocator)
 	}
-	fn vkCreateDescriptorPool(&self, device: VkDevice, pCreateInfo: *const VkDescriptorPoolCreateInfo, pAllocator: *const VkAllocationCallbacks, pDescriptorPool: *mut VkDescriptorPool) -> VkResult {
-		(self.vk_create_descriptor_pool)(device, pCreateInfo, pAllocator, pDescriptorPool)
+	fn vkCreateDescriptorPool(&self, device: VkDevice, pCreateInfo: *const VkDescriptorPoolCreateInfo, pAllocator: *const VkAllocationCallbacks, pDescriptorPool: *mut VkDescriptorPool) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_create_descriptor_pool)(device, pCreateInfo, pAllocator, pDescriptorPool))
 	}
 	fn vkDestroyDescriptorPool(&self, device: VkDevice, descriptorPool: VkDescriptorPool, pAllocator: *const VkAllocationCallbacks) {
 		(self.vk_destroy_descriptor_pool)(device, descriptorPool, pAllocator)
 	}
-	fn vkResetDescriptorPool(&self, device: VkDevice, descriptorPool: VkDescriptorPool, flags: VkDescriptorPoolResetFlags) -> VkResult {
-		(self.vk_reset_descriptor_pool)(device, descriptorPool, flags)
+	fn vkResetDescriptorPool(&self, device: VkDevice, descriptorPool: VkDescriptorPool, flags: VkDescriptorPoolResetFlags) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_reset_descriptor_pool)(device, descriptorPool, flags))
 	}
-	fn vkAllocateDescriptorSets(&self, device: VkDevice, pAllocateInfo: *const VkDescriptorSetAllocateInfo, pDescriptorSets: *mut VkDescriptorSet) -> VkResult {
-		(self.vk_allocate_descriptor_sets)(device, pAllocateInfo, pDescriptorSets)
+	fn vkAllocateDescriptorSets(&self, device: VkDevice, pAllocateInfo: *const VkDescriptorSetAllocateInfo, pDescriptorSets: *mut VkDescriptorSet) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_allocate_descriptor_sets)(device, pAllocateInfo, pDescriptorSets))
 	}
-	fn vkFreeDescriptorSets(&self, device: VkDevice, descriptorPool: VkDescriptorPool, descriptorSetCount: u32, pDescriptorSets: *const VkDescriptorSet) -> VkResult {
-		(self.vk_free_descriptor_sets)(device, descriptorPool, descriptorSetCount, pDescriptorSets)
+	fn vkFreeDescriptorSets(&self, device: VkDevice, descriptorPool: VkDescriptorPool, descriptorSetCount: u32, pDescriptorSets: *const VkDescriptorSet) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_free_descriptor_sets)(device, descriptorPool, descriptorSetCount, pDescriptorSets))
 	}
 	fn vkUpdateDescriptorSets(&self, device: VkDevice, descriptorWriteCount: u32, pDescriptorWrites: *const VkWriteDescriptorSet, descriptorCopyCount: u32, pDescriptorCopies: *const VkCopyDescriptorSet) {
 		(self.vk_update_descriptor_sets)(device, descriptorWriteCount, pDescriptorWrites, descriptorCopyCount, pDescriptorCopies)
 	}
-	fn vkCreateFramebuffer(&self, device: VkDevice, pCreateInfo: *const VkFramebufferCreateInfo, pAllocator: *const VkAllocationCallbacks, pFramebuffer: *mut VkFramebuffer) -> VkResult {
-		(self.vk_create_framebuffer)(device, pCreateInfo, pAllocator, pFramebuffer)
+	fn vkCreateFramebuffer(&self, device: VkDevice, pCreateInfo: *const VkFramebufferCreateInfo, pAllocator: *const VkAllocationCallbacks, pFramebuffer: *mut VkFramebuffer) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_create_framebuffer)(device, pCreateInfo, pAllocator, pFramebuffer))
 	}
 	fn vkDestroyFramebuffer(&self, device: VkDevice, framebuffer: VkFramebuffer, pAllocator: *const VkAllocationCallbacks) {
 		(self.vk_destroy_framebuffer)(device, framebuffer, pAllocator)
 	}
-	fn vkCreateRenderPass(&self, device: VkDevice, pCreateInfo: *const VkRenderPassCreateInfo, pAllocator: *const VkAllocationCallbacks, pRenderPass: *mut VkRenderPass) -> VkResult {
-		(self.vk_create_render_pass)(device, pCreateInfo, pAllocator, pRenderPass)
+	fn vkCreateRenderPass(&self, device: VkDevice, pCreateInfo: *const VkRenderPassCreateInfo, pAllocator: *const VkAllocationCallbacks, pRenderPass: *mut VkRenderPass) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_create_render_pass)(device, pCreateInfo, pAllocator, pRenderPass))
 	}
 	fn vkDestroyRenderPass(&self, device: VkDevice, renderPass: VkRenderPass, pAllocator: *const VkAllocationCallbacks) {
 		(self.vk_destroy_render_pass)(device, renderPass, pAllocator)
@@ -5613,29 +5620,29 @@ impl VK_VERSION_1_0 for Vulkan_VERSION_1_0 {
 	fn vkGetRenderAreaGranularity(&self, device: VkDevice, renderPass: VkRenderPass, pGranularity: *mut VkExtent2D) {
 		(self.vk_get_render_area_granularity)(device, renderPass, pGranularity)
 	}
-	fn vkCreateCommandPool(&self, device: VkDevice, pCreateInfo: *const VkCommandPoolCreateInfo, pAllocator: *const VkAllocationCallbacks, pCommandPool: *mut VkCommandPool) -> VkResult {
-		(self.vk_create_command_pool)(device, pCreateInfo, pAllocator, pCommandPool)
+	fn vkCreateCommandPool(&self, device: VkDevice, pCreateInfo: *const VkCommandPoolCreateInfo, pAllocator: *const VkAllocationCallbacks, pCommandPool: *mut VkCommandPool) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_create_command_pool)(device, pCreateInfo, pAllocator, pCommandPool))
 	}
 	fn vkDestroyCommandPool(&self, device: VkDevice, commandPool: VkCommandPool, pAllocator: *const VkAllocationCallbacks) {
 		(self.vk_destroy_command_pool)(device, commandPool, pAllocator)
 	}
-	fn vkResetCommandPool(&self, device: VkDevice, commandPool: VkCommandPool, flags: VkCommandPoolResetFlags) -> VkResult {
-		(self.vk_reset_command_pool)(device, commandPool, flags)
+	fn vkResetCommandPool(&self, device: VkDevice, commandPool: VkCommandPool, flags: VkCommandPoolResetFlags) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_reset_command_pool)(device, commandPool, flags))
 	}
-	fn vkAllocateCommandBuffers(&self, device: VkDevice, pAllocateInfo: *const VkCommandBufferAllocateInfo, pCommandBuffers: *mut VkCommandBuffer) -> VkResult {
-		(self.vk_allocate_command_buffers)(device, pAllocateInfo, pCommandBuffers)
+	fn vkAllocateCommandBuffers(&self, device: VkDevice, pAllocateInfo: *const VkCommandBufferAllocateInfo, pCommandBuffers: *mut VkCommandBuffer) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_allocate_command_buffers)(device, pAllocateInfo, pCommandBuffers))
 	}
 	fn vkFreeCommandBuffers(&self, device: VkDevice, commandPool: VkCommandPool, commandBufferCount: u32, pCommandBuffers: *const VkCommandBuffer) {
 		(self.vk_free_command_buffers)(device, commandPool, commandBufferCount, pCommandBuffers)
 	}
-	fn vkBeginCommandBuffer(&self, commandBuffer: VkCommandBuffer, pBeginInfo: *const VkCommandBufferBeginInfo) -> VkResult {
-		(self.vk_begin_command_buffer)(commandBuffer, pBeginInfo)
+	fn vkBeginCommandBuffer(&self, commandBuffer: VkCommandBuffer, pBeginInfo: *const VkCommandBufferBeginInfo) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_begin_command_buffer)(commandBuffer, pBeginInfo))
 	}
-	fn vkEndCommandBuffer(&self, commandBuffer: VkCommandBuffer) -> VkResult {
-		(self.vk_end_command_buffer)(commandBuffer)
+	fn vkEndCommandBuffer(&self, commandBuffer: VkCommandBuffer) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_end_command_buffer)(commandBuffer))
 	}
-	fn vkResetCommandBuffer(&self, commandBuffer: VkCommandBuffer, flags: VkCommandBufferResetFlags) -> VkResult {
-		(self.vk_reset_command_buffer)(commandBuffer, flags)
+	fn vkResetCommandBuffer(&self, commandBuffer: VkCommandBuffer, flags: VkCommandBufferResetFlags) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_reset_command_buffer)(commandBuffer, flags))
 	}
 	fn vkCmdBindPipeline(&self, commandBuffer: VkCommandBuffer, pipelineBindPoint: VkPipelineBindPoint, pipeline: VkPipeline) {
 		(self.vk_cmd_bind_pipeline)(commandBuffer, pipelineBindPoint, pipeline)
@@ -6987,28 +6994,28 @@ extern "system" fn dummy_vkGetDescriptorSetLayoutSupport(_: VkDevice, _: *const 
 	panic!("Vulkan function pointer of `vkGetDescriptorSetLayoutSupport()` is NULL");
 }
 pub trait VK_VERSION_1_1: Debug {
-	fn vkEnumerateInstanceVersion(&self, pApiVersion: *mut uint32_t) -> VkResult;
-	fn vkBindBufferMemory2(&self, device: VkDevice, bindInfoCount: u32, pBindInfos: *const VkBindBufferMemoryInfo) -> VkResult;
-	fn vkBindImageMemory2(&self, device: VkDevice, bindInfoCount: u32, pBindInfos: *const VkBindImageMemoryInfo) -> VkResult;
+	fn vkEnumerateInstanceVersion(&self, pApiVersion: *mut uint32_t) -> Result<(), VkResult>;
+	fn vkBindBufferMemory2(&self, device: VkDevice, bindInfoCount: u32, pBindInfos: *const VkBindBufferMemoryInfo) -> Result<(), VkResult>;
+	fn vkBindImageMemory2(&self, device: VkDevice, bindInfoCount: u32, pBindInfos: *const VkBindImageMemoryInfo) -> Result<(), VkResult>;
 	fn vkGetDeviceGroupPeerMemoryFeatures(&self, device: VkDevice, heapIndex: u32, localDeviceIndex: u32, remoteDeviceIndex: u32, pPeerMemoryFeatures: *mut VkPeerMemoryFeatureFlags);
 	fn vkCmdSetDeviceMask(&self, commandBuffer: VkCommandBuffer, deviceMask: u32);
 	fn vkCmdDispatchBase(&self, commandBuffer: VkCommandBuffer, baseGroupX: u32, baseGroupY: u32, baseGroupZ: u32, groupCountX: u32, groupCountY: u32, groupCountZ: u32);
-	fn vkEnumeratePhysicalDeviceGroups(&self, instance: VkInstance, pPhysicalDeviceGroupCount: *mut uint32_t, pPhysicalDeviceGroupProperties: *mut VkPhysicalDeviceGroupProperties) -> VkResult;
+	fn vkEnumeratePhysicalDeviceGroups(&self, instance: VkInstance, pPhysicalDeviceGroupCount: *mut uint32_t, pPhysicalDeviceGroupProperties: *mut VkPhysicalDeviceGroupProperties) -> Result<(), VkResult>;
 	fn vkGetImageMemoryRequirements2(&self, device: VkDevice, pInfo: *const VkImageMemoryRequirementsInfo2, pMemoryRequirements: *mut VkMemoryRequirements2);
 	fn vkGetBufferMemoryRequirements2(&self, device: VkDevice, pInfo: *const VkBufferMemoryRequirementsInfo2, pMemoryRequirements: *mut VkMemoryRequirements2);
 	fn vkGetImageSparseMemoryRequirements2(&self, device: VkDevice, pInfo: *const VkImageSparseMemoryRequirementsInfo2, pSparseMemoryRequirementCount: *mut uint32_t, pSparseMemoryRequirements: *mut VkSparseImageMemoryRequirements2);
 	fn vkGetPhysicalDeviceFeatures2(&self, physicalDevice: VkPhysicalDevice, pFeatures: *mut VkPhysicalDeviceFeatures2);
 	fn vkGetPhysicalDeviceProperties2(&self, physicalDevice: VkPhysicalDevice, pProperties: *mut VkPhysicalDeviceProperties2);
 	fn vkGetPhysicalDeviceFormatProperties2(&self, physicalDevice: VkPhysicalDevice, format: VkFormat, pFormatProperties: *mut VkFormatProperties2);
-	fn vkGetPhysicalDeviceImageFormatProperties2(&self, physicalDevice: VkPhysicalDevice, pImageFormatInfo: *const VkPhysicalDeviceImageFormatInfo2, pImageFormatProperties: *mut VkImageFormatProperties2) -> VkResult;
+	fn vkGetPhysicalDeviceImageFormatProperties2(&self, physicalDevice: VkPhysicalDevice, pImageFormatInfo: *const VkPhysicalDeviceImageFormatInfo2, pImageFormatProperties: *mut VkImageFormatProperties2) -> Result<(), VkResult>;
 	fn vkGetPhysicalDeviceQueueFamilyProperties2(&self, physicalDevice: VkPhysicalDevice, pQueueFamilyPropertyCount: *mut uint32_t, pQueueFamilyProperties: *mut VkQueueFamilyProperties2);
 	fn vkGetPhysicalDeviceMemoryProperties2(&self, physicalDevice: VkPhysicalDevice, pMemoryProperties: *mut VkPhysicalDeviceMemoryProperties2);
 	fn vkGetPhysicalDeviceSparseImageFormatProperties2(&self, physicalDevice: VkPhysicalDevice, pFormatInfo: *const VkPhysicalDeviceSparseImageFormatInfo2, pPropertyCount: *mut uint32_t, pProperties: *mut VkSparseImageFormatProperties2);
 	fn vkTrimCommandPool(&self, device: VkDevice, commandPool: VkCommandPool, flags: VkCommandPoolTrimFlags);
 	fn vkGetDeviceQueue2(&self, device: VkDevice, pQueueInfo: *const VkDeviceQueueInfo2, pQueue: *mut VkQueue);
-	fn vkCreateSamplerYcbcrConversion(&self, device: VkDevice, pCreateInfo: *const VkSamplerYcbcrConversionCreateInfo, pAllocator: *const VkAllocationCallbacks, pYcbcrConversion: *mut VkSamplerYcbcrConversion) -> VkResult;
+	fn vkCreateSamplerYcbcrConversion(&self, device: VkDevice, pCreateInfo: *const VkSamplerYcbcrConversionCreateInfo, pAllocator: *const VkAllocationCallbacks, pYcbcrConversion: *mut VkSamplerYcbcrConversion) -> Result<(), VkResult>;
 	fn vkDestroySamplerYcbcrConversion(&self, device: VkDevice, ycbcrConversion: VkSamplerYcbcrConversion, pAllocator: *const VkAllocationCallbacks);
-	fn vkCreateDescriptorUpdateTemplate(&self, device: VkDevice, pCreateInfo: *const VkDescriptorUpdateTemplateCreateInfo, pAllocator: *const VkAllocationCallbacks, pDescriptorUpdateTemplate: *mut VkDescriptorUpdateTemplate) -> VkResult;
+	fn vkCreateDescriptorUpdateTemplate(&self, device: VkDevice, pCreateInfo: *const VkDescriptorUpdateTemplateCreateInfo, pAllocator: *const VkAllocationCallbacks, pDescriptorUpdateTemplate: *mut VkDescriptorUpdateTemplate) -> Result<(), VkResult>;
 	fn vkDestroyDescriptorUpdateTemplate(&self, device: VkDevice, descriptorUpdateTemplate: VkDescriptorUpdateTemplate, pAllocator: *const VkAllocationCallbacks);
 	fn vkUpdateDescriptorSetWithTemplate(&self, device: VkDevice, descriptorSet: VkDescriptorSet, descriptorUpdateTemplate: VkDescriptorUpdateTemplate, pData: *const c_void);
 	fn vkGetPhysicalDeviceExternalBufferProperties(&self, physicalDevice: VkPhysicalDevice, pExternalBufferInfo: *const VkPhysicalDeviceExternalBufferInfo, pExternalBufferProperties: *mut VkExternalBufferProperties);
@@ -7048,14 +7055,14 @@ pub struct Vulkan_VERSION_1_1 {
 	vk_get_descriptor_set_layout_support: PFN_vkGetDescriptorSetLayoutSupport,
 }
 impl VK_VERSION_1_1 for Vulkan_VERSION_1_1 {
-	fn vkEnumerateInstanceVersion(&self, pApiVersion: *mut uint32_t) -> VkResult {
-		(self.vk_enumerate_instance_version)(pApiVersion)
+	fn vkEnumerateInstanceVersion(&self, pApiVersion: *mut uint32_t) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_enumerate_instance_version)(pApiVersion))
 	}
-	fn vkBindBufferMemory2(&self, device: VkDevice, bindInfoCount: u32, pBindInfos: *const VkBindBufferMemoryInfo) -> VkResult {
-		(self.vk_bind_buffer_memory2)(device, bindInfoCount, pBindInfos)
+	fn vkBindBufferMemory2(&self, device: VkDevice, bindInfoCount: u32, pBindInfos: *const VkBindBufferMemoryInfo) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_bind_buffer_memory2)(device, bindInfoCount, pBindInfos))
 	}
-	fn vkBindImageMemory2(&self, device: VkDevice, bindInfoCount: u32, pBindInfos: *const VkBindImageMemoryInfo) -> VkResult {
-		(self.vk_bind_image_memory2)(device, bindInfoCount, pBindInfos)
+	fn vkBindImageMemory2(&self, device: VkDevice, bindInfoCount: u32, pBindInfos: *const VkBindImageMemoryInfo) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_bind_image_memory2)(device, bindInfoCount, pBindInfos))
 	}
 	fn vkGetDeviceGroupPeerMemoryFeatures(&self, device: VkDevice, heapIndex: u32, localDeviceIndex: u32, remoteDeviceIndex: u32, pPeerMemoryFeatures: *mut VkPeerMemoryFeatureFlags) {
 		(self.vk_get_device_group_peer_memory_features)(device, heapIndex, localDeviceIndex, remoteDeviceIndex, pPeerMemoryFeatures)
@@ -7066,8 +7073,8 @@ impl VK_VERSION_1_1 for Vulkan_VERSION_1_1 {
 	fn vkCmdDispatchBase(&self, commandBuffer: VkCommandBuffer, baseGroupX: u32, baseGroupY: u32, baseGroupZ: u32, groupCountX: u32, groupCountY: u32, groupCountZ: u32) {
 		(self.vk_cmd_dispatch_base)(commandBuffer, baseGroupX, baseGroupY, baseGroupZ, groupCountX, groupCountY, groupCountZ)
 	}
-	fn vkEnumeratePhysicalDeviceGroups(&self, instance: VkInstance, pPhysicalDeviceGroupCount: *mut uint32_t, pPhysicalDeviceGroupProperties: *mut VkPhysicalDeviceGroupProperties) -> VkResult {
-		(self.vk_enumerate_physical_device_groups)(instance, pPhysicalDeviceGroupCount, pPhysicalDeviceGroupProperties)
+	fn vkEnumeratePhysicalDeviceGroups(&self, instance: VkInstance, pPhysicalDeviceGroupCount: *mut uint32_t, pPhysicalDeviceGroupProperties: *mut VkPhysicalDeviceGroupProperties) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_enumerate_physical_device_groups)(instance, pPhysicalDeviceGroupCount, pPhysicalDeviceGroupProperties))
 	}
 	fn vkGetImageMemoryRequirements2(&self, device: VkDevice, pInfo: *const VkImageMemoryRequirementsInfo2, pMemoryRequirements: *mut VkMemoryRequirements2) {
 		(self.vk_get_image_memory_requirements2)(device, pInfo, pMemoryRequirements)
@@ -7087,8 +7094,8 @@ impl VK_VERSION_1_1 for Vulkan_VERSION_1_1 {
 	fn vkGetPhysicalDeviceFormatProperties2(&self, physicalDevice: VkPhysicalDevice, format: VkFormat, pFormatProperties: *mut VkFormatProperties2) {
 		(self.vk_get_physical_device_format_properties2)(physicalDevice, format, pFormatProperties)
 	}
-	fn vkGetPhysicalDeviceImageFormatProperties2(&self, physicalDevice: VkPhysicalDevice, pImageFormatInfo: *const VkPhysicalDeviceImageFormatInfo2, pImageFormatProperties: *mut VkImageFormatProperties2) -> VkResult {
-		(self.vk_get_physical_device_image_format_properties2)(physicalDevice, pImageFormatInfo, pImageFormatProperties)
+	fn vkGetPhysicalDeviceImageFormatProperties2(&self, physicalDevice: VkPhysicalDevice, pImageFormatInfo: *const VkPhysicalDeviceImageFormatInfo2, pImageFormatProperties: *mut VkImageFormatProperties2) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_get_physical_device_image_format_properties2)(physicalDevice, pImageFormatInfo, pImageFormatProperties))
 	}
 	fn vkGetPhysicalDeviceQueueFamilyProperties2(&self, physicalDevice: VkPhysicalDevice, pQueueFamilyPropertyCount: *mut uint32_t, pQueueFamilyProperties: *mut VkQueueFamilyProperties2) {
 		(self.vk_get_physical_device_queue_family_properties2)(physicalDevice, pQueueFamilyPropertyCount, pQueueFamilyProperties)
@@ -7105,14 +7112,14 @@ impl VK_VERSION_1_1 for Vulkan_VERSION_1_1 {
 	fn vkGetDeviceQueue2(&self, device: VkDevice, pQueueInfo: *const VkDeviceQueueInfo2, pQueue: *mut VkQueue) {
 		(self.vk_get_device_queue2)(device, pQueueInfo, pQueue)
 	}
-	fn vkCreateSamplerYcbcrConversion(&self, device: VkDevice, pCreateInfo: *const VkSamplerYcbcrConversionCreateInfo, pAllocator: *const VkAllocationCallbacks, pYcbcrConversion: *mut VkSamplerYcbcrConversion) -> VkResult {
-		(self.vk_create_sampler_ycbcr_conversion)(device, pCreateInfo, pAllocator, pYcbcrConversion)
+	fn vkCreateSamplerYcbcrConversion(&self, device: VkDevice, pCreateInfo: *const VkSamplerYcbcrConversionCreateInfo, pAllocator: *const VkAllocationCallbacks, pYcbcrConversion: *mut VkSamplerYcbcrConversion) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_create_sampler_ycbcr_conversion)(device, pCreateInfo, pAllocator, pYcbcrConversion))
 	}
 	fn vkDestroySamplerYcbcrConversion(&self, device: VkDevice, ycbcrConversion: VkSamplerYcbcrConversion, pAllocator: *const VkAllocationCallbacks) {
 		(self.vk_destroy_sampler_ycbcr_conversion)(device, ycbcrConversion, pAllocator)
 	}
-	fn vkCreateDescriptorUpdateTemplate(&self, device: VkDevice, pCreateInfo: *const VkDescriptorUpdateTemplateCreateInfo, pAllocator: *const VkAllocationCallbacks, pDescriptorUpdateTemplate: *mut VkDescriptorUpdateTemplate) -> VkResult {
-		(self.vk_create_descriptor_update_template)(device, pCreateInfo, pAllocator, pDescriptorUpdateTemplate)
+	fn vkCreateDescriptorUpdateTemplate(&self, device: VkDevice, pCreateInfo: *const VkDescriptorUpdateTemplateCreateInfo, pAllocator: *const VkAllocationCallbacks, pDescriptorUpdateTemplate: *mut VkDescriptorUpdateTemplate) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_create_descriptor_update_template)(device, pCreateInfo, pAllocator, pDescriptorUpdateTemplate))
 	}
 	fn vkDestroyDescriptorUpdateTemplate(&self, device: VkDevice, descriptorUpdateTemplate: VkDescriptorUpdateTemplate, pAllocator: *const VkAllocationCallbacks) {
 		(self.vk_destroy_descriptor_update_template)(device, descriptorUpdateTemplate, pAllocator)
@@ -7997,14 +8004,14 @@ extern "system" fn dummy_vkGetDeviceMemoryOpaqueCaptureAddress(_: VkDevice, _: *
 pub trait VK_VERSION_1_2: Debug {
 	fn vkCmdDrawIndirectCount(&self, commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize, countBuffer: VkBuffer, countBufferOffset: VkDeviceSize, maxDrawCount: u32, stride: u32);
 	fn vkCmdDrawIndexedIndirectCount(&self, commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize, countBuffer: VkBuffer, countBufferOffset: VkDeviceSize, maxDrawCount: u32, stride: u32);
-	fn vkCreateRenderPass2(&self, device: VkDevice, pCreateInfo: *const VkRenderPassCreateInfo2, pAllocator: *const VkAllocationCallbacks, pRenderPass: *mut VkRenderPass) -> VkResult;
+	fn vkCreateRenderPass2(&self, device: VkDevice, pCreateInfo: *const VkRenderPassCreateInfo2, pAllocator: *const VkAllocationCallbacks, pRenderPass: *mut VkRenderPass) -> Result<(), VkResult>;
 	fn vkCmdBeginRenderPass2(&self, commandBuffer: VkCommandBuffer, pRenderPassBegin: *const VkRenderPassBeginInfo, pSubpassBeginInfo: *const VkSubpassBeginInfo);
 	fn vkCmdNextSubpass2(&self, commandBuffer: VkCommandBuffer, pSubpassBeginInfo: *const VkSubpassBeginInfo, pSubpassEndInfo: *const VkSubpassEndInfo);
 	fn vkCmdEndRenderPass2(&self, commandBuffer: VkCommandBuffer, pSubpassEndInfo: *const VkSubpassEndInfo);
 	fn vkResetQueryPool(&self, device: VkDevice, queryPool: VkQueryPool, firstQuery: u32, queryCount: u32);
-	fn vkGetSemaphoreCounterValue(&self, device: VkDevice, semaphore: VkSemaphore, pValue: *mut uint64_t) -> VkResult;
-	fn vkWaitSemaphores(&self, device: VkDevice, pWaitInfo: *const VkSemaphoreWaitInfo, timeout: u64) -> VkResult;
-	fn vkSignalSemaphore(&self, device: VkDevice, pSignalInfo: *const VkSemaphoreSignalInfo) -> VkResult;
+	fn vkGetSemaphoreCounterValue(&self, device: VkDevice, semaphore: VkSemaphore, pValue: *mut uint64_t) -> Result<(), VkResult>;
+	fn vkWaitSemaphores(&self, device: VkDevice, pWaitInfo: *const VkSemaphoreWaitInfo, timeout: u64) -> Result<(), VkResult>;
+	fn vkSignalSemaphore(&self, device: VkDevice, pSignalInfo: *const VkSemaphoreSignalInfo) -> Result<(), VkResult>;
 	fn vkGetBufferDeviceAddress(&self, device: VkDevice, pInfo: *const VkBufferDeviceAddressInfo) -> VkDeviceAddress;
 	fn vkGetBufferOpaqueCaptureAddress(&self, device: VkDevice, pInfo: *const VkBufferDeviceAddressInfo) -> u64;
 	fn vkGetDeviceMemoryOpaqueCaptureAddress(&self, device: VkDevice, pInfo: *const VkDeviceMemoryOpaqueCaptureAddressInfo) -> u64;
@@ -8032,8 +8039,8 @@ impl VK_VERSION_1_2 for Vulkan_VERSION_1_2 {
 	fn vkCmdDrawIndexedIndirectCount(&self, commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize, countBuffer: VkBuffer, countBufferOffset: VkDeviceSize, maxDrawCount: u32, stride: u32) {
 		(self.vk_cmd_draw_indexed_indirect_count)(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride)
 	}
-	fn vkCreateRenderPass2(&self, device: VkDevice, pCreateInfo: *const VkRenderPassCreateInfo2, pAllocator: *const VkAllocationCallbacks, pRenderPass: *mut VkRenderPass) -> VkResult {
-		(self.vk_create_render_pass2)(device, pCreateInfo, pAllocator, pRenderPass)
+	fn vkCreateRenderPass2(&self, device: VkDevice, pCreateInfo: *const VkRenderPassCreateInfo2, pAllocator: *const VkAllocationCallbacks, pRenderPass: *mut VkRenderPass) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_create_render_pass2)(device, pCreateInfo, pAllocator, pRenderPass))
 	}
 	fn vkCmdBeginRenderPass2(&self, commandBuffer: VkCommandBuffer, pRenderPassBegin: *const VkRenderPassBeginInfo, pSubpassBeginInfo: *const VkSubpassBeginInfo) {
 		(self.vk_cmd_begin_render_pass2)(commandBuffer, pRenderPassBegin, pSubpassBeginInfo)
@@ -8047,14 +8054,14 @@ impl VK_VERSION_1_2 for Vulkan_VERSION_1_2 {
 	fn vkResetQueryPool(&self, device: VkDevice, queryPool: VkQueryPool, firstQuery: u32, queryCount: u32) {
 		(self.vk_reset_query_pool)(device, queryPool, firstQuery, queryCount)
 	}
-	fn vkGetSemaphoreCounterValue(&self, device: VkDevice, semaphore: VkSemaphore, pValue: *mut uint64_t) -> VkResult {
-		(self.vk_get_semaphore_counter_value)(device, semaphore, pValue)
+	fn vkGetSemaphoreCounterValue(&self, device: VkDevice, semaphore: VkSemaphore, pValue: *mut uint64_t) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_get_semaphore_counter_value)(device, semaphore, pValue))
 	}
-	fn vkWaitSemaphores(&self, device: VkDevice, pWaitInfo: *const VkSemaphoreWaitInfo, timeout: u64) -> VkResult {
-		(self.vk_wait_semaphores)(device, pWaitInfo, timeout)
+	fn vkWaitSemaphores(&self, device: VkDevice, pWaitInfo: *const VkSemaphoreWaitInfo, timeout: u64) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_wait_semaphores)(device, pWaitInfo, timeout))
 	}
-	fn vkSignalSemaphore(&self, device: VkDevice, pSignalInfo: *const VkSemaphoreSignalInfo) -> VkResult {
-		(self.vk_signal_semaphore)(device, pSignalInfo)
+	fn vkSignalSemaphore(&self, device: VkDevice, pSignalInfo: *const VkSemaphoreSignalInfo) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_signal_semaphore)(device, pSignalInfo))
 	}
 	fn vkGetBufferDeviceAddress(&self, device: VkDevice, pInfo: *const VkBufferDeviceAddressInfo) -> VkDeviceAddress {
 		(self.vk_get_buffer_device_address)(device, pInfo)
@@ -8912,17 +8919,17 @@ extern "system" fn dummy_vkGetDeviceImageSparseMemoryRequirements(_: VkDevice, _
 	panic!("Vulkan function pointer of `vkGetDeviceImageSparseMemoryRequirements()` is NULL");
 }
 pub trait VK_VERSION_1_3: Debug {
-	fn vkGetPhysicalDeviceToolProperties(&self, physicalDevice: VkPhysicalDevice, pToolCount: *mut uint32_t, pToolProperties: *mut VkPhysicalDeviceToolProperties) -> VkResult;
-	fn vkCreatePrivateDataSlot(&self, device: VkDevice, pCreateInfo: *const VkPrivateDataSlotCreateInfo, pAllocator: *const VkAllocationCallbacks, pPrivateDataSlot: *mut VkPrivateDataSlot) -> VkResult;
+	fn vkGetPhysicalDeviceToolProperties(&self, physicalDevice: VkPhysicalDevice, pToolCount: *mut uint32_t, pToolProperties: *mut VkPhysicalDeviceToolProperties) -> Result<(), VkResult>;
+	fn vkCreatePrivateDataSlot(&self, device: VkDevice, pCreateInfo: *const VkPrivateDataSlotCreateInfo, pAllocator: *const VkAllocationCallbacks, pPrivateDataSlot: *mut VkPrivateDataSlot) -> Result<(), VkResult>;
 	fn vkDestroyPrivateDataSlot(&self, device: VkDevice, privateDataSlot: VkPrivateDataSlot, pAllocator: *const VkAllocationCallbacks);
-	fn vkSetPrivateData(&self, device: VkDevice, objectType: VkObjectType, objectHandle: u64, privateDataSlot: VkPrivateDataSlot, data: u64) -> VkResult;
+	fn vkSetPrivateData(&self, device: VkDevice, objectType: VkObjectType, objectHandle: u64, privateDataSlot: VkPrivateDataSlot, data: u64) -> Result<(), VkResult>;
 	fn vkGetPrivateData(&self, device: VkDevice, objectType: VkObjectType, objectHandle: u64, privateDataSlot: VkPrivateDataSlot, pData: *mut uint64_t);
 	fn vkCmdSetEvent2(&self, commandBuffer: VkCommandBuffer, event: VkEvent, pDependencyInfo: *const VkDependencyInfo);
 	fn vkCmdResetEvent2(&self, commandBuffer: VkCommandBuffer, event: VkEvent, stageMask: VkPipelineStageFlags2);
 	fn vkCmdWaitEvents2(&self, commandBuffer: VkCommandBuffer, eventCount: u32, pEvents: *const VkEvent, pDependencyInfos: *const VkDependencyInfo);
 	fn vkCmdPipelineBarrier2(&self, commandBuffer: VkCommandBuffer, pDependencyInfo: *const VkDependencyInfo);
 	fn vkCmdWriteTimestamp2(&self, commandBuffer: VkCommandBuffer, stage: VkPipelineStageFlags2, queryPool: VkQueryPool, query: u32);
-	fn vkQueueSubmit2(&self, queue: VkQueue, submitCount: u32, pSubmits: *const VkSubmitInfo2, fence: VkFence) -> VkResult;
+	fn vkQueueSubmit2(&self, queue: VkQueue, submitCount: u32, pSubmits: *const VkSubmitInfo2, fence: VkFence) -> Result<(), VkResult>;
 	fn vkCmdCopyBuffer2(&self, commandBuffer: VkCommandBuffer, pCopyBufferInfo: *const VkCopyBufferInfo2);
 	fn vkCmdCopyImage2(&self, commandBuffer: VkCommandBuffer, pCopyImageInfo: *const VkCopyImageInfo2);
 	fn vkCmdCopyBufferToImage2(&self, commandBuffer: VkCommandBuffer, pCopyBufferToImageInfo: *const VkCopyBufferToImageInfo2);
@@ -8991,17 +8998,17 @@ pub struct Vulkan_VERSION_1_3 {
 	vk_get_device_image_sparse_memory_requirements: PFN_vkGetDeviceImageSparseMemoryRequirements,
 }
 impl VK_VERSION_1_3 for Vulkan_VERSION_1_3 {
-	fn vkGetPhysicalDeviceToolProperties(&self, physicalDevice: VkPhysicalDevice, pToolCount: *mut uint32_t, pToolProperties: *mut VkPhysicalDeviceToolProperties) -> VkResult {
-		(self.vk_get_physical_device_tool_properties)(physicalDevice, pToolCount, pToolProperties)
+	fn vkGetPhysicalDeviceToolProperties(&self, physicalDevice: VkPhysicalDevice, pToolCount: *mut uint32_t, pToolProperties: *mut VkPhysicalDeviceToolProperties) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_get_physical_device_tool_properties)(physicalDevice, pToolCount, pToolProperties))
 	}
-	fn vkCreatePrivateDataSlot(&self, device: VkDevice, pCreateInfo: *const VkPrivateDataSlotCreateInfo, pAllocator: *const VkAllocationCallbacks, pPrivateDataSlot: *mut VkPrivateDataSlot) -> VkResult {
-		(self.vk_create_private_data_slot)(device, pCreateInfo, pAllocator, pPrivateDataSlot)
+	fn vkCreatePrivateDataSlot(&self, device: VkDevice, pCreateInfo: *const VkPrivateDataSlotCreateInfo, pAllocator: *const VkAllocationCallbacks, pPrivateDataSlot: *mut VkPrivateDataSlot) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_create_private_data_slot)(device, pCreateInfo, pAllocator, pPrivateDataSlot))
 	}
 	fn vkDestroyPrivateDataSlot(&self, device: VkDevice, privateDataSlot: VkPrivateDataSlot, pAllocator: *const VkAllocationCallbacks) {
 		(self.vk_destroy_private_data_slot)(device, privateDataSlot, pAllocator)
 	}
-	fn vkSetPrivateData(&self, device: VkDevice, objectType: VkObjectType, objectHandle: u64, privateDataSlot: VkPrivateDataSlot, data: u64) -> VkResult {
-		(self.vk_set_private_data)(device, objectType, objectHandle, privateDataSlot, data)
+	fn vkSetPrivateData(&self, device: VkDevice, objectType: VkObjectType, objectHandle: u64, privateDataSlot: VkPrivateDataSlot, data: u64) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_set_private_data)(device, objectType, objectHandle, privateDataSlot, data))
 	}
 	fn vkGetPrivateData(&self, device: VkDevice, objectType: VkObjectType, objectHandle: u64, privateDataSlot: VkPrivateDataSlot, pData: *mut uint64_t) {
 		(self.vk_get_private_data)(device, objectType, objectHandle, privateDataSlot, pData)
@@ -9021,8 +9028,8 @@ impl VK_VERSION_1_3 for Vulkan_VERSION_1_3 {
 	fn vkCmdWriteTimestamp2(&self, commandBuffer: VkCommandBuffer, stage: VkPipelineStageFlags2, queryPool: VkQueryPool, query: u32) {
 		(self.vk_cmd_write_timestamp2)(commandBuffer, stage, queryPool, query)
 	}
-	fn vkQueueSubmit2(&self, queue: VkQueue, submitCount: u32, pSubmits: *const VkSubmitInfo2, fence: VkFence) -> VkResult {
-		(self.vk_queue_submit2)(queue, submitCount, pSubmits, fence)
+	fn vkQueueSubmit2(&self, queue: VkQueue, submitCount: u32, pSubmits: *const VkSubmitInfo2, fence: VkFence) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_queue_submit2)(queue, submitCount, pSubmits, fence))
 	}
 	fn vkCmdCopyBuffer2(&self, commandBuffer: VkCommandBuffer, pCopyBufferInfo: *const VkCopyBufferInfo2) {
 		(self.vk_cmd_copy_buffer2)(commandBuffer, pCopyBufferInfo)
@@ -9849,8 +9856,8 @@ extern "system" fn dummy_vkTransitionImageLayout(_: VkDevice, _: u32, _: *const 
 }
 pub trait VK_VERSION_1_4: Debug {
 	fn vkCmdSetLineStipple(&self, commandBuffer: VkCommandBuffer, lineStippleFactor: u32, lineStipplePattern: u16);
-	fn vkMapMemory2(&self, device: VkDevice, pMemoryMapInfo: *const VkMemoryMapInfo, ppData: *mut *mut c_void) -> VkResult;
-	fn vkUnmapMemory2(&self, device: VkDevice, pMemoryUnmapInfo: *const VkMemoryUnmapInfo) -> VkResult;
+	fn vkMapMemory2(&self, device: VkDevice, pMemoryMapInfo: *const VkMemoryMapInfo, ppData: *mut *mut c_void) -> Result<(), VkResult>;
+	fn vkUnmapMemory2(&self, device: VkDevice, pMemoryUnmapInfo: *const VkMemoryUnmapInfo) -> Result<(), VkResult>;
 	fn vkCmdBindIndexBuffer2(&self, commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize, size: VkDeviceSize, indexType: VkIndexType);
 	fn vkGetRenderingAreaGranularity(&self, device: VkDevice, pRenderingAreaInfo: *const VkRenderingAreaInfo, pGranularity: *mut VkExtent2D);
 	fn vkGetDeviceImageSubresourceLayout(&self, device: VkDevice, pInfo: *const VkDeviceImageSubresourceInfo, pLayout: *mut VkSubresourceLayout2);
@@ -9863,10 +9870,10 @@ pub trait VK_VERSION_1_4: Debug {
 	fn vkCmdPushConstants2(&self, commandBuffer: VkCommandBuffer, pPushConstantsInfo: *const VkPushConstantsInfo);
 	fn vkCmdPushDescriptorSet2(&self, commandBuffer: VkCommandBuffer, pPushDescriptorSetInfo: *const VkPushDescriptorSetInfo);
 	fn vkCmdPushDescriptorSetWithTemplate2(&self, commandBuffer: VkCommandBuffer, pPushDescriptorSetWithTemplateInfo: *const VkPushDescriptorSetWithTemplateInfo);
-	fn vkCopyMemoryToImage(&self, device: VkDevice, pCopyMemoryToImageInfo: *const VkCopyMemoryToImageInfo) -> VkResult;
-	fn vkCopyImageToMemory(&self, device: VkDevice, pCopyImageToMemoryInfo: *const VkCopyImageToMemoryInfo) -> VkResult;
-	fn vkCopyImageToImage(&self, device: VkDevice, pCopyImageToImageInfo: *const VkCopyImageToImageInfo) -> VkResult;
-	fn vkTransitionImageLayout(&self, device: VkDevice, transitionCount: u32, pTransitions: *const VkHostImageLayoutTransitionInfo) -> VkResult;
+	fn vkCopyMemoryToImage(&self, device: VkDevice, pCopyMemoryToImageInfo: *const VkCopyMemoryToImageInfo) -> Result<(), VkResult>;
+	fn vkCopyImageToMemory(&self, device: VkDevice, pCopyImageToMemoryInfo: *const VkCopyImageToMemoryInfo) -> Result<(), VkResult>;
+	fn vkCopyImageToImage(&self, device: VkDevice, pCopyImageToImageInfo: *const VkCopyImageToImageInfo) -> Result<(), VkResult>;
+	fn vkTransitionImageLayout(&self, device: VkDevice, transitionCount: u32, pTransitions: *const VkHostImageLayoutTransitionInfo) -> Result<(), VkResult>;
 }
 #[derive(Debug, Clone, Copy)]
 pub struct Vulkan_VERSION_1_4 {
@@ -9894,11 +9901,11 @@ impl VK_VERSION_1_4 for Vulkan_VERSION_1_4 {
 	fn vkCmdSetLineStipple(&self, commandBuffer: VkCommandBuffer, lineStippleFactor: u32, lineStipplePattern: u16) {
 		(self.vk_cmd_set_line_stipple)(commandBuffer, lineStippleFactor, lineStipplePattern)
 	}
-	fn vkMapMemory2(&self, device: VkDevice, pMemoryMapInfo: *const VkMemoryMapInfo, ppData: *mut *mut c_void) -> VkResult {
-		(self.vk_map_memory2)(device, pMemoryMapInfo, ppData)
+	fn vkMapMemory2(&self, device: VkDevice, pMemoryMapInfo: *const VkMemoryMapInfo, ppData: *mut *mut c_void) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_map_memory2)(device, pMemoryMapInfo, ppData))
 	}
-	fn vkUnmapMemory2(&self, device: VkDevice, pMemoryUnmapInfo: *const VkMemoryUnmapInfo) -> VkResult {
-		(self.vk_unmap_memory2)(device, pMemoryUnmapInfo)
+	fn vkUnmapMemory2(&self, device: VkDevice, pMemoryUnmapInfo: *const VkMemoryUnmapInfo) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_unmap_memory2)(device, pMemoryUnmapInfo))
 	}
 	fn vkCmdBindIndexBuffer2(&self, commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize, size: VkDeviceSize, indexType: VkIndexType) {
 		(self.vk_cmd_bind_index_buffer2)(commandBuffer, buffer, offset, size, indexType)
@@ -9936,17 +9943,17 @@ impl VK_VERSION_1_4 for Vulkan_VERSION_1_4 {
 	fn vkCmdPushDescriptorSetWithTemplate2(&self, commandBuffer: VkCommandBuffer, pPushDescriptorSetWithTemplateInfo: *const VkPushDescriptorSetWithTemplateInfo) {
 		(self.vk_cmd_push_descriptor_set_with_template2)(commandBuffer, pPushDescriptorSetWithTemplateInfo)
 	}
-	fn vkCopyMemoryToImage(&self, device: VkDevice, pCopyMemoryToImageInfo: *const VkCopyMemoryToImageInfo) -> VkResult {
-		(self.vk_copy_memory_to_image)(device, pCopyMemoryToImageInfo)
+	fn vkCopyMemoryToImage(&self, device: VkDevice, pCopyMemoryToImageInfo: *const VkCopyMemoryToImageInfo) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_copy_memory_to_image)(device, pCopyMemoryToImageInfo))
 	}
-	fn vkCopyImageToMemory(&self, device: VkDevice, pCopyImageToMemoryInfo: *const VkCopyImageToMemoryInfo) -> VkResult {
-		(self.vk_copy_image_to_memory)(device, pCopyImageToMemoryInfo)
+	fn vkCopyImageToMemory(&self, device: VkDevice, pCopyImageToMemoryInfo: *const VkCopyImageToMemoryInfo) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_copy_image_to_memory)(device, pCopyImageToMemoryInfo))
 	}
-	fn vkCopyImageToImage(&self, device: VkDevice, pCopyImageToImageInfo: *const VkCopyImageToImageInfo) -> VkResult {
-		(self.vk_copy_image_to_image)(device, pCopyImageToImageInfo)
+	fn vkCopyImageToImage(&self, device: VkDevice, pCopyImageToImageInfo: *const VkCopyImageToImageInfo) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_copy_image_to_image)(device, pCopyImageToImageInfo))
 	}
-	fn vkTransitionImageLayout(&self, device: VkDevice, transitionCount: u32, pTransitions: *const VkHostImageLayoutTransitionInfo) -> VkResult {
-		(self.vk_transition_image_layout)(device, transitionCount, pTransitions)
+	fn vkTransitionImageLayout(&self, device: VkDevice, transitionCount: u32, pTransitions: *const VkHostImageLayoutTransitionInfo) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_transition_image_layout)(device, transitionCount, pTransitions))
 	}
 }
 impl Default for Vulkan_VERSION_1_4 {
@@ -10248,15 +10255,15 @@ extern "system" fn dummy_vkCreateSwapchainKHR(_: VkDevice, _: *const VkSwapchain
 	panic!("Vulkan function pointer of `vkCreateSwapchainKHR()` is NULL");
 }
 pub trait VK_KHR_swapchain: Debug {
-	fn vkCreateSwapchainKHR(&self, device: VkDevice, pCreateInfo: *const VkSwapchainCreateInfoKHR, pAllocator: *const VkAllocationCallbacks, pSwapchain: *mut VkSwapchainKHR) -> VkResult;
+	fn vkCreateSwapchainKHR(&self, device: VkDevice, pCreateInfo: *const VkSwapchainCreateInfoKHR, pAllocator: *const VkAllocationCallbacks, pSwapchain: *mut VkSwapchainKHR) -> Result<(), VkResult>;
 }
 #[derive(Debug, Clone, Copy)]
 pub struct Vulkan_KHR_swapchain {
 	vk_create_swapchain_khr: PFN_vkCreateSwapchainKHR,
 }
 impl VK_KHR_swapchain for Vulkan_KHR_swapchain {
-	fn vkCreateSwapchainKHR(&self, device: VkDevice, pCreateInfo: *const VkSwapchainCreateInfoKHR, pAllocator: *const VkAllocationCallbacks, pSwapchain: *mut VkSwapchainKHR) -> VkResult {
-		(self.vk_create_swapchain_khr)(device, pCreateInfo, pAllocator, pSwapchain)
+	fn vkCreateSwapchainKHR(&self, device: VkDevice, pCreateInfo: *const VkSwapchainCreateInfoKHR, pAllocator: *const VkAllocationCallbacks, pSwapchain: *mut VkSwapchainKHR) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_create_swapchain_khr)(device, pCreateInfo, pAllocator, pSwapchain))
 	}
 }
 impl Default for Vulkan_KHR_swapchain {
@@ -10368,15 +10375,15 @@ extern "system" fn dummy_vkGetPhysicalDeviceDisplayPropertiesKHR(_: VkPhysicalDe
 	panic!("Vulkan function pointer of `vkGetPhysicalDeviceDisplayPropertiesKHR()` is NULL");
 }
 pub trait VK_KHR_display: Debug {
-	fn vkGetPhysicalDeviceDisplayPropertiesKHR(&self, physicalDevice: VkPhysicalDevice, pPropertyCount: *mut uint32_t, pProperties: *mut VkDisplayPropertiesKHR) -> VkResult;
+	fn vkGetPhysicalDeviceDisplayPropertiesKHR(&self, physicalDevice: VkPhysicalDevice, pPropertyCount: *mut uint32_t, pProperties: *mut VkDisplayPropertiesKHR) -> Result<(), VkResult>;
 }
 #[derive(Debug, Clone, Copy)]
 pub struct Vulkan_KHR_display {
 	vk_get_physical_device_display_properties_khr: PFN_vkGetPhysicalDeviceDisplayPropertiesKHR,
 }
 impl VK_KHR_display for Vulkan_KHR_display {
-	fn vkGetPhysicalDeviceDisplayPropertiesKHR(&self, physicalDevice: VkPhysicalDevice, pPropertyCount: *mut uint32_t, pProperties: *mut VkDisplayPropertiesKHR) -> VkResult {
-		(self.vk_get_physical_device_display_properties_khr)(physicalDevice, pPropertyCount, pProperties)
+	fn vkGetPhysicalDeviceDisplayPropertiesKHR(&self, physicalDevice: VkPhysicalDevice, pPropertyCount: *mut uint32_t, pProperties: *mut VkDisplayPropertiesKHR) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_get_physical_device_display_properties_khr)(physicalDevice, pPropertyCount, pProperties))
 	}
 }
 impl Default for Vulkan_KHR_display {
@@ -10407,15 +10414,15 @@ extern "system" fn dummy_vkCreateSharedSwapchainsKHR(_: VkDevice, _: u32, _: *co
 	panic!("Vulkan function pointer of `vkCreateSharedSwapchainsKHR()` is NULL");
 }
 pub trait VK_KHR_display_swapchain: Debug {
-	fn vkCreateSharedSwapchainsKHR(&self, device: VkDevice, swapchainCount: u32, pCreateInfos: *const VkSwapchainCreateInfoKHR, pAllocator: *const VkAllocationCallbacks, pSwapchains: *mut VkSwapchainKHR) -> VkResult;
+	fn vkCreateSharedSwapchainsKHR(&self, device: VkDevice, swapchainCount: u32, pCreateInfos: *const VkSwapchainCreateInfoKHR, pAllocator: *const VkAllocationCallbacks, pSwapchains: *mut VkSwapchainKHR) -> Result<(), VkResult>;
 }
 #[derive(Debug, Clone, Copy)]
 pub struct Vulkan_KHR_display_swapchain {
 	vk_create_shared_swapchains_khr: PFN_vkCreateSharedSwapchainsKHR,
 }
 impl VK_KHR_display_swapchain for Vulkan_KHR_display_swapchain {
-	fn vkCreateSharedSwapchainsKHR(&self, device: VkDevice, swapchainCount: u32, pCreateInfos: *const VkSwapchainCreateInfoKHR, pAllocator: *const VkAllocationCallbacks, pSwapchains: *mut VkSwapchainKHR) -> VkResult {
-		(self.vk_create_shared_swapchains_khr)(device, swapchainCount, pCreateInfos, pAllocator, pSwapchains)
+	fn vkCreateSharedSwapchainsKHR(&self, device: VkDevice, swapchainCount: u32, pCreateInfos: *const VkSwapchainCreateInfoKHR, pAllocator: *const VkAllocationCallbacks, pSwapchains: *mut VkSwapchainKHR) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_create_shared_swapchains_khr)(device, swapchainCount, pCreateInfos, pAllocator, pSwapchains))
 	}
 }
 impl Default for Vulkan_KHR_display_swapchain {
@@ -10710,15 +10717,15 @@ extern "system" fn dummy_vkGetPhysicalDeviceVideoCapabilitiesKHR(_: VkPhysicalDe
 	panic!("Vulkan function pointer of `vkGetPhysicalDeviceVideoCapabilitiesKHR()` is NULL");
 }
 pub trait VK_KHR_video_queue: Debug {
-	fn vkGetPhysicalDeviceVideoCapabilitiesKHR(&self, physicalDevice: VkPhysicalDevice, pVideoProfile: *const VkVideoProfileInfoKHR, pCapabilities: *mut VkVideoCapabilitiesKHR) -> VkResult;
+	fn vkGetPhysicalDeviceVideoCapabilitiesKHR(&self, physicalDevice: VkPhysicalDevice, pVideoProfile: *const VkVideoProfileInfoKHR, pCapabilities: *mut VkVideoCapabilitiesKHR) -> Result<(), VkResult>;
 }
 #[derive(Debug, Clone, Copy)]
 pub struct Vulkan_KHR_video_queue {
 	vk_get_physical_device_video_capabilities_khr: PFN_vkGetPhysicalDeviceVideoCapabilitiesKHR,
 }
 impl VK_KHR_video_queue for Vulkan_KHR_video_queue {
-	fn vkGetPhysicalDeviceVideoCapabilitiesKHR(&self, physicalDevice: VkPhysicalDevice, pVideoProfile: *const VkVideoProfileInfoKHR, pCapabilities: *mut VkVideoCapabilitiesKHR) -> VkResult {
-		(self.vk_get_physical_device_video_capabilities_khr)(physicalDevice, pVideoProfile, pCapabilities)
+	fn vkGetPhysicalDeviceVideoCapabilitiesKHR(&self, physicalDevice: VkPhysicalDevice, pVideoProfile: *const VkVideoProfileInfoKHR, pCapabilities: *mut VkVideoCapabilitiesKHR) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_get_physical_device_video_capabilities_khr)(physicalDevice, pVideoProfile, pCapabilities))
 	}
 }
 impl Default for Vulkan_KHR_video_queue {
@@ -13913,15 +13920,15 @@ extern "system" fn dummy_vkEnumeratePhysicalDeviceGroupsKHR(_: VkInstance, _: *m
 	panic!("Vulkan function pointer of `vkEnumeratePhysicalDeviceGroupsKHR()` is NULL");
 }
 pub trait VK_KHR_device_group_creation: Debug {
-	fn vkEnumeratePhysicalDeviceGroupsKHR(&self, instance: VkInstance, pPhysicalDeviceGroupCount: *mut uint32_t, pPhysicalDeviceGroupProperties: *mut VkPhysicalDeviceGroupProperties) -> VkResult;
+	fn vkEnumeratePhysicalDeviceGroupsKHR(&self, instance: VkInstance, pPhysicalDeviceGroupCount: *mut uint32_t, pPhysicalDeviceGroupProperties: *mut VkPhysicalDeviceGroupProperties) -> Result<(), VkResult>;
 }
 #[derive(Debug, Clone, Copy)]
 pub struct Vulkan_KHR_device_group_creation {
 	vk_enumerate_physical_device_groups_khr: PFN_vkEnumeratePhysicalDeviceGroupsKHR,
 }
 impl VK_KHR_device_group_creation for Vulkan_KHR_device_group_creation {
-	fn vkEnumeratePhysicalDeviceGroupsKHR(&self, instance: VkInstance, pPhysicalDeviceGroupCount: *mut uint32_t, pPhysicalDeviceGroupProperties: *mut VkPhysicalDeviceGroupProperties) -> VkResult {
-		(self.vk_enumerate_physical_device_groups_khr)(instance, pPhysicalDeviceGroupCount, pPhysicalDeviceGroupProperties)
+	fn vkEnumeratePhysicalDeviceGroupsKHR(&self, instance: VkInstance, pPhysicalDeviceGroupCount: *mut uint32_t, pPhysicalDeviceGroupProperties: *mut VkPhysicalDeviceGroupProperties) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_enumerate_physical_device_groups_khr)(instance, pPhysicalDeviceGroupCount, pPhysicalDeviceGroupProperties))
 	}
 }
 impl Default for Vulkan_KHR_device_group_creation {
@@ -14026,15 +14033,15 @@ extern "system" fn dummy_vkGetMemoryFdKHR(_: VkDevice, _: *const VkMemoryGetFdIn
 	panic!("Vulkan function pointer of `vkGetMemoryFdKHR()` is NULL");
 }
 pub trait VK_KHR_external_memory_fd: Debug {
-	fn vkGetMemoryFdKHR(&self, device: VkDevice, pGetFdInfo: *const VkMemoryGetFdInfoKHR, pFd: *mut int) -> VkResult;
+	fn vkGetMemoryFdKHR(&self, device: VkDevice, pGetFdInfo: *const VkMemoryGetFdInfoKHR, pFd: *mut int) -> Result<(), VkResult>;
 }
 #[derive(Debug, Clone, Copy)]
 pub struct Vulkan_KHR_external_memory_fd {
 	vk_get_memory_fd_khr: PFN_vkGetMemoryFdKHR,
 }
 impl VK_KHR_external_memory_fd for Vulkan_KHR_external_memory_fd {
-	fn vkGetMemoryFdKHR(&self, device: VkDevice, pGetFdInfo: *const VkMemoryGetFdInfoKHR, pFd: *mut int) -> VkResult {
-		(self.vk_get_memory_fd_khr)(device, pGetFdInfo, pFd)
+	fn vkGetMemoryFdKHR(&self, device: VkDevice, pGetFdInfo: *const VkMemoryGetFdInfoKHR, pFd: *mut int) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_get_memory_fd_khr)(device, pGetFdInfo, pFd))
 	}
 }
 impl Default for Vulkan_KHR_external_memory_fd {
@@ -14128,15 +14135,15 @@ extern "system" fn dummy_vkImportSemaphoreFdKHR(_: VkDevice, _: *const VkImportS
 	panic!("Vulkan function pointer of `vkImportSemaphoreFdKHR()` is NULL");
 }
 pub trait VK_KHR_external_semaphore_fd: Debug {
-	fn vkImportSemaphoreFdKHR(&self, device: VkDevice, pImportSemaphoreFdInfo: *const VkImportSemaphoreFdInfoKHR) -> VkResult;
+	fn vkImportSemaphoreFdKHR(&self, device: VkDevice, pImportSemaphoreFdInfo: *const VkImportSemaphoreFdInfoKHR) -> Result<(), VkResult>;
 }
 #[derive(Debug, Clone, Copy)]
 pub struct Vulkan_KHR_external_semaphore_fd {
 	vk_import_semaphore_fd_khr: PFN_vkImportSemaphoreFdKHR,
 }
 impl VK_KHR_external_semaphore_fd for Vulkan_KHR_external_semaphore_fd {
-	fn vkImportSemaphoreFdKHR(&self, device: VkDevice, pImportSemaphoreFdInfo: *const VkImportSemaphoreFdInfoKHR) -> VkResult {
-		(self.vk_import_semaphore_fd_khr)(device, pImportSemaphoreFdInfo)
+	fn vkImportSemaphoreFdKHR(&self, device: VkDevice, pImportSemaphoreFdInfo: *const VkImportSemaphoreFdInfoKHR) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_import_semaphore_fd_khr)(device, pImportSemaphoreFdInfo))
 	}
 }
 impl Default for Vulkan_KHR_external_semaphore_fd {
@@ -14263,15 +14270,15 @@ extern "system" fn dummy_vkCreateDescriptorUpdateTemplateKHR(_: VkDevice, _: *co
 	panic!("Vulkan function pointer of `vkCreateDescriptorUpdateTemplateKHR()` is NULL");
 }
 pub trait VK_KHR_descriptor_update_template: Debug {
-	fn vkCreateDescriptorUpdateTemplateKHR(&self, device: VkDevice, pCreateInfo: *const VkDescriptorUpdateTemplateCreateInfo, pAllocator: *const VkAllocationCallbacks, pDescriptorUpdateTemplate: *mut VkDescriptorUpdateTemplate) -> VkResult;
+	fn vkCreateDescriptorUpdateTemplateKHR(&self, device: VkDevice, pCreateInfo: *const VkDescriptorUpdateTemplateCreateInfo, pAllocator: *const VkAllocationCallbacks, pDescriptorUpdateTemplate: *mut VkDescriptorUpdateTemplate) -> Result<(), VkResult>;
 }
 #[derive(Debug, Clone, Copy)]
 pub struct Vulkan_KHR_descriptor_update_template {
 	vk_create_descriptor_update_template_khr: PFN_vkCreateDescriptorUpdateTemplateKHR,
 }
 impl VK_KHR_descriptor_update_template for Vulkan_KHR_descriptor_update_template {
-	fn vkCreateDescriptorUpdateTemplateKHR(&self, device: VkDevice, pCreateInfo: *const VkDescriptorUpdateTemplateCreateInfo, pAllocator: *const VkAllocationCallbacks, pDescriptorUpdateTemplate: *mut VkDescriptorUpdateTemplate) -> VkResult {
-		(self.vk_create_descriptor_update_template_khr)(device, pCreateInfo, pAllocator, pDescriptorUpdateTemplate)
+	fn vkCreateDescriptorUpdateTemplateKHR(&self, device: VkDevice, pCreateInfo: *const VkDescriptorUpdateTemplateCreateInfo, pAllocator: *const VkAllocationCallbacks, pDescriptorUpdateTemplate: *mut VkDescriptorUpdateTemplate) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_create_descriptor_update_template_khr)(device, pCreateInfo, pAllocator, pDescriptorUpdateTemplate))
 	}
 }
 impl Default for Vulkan_KHR_descriptor_update_template {
@@ -14321,15 +14328,15 @@ extern "system" fn dummy_vkCreateRenderPass2KHR(_: VkDevice, _: *const VkRenderP
 	panic!("Vulkan function pointer of `vkCreateRenderPass2KHR()` is NULL");
 }
 pub trait VK_KHR_create_renderpass2: Debug {
-	fn vkCreateRenderPass2KHR(&self, device: VkDevice, pCreateInfo: *const VkRenderPassCreateInfo2, pAllocator: *const VkAllocationCallbacks, pRenderPass: *mut VkRenderPass) -> VkResult;
+	fn vkCreateRenderPass2KHR(&self, device: VkDevice, pCreateInfo: *const VkRenderPassCreateInfo2, pAllocator: *const VkAllocationCallbacks, pRenderPass: *mut VkRenderPass) -> Result<(), VkResult>;
 }
 #[derive(Debug, Clone, Copy)]
 pub struct Vulkan_KHR_create_renderpass2 {
 	vk_create_render_pass2_khr: PFN_vkCreateRenderPass2KHR,
 }
 impl VK_KHR_create_renderpass2 for Vulkan_KHR_create_renderpass2 {
-	fn vkCreateRenderPass2KHR(&self, device: VkDevice, pCreateInfo: *const VkRenderPassCreateInfo2, pAllocator: *const VkAllocationCallbacks, pRenderPass: *mut VkRenderPass) -> VkResult {
-		(self.vk_create_render_pass2_khr)(device, pCreateInfo, pAllocator, pRenderPass)
+	fn vkCreateRenderPass2KHR(&self, device: VkDevice, pCreateInfo: *const VkRenderPassCreateInfo2, pAllocator: *const VkAllocationCallbacks, pRenderPass: *mut VkRenderPass) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_create_render_pass2_khr)(device, pCreateInfo, pAllocator, pRenderPass))
 	}
 }
 impl Default for Vulkan_KHR_create_renderpass2 {
@@ -14358,15 +14365,15 @@ extern "system" fn dummy_vkGetSwapchainStatusKHR(_: VkDevice, _: VkSwapchainKHR)
 	panic!("Vulkan function pointer of `vkGetSwapchainStatusKHR()` is NULL");
 }
 pub trait VK_KHR_shared_presentable_image: Debug {
-	fn vkGetSwapchainStatusKHR(&self, device: VkDevice, swapchain: VkSwapchainKHR) -> VkResult;
+	fn vkGetSwapchainStatusKHR(&self, device: VkDevice, swapchain: VkSwapchainKHR) -> Result<(), VkResult>;
 }
 #[derive(Debug, Clone, Copy)]
 pub struct Vulkan_KHR_shared_presentable_image {
 	vk_get_swapchain_status_khr: PFN_vkGetSwapchainStatusKHR,
 }
 impl VK_KHR_shared_presentable_image for Vulkan_KHR_shared_presentable_image {
-	fn vkGetSwapchainStatusKHR(&self, device: VkDevice, swapchain: VkSwapchainKHR) -> VkResult {
-		(self.vk_get_swapchain_status_khr)(device, swapchain)
+	fn vkGetSwapchainStatusKHR(&self, device: VkDevice, swapchain: VkSwapchainKHR) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_get_swapchain_status_khr)(device, swapchain))
 	}
 }
 impl Default for Vulkan_KHR_shared_presentable_image {
@@ -14460,15 +14467,15 @@ extern "system" fn dummy_vkImportFenceFdKHR(_: VkDevice, _: *const VkImportFence
 	panic!("Vulkan function pointer of `vkImportFenceFdKHR()` is NULL");
 }
 pub trait VK_KHR_external_fence_fd: Debug {
-	fn vkImportFenceFdKHR(&self, device: VkDevice, pImportFenceFdInfo: *const VkImportFenceFdInfoKHR) -> VkResult;
+	fn vkImportFenceFdKHR(&self, device: VkDevice, pImportFenceFdInfo: *const VkImportFenceFdInfoKHR) -> Result<(), VkResult>;
 }
 #[derive(Debug, Clone, Copy)]
 pub struct Vulkan_KHR_external_fence_fd {
 	vk_import_fence_fd_khr: PFN_vkImportFenceFdKHR,
 }
 impl VK_KHR_external_fence_fd for Vulkan_KHR_external_fence_fd {
-	fn vkImportFenceFdKHR(&self, device: VkDevice, pImportFenceFdInfo: *const VkImportFenceFdInfoKHR) -> VkResult {
-		(self.vk_import_fence_fd_khr)(device, pImportFenceFdInfo)
+	fn vkImportFenceFdKHR(&self, device: VkDevice, pImportFenceFdInfo: *const VkImportFenceFdInfoKHR) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_import_fence_fd_khr)(device, pImportFenceFdInfo))
 	}
 }
 impl Default for Vulkan_KHR_external_fence_fd {
@@ -14632,15 +14639,15 @@ extern "system" fn dummy_vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCou
 	panic!("Vulkan function pointer of `vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR()` is NULL");
 }
 pub trait VK_KHR_performance_query: Debug {
-	fn vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR(&self, physicalDevice: VkPhysicalDevice, queueFamilyIndex: u32, pCounterCount: *mut uint32_t, pCounters: *mut VkPerformanceCounterKHR, pCounterDescriptions: *mut VkPerformanceCounterDescriptionKHR) -> VkResult;
+	fn vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR(&self, physicalDevice: VkPhysicalDevice, queueFamilyIndex: u32, pCounterCount: *mut uint32_t, pCounters: *mut VkPerformanceCounterKHR, pCounterDescriptions: *mut VkPerformanceCounterDescriptionKHR) -> Result<(), VkResult>;
 }
 #[derive(Debug, Clone, Copy)]
 pub struct Vulkan_KHR_performance_query {
 	vk_enumerate_physical_device_queue_family_performance_query_counters_khr: PFN_vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR,
 }
 impl VK_KHR_performance_query for Vulkan_KHR_performance_query {
-	fn vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR(&self, physicalDevice: VkPhysicalDevice, queueFamilyIndex: u32, pCounterCount: *mut uint32_t, pCounters: *mut VkPerformanceCounterKHR, pCounterDescriptions: *mut VkPerformanceCounterDescriptionKHR) -> VkResult {
-		(self.vk_enumerate_physical_device_queue_family_performance_query_counters_khr)(physicalDevice, queueFamilyIndex, pCounterCount, pCounters, pCounterDescriptions)
+	fn vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR(&self, physicalDevice: VkPhysicalDevice, queueFamilyIndex: u32, pCounterCount: *mut uint32_t, pCounters: *mut VkPerformanceCounterKHR, pCounterDescriptions: *mut VkPerformanceCounterDescriptionKHR) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_enumerate_physical_device_queue_family_performance_query_counters_khr)(physicalDevice, queueFamilyIndex, pCounterCount, pCounters, pCounterDescriptions))
 	}
 }
 impl Default for Vulkan_KHR_performance_query {
@@ -14705,15 +14712,15 @@ extern "system" fn dummy_vkGetPhysicalDeviceSurfaceCapabilities2KHR(_: VkPhysica
 	panic!("Vulkan function pointer of `vkGetPhysicalDeviceSurfaceCapabilities2KHR()` is NULL");
 }
 pub trait VK_KHR_get_surface_capabilities2: Debug {
-	fn vkGetPhysicalDeviceSurfaceCapabilities2KHR(&self, physicalDevice: VkPhysicalDevice, pSurfaceInfo: *const VkPhysicalDeviceSurfaceInfo2KHR, pSurfaceCapabilities: *mut VkSurfaceCapabilities2KHR) -> VkResult;
+	fn vkGetPhysicalDeviceSurfaceCapabilities2KHR(&self, physicalDevice: VkPhysicalDevice, pSurfaceInfo: *const VkPhysicalDeviceSurfaceInfo2KHR, pSurfaceCapabilities: *mut VkSurfaceCapabilities2KHR) -> Result<(), VkResult>;
 }
 #[derive(Debug, Clone, Copy)]
 pub struct Vulkan_KHR_get_surface_capabilities2 {
 	vk_get_physical_device_surface_capabilities2_khr: PFN_vkGetPhysicalDeviceSurfaceCapabilities2KHR,
 }
 impl VK_KHR_get_surface_capabilities2 for Vulkan_KHR_get_surface_capabilities2 {
-	fn vkGetPhysicalDeviceSurfaceCapabilities2KHR(&self, physicalDevice: VkPhysicalDevice, pSurfaceInfo: *const VkPhysicalDeviceSurfaceInfo2KHR, pSurfaceCapabilities: *mut VkSurfaceCapabilities2KHR) -> VkResult {
-		(self.vk_get_physical_device_surface_capabilities2_khr)(physicalDevice, pSurfaceInfo, pSurfaceCapabilities)
+	fn vkGetPhysicalDeviceSurfaceCapabilities2KHR(&self, physicalDevice: VkPhysicalDevice, pSurfaceInfo: *const VkPhysicalDeviceSurfaceInfo2KHR, pSurfaceCapabilities: *mut VkSurfaceCapabilities2KHR) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_get_physical_device_surface_capabilities2_khr)(physicalDevice, pSurfaceInfo, pSurfaceCapabilities))
 	}
 }
 impl Default for Vulkan_KHR_get_surface_capabilities2 {
@@ -14790,15 +14797,15 @@ extern "system" fn dummy_vkGetPhysicalDeviceDisplayProperties2KHR(_: VkPhysicalD
 	panic!("Vulkan function pointer of `vkGetPhysicalDeviceDisplayProperties2KHR()` is NULL");
 }
 pub trait VK_KHR_get_display_properties2: Debug {
-	fn vkGetPhysicalDeviceDisplayProperties2KHR(&self, physicalDevice: VkPhysicalDevice, pPropertyCount: *mut uint32_t, pProperties: *mut VkDisplayProperties2KHR) -> VkResult;
+	fn vkGetPhysicalDeviceDisplayProperties2KHR(&self, physicalDevice: VkPhysicalDevice, pPropertyCount: *mut uint32_t, pProperties: *mut VkDisplayProperties2KHR) -> Result<(), VkResult>;
 }
 #[derive(Debug, Clone, Copy)]
 pub struct Vulkan_KHR_get_display_properties2 {
 	vk_get_physical_device_display_properties2_khr: PFN_vkGetPhysicalDeviceDisplayProperties2KHR,
 }
 impl VK_KHR_get_display_properties2 for Vulkan_KHR_get_display_properties2 {
-	fn vkGetPhysicalDeviceDisplayProperties2KHR(&self, physicalDevice: VkPhysicalDevice, pPropertyCount: *mut uint32_t, pProperties: *mut VkDisplayProperties2KHR) -> VkResult {
-		(self.vk_get_physical_device_display_properties2_khr)(physicalDevice, pPropertyCount, pProperties)
+	fn vkGetPhysicalDeviceDisplayProperties2KHR(&self, physicalDevice: VkPhysicalDevice, pPropertyCount: *mut uint32_t, pProperties: *mut VkDisplayProperties2KHR) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_get_physical_device_display_properties2_khr)(physicalDevice, pPropertyCount, pProperties))
 	}
 }
 impl Default for Vulkan_KHR_get_display_properties2 {
@@ -14950,15 +14957,15 @@ extern "system" fn dummy_vkCreateSamplerYcbcrConversionKHR(_: VkDevice, _: *cons
 	panic!("Vulkan function pointer of `vkCreateSamplerYcbcrConversionKHR()` is NULL");
 }
 pub trait VK_KHR_sampler_ycbcr_conversion: Debug {
-	fn vkCreateSamplerYcbcrConversionKHR(&self, device: VkDevice, pCreateInfo: *const VkSamplerYcbcrConversionCreateInfo, pAllocator: *const VkAllocationCallbacks, pYcbcrConversion: *mut VkSamplerYcbcrConversion) -> VkResult;
+	fn vkCreateSamplerYcbcrConversionKHR(&self, device: VkDevice, pCreateInfo: *const VkSamplerYcbcrConversionCreateInfo, pAllocator: *const VkAllocationCallbacks, pYcbcrConversion: *mut VkSamplerYcbcrConversion) -> Result<(), VkResult>;
 }
 #[derive(Debug, Clone, Copy)]
 pub struct Vulkan_KHR_sampler_ycbcr_conversion {
 	vk_create_sampler_ycbcr_conversion_khr: PFN_vkCreateSamplerYcbcrConversionKHR,
 }
 impl VK_KHR_sampler_ycbcr_conversion for Vulkan_KHR_sampler_ycbcr_conversion {
-	fn vkCreateSamplerYcbcrConversionKHR(&self, device: VkDevice, pCreateInfo: *const VkSamplerYcbcrConversionCreateInfo, pAllocator: *const VkAllocationCallbacks, pYcbcrConversion: *mut VkSamplerYcbcrConversion) -> VkResult {
-		(self.vk_create_sampler_ycbcr_conversion_khr)(device, pCreateInfo, pAllocator, pYcbcrConversion)
+	fn vkCreateSamplerYcbcrConversionKHR(&self, device: VkDevice, pCreateInfo: *const VkSamplerYcbcrConversionCreateInfo, pAllocator: *const VkAllocationCallbacks, pYcbcrConversion: *mut VkSamplerYcbcrConversion) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_create_sampler_ycbcr_conversion_khr)(device, pCreateInfo, pAllocator, pYcbcrConversion))
 	}
 }
 impl Default for Vulkan_KHR_sampler_ycbcr_conversion {
@@ -14983,15 +14990,15 @@ extern "system" fn dummy_vkBindBufferMemory2KHR(_: VkDevice, _: u32, _: *const V
 	panic!("Vulkan function pointer of `vkBindBufferMemory2KHR()` is NULL");
 }
 pub trait VK_KHR_bind_memory2: Debug {
-	fn vkBindBufferMemory2KHR(&self, device: VkDevice, bindInfoCount: u32, pBindInfos: *const VkBindBufferMemoryInfo) -> VkResult;
+	fn vkBindBufferMemory2KHR(&self, device: VkDevice, bindInfoCount: u32, pBindInfos: *const VkBindBufferMemoryInfo) -> Result<(), VkResult>;
 }
 #[derive(Debug, Clone, Copy)]
 pub struct Vulkan_KHR_bind_memory2 {
 	vk_bind_buffer_memory2_khr: PFN_vkBindBufferMemory2KHR,
 }
 impl VK_KHR_bind_memory2 for Vulkan_KHR_bind_memory2 {
-	fn vkBindBufferMemory2KHR(&self, device: VkDevice, bindInfoCount: u32, pBindInfos: *const VkBindBufferMemoryInfo) -> VkResult {
-		(self.vk_bind_buffer_memory2_khr)(device, bindInfoCount, pBindInfos)
+	fn vkBindBufferMemory2KHR(&self, device: VkDevice, bindInfoCount: u32, pBindInfos: *const VkBindBufferMemoryInfo) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_bind_buffer_memory2_khr)(device, bindInfoCount, pBindInfos))
 	}
 }
 impl Default for Vulkan_KHR_bind_memory2 {
@@ -15399,15 +15406,15 @@ extern "system" fn dummy_vkGetSemaphoreCounterValueKHR(_: VkDevice, _: VkSemapho
 	panic!("Vulkan function pointer of `vkGetSemaphoreCounterValueKHR()` is NULL");
 }
 pub trait VK_KHR_timeline_semaphore: Debug {
-	fn vkGetSemaphoreCounterValueKHR(&self, device: VkDevice, semaphore: VkSemaphore, pValue: *mut uint64_t) -> VkResult;
+	fn vkGetSemaphoreCounterValueKHR(&self, device: VkDevice, semaphore: VkSemaphore, pValue: *mut uint64_t) -> Result<(), VkResult>;
 }
 #[derive(Debug, Clone, Copy)]
 pub struct Vulkan_KHR_timeline_semaphore {
 	vk_get_semaphore_counter_value_khr: PFN_vkGetSemaphoreCounterValueKHR,
 }
 impl VK_KHR_timeline_semaphore for Vulkan_KHR_timeline_semaphore {
-	fn vkGetSemaphoreCounterValueKHR(&self, device: VkDevice, semaphore: VkSemaphore, pValue: *mut uint64_t) -> VkResult {
-		(self.vk_get_semaphore_counter_value_khr)(device, semaphore, pValue)
+	fn vkGetSemaphoreCounterValueKHR(&self, device: VkDevice, semaphore: VkSemaphore, pValue: *mut uint64_t) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_get_semaphore_counter_value_khr)(device, semaphore, pValue))
 	}
 }
 impl Default for Vulkan_KHR_timeline_semaphore {
@@ -15535,15 +15542,15 @@ extern "system" fn dummy_vkGetPhysicalDeviceFragmentShadingRatesKHR(_: VkPhysica
 	panic!("Vulkan function pointer of `vkGetPhysicalDeviceFragmentShadingRatesKHR()` is NULL");
 }
 pub trait VK_KHR_fragment_shading_rate: Debug {
-	fn vkGetPhysicalDeviceFragmentShadingRatesKHR(&self, physicalDevice: VkPhysicalDevice, pFragmentShadingRateCount: *mut uint32_t, pFragmentShadingRates: *mut VkPhysicalDeviceFragmentShadingRateKHR) -> VkResult;
+	fn vkGetPhysicalDeviceFragmentShadingRatesKHR(&self, physicalDevice: VkPhysicalDevice, pFragmentShadingRateCount: *mut uint32_t, pFragmentShadingRates: *mut VkPhysicalDeviceFragmentShadingRateKHR) -> Result<(), VkResult>;
 }
 #[derive(Debug, Clone, Copy)]
 pub struct Vulkan_KHR_fragment_shading_rate {
 	vk_get_physical_device_fragment_shading_rates_khr: PFN_vkGetPhysicalDeviceFragmentShadingRatesKHR,
 }
 impl VK_KHR_fragment_shading_rate for Vulkan_KHR_fragment_shading_rate {
-	fn vkGetPhysicalDeviceFragmentShadingRatesKHR(&self, physicalDevice: VkPhysicalDevice, pFragmentShadingRateCount: *mut uint32_t, pFragmentShadingRates: *mut VkPhysicalDeviceFragmentShadingRateKHR) -> VkResult {
-		(self.vk_get_physical_device_fragment_shading_rates_khr)(physicalDevice, pFragmentShadingRateCount, pFragmentShadingRates)
+	fn vkGetPhysicalDeviceFragmentShadingRatesKHR(&self, physicalDevice: VkPhysicalDevice, pFragmentShadingRateCount: *mut uint32_t, pFragmentShadingRates: *mut VkPhysicalDeviceFragmentShadingRateKHR) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_get_physical_device_fragment_shading_rates_khr)(physicalDevice, pFragmentShadingRateCount, pFragmentShadingRates))
 	}
 }
 impl Default for Vulkan_KHR_fragment_shading_rate {
@@ -15679,15 +15686,15 @@ extern "system" fn dummy_vkWaitForPresentKHR(_: VkDevice, _: VkSwapchainKHR, _: 
 	panic!("Vulkan function pointer of `vkWaitForPresentKHR()` is NULL");
 }
 pub trait VK_KHR_present_wait: Debug {
-	fn vkWaitForPresentKHR(&self, device: VkDevice, swapchain: VkSwapchainKHR, presentId: u64, timeout: u64) -> VkResult;
+	fn vkWaitForPresentKHR(&self, device: VkDevice, swapchain: VkSwapchainKHR, presentId: u64, timeout: u64) -> Result<(), VkResult>;
 }
 #[derive(Debug, Clone, Copy)]
 pub struct Vulkan_KHR_present_wait {
 	vk_wait_for_present_khr: PFN_vkWaitForPresentKHR,
 }
 impl VK_KHR_present_wait for Vulkan_KHR_present_wait {
-	fn vkWaitForPresentKHR(&self, device: VkDevice, swapchain: VkSwapchainKHR, presentId: u64, timeout: u64) -> VkResult {
-		(self.vk_wait_for_present_khr)(device, swapchain, presentId, timeout)
+	fn vkWaitForPresentKHR(&self, device: VkDevice, swapchain: VkSwapchainKHR, presentId: u64, timeout: u64) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_wait_for_present_khr)(device, swapchain, presentId, timeout))
 	}
 }
 impl Default for Vulkan_KHR_present_wait {
@@ -15769,15 +15776,15 @@ extern "system" fn dummy_vkCreateDeferredOperationKHR(_: VkDevice, _: *const VkA
 	panic!("Vulkan function pointer of `vkCreateDeferredOperationKHR()` is NULL");
 }
 pub trait VK_KHR_deferred_host_operations: Debug {
-	fn vkCreateDeferredOperationKHR(&self, device: VkDevice, pAllocator: *const VkAllocationCallbacks, pDeferredOperation: *mut VkDeferredOperationKHR) -> VkResult;
+	fn vkCreateDeferredOperationKHR(&self, device: VkDevice, pAllocator: *const VkAllocationCallbacks, pDeferredOperation: *mut VkDeferredOperationKHR) -> Result<(), VkResult>;
 }
 #[derive(Debug, Clone, Copy)]
 pub struct Vulkan_KHR_deferred_host_operations {
 	vk_create_deferred_operation_khr: PFN_vkCreateDeferredOperationKHR,
 }
 impl VK_KHR_deferred_host_operations for Vulkan_KHR_deferred_host_operations {
-	fn vkCreateDeferredOperationKHR(&self, device: VkDevice, pAllocator: *const VkAllocationCallbacks, pDeferredOperation: *mut VkDeferredOperationKHR) -> VkResult {
-		(self.vk_create_deferred_operation_khr)(device, pAllocator, pDeferredOperation)
+	fn vkCreateDeferredOperationKHR(&self, device: VkDevice, pAllocator: *const VkAllocationCallbacks, pDeferredOperation: *mut VkDeferredOperationKHR) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_create_deferred_operation_khr)(device, pAllocator, pDeferredOperation))
 	}
 }
 impl Default for Vulkan_KHR_deferred_host_operations {
@@ -15881,15 +15888,15 @@ extern "system" fn dummy_vkGetPipelineExecutablePropertiesKHR(_: VkDevice, _: *c
 	panic!("Vulkan function pointer of `vkGetPipelineExecutablePropertiesKHR()` is NULL");
 }
 pub trait VK_KHR_pipeline_executable_properties: Debug {
-	fn vkGetPipelineExecutablePropertiesKHR(&self, device: VkDevice, pPipelineInfo: *const VkPipelineInfoKHR, pExecutableCount: *mut uint32_t, pProperties: *mut VkPipelineExecutablePropertiesKHR) -> VkResult;
+	fn vkGetPipelineExecutablePropertiesKHR(&self, device: VkDevice, pPipelineInfo: *const VkPipelineInfoKHR, pExecutableCount: *mut uint32_t, pProperties: *mut VkPipelineExecutablePropertiesKHR) -> Result<(), VkResult>;
 }
 #[derive(Debug, Clone, Copy)]
 pub struct Vulkan_KHR_pipeline_executable_properties {
 	vk_get_pipeline_executable_properties_khr: PFN_vkGetPipelineExecutablePropertiesKHR,
 }
 impl VK_KHR_pipeline_executable_properties for Vulkan_KHR_pipeline_executable_properties {
-	fn vkGetPipelineExecutablePropertiesKHR(&self, device: VkDevice, pPipelineInfo: *const VkPipelineInfoKHR, pExecutableCount: *mut uint32_t, pProperties: *mut VkPipelineExecutablePropertiesKHR) -> VkResult {
-		(self.vk_get_pipeline_executable_properties_khr)(device, pPipelineInfo, pExecutableCount, pProperties)
+	fn vkGetPipelineExecutablePropertiesKHR(&self, device: VkDevice, pPipelineInfo: *const VkPipelineInfoKHR, pExecutableCount: *mut uint32_t, pProperties: *mut VkPipelineExecutablePropertiesKHR) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_get_pipeline_executable_properties_khr)(device, pPipelineInfo, pExecutableCount, pProperties))
 	}
 }
 impl Default for Vulkan_KHR_pipeline_executable_properties {
@@ -15916,15 +15923,15 @@ extern "system" fn dummy_vkMapMemory2KHR(_: VkDevice, _: *const VkMemoryMapInfo,
 	panic!("Vulkan function pointer of `vkMapMemory2KHR()` is NULL");
 }
 pub trait VK_KHR_map_memory2: Debug {
-	fn vkMapMemory2KHR(&self, device: VkDevice, pMemoryMapInfo: *const VkMemoryMapInfo, ppData: *mut *mut c_void) -> VkResult;
+	fn vkMapMemory2KHR(&self, device: VkDevice, pMemoryMapInfo: *const VkMemoryMapInfo, ppData: *mut *mut c_void) -> Result<(), VkResult>;
 }
 #[derive(Debug, Clone, Copy)]
 pub struct Vulkan_KHR_map_memory2 {
 	vk_map_memory2_khr: PFN_vkMapMemory2KHR,
 }
 impl VK_KHR_map_memory2 for Vulkan_KHR_map_memory2 {
-	fn vkMapMemory2KHR(&self, device: VkDevice, pMemoryMapInfo: *const VkMemoryMapInfo, ppData: *mut *mut c_void) -> VkResult {
-		(self.vk_map_memory2_khr)(device, pMemoryMapInfo, ppData)
+	fn vkMapMemory2KHR(&self, device: VkDevice, pMemoryMapInfo: *const VkMemoryMapInfo, ppData: *mut *mut c_void) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_map_memory2_khr)(device, pMemoryMapInfo, ppData))
 	}
 }
 impl Default for Vulkan_KHR_map_memory2 {
@@ -16202,15 +16209,15 @@ extern "system" fn dummy_vkGetPhysicalDeviceVideoEncodeQualityLevelPropertiesKHR
 	panic!("Vulkan function pointer of `vkGetPhysicalDeviceVideoEncodeQualityLevelPropertiesKHR()` is NULL");
 }
 pub trait VK_KHR_video_encode_queue: Debug {
-	fn vkGetPhysicalDeviceVideoEncodeQualityLevelPropertiesKHR(&self, physicalDevice: VkPhysicalDevice, pQualityLevelInfo: *const VkPhysicalDeviceVideoEncodeQualityLevelInfoKHR, pQualityLevelProperties: *mut VkVideoEncodeQualityLevelPropertiesKHR) -> VkResult;
+	fn vkGetPhysicalDeviceVideoEncodeQualityLevelPropertiesKHR(&self, physicalDevice: VkPhysicalDevice, pQualityLevelInfo: *const VkPhysicalDeviceVideoEncodeQualityLevelInfoKHR, pQualityLevelProperties: *mut VkVideoEncodeQualityLevelPropertiesKHR) -> Result<(), VkResult>;
 }
 #[derive(Debug, Clone, Copy)]
 pub struct Vulkan_KHR_video_encode_queue {
 	vk_get_physical_device_video_encode_quality_level_properties_khr: PFN_vkGetPhysicalDeviceVideoEncodeQualityLevelPropertiesKHR,
 }
 impl VK_KHR_video_encode_queue for Vulkan_KHR_video_encode_queue {
-	fn vkGetPhysicalDeviceVideoEncodeQualityLevelPropertiesKHR(&self, physicalDevice: VkPhysicalDevice, pQualityLevelInfo: *const VkPhysicalDeviceVideoEncodeQualityLevelInfoKHR, pQualityLevelProperties: *mut VkVideoEncodeQualityLevelPropertiesKHR) -> VkResult {
-		(self.vk_get_physical_device_video_encode_quality_level_properties_khr)(physicalDevice, pQualityLevelInfo, pQualityLevelProperties)
+	fn vkGetPhysicalDeviceVideoEncodeQualityLevelPropertiesKHR(&self, physicalDevice: VkPhysicalDevice, pQualityLevelInfo: *const VkPhysicalDeviceVideoEncodeQualityLevelInfoKHR, pQualityLevelProperties: *mut VkVideoEncodeQualityLevelPropertiesKHR) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_get_physical_device_video_encode_quality_level_properties_khr)(physicalDevice, pQualityLevelInfo, pQualityLevelProperties))
 	}
 }
 impl Default for Vulkan_KHR_video_encode_queue {
@@ -16677,15 +16684,15 @@ extern "system" fn dummy_vkWaitForPresent2KHR(_: VkDevice, _: VkSwapchainKHR, _:
 	panic!("Vulkan function pointer of `vkWaitForPresent2KHR()` is NULL");
 }
 pub trait VK_KHR_present_wait2: Debug {
-	fn vkWaitForPresent2KHR(&self, device: VkDevice, swapchain: VkSwapchainKHR, pPresentWait2Info: *const VkPresentWait2InfoKHR) -> VkResult;
+	fn vkWaitForPresent2KHR(&self, device: VkDevice, swapchain: VkSwapchainKHR, pPresentWait2Info: *const VkPresentWait2InfoKHR) -> Result<(), VkResult>;
 }
 #[derive(Debug, Clone, Copy)]
 pub struct Vulkan_KHR_present_wait2 {
 	vk_wait_for_present2_khr: PFN_vkWaitForPresent2KHR,
 }
 impl VK_KHR_present_wait2 for Vulkan_KHR_present_wait2 {
-	fn vkWaitForPresent2KHR(&self, device: VkDevice, swapchain: VkSwapchainKHR, pPresentWait2Info: *const VkPresentWait2InfoKHR) -> VkResult {
-		(self.vk_wait_for_present2_khr)(device, swapchain, pPresentWait2Info)
+	fn vkWaitForPresent2KHR(&self, device: VkDevice, swapchain: VkSwapchainKHR, pPresentWait2Info: *const VkPresentWait2InfoKHR) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_wait_for_present2_khr)(device, swapchain, pPresentWait2Info))
 	}
 }
 impl Default for Vulkan_KHR_present_wait2 {
@@ -16828,15 +16835,15 @@ extern "system" fn dummy_vkCreatePipelineBinariesKHR(_: VkDevice, _: *const VkPi
 	panic!("Vulkan function pointer of `vkCreatePipelineBinariesKHR()` is NULL");
 }
 pub trait VK_KHR_pipeline_binary: Debug {
-	fn vkCreatePipelineBinariesKHR(&self, device: VkDevice, pCreateInfo: *const VkPipelineBinaryCreateInfoKHR, pAllocator: *const VkAllocationCallbacks, pBinaries: *mut VkPipelineBinaryHandlesInfoKHR) -> VkResult;
+	fn vkCreatePipelineBinariesKHR(&self, device: VkDevice, pCreateInfo: *const VkPipelineBinaryCreateInfoKHR, pAllocator: *const VkAllocationCallbacks, pBinaries: *mut VkPipelineBinaryHandlesInfoKHR) -> Result<(), VkResult>;
 }
 #[derive(Debug, Clone, Copy)]
 pub struct Vulkan_KHR_pipeline_binary {
 	vk_create_pipeline_binaries_khr: PFN_vkCreatePipelineBinariesKHR,
 }
 impl VK_KHR_pipeline_binary for Vulkan_KHR_pipeline_binary {
-	fn vkCreatePipelineBinariesKHR(&self, device: VkDevice, pCreateInfo: *const VkPipelineBinaryCreateInfoKHR, pAllocator: *const VkAllocationCallbacks, pBinaries: *mut VkPipelineBinaryHandlesInfoKHR) -> VkResult {
-		(self.vk_create_pipeline_binaries_khr)(device, pCreateInfo, pAllocator, pBinaries)
+	fn vkCreatePipelineBinariesKHR(&self, device: VkDevice, pCreateInfo: *const VkPipelineBinaryCreateInfoKHR, pAllocator: *const VkAllocationCallbacks, pBinaries: *mut VkPipelineBinaryHandlesInfoKHR) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_create_pipeline_binaries_khr)(device, pCreateInfo, pAllocator, pBinaries))
 	}
 }
 impl Default for Vulkan_KHR_pipeline_binary {
@@ -16975,15 +16982,15 @@ extern "system" fn dummy_vkReleaseSwapchainImagesKHR(_: VkDevice, _: *const VkRe
 	panic!("Vulkan function pointer of `vkReleaseSwapchainImagesKHR()` is NULL");
 }
 pub trait VK_KHR_swapchain_maintenance1: Debug {
-	fn vkReleaseSwapchainImagesKHR(&self, device: VkDevice, pReleaseInfo: *const VkReleaseSwapchainImagesInfoKHR) -> VkResult;
+	fn vkReleaseSwapchainImagesKHR(&self, device: VkDevice, pReleaseInfo: *const VkReleaseSwapchainImagesInfoKHR) -> Result<(), VkResult>;
 }
 #[derive(Debug, Clone, Copy)]
 pub struct Vulkan_KHR_swapchain_maintenance1 {
 	vk_release_swapchain_images_khr: PFN_vkReleaseSwapchainImagesKHR,
 }
 impl VK_KHR_swapchain_maintenance1 for Vulkan_KHR_swapchain_maintenance1 {
-	fn vkReleaseSwapchainImagesKHR(&self, device: VkDevice, pReleaseInfo: *const VkReleaseSwapchainImagesInfoKHR) -> VkResult {
-		(self.vk_release_swapchain_images_khr)(device, pReleaseInfo)
+	fn vkReleaseSwapchainImagesKHR(&self, device: VkDevice, pReleaseInfo: *const VkReleaseSwapchainImagesInfoKHR) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_release_swapchain_images_khr)(device, pReleaseInfo))
 	}
 }
 impl Default for Vulkan_KHR_swapchain_maintenance1 {
@@ -17086,15 +17093,15 @@ extern "system" fn dummy_vkGetPhysicalDeviceCooperativeMatrixPropertiesKHR(_: Vk
 	panic!("Vulkan function pointer of `vkGetPhysicalDeviceCooperativeMatrixPropertiesKHR()` is NULL");
 }
 pub trait VK_KHR_cooperative_matrix: Debug {
-	fn vkGetPhysicalDeviceCooperativeMatrixPropertiesKHR(&self, physicalDevice: VkPhysicalDevice, pPropertyCount: *mut uint32_t, pProperties: *mut VkCooperativeMatrixPropertiesKHR) -> VkResult;
+	fn vkGetPhysicalDeviceCooperativeMatrixPropertiesKHR(&self, physicalDevice: VkPhysicalDevice, pPropertyCount: *mut uint32_t, pProperties: *mut VkCooperativeMatrixPropertiesKHR) -> Result<(), VkResult>;
 }
 #[derive(Debug, Clone, Copy)]
 pub struct Vulkan_KHR_cooperative_matrix {
 	vk_get_physical_device_cooperative_matrix_properties_khr: PFN_vkGetPhysicalDeviceCooperativeMatrixPropertiesKHR,
 }
 impl VK_KHR_cooperative_matrix for Vulkan_KHR_cooperative_matrix {
-	fn vkGetPhysicalDeviceCooperativeMatrixPropertiesKHR(&self, physicalDevice: VkPhysicalDevice, pPropertyCount: *mut uint32_t, pProperties: *mut VkCooperativeMatrixPropertiesKHR) -> VkResult {
-		(self.vk_get_physical_device_cooperative_matrix_properties_khr)(physicalDevice, pPropertyCount, pProperties)
+	fn vkGetPhysicalDeviceCooperativeMatrixPropertiesKHR(&self, physicalDevice: VkPhysicalDevice, pPropertyCount: *mut uint32_t, pProperties: *mut VkCooperativeMatrixPropertiesKHR) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_get_physical_device_cooperative_matrix_properties_khr)(physicalDevice, pPropertyCount, pProperties))
 	}
 }
 impl Default for Vulkan_KHR_cooperative_matrix {
@@ -19330,15 +19337,15 @@ extern "system" fn dummy_vkGetPhysicalDeviceCalibrateableTimeDomainsKHR(_: VkPhy
 	panic!("Vulkan function pointer of `vkGetPhysicalDeviceCalibrateableTimeDomainsKHR()` is NULL");
 }
 pub trait VK_KHR_calibrated_timestamps: Debug {
-	fn vkGetPhysicalDeviceCalibrateableTimeDomainsKHR(&self, physicalDevice: VkPhysicalDevice, pTimeDomainCount: *mut uint32_t, pTimeDomains: *mut VkTimeDomainKHR) -> VkResult;
+	fn vkGetPhysicalDeviceCalibrateableTimeDomainsKHR(&self, physicalDevice: VkPhysicalDevice, pTimeDomainCount: *mut uint32_t, pTimeDomains: *mut VkTimeDomainKHR) -> Result<(), VkResult>;
 }
 #[derive(Debug, Clone, Copy)]
 pub struct Vulkan_KHR_calibrated_timestamps {
 	vk_get_physical_device_calibrateable_time_domains_khr: PFN_vkGetPhysicalDeviceCalibrateableTimeDomainsKHR,
 }
 impl VK_KHR_calibrated_timestamps for Vulkan_KHR_calibrated_timestamps {
-	fn vkGetPhysicalDeviceCalibrateableTimeDomainsKHR(&self, physicalDevice: VkPhysicalDevice, pTimeDomainCount: *mut uint32_t, pTimeDomains: *mut VkTimeDomainKHR) -> VkResult {
-		(self.vk_get_physical_device_calibrateable_time_domains_khr)(physicalDevice, pTimeDomainCount, pTimeDomains)
+	fn vkGetPhysicalDeviceCalibrateableTimeDomainsKHR(&self, physicalDevice: VkPhysicalDevice, pTimeDomainCount: *mut uint32_t, pTimeDomains: *mut VkTimeDomainKHR) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_get_physical_device_calibrateable_time_domains_khr)(physicalDevice, pTimeDomainCount, pTimeDomains))
 	}
 }
 impl Default for Vulkan_KHR_calibrated_timestamps {
@@ -19953,15 +19960,15 @@ extern "system" fn dummy_vkCreateDebugReportCallbackEXT(_: VkInstance, _: *const
 	panic!("Vulkan function pointer of `vkCreateDebugReportCallbackEXT()` is NULL");
 }
 pub trait VK_EXT_debug_report: Debug {
-	fn vkCreateDebugReportCallbackEXT(&self, instance: VkInstance, pCreateInfo: *const VkDebugReportCallbackCreateInfoEXT, pAllocator: *const VkAllocationCallbacks, pCallback: *mut VkDebugReportCallbackEXT) -> VkResult;
+	fn vkCreateDebugReportCallbackEXT(&self, instance: VkInstance, pCreateInfo: *const VkDebugReportCallbackCreateInfoEXT, pAllocator: *const VkAllocationCallbacks, pCallback: *mut VkDebugReportCallbackEXT) -> Result<(), VkResult>;
 }
 #[derive(Debug, Clone, Copy)]
 pub struct Vulkan_EXT_debug_report {
 	vk_create_debug_report_callback_ext: PFN_vkCreateDebugReportCallbackEXT,
 }
 impl VK_EXT_debug_report for Vulkan_EXT_debug_report {
-	fn vkCreateDebugReportCallbackEXT(&self, instance: VkInstance, pCreateInfo: *const VkDebugReportCallbackCreateInfoEXT, pAllocator: *const VkAllocationCallbacks, pCallback: *mut VkDebugReportCallbackEXT) -> VkResult {
-		(self.vk_create_debug_report_callback_ext)(instance, pCreateInfo, pAllocator, pCallback)
+	fn vkCreateDebugReportCallbackEXT(&self, instance: VkInstance, pCreateInfo: *const VkDebugReportCallbackCreateInfoEXT, pAllocator: *const VkAllocationCallbacks, pCallback: *mut VkDebugReportCallbackEXT) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_create_debug_report_callback_ext)(instance, pCreateInfo, pAllocator, pCallback))
 	}
 }
 impl Default for Vulkan_EXT_debug_report {
@@ -20113,15 +20120,15 @@ extern "system" fn dummy_vkDebugMarkerSetObjectTagEXT(_: VkDevice, _: *const VkD
 	panic!("Vulkan function pointer of `vkDebugMarkerSetObjectTagEXT()` is NULL");
 }
 pub trait VK_EXT_debug_marker: Debug {
-	fn vkDebugMarkerSetObjectTagEXT(&self, device: VkDevice, pTagInfo: *const VkDebugMarkerObjectTagInfoEXT) -> VkResult;
+	fn vkDebugMarkerSetObjectTagEXT(&self, device: VkDevice, pTagInfo: *const VkDebugMarkerObjectTagInfoEXT) -> Result<(), VkResult>;
 }
 #[derive(Debug, Clone, Copy)]
 pub struct Vulkan_EXT_debug_marker {
 	vk_debug_marker_set_object_tag_ext: PFN_vkDebugMarkerSetObjectTagEXT,
 }
 impl VK_EXT_debug_marker for Vulkan_EXT_debug_marker {
-	fn vkDebugMarkerSetObjectTagEXT(&self, device: VkDevice, pTagInfo: *const VkDebugMarkerObjectTagInfoEXT) -> VkResult {
-		(self.vk_debug_marker_set_object_tag_ext)(device, pTagInfo)
+	fn vkDebugMarkerSetObjectTagEXT(&self, device: VkDevice, pTagInfo: *const VkDebugMarkerObjectTagInfoEXT) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_debug_marker_set_object_tag_ext)(device, pTagInfo))
 	}
 }
 impl Default for Vulkan_EXT_debug_marker {
@@ -20314,15 +20321,15 @@ extern "system" fn dummy_vkCreateCuModuleNVX(_: VkDevice, _: *const VkCuModuleCr
 	panic!("Vulkan function pointer of `vkCreateCuModuleNVX()` is NULL");
 }
 pub trait VK_NVX_binary_import: Debug {
-	fn vkCreateCuModuleNVX(&self, device: VkDevice, pCreateInfo: *const VkCuModuleCreateInfoNVX, pAllocator: *const VkAllocationCallbacks, pModule: *mut VkCuModuleNVX) -> VkResult;
+	fn vkCreateCuModuleNVX(&self, device: VkDevice, pCreateInfo: *const VkCuModuleCreateInfoNVX, pAllocator: *const VkAllocationCallbacks, pModule: *mut VkCuModuleNVX) -> Result<(), VkResult>;
 }
 #[derive(Debug, Clone, Copy)]
 pub struct Vulkan_NVX_binary_import {
 	vk_create_cu_module_nvx: PFN_vkCreateCuModuleNVX,
 }
 impl VK_NVX_binary_import for Vulkan_NVX_binary_import {
-	fn vkCreateCuModuleNVX(&self, device: VkDevice, pCreateInfo: *const VkCuModuleCreateInfoNVX, pAllocator: *const VkAllocationCallbacks, pModule: *mut VkCuModuleNVX) -> VkResult {
-		(self.vk_create_cu_module_nvx)(device, pCreateInfo, pAllocator, pModule)
+	fn vkCreateCuModuleNVX(&self, device: VkDevice, pCreateInfo: *const VkCuModuleCreateInfoNVX, pAllocator: *const VkAllocationCallbacks, pModule: *mut VkCuModuleNVX) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_create_cu_module_nvx)(device, pCreateInfo, pAllocator, pModule))
 	}
 }
 impl Default for Vulkan_NVX_binary_import {
@@ -20515,15 +20522,15 @@ extern "system" fn dummy_vkGetShaderInfoAMD(_: VkDevice, _: VkPipeline, _: VkSha
 	panic!("Vulkan function pointer of `vkGetShaderInfoAMD()` is NULL");
 }
 pub trait VK_AMD_shader_info: Debug {
-	fn vkGetShaderInfoAMD(&self, device: VkDevice, pipeline: VkPipeline, shaderStage: VkShaderStageFlagBits, infoType: VkShaderInfoTypeAMD, pInfoSize: *mut size_t, pInfo: *mut c_void) -> VkResult;
+	fn vkGetShaderInfoAMD(&self, device: VkDevice, pipeline: VkPipeline, shaderStage: VkShaderStageFlagBits, infoType: VkShaderInfoTypeAMD, pInfoSize: *mut size_t, pInfo: *mut c_void) -> Result<(), VkResult>;
 }
 #[derive(Debug, Clone, Copy)]
 pub struct Vulkan_AMD_shader_info {
 	vk_get_shader_info_amd: PFN_vkGetShaderInfoAMD,
 }
 impl VK_AMD_shader_info for Vulkan_AMD_shader_info {
-	fn vkGetShaderInfoAMD(&self, device: VkDevice, pipeline: VkPipeline, shaderStage: VkShaderStageFlagBits, infoType: VkShaderInfoTypeAMD, pInfoSize: *mut size_t, pInfo: *mut c_void) -> VkResult {
-		(self.vk_get_shader_info_amd)(device, pipeline, shaderStage, infoType, pInfoSize, pInfo)
+	fn vkGetShaderInfoAMD(&self, device: VkDevice, pipeline: VkPipeline, shaderStage: VkShaderStageFlagBits, infoType: VkShaderInfoTypeAMD, pInfoSize: *mut size_t, pInfo: *mut c_void) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_get_shader_info_amd)(device, pipeline, shaderStage, infoType, pInfoSize, pInfo))
 	}
 }
 impl Default for Vulkan_AMD_shader_info {
@@ -20621,15 +20628,15 @@ extern "system" fn dummy_vkGetPhysicalDeviceExternalImageFormatPropertiesNV(_: V
 	panic!("Vulkan function pointer of `vkGetPhysicalDeviceExternalImageFormatPropertiesNV()` is NULL");
 }
 pub trait VK_NV_external_memory_capabilities: Debug {
-	fn vkGetPhysicalDeviceExternalImageFormatPropertiesNV(&self, physicalDevice: VkPhysicalDevice, format: VkFormat, type_: VkImageType, tiling: VkImageTiling, usage: VkImageUsageFlags, flags: VkImageCreateFlags, externalHandleType: VkExternalMemoryHandleTypeFlagsNV, pExternalImageFormatProperties: *mut VkExternalImageFormatPropertiesNV) -> VkResult;
+	fn vkGetPhysicalDeviceExternalImageFormatPropertiesNV(&self, physicalDevice: VkPhysicalDevice, format: VkFormat, type_: VkImageType, tiling: VkImageTiling, usage: VkImageUsageFlags, flags: VkImageCreateFlags, externalHandleType: VkExternalMemoryHandleTypeFlagsNV, pExternalImageFormatProperties: *mut VkExternalImageFormatPropertiesNV) -> Result<(), VkResult>;
 }
 #[derive(Debug, Clone, Copy)]
 pub struct Vulkan_NV_external_memory_capabilities {
 	vk_get_physical_device_external_image_format_properties_nv: PFN_vkGetPhysicalDeviceExternalImageFormatPropertiesNV,
 }
 impl VK_NV_external_memory_capabilities for Vulkan_NV_external_memory_capabilities {
-	fn vkGetPhysicalDeviceExternalImageFormatPropertiesNV(&self, physicalDevice: VkPhysicalDevice, format: VkFormat, type_: VkImageType, tiling: VkImageTiling, usage: VkImageUsageFlags, flags: VkImageCreateFlags, externalHandleType: VkExternalMemoryHandleTypeFlagsNV, pExternalImageFormatProperties: *mut VkExternalImageFormatPropertiesNV) -> VkResult {
-		(self.vk_get_physical_device_external_image_format_properties_nv)(physicalDevice, format, type_, tiling, usage, flags, externalHandleType, pExternalImageFormatProperties)
+	fn vkGetPhysicalDeviceExternalImageFormatPropertiesNV(&self, physicalDevice: VkPhysicalDevice, format: VkFormat, type_: VkImageType, tiling: VkImageTiling, usage: VkImageUsageFlags, flags: VkImageCreateFlags, externalHandleType: VkExternalMemoryHandleTypeFlagsNV, pExternalImageFormatProperties: *mut VkExternalImageFormatPropertiesNV) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_get_physical_device_external_image_format_properties_nv)(physicalDevice, format, type_, tiling, usage, flags, externalHandleType, pExternalImageFormatProperties))
 	}
 }
 impl Default for Vulkan_NV_external_memory_capabilities {
@@ -20905,15 +20912,15 @@ extern "system" fn dummy_vkReleaseDisplayEXT(_: VkPhysicalDevice, _: VkDisplayKH
 	panic!("Vulkan function pointer of `vkReleaseDisplayEXT()` is NULL");
 }
 pub trait VK_EXT_direct_mode_display: Debug {
-	fn vkReleaseDisplayEXT(&self, physicalDevice: VkPhysicalDevice, display: VkDisplayKHR) -> VkResult;
+	fn vkReleaseDisplayEXT(&self, physicalDevice: VkPhysicalDevice, display: VkDisplayKHR) -> Result<(), VkResult>;
 }
 #[derive(Debug, Clone, Copy)]
 pub struct Vulkan_EXT_direct_mode_display {
 	vk_release_display_ext: PFN_vkReleaseDisplayEXT,
 }
 impl VK_EXT_direct_mode_display for Vulkan_EXT_direct_mode_display {
-	fn vkReleaseDisplayEXT(&self, physicalDevice: VkPhysicalDevice, display: VkDisplayKHR) -> VkResult {
-		(self.vk_release_display_ext)(physicalDevice, display)
+	fn vkReleaseDisplayEXT(&self, physicalDevice: VkPhysicalDevice, display: VkDisplayKHR) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_release_display_ext)(physicalDevice, display))
 	}
 }
 impl Default for Vulkan_EXT_direct_mode_display {
@@ -20962,15 +20969,15 @@ extern "system" fn dummy_vkGetPhysicalDeviceSurfaceCapabilities2EXT(_: VkPhysica
 	panic!("Vulkan function pointer of `vkGetPhysicalDeviceSurfaceCapabilities2EXT()` is NULL");
 }
 pub trait VK_EXT_display_surface_counter: Debug {
-	fn vkGetPhysicalDeviceSurfaceCapabilities2EXT(&self, physicalDevice: VkPhysicalDevice, surface: VkSurfaceKHR, pSurfaceCapabilities: *mut VkSurfaceCapabilities2EXT) -> VkResult;
+	fn vkGetPhysicalDeviceSurfaceCapabilities2EXT(&self, physicalDevice: VkPhysicalDevice, surface: VkSurfaceKHR, pSurfaceCapabilities: *mut VkSurfaceCapabilities2EXT) -> Result<(), VkResult>;
 }
 #[derive(Debug, Clone, Copy)]
 pub struct Vulkan_EXT_display_surface_counter {
 	vk_get_physical_device_surface_capabilities2_ext: PFN_vkGetPhysicalDeviceSurfaceCapabilities2EXT,
 }
 impl VK_EXT_display_surface_counter for Vulkan_EXT_display_surface_counter {
-	fn vkGetPhysicalDeviceSurfaceCapabilities2EXT(&self, physicalDevice: VkPhysicalDevice, surface: VkSurfaceKHR, pSurfaceCapabilities: *mut VkSurfaceCapabilities2EXT) -> VkResult {
-		(self.vk_get_physical_device_surface_capabilities2_ext)(physicalDevice, surface, pSurfaceCapabilities)
+	fn vkGetPhysicalDeviceSurfaceCapabilities2EXT(&self, physicalDevice: VkPhysicalDevice, surface: VkSurfaceKHR, pSurfaceCapabilities: *mut VkSurfaceCapabilities2EXT) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_get_physical_device_surface_capabilities2_ext)(physicalDevice, surface, pSurfaceCapabilities))
 	}
 }
 impl Default for Vulkan_EXT_display_surface_counter {
@@ -21043,15 +21050,15 @@ extern "system" fn dummy_vkDisplayPowerControlEXT(_: VkDevice, _: VkDisplayKHR, 
 	panic!("Vulkan function pointer of `vkDisplayPowerControlEXT()` is NULL");
 }
 pub trait VK_EXT_display_control: Debug {
-	fn vkDisplayPowerControlEXT(&self, device: VkDevice, display: VkDisplayKHR, pDisplayPowerInfo: *const VkDisplayPowerInfoEXT) -> VkResult;
+	fn vkDisplayPowerControlEXT(&self, device: VkDevice, display: VkDisplayKHR, pDisplayPowerInfo: *const VkDisplayPowerInfoEXT) -> Result<(), VkResult>;
 }
 #[derive(Debug, Clone, Copy)]
 pub struct Vulkan_EXT_display_control {
 	vk_display_power_control_ext: PFN_vkDisplayPowerControlEXT,
 }
 impl VK_EXT_display_control for Vulkan_EXT_display_control {
-	fn vkDisplayPowerControlEXT(&self, device: VkDevice, display: VkDisplayKHR, pDisplayPowerInfo: *const VkDisplayPowerInfoEXT) -> VkResult {
-		(self.vk_display_power_control_ext)(device, display, pDisplayPowerInfo)
+	fn vkDisplayPowerControlEXT(&self, device: VkDevice, display: VkDisplayKHR, pDisplayPowerInfo: *const VkDisplayPowerInfoEXT) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_display_power_control_ext)(device, display, pDisplayPowerInfo))
 	}
 }
 impl Default for Vulkan_EXT_display_control {
@@ -21102,15 +21109,15 @@ extern "system" fn dummy_vkGetRefreshCycleDurationGOOGLE(_: VkDevice, _: VkSwapc
 	panic!("Vulkan function pointer of `vkGetRefreshCycleDurationGOOGLE()` is NULL");
 }
 pub trait VK_GOOGLE_display_timing: Debug {
-	fn vkGetRefreshCycleDurationGOOGLE(&self, device: VkDevice, swapchain: VkSwapchainKHR, pDisplayTimingProperties: *mut VkRefreshCycleDurationGOOGLE) -> VkResult;
+	fn vkGetRefreshCycleDurationGOOGLE(&self, device: VkDevice, swapchain: VkSwapchainKHR, pDisplayTimingProperties: *mut VkRefreshCycleDurationGOOGLE) -> Result<(), VkResult>;
 }
 #[derive(Debug, Clone, Copy)]
 pub struct Vulkan_GOOGLE_display_timing {
 	vk_get_refresh_cycle_duration_google: PFN_vkGetRefreshCycleDurationGOOGLE,
 }
 impl VK_GOOGLE_display_timing for Vulkan_GOOGLE_display_timing {
-	fn vkGetRefreshCycleDurationGOOGLE(&self, device: VkDevice, swapchain: VkSwapchainKHR, pDisplayTimingProperties: *mut VkRefreshCycleDurationGOOGLE) -> VkResult {
-		(self.vk_get_refresh_cycle_duration_google)(device, swapchain, pDisplayTimingProperties)
+	fn vkGetRefreshCycleDurationGOOGLE(&self, device: VkDevice, swapchain: VkSwapchainKHR, pDisplayTimingProperties: *mut VkRefreshCycleDurationGOOGLE) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_get_refresh_cycle_duration_google)(device, swapchain, pDisplayTimingProperties))
 	}
 }
 impl Default for Vulkan_GOOGLE_display_timing {
@@ -21588,15 +21595,15 @@ extern "system" fn dummy_vkSetDebugUtilsObjectNameEXT(_: VkDevice, _: *const VkD
 	panic!("Vulkan function pointer of `vkSetDebugUtilsObjectNameEXT()` is NULL");
 }
 pub trait VK_EXT_debug_utils: Debug {
-	fn vkSetDebugUtilsObjectNameEXT(&self, device: VkDevice, pNameInfo: *const VkDebugUtilsObjectNameInfoEXT) -> VkResult;
+	fn vkSetDebugUtilsObjectNameEXT(&self, device: VkDevice, pNameInfo: *const VkDebugUtilsObjectNameInfoEXT) -> Result<(), VkResult>;
 }
 #[derive(Debug, Clone, Copy)]
 pub struct Vulkan_EXT_debug_utils {
 	vk_set_debug_utils_object_name_ext: PFN_vkSetDebugUtilsObjectNameEXT,
 }
 impl VK_EXT_debug_utils for Vulkan_EXT_debug_utils {
-	fn vkSetDebugUtilsObjectNameEXT(&self, device: VkDevice, pNameInfo: *const VkDebugUtilsObjectNameInfoEXT) -> VkResult {
-		(self.vk_set_debug_utils_object_name_ext)(device, pNameInfo)
+	fn vkSetDebugUtilsObjectNameEXT(&self, device: VkDevice, pNameInfo: *const VkDebugUtilsObjectNameInfoEXT) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_set_debug_utils_object_name_ext)(device, pNameInfo))
 	}
 }
 impl Default for Vulkan_EXT_debug_utils {
@@ -22044,15 +22051,15 @@ extern "system" fn dummy_vkGetImageDrmFormatModifierPropertiesEXT(_: VkDevice, _
 	panic!("Vulkan function pointer of `vkGetImageDrmFormatModifierPropertiesEXT()` is NULL");
 }
 pub trait VK_EXT_image_drm_format_modifier: Debug {
-	fn vkGetImageDrmFormatModifierPropertiesEXT(&self, device: VkDevice, image: VkImage, pProperties: *mut VkImageDrmFormatModifierPropertiesEXT) -> VkResult;
+	fn vkGetImageDrmFormatModifierPropertiesEXT(&self, device: VkDevice, image: VkImage, pProperties: *mut VkImageDrmFormatModifierPropertiesEXT) -> Result<(), VkResult>;
 }
 #[derive(Debug, Clone, Copy)]
 pub struct Vulkan_EXT_image_drm_format_modifier {
 	vk_get_image_drm_format_modifier_properties_ext: PFN_vkGetImageDrmFormatModifierPropertiesEXT,
 }
 impl VK_EXT_image_drm_format_modifier for Vulkan_EXT_image_drm_format_modifier {
-	fn vkGetImageDrmFormatModifierPropertiesEXT(&self, device: VkDevice, image: VkImage, pProperties: *mut VkImageDrmFormatModifierPropertiesEXT) -> VkResult {
-		(self.vk_get_image_drm_format_modifier_properties_ext)(device, image, pProperties)
+	fn vkGetImageDrmFormatModifierPropertiesEXT(&self, device: VkDevice, image: VkImage, pProperties: *mut VkImageDrmFormatModifierPropertiesEXT) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_get_image_drm_format_modifier_properties_ext)(device, image, pProperties))
 	}
 }
 impl Default for Vulkan_EXT_image_drm_format_modifier {
@@ -22104,15 +22111,15 @@ extern "system" fn dummy_vkCreateValidationCacheEXT(_: VkDevice, _: *const VkVal
 	panic!("Vulkan function pointer of `vkCreateValidationCacheEXT()` is NULL");
 }
 pub trait VK_EXT_validation_cache: Debug {
-	fn vkCreateValidationCacheEXT(&self, device: VkDevice, pCreateInfo: *const VkValidationCacheCreateInfoEXT, pAllocator: *const VkAllocationCallbacks, pValidationCache: *mut VkValidationCacheEXT) -> VkResult;
+	fn vkCreateValidationCacheEXT(&self, device: VkDevice, pCreateInfo: *const VkValidationCacheCreateInfoEXT, pAllocator: *const VkAllocationCallbacks, pValidationCache: *mut VkValidationCacheEXT) -> Result<(), VkResult>;
 }
 #[derive(Debug, Clone, Copy)]
 pub struct Vulkan_EXT_validation_cache {
 	vk_create_validation_cache_ext: PFN_vkCreateValidationCacheEXT,
 }
 impl VK_EXT_validation_cache for Vulkan_EXT_validation_cache {
-	fn vkCreateValidationCacheEXT(&self, device: VkDevice, pCreateInfo: *const VkValidationCacheCreateInfoEXT, pAllocator: *const VkAllocationCallbacks, pValidationCache: *mut VkValidationCacheEXT) -> VkResult {
-		(self.vk_create_validation_cache_ext)(device, pCreateInfo, pAllocator, pValidationCache)
+	fn vkCreateValidationCacheEXT(&self, device: VkDevice, pCreateInfo: *const VkValidationCacheCreateInfoEXT, pAllocator: *const VkAllocationCallbacks, pValidationCache: *mut VkValidationCacheEXT) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_create_validation_cache_ext)(device, pCreateInfo, pAllocator, pValidationCache))
 	}
 }
 impl Default for Vulkan_EXT_validation_cache {
@@ -22619,15 +22626,15 @@ extern "system" fn dummy_vkCreateAccelerationStructureNV(_: VkDevice, _: *const 
 	panic!("Vulkan function pointer of `vkCreateAccelerationStructureNV()` is NULL");
 }
 pub trait VK_NV_ray_tracing: Debug {
-	fn vkCreateAccelerationStructureNV(&self, device: VkDevice, pCreateInfo: *const VkAccelerationStructureCreateInfoNV, pAllocator: *const VkAllocationCallbacks, pAccelerationStructure: *mut VkAccelerationStructureNV) -> VkResult;
+	fn vkCreateAccelerationStructureNV(&self, device: VkDevice, pCreateInfo: *const VkAccelerationStructureCreateInfoNV, pAllocator: *const VkAllocationCallbacks, pAccelerationStructure: *mut VkAccelerationStructureNV) -> Result<(), VkResult>;
 }
 #[derive(Debug, Clone, Copy)]
 pub struct Vulkan_NV_ray_tracing {
 	vk_create_acceleration_structure_nv: PFN_vkCreateAccelerationStructureNV,
 }
 impl VK_NV_ray_tracing for Vulkan_NV_ray_tracing {
-	fn vkCreateAccelerationStructureNV(&self, device: VkDevice, pCreateInfo: *const VkAccelerationStructureCreateInfoNV, pAllocator: *const VkAllocationCallbacks, pAccelerationStructure: *mut VkAccelerationStructureNV) -> VkResult {
-		(self.vk_create_acceleration_structure_nv)(device, pCreateInfo, pAllocator, pAccelerationStructure)
+	fn vkCreateAccelerationStructureNV(&self, device: VkDevice, pCreateInfo: *const VkAccelerationStructureCreateInfoNV, pAllocator: *const VkAllocationCallbacks, pAccelerationStructure: *mut VkAccelerationStructureNV) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_create_acceleration_structure_nv)(device, pCreateInfo, pAllocator, pAccelerationStructure))
 	}
 }
 impl Default for Vulkan_NV_ray_tracing {
@@ -22758,15 +22765,15 @@ extern "system" fn dummy_vkGetMemoryHostPointerPropertiesEXT(_: VkDevice, _: VkE
 	panic!("Vulkan function pointer of `vkGetMemoryHostPointerPropertiesEXT()` is NULL");
 }
 pub trait VK_EXT_external_memory_host: Debug {
-	fn vkGetMemoryHostPointerPropertiesEXT(&self, device: VkDevice, handleType: VkExternalMemoryHandleTypeFlagBits, pHostPointer: *const c_void, pMemoryHostPointerProperties: *mut VkMemoryHostPointerPropertiesEXT) -> VkResult;
+	fn vkGetMemoryHostPointerPropertiesEXT(&self, device: VkDevice, handleType: VkExternalMemoryHandleTypeFlagBits, pHostPointer: *const c_void, pMemoryHostPointerProperties: *mut VkMemoryHostPointerPropertiesEXT) -> Result<(), VkResult>;
 }
 #[derive(Debug, Clone, Copy)]
 pub struct Vulkan_EXT_external_memory_host {
 	vk_get_memory_host_pointer_properties_ext: PFN_vkGetMemoryHostPointerPropertiesEXT,
 }
 impl VK_EXT_external_memory_host for Vulkan_EXT_external_memory_host {
-	fn vkGetMemoryHostPointerPropertiesEXT(&self, device: VkDevice, handleType: VkExternalMemoryHandleTypeFlagBits, pHostPointer: *const c_void, pMemoryHostPointerProperties: *mut VkMemoryHostPointerPropertiesEXT) -> VkResult {
-		(self.vk_get_memory_host_pointer_properties_ext)(device, handleType, pHostPointer, pMemoryHostPointerProperties)
+	fn vkGetMemoryHostPointerPropertiesEXT(&self, device: VkDevice, handleType: VkExternalMemoryHandleTypeFlagBits, pHostPointer: *const c_void, pMemoryHostPointerProperties: *mut VkMemoryHostPointerPropertiesEXT) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_get_memory_host_pointer_properties_ext)(device, handleType, pHostPointer, pMemoryHostPointerProperties))
 	}
 }
 impl Default for Vulkan_EXT_external_memory_host {
@@ -22849,15 +22856,15 @@ extern "system" fn dummy_vkGetPhysicalDeviceCalibrateableTimeDomainsEXT(_: VkPhy
 	panic!("Vulkan function pointer of `vkGetPhysicalDeviceCalibrateableTimeDomainsEXT()` is NULL");
 }
 pub trait VK_EXT_calibrated_timestamps: Debug {
-	fn vkGetPhysicalDeviceCalibrateableTimeDomainsEXT(&self, physicalDevice: VkPhysicalDevice, pTimeDomainCount: *mut uint32_t, pTimeDomains: *mut VkTimeDomainKHR) -> VkResult;
+	fn vkGetPhysicalDeviceCalibrateableTimeDomainsEXT(&self, physicalDevice: VkPhysicalDevice, pTimeDomainCount: *mut uint32_t, pTimeDomains: *mut VkTimeDomainKHR) -> Result<(), VkResult>;
 }
 #[derive(Debug, Clone, Copy)]
 pub struct Vulkan_EXT_calibrated_timestamps {
 	vk_get_physical_device_calibrateable_time_domains_ext: PFN_vkGetPhysicalDeviceCalibrateableTimeDomainsEXT,
 }
 impl VK_EXT_calibrated_timestamps for Vulkan_EXT_calibrated_timestamps {
-	fn vkGetPhysicalDeviceCalibrateableTimeDomainsEXT(&self, physicalDevice: VkPhysicalDevice, pTimeDomainCount: *mut uint32_t, pTimeDomains: *mut VkTimeDomainKHR) -> VkResult {
-		(self.vk_get_physical_device_calibrateable_time_domains_ext)(physicalDevice, pTimeDomainCount, pTimeDomains)
+	fn vkGetPhysicalDeviceCalibrateableTimeDomainsEXT(&self, physicalDevice: VkPhysicalDevice, pTimeDomainCount: *mut uint32_t, pTimeDomains: *mut VkTimeDomainKHR) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_get_physical_device_calibrateable_time_domains_ext)(physicalDevice, pTimeDomainCount, pTimeDomains))
 	}
 }
 impl Default for Vulkan_EXT_calibrated_timestamps {
@@ -23362,15 +23369,15 @@ extern "system" fn dummy_vkInitializePerformanceApiINTEL(_: VkDevice, _: *const 
 	panic!("Vulkan function pointer of `vkInitializePerformanceApiINTEL()` is NULL");
 }
 pub trait VK_INTEL_performance_query: Debug {
-	fn vkInitializePerformanceApiINTEL(&self, device: VkDevice, pInitializeInfo: *const VkInitializePerformanceApiInfoINTEL) -> VkResult;
+	fn vkInitializePerformanceApiINTEL(&self, device: VkDevice, pInitializeInfo: *const VkInitializePerformanceApiInfoINTEL) -> Result<(), VkResult>;
 }
 #[derive(Debug, Clone, Copy)]
 pub struct Vulkan_INTEL_performance_query {
 	vk_initialize_performance_api_intel: PFN_vkInitializePerformanceApiINTEL,
 }
 impl VK_INTEL_performance_query for Vulkan_INTEL_performance_query {
-	fn vkInitializePerformanceApiINTEL(&self, device: VkDevice, pInitializeInfo: *const VkInitializePerformanceApiInfoINTEL) -> VkResult {
-		(self.vk_initialize_performance_api_intel)(device, pInitializeInfo)
+	fn vkInitializePerformanceApiINTEL(&self, device: VkDevice, pInitializeInfo: *const VkInitializePerformanceApiInfoINTEL) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_initialize_performance_api_intel)(device, pInitializeInfo))
 	}
 }
 impl Default for Vulkan_INTEL_performance_query {
@@ -23760,15 +23767,15 @@ extern "system" fn dummy_vkGetPhysicalDeviceToolPropertiesEXT(_: VkPhysicalDevic
 	panic!("Vulkan function pointer of `vkGetPhysicalDeviceToolPropertiesEXT()` is NULL");
 }
 pub trait VK_EXT_tooling_info: Debug {
-	fn vkGetPhysicalDeviceToolPropertiesEXT(&self, physicalDevice: VkPhysicalDevice, pToolCount: *mut uint32_t, pToolProperties: *mut VkPhysicalDeviceToolProperties) -> VkResult;
+	fn vkGetPhysicalDeviceToolPropertiesEXT(&self, physicalDevice: VkPhysicalDevice, pToolCount: *mut uint32_t, pToolProperties: *mut VkPhysicalDeviceToolProperties) -> Result<(), VkResult>;
 }
 #[derive(Debug, Clone, Copy)]
 pub struct Vulkan_EXT_tooling_info {
 	vk_get_physical_device_tool_properties_ext: PFN_vkGetPhysicalDeviceToolPropertiesEXT,
 }
 impl VK_EXT_tooling_info for Vulkan_EXT_tooling_info {
-	fn vkGetPhysicalDeviceToolPropertiesEXT(&self, physicalDevice: VkPhysicalDevice, pToolCount: *mut uint32_t, pToolProperties: *mut VkPhysicalDeviceToolProperties) -> VkResult {
-		(self.vk_get_physical_device_tool_properties_ext)(physicalDevice, pToolCount, pToolProperties)
+	fn vkGetPhysicalDeviceToolPropertiesEXT(&self, physicalDevice: VkPhysicalDevice, pToolCount: *mut uint32_t, pToolProperties: *mut VkPhysicalDeviceToolProperties) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_get_physical_device_tool_properties_ext)(physicalDevice, pToolCount, pToolProperties))
 	}
 }
 impl Default for Vulkan_EXT_tooling_info {
@@ -23883,15 +23890,15 @@ extern "system" fn dummy_vkGetPhysicalDeviceCooperativeMatrixPropertiesNV(_: VkP
 	panic!("Vulkan function pointer of `vkGetPhysicalDeviceCooperativeMatrixPropertiesNV()` is NULL");
 }
 pub trait VK_NV_cooperative_matrix: Debug {
-	fn vkGetPhysicalDeviceCooperativeMatrixPropertiesNV(&self, physicalDevice: VkPhysicalDevice, pPropertyCount: *mut uint32_t, pProperties: *mut VkCooperativeMatrixPropertiesNV) -> VkResult;
+	fn vkGetPhysicalDeviceCooperativeMatrixPropertiesNV(&self, physicalDevice: VkPhysicalDevice, pPropertyCount: *mut uint32_t, pProperties: *mut VkCooperativeMatrixPropertiesNV) -> Result<(), VkResult>;
 }
 #[derive(Debug, Clone, Copy)]
 pub struct Vulkan_NV_cooperative_matrix {
 	vk_get_physical_device_cooperative_matrix_properties_nv: PFN_vkGetPhysicalDeviceCooperativeMatrixPropertiesNV,
 }
 impl VK_NV_cooperative_matrix for Vulkan_NV_cooperative_matrix {
-	fn vkGetPhysicalDeviceCooperativeMatrixPropertiesNV(&self, physicalDevice: VkPhysicalDevice, pPropertyCount: *mut uint32_t, pProperties: *mut VkCooperativeMatrixPropertiesNV) -> VkResult {
-		(self.vk_get_physical_device_cooperative_matrix_properties_nv)(physicalDevice, pPropertyCount, pProperties)
+	fn vkGetPhysicalDeviceCooperativeMatrixPropertiesNV(&self, physicalDevice: VkPhysicalDevice, pPropertyCount: *mut uint32_t, pProperties: *mut VkCooperativeMatrixPropertiesNV) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_get_physical_device_cooperative_matrix_properties_nv)(physicalDevice, pPropertyCount, pProperties))
 	}
 }
 impl Default for Vulkan_NV_cooperative_matrix {
@@ -23946,15 +23953,15 @@ extern "system" fn dummy_vkGetPhysicalDeviceSupportedFramebufferMixedSamplesComb
 	panic!("Vulkan function pointer of `vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV()` is NULL");
 }
 pub trait VK_NV_coverage_reduction_mode: Debug {
-	fn vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV(&self, physicalDevice: VkPhysicalDevice, pCombinationCount: *mut uint32_t, pCombinations: *mut VkFramebufferMixedSamplesCombinationNV) -> VkResult;
+	fn vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV(&self, physicalDevice: VkPhysicalDevice, pCombinationCount: *mut uint32_t, pCombinations: *mut VkFramebufferMixedSamplesCombinationNV) -> Result<(), VkResult>;
 }
 #[derive(Debug, Clone, Copy)]
 pub struct Vulkan_NV_coverage_reduction_mode {
 	vk_get_physical_device_supported_framebuffer_mixed_samples_combinations_nv: PFN_vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV,
 }
 impl VK_NV_coverage_reduction_mode for Vulkan_NV_coverage_reduction_mode {
-	fn vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV(&self, physicalDevice: VkPhysicalDevice, pCombinationCount: *mut uint32_t, pCombinations: *mut VkFramebufferMixedSamplesCombinationNV) -> VkResult {
-		(self.vk_get_physical_device_supported_framebuffer_mixed_samples_combinations_nv)(physicalDevice, pCombinationCount, pCombinations)
+	fn vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV(&self, physicalDevice: VkPhysicalDevice, pCombinationCount: *mut uint32_t, pCombinations: *mut VkFramebufferMixedSamplesCombinationNV) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_get_physical_device_supported_framebuffer_mixed_samples_combinations_nv)(physicalDevice, pCombinationCount, pCombinations))
 	}
 }
 impl Default for Vulkan_NV_coverage_reduction_mode {
@@ -24072,15 +24079,15 @@ extern "system" fn dummy_vkCreateHeadlessSurfaceEXT(_: VkInstance, _: *const VkH
 	panic!("Vulkan function pointer of `vkCreateHeadlessSurfaceEXT()` is NULL");
 }
 pub trait VK_EXT_headless_surface: Debug {
-	fn vkCreateHeadlessSurfaceEXT(&self, instance: VkInstance, pCreateInfo: *const VkHeadlessSurfaceCreateInfoEXT, pAllocator: *const VkAllocationCallbacks, pSurface: *mut VkSurfaceKHR) -> VkResult;
+	fn vkCreateHeadlessSurfaceEXT(&self, instance: VkInstance, pCreateInfo: *const VkHeadlessSurfaceCreateInfoEXT, pAllocator: *const VkAllocationCallbacks, pSurface: *mut VkSurfaceKHR) -> Result<(), VkResult>;
 }
 #[derive(Debug, Clone, Copy)]
 pub struct Vulkan_EXT_headless_surface {
 	vk_create_headless_surface_ext: PFN_vkCreateHeadlessSurfaceEXT,
 }
 impl VK_EXT_headless_surface for Vulkan_EXT_headless_surface {
-	fn vkCreateHeadlessSurfaceEXT(&self, instance: VkInstance, pCreateInfo: *const VkHeadlessSurfaceCreateInfoEXT, pAllocator: *const VkAllocationCallbacks, pSurface: *mut VkSurfaceKHR) -> VkResult {
-		(self.vk_create_headless_surface_ext)(instance, pCreateInfo, pAllocator, pSurface)
+	fn vkCreateHeadlessSurfaceEXT(&self, instance: VkInstance, pCreateInfo: *const VkHeadlessSurfaceCreateInfoEXT, pAllocator: *const VkAllocationCallbacks, pSurface: *mut VkSurfaceKHR) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_create_headless_surface_ext)(instance, pCreateInfo, pAllocator, pSurface))
 	}
 }
 impl Default for Vulkan_EXT_headless_surface {
@@ -24280,15 +24287,15 @@ extern "system" fn dummy_vkCopyMemoryToImageEXT(_: VkDevice, _: *const VkCopyMem
 	panic!("Vulkan function pointer of `vkCopyMemoryToImageEXT()` is NULL");
 }
 pub trait VK_EXT_host_image_copy: Debug {
-	fn vkCopyMemoryToImageEXT(&self, device: VkDevice, pCopyMemoryToImageInfo: *const VkCopyMemoryToImageInfo) -> VkResult;
+	fn vkCopyMemoryToImageEXT(&self, device: VkDevice, pCopyMemoryToImageInfo: *const VkCopyMemoryToImageInfo) -> Result<(), VkResult>;
 }
 #[derive(Debug, Clone, Copy)]
 pub struct Vulkan_EXT_host_image_copy {
 	vk_copy_memory_to_image_ext: PFN_vkCopyMemoryToImageEXT,
 }
 impl VK_EXT_host_image_copy for Vulkan_EXT_host_image_copy {
-	fn vkCopyMemoryToImageEXT(&self, device: VkDevice, pCopyMemoryToImageInfo: *const VkCopyMemoryToImageInfo) -> VkResult {
-		(self.vk_copy_memory_to_image_ext)(device, pCopyMemoryToImageInfo)
+	fn vkCopyMemoryToImageEXT(&self, device: VkDevice, pCopyMemoryToImageInfo: *const VkCopyMemoryToImageInfo) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_copy_memory_to_image_ext)(device, pCopyMemoryToImageInfo))
 	}
 }
 impl Default for Vulkan_EXT_host_image_copy {
@@ -24406,15 +24413,15 @@ extern "system" fn dummy_vkReleaseSwapchainImagesEXT(_: VkDevice, _: *const VkRe
 	panic!("Vulkan function pointer of `vkReleaseSwapchainImagesEXT()` is NULL");
 }
 pub trait VK_EXT_swapchain_maintenance1: Debug {
-	fn vkReleaseSwapchainImagesEXT(&self, device: VkDevice, pReleaseInfo: *const VkReleaseSwapchainImagesInfoKHR) -> VkResult;
+	fn vkReleaseSwapchainImagesEXT(&self, device: VkDevice, pReleaseInfo: *const VkReleaseSwapchainImagesInfoKHR) -> Result<(), VkResult>;
 }
 #[derive(Debug, Clone, Copy)]
 pub struct Vulkan_EXT_swapchain_maintenance1 {
 	vk_release_swapchain_images_ext: PFN_vkReleaseSwapchainImagesEXT,
 }
 impl VK_EXT_swapchain_maintenance1 for Vulkan_EXT_swapchain_maintenance1 {
-	fn vkReleaseSwapchainImagesEXT(&self, device: VkDevice, pReleaseInfo: *const VkReleaseSwapchainImagesInfoKHR) -> VkResult {
-		(self.vk_release_swapchain_images_ext)(device, pReleaseInfo)
+	fn vkReleaseSwapchainImagesEXT(&self, device: VkDevice, pReleaseInfo: *const VkReleaseSwapchainImagesInfoKHR) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_release_swapchain_images_ext)(device, pReleaseInfo))
 	}
 }
 impl Default for Vulkan_EXT_swapchain_maintenance1 {
@@ -24856,15 +24863,15 @@ extern "system" fn dummy_vkAcquireDrmDisplayEXT(_: VkPhysicalDevice, _: i32, _: 
 	panic!("Vulkan function pointer of `vkAcquireDrmDisplayEXT()` is NULL");
 }
 pub trait VK_EXT_acquire_drm_display: Debug {
-	fn vkAcquireDrmDisplayEXT(&self, physicalDevice: VkPhysicalDevice, drmFd: i32, display: VkDisplayKHR) -> VkResult;
+	fn vkAcquireDrmDisplayEXT(&self, physicalDevice: VkPhysicalDevice, drmFd: i32, display: VkDisplayKHR) -> Result<(), VkResult>;
 }
 #[derive(Debug, Clone, Copy)]
 pub struct Vulkan_EXT_acquire_drm_display {
 	vk_acquire_drm_display_ext: PFN_vkAcquireDrmDisplayEXT,
 }
 impl VK_EXT_acquire_drm_display for Vulkan_EXT_acquire_drm_display {
-	fn vkAcquireDrmDisplayEXT(&self, physicalDevice: VkPhysicalDevice, drmFd: i32, display: VkDisplayKHR) -> VkResult {
-		(self.vk_acquire_drm_display_ext)(physicalDevice, drmFd, display)
+	fn vkAcquireDrmDisplayEXT(&self, physicalDevice: VkPhysicalDevice, drmFd: i32, display: VkDisplayKHR) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_acquire_drm_display_ext)(physicalDevice, drmFd, display))
 	}
 }
 impl Default for Vulkan_EXT_acquire_drm_display {
@@ -24996,15 +25003,15 @@ extern "system" fn dummy_vkCreatePrivateDataSlotEXT(_: VkDevice, _: *const VkPri
 	panic!("Vulkan function pointer of `vkCreatePrivateDataSlotEXT()` is NULL");
 }
 pub trait VK_EXT_private_data: Debug {
-	fn vkCreatePrivateDataSlotEXT(&self, device: VkDevice, pCreateInfo: *const VkPrivateDataSlotCreateInfo, pAllocator: *const VkAllocationCallbacks, pPrivateDataSlot: *mut VkPrivateDataSlot) -> VkResult;
+	fn vkCreatePrivateDataSlotEXT(&self, device: VkDevice, pCreateInfo: *const VkPrivateDataSlotCreateInfo, pAllocator: *const VkAllocationCallbacks, pPrivateDataSlot: *mut VkPrivateDataSlot) -> Result<(), VkResult>;
 }
 #[derive(Debug, Clone, Copy)]
 pub struct Vulkan_EXT_private_data {
 	vk_create_private_data_slot_ext: PFN_vkCreatePrivateDataSlotEXT,
 }
 impl VK_EXT_private_data for Vulkan_EXT_private_data {
-	fn vkCreatePrivateDataSlotEXT(&self, device: VkDevice, pCreateInfo: *const VkPrivateDataSlotCreateInfo, pAllocator: *const VkAllocationCallbacks, pPrivateDataSlot: *mut VkPrivateDataSlot) -> VkResult {
-		(self.vk_create_private_data_slot_ext)(device, pCreateInfo, pAllocator, pPrivateDataSlot)
+	fn vkCreatePrivateDataSlotEXT(&self, device: VkDevice, pCreateInfo: *const VkPrivateDataSlotCreateInfo, pAllocator: *const VkAllocationCallbacks, pPrivateDataSlot: *mut VkPrivateDataSlot) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_create_private_data_slot_ext)(device, pCreateInfo, pAllocator, pPrivateDataSlot))
 	}
 }
 impl Default for Vulkan_EXT_private_data {
@@ -26027,15 +26034,15 @@ extern "system" fn dummy_vkGetDeviceFaultInfoEXT(_: VkDevice, _: *mut VkDeviceFa
 	panic!("Vulkan function pointer of `vkGetDeviceFaultInfoEXT()` is NULL");
 }
 pub trait VK_EXT_device_fault: Debug {
-	fn vkGetDeviceFaultInfoEXT(&self, device: VkDevice, pFaultCounts: *mut VkDeviceFaultCountsEXT, pFaultInfo: *mut VkDeviceFaultInfoEXT) -> VkResult;
+	fn vkGetDeviceFaultInfoEXT(&self, device: VkDevice, pFaultCounts: *mut VkDeviceFaultCountsEXT, pFaultInfo: *mut VkDeviceFaultInfoEXT) -> Result<(), VkResult>;
 }
 #[derive(Debug, Clone, Copy)]
 pub struct Vulkan_EXT_device_fault {
 	vk_get_device_fault_info_ext: PFN_vkGetDeviceFaultInfoEXT,
 }
 impl VK_EXT_device_fault for Vulkan_EXT_device_fault {
-	fn vkGetDeviceFaultInfoEXT(&self, device: VkDevice, pFaultCounts: *mut VkDeviceFaultCountsEXT, pFaultInfo: *mut VkDeviceFaultInfoEXT) -> VkResult {
-		(self.vk_get_device_fault_info_ext)(device, pFaultCounts, pFaultInfo)
+	fn vkGetDeviceFaultInfoEXT(&self, device: VkDevice, pFaultCounts: *mut VkDeviceFaultCountsEXT, pFaultInfo: *mut VkDeviceFaultInfoEXT) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_get_device_fault_info_ext)(device, pFaultCounts, pFaultInfo))
 	}
 }
 impl Default for Vulkan_EXT_device_fault {
@@ -26356,15 +26363,15 @@ extern "system" fn dummy_vkGetDeviceSubpassShadingMaxWorkgroupSizeHUAWEI(_: VkDe
 	panic!("Vulkan function pointer of `vkGetDeviceSubpassShadingMaxWorkgroupSizeHUAWEI()` is NULL");
 }
 pub trait VK_HUAWEI_subpass_shading: Debug {
-	fn vkGetDeviceSubpassShadingMaxWorkgroupSizeHUAWEI(&self, device: VkDevice, renderpass: VkRenderPass, pMaxWorkgroupSize: *mut VkExtent2D) -> VkResult;
+	fn vkGetDeviceSubpassShadingMaxWorkgroupSizeHUAWEI(&self, device: VkDevice, renderpass: VkRenderPass, pMaxWorkgroupSize: *mut VkExtent2D) -> Result<(), VkResult>;
 }
 #[derive(Debug, Clone, Copy)]
 pub struct Vulkan_HUAWEI_subpass_shading {
 	vk_get_device_subpass_shading_max_workgroup_size_huawei: PFN_vkGetDeviceSubpassShadingMaxWorkgroupSizeHUAWEI,
 }
 impl VK_HUAWEI_subpass_shading for Vulkan_HUAWEI_subpass_shading {
-	fn vkGetDeviceSubpassShadingMaxWorkgroupSizeHUAWEI(&self, device: VkDevice, renderpass: VkRenderPass, pMaxWorkgroupSize: *mut VkExtent2D) -> VkResult {
-		(self.vk_get_device_subpass_shading_max_workgroup_size_huawei)(device, renderpass, pMaxWorkgroupSize)
+	fn vkGetDeviceSubpassShadingMaxWorkgroupSizeHUAWEI(&self, device: VkDevice, renderpass: VkRenderPass, pMaxWorkgroupSize: *mut VkExtent2D) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_get_device_subpass_shading_max_workgroup_size_huawei)(device, renderpass, pMaxWorkgroupSize))
 	}
 }
 impl Default for Vulkan_HUAWEI_subpass_shading {
@@ -26439,15 +26446,15 @@ extern "system" fn dummy_vkGetMemoryRemoteAddressNV(_: VkDevice, _: *const VkMem
 	panic!("Vulkan function pointer of `vkGetMemoryRemoteAddressNV()` is NULL");
 }
 pub trait VK_NV_external_memory_rdma: Debug {
-	fn vkGetMemoryRemoteAddressNV(&self, device: VkDevice, pMemoryGetRemoteAddressInfo: *const VkMemoryGetRemoteAddressInfoNV, pAddress: *mut VkRemoteAddressNV) -> VkResult;
+	fn vkGetMemoryRemoteAddressNV(&self, device: VkDevice, pMemoryGetRemoteAddressInfo: *const VkMemoryGetRemoteAddressInfoNV, pAddress: *mut VkRemoteAddressNV) -> Result<(), VkResult>;
 }
 #[derive(Debug, Clone, Copy)]
 pub struct Vulkan_NV_external_memory_rdma {
 	vk_get_memory_remote_address_nv: PFN_vkGetMemoryRemoteAddressNV,
 }
 impl VK_NV_external_memory_rdma for Vulkan_NV_external_memory_rdma {
-	fn vkGetMemoryRemoteAddressNV(&self, device: VkDevice, pMemoryGetRemoteAddressInfo: *const VkMemoryGetRemoteAddressInfoNV, pAddress: *mut VkRemoteAddressNV) -> VkResult {
-		(self.vk_get_memory_remote_address_nv)(device, pMemoryGetRemoteAddressInfo, pAddress)
+	fn vkGetMemoryRemoteAddressNV(&self, device: VkDevice, pMemoryGetRemoteAddressInfo: *const VkMemoryGetRemoteAddressInfoNV, pAddress: *mut VkRemoteAddressNV) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_get_memory_remote_address_nv)(device, pMemoryGetRemoteAddressInfo, pAddress))
 	}
 }
 impl Default for Vulkan_NV_external_memory_rdma {
@@ -26484,15 +26491,15 @@ extern "system" fn dummy_vkGetPipelinePropertiesEXT(_: VkDevice, _: *const VkPip
 	panic!("Vulkan function pointer of `vkGetPipelinePropertiesEXT()` is NULL");
 }
 pub trait VK_EXT_pipeline_properties: Debug {
-	fn vkGetPipelinePropertiesEXT(&self, device: VkDevice, pPipelineInfo: *const VkPipelineInfoEXT, pPipelineProperties: *mut VkBaseOutStructure) -> VkResult;
+	fn vkGetPipelinePropertiesEXT(&self, device: VkDevice, pPipelineInfo: *const VkPipelineInfoEXT, pPipelineProperties: *mut VkBaseOutStructure) -> Result<(), VkResult>;
 }
 #[derive(Debug, Clone, Copy)]
 pub struct Vulkan_EXT_pipeline_properties {
 	vk_get_pipeline_properties_ext: PFN_vkGetPipelinePropertiesEXT,
 }
 impl VK_EXT_pipeline_properties for Vulkan_EXT_pipeline_properties {
-	fn vkGetPipelinePropertiesEXT(&self, device: VkDevice, pPipelineInfo: *const VkPipelineInfoEXT, pPipelineProperties: *mut VkBaseOutStructure) -> VkResult {
-		(self.vk_get_pipeline_properties_ext)(device, pPipelineInfo, pPipelineProperties)
+	fn vkGetPipelinePropertiesEXT(&self, device: VkDevice, pPipelineInfo: *const VkPipelineInfoEXT, pPipelineProperties: *mut VkBaseOutStructure) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_get_pipeline_properties_ext)(device, pPipelineInfo, pPipelineProperties))
 	}
 }
 impl Default for Vulkan_EXT_pipeline_properties {
@@ -27079,15 +27086,15 @@ extern "system" fn dummy_vkCreateMicromapEXT(_: VkDevice, _: *const VkMicromapCr
 	panic!("Vulkan function pointer of `vkCreateMicromapEXT()` is NULL");
 }
 pub trait VK_EXT_opacity_micromap: Debug {
-	fn vkCreateMicromapEXT(&self, device: VkDevice, pCreateInfo: *const VkMicromapCreateInfoEXT, pAllocator: *const VkAllocationCallbacks, pMicromap: *mut VkMicromapEXT) -> VkResult;
+	fn vkCreateMicromapEXT(&self, device: VkDevice, pCreateInfo: *const VkMicromapCreateInfoEXT, pAllocator: *const VkAllocationCallbacks, pMicromap: *mut VkMicromapEXT) -> Result<(), VkResult>;
 }
 #[derive(Debug, Clone, Copy)]
 pub struct Vulkan_EXT_opacity_micromap {
 	vk_create_micromap_ext: PFN_vkCreateMicromapEXT,
 }
 impl VK_EXT_opacity_micromap for Vulkan_EXT_opacity_micromap {
-	fn vkCreateMicromapEXT(&self, device: VkDevice, pCreateInfo: *const VkMicromapCreateInfoEXT, pAllocator: *const VkAllocationCallbacks, pMicromap: *mut VkMicromapEXT) -> VkResult {
-		(self.vk_create_micromap_ext)(device, pCreateInfo, pAllocator, pMicromap)
+	fn vkCreateMicromapEXT(&self, device: VkDevice, pCreateInfo: *const VkMicromapCreateInfoEXT, pAllocator: *const VkAllocationCallbacks, pMicromap: *mut VkMicromapEXT) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_create_micromap_ext)(device, pCreateInfo, pAllocator, pMicromap))
 	}
 }
 impl Default for Vulkan_EXT_opacity_micromap {
@@ -28401,15 +28408,15 @@ extern "system" fn dummy_vkCreateTensorARM(_: VkDevice, _: *const VkTensorCreate
 	panic!("Vulkan function pointer of `vkCreateTensorARM()` is NULL");
 }
 pub trait VK_ARM_tensors: Debug {
-	fn vkCreateTensorARM(&self, device: VkDevice, pCreateInfo: *const VkTensorCreateInfoARM, pAllocator: *const VkAllocationCallbacks, pTensor: *mut VkTensorARM) -> VkResult;
+	fn vkCreateTensorARM(&self, device: VkDevice, pCreateInfo: *const VkTensorCreateInfoARM, pAllocator: *const VkAllocationCallbacks, pTensor: *mut VkTensorARM) -> Result<(), VkResult>;
 }
 #[derive(Debug, Clone, Copy)]
 pub struct Vulkan_ARM_tensors {
 	vk_create_tensor_arm: PFN_vkCreateTensorARM,
 }
 impl VK_ARM_tensors for Vulkan_ARM_tensors {
-	fn vkCreateTensorARM(&self, device: VkDevice, pCreateInfo: *const VkTensorCreateInfoARM, pAllocator: *const VkAllocationCallbacks, pTensor: *mut VkTensorARM) -> VkResult {
-		(self.vk_create_tensor_arm)(device, pCreateInfo, pAllocator, pTensor)
+	fn vkCreateTensorARM(&self, device: VkDevice, pCreateInfo: *const VkTensorCreateInfoARM, pAllocator: *const VkAllocationCallbacks, pTensor: *mut VkTensorARM) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_create_tensor_arm)(device, pCreateInfo, pAllocator, pTensor))
 	}
 }
 impl Default for Vulkan_ARM_tensors {
@@ -28650,15 +28657,15 @@ extern "system" fn dummy_vkGetPhysicalDeviceOpticalFlowImageFormatsNV(_: VkPhysi
 	panic!("Vulkan function pointer of `vkGetPhysicalDeviceOpticalFlowImageFormatsNV()` is NULL");
 }
 pub trait VK_NV_optical_flow: Debug {
-	fn vkGetPhysicalDeviceOpticalFlowImageFormatsNV(&self, physicalDevice: VkPhysicalDevice, pOpticalFlowImageFormatInfo: *const VkOpticalFlowImageFormatInfoNV, pFormatCount: *mut uint32_t, pImageFormatProperties: *mut VkOpticalFlowImageFormatPropertiesNV) -> VkResult;
+	fn vkGetPhysicalDeviceOpticalFlowImageFormatsNV(&self, physicalDevice: VkPhysicalDevice, pOpticalFlowImageFormatInfo: *const VkOpticalFlowImageFormatInfoNV, pFormatCount: *mut uint32_t, pImageFormatProperties: *mut VkOpticalFlowImageFormatPropertiesNV) -> Result<(), VkResult>;
 }
 #[derive(Debug, Clone, Copy)]
 pub struct Vulkan_NV_optical_flow {
 	vk_get_physical_device_optical_flow_image_formats_nv: PFN_vkGetPhysicalDeviceOpticalFlowImageFormatsNV,
 }
 impl VK_NV_optical_flow for Vulkan_NV_optical_flow {
-	fn vkGetPhysicalDeviceOpticalFlowImageFormatsNV(&self, physicalDevice: VkPhysicalDevice, pOpticalFlowImageFormatInfo: *const VkOpticalFlowImageFormatInfoNV, pFormatCount: *mut uint32_t, pImageFormatProperties: *mut VkOpticalFlowImageFormatPropertiesNV) -> VkResult {
-		(self.vk_get_physical_device_optical_flow_image_formats_nv)(physicalDevice, pOpticalFlowImageFormatInfo, pFormatCount, pImageFormatProperties)
+	fn vkGetPhysicalDeviceOpticalFlowImageFormatsNV(&self, physicalDevice: VkPhysicalDevice, pOpticalFlowImageFormatInfo: *const VkOpticalFlowImageFormatInfoNV, pFormatCount: *mut uint32_t, pImageFormatProperties: *mut VkOpticalFlowImageFormatPropertiesNV) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_get_physical_device_optical_flow_image_formats_nv)(physicalDevice, pOpticalFlowImageFormatInfo, pFormatCount, pImageFormatProperties))
 	}
 }
 impl Default for Vulkan_NV_optical_flow {
@@ -28861,15 +28868,15 @@ extern "system" fn dummy_vkCreateShadersEXT(_: VkDevice, _: u32, _: *const VkSha
 	panic!("Vulkan function pointer of `vkCreateShadersEXT()` is NULL");
 }
 pub trait VK_EXT_shader_object: Debug {
-	fn vkCreateShadersEXT(&self, device: VkDevice, createInfoCount: u32, pCreateInfos: *const VkShaderCreateInfoEXT, pAllocator: *const VkAllocationCallbacks, pShaders: *mut VkShaderEXT) -> VkResult;
+	fn vkCreateShadersEXT(&self, device: VkDevice, createInfoCount: u32, pCreateInfos: *const VkShaderCreateInfoEXT, pAllocator: *const VkAllocationCallbacks, pShaders: *mut VkShaderEXT) -> Result<(), VkResult>;
 }
 #[derive(Debug, Clone, Copy)]
 pub struct Vulkan_EXT_shader_object {
 	vk_create_shaders_ext: PFN_vkCreateShadersEXT,
 }
 impl VK_EXT_shader_object for Vulkan_EXT_shader_object {
-	fn vkCreateShadersEXT(&self, device: VkDevice, createInfoCount: u32, pCreateInfos: *const VkShaderCreateInfoEXT, pAllocator: *const VkAllocationCallbacks, pShaders: *mut VkShaderEXT) -> VkResult {
-		(self.vk_create_shaders_ext)(device, createInfoCount, pCreateInfos, pAllocator, pShaders)
+	fn vkCreateShadersEXT(&self, device: VkDevice, createInfoCount: u32, pCreateInfos: *const VkShaderCreateInfoEXT, pAllocator: *const VkAllocationCallbacks, pShaders: *mut VkShaderEXT) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_create_shaders_ext)(device, createInfoCount, pCreateInfos, pAllocator, pShaders))
 	}
 }
 impl Default for Vulkan_EXT_shader_object {
@@ -28908,15 +28915,15 @@ extern "system" fn dummy_vkGetFramebufferTilePropertiesQCOM(_: VkDevice, _: VkFr
 	panic!("Vulkan function pointer of `vkGetFramebufferTilePropertiesQCOM()` is NULL");
 }
 pub trait VK_QCOM_tile_properties: Debug {
-	fn vkGetFramebufferTilePropertiesQCOM(&self, device: VkDevice, framebuffer: VkFramebuffer, pPropertiesCount: *mut uint32_t, pProperties: *mut VkTilePropertiesQCOM) -> VkResult;
+	fn vkGetFramebufferTilePropertiesQCOM(&self, device: VkDevice, framebuffer: VkFramebuffer, pPropertiesCount: *mut uint32_t, pProperties: *mut VkTilePropertiesQCOM) -> Result<(), VkResult>;
 }
 #[derive(Debug, Clone, Copy)]
 pub struct Vulkan_QCOM_tile_properties {
 	vk_get_framebuffer_tile_properties_qcom: PFN_vkGetFramebufferTilePropertiesQCOM,
 }
 impl VK_QCOM_tile_properties for Vulkan_QCOM_tile_properties {
-	fn vkGetFramebufferTilePropertiesQCOM(&self, device: VkDevice, framebuffer: VkFramebuffer, pPropertiesCount: *mut uint32_t, pProperties: *mut VkTilePropertiesQCOM) -> VkResult {
-		(self.vk_get_framebuffer_tile_properties_qcom)(device, framebuffer, pPropertiesCount, pProperties)
+	fn vkGetFramebufferTilePropertiesQCOM(&self, device: VkDevice, framebuffer: VkFramebuffer, pPropertiesCount: *mut uint32_t, pProperties: *mut VkTilePropertiesQCOM) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_get_framebuffer_tile_properties_qcom)(device, framebuffer, pPropertiesCount, pProperties))
 	}
 }
 impl Default for Vulkan_QCOM_tile_properties {
@@ -29082,15 +29089,15 @@ extern "system" fn dummy_vkGetPhysicalDeviceCooperativeVectorPropertiesNV(_: VkP
 	panic!("Vulkan function pointer of `vkGetPhysicalDeviceCooperativeVectorPropertiesNV()` is NULL");
 }
 pub trait VK_NV_cooperative_vector: Debug {
-	fn vkGetPhysicalDeviceCooperativeVectorPropertiesNV(&self, physicalDevice: VkPhysicalDevice, pPropertyCount: *mut uint32_t, pProperties: *mut VkCooperativeVectorPropertiesNV) -> VkResult;
+	fn vkGetPhysicalDeviceCooperativeVectorPropertiesNV(&self, physicalDevice: VkPhysicalDevice, pPropertyCount: *mut uint32_t, pProperties: *mut VkCooperativeVectorPropertiesNV) -> Result<(), VkResult>;
 }
 #[derive(Debug, Clone, Copy)]
 pub struct Vulkan_NV_cooperative_vector {
 	vk_get_physical_device_cooperative_vector_properties_nv: PFN_vkGetPhysicalDeviceCooperativeVectorPropertiesNV,
 }
 impl VK_NV_cooperative_vector for Vulkan_NV_cooperative_vector {
-	fn vkGetPhysicalDeviceCooperativeVectorPropertiesNV(&self, physicalDevice: VkPhysicalDevice, pPropertyCount: *mut uint32_t, pProperties: *mut VkCooperativeVectorPropertiesNV) -> VkResult {
-		(self.vk_get_physical_device_cooperative_vector_properties_nv)(physicalDevice, pPropertyCount, pProperties)
+	fn vkGetPhysicalDeviceCooperativeVectorPropertiesNV(&self, physicalDevice: VkPhysicalDevice, pPropertyCount: *mut uint32_t, pProperties: *mut VkCooperativeVectorPropertiesNV) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_get_physical_device_cooperative_vector_properties_nv)(physicalDevice, pPropertyCount, pProperties))
 	}
 }
 impl Default for Vulkan_NV_cooperative_vector {
@@ -29410,15 +29417,15 @@ extern "system" fn dummy_vkSetLatencySleepModeNV(_: VkDevice, _: VkSwapchainKHR,
 	panic!("Vulkan function pointer of `vkSetLatencySleepModeNV()` is NULL");
 }
 pub trait VK_NV_low_latency2: Debug {
-	fn vkSetLatencySleepModeNV(&self, device: VkDevice, swapchain: VkSwapchainKHR, pSleepModeInfo: *const VkLatencySleepModeInfoNV) -> VkResult;
+	fn vkSetLatencySleepModeNV(&self, device: VkDevice, swapchain: VkSwapchainKHR, pSleepModeInfo: *const VkLatencySleepModeInfoNV) -> Result<(), VkResult>;
 }
 #[derive(Debug, Clone, Copy)]
 pub struct Vulkan_NV_low_latency2 {
 	vk_set_latency_sleep_mode_nv: PFN_vkSetLatencySleepModeNV,
 }
 impl VK_NV_low_latency2 for Vulkan_NV_low_latency2 {
-	fn vkSetLatencySleepModeNV(&self, device: VkDevice, swapchain: VkSwapchainKHR, pSleepModeInfo: *const VkLatencySleepModeInfoNV) -> VkResult {
-		(self.vk_set_latency_sleep_mode_nv)(device, swapchain, pSleepModeInfo)
+	fn vkSetLatencySleepModeNV(&self, device: VkDevice, swapchain: VkSwapchainKHR, pSleepModeInfo: *const VkLatencySleepModeInfoNV) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_set_latency_sleep_mode_nv)(device, swapchain, pSleepModeInfo))
 	}
 }
 impl Default for Vulkan_NV_low_latency2 {
@@ -29676,15 +29683,15 @@ extern "system" fn dummy_vkCreateDataGraphPipelinesARM(_: VkDevice, _: VkDeferre
 	panic!("Vulkan function pointer of `vkCreateDataGraphPipelinesARM()` is NULL");
 }
 pub trait VK_ARM_data_graph: Debug {
-	fn vkCreateDataGraphPipelinesARM(&self, device: VkDevice, deferredOperation: VkDeferredOperationKHR, pipelineCache: VkPipelineCache, createInfoCount: u32, pCreateInfos: *const VkDataGraphPipelineCreateInfoARM, pAllocator: *const VkAllocationCallbacks, pPipelines: *mut VkPipeline) -> VkResult;
+	fn vkCreateDataGraphPipelinesARM(&self, device: VkDevice, deferredOperation: VkDeferredOperationKHR, pipelineCache: VkPipelineCache, createInfoCount: u32, pCreateInfos: *const VkDataGraphPipelineCreateInfoARM, pAllocator: *const VkAllocationCallbacks, pPipelines: *mut VkPipeline) -> Result<(), VkResult>;
 }
 #[derive(Debug, Clone, Copy)]
 pub struct Vulkan_ARM_data_graph {
 	vk_create_data_graph_pipelines_arm: PFN_vkCreateDataGraphPipelinesARM,
 }
 impl VK_ARM_data_graph for Vulkan_ARM_data_graph {
-	fn vkCreateDataGraphPipelinesARM(&self, device: VkDevice, deferredOperation: VkDeferredOperationKHR, pipelineCache: VkPipelineCache, createInfoCount: u32, pCreateInfos: *const VkDataGraphPipelineCreateInfoARM, pAllocator: *const VkAllocationCallbacks, pPipelines: *mut VkPipeline) -> VkResult {
-		(self.vk_create_data_graph_pipelines_arm)(device, deferredOperation, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines)
+	fn vkCreateDataGraphPipelinesARM(&self, device: VkDevice, deferredOperation: VkDeferredOperationKHR, pipelineCache: VkPipelineCache, createInfoCount: u32, pCreateInfos: *const VkDataGraphPipelineCreateInfoARM, pAllocator: *const VkAllocationCallbacks, pPipelines: *mut VkPipeline) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_create_data_graph_pipelines_arm)(device, deferredOperation, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines))
 	}
 }
 impl Default for Vulkan_ARM_data_graph {
@@ -30139,15 +30146,15 @@ extern "system" fn dummy_vkCreateExternalComputeQueueNV(_: VkDevice, _: *const V
 	panic!("Vulkan function pointer of `vkCreateExternalComputeQueueNV()` is NULL");
 }
 pub trait VK_NV_external_compute_queue: Debug {
-	fn vkCreateExternalComputeQueueNV(&self, device: VkDevice, pCreateInfo: *const VkExternalComputeQueueCreateInfoNV, pAllocator: *const VkAllocationCallbacks, pExternalQueue: *mut VkExternalComputeQueueNV) -> VkResult;
+	fn vkCreateExternalComputeQueueNV(&self, device: VkDevice, pCreateInfo: *const VkExternalComputeQueueCreateInfoNV, pAllocator: *const VkAllocationCallbacks, pExternalQueue: *mut VkExternalComputeQueueNV) -> Result<(), VkResult>;
 }
 #[derive(Debug, Clone, Copy)]
 pub struct Vulkan_NV_external_compute_queue {
 	vk_create_external_compute_queue_nv: PFN_vkCreateExternalComputeQueueNV,
 }
 impl VK_NV_external_compute_queue for Vulkan_NV_external_compute_queue {
-	fn vkCreateExternalComputeQueueNV(&self, device: VkDevice, pCreateInfo: *const VkExternalComputeQueueCreateInfoNV, pAllocator: *const VkAllocationCallbacks, pExternalQueue: *mut VkExternalComputeQueueNV) -> VkResult {
-		(self.vk_create_external_compute_queue_nv)(device, pCreateInfo, pAllocator, pExternalQueue)
+	fn vkCreateExternalComputeQueueNV(&self, device: VkDevice, pCreateInfo: *const VkExternalComputeQueueCreateInfoNV, pAllocator: *const VkAllocationCallbacks, pExternalQueue: *mut VkExternalComputeQueueNV) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_create_external_compute_queue_nv)(device, pCreateInfo, pAllocator, pExternalQueue))
 	}
 }
 impl Default for Vulkan_NV_external_compute_queue {
@@ -31241,15 +31248,15 @@ extern "system" fn dummy_vkGetPhysicalDeviceCooperativeMatrixFlexibleDimensionsP
 	panic!("Vulkan function pointer of `vkGetPhysicalDeviceCooperativeMatrixFlexibleDimensionsPropertiesNV()` is NULL");
 }
 pub trait VK_NV_cooperative_matrix2: Debug {
-	fn vkGetPhysicalDeviceCooperativeMatrixFlexibleDimensionsPropertiesNV(&self, physicalDevice: VkPhysicalDevice, pPropertyCount: *mut uint32_t, pProperties: *mut VkCooperativeMatrixFlexibleDimensionsPropertiesNV) -> VkResult;
+	fn vkGetPhysicalDeviceCooperativeMatrixFlexibleDimensionsPropertiesNV(&self, physicalDevice: VkPhysicalDevice, pPropertyCount: *mut uint32_t, pProperties: *mut VkCooperativeMatrixFlexibleDimensionsPropertiesNV) -> Result<(), VkResult>;
 }
 #[derive(Debug, Clone, Copy)]
 pub struct Vulkan_NV_cooperative_matrix2 {
 	vk_get_physical_device_cooperative_matrix_flexible_dimensions_properties_nv: PFN_vkGetPhysicalDeviceCooperativeMatrixFlexibleDimensionsPropertiesNV,
 }
 impl VK_NV_cooperative_matrix2 for Vulkan_NV_cooperative_matrix2 {
-	fn vkGetPhysicalDeviceCooperativeMatrixFlexibleDimensionsPropertiesNV(&self, physicalDevice: VkPhysicalDevice, pPropertyCount: *mut uint32_t, pProperties: *mut VkCooperativeMatrixFlexibleDimensionsPropertiesNV) -> VkResult {
-		(self.vk_get_physical_device_cooperative_matrix_flexible_dimensions_properties_nv)(physicalDevice, pPropertyCount, pProperties)
+	fn vkGetPhysicalDeviceCooperativeMatrixFlexibleDimensionsPropertiesNV(&self, physicalDevice: VkPhysicalDevice, pPropertyCount: *mut uint32_t, pProperties: *mut VkCooperativeMatrixFlexibleDimensionsPropertiesNV) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_get_physical_device_cooperative_matrix_flexible_dimensions_properties_nv)(physicalDevice, pPropertyCount, pProperties))
 	}
 }
 impl Default for Vulkan_NV_cooperative_matrix2 {
@@ -31670,15 +31677,15 @@ extern "system" fn dummy_vkCreateAccelerationStructureKHR(_: VkDevice, _: *const
 	panic!("Vulkan function pointer of `vkCreateAccelerationStructureKHR()` is NULL");
 }
 pub trait VK_KHR_acceleration_structure: Debug {
-	fn vkCreateAccelerationStructureKHR(&self, device: VkDevice, pCreateInfo: *const VkAccelerationStructureCreateInfoKHR, pAllocator: *const VkAllocationCallbacks, pAccelerationStructure: *mut VkAccelerationStructureKHR) -> VkResult;
+	fn vkCreateAccelerationStructureKHR(&self, device: VkDevice, pCreateInfo: *const VkAccelerationStructureCreateInfoKHR, pAllocator: *const VkAllocationCallbacks, pAccelerationStructure: *mut VkAccelerationStructureKHR) -> Result<(), VkResult>;
 }
 #[derive(Debug, Clone, Copy)]
 pub struct Vulkan_KHR_acceleration_structure {
 	vk_create_acceleration_structure_khr: PFN_vkCreateAccelerationStructureKHR,
 }
 impl VK_KHR_acceleration_structure for Vulkan_KHR_acceleration_structure {
-	fn vkCreateAccelerationStructureKHR(&self, device: VkDevice, pCreateInfo: *const VkAccelerationStructureCreateInfoKHR, pAllocator: *const VkAllocationCallbacks, pAccelerationStructure: *mut VkAccelerationStructureKHR) -> VkResult {
-		(self.vk_create_acceleration_structure_khr)(device, pCreateInfo, pAllocator, pAccelerationStructure)
+	fn vkCreateAccelerationStructureKHR(&self, device: VkDevice, pCreateInfo: *const VkAccelerationStructureCreateInfoKHR, pAllocator: *const VkAllocationCallbacks, pAccelerationStructure: *mut VkAccelerationStructureKHR) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_create_acceleration_structure_khr)(device, pCreateInfo, pAllocator, pAccelerationStructure))
 	}
 }
 impl Default for Vulkan_KHR_acceleration_structure {
@@ -32322,14 +32329,14 @@ pub struct VkCore {
 	pub vk_ext_mesh_shader: Vulkan_EXT_mesh_shader,
 }
 impl VK_VERSION_1_0 for VkCore {
-	fn vkCreateInstance(&self, pCreateInfo: *const VkInstanceCreateInfo, pAllocator: *const VkAllocationCallbacks, pInstance: *mut VkInstance) -> VkResult {
-		(self.vk_version_1_0.vk_create_instance)(pCreateInfo, pAllocator, pInstance)
+	fn vkCreateInstance(&self, pCreateInfo: *const VkInstanceCreateInfo, pAllocator: *const VkAllocationCallbacks, pInstance: *mut VkInstance) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_version_1_0.vk_create_instance)(pCreateInfo, pAllocator, pInstance))
 	}
 	fn vkDestroyInstance(&self, instance: VkInstance, pAllocator: *const VkAllocationCallbacks) {
 		(self.vk_version_1_0.vk_destroy_instance)(instance, pAllocator)
 	}
-	fn vkEnumeratePhysicalDevices(&self, instance: VkInstance, pPhysicalDeviceCount: *mut uint32_t, pPhysicalDevices: *mut VkPhysicalDevice) -> VkResult {
-		(self.vk_version_1_0.vk_enumerate_physical_devices)(instance, pPhysicalDeviceCount, pPhysicalDevices)
+	fn vkEnumeratePhysicalDevices(&self, instance: VkInstance, pPhysicalDeviceCount: *mut uint32_t, pPhysicalDevices: *mut VkPhysicalDevice) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_version_1_0.vk_enumerate_physical_devices)(instance, pPhysicalDeviceCount, pPhysicalDevices))
 	}
 	fn vkGetPhysicalDeviceFeatures(&self, physicalDevice: VkPhysicalDevice, pFeatures: *mut VkPhysicalDeviceFeatures) {
 		(self.vk_version_1_0.vk_get_physical_device_features)(physicalDevice, pFeatures)
@@ -32337,8 +32344,8 @@ impl VK_VERSION_1_0 for VkCore {
 	fn vkGetPhysicalDeviceFormatProperties(&self, physicalDevice: VkPhysicalDevice, format: VkFormat, pFormatProperties: *mut VkFormatProperties) {
 		(self.vk_version_1_0.vk_get_physical_device_format_properties)(physicalDevice, format, pFormatProperties)
 	}
-	fn vkGetPhysicalDeviceImageFormatProperties(&self, physicalDevice: VkPhysicalDevice, format: VkFormat, type_: VkImageType, tiling: VkImageTiling, usage: VkImageUsageFlags, flags: VkImageCreateFlags, pImageFormatProperties: *mut VkImageFormatProperties) -> VkResult {
-		(self.vk_version_1_0.vk_get_physical_device_image_format_properties)(physicalDevice, format, type_, tiling, usage, flags, pImageFormatProperties)
+	fn vkGetPhysicalDeviceImageFormatProperties(&self, physicalDevice: VkPhysicalDevice, format: VkFormat, type_: VkImageType, tiling: VkImageTiling, usage: VkImageUsageFlags, flags: VkImageCreateFlags, pImageFormatProperties: *mut VkImageFormatProperties) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_version_1_0.vk_get_physical_device_image_format_properties)(physicalDevice, format, type_, tiling, usage, flags, pImageFormatProperties))
 	}
 	fn vkGetPhysicalDeviceProperties(&self, physicalDevice: VkPhysicalDevice, pProperties: *mut VkPhysicalDeviceProperties) {
 		(self.vk_version_1_0.vk_get_physical_device_properties)(physicalDevice, pProperties)
@@ -32355,62 +32362,62 @@ impl VK_VERSION_1_0 for VkCore {
 	fn vkGetDeviceProcAddr(&self, device: VkDevice, pName: *const i8) -> PFN_vkVoidFunction {
 		(self.vk_version_1_0.vk_get_device_proc_addr)(device, pName)
 	}
-	fn vkCreateDevice(&self, physicalDevice: VkPhysicalDevice, pCreateInfo: *const VkDeviceCreateInfo, pAllocator: *const VkAllocationCallbacks, pDevice: *mut VkDevice) -> VkResult {
-		(self.vk_version_1_0.vk_create_device)(physicalDevice, pCreateInfo, pAllocator, pDevice)
+	fn vkCreateDevice(&self, physicalDevice: VkPhysicalDevice, pCreateInfo: *const VkDeviceCreateInfo, pAllocator: *const VkAllocationCallbacks, pDevice: *mut VkDevice) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_version_1_0.vk_create_device)(physicalDevice, pCreateInfo, pAllocator, pDevice))
 	}
 	fn vkDestroyDevice(&self, device: VkDevice, pAllocator: *const VkAllocationCallbacks) {
 		(self.vk_version_1_0.vk_destroy_device)(device, pAllocator)
 	}
-	fn vkEnumerateInstanceExtensionProperties(&self, pLayerName: *const i8, pPropertyCount: *mut uint32_t, pProperties: *mut VkExtensionProperties) -> VkResult {
-		(self.vk_version_1_0.vk_enumerate_instance_extension_properties)(pLayerName, pPropertyCount, pProperties)
+	fn vkEnumerateInstanceExtensionProperties(&self, pLayerName: *const i8, pPropertyCount: *mut uint32_t, pProperties: *mut VkExtensionProperties) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_version_1_0.vk_enumerate_instance_extension_properties)(pLayerName, pPropertyCount, pProperties))
 	}
-	fn vkEnumerateDeviceExtensionProperties(&self, physicalDevice: VkPhysicalDevice, pLayerName: *const i8, pPropertyCount: *mut uint32_t, pProperties: *mut VkExtensionProperties) -> VkResult {
-		(self.vk_version_1_0.vk_enumerate_device_extension_properties)(physicalDevice, pLayerName, pPropertyCount, pProperties)
+	fn vkEnumerateDeviceExtensionProperties(&self, physicalDevice: VkPhysicalDevice, pLayerName: *const i8, pPropertyCount: *mut uint32_t, pProperties: *mut VkExtensionProperties) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_version_1_0.vk_enumerate_device_extension_properties)(physicalDevice, pLayerName, pPropertyCount, pProperties))
 	}
-	fn vkEnumerateInstanceLayerProperties(&self, pPropertyCount: *mut uint32_t, pProperties: *mut VkLayerProperties) -> VkResult {
-		(self.vk_version_1_0.vk_enumerate_instance_layer_properties)(pPropertyCount, pProperties)
+	fn vkEnumerateInstanceLayerProperties(&self, pPropertyCount: *mut uint32_t, pProperties: *mut VkLayerProperties) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_version_1_0.vk_enumerate_instance_layer_properties)(pPropertyCount, pProperties))
 	}
-	fn vkEnumerateDeviceLayerProperties(&self, physicalDevice: VkPhysicalDevice, pPropertyCount: *mut uint32_t, pProperties: *mut VkLayerProperties) -> VkResult {
-		(self.vk_version_1_0.vk_enumerate_device_layer_properties)(physicalDevice, pPropertyCount, pProperties)
+	fn vkEnumerateDeviceLayerProperties(&self, physicalDevice: VkPhysicalDevice, pPropertyCount: *mut uint32_t, pProperties: *mut VkLayerProperties) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_version_1_0.vk_enumerate_device_layer_properties)(physicalDevice, pPropertyCount, pProperties))
 	}
 	fn vkGetDeviceQueue(&self, device: VkDevice, queueFamilyIndex: u32, queueIndex: u32, pQueue: *mut VkQueue) {
 		(self.vk_version_1_0.vk_get_device_queue)(device, queueFamilyIndex, queueIndex, pQueue)
 	}
-	fn vkQueueSubmit(&self, queue: VkQueue, submitCount: u32, pSubmits: *const VkSubmitInfo, fence: VkFence) -> VkResult {
-		(self.vk_version_1_0.vk_queue_submit)(queue, submitCount, pSubmits, fence)
+	fn vkQueueSubmit(&self, queue: VkQueue, submitCount: u32, pSubmits: *const VkSubmitInfo, fence: VkFence) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_version_1_0.vk_queue_submit)(queue, submitCount, pSubmits, fence))
 	}
-	fn vkQueueWaitIdle(&self, queue: VkQueue) -> VkResult {
-		(self.vk_version_1_0.vk_queue_wait_idle)(queue)
+	fn vkQueueWaitIdle(&self, queue: VkQueue) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_version_1_0.vk_queue_wait_idle)(queue))
 	}
-	fn vkDeviceWaitIdle(&self, device: VkDevice) -> VkResult {
-		(self.vk_version_1_0.vk_device_wait_idle)(device)
+	fn vkDeviceWaitIdle(&self, device: VkDevice) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_version_1_0.vk_device_wait_idle)(device))
 	}
-	fn vkAllocateMemory(&self, device: VkDevice, pAllocateInfo: *const VkMemoryAllocateInfo, pAllocator: *const VkAllocationCallbacks, pMemory: *mut VkDeviceMemory) -> VkResult {
-		(self.vk_version_1_0.vk_allocate_memory)(device, pAllocateInfo, pAllocator, pMemory)
+	fn vkAllocateMemory(&self, device: VkDevice, pAllocateInfo: *const VkMemoryAllocateInfo, pAllocator: *const VkAllocationCallbacks, pMemory: *mut VkDeviceMemory) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_version_1_0.vk_allocate_memory)(device, pAllocateInfo, pAllocator, pMemory))
 	}
 	fn vkFreeMemory(&self, device: VkDevice, memory: VkDeviceMemory, pAllocator: *const VkAllocationCallbacks) {
 		(self.vk_version_1_0.vk_free_memory)(device, memory, pAllocator)
 	}
-	fn vkMapMemory(&self, device: VkDevice, memory: VkDeviceMemory, offset: VkDeviceSize, size: VkDeviceSize, flags: VkMemoryMapFlags, ppData: *mut *mut c_void) -> VkResult {
-		(self.vk_version_1_0.vk_map_memory)(device, memory, offset, size, flags, ppData)
+	fn vkMapMemory(&self, device: VkDevice, memory: VkDeviceMemory, offset: VkDeviceSize, size: VkDeviceSize, flags: VkMemoryMapFlags, ppData: *mut *mut c_void) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_version_1_0.vk_map_memory)(device, memory, offset, size, flags, ppData))
 	}
 	fn vkUnmapMemory(&self, device: VkDevice, memory: VkDeviceMemory) {
 		(self.vk_version_1_0.vk_unmap_memory)(device, memory)
 	}
-	fn vkFlushMappedMemoryRanges(&self, device: VkDevice, memoryRangeCount: u32, pMemoryRanges: *const VkMappedMemoryRange) -> VkResult {
-		(self.vk_version_1_0.vk_flush_mapped_memory_ranges)(device, memoryRangeCount, pMemoryRanges)
+	fn vkFlushMappedMemoryRanges(&self, device: VkDevice, memoryRangeCount: u32, pMemoryRanges: *const VkMappedMemoryRange) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_version_1_0.vk_flush_mapped_memory_ranges)(device, memoryRangeCount, pMemoryRanges))
 	}
-	fn vkInvalidateMappedMemoryRanges(&self, device: VkDevice, memoryRangeCount: u32, pMemoryRanges: *const VkMappedMemoryRange) -> VkResult {
-		(self.vk_version_1_0.vk_invalidate_mapped_memory_ranges)(device, memoryRangeCount, pMemoryRanges)
+	fn vkInvalidateMappedMemoryRanges(&self, device: VkDevice, memoryRangeCount: u32, pMemoryRanges: *const VkMappedMemoryRange) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_version_1_0.vk_invalidate_mapped_memory_ranges)(device, memoryRangeCount, pMemoryRanges))
 	}
 	fn vkGetDeviceMemoryCommitment(&self, device: VkDevice, memory: VkDeviceMemory, pCommittedMemoryInBytes: *mut VkDeviceSize) {
 		(self.vk_version_1_0.vk_get_device_memory_commitment)(device, memory, pCommittedMemoryInBytes)
 	}
-	fn vkBindBufferMemory(&self, device: VkDevice, buffer: VkBuffer, memory: VkDeviceMemory, memoryOffset: VkDeviceSize) -> VkResult {
-		(self.vk_version_1_0.vk_bind_buffer_memory)(device, buffer, memory, memoryOffset)
+	fn vkBindBufferMemory(&self, device: VkDevice, buffer: VkBuffer, memory: VkDeviceMemory, memoryOffset: VkDeviceSize) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_version_1_0.vk_bind_buffer_memory)(device, buffer, memory, memoryOffset))
 	}
-	fn vkBindImageMemory(&self, device: VkDevice, image: VkImage, memory: VkDeviceMemory, memoryOffset: VkDeviceSize) -> VkResult {
-		(self.vk_version_1_0.vk_bind_image_memory)(device, image, memory, memoryOffset)
+	fn vkBindImageMemory(&self, device: VkDevice, image: VkImage, memory: VkDeviceMemory, memoryOffset: VkDeviceSize) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_version_1_0.vk_bind_image_memory)(device, image, memory, memoryOffset))
 	}
 	fn vkGetBufferMemoryRequirements(&self, device: VkDevice, buffer: VkBuffer, pMemoryRequirements: *mut VkMemoryRequirements) {
 		(self.vk_version_1_0.vk_get_buffer_memory_requirements)(device, buffer, pMemoryRequirements)
@@ -32424,68 +32431,68 @@ impl VK_VERSION_1_0 for VkCore {
 	fn vkGetPhysicalDeviceSparseImageFormatProperties(&self, physicalDevice: VkPhysicalDevice, format: VkFormat, type_: VkImageType, samples: VkSampleCountFlagBits, usage: VkImageUsageFlags, tiling: VkImageTiling, pPropertyCount: *mut uint32_t, pProperties: *mut VkSparseImageFormatProperties) {
 		(self.vk_version_1_0.vk_get_physical_device_sparse_image_format_properties)(physicalDevice, format, type_, samples, usage, tiling, pPropertyCount, pProperties)
 	}
-	fn vkQueueBindSparse(&self, queue: VkQueue, bindInfoCount: u32, pBindInfo: *const VkBindSparseInfo, fence: VkFence) -> VkResult {
-		(self.vk_version_1_0.vk_queue_bind_sparse)(queue, bindInfoCount, pBindInfo, fence)
+	fn vkQueueBindSparse(&self, queue: VkQueue, bindInfoCount: u32, pBindInfo: *const VkBindSparseInfo, fence: VkFence) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_version_1_0.vk_queue_bind_sparse)(queue, bindInfoCount, pBindInfo, fence))
 	}
-	fn vkCreateFence(&self, device: VkDevice, pCreateInfo: *const VkFenceCreateInfo, pAllocator: *const VkAllocationCallbacks, pFence: *mut VkFence) -> VkResult {
-		(self.vk_version_1_0.vk_create_fence)(device, pCreateInfo, pAllocator, pFence)
+	fn vkCreateFence(&self, device: VkDevice, pCreateInfo: *const VkFenceCreateInfo, pAllocator: *const VkAllocationCallbacks, pFence: *mut VkFence) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_version_1_0.vk_create_fence)(device, pCreateInfo, pAllocator, pFence))
 	}
 	fn vkDestroyFence(&self, device: VkDevice, fence: VkFence, pAllocator: *const VkAllocationCallbacks) {
 		(self.vk_version_1_0.vk_destroy_fence)(device, fence, pAllocator)
 	}
-	fn vkResetFences(&self, device: VkDevice, fenceCount: u32, pFences: *const VkFence) -> VkResult {
-		(self.vk_version_1_0.vk_reset_fences)(device, fenceCount, pFences)
+	fn vkResetFences(&self, device: VkDevice, fenceCount: u32, pFences: *const VkFence) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_version_1_0.vk_reset_fences)(device, fenceCount, pFences))
 	}
-	fn vkGetFenceStatus(&self, device: VkDevice, fence: VkFence) -> VkResult {
-		(self.vk_version_1_0.vk_get_fence_status)(device, fence)
+	fn vkGetFenceStatus(&self, device: VkDevice, fence: VkFence) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_version_1_0.vk_get_fence_status)(device, fence))
 	}
-	fn vkWaitForFences(&self, device: VkDevice, fenceCount: u32, pFences: *const VkFence, waitAll: VkBool32, timeout: u64) -> VkResult {
-		(self.vk_version_1_0.vk_wait_for_fences)(device, fenceCount, pFences, waitAll, timeout)
+	fn vkWaitForFences(&self, device: VkDevice, fenceCount: u32, pFences: *const VkFence, waitAll: VkBool32, timeout: u64) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_version_1_0.vk_wait_for_fences)(device, fenceCount, pFences, waitAll, timeout))
 	}
-	fn vkCreateSemaphore(&self, device: VkDevice, pCreateInfo: *const VkSemaphoreCreateInfo, pAllocator: *const VkAllocationCallbacks, pSemaphore: *mut VkSemaphore) -> VkResult {
-		(self.vk_version_1_0.vk_create_semaphore)(device, pCreateInfo, pAllocator, pSemaphore)
+	fn vkCreateSemaphore(&self, device: VkDevice, pCreateInfo: *const VkSemaphoreCreateInfo, pAllocator: *const VkAllocationCallbacks, pSemaphore: *mut VkSemaphore) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_version_1_0.vk_create_semaphore)(device, pCreateInfo, pAllocator, pSemaphore))
 	}
 	fn vkDestroySemaphore(&self, device: VkDevice, semaphore: VkSemaphore, pAllocator: *const VkAllocationCallbacks) {
 		(self.vk_version_1_0.vk_destroy_semaphore)(device, semaphore, pAllocator)
 	}
-	fn vkCreateEvent(&self, device: VkDevice, pCreateInfo: *const VkEventCreateInfo, pAllocator: *const VkAllocationCallbacks, pEvent: *mut VkEvent) -> VkResult {
-		(self.vk_version_1_0.vk_create_event)(device, pCreateInfo, pAllocator, pEvent)
+	fn vkCreateEvent(&self, device: VkDevice, pCreateInfo: *const VkEventCreateInfo, pAllocator: *const VkAllocationCallbacks, pEvent: *mut VkEvent) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_version_1_0.vk_create_event)(device, pCreateInfo, pAllocator, pEvent))
 	}
 	fn vkDestroyEvent(&self, device: VkDevice, event: VkEvent, pAllocator: *const VkAllocationCallbacks) {
 		(self.vk_version_1_0.vk_destroy_event)(device, event, pAllocator)
 	}
-	fn vkGetEventStatus(&self, device: VkDevice, event: VkEvent) -> VkResult {
-		(self.vk_version_1_0.vk_get_event_status)(device, event)
+	fn vkGetEventStatus(&self, device: VkDevice, event: VkEvent) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_version_1_0.vk_get_event_status)(device, event))
 	}
-	fn vkSetEvent(&self, device: VkDevice, event: VkEvent) -> VkResult {
-		(self.vk_version_1_0.vk_set_event)(device, event)
+	fn vkSetEvent(&self, device: VkDevice, event: VkEvent) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_version_1_0.vk_set_event)(device, event))
 	}
-	fn vkResetEvent(&self, device: VkDevice, event: VkEvent) -> VkResult {
-		(self.vk_version_1_0.vk_reset_event)(device, event)
+	fn vkResetEvent(&self, device: VkDevice, event: VkEvent) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_version_1_0.vk_reset_event)(device, event))
 	}
-	fn vkCreateQueryPool(&self, device: VkDevice, pCreateInfo: *const VkQueryPoolCreateInfo, pAllocator: *const VkAllocationCallbacks, pQueryPool: *mut VkQueryPool) -> VkResult {
-		(self.vk_version_1_0.vk_create_query_pool)(device, pCreateInfo, pAllocator, pQueryPool)
+	fn vkCreateQueryPool(&self, device: VkDevice, pCreateInfo: *const VkQueryPoolCreateInfo, pAllocator: *const VkAllocationCallbacks, pQueryPool: *mut VkQueryPool) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_version_1_0.vk_create_query_pool)(device, pCreateInfo, pAllocator, pQueryPool))
 	}
 	fn vkDestroyQueryPool(&self, device: VkDevice, queryPool: VkQueryPool, pAllocator: *const VkAllocationCallbacks) {
 		(self.vk_version_1_0.vk_destroy_query_pool)(device, queryPool, pAllocator)
 	}
-	fn vkGetQueryPoolResults(&self, device: VkDevice, queryPool: VkQueryPool, firstQuery: u32, queryCount: u32, dataSize: usize, pData: *mut c_void, stride: VkDeviceSize, flags: VkQueryResultFlags) -> VkResult {
-		(self.vk_version_1_0.vk_get_query_pool_results)(device, queryPool, firstQuery, queryCount, dataSize, pData, stride, flags)
+	fn vkGetQueryPoolResults(&self, device: VkDevice, queryPool: VkQueryPool, firstQuery: u32, queryCount: u32, dataSize: usize, pData: *mut c_void, stride: VkDeviceSize, flags: VkQueryResultFlags) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_version_1_0.vk_get_query_pool_results)(device, queryPool, firstQuery, queryCount, dataSize, pData, stride, flags))
 	}
-	fn vkCreateBuffer(&self, device: VkDevice, pCreateInfo: *const VkBufferCreateInfo, pAllocator: *const VkAllocationCallbacks, pBuffer: *mut VkBuffer) -> VkResult {
-		(self.vk_version_1_0.vk_create_buffer)(device, pCreateInfo, pAllocator, pBuffer)
+	fn vkCreateBuffer(&self, device: VkDevice, pCreateInfo: *const VkBufferCreateInfo, pAllocator: *const VkAllocationCallbacks, pBuffer: *mut VkBuffer) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_version_1_0.vk_create_buffer)(device, pCreateInfo, pAllocator, pBuffer))
 	}
 	fn vkDestroyBuffer(&self, device: VkDevice, buffer: VkBuffer, pAllocator: *const VkAllocationCallbacks) {
 		(self.vk_version_1_0.vk_destroy_buffer)(device, buffer, pAllocator)
 	}
-	fn vkCreateBufferView(&self, device: VkDevice, pCreateInfo: *const VkBufferViewCreateInfo, pAllocator: *const VkAllocationCallbacks, pView: *mut VkBufferView) -> VkResult {
-		(self.vk_version_1_0.vk_create_buffer_view)(device, pCreateInfo, pAllocator, pView)
+	fn vkCreateBufferView(&self, device: VkDevice, pCreateInfo: *const VkBufferViewCreateInfo, pAllocator: *const VkAllocationCallbacks, pView: *mut VkBufferView) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_version_1_0.vk_create_buffer_view)(device, pCreateInfo, pAllocator, pView))
 	}
 	fn vkDestroyBufferView(&self, device: VkDevice, bufferView: VkBufferView, pAllocator: *const VkAllocationCallbacks) {
 		(self.vk_version_1_0.vk_destroy_buffer_view)(device, bufferView, pAllocator)
 	}
-	fn vkCreateImage(&self, device: VkDevice, pCreateInfo: *const VkImageCreateInfo, pAllocator: *const VkAllocationCallbacks, pImage: *mut VkImage) -> VkResult {
-		(self.vk_version_1_0.vk_create_image)(device, pCreateInfo, pAllocator, pImage)
+	fn vkCreateImage(&self, device: VkDevice, pCreateInfo: *const VkImageCreateInfo, pAllocator: *const VkAllocationCallbacks, pImage: *mut VkImage) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_version_1_0.vk_create_image)(device, pCreateInfo, pAllocator, pImage))
 	}
 	fn vkDestroyImage(&self, device: VkDevice, image: VkImage, pAllocator: *const VkAllocationCallbacks) {
 		(self.vk_version_1_0.vk_destroy_image)(device, image, pAllocator)
@@ -32493,83 +32500,83 @@ impl VK_VERSION_1_0 for VkCore {
 	fn vkGetImageSubresourceLayout(&self, device: VkDevice, image: VkImage, pSubresource: *const VkImageSubresource, pLayout: *mut VkSubresourceLayout) {
 		(self.vk_version_1_0.vk_get_image_subresource_layout)(device, image, pSubresource, pLayout)
 	}
-	fn vkCreateImageView(&self, device: VkDevice, pCreateInfo: *const VkImageViewCreateInfo, pAllocator: *const VkAllocationCallbacks, pView: *mut VkImageView) -> VkResult {
-		(self.vk_version_1_0.vk_create_image_view)(device, pCreateInfo, pAllocator, pView)
+	fn vkCreateImageView(&self, device: VkDevice, pCreateInfo: *const VkImageViewCreateInfo, pAllocator: *const VkAllocationCallbacks, pView: *mut VkImageView) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_version_1_0.vk_create_image_view)(device, pCreateInfo, pAllocator, pView))
 	}
 	fn vkDestroyImageView(&self, device: VkDevice, imageView: VkImageView, pAllocator: *const VkAllocationCallbacks) {
 		(self.vk_version_1_0.vk_destroy_image_view)(device, imageView, pAllocator)
 	}
-	fn vkCreateShaderModule(&self, device: VkDevice, pCreateInfo: *const VkShaderModuleCreateInfo, pAllocator: *const VkAllocationCallbacks, pShaderModule: *mut VkShaderModule) -> VkResult {
-		(self.vk_version_1_0.vk_create_shader_module)(device, pCreateInfo, pAllocator, pShaderModule)
+	fn vkCreateShaderModule(&self, device: VkDevice, pCreateInfo: *const VkShaderModuleCreateInfo, pAllocator: *const VkAllocationCallbacks, pShaderModule: *mut VkShaderModule) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_version_1_0.vk_create_shader_module)(device, pCreateInfo, pAllocator, pShaderModule))
 	}
 	fn vkDestroyShaderModule(&self, device: VkDevice, shaderModule: VkShaderModule, pAllocator: *const VkAllocationCallbacks) {
 		(self.vk_version_1_0.vk_destroy_shader_module)(device, shaderModule, pAllocator)
 	}
-	fn vkCreatePipelineCache(&self, device: VkDevice, pCreateInfo: *const VkPipelineCacheCreateInfo, pAllocator: *const VkAllocationCallbacks, pPipelineCache: *mut VkPipelineCache) -> VkResult {
-		(self.vk_version_1_0.vk_create_pipeline_cache)(device, pCreateInfo, pAllocator, pPipelineCache)
+	fn vkCreatePipelineCache(&self, device: VkDevice, pCreateInfo: *const VkPipelineCacheCreateInfo, pAllocator: *const VkAllocationCallbacks, pPipelineCache: *mut VkPipelineCache) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_version_1_0.vk_create_pipeline_cache)(device, pCreateInfo, pAllocator, pPipelineCache))
 	}
 	fn vkDestroyPipelineCache(&self, device: VkDevice, pipelineCache: VkPipelineCache, pAllocator: *const VkAllocationCallbacks) {
 		(self.vk_version_1_0.vk_destroy_pipeline_cache)(device, pipelineCache, pAllocator)
 	}
-	fn vkGetPipelineCacheData(&self, device: VkDevice, pipelineCache: VkPipelineCache, pDataSize: *mut size_t, pData: *mut c_void) -> VkResult {
-		(self.vk_version_1_0.vk_get_pipeline_cache_data)(device, pipelineCache, pDataSize, pData)
+	fn vkGetPipelineCacheData(&self, device: VkDevice, pipelineCache: VkPipelineCache, pDataSize: *mut size_t, pData: *mut c_void) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_version_1_0.vk_get_pipeline_cache_data)(device, pipelineCache, pDataSize, pData))
 	}
-	fn vkMergePipelineCaches(&self, device: VkDevice, dstCache: VkPipelineCache, srcCacheCount: u32, pSrcCaches: *const VkPipelineCache) -> VkResult {
-		(self.vk_version_1_0.vk_merge_pipeline_caches)(device, dstCache, srcCacheCount, pSrcCaches)
+	fn vkMergePipelineCaches(&self, device: VkDevice, dstCache: VkPipelineCache, srcCacheCount: u32, pSrcCaches: *const VkPipelineCache) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_version_1_0.vk_merge_pipeline_caches)(device, dstCache, srcCacheCount, pSrcCaches))
 	}
-	fn vkCreateGraphicsPipelines(&self, device: VkDevice, pipelineCache: VkPipelineCache, createInfoCount: u32, pCreateInfos: *const VkGraphicsPipelineCreateInfo, pAllocator: *const VkAllocationCallbacks, pPipelines: *mut VkPipeline) -> VkResult {
-		(self.vk_version_1_0.vk_create_graphics_pipelines)(device, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines)
+	fn vkCreateGraphicsPipelines(&self, device: VkDevice, pipelineCache: VkPipelineCache, createInfoCount: u32, pCreateInfos: *const VkGraphicsPipelineCreateInfo, pAllocator: *const VkAllocationCallbacks, pPipelines: *mut VkPipeline) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_version_1_0.vk_create_graphics_pipelines)(device, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines))
 	}
-	fn vkCreateComputePipelines(&self, device: VkDevice, pipelineCache: VkPipelineCache, createInfoCount: u32, pCreateInfos: *const VkComputePipelineCreateInfo, pAllocator: *const VkAllocationCallbacks, pPipelines: *mut VkPipeline) -> VkResult {
-		(self.vk_version_1_0.vk_create_compute_pipelines)(device, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines)
+	fn vkCreateComputePipelines(&self, device: VkDevice, pipelineCache: VkPipelineCache, createInfoCount: u32, pCreateInfos: *const VkComputePipelineCreateInfo, pAllocator: *const VkAllocationCallbacks, pPipelines: *mut VkPipeline) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_version_1_0.vk_create_compute_pipelines)(device, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines))
 	}
 	fn vkDestroyPipeline(&self, device: VkDevice, pipeline: VkPipeline, pAllocator: *const VkAllocationCallbacks) {
 		(self.vk_version_1_0.vk_destroy_pipeline)(device, pipeline, pAllocator)
 	}
-	fn vkCreatePipelineLayout(&self, device: VkDevice, pCreateInfo: *const VkPipelineLayoutCreateInfo, pAllocator: *const VkAllocationCallbacks, pPipelineLayout: *mut VkPipelineLayout) -> VkResult {
-		(self.vk_version_1_0.vk_create_pipeline_layout)(device, pCreateInfo, pAllocator, pPipelineLayout)
+	fn vkCreatePipelineLayout(&self, device: VkDevice, pCreateInfo: *const VkPipelineLayoutCreateInfo, pAllocator: *const VkAllocationCallbacks, pPipelineLayout: *mut VkPipelineLayout) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_version_1_0.vk_create_pipeline_layout)(device, pCreateInfo, pAllocator, pPipelineLayout))
 	}
 	fn vkDestroyPipelineLayout(&self, device: VkDevice, pipelineLayout: VkPipelineLayout, pAllocator: *const VkAllocationCallbacks) {
 		(self.vk_version_1_0.vk_destroy_pipeline_layout)(device, pipelineLayout, pAllocator)
 	}
-	fn vkCreateSampler(&self, device: VkDevice, pCreateInfo: *const VkSamplerCreateInfo, pAllocator: *const VkAllocationCallbacks, pSampler: *mut VkSampler) -> VkResult {
-		(self.vk_version_1_0.vk_create_sampler)(device, pCreateInfo, pAllocator, pSampler)
+	fn vkCreateSampler(&self, device: VkDevice, pCreateInfo: *const VkSamplerCreateInfo, pAllocator: *const VkAllocationCallbacks, pSampler: *mut VkSampler) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_version_1_0.vk_create_sampler)(device, pCreateInfo, pAllocator, pSampler))
 	}
 	fn vkDestroySampler(&self, device: VkDevice, sampler: VkSampler, pAllocator: *const VkAllocationCallbacks) {
 		(self.vk_version_1_0.vk_destroy_sampler)(device, sampler, pAllocator)
 	}
-	fn vkCreateDescriptorSetLayout(&self, device: VkDevice, pCreateInfo: *const VkDescriptorSetLayoutCreateInfo, pAllocator: *const VkAllocationCallbacks, pSetLayout: *mut VkDescriptorSetLayout) -> VkResult {
-		(self.vk_version_1_0.vk_create_descriptor_set_layout)(device, pCreateInfo, pAllocator, pSetLayout)
+	fn vkCreateDescriptorSetLayout(&self, device: VkDevice, pCreateInfo: *const VkDescriptorSetLayoutCreateInfo, pAllocator: *const VkAllocationCallbacks, pSetLayout: *mut VkDescriptorSetLayout) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_version_1_0.vk_create_descriptor_set_layout)(device, pCreateInfo, pAllocator, pSetLayout))
 	}
 	fn vkDestroyDescriptorSetLayout(&self, device: VkDevice, descriptorSetLayout: VkDescriptorSetLayout, pAllocator: *const VkAllocationCallbacks) {
 		(self.vk_version_1_0.vk_destroy_descriptor_set_layout)(device, descriptorSetLayout, pAllocator)
 	}
-	fn vkCreateDescriptorPool(&self, device: VkDevice, pCreateInfo: *const VkDescriptorPoolCreateInfo, pAllocator: *const VkAllocationCallbacks, pDescriptorPool: *mut VkDescriptorPool) -> VkResult {
-		(self.vk_version_1_0.vk_create_descriptor_pool)(device, pCreateInfo, pAllocator, pDescriptorPool)
+	fn vkCreateDescriptorPool(&self, device: VkDevice, pCreateInfo: *const VkDescriptorPoolCreateInfo, pAllocator: *const VkAllocationCallbacks, pDescriptorPool: *mut VkDescriptorPool) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_version_1_0.vk_create_descriptor_pool)(device, pCreateInfo, pAllocator, pDescriptorPool))
 	}
 	fn vkDestroyDescriptorPool(&self, device: VkDevice, descriptorPool: VkDescriptorPool, pAllocator: *const VkAllocationCallbacks) {
 		(self.vk_version_1_0.vk_destroy_descriptor_pool)(device, descriptorPool, pAllocator)
 	}
-	fn vkResetDescriptorPool(&self, device: VkDevice, descriptorPool: VkDescriptorPool, flags: VkDescriptorPoolResetFlags) -> VkResult {
-		(self.vk_version_1_0.vk_reset_descriptor_pool)(device, descriptorPool, flags)
+	fn vkResetDescriptorPool(&self, device: VkDevice, descriptorPool: VkDescriptorPool, flags: VkDescriptorPoolResetFlags) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_version_1_0.vk_reset_descriptor_pool)(device, descriptorPool, flags))
 	}
-	fn vkAllocateDescriptorSets(&self, device: VkDevice, pAllocateInfo: *const VkDescriptorSetAllocateInfo, pDescriptorSets: *mut VkDescriptorSet) -> VkResult {
-		(self.vk_version_1_0.vk_allocate_descriptor_sets)(device, pAllocateInfo, pDescriptorSets)
+	fn vkAllocateDescriptorSets(&self, device: VkDevice, pAllocateInfo: *const VkDescriptorSetAllocateInfo, pDescriptorSets: *mut VkDescriptorSet) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_version_1_0.vk_allocate_descriptor_sets)(device, pAllocateInfo, pDescriptorSets))
 	}
-	fn vkFreeDescriptorSets(&self, device: VkDevice, descriptorPool: VkDescriptorPool, descriptorSetCount: u32, pDescriptorSets: *const VkDescriptorSet) -> VkResult {
-		(self.vk_version_1_0.vk_free_descriptor_sets)(device, descriptorPool, descriptorSetCount, pDescriptorSets)
+	fn vkFreeDescriptorSets(&self, device: VkDevice, descriptorPool: VkDescriptorPool, descriptorSetCount: u32, pDescriptorSets: *const VkDescriptorSet) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_version_1_0.vk_free_descriptor_sets)(device, descriptorPool, descriptorSetCount, pDescriptorSets))
 	}
 	fn vkUpdateDescriptorSets(&self, device: VkDevice, descriptorWriteCount: u32, pDescriptorWrites: *const VkWriteDescriptorSet, descriptorCopyCount: u32, pDescriptorCopies: *const VkCopyDescriptorSet) {
 		(self.vk_version_1_0.vk_update_descriptor_sets)(device, descriptorWriteCount, pDescriptorWrites, descriptorCopyCount, pDescriptorCopies)
 	}
-	fn vkCreateFramebuffer(&self, device: VkDevice, pCreateInfo: *const VkFramebufferCreateInfo, pAllocator: *const VkAllocationCallbacks, pFramebuffer: *mut VkFramebuffer) -> VkResult {
-		(self.vk_version_1_0.vk_create_framebuffer)(device, pCreateInfo, pAllocator, pFramebuffer)
+	fn vkCreateFramebuffer(&self, device: VkDevice, pCreateInfo: *const VkFramebufferCreateInfo, pAllocator: *const VkAllocationCallbacks, pFramebuffer: *mut VkFramebuffer) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_version_1_0.vk_create_framebuffer)(device, pCreateInfo, pAllocator, pFramebuffer))
 	}
 	fn vkDestroyFramebuffer(&self, device: VkDevice, framebuffer: VkFramebuffer, pAllocator: *const VkAllocationCallbacks) {
 		(self.vk_version_1_0.vk_destroy_framebuffer)(device, framebuffer, pAllocator)
 	}
-	fn vkCreateRenderPass(&self, device: VkDevice, pCreateInfo: *const VkRenderPassCreateInfo, pAllocator: *const VkAllocationCallbacks, pRenderPass: *mut VkRenderPass) -> VkResult {
-		(self.vk_version_1_0.vk_create_render_pass)(device, pCreateInfo, pAllocator, pRenderPass)
+	fn vkCreateRenderPass(&self, device: VkDevice, pCreateInfo: *const VkRenderPassCreateInfo, pAllocator: *const VkAllocationCallbacks, pRenderPass: *mut VkRenderPass) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_version_1_0.vk_create_render_pass)(device, pCreateInfo, pAllocator, pRenderPass))
 	}
 	fn vkDestroyRenderPass(&self, device: VkDevice, renderPass: VkRenderPass, pAllocator: *const VkAllocationCallbacks) {
 		(self.vk_version_1_0.vk_destroy_render_pass)(device, renderPass, pAllocator)
@@ -32577,29 +32584,29 @@ impl VK_VERSION_1_0 for VkCore {
 	fn vkGetRenderAreaGranularity(&self, device: VkDevice, renderPass: VkRenderPass, pGranularity: *mut VkExtent2D) {
 		(self.vk_version_1_0.vk_get_render_area_granularity)(device, renderPass, pGranularity)
 	}
-	fn vkCreateCommandPool(&self, device: VkDevice, pCreateInfo: *const VkCommandPoolCreateInfo, pAllocator: *const VkAllocationCallbacks, pCommandPool: *mut VkCommandPool) -> VkResult {
-		(self.vk_version_1_0.vk_create_command_pool)(device, pCreateInfo, pAllocator, pCommandPool)
+	fn vkCreateCommandPool(&self, device: VkDevice, pCreateInfo: *const VkCommandPoolCreateInfo, pAllocator: *const VkAllocationCallbacks, pCommandPool: *mut VkCommandPool) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_version_1_0.vk_create_command_pool)(device, pCreateInfo, pAllocator, pCommandPool))
 	}
 	fn vkDestroyCommandPool(&self, device: VkDevice, commandPool: VkCommandPool, pAllocator: *const VkAllocationCallbacks) {
 		(self.vk_version_1_0.vk_destroy_command_pool)(device, commandPool, pAllocator)
 	}
-	fn vkResetCommandPool(&self, device: VkDevice, commandPool: VkCommandPool, flags: VkCommandPoolResetFlags) -> VkResult {
-		(self.vk_version_1_0.vk_reset_command_pool)(device, commandPool, flags)
+	fn vkResetCommandPool(&self, device: VkDevice, commandPool: VkCommandPool, flags: VkCommandPoolResetFlags) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_version_1_0.vk_reset_command_pool)(device, commandPool, flags))
 	}
-	fn vkAllocateCommandBuffers(&self, device: VkDevice, pAllocateInfo: *const VkCommandBufferAllocateInfo, pCommandBuffers: *mut VkCommandBuffer) -> VkResult {
-		(self.vk_version_1_0.vk_allocate_command_buffers)(device, pAllocateInfo, pCommandBuffers)
+	fn vkAllocateCommandBuffers(&self, device: VkDevice, pAllocateInfo: *const VkCommandBufferAllocateInfo, pCommandBuffers: *mut VkCommandBuffer) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_version_1_0.vk_allocate_command_buffers)(device, pAllocateInfo, pCommandBuffers))
 	}
 	fn vkFreeCommandBuffers(&self, device: VkDevice, commandPool: VkCommandPool, commandBufferCount: u32, pCommandBuffers: *const VkCommandBuffer) {
 		(self.vk_version_1_0.vk_free_command_buffers)(device, commandPool, commandBufferCount, pCommandBuffers)
 	}
-	fn vkBeginCommandBuffer(&self, commandBuffer: VkCommandBuffer, pBeginInfo: *const VkCommandBufferBeginInfo) -> VkResult {
-		(self.vk_version_1_0.vk_begin_command_buffer)(commandBuffer, pBeginInfo)
+	fn vkBeginCommandBuffer(&self, commandBuffer: VkCommandBuffer, pBeginInfo: *const VkCommandBufferBeginInfo) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_version_1_0.vk_begin_command_buffer)(commandBuffer, pBeginInfo))
 	}
-	fn vkEndCommandBuffer(&self, commandBuffer: VkCommandBuffer) -> VkResult {
-		(self.vk_version_1_0.vk_end_command_buffer)(commandBuffer)
+	fn vkEndCommandBuffer(&self, commandBuffer: VkCommandBuffer) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_version_1_0.vk_end_command_buffer)(commandBuffer))
 	}
-	fn vkResetCommandBuffer(&self, commandBuffer: VkCommandBuffer, flags: VkCommandBufferResetFlags) -> VkResult {
-		(self.vk_version_1_0.vk_reset_command_buffer)(commandBuffer, flags)
+	fn vkResetCommandBuffer(&self, commandBuffer: VkCommandBuffer, flags: VkCommandBufferResetFlags) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_version_1_0.vk_reset_command_buffer)(commandBuffer, flags))
 	}
 	fn vkCmdBindPipeline(&self, commandBuffer: VkCommandBuffer, pipelineBindPoint: VkPipelineBindPoint, pipeline: VkPipeline) {
 		(self.vk_version_1_0.vk_cmd_bind_pipeline)(commandBuffer, pipelineBindPoint, pipeline)
@@ -32735,14 +32742,14 @@ impl VK_VERSION_1_0 for VkCore {
 	}
 }
 impl VK_VERSION_1_1 for VkCore {
-	fn vkEnumerateInstanceVersion(&self, pApiVersion: *mut uint32_t) -> VkResult {
-		(self.vk_version_1_1.vk_enumerate_instance_version)(pApiVersion)
+	fn vkEnumerateInstanceVersion(&self, pApiVersion: *mut uint32_t) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_version_1_1.vk_enumerate_instance_version)(pApiVersion))
 	}
-	fn vkBindBufferMemory2(&self, device: VkDevice, bindInfoCount: u32, pBindInfos: *const VkBindBufferMemoryInfo) -> VkResult {
-		(self.vk_version_1_1.vk_bind_buffer_memory2)(device, bindInfoCount, pBindInfos)
+	fn vkBindBufferMemory2(&self, device: VkDevice, bindInfoCount: u32, pBindInfos: *const VkBindBufferMemoryInfo) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_version_1_1.vk_bind_buffer_memory2)(device, bindInfoCount, pBindInfos))
 	}
-	fn vkBindImageMemory2(&self, device: VkDevice, bindInfoCount: u32, pBindInfos: *const VkBindImageMemoryInfo) -> VkResult {
-		(self.vk_version_1_1.vk_bind_image_memory2)(device, bindInfoCount, pBindInfos)
+	fn vkBindImageMemory2(&self, device: VkDevice, bindInfoCount: u32, pBindInfos: *const VkBindImageMemoryInfo) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_version_1_1.vk_bind_image_memory2)(device, bindInfoCount, pBindInfos))
 	}
 	fn vkGetDeviceGroupPeerMemoryFeatures(&self, device: VkDevice, heapIndex: u32, localDeviceIndex: u32, remoteDeviceIndex: u32, pPeerMemoryFeatures: *mut VkPeerMemoryFeatureFlags) {
 		(self.vk_version_1_1.vk_get_device_group_peer_memory_features)(device, heapIndex, localDeviceIndex, remoteDeviceIndex, pPeerMemoryFeatures)
@@ -32753,8 +32760,8 @@ impl VK_VERSION_1_1 for VkCore {
 	fn vkCmdDispatchBase(&self, commandBuffer: VkCommandBuffer, baseGroupX: u32, baseGroupY: u32, baseGroupZ: u32, groupCountX: u32, groupCountY: u32, groupCountZ: u32) {
 		(self.vk_version_1_1.vk_cmd_dispatch_base)(commandBuffer, baseGroupX, baseGroupY, baseGroupZ, groupCountX, groupCountY, groupCountZ)
 	}
-	fn vkEnumeratePhysicalDeviceGroups(&self, instance: VkInstance, pPhysicalDeviceGroupCount: *mut uint32_t, pPhysicalDeviceGroupProperties: *mut VkPhysicalDeviceGroupProperties) -> VkResult {
-		(self.vk_version_1_1.vk_enumerate_physical_device_groups)(instance, pPhysicalDeviceGroupCount, pPhysicalDeviceGroupProperties)
+	fn vkEnumeratePhysicalDeviceGroups(&self, instance: VkInstance, pPhysicalDeviceGroupCount: *mut uint32_t, pPhysicalDeviceGroupProperties: *mut VkPhysicalDeviceGroupProperties) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_version_1_1.vk_enumerate_physical_device_groups)(instance, pPhysicalDeviceGroupCount, pPhysicalDeviceGroupProperties))
 	}
 	fn vkGetImageMemoryRequirements2(&self, device: VkDevice, pInfo: *const VkImageMemoryRequirementsInfo2, pMemoryRequirements: *mut VkMemoryRequirements2) {
 		(self.vk_version_1_1.vk_get_image_memory_requirements2)(device, pInfo, pMemoryRequirements)
@@ -32774,8 +32781,8 @@ impl VK_VERSION_1_1 for VkCore {
 	fn vkGetPhysicalDeviceFormatProperties2(&self, physicalDevice: VkPhysicalDevice, format: VkFormat, pFormatProperties: *mut VkFormatProperties2) {
 		(self.vk_version_1_1.vk_get_physical_device_format_properties2)(physicalDevice, format, pFormatProperties)
 	}
-	fn vkGetPhysicalDeviceImageFormatProperties2(&self, physicalDevice: VkPhysicalDevice, pImageFormatInfo: *const VkPhysicalDeviceImageFormatInfo2, pImageFormatProperties: *mut VkImageFormatProperties2) -> VkResult {
-		(self.vk_version_1_1.vk_get_physical_device_image_format_properties2)(physicalDevice, pImageFormatInfo, pImageFormatProperties)
+	fn vkGetPhysicalDeviceImageFormatProperties2(&self, physicalDevice: VkPhysicalDevice, pImageFormatInfo: *const VkPhysicalDeviceImageFormatInfo2, pImageFormatProperties: *mut VkImageFormatProperties2) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_version_1_1.vk_get_physical_device_image_format_properties2)(physicalDevice, pImageFormatInfo, pImageFormatProperties))
 	}
 	fn vkGetPhysicalDeviceQueueFamilyProperties2(&self, physicalDevice: VkPhysicalDevice, pQueueFamilyPropertyCount: *mut uint32_t, pQueueFamilyProperties: *mut VkQueueFamilyProperties2) {
 		(self.vk_version_1_1.vk_get_physical_device_queue_family_properties2)(physicalDevice, pQueueFamilyPropertyCount, pQueueFamilyProperties)
@@ -32792,14 +32799,14 @@ impl VK_VERSION_1_1 for VkCore {
 	fn vkGetDeviceQueue2(&self, device: VkDevice, pQueueInfo: *const VkDeviceQueueInfo2, pQueue: *mut VkQueue) {
 		(self.vk_version_1_1.vk_get_device_queue2)(device, pQueueInfo, pQueue)
 	}
-	fn vkCreateSamplerYcbcrConversion(&self, device: VkDevice, pCreateInfo: *const VkSamplerYcbcrConversionCreateInfo, pAllocator: *const VkAllocationCallbacks, pYcbcrConversion: *mut VkSamplerYcbcrConversion) -> VkResult {
-		(self.vk_version_1_1.vk_create_sampler_ycbcr_conversion)(device, pCreateInfo, pAllocator, pYcbcrConversion)
+	fn vkCreateSamplerYcbcrConversion(&self, device: VkDevice, pCreateInfo: *const VkSamplerYcbcrConversionCreateInfo, pAllocator: *const VkAllocationCallbacks, pYcbcrConversion: *mut VkSamplerYcbcrConversion) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_version_1_1.vk_create_sampler_ycbcr_conversion)(device, pCreateInfo, pAllocator, pYcbcrConversion))
 	}
 	fn vkDestroySamplerYcbcrConversion(&self, device: VkDevice, ycbcrConversion: VkSamplerYcbcrConversion, pAllocator: *const VkAllocationCallbacks) {
 		(self.vk_version_1_1.vk_destroy_sampler_ycbcr_conversion)(device, ycbcrConversion, pAllocator)
 	}
-	fn vkCreateDescriptorUpdateTemplate(&self, device: VkDevice, pCreateInfo: *const VkDescriptorUpdateTemplateCreateInfo, pAllocator: *const VkAllocationCallbacks, pDescriptorUpdateTemplate: *mut VkDescriptorUpdateTemplate) -> VkResult {
-		(self.vk_version_1_1.vk_create_descriptor_update_template)(device, pCreateInfo, pAllocator, pDescriptorUpdateTemplate)
+	fn vkCreateDescriptorUpdateTemplate(&self, device: VkDevice, pCreateInfo: *const VkDescriptorUpdateTemplateCreateInfo, pAllocator: *const VkAllocationCallbacks, pDescriptorUpdateTemplate: *mut VkDescriptorUpdateTemplate) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_version_1_1.vk_create_descriptor_update_template)(device, pCreateInfo, pAllocator, pDescriptorUpdateTemplate))
 	}
 	fn vkDestroyDescriptorUpdateTemplate(&self, device: VkDevice, descriptorUpdateTemplate: VkDescriptorUpdateTemplate, pAllocator: *const VkAllocationCallbacks) {
 		(self.vk_version_1_1.vk_destroy_descriptor_update_template)(device, descriptorUpdateTemplate, pAllocator)
@@ -32827,8 +32834,8 @@ impl VK_VERSION_1_2 for VkCore {
 	fn vkCmdDrawIndexedIndirectCount(&self, commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize, countBuffer: VkBuffer, countBufferOffset: VkDeviceSize, maxDrawCount: u32, stride: u32) {
 		(self.vk_version_1_2.vk_cmd_draw_indexed_indirect_count)(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride)
 	}
-	fn vkCreateRenderPass2(&self, device: VkDevice, pCreateInfo: *const VkRenderPassCreateInfo2, pAllocator: *const VkAllocationCallbacks, pRenderPass: *mut VkRenderPass) -> VkResult {
-		(self.vk_version_1_2.vk_create_render_pass2)(device, pCreateInfo, pAllocator, pRenderPass)
+	fn vkCreateRenderPass2(&self, device: VkDevice, pCreateInfo: *const VkRenderPassCreateInfo2, pAllocator: *const VkAllocationCallbacks, pRenderPass: *mut VkRenderPass) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_version_1_2.vk_create_render_pass2)(device, pCreateInfo, pAllocator, pRenderPass))
 	}
 	fn vkCmdBeginRenderPass2(&self, commandBuffer: VkCommandBuffer, pRenderPassBegin: *const VkRenderPassBeginInfo, pSubpassBeginInfo: *const VkSubpassBeginInfo) {
 		(self.vk_version_1_2.vk_cmd_begin_render_pass2)(commandBuffer, pRenderPassBegin, pSubpassBeginInfo)
@@ -32842,14 +32849,14 @@ impl VK_VERSION_1_2 for VkCore {
 	fn vkResetQueryPool(&self, device: VkDevice, queryPool: VkQueryPool, firstQuery: u32, queryCount: u32) {
 		(self.vk_version_1_2.vk_reset_query_pool)(device, queryPool, firstQuery, queryCount)
 	}
-	fn vkGetSemaphoreCounterValue(&self, device: VkDevice, semaphore: VkSemaphore, pValue: *mut uint64_t) -> VkResult {
-		(self.vk_version_1_2.vk_get_semaphore_counter_value)(device, semaphore, pValue)
+	fn vkGetSemaphoreCounterValue(&self, device: VkDevice, semaphore: VkSemaphore, pValue: *mut uint64_t) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_version_1_2.vk_get_semaphore_counter_value)(device, semaphore, pValue))
 	}
-	fn vkWaitSemaphores(&self, device: VkDevice, pWaitInfo: *const VkSemaphoreWaitInfo, timeout: u64) -> VkResult {
-		(self.vk_version_1_2.vk_wait_semaphores)(device, pWaitInfo, timeout)
+	fn vkWaitSemaphores(&self, device: VkDevice, pWaitInfo: *const VkSemaphoreWaitInfo, timeout: u64) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_version_1_2.vk_wait_semaphores)(device, pWaitInfo, timeout))
 	}
-	fn vkSignalSemaphore(&self, device: VkDevice, pSignalInfo: *const VkSemaphoreSignalInfo) -> VkResult {
-		(self.vk_version_1_2.vk_signal_semaphore)(device, pSignalInfo)
+	fn vkSignalSemaphore(&self, device: VkDevice, pSignalInfo: *const VkSemaphoreSignalInfo) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_version_1_2.vk_signal_semaphore)(device, pSignalInfo))
 	}
 	fn vkGetBufferDeviceAddress(&self, device: VkDevice, pInfo: *const VkBufferDeviceAddressInfo) -> VkDeviceAddress {
 		(self.vk_version_1_2.vk_get_buffer_device_address)(device, pInfo)
@@ -32862,17 +32869,17 @@ impl VK_VERSION_1_2 for VkCore {
 	}
 }
 impl VK_VERSION_1_3 for VkCore {
-	fn vkGetPhysicalDeviceToolProperties(&self, physicalDevice: VkPhysicalDevice, pToolCount: *mut uint32_t, pToolProperties: *mut VkPhysicalDeviceToolProperties) -> VkResult {
-		(self.vk_version_1_3.vk_get_physical_device_tool_properties)(physicalDevice, pToolCount, pToolProperties)
+	fn vkGetPhysicalDeviceToolProperties(&self, physicalDevice: VkPhysicalDevice, pToolCount: *mut uint32_t, pToolProperties: *mut VkPhysicalDeviceToolProperties) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_version_1_3.vk_get_physical_device_tool_properties)(physicalDevice, pToolCount, pToolProperties))
 	}
-	fn vkCreatePrivateDataSlot(&self, device: VkDevice, pCreateInfo: *const VkPrivateDataSlotCreateInfo, pAllocator: *const VkAllocationCallbacks, pPrivateDataSlot: *mut VkPrivateDataSlot) -> VkResult {
-		(self.vk_version_1_3.vk_create_private_data_slot)(device, pCreateInfo, pAllocator, pPrivateDataSlot)
+	fn vkCreatePrivateDataSlot(&self, device: VkDevice, pCreateInfo: *const VkPrivateDataSlotCreateInfo, pAllocator: *const VkAllocationCallbacks, pPrivateDataSlot: *mut VkPrivateDataSlot) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_version_1_3.vk_create_private_data_slot)(device, pCreateInfo, pAllocator, pPrivateDataSlot))
 	}
 	fn vkDestroyPrivateDataSlot(&self, device: VkDevice, privateDataSlot: VkPrivateDataSlot, pAllocator: *const VkAllocationCallbacks) {
 		(self.vk_version_1_3.vk_destroy_private_data_slot)(device, privateDataSlot, pAllocator)
 	}
-	fn vkSetPrivateData(&self, device: VkDevice, objectType: VkObjectType, objectHandle: u64, privateDataSlot: VkPrivateDataSlot, data: u64) -> VkResult {
-		(self.vk_version_1_3.vk_set_private_data)(device, objectType, objectHandle, privateDataSlot, data)
+	fn vkSetPrivateData(&self, device: VkDevice, objectType: VkObjectType, objectHandle: u64, privateDataSlot: VkPrivateDataSlot, data: u64) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_version_1_3.vk_set_private_data)(device, objectType, objectHandle, privateDataSlot, data))
 	}
 	fn vkGetPrivateData(&self, device: VkDevice, objectType: VkObjectType, objectHandle: u64, privateDataSlot: VkPrivateDataSlot, pData: *mut uint64_t) {
 		(self.vk_version_1_3.vk_get_private_data)(device, objectType, objectHandle, privateDataSlot, pData)
@@ -32892,8 +32899,8 @@ impl VK_VERSION_1_3 for VkCore {
 	fn vkCmdWriteTimestamp2(&self, commandBuffer: VkCommandBuffer, stage: VkPipelineStageFlags2, queryPool: VkQueryPool, query: u32) {
 		(self.vk_version_1_3.vk_cmd_write_timestamp2)(commandBuffer, stage, queryPool, query)
 	}
-	fn vkQueueSubmit2(&self, queue: VkQueue, submitCount: u32, pSubmits: *const VkSubmitInfo2, fence: VkFence) -> VkResult {
-		(self.vk_version_1_3.vk_queue_submit2)(queue, submitCount, pSubmits, fence)
+	fn vkQueueSubmit2(&self, queue: VkQueue, submitCount: u32, pSubmits: *const VkSubmitInfo2, fence: VkFence) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_version_1_3.vk_queue_submit2)(queue, submitCount, pSubmits, fence))
 	}
 	fn vkCmdCopyBuffer2(&self, commandBuffer: VkCommandBuffer, pCopyBufferInfo: *const VkCopyBufferInfo2) {
 		(self.vk_version_1_3.vk_cmd_copy_buffer2)(commandBuffer, pCopyBufferInfo)
@@ -32978,11 +32985,11 @@ impl VK_VERSION_1_4 for VkCore {
 	fn vkCmdSetLineStipple(&self, commandBuffer: VkCommandBuffer, lineStippleFactor: u32, lineStipplePattern: u16) {
 		(self.vk_version_1_4.vk_cmd_set_line_stipple)(commandBuffer, lineStippleFactor, lineStipplePattern)
 	}
-	fn vkMapMemory2(&self, device: VkDevice, pMemoryMapInfo: *const VkMemoryMapInfo, ppData: *mut *mut c_void) -> VkResult {
-		(self.vk_version_1_4.vk_map_memory2)(device, pMemoryMapInfo, ppData)
+	fn vkMapMemory2(&self, device: VkDevice, pMemoryMapInfo: *const VkMemoryMapInfo, ppData: *mut *mut c_void) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_version_1_4.vk_map_memory2)(device, pMemoryMapInfo, ppData))
 	}
-	fn vkUnmapMemory2(&self, device: VkDevice, pMemoryUnmapInfo: *const VkMemoryUnmapInfo) -> VkResult {
-		(self.vk_version_1_4.vk_unmap_memory2)(device, pMemoryUnmapInfo)
+	fn vkUnmapMemory2(&self, device: VkDevice, pMemoryUnmapInfo: *const VkMemoryUnmapInfo) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_version_1_4.vk_unmap_memory2)(device, pMemoryUnmapInfo))
 	}
 	fn vkCmdBindIndexBuffer2(&self, commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize, size: VkDeviceSize, indexType: VkIndexType) {
 		(self.vk_version_1_4.vk_cmd_bind_index_buffer2)(commandBuffer, buffer, offset, size, indexType)
@@ -33020,17 +33027,17 @@ impl VK_VERSION_1_4 for VkCore {
 	fn vkCmdPushDescriptorSetWithTemplate2(&self, commandBuffer: VkCommandBuffer, pPushDescriptorSetWithTemplateInfo: *const VkPushDescriptorSetWithTemplateInfo) {
 		(self.vk_version_1_4.vk_cmd_push_descriptor_set_with_template2)(commandBuffer, pPushDescriptorSetWithTemplateInfo)
 	}
-	fn vkCopyMemoryToImage(&self, device: VkDevice, pCopyMemoryToImageInfo: *const VkCopyMemoryToImageInfo) -> VkResult {
-		(self.vk_version_1_4.vk_copy_memory_to_image)(device, pCopyMemoryToImageInfo)
+	fn vkCopyMemoryToImage(&self, device: VkDevice, pCopyMemoryToImageInfo: *const VkCopyMemoryToImageInfo) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_version_1_4.vk_copy_memory_to_image)(device, pCopyMemoryToImageInfo))
 	}
-	fn vkCopyImageToMemory(&self, device: VkDevice, pCopyImageToMemoryInfo: *const VkCopyImageToMemoryInfo) -> VkResult {
-		(self.vk_version_1_4.vk_copy_image_to_memory)(device, pCopyImageToMemoryInfo)
+	fn vkCopyImageToMemory(&self, device: VkDevice, pCopyImageToMemoryInfo: *const VkCopyImageToMemoryInfo) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_version_1_4.vk_copy_image_to_memory)(device, pCopyImageToMemoryInfo))
 	}
-	fn vkCopyImageToImage(&self, device: VkDevice, pCopyImageToImageInfo: *const VkCopyImageToImageInfo) -> VkResult {
-		(self.vk_version_1_4.vk_copy_image_to_image)(device, pCopyImageToImageInfo)
+	fn vkCopyImageToImage(&self, device: VkDevice, pCopyImageToImageInfo: *const VkCopyImageToImageInfo) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_version_1_4.vk_copy_image_to_image)(device, pCopyImageToImageInfo))
 	}
-	fn vkTransitionImageLayout(&self, device: VkDevice, transitionCount: u32, pTransitions: *const VkHostImageLayoutTransitionInfo) -> VkResult {
-		(self.vk_version_1_4.vk_transition_image_layout)(device, transitionCount, pTransitions)
+	fn vkTransitionImageLayout(&self, device: VkDevice, transitionCount: u32, pTransitions: *const VkHostImageLayoutTransitionInfo) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_version_1_4.vk_transition_image_layout)(device, transitionCount, pTransitions))
 	}
 }
 impl VK_KHR_surface for VkCore {
@@ -33039,24 +33046,24 @@ impl VK_KHR_surface for VkCore {
 	}
 }
 impl VK_KHR_swapchain for VkCore {
-	fn vkCreateSwapchainKHR(&self, device: VkDevice, pCreateInfo: *const VkSwapchainCreateInfoKHR, pAllocator: *const VkAllocationCallbacks, pSwapchain: *mut VkSwapchainKHR) -> VkResult {
-		(self.vk_khr_swapchain.vk_create_swapchain_khr)(device, pCreateInfo, pAllocator, pSwapchain)
+	fn vkCreateSwapchainKHR(&self, device: VkDevice, pCreateInfo: *const VkSwapchainCreateInfoKHR, pAllocator: *const VkAllocationCallbacks, pSwapchain: *mut VkSwapchainKHR) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_khr_swapchain.vk_create_swapchain_khr)(device, pCreateInfo, pAllocator, pSwapchain))
 	}
 }
 impl VK_KHR_display for VkCore {
-	fn vkGetPhysicalDeviceDisplayPropertiesKHR(&self, physicalDevice: VkPhysicalDevice, pPropertyCount: *mut uint32_t, pProperties: *mut VkDisplayPropertiesKHR) -> VkResult {
-		(self.vk_khr_display.vk_get_physical_device_display_properties_khr)(physicalDevice, pPropertyCount, pProperties)
+	fn vkGetPhysicalDeviceDisplayPropertiesKHR(&self, physicalDevice: VkPhysicalDevice, pPropertyCount: *mut uint32_t, pProperties: *mut VkDisplayPropertiesKHR) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_khr_display.vk_get_physical_device_display_properties_khr)(physicalDevice, pPropertyCount, pProperties))
 	}
 }
 impl VK_KHR_display_swapchain for VkCore {
-	fn vkCreateSharedSwapchainsKHR(&self, device: VkDevice, swapchainCount: u32, pCreateInfos: *const VkSwapchainCreateInfoKHR, pAllocator: *const VkAllocationCallbacks, pSwapchains: *mut VkSwapchainKHR) -> VkResult {
-		(self.vk_khr_display_swapchain.vk_create_shared_swapchains_khr)(device, swapchainCount, pCreateInfos, pAllocator, pSwapchains)
+	fn vkCreateSharedSwapchainsKHR(&self, device: VkDevice, swapchainCount: u32, pCreateInfos: *const VkSwapchainCreateInfoKHR, pAllocator: *const VkAllocationCallbacks, pSwapchains: *mut VkSwapchainKHR) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_khr_display_swapchain.vk_create_shared_swapchains_khr)(device, swapchainCount, pCreateInfos, pAllocator, pSwapchains))
 	}
 }
 impl VK_KHR_sampler_mirror_clamp_to_edge for VkCore {}
 impl VK_KHR_video_queue for VkCore {
-	fn vkGetPhysicalDeviceVideoCapabilitiesKHR(&self, physicalDevice: VkPhysicalDevice, pVideoProfile: *const VkVideoProfileInfoKHR, pCapabilities: *mut VkVideoCapabilitiesKHR) -> VkResult {
-		(self.vk_khr_video_queue.vk_get_physical_device_video_capabilities_khr)(physicalDevice, pVideoProfile, pCapabilities)
+	fn vkGetPhysicalDeviceVideoCapabilitiesKHR(&self, physicalDevice: VkPhysicalDevice, pVideoProfile: *const VkVideoProfileInfoKHR, pCapabilities: *mut VkVideoCapabilitiesKHR) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_khr_video_queue.vk_get_physical_device_video_capabilities_khr)(physicalDevice, pVideoProfile, pCapabilities))
 	}
 }
 impl VK_KHR_video_decode_queue for VkCore {
@@ -33096,8 +33103,8 @@ impl VK_KHR_maintenance1 for VkCore {
 	}
 }
 impl VK_KHR_device_group_creation for VkCore {
-	fn vkEnumeratePhysicalDeviceGroupsKHR(&self, instance: VkInstance, pPhysicalDeviceGroupCount: *mut uint32_t, pPhysicalDeviceGroupProperties: *mut VkPhysicalDeviceGroupProperties) -> VkResult {
-		(self.vk_khr_device_group_creation.vk_enumerate_physical_device_groups_khr)(instance, pPhysicalDeviceGroupCount, pPhysicalDeviceGroupProperties)
+	fn vkEnumeratePhysicalDeviceGroupsKHR(&self, instance: VkInstance, pPhysicalDeviceGroupCount: *mut uint32_t, pPhysicalDeviceGroupProperties: *mut VkPhysicalDeviceGroupProperties) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_khr_device_group_creation.vk_enumerate_physical_device_groups_khr)(instance, pPhysicalDeviceGroupCount, pPhysicalDeviceGroupProperties))
 	}
 }
 impl VK_KHR_external_memory_capabilities for VkCore {
@@ -33107,8 +33114,8 @@ impl VK_KHR_external_memory_capabilities for VkCore {
 }
 impl VK_KHR_external_memory for VkCore {}
 impl VK_KHR_external_memory_fd for VkCore {
-	fn vkGetMemoryFdKHR(&self, device: VkDevice, pGetFdInfo: *const VkMemoryGetFdInfoKHR, pFd: *mut int) -> VkResult {
-		(self.vk_khr_external_memory_fd.vk_get_memory_fd_khr)(device, pGetFdInfo, pFd)
+	fn vkGetMemoryFdKHR(&self, device: VkDevice, pGetFdInfo: *const VkMemoryGetFdInfoKHR, pFd: *mut int) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_khr_external_memory_fd.vk_get_memory_fd_khr)(device, pGetFdInfo, pFd))
 	}
 }
 impl VK_KHR_external_semaphore_capabilities for VkCore {
@@ -33118,8 +33125,8 @@ impl VK_KHR_external_semaphore_capabilities for VkCore {
 }
 impl VK_KHR_external_semaphore for VkCore {}
 impl VK_KHR_external_semaphore_fd for VkCore {
-	fn vkImportSemaphoreFdKHR(&self, device: VkDevice, pImportSemaphoreFdInfo: *const VkImportSemaphoreFdInfoKHR) -> VkResult {
-		(self.vk_khr_external_semaphore_fd.vk_import_semaphore_fd_khr)(device, pImportSemaphoreFdInfo)
+	fn vkImportSemaphoreFdKHR(&self, device: VkDevice, pImportSemaphoreFdInfo: *const VkImportSemaphoreFdInfoKHR) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_khr_external_semaphore_fd.vk_import_semaphore_fd_khr)(device, pImportSemaphoreFdInfo))
 	}
 }
 impl VK_KHR_push_descriptor for VkCore {
@@ -33131,19 +33138,19 @@ impl VK_KHR_shader_float16_int8 for VkCore {}
 impl VK_KHR_16bit_storage for VkCore {}
 impl VK_KHR_incremental_present for VkCore {}
 impl VK_KHR_descriptor_update_template for VkCore {
-	fn vkCreateDescriptorUpdateTemplateKHR(&self, device: VkDevice, pCreateInfo: *const VkDescriptorUpdateTemplateCreateInfo, pAllocator: *const VkAllocationCallbacks, pDescriptorUpdateTemplate: *mut VkDescriptorUpdateTemplate) -> VkResult {
-		(self.vk_khr_descriptor_update_template.vk_create_descriptor_update_template_khr)(device, pCreateInfo, pAllocator, pDescriptorUpdateTemplate)
+	fn vkCreateDescriptorUpdateTemplateKHR(&self, device: VkDevice, pCreateInfo: *const VkDescriptorUpdateTemplateCreateInfo, pAllocator: *const VkAllocationCallbacks, pDescriptorUpdateTemplate: *mut VkDescriptorUpdateTemplate) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_khr_descriptor_update_template.vk_create_descriptor_update_template_khr)(device, pCreateInfo, pAllocator, pDescriptorUpdateTemplate))
 	}
 }
 impl VK_KHR_imageless_framebuffer for VkCore {}
 impl VK_KHR_create_renderpass2 for VkCore {
-	fn vkCreateRenderPass2KHR(&self, device: VkDevice, pCreateInfo: *const VkRenderPassCreateInfo2, pAllocator: *const VkAllocationCallbacks, pRenderPass: *mut VkRenderPass) -> VkResult {
-		(self.vk_khr_create_renderpass2.vk_create_render_pass2_khr)(device, pCreateInfo, pAllocator, pRenderPass)
+	fn vkCreateRenderPass2KHR(&self, device: VkDevice, pCreateInfo: *const VkRenderPassCreateInfo2, pAllocator: *const VkAllocationCallbacks, pRenderPass: *mut VkRenderPass) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_khr_create_renderpass2.vk_create_render_pass2_khr)(device, pCreateInfo, pAllocator, pRenderPass))
 	}
 }
 impl VK_KHR_shared_presentable_image for VkCore {
-	fn vkGetSwapchainStatusKHR(&self, device: VkDevice, swapchain: VkSwapchainKHR) -> VkResult {
-		(self.vk_khr_shared_presentable_image.vk_get_swapchain_status_khr)(device, swapchain)
+	fn vkGetSwapchainStatusKHR(&self, device: VkDevice, swapchain: VkSwapchainKHR) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_khr_shared_presentable_image.vk_get_swapchain_status_khr)(device, swapchain))
 	}
 }
 impl VK_KHR_external_fence_capabilities for VkCore {
@@ -33153,25 +33160,25 @@ impl VK_KHR_external_fence_capabilities for VkCore {
 }
 impl VK_KHR_external_fence for VkCore {}
 impl VK_KHR_external_fence_fd for VkCore {
-	fn vkImportFenceFdKHR(&self, device: VkDevice, pImportFenceFdInfo: *const VkImportFenceFdInfoKHR) -> VkResult {
-		(self.vk_khr_external_fence_fd.vk_import_fence_fd_khr)(device, pImportFenceFdInfo)
+	fn vkImportFenceFdKHR(&self, device: VkDevice, pImportFenceFdInfo: *const VkImportFenceFdInfoKHR) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_khr_external_fence_fd.vk_import_fence_fd_khr)(device, pImportFenceFdInfo))
 	}
 }
 impl VK_KHR_performance_query for VkCore {
-	fn vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR(&self, physicalDevice: VkPhysicalDevice, queueFamilyIndex: u32, pCounterCount: *mut uint32_t, pCounters: *mut VkPerformanceCounterKHR, pCounterDescriptions: *mut VkPerformanceCounterDescriptionKHR) -> VkResult {
-		(self.vk_khr_performance_query.vk_enumerate_physical_device_queue_family_performance_query_counters_khr)(physicalDevice, queueFamilyIndex, pCounterCount, pCounters, pCounterDescriptions)
+	fn vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR(&self, physicalDevice: VkPhysicalDevice, queueFamilyIndex: u32, pCounterCount: *mut uint32_t, pCounters: *mut VkPerformanceCounterKHR, pCounterDescriptions: *mut VkPerformanceCounterDescriptionKHR) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_khr_performance_query.vk_enumerate_physical_device_queue_family_performance_query_counters_khr)(physicalDevice, queueFamilyIndex, pCounterCount, pCounters, pCounterDescriptions))
 	}
 }
 impl VK_KHR_maintenance2 for VkCore {}
 impl VK_KHR_get_surface_capabilities2 for VkCore {
-	fn vkGetPhysicalDeviceSurfaceCapabilities2KHR(&self, physicalDevice: VkPhysicalDevice, pSurfaceInfo: *const VkPhysicalDeviceSurfaceInfo2KHR, pSurfaceCapabilities: *mut VkSurfaceCapabilities2KHR) -> VkResult {
-		(self.vk_khr_get_surface_capabilities2.vk_get_physical_device_surface_capabilities2_khr)(physicalDevice, pSurfaceInfo, pSurfaceCapabilities)
+	fn vkGetPhysicalDeviceSurfaceCapabilities2KHR(&self, physicalDevice: VkPhysicalDevice, pSurfaceInfo: *const VkPhysicalDeviceSurfaceInfo2KHR, pSurfaceCapabilities: *mut VkSurfaceCapabilities2KHR) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_khr_get_surface_capabilities2.vk_get_physical_device_surface_capabilities2_khr)(physicalDevice, pSurfaceInfo, pSurfaceCapabilities))
 	}
 }
 impl VK_KHR_variable_pointers for VkCore {}
 impl VK_KHR_get_display_properties2 for VkCore {
-	fn vkGetPhysicalDeviceDisplayProperties2KHR(&self, physicalDevice: VkPhysicalDevice, pPropertyCount: *mut uint32_t, pProperties: *mut VkDisplayProperties2KHR) -> VkResult {
-		(self.vk_khr_get_display_properties2.vk_get_physical_device_display_properties2_khr)(physicalDevice, pPropertyCount, pProperties)
+	fn vkGetPhysicalDeviceDisplayProperties2KHR(&self, physicalDevice: VkPhysicalDevice, pPropertyCount: *mut uint32_t, pProperties: *mut VkDisplayProperties2KHR) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_khr_get_display_properties2.vk_get_physical_device_display_properties2_khr)(physicalDevice, pPropertyCount, pProperties))
 	}
 }
 impl VK_KHR_dedicated_allocation for VkCore {}
@@ -33185,13 +33192,13 @@ impl VK_KHR_get_memory_requirements2 for VkCore {
 }
 impl VK_KHR_image_format_list for VkCore {}
 impl VK_KHR_sampler_ycbcr_conversion for VkCore {
-	fn vkCreateSamplerYcbcrConversionKHR(&self, device: VkDevice, pCreateInfo: *const VkSamplerYcbcrConversionCreateInfo, pAllocator: *const VkAllocationCallbacks, pYcbcrConversion: *mut VkSamplerYcbcrConversion) -> VkResult {
-		(self.vk_khr_sampler_ycbcr_conversion.vk_create_sampler_ycbcr_conversion_khr)(device, pCreateInfo, pAllocator, pYcbcrConversion)
+	fn vkCreateSamplerYcbcrConversionKHR(&self, device: VkDevice, pCreateInfo: *const VkSamplerYcbcrConversionCreateInfo, pAllocator: *const VkAllocationCallbacks, pYcbcrConversion: *mut VkSamplerYcbcrConversion) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_khr_sampler_ycbcr_conversion.vk_create_sampler_ycbcr_conversion_khr)(device, pCreateInfo, pAllocator, pYcbcrConversion))
 	}
 }
 impl VK_KHR_bind_memory2 for VkCore {
-	fn vkBindBufferMemory2KHR(&self, device: VkDevice, bindInfoCount: u32, pBindInfos: *const VkBindBufferMemoryInfo) -> VkResult {
-		(self.vk_khr_bind_memory2.vk_bind_buffer_memory2_khr)(device, bindInfoCount, pBindInfos)
+	fn vkBindBufferMemory2KHR(&self, device: VkDevice, bindInfoCount: u32, pBindInfos: *const VkBindBufferMemoryInfo) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_khr_bind_memory2.vk_bind_buffer_memory2_khr)(device, bindInfoCount, pBindInfos))
 	}
 }
 impl VK_KHR_maintenance3 for VkCore {
@@ -33216,15 +33223,15 @@ impl VK_KHR_shader_float_controls for VkCore {}
 impl VK_KHR_depth_stencil_resolve for VkCore {}
 impl VK_KHR_swapchain_mutable_format for VkCore {}
 impl VK_KHR_timeline_semaphore for VkCore {
-	fn vkGetSemaphoreCounterValueKHR(&self, device: VkDevice, semaphore: VkSemaphore, pValue: *mut uint64_t) -> VkResult {
-		(self.vk_khr_timeline_semaphore.vk_get_semaphore_counter_value_khr)(device, semaphore, pValue)
+	fn vkGetSemaphoreCounterValueKHR(&self, device: VkDevice, semaphore: VkSemaphore, pValue: *mut uint64_t) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_khr_timeline_semaphore.vk_get_semaphore_counter_value_khr)(device, semaphore, pValue))
 	}
 }
 impl VK_KHR_vulkan_memory_model for VkCore {}
 impl VK_KHR_shader_terminate_invocation for VkCore {}
 impl VK_KHR_fragment_shading_rate for VkCore {
-	fn vkGetPhysicalDeviceFragmentShadingRatesKHR(&self, physicalDevice: VkPhysicalDevice, pFragmentShadingRateCount: *mut uint32_t, pFragmentShadingRates: *mut VkPhysicalDeviceFragmentShadingRateKHR) -> VkResult {
-		(self.vk_khr_fragment_shading_rate.vk_get_physical_device_fragment_shading_rates_khr)(physicalDevice, pFragmentShadingRateCount, pFragmentShadingRates)
+	fn vkGetPhysicalDeviceFragmentShadingRatesKHR(&self, physicalDevice: VkPhysicalDevice, pFragmentShadingRateCount: *mut uint32_t, pFragmentShadingRates: *mut VkPhysicalDeviceFragmentShadingRateKHR) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_khr_fragment_shading_rate.vk_get_physical_device_fragment_shading_rates_khr)(physicalDevice, pFragmentShadingRateCount, pFragmentShadingRates))
 	}
 }
 impl VK_KHR_dynamic_rendering_local_read for VkCore {
@@ -33237,8 +33244,8 @@ impl VK_KHR_spirv_1_4 for VkCore {}
 impl VK_KHR_surface_protected_capabilities for VkCore {}
 impl VK_KHR_separate_depth_stencil_layouts for VkCore {}
 impl VK_KHR_present_wait for VkCore {
-	fn vkWaitForPresentKHR(&self, device: VkDevice, swapchain: VkSwapchainKHR, presentId: u64, timeout: u64) -> VkResult {
-		(self.vk_khr_present_wait.vk_wait_for_present_khr)(device, swapchain, presentId, timeout)
+	fn vkWaitForPresentKHR(&self, device: VkDevice, swapchain: VkSwapchainKHR, presentId: u64, timeout: u64) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_khr_present_wait.vk_wait_for_present_khr)(device, swapchain, presentId, timeout))
 	}
 }
 impl VK_KHR_uniform_buffer_standard_layout for VkCore {}
@@ -33248,18 +33255,18 @@ impl VK_KHR_buffer_device_address for VkCore {
 	}
 }
 impl VK_KHR_deferred_host_operations for VkCore {
-	fn vkCreateDeferredOperationKHR(&self, device: VkDevice, pAllocator: *const VkAllocationCallbacks, pDeferredOperation: *mut VkDeferredOperationKHR) -> VkResult {
-		(self.vk_khr_deferred_host_operations.vk_create_deferred_operation_khr)(device, pAllocator, pDeferredOperation)
+	fn vkCreateDeferredOperationKHR(&self, device: VkDevice, pAllocator: *const VkAllocationCallbacks, pDeferredOperation: *mut VkDeferredOperationKHR) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_khr_deferred_host_operations.vk_create_deferred_operation_khr)(device, pAllocator, pDeferredOperation))
 	}
 }
 impl VK_KHR_pipeline_executable_properties for VkCore {
-	fn vkGetPipelineExecutablePropertiesKHR(&self, device: VkDevice, pPipelineInfo: *const VkPipelineInfoKHR, pExecutableCount: *mut uint32_t, pProperties: *mut VkPipelineExecutablePropertiesKHR) -> VkResult {
-		(self.vk_khr_pipeline_executable_properties.vk_get_pipeline_executable_properties_khr)(device, pPipelineInfo, pExecutableCount, pProperties)
+	fn vkGetPipelineExecutablePropertiesKHR(&self, device: VkDevice, pPipelineInfo: *const VkPipelineInfoKHR, pExecutableCount: *mut uint32_t, pProperties: *mut VkPipelineExecutablePropertiesKHR) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_khr_pipeline_executable_properties.vk_get_pipeline_executable_properties_khr)(device, pPipelineInfo, pExecutableCount, pProperties))
 	}
 }
 impl VK_KHR_map_memory2 for VkCore {
-	fn vkMapMemory2KHR(&self, device: VkDevice, pMemoryMapInfo: *const VkMemoryMapInfo, ppData: *mut *mut c_void) -> VkResult {
-		(self.vk_khr_map_memory2.vk_map_memory2_khr)(device, pMemoryMapInfo, ppData)
+	fn vkMapMemory2KHR(&self, device: VkDevice, pMemoryMapInfo: *const VkMemoryMapInfo, ppData: *mut *mut c_void) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_khr_map_memory2.vk_map_memory2_khr)(device, pMemoryMapInfo, ppData))
 	}
 }
 impl VK_KHR_shader_integer_dot_product for VkCore {}
@@ -33267,8 +33274,8 @@ impl VK_KHR_pipeline_library for VkCore {}
 impl VK_KHR_shader_non_semantic_info for VkCore {}
 impl VK_KHR_present_id for VkCore {}
 impl VK_KHR_video_encode_queue for VkCore {
-	fn vkGetPhysicalDeviceVideoEncodeQualityLevelPropertiesKHR(&self, physicalDevice: VkPhysicalDevice, pQualityLevelInfo: *const VkPhysicalDeviceVideoEncodeQualityLevelInfoKHR, pQualityLevelProperties: *mut VkVideoEncodeQualityLevelPropertiesKHR) -> VkResult {
-		(self.vk_khr_video_encode_queue.vk_get_physical_device_video_encode_quality_level_properties_khr)(physicalDevice, pQualityLevelInfo, pQualityLevelProperties)
+	fn vkGetPhysicalDeviceVideoEncodeQualityLevelPropertiesKHR(&self, physicalDevice: VkPhysicalDevice, pQualityLevelInfo: *const VkPhysicalDeviceVideoEncodeQualityLevelInfoKHR, pQualityLevelProperties: *mut VkVideoEncodeQualityLevelPropertiesKHR) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_khr_video_encode_queue.vk_get_physical_device_video_encode_quality_level_properties_khr)(physicalDevice, pQualityLevelInfo, pQualityLevelProperties))
 	}
 }
 impl VK_KHR_synchronization2 for VkCore {
@@ -33306,25 +33313,25 @@ impl VK_KHR_maintenance5 for VkCore {
 }
 impl VK_KHR_present_id2 for VkCore {}
 impl VK_KHR_present_wait2 for VkCore {
-	fn vkWaitForPresent2KHR(&self, device: VkDevice, swapchain: VkSwapchainKHR, pPresentWait2Info: *const VkPresentWait2InfoKHR) -> VkResult {
-		(self.vk_khr_present_wait2.vk_wait_for_present2_khr)(device, swapchain, pPresentWait2Info)
+	fn vkWaitForPresent2KHR(&self, device: VkDevice, swapchain: VkSwapchainKHR, pPresentWait2Info: *const VkPresentWait2InfoKHR) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_khr_present_wait2.vk_wait_for_present2_khr)(device, swapchain, pPresentWait2Info))
 	}
 }
 impl VK_KHR_ray_tracing_position_fetch for VkCore {}
 impl VK_KHR_pipeline_binary for VkCore {
-	fn vkCreatePipelineBinariesKHR(&self, device: VkDevice, pCreateInfo: *const VkPipelineBinaryCreateInfoKHR, pAllocator: *const VkAllocationCallbacks, pBinaries: *mut VkPipelineBinaryHandlesInfoKHR) -> VkResult {
-		(self.vk_khr_pipeline_binary.vk_create_pipeline_binaries_khr)(device, pCreateInfo, pAllocator, pBinaries)
+	fn vkCreatePipelineBinariesKHR(&self, device: VkDevice, pCreateInfo: *const VkPipelineBinaryCreateInfoKHR, pAllocator: *const VkAllocationCallbacks, pBinaries: *mut VkPipelineBinaryHandlesInfoKHR) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_khr_pipeline_binary.vk_create_pipeline_binaries_khr)(device, pCreateInfo, pAllocator, pBinaries))
 	}
 }
 impl VK_KHR_surface_maintenance1 for VkCore {}
 impl VK_KHR_swapchain_maintenance1 for VkCore {
-	fn vkReleaseSwapchainImagesKHR(&self, device: VkDevice, pReleaseInfo: *const VkReleaseSwapchainImagesInfoKHR) -> VkResult {
-		(self.vk_khr_swapchain_maintenance1.vk_release_swapchain_images_khr)(device, pReleaseInfo)
+	fn vkReleaseSwapchainImagesKHR(&self, device: VkDevice, pReleaseInfo: *const VkReleaseSwapchainImagesInfoKHR) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_khr_swapchain_maintenance1.vk_release_swapchain_images_khr)(device, pReleaseInfo))
 	}
 }
 impl VK_KHR_cooperative_matrix for VkCore {
-	fn vkGetPhysicalDeviceCooperativeMatrixPropertiesKHR(&self, physicalDevice: VkPhysicalDevice, pPropertyCount: *mut uint32_t, pProperties: *mut VkCooperativeMatrixPropertiesKHR) -> VkResult {
-		(self.vk_khr_cooperative_matrix.vk_get_physical_device_cooperative_matrix_properties_khr)(physicalDevice, pPropertyCount, pProperties)
+	fn vkGetPhysicalDeviceCooperativeMatrixPropertiesKHR(&self, physicalDevice: VkPhysicalDevice, pPropertyCount: *mut uint32_t, pProperties: *mut VkCooperativeMatrixPropertiesKHR) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_khr_cooperative_matrix.vk_get_physical_device_cooperative_matrix_properties_khr)(physicalDevice, pPropertyCount, pProperties))
 	}
 }
 impl VK_KHR_compute_shader_derivatives for VkCore {}
@@ -33348,8 +33355,8 @@ impl VK_KHR_line_rasterization for VkCore {
 	}
 }
 impl VK_KHR_calibrated_timestamps for VkCore {
-	fn vkGetPhysicalDeviceCalibrateableTimeDomainsKHR(&self, physicalDevice: VkPhysicalDevice, pTimeDomainCount: *mut uint32_t, pTimeDomains: *mut VkTimeDomainKHR) -> VkResult {
-		(self.vk_khr_calibrated_timestamps.vk_get_physical_device_calibrateable_time_domains_khr)(physicalDevice, pTimeDomainCount, pTimeDomains)
+	fn vkGetPhysicalDeviceCalibrateableTimeDomainsKHR(&self, physicalDevice: VkPhysicalDevice, pTimeDomainCount: *mut uint32_t, pTimeDomains: *mut VkTimeDomainKHR) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_khr_calibrated_timestamps.vk_get_physical_device_calibrateable_time_domains_khr)(physicalDevice, pTimeDomainCount, pTimeDomains))
 	}
 }
 impl VK_KHR_shader_expect_assume for VkCore {}
@@ -33369,8 +33376,8 @@ impl VK_KHR_depth_clamp_zero_one for VkCore {}
 impl VK_KHR_robustness2 for VkCore {}
 impl VK_KHR_present_mode_fifo_latest_ready for VkCore {}
 impl VK_EXT_debug_report for VkCore {
-	fn vkCreateDebugReportCallbackEXT(&self, instance: VkInstance, pCreateInfo: *const VkDebugReportCallbackCreateInfoEXT, pAllocator: *const VkAllocationCallbacks, pCallback: *mut VkDebugReportCallbackEXT) -> VkResult {
-		(self.vk_ext_debug_report.vk_create_debug_report_callback_ext)(instance, pCreateInfo, pAllocator, pCallback)
+	fn vkCreateDebugReportCallbackEXT(&self, instance: VkInstance, pCreateInfo: *const VkDebugReportCallbackCreateInfoEXT, pAllocator: *const VkAllocationCallbacks, pCallback: *mut VkDebugReportCallbackEXT) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_ext_debug_report.vk_create_debug_report_callback_ext)(instance, pCreateInfo, pAllocator, pCallback))
 	}
 }
 impl VK_NV_glsl_shader for VkCore {}
@@ -33380,8 +33387,8 @@ impl VK_AMD_rasterization_order for VkCore {}
 impl VK_AMD_shader_trinary_minmax for VkCore {}
 impl VK_AMD_shader_explicit_vertex_parameter for VkCore {}
 impl VK_EXT_debug_marker for VkCore {
-	fn vkDebugMarkerSetObjectTagEXT(&self, device: VkDevice, pTagInfo: *const VkDebugMarkerObjectTagInfoEXT) -> VkResult {
-		(self.vk_ext_debug_marker.vk_debug_marker_set_object_tag_ext)(device, pTagInfo)
+	fn vkDebugMarkerSetObjectTagEXT(&self, device: VkDevice, pTagInfo: *const VkDebugMarkerObjectTagInfoEXT) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_ext_debug_marker.vk_debug_marker_set_object_tag_ext)(device, pTagInfo))
 	}
 }
 impl VK_AMD_gcn_shader for VkCore {}
@@ -33392,8 +33399,8 @@ impl VK_EXT_transform_feedback for VkCore {
 	}
 }
 impl VK_NVX_binary_import for VkCore {
-	fn vkCreateCuModuleNVX(&self, device: VkDevice, pCreateInfo: *const VkCuModuleCreateInfoNVX, pAllocator: *const VkAllocationCallbacks, pModule: *mut VkCuModuleNVX) -> VkResult {
-		(self.vk_nvx_binary_import.vk_create_cu_module_nvx)(device, pCreateInfo, pAllocator, pModule)
+	fn vkCreateCuModuleNVX(&self, device: VkDevice, pCreateInfo: *const VkCuModuleCreateInfoNVX, pAllocator: *const VkAllocationCallbacks, pModule: *mut VkCuModuleNVX) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_nvx_binary_import.vk_create_cu_module_nvx)(device, pCreateInfo, pAllocator, pModule))
 	}
 }
 impl VK_NVX_image_view_handle for VkCore {
@@ -33411,16 +33418,16 @@ impl VK_AMD_gpu_shader_half_float for VkCore {}
 impl VK_AMD_shader_ballot for VkCore {}
 impl VK_AMD_texture_gather_bias_lod for VkCore {}
 impl VK_AMD_shader_info for VkCore {
-	fn vkGetShaderInfoAMD(&self, device: VkDevice, pipeline: VkPipeline, shaderStage: VkShaderStageFlagBits, infoType: VkShaderInfoTypeAMD, pInfoSize: *mut size_t, pInfo: *mut c_void) -> VkResult {
-		(self.vk_amd_shader_info.vk_get_shader_info_amd)(device, pipeline, shaderStage, infoType, pInfoSize, pInfo)
+	fn vkGetShaderInfoAMD(&self, device: VkDevice, pipeline: VkPipeline, shaderStage: VkShaderStageFlagBits, infoType: VkShaderInfoTypeAMD, pInfoSize: *mut size_t, pInfo: *mut c_void) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_amd_shader_info.vk_get_shader_info_amd)(device, pipeline, shaderStage, infoType, pInfoSize, pInfo))
 	}
 }
 impl VK_AMD_shader_image_load_store_lod for VkCore {}
 impl VK_NV_corner_sampled_image for VkCore {}
 impl VK_IMG_format_pvrtc for VkCore {}
 impl VK_NV_external_memory_capabilities for VkCore {
-	fn vkGetPhysicalDeviceExternalImageFormatPropertiesNV(&self, physicalDevice: VkPhysicalDevice, format: VkFormat, type_: VkImageType, tiling: VkImageTiling, usage: VkImageUsageFlags, flags: VkImageCreateFlags, externalHandleType: VkExternalMemoryHandleTypeFlagsNV, pExternalImageFormatProperties: *mut VkExternalImageFormatPropertiesNV) -> VkResult {
-		(self.vk_nv_external_memory_capabilities.vk_get_physical_device_external_image_format_properties_nv)(physicalDevice, format, type_, tiling, usage, flags, externalHandleType, pExternalImageFormatProperties)
+	fn vkGetPhysicalDeviceExternalImageFormatPropertiesNV(&self, physicalDevice: VkPhysicalDevice, format: VkFormat, type_: VkImageType, tiling: VkImageTiling, usage: VkImageUsageFlags, flags: VkImageCreateFlags, externalHandleType: VkExternalMemoryHandleTypeFlagsNV, pExternalImageFormatProperties: *mut VkExternalImageFormatPropertiesNV) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_nv_external_memory_capabilities.vk_get_physical_device_external_image_format_properties_nv)(physicalDevice, format, type_, tiling, usage, flags, externalHandleType, pExternalImageFormatProperties))
 	}
 }
 impl VK_NV_external_memory for VkCore {}
@@ -33441,23 +33448,23 @@ impl VK_NV_clip_space_w_scaling for VkCore {
 	}
 }
 impl VK_EXT_direct_mode_display for VkCore {
-	fn vkReleaseDisplayEXT(&self, physicalDevice: VkPhysicalDevice, display: VkDisplayKHR) -> VkResult {
-		(self.vk_ext_direct_mode_display.vk_release_display_ext)(physicalDevice, display)
+	fn vkReleaseDisplayEXT(&self, physicalDevice: VkPhysicalDevice, display: VkDisplayKHR) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_ext_direct_mode_display.vk_release_display_ext)(physicalDevice, display))
 	}
 }
 impl VK_EXT_display_surface_counter for VkCore {
-	fn vkGetPhysicalDeviceSurfaceCapabilities2EXT(&self, physicalDevice: VkPhysicalDevice, surface: VkSurfaceKHR, pSurfaceCapabilities: *mut VkSurfaceCapabilities2EXT) -> VkResult {
-		(self.vk_ext_display_surface_counter.vk_get_physical_device_surface_capabilities2_ext)(physicalDevice, surface, pSurfaceCapabilities)
+	fn vkGetPhysicalDeviceSurfaceCapabilities2EXT(&self, physicalDevice: VkPhysicalDevice, surface: VkSurfaceKHR, pSurfaceCapabilities: *mut VkSurfaceCapabilities2EXT) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_ext_display_surface_counter.vk_get_physical_device_surface_capabilities2_ext)(physicalDevice, surface, pSurfaceCapabilities))
 	}
 }
 impl VK_EXT_display_control for VkCore {
-	fn vkDisplayPowerControlEXT(&self, device: VkDevice, display: VkDisplayKHR, pDisplayPowerInfo: *const VkDisplayPowerInfoEXT) -> VkResult {
-		(self.vk_ext_display_control.vk_display_power_control_ext)(device, display, pDisplayPowerInfo)
+	fn vkDisplayPowerControlEXT(&self, device: VkDevice, display: VkDisplayKHR, pDisplayPowerInfo: *const VkDisplayPowerInfoEXT) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_ext_display_control.vk_display_power_control_ext)(device, display, pDisplayPowerInfo))
 	}
 }
 impl VK_GOOGLE_display_timing for VkCore {
-	fn vkGetRefreshCycleDurationGOOGLE(&self, device: VkDevice, swapchain: VkSwapchainKHR, pDisplayTimingProperties: *mut VkRefreshCycleDurationGOOGLE) -> VkResult {
-		(self.vk_google_display_timing.vk_get_refresh_cycle_duration_google)(device, swapchain, pDisplayTimingProperties)
+	fn vkGetRefreshCycleDurationGOOGLE(&self, device: VkDevice, swapchain: VkSwapchainKHR, pDisplayTimingProperties: *mut VkRefreshCycleDurationGOOGLE) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_google_display_timing.vk_get_refresh_cycle_duration_google)(device, swapchain, pDisplayTimingProperties))
 	}
 }
 impl VK_NV_sample_mask_override_coverage for VkCore {}
@@ -33482,8 +33489,8 @@ impl VK_IMG_relaxed_line_rasterization for VkCore {}
 impl VK_EXT_external_memory_dma_buf for VkCore {}
 impl VK_EXT_queue_family_foreign for VkCore {}
 impl VK_EXT_debug_utils for VkCore {
-	fn vkSetDebugUtilsObjectNameEXT(&self, device: VkDevice, pNameInfo: *const VkDebugUtilsObjectNameInfoEXT) -> VkResult {
-		(self.vk_ext_debug_utils.vk_set_debug_utils_object_name_ext)(device, pNameInfo)
+	fn vkSetDebugUtilsObjectNameEXT(&self, device: VkDevice, pNameInfo: *const VkDebugUtilsObjectNameInfoEXT) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_ext_debug_utils.vk_set_debug_utils_object_name_ext)(device, pNameInfo))
 	}
 }
 impl VK_EXT_sampler_filter_minmax for VkCore {}
@@ -33504,13 +33511,13 @@ impl VK_NV_fill_rectangle for VkCore {}
 impl VK_NV_shader_sm_builtins for VkCore {}
 impl VK_EXT_post_depth_coverage for VkCore {}
 impl VK_EXT_image_drm_format_modifier for VkCore {
-	fn vkGetImageDrmFormatModifierPropertiesEXT(&self, device: VkDevice, image: VkImage, pProperties: *mut VkImageDrmFormatModifierPropertiesEXT) -> VkResult {
-		(self.vk_ext_image_drm_format_modifier.vk_get_image_drm_format_modifier_properties_ext)(device, image, pProperties)
+	fn vkGetImageDrmFormatModifierPropertiesEXT(&self, device: VkDevice, image: VkImage, pProperties: *mut VkImageDrmFormatModifierPropertiesEXT) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_ext_image_drm_format_modifier.vk_get_image_drm_format_modifier_properties_ext)(device, image, pProperties))
 	}
 }
 impl VK_EXT_validation_cache for VkCore {
-	fn vkCreateValidationCacheEXT(&self, device: VkDevice, pCreateInfo: *const VkValidationCacheCreateInfoEXT, pAllocator: *const VkAllocationCallbacks, pValidationCache: *mut VkValidationCacheEXT) -> VkResult {
-		(self.vk_ext_validation_cache.vk_create_validation_cache_ext)(device, pCreateInfo, pAllocator, pValidationCache)
+	fn vkCreateValidationCacheEXT(&self, device: VkDevice, pCreateInfo: *const VkValidationCacheCreateInfoEXT, pAllocator: *const VkAllocationCallbacks, pValidationCache: *mut VkValidationCacheEXT) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_ext_validation_cache.vk_create_validation_cache_ext)(device, pCreateInfo, pAllocator, pValidationCache))
 	}
 }
 impl VK_EXT_descriptor_indexing for VkCore {}
@@ -33521,8 +33528,8 @@ impl VK_NV_shading_rate_image for VkCore {
 	}
 }
 impl VK_NV_ray_tracing for VkCore {
-	fn vkCreateAccelerationStructureNV(&self, device: VkDevice, pCreateInfo: *const VkAccelerationStructureCreateInfoNV, pAllocator: *const VkAllocationCallbacks, pAccelerationStructure: *mut VkAccelerationStructureNV) -> VkResult {
-		(self.vk_nv_ray_tracing.vk_create_acceleration_structure_nv)(device, pCreateInfo, pAllocator, pAccelerationStructure)
+	fn vkCreateAccelerationStructureNV(&self, device: VkDevice, pCreateInfo: *const VkAccelerationStructureCreateInfoNV, pAllocator: *const VkAllocationCallbacks, pAccelerationStructure: *mut VkAccelerationStructureNV) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_nv_ray_tracing.vk_create_acceleration_structure_nv)(device, pCreateInfo, pAllocator, pAccelerationStructure))
 	}
 }
 impl VK_NV_representative_fragment_test for VkCore {}
@@ -33530,8 +33537,8 @@ impl VK_EXT_filter_cubic for VkCore {}
 impl VK_QCOM_render_pass_shader_resolve for VkCore {}
 impl VK_EXT_global_priority for VkCore {}
 impl VK_EXT_external_memory_host for VkCore {
-	fn vkGetMemoryHostPointerPropertiesEXT(&self, device: VkDevice, handleType: VkExternalMemoryHandleTypeFlagBits, pHostPointer: *const c_void, pMemoryHostPointerProperties: *mut VkMemoryHostPointerPropertiesEXT) -> VkResult {
-		(self.vk_ext_external_memory_host.vk_get_memory_host_pointer_properties_ext)(device, handleType, pHostPointer, pMemoryHostPointerProperties)
+	fn vkGetMemoryHostPointerPropertiesEXT(&self, device: VkDevice, handleType: VkExternalMemoryHandleTypeFlagBits, pHostPointer: *const c_void, pMemoryHostPointerProperties: *mut VkMemoryHostPointerPropertiesEXT) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_ext_external_memory_host.vk_get_memory_host_pointer_properties_ext)(device, handleType, pHostPointer, pMemoryHostPointerProperties))
 	}
 }
 impl VK_AMD_buffer_marker for VkCore {
@@ -33541,8 +33548,8 @@ impl VK_AMD_buffer_marker for VkCore {
 }
 impl VK_AMD_pipeline_compiler_control for VkCore {}
 impl VK_EXT_calibrated_timestamps for VkCore {
-	fn vkGetPhysicalDeviceCalibrateableTimeDomainsEXT(&self, physicalDevice: VkPhysicalDevice, pTimeDomainCount: *mut uint32_t, pTimeDomains: *mut VkTimeDomainKHR) -> VkResult {
-		(self.vk_ext_calibrated_timestamps.vk_get_physical_device_calibrateable_time_domains_ext)(physicalDevice, pTimeDomainCount, pTimeDomains)
+	fn vkGetPhysicalDeviceCalibrateableTimeDomainsEXT(&self, physicalDevice: VkPhysicalDevice, pTimeDomainCount: *mut uint32_t, pTimeDomains: *mut VkTimeDomainKHR) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_ext_calibrated_timestamps.vk_get_physical_device_calibrateable_time_domains_ext)(physicalDevice, pTimeDomainCount, pTimeDomains))
 	}
 }
 impl VK_AMD_shader_core_properties for VkCore {}
@@ -33570,8 +33577,8 @@ impl VK_NV_device_diagnostic_checkpoints for VkCore {
 }
 impl VK_INTEL_shader_integer_functions2 for VkCore {}
 impl VK_INTEL_performance_query for VkCore {
-	fn vkInitializePerformanceApiINTEL(&self, device: VkDevice, pInitializeInfo: *const VkInitializePerformanceApiInfoINTEL) -> VkResult {
-		(self.vk_intel_performance_query.vk_initialize_performance_api_intel)(device, pInitializeInfo)
+	fn vkInitializePerformanceApiINTEL(&self, device: VkDevice, pInitializeInfo: *const VkInitializePerformanceApiInfoINTEL) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_intel_performance_query.vk_initialize_performance_api_intel)(device, pInitializeInfo))
 	}
 }
 impl VK_EXT_pci_bus_info for VkCore {}
@@ -33597,28 +33604,28 @@ impl VK_EXT_buffer_device_address for VkCore {
 	}
 }
 impl VK_EXT_tooling_info for VkCore {
-	fn vkGetPhysicalDeviceToolPropertiesEXT(&self, physicalDevice: VkPhysicalDevice, pToolCount: *mut uint32_t, pToolProperties: *mut VkPhysicalDeviceToolProperties) -> VkResult {
-		(self.vk_ext_tooling_info.vk_get_physical_device_tool_properties_ext)(physicalDevice, pToolCount, pToolProperties)
+	fn vkGetPhysicalDeviceToolPropertiesEXT(&self, physicalDevice: VkPhysicalDevice, pToolCount: *mut uint32_t, pToolProperties: *mut VkPhysicalDeviceToolProperties) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_ext_tooling_info.vk_get_physical_device_tool_properties_ext)(physicalDevice, pToolCount, pToolProperties))
 	}
 }
 impl VK_EXT_separate_stencil_usage for VkCore {}
 impl VK_EXT_validation_features for VkCore {}
 impl VK_NV_cooperative_matrix for VkCore {
-	fn vkGetPhysicalDeviceCooperativeMatrixPropertiesNV(&self, physicalDevice: VkPhysicalDevice, pPropertyCount: *mut uint32_t, pProperties: *mut VkCooperativeMatrixPropertiesNV) -> VkResult {
-		(self.vk_nv_cooperative_matrix.vk_get_physical_device_cooperative_matrix_properties_nv)(physicalDevice, pPropertyCount, pProperties)
+	fn vkGetPhysicalDeviceCooperativeMatrixPropertiesNV(&self, physicalDevice: VkPhysicalDevice, pPropertyCount: *mut uint32_t, pProperties: *mut VkCooperativeMatrixPropertiesNV) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_nv_cooperative_matrix.vk_get_physical_device_cooperative_matrix_properties_nv)(physicalDevice, pPropertyCount, pProperties))
 	}
 }
 impl VK_NV_coverage_reduction_mode for VkCore {
-	fn vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV(&self, physicalDevice: VkPhysicalDevice, pCombinationCount: *mut uint32_t, pCombinations: *mut VkFramebufferMixedSamplesCombinationNV) -> VkResult {
-		(self.vk_nv_coverage_reduction_mode.vk_get_physical_device_supported_framebuffer_mixed_samples_combinations_nv)(physicalDevice, pCombinationCount, pCombinations)
+	fn vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV(&self, physicalDevice: VkPhysicalDevice, pCombinationCount: *mut uint32_t, pCombinations: *mut VkFramebufferMixedSamplesCombinationNV) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_nv_coverage_reduction_mode.vk_get_physical_device_supported_framebuffer_mixed_samples_combinations_nv)(physicalDevice, pCombinationCount, pCombinations))
 	}
 }
 impl VK_EXT_fragment_shader_interlock for VkCore {}
 impl VK_EXT_ycbcr_image_arrays for VkCore {}
 impl VK_EXT_provoking_vertex for VkCore {}
 impl VK_EXT_headless_surface for VkCore {
-	fn vkCreateHeadlessSurfaceEXT(&self, instance: VkInstance, pCreateInfo: *const VkHeadlessSurfaceCreateInfoEXT, pAllocator: *const VkAllocationCallbacks, pSurface: *mut VkSurfaceKHR) -> VkResult {
-		(self.vk_ext_headless_surface.vk_create_headless_surface_ext)(instance, pCreateInfo, pAllocator, pSurface)
+	fn vkCreateHeadlessSurfaceEXT(&self, instance: VkInstance, pCreateInfo: *const VkHeadlessSurfaceCreateInfoEXT, pAllocator: *const VkAllocationCallbacks, pSurface: *mut VkSurfaceKHR) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_ext_headless_surface.vk_create_headless_surface_ext)(instance, pCreateInfo, pAllocator, pSurface))
 	}
 }
 impl VK_EXT_line_rasterization for VkCore {
@@ -33639,16 +33646,16 @@ impl VK_EXT_extended_dynamic_state for VkCore {
 	}
 }
 impl VK_EXT_host_image_copy for VkCore {
-	fn vkCopyMemoryToImageEXT(&self, device: VkDevice, pCopyMemoryToImageInfo: *const VkCopyMemoryToImageInfo) -> VkResult {
-		(self.vk_ext_host_image_copy.vk_copy_memory_to_image_ext)(device, pCopyMemoryToImageInfo)
+	fn vkCopyMemoryToImageEXT(&self, device: VkDevice, pCopyMemoryToImageInfo: *const VkCopyMemoryToImageInfo) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_ext_host_image_copy.vk_copy_memory_to_image_ext)(device, pCopyMemoryToImageInfo))
 	}
 }
 impl VK_EXT_map_memory_placed for VkCore {}
 impl VK_EXT_shader_atomic_float2 for VkCore {}
 impl VK_EXT_surface_maintenance1 for VkCore {}
 impl VK_EXT_swapchain_maintenance1 for VkCore {
-	fn vkReleaseSwapchainImagesEXT(&self, device: VkDevice, pReleaseInfo: *const VkReleaseSwapchainImagesInfoKHR) -> VkResult {
-		(self.vk_ext_swapchain_maintenance1.vk_release_swapchain_images_ext)(device, pReleaseInfo)
+	fn vkReleaseSwapchainImagesEXT(&self, device: VkDevice, pReleaseInfo: *const VkReleaseSwapchainImagesInfoKHR) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_ext_swapchain_maintenance1.vk_release_swapchain_images_ext)(device, pReleaseInfo))
 	}
 }
 impl VK_EXT_shader_demote_to_helper_invocation for VkCore {}
@@ -33667,8 +33674,8 @@ impl VK_EXT_depth_bias_control for VkCore {
 }
 impl VK_EXT_device_memory_report for VkCore {}
 impl VK_EXT_acquire_drm_display for VkCore {
-	fn vkAcquireDrmDisplayEXT(&self, physicalDevice: VkPhysicalDevice, drmFd: i32, display: VkDisplayKHR) -> VkResult {
-		(self.vk_ext_acquire_drm_display.vk_acquire_drm_display_ext)(physicalDevice, drmFd, display)
+	fn vkAcquireDrmDisplayEXT(&self, physicalDevice: VkPhysicalDevice, drmFd: i32, display: VkDisplayKHR) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_ext_acquire_drm_display.vk_acquire_drm_display_ext)(physicalDevice, drmFd, display))
 	}
 }
 impl VK_EXT_robustness2 for VkCore {}
@@ -33676,8 +33683,8 @@ impl VK_EXT_custom_border_color for VkCore {}
 impl VK_GOOGLE_user_type for VkCore {}
 impl VK_NV_present_barrier for VkCore {}
 impl VK_EXT_private_data for VkCore {
-	fn vkCreatePrivateDataSlotEXT(&self, device: VkDevice, pCreateInfo: *const VkPrivateDataSlotCreateInfo, pAllocator: *const VkAllocationCallbacks, pPrivateDataSlot: *mut VkPrivateDataSlot) -> VkResult {
-		(self.vk_ext_private_data.vk_create_private_data_slot_ext)(device, pCreateInfo, pAllocator, pPrivateDataSlot)
+	fn vkCreatePrivateDataSlotEXT(&self, device: VkDevice, pCreateInfo: *const VkPrivateDataSlotCreateInfo, pAllocator: *const VkAllocationCallbacks, pPrivateDataSlot: *mut VkPrivateDataSlot) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_ext_private_data.vk_create_private_data_slot_ext)(device, pCreateInfo, pAllocator, pPrivateDataSlot))
 	}
 }
 impl VK_EXT_pipeline_creation_cache_control for VkCore {}
@@ -33710,8 +33717,8 @@ impl VK_EXT_image_compression_control for VkCore {}
 impl VK_EXT_attachment_feedback_loop_layout for VkCore {}
 impl VK_EXT_4444_formats for VkCore {}
 impl VK_EXT_device_fault for VkCore {
-	fn vkGetDeviceFaultInfoEXT(&self, device: VkDevice, pFaultCounts: *mut VkDeviceFaultCountsEXT, pFaultInfo: *mut VkDeviceFaultInfoEXT) -> VkResult {
-		(self.vk_ext_device_fault.vk_get_device_fault_info_ext)(device, pFaultCounts, pFaultInfo)
+	fn vkGetDeviceFaultInfoEXT(&self, device: VkDevice, pFaultCounts: *mut VkDeviceFaultCountsEXT, pFaultInfo: *mut VkDeviceFaultInfoEXT) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_ext_device_fault.vk_get_device_fault_info_ext)(device, pFaultCounts, pFaultInfo))
 	}
 }
 impl VK_ARM_rasterization_order_attachment_access for VkCore {}
@@ -33728,8 +33735,8 @@ impl VK_EXT_depth_clip_control for VkCore {}
 impl VK_EXT_primitive_topology_list_restart for VkCore {}
 impl VK_EXT_present_mode_fifo_latest_ready for VkCore {}
 impl VK_HUAWEI_subpass_shading for VkCore {
-	fn vkGetDeviceSubpassShadingMaxWorkgroupSizeHUAWEI(&self, device: VkDevice, renderpass: VkRenderPass, pMaxWorkgroupSize: *mut VkExtent2D) -> VkResult {
-		(self.vk_huawei_subpass_shading.vk_get_device_subpass_shading_max_workgroup_size_huawei)(device, renderpass, pMaxWorkgroupSize)
+	fn vkGetDeviceSubpassShadingMaxWorkgroupSizeHUAWEI(&self, device: VkDevice, renderpass: VkRenderPass, pMaxWorkgroupSize: *mut VkExtent2D) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_huawei_subpass_shading.vk_get_device_subpass_shading_max_workgroup_size_huawei)(device, renderpass, pMaxWorkgroupSize))
 	}
 }
 impl VK_HUAWEI_invocation_mask for VkCore {
@@ -33738,13 +33745,13 @@ impl VK_HUAWEI_invocation_mask for VkCore {
 	}
 }
 impl VK_NV_external_memory_rdma for VkCore {
-	fn vkGetMemoryRemoteAddressNV(&self, device: VkDevice, pMemoryGetRemoteAddressInfo: *const VkMemoryGetRemoteAddressInfoNV, pAddress: *mut VkRemoteAddressNV) -> VkResult {
-		(self.vk_nv_external_memory_rdma.vk_get_memory_remote_address_nv)(device, pMemoryGetRemoteAddressInfo, pAddress)
+	fn vkGetMemoryRemoteAddressNV(&self, device: VkDevice, pMemoryGetRemoteAddressInfo: *const VkMemoryGetRemoteAddressInfoNV, pAddress: *mut VkRemoteAddressNV) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_nv_external_memory_rdma.vk_get_memory_remote_address_nv)(device, pMemoryGetRemoteAddressInfo, pAddress))
 	}
 }
 impl VK_EXT_pipeline_properties for VkCore {
-	fn vkGetPipelinePropertiesEXT(&self, device: VkDevice, pPipelineInfo: *const VkPipelineInfoEXT, pPipelineProperties: *mut VkBaseOutStructure) -> VkResult {
-		(self.vk_ext_pipeline_properties.vk_get_pipeline_properties_ext)(device, pPipelineInfo, pPipelineProperties)
+	fn vkGetPipelinePropertiesEXT(&self, device: VkDevice, pPipelineInfo: *const VkPipelineInfoEXT, pPipelineProperties: *mut VkBaseOutStructure) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_ext_pipeline_properties.vk_get_pipeline_properties_ext)(device, pPipelineInfo, pPipelineProperties))
 	}
 }
 impl VK_EXT_frame_boundary for VkCore {}
@@ -33770,8 +33777,8 @@ impl VK_EXT_multi_draw for VkCore {
 impl VK_EXT_image_2d_view_of_3d for VkCore {}
 impl VK_EXT_shader_tile_image for VkCore {}
 impl VK_EXT_opacity_micromap for VkCore {
-	fn vkCreateMicromapEXT(&self, device: VkDevice, pCreateInfo: *const VkMicromapCreateInfoEXT, pAllocator: *const VkAllocationCallbacks, pMicromap: *mut VkMicromapEXT) -> VkResult {
-		(self.vk_ext_opacity_micromap.vk_create_micromap_ext)(device, pCreateInfo, pAllocator, pMicromap)
+	fn vkCreateMicromapEXT(&self, device: VkDevice, pCreateInfo: *const VkMicromapCreateInfoEXT, pAllocator: *const VkAllocationCallbacks, pMicromap: *mut VkMicromapEXT) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_ext_opacity_micromap.vk_create_micromap_ext)(device, pCreateInfo, pAllocator, pMicromap))
 	}
 }
 impl VK_EXT_load_store_op_none for VkCore {}
@@ -33828,8 +33835,8 @@ impl VK_EXT_extended_dynamic_state3 for VkCore {
 impl VK_EXT_subpass_merge_feedback for VkCore {}
 impl VK_LUNARG_direct_driver_loading for VkCore {}
 impl VK_ARM_tensors for VkCore {
-	fn vkCreateTensorARM(&self, device: VkDevice, pCreateInfo: *const VkTensorCreateInfoARM, pAllocator: *const VkAllocationCallbacks, pTensor: *mut VkTensorARM) -> VkResult {
-		(self.vk_arm_tensors.vk_create_tensor_arm)(device, pCreateInfo, pAllocator, pTensor)
+	fn vkCreateTensorARM(&self, device: VkDevice, pCreateInfo: *const VkTensorCreateInfoARM, pAllocator: *const VkAllocationCallbacks, pTensor: *mut VkTensorARM) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_arm_tensors.vk_create_tensor_arm)(device, pCreateInfo, pAllocator, pTensor))
 	}
 }
 impl VK_EXT_shader_module_identifier for VkCore {
@@ -33839,8 +33846,8 @@ impl VK_EXT_shader_module_identifier for VkCore {
 }
 impl VK_EXT_rasterization_order_attachment_access for VkCore {}
 impl VK_NV_optical_flow for VkCore {
-	fn vkGetPhysicalDeviceOpticalFlowImageFormatsNV(&self, physicalDevice: VkPhysicalDevice, pOpticalFlowImageFormatInfo: *const VkOpticalFlowImageFormatInfoNV, pFormatCount: *mut uint32_t, pImageFormatProperties: *mut VkOpticalFlowImageFormatPropertiesNV) -> VkResult {
-		(self.vk_nv_optical_flow.vk_get_physical_device_optical_flow_image_formats_nv)(physicalDevice, pOpticalFlowImageFormatInfo, pFormatCount, pImageFormatProperties)
+	fn vkGetPhysicalDeviceOpticalFlowImageFormatsNV(&self, physicalDevice: VkPhysicalDevice, pOpticalFlowImageFormatInfo: *const VkOpticalFlowImageFormatInfoNV, pFormatCount: *mut uint32_t, pImageFormatProperties: *mut VkOpticalFlowImageFormatPropertiesNV) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_nv_optical_flow.vk_get_physical_device_optical_flow_image_formats_nv)(physicalDevice, pOpticalFlowImageFormatInfo, pFormatCount, pImageFormatProperties))
 	}
 }
 impl VK_EXT_legacy_dithering for VkCore {}
@@ -33851,21 +33858,21 @@ impl VK_AMD_anti_lag for VkCore {
 	}
 }
 impl VK_EXT_shader_object for VkCore {
-	fn vkCreateShadersEXT(&self, device: VkDevice, createInfoCount: u32, pCreateInfos: *const VkShaderCreateInfoEXT, pAllocator: *const VkAllocationCallbacks, pShaders: *mut VkShaderEXT) -> VkResult {
-		(self.vk_ext_shader_object.vk_create_shaders_ext)(device, createInfoCount, pCreateInfos, pAllocator, pShaders)
+	fn vkCreateShadersEXT(&self, device: VkDevice, createInfoCount: u32, pCreateInfos: *const VkShaderCreateInfoEXT, pAllocator: *const VkAllocationCallbacks, pShaders: *mut VkShaderEXT) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_ext_shader_object.vk_create_shaders_ext)(device, createInfoCount, pCreateInfos, pAllocator, pShaders))
 	}
 }
 impl VK_QCOM_tile_properties for VkCore {
-	fn vkGetFramebufferTilePropertiesQCOM(&self, device: VkDevice, framebuffer: VkFramebuffer, pPropertiesCount: *mut uint32_t, pProperties: *mut VkTilePropertiesQCOM) -> VkResult {
-		(self.vk_qcom_tile_properties.vk_get_framebuffer_tile_properties_qcom)(device, framebuffer, pPropertiesCount, pProperties)
+	fn vkGetFramebufferTilePropertiesQCOM(&self, device: VkDevice, framebuffer: VkFramebuffer, pPropertiesCount: *mut uint32_t, pProperties: *mut VkTilePropertiesQCOM) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_qcom_tile_properties.vk_get_framebuffer_tile_properties_qcom)(device, framebuffer, pPropertiesCount, pProperties))
 	}
 }
 impl VK_SEC_amigo_profiling for VkCore {}
 impl VK_QCOM_multiview_per_view_viewports for VkCore {}
 impl VK_NV_ray_tracing_invocation_reorder for VkCore {}
 impl VK_NV_cooperative_vector for VkCore {
-	fn vkGetPhysicalDeviceCooperativeVectorPropertiesNV(&self, physicalDevice: VkPhysicalDevice, pPropertyCount: *mut uint32_t, pProperties: *mut VkCooperativeVectorPropertiesNV) -> VkResult {
-		(self.vk_nv_cooperative_vector.vk_get_physical_device_cooperative_vector_properties_nv)(physicalDevice, pPropertyCount, pProperties)
+	fn vkGetPhysicalDeviceCooperativeVectorPropertiesNV(&self, physicalDevice: VkPhysicalDevice, pPropertyCount: *mut uint32_t, pProperties: *mut VkCooperativeVectorPropertiesNV) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_nv_cooperative_vector.vk_get_physical_device_cooperative_vector_properties_nv)(physicalDevice, pPropertyCount, pProperties))
 	}
 }
 impl VK_NV_extended_sparse_address_space for VkCore {}
@@ -33876,13 +33883,13 @@ impl VK_ARM_shader_core_builtins for VkCore {}
 impl VK_EXT_pipeline_library_group_handles for VkCore {}
 impl VK_EXT_dynamic_rendering_unused_attachments for VkCore {}
 impl VK_NV_low_latency2 for VkCore {
-	fn vkSetLatencySleepModeNV(&self, device: VkDevice, swapchain: VkSwapchainKHR, pSleepModeInfo: *const VkLatencySleepModeInfoNV) -> VkResult {
-		(self.vk_nv_low_latency2.vk_set_latency_sleep_mode_nv)(device, swapchain, pSleepModeInfo)
+	fn vkSetLatencySleepModeNV(&self, device: VkDevice, swapchain: VkSwapchainKHR, pSleepModeInfo: *const VkLatencySleepModeInfoNV) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_nv_low_latency2.vk_set_latency_sleep_mode_nv)(device, swapchain, pSleepModeInfo))
 	}
 }
 impl VK_ARM_data_graph for VkCore {
-	fn vkCreateDataGraphPipelinesARM(&self, device: VkDevice, deferredOperation: VkDeferredOperationKHR, pipelineCache: VkPipelineCache, createInfoCount: u32, pCreateInfos: *const VkDataGraphPipelineCreateInfoARM, pAllocator: *const VkAllocationCallbacks, pPipelines: *mut VkPipeline) -> VkResult {
-		(self.vk_arm_data_graph.vk_create_data_graph_pipelines_arm)(device, deferredOperation, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines)
+	fn vkCreateDataGraphPipelinesARM(&self, device: VkDevice, deferredOperation: VkDeferredOperationKHR, pipelineCache: VkPipelineCache, createInfoCount: u32, pCreateInfos: *const VkDataGraphPipelineCreateInfoARM, pAllocator: *const VkAllocationCallbacks, pPipelines: *mut VkPipeline) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_arm_data_graph.vk_create_data_graph_pipelines_arm)(device, deferredOperation, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines))
 	}
 }
 impl VK_QCOM_multiview_per_view_render_areas for VkCore {}
@@ -33906,8 +33913,8 @@ impl VK_QCOM_tile_memory_heap for VkCore {
 impl VK_NV_display_stereo for VkCore {}
 impl VK_NV_raw_access_chains for VkCore {}
 impl VK_NV_external_compute_queue for VkCore {
-	fn vkCreateExternalComputeQueueNV(&self, device: VkDevice, pCreateInfo: *const VkExternalComputeQueueCreateInfoNV, pAllocator: *const VkAllocationCallbacks, pExternalQueue: *mut VkExternalComputeQueueNV) -> VkResult {
-		(self.vk_nv_external_compute_queue.vk_create_external_compute_queue_nv)(device, pCreateInfo, pAllocator, pExternalQueue)
+	fn vkCreateExternalComputeQueueNV(&self, device: VkDevice, pCreateInfo: *const VkExternalComputeQueueCreateInfoNV, pAllocator: *const VkAllocationCallbacks, pExternalQueue: *mut VkExternalComputeQueueNV) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_nv_external_compute_queue.vk_create_external_compute_queue_nv)(device, pCreateInfo, pAllocator, pExternalQueue))
 	}
 }
 impl VK_NV_command_buffer_inheritance for VkCore {}
@@ -33934,8 +33941,8 @@ impl VK_MESA_image_alignment_control for VkCore {}
 impl VK_EXT_depth_clamp_control for VkCore {}
 impl VK_HUAWEI_hdr_vivid for VkCore {}
 impl VK_NV_cooperative_matrix2 for VkCore {
-	fn vkGetPhysicalDeviceCooperativeMatrixFlexibleDimensionsPropertiesNV(&self, physicalDevice: VkPhysicalDevice, pPropertyCount: *mut uint32_t, pProperties: *mut VkCooperativeMatrixFlexibleDimensionsPropertiesNV) -> VkResult {
-		(self.vk_nv_cooperative_matrix2.vk_get_physical_device_cooperative_matrix_flexible_dimensions_properties_nv)(physicalDevice, pPropertyCount, pProperties)
+	fn vkGetPhysicalDeviceCooperativeMatrixFlexibleDimensionsPropertiesNV(&self, physicalDevice: VkPhysicalDevice, pPropertyCount: *mut uint32_t, pProperties: *mut VkCooperativeMatrixFlexibleDimensionsPropertiesNV) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_nv_cooperative_matrix2.vk_get_physical_device_cooperative_matrix_flexible_dimensions_properties_nv)(physicalDevice, pPropertyCount, pProperties))
 	}
 }
 impl VK_ARM_pipeline_opacity_micromap for VkCore {}
@@ -33951,8 +33958,8 @@ impl VK_EXT_fragment_density_map_offset for VkCore {
 impl VK_EXT_zero_initialize_device_memory for VkCore {}
 impl VK_SEC_pipeline_cache_incremental_mode for VkCore {}
 impl VK_KHR_acceleration_structure for VkCore {
-	fn vkCreateAccelerationStructureKHR(&self, device: VkDevice, pCreateInfo: *const VkAccelerationStructureCreateInfoKHR, pAllocator: *const VkAllocationCallbacks, pAccelerationStructure: *mut VkAccelerationStructureKHR) -> VkResult {
-		(self.vk_khr_acceleration_structure.vk_create_acceleration_structure_khr)(device, pCreateInfo, pAllocator, pAccelerationStructure)
+	fn vkCreateAccelerationStructureKHR(&self, device: VkDevice, pCreateInfo: *const VkAccelerationStructureCreateInfoKHR, pAllocator: *const VkAllocationCallbacks, pAccelerationStructure: *mut VkAccelerationStructureKHR) -> Result<(), VkResult> {
+		vk_convert_result((self.vk_khr_acceleration_structure.vk_create_acceleration_structure_khr)(device, pCreateInfo, pAllocator, pAccelerationStructure))
 	}
 }
 impl VK_KHR_ray_tracing_pipeline for VkCore {
