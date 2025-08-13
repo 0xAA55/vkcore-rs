@@ -12,3 +12,5 @@ keywords = ["Vulkan", "GLFW", "GameEngine", "Render", "GPU"]
 [dev-dependencies]
 glfw = { version = "0.59.0", features = ["vulkan", "image"] }
 
+[profile.release]
+lto = "fat"
