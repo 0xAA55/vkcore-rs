@@ -42843,3 +42843,10 @@ impl VkCore {
 		}
 	}
 }
+
+impl Drop for VkCore {
+	fn drop(&mut self) {
+		self.vkDestroyInstance(self.instance, null()).unwrap();
+	}
+}
+
