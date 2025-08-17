@@ -26,11 +26,15 @@ pub fn vk_make_video_std_version(major: u32, minor: u32, patch: u32) -> u32 {
 	(major << 22) | (minor << 12) | patch
 }
 
+fn to_byte_array_string<const N: usize>(input: &[u8; N]) -> String {
+	format!("[{}]", input.iter().map(|b|format!("0x{b:02X}")).collect::<Vec<String>>().join(", "))
+}
+
 /// Convert a fixed-length `i8` array to a Rust string if it is a UTF-8 string; otherwise, return the hexadecimal sequences of the byte array
 fn maybe_string<const N: usize>(input: &[i8; N]) -> String {
 	match unsafe{CStr::from_ptr(input.as_ptr())}.to_str() {
 		Ok(s) => s.to_owned(),
-		Err(_) => format!("[{}]", input.iter().map(|b|format!("0x{:02X}", *b as u8)).collect::<Vec<String>>().join(", ")),
+		Err(_) => to_byte_array_string::<N>(unsafe{transmute(input)}),
 	}
 }
 
@@ -5842,7 +5846,7 @@ impl Debug for VkPipelineCacheHeaderVersionOne {
 		.field("headerVersion", &self.headerVersion)
 		.field("vendorID", &self.vendorID)
 		.field("deviceID", &self.deviceID)
-		.field("pipelineCacheUUID", &self.pipelineCacheUUID)
+		.field("pipelineCacheUUID", &format_args!("{}", to_byte_array_string(&self.pipelineCacheUUID)))
 		.finish()
 	}
 }
@@ -6408,7 +6412,7 @@ impl Debug for VkPhysicalDeviceProperties {
 		.field("deviceID", &self.deviceID)
 		.field("deviceType", &self.deviceType)
 		.field("deviceName", &format_args!("{}", maybe_string(&self.deviceName)))
-		.field("pipelineCacheUUID", &self.pipelineCacheUUID)
+		.field("pipelineCacheUUID", &format_args!("{}", to_byte_array_string(&self.pipelineCacheUUID)))
 		.field("limits", &self.limits)
 		.field("sparseProperties", &self.sparseProperties)
 		.finish()
@@ -12280,9 +12284,9 @@ impl Debug for VkPhysicalDeviceIDProperties {
 		f.debug_struct("VkPhysicalDeviceIDProperties")
 		.field("sType", &self.sType)
 		.field("pNext", &self.pNext)
-		.field("deviceUUID", &self.deviceUUID)
-		.field("driverUUID", &self.driverUUID)
-		.field("deviceLUID", &self.deviceLUID)
+		.field("deviceUUID", &format_args!("{}", to_byte_array_string(&self.deviceUUID)))
+		.field("driverUUID", &format_args!("{}", to_byte_array_string(&self.driverUUID)))
+		.field("deviceLUID", &format_args!("{}", to_byte_array_string(&self.deviceLUID)))
 		.field("deviceNodeMask", &self.deviceNodeMask)
 		.field("deviceLUIDValid", &self.deviceLUIDValid)
 		.finish()
@@ -13270,9 +13274,9 @@ impl Debug for VkPhysicalDeviceVulkan11Properties {
 		f.debug_struct("VkPhysicalDeviceVulkan11Properties")
 		.field("sType", &self.sType)
 		.field("pNext", &self.pNext)
-		.field("deviceUUID", &self.deviceUUID)
-		.field("driverUUID", &self.driverUUID)
-		.field("deviceLUID", &self.deviceLUID)
+		.field("deviceUUID", &format_args!("{}", to_byte_array_string(&self.deviceUUID)))
+		.field("driverUUID", &format_args!("{}", to_byte_array_string(&self.driverUUID)))
+		.field("deviceLUID", &format_args!("{}", to_byte_array_string(&self.deviceLUID)))
 		.field("deviceNodeMask", &self.deviceNodeMask)
 		.field("deviceLUIDValid", &self.deviceLUIDValid)
 		.field("subgroupSize", &self.subgroupSize)
@@ -17293,7 +17297,7 @@ impl Debug for VkPhysicalDeviceVulkan14Properties {
 		.field("pCopySrcLayouts", &self.pCopySrcLayouts)
 		.field("copyDstLayoutCount", &self.copyDstLayoutCount)
 		.field("pCopyDstLayouts", &self.pCopyDstLayouts)
-		.field("optimalTilingLayoutUUID", &self.optimalTilingLayoutUUID)
+		.field("optimalTilingLayoutUUID", &format_args!("{}", to_byte_array_string(&self.optimalTilingLayoutUUID)))
 		.field("identicalMemoryTypeRequirements", &self.identicalMemoryTypeRequirements)
 		.finish()
 	}
@@ -18151,7 +18155,7 @@ impl Debug for VkPhysicalDeviceHostImageCopyProperties {
 		.field("pCopySrcLayouts", &self.pCopySrcLayouts)
 		.field("copyDstLayoutCount", &self.copyDstLayoutCount)
 		.field("pCopyDstLayouts", &self.pCopyDstLayouts)
-		.field("optimalTilingLayoutUUID", &self.optimalTilingLayoutUUID)
+		.field("optimalTilingLayoutUUID", &format_args!("{}", to_byte_array_string(&self.optimalTilingLayoutUUID)))
 		.field("identicalMemoryTypeRequirements", &self.identicalMemoryTypeRequirements)
 		.finish()
 	}
@@ -20993,7 +20997,7 @@ impl Debug for StdVideoH264HrdParameters {
 		.field("reserved1", &self.reserved1)
 		.field("bit_rate_value_minus1", &self.bit_rate_value_minus1)
 		.field("cpb_size_value_minus1", &self.cpb_size_value_minus1)
-		.field("cbr_flag", &self.cbr_flag)
+		.field("cbr_flag", &format_args!("{}", to_byte_array_string(&self.cbr_flag)))
 		.field("initial_cpb_removal_delay_length_minus1", &self.initial_cpb_removal_delay_length_minus1)
 		.field("cpb_removal_delay_length_minus1", &self.cpb_removal_delay_length_minus1)
 		.field("dpb_output_delay_length_minus1", &self.dpb_output_delay_length_minus1)
@@ -21695,12 +21699,12 @@ impl Debug for StdVideoEncodeH264ReferenceListsInfo {
 		.field("flags", &self.flags)
 		.field("num_ref_idx_l0_active_minus1", &self.num_ref_idx_l0_active_minus1)
 		.field("num_ref_idx_l1_active_minus1", &self.num_ref_idx_l1_active_minus1)
-		.field("RefPicList0", &self.RefPicList0)
-		.field("RefPicList1", &self.RefPicList1)
+		.field("RefPicList0", &format_args!("{}", to_byte_array_string(&self.RefPicList0)))
+		.field("RefPicList1", &format_args!("{}", to_byte_array_string(&self.RefPicList1)))
 		.field("refList0ModOpCount", &self.refList0ModOpCount)
 		.field("refList1ModOpCount", &self.refList1ModOpCount)
 		.field("refPicMarkingOpCount", &self.refPicMarkingOpCount)
-		.field("reserved1", &self.reserved1)
+		.field("reserved1", &format_args!("{}", to_byte_array_string(&self.reserved1)))
 		.field("pRefList0ModOperations", &self.pRefList0ModOperations)
 		.field("pRefList1ModOperations", &self.pRefList1ModOperations)
 		.field("pRefPicMarkingOperations", &self.pRefPicMarkingOperations)
@@ -21733,7 +21737,7 @@ impl Debug for StdVideoEncodeH264PictureInfo {
 		.field("frame_num", &self.frame_num)
 		.field("PicOrderCnt", &self.PicOrderCnt)
 		.field("temporal_id", &self.temporal_id)
-		.field("reserved1", &self.reserved1)
+		.field("reserved1", &format_args!("{}", to_byte_array_string(&self.reserved1)))
 		.field("pRefLists", &self.pRefLists)
 		.finish()
 	}
@@ -22499,8 +22503,8 @@ impl Debug for StdVideoH265DecPicBufMgr {
 	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
 		f.debug_struct("StdVideoH265DecPicBufMgr")
 		.field("max_latency_increase_plus1", &self.max_latency_increase_plus1)
-		.field("max_dec_pic_buffering_minus1", &self.max_dec_pic_buffering_minus1)
-		.field("max_num_reorder_pics", &self.max_num_reorder_pics)
+		.field("max_dec_pic_buffering_minus1", &format_args!("{}", to_byte_array_string(&self.max_dec_pic_buffering_minus1)))
+		.field("max_num_reorder_pics", &format_args!("{}", to_byte_array_string(&self.max_num_reorder_pics)))
 		.finish()
 	}
 }
@@ -22628,7 +22632,7 @@ impl Debug for StdVideoH265HrdParameters {
 		.field("initial_cpb_removal_delay_length_minus1", &self.initial_cpb_removal_delay_length_minus1)
 		.field("au_cpb_removal_delay_length_minus1", &self.au_cpb_removal_delay_length_minus1)
 		.field("dpb_output_delay_length_minus1", &self.dpb_output_delay_length_minus1)
-		.field("cpb_cnt_minus1", &self.cpb_cnt_minus1)
+		.field("cpb_cnt_minus1", &format_args!("{}", to_byte_array_string(&self.cpb_cnt_minus1)))
 		.field("elemental_duration_in_tc_minus1", &self.elemental_duration_in_tc_minus1)
 		.field("reserved", &self.reserved)
 		.field("pSubLayerHrdParametersNal", &self.pSubLayerHrdParametersNal)
@@ -22806,8 +22810,8 @@ impl Debug for StdVideoH265ScalingLists {
 		.field("ScalingList8x8", &self.ScalingList8x8)
 		.field("ScalingList16x16", &self.ScalingList16x16)
 		.field("ScalingList32x32", &self.ScalingList32x32)
-		.field("ScalingListDCCoef16x16", &self.ScalingListDCCoef16x16)
-		.field("ScalingListDCCoef32x32", &self.ScalingListDCCoef32x32)
+		.field("ScalingListDCCoef16x16", &format_args!("{}", to_byte_array_string(&self.ScalingListDCCoef16x16)))
+		.field("ScalingListDCCoef32x32", &format_args!("{}", to_byte_array_string(&self.ScalingListDCCoef32x32)))
 		.finish()
 	}
 }
@@ -24104,10 +24108,10 @@ impl Debug for StdVideoEncodeH265ReferenceListsInfo {
 		.field("flags", &self.flags)
 		.field("num_ref_idx_l0_active_minus1", &self.num_ref_idx_l0_active_minus1)
 		.field("num_ref_idx_l1_active_minus1", &self.num_ref_idx_l1_active_minus1)
-		.field("RefPicList0", &self.RefPicList0)
-		.field("RefPicList1", &self.RefPicList1)
-		.field("list_entry_l0", &self.list_entry_l0)
-		.field("list_entry_l1", &self.list_entry_l1)
+		.field("RefPicList0", &format_args!("{}", to_byte_array_string(&self.RefPicList0)))
+		.field("RefPicList1", &format_args!("{}", to_byte_array_string(&self.RefPicList1)))
+		.field("list_entry_l0", &format_args!("{}", to_byte_array_string(&self.list_entry_l0)))
+		.field("list_entry_l1", &format_args!("{}", to_byte_array_string(&self.list_entry_l1)))
 		.finish()
 	}
 }
@@ -24222,11 +24226,11 @@ impl Debug for StdVideoEncodeH265LongTermRefPics {
 		f.debug_struct("StdVideoEncodeH265LongTermRefPics")
 		.field("num_long_term_sps", &self.num_long_term_sps)
 		.field("num_long_term_pics", &self.num_long_term_pics)
-		.field("lt_idx_sps", &self.lt_idx_sps)
-		.field("poc_lsb_lt", &self.poc_lsb_lt)
+		.field("lt_idx_sps", &format_args!("{}", to_byte_array_string(&self.lt_idx_sps)))
+		.field("poc_lsb_lt", &format_args!("{}", to_byte_array_string(&self.poc_lsb_lt)))
 		.field("used_by_curr_pic_lt_flag", &self.used_by_curr_pic_lt_flag)
-		.field("delta_poc_msb_present_flag", &self.delta_poc_msb_present_flag)
-		.field("delta_poc_msb_cycle_lt", &self.delta_poc_msb_cycle_lt)
+		.field("delta_poc_msb_present_flag", &format_args!("{}", to_byte_array_string(&self.delta_poc_msb_present_flag)))
+		.field("delta_poc_msb_cycle_lt", &format_args!("{}", to_byte_array_string(&self.delta_poc_msb_cycle_lt)))
 		.finish()
 	}
 }
@@ -24258,7 +24262,7 @@ impl Debug for StdVideoEncodeH265PictureInfo {
 		.field("short_term_ref_pic_set_idx", &self.short_term_ref_pic_set_idx)
 		.field("PicOrderCntVal", &self.PicOrderCntVal)
 		.field("TemporalId", &self.TemporalId)
-		.field("reserved1", &self.reserved1)
+		.field("reserved1", &format_args!("{}", to_byte_array_string(&self.reserved1)))
 		.field("pRefLists", &self.pRefLists)
 		.field("pShortTermRefPicSet", &self.pShortTermRefPicSet)
 		.field("pLongTermRefPics", &self.pLongTermRefPics)
@@ -26078,7 +26082,7 @@ impl Debug for VkPerformanceCounterKHR {
 		.field("unit", &self.unit)
 		.field("scope", &self.scope)
 		.field("storage", &self.storage)
-		.field("uuid", &self.uuid)
+		.field("uuid", &format_args!("{}", to_byte_array_string(&self.uuid)))
 		.finish()
 	}
 }
@@ -27199,9 +27203,9 @@ impl Debug for StdVideoDecodeH265PictureInfo {
 		.field("PicOrderCntVal", &self.PicOrderCntVal)
 		.field("NumBitsForSTRefPicSetInSlice", &self.NumBitsForSTRefPicSetInSlice)
 		.field("reserved", &self.reserved)
-		.field("RefPicSetStCurrBefore", &self.RefPicSetStCurrBefore)
-		.field("RefPicSetStCurrAfter", &self.RefPicSetStCurrAfter)
-		.field("RefPicSetLtCurr", &self.RefPicSetLtCurr)
+		.field("RefPicSetStCurrBefore", &format_args!("{}", to_byte_array_string(&self.RefPicSetStCurrBefore)))
+		.field("RefPicSetStCurrAfter", &format_args!("{}", to_byte_array_string(&self.RefPicSetStCurrAfter)))
+		.field("RefPicSetLtCurr", &format_args!("{}", to_byte_array_string(&self.RefPicSetLtCurr)))
 		.finish()
 	}
 }
@@ -29791,7 +29795,7 @@ impl Debug for VkPipelineBinaryKeyKHR {
 		.field("sType", &self.sType)
 		.field("pNext", &self.pNext)
 		.field("keySize", &self.keySize)
-		.field("key", &self.key)
+		.field("key", &format_args!("{}", to_byte_array_string(&self.key)))
 		.finish()
 	}
 }
@@ -31059,7 +31063,7 @@ impl Debug for StdVideoAV1LoopFilter {
 	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
 		f.debug_struct("StdVideoAV1LoopFilter")
 		.field("flags", &self.flags)
-		.field("loop_filter_level", &self.loop_filter_level)
+		.field("loop_filter_level", &format_args!("{}", to_byte_array_string(&self.loop_filter_level)))
 		.field("loop_filter_sharpness", &self.loop_filter_sharpness)
 		.field("update_ref_delta", &self.update_ref_delta)
 		.field("loop_filter_ref_deltas", &format_args!("{}", maybe_string(&self.loop_filter_ref_deltas)))
@@ -31147,7 +31151,7 @@ pub struct StdVideoAV1Segmentation {
 impl Debug for StdVideoAV1Segmentation {
 	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
 		f.debug_struct("StdVideoAV1Segmentation")
-		.field("FeatureEnabled", &self.FeatureEnabled)
+		.field("FeatureEnabled", &format_args!("{}", to_byte_array_string(&self.FeatureEnabled)))
 		.field("FeatureData", &self.FeatureData)
 		.finish()
 	}
@@ -31205,7 +31209,7 @@ impl Debug for StdVideoAV1TileInfo {
 		.field("TileRows", &self.TileRows)
 		.field("context_update_tile_id", &self.context_update_tile_id)
 		.field("tile_size_bytes_minus_1", &self.tile_size_bytes_minus_1)
-		.field("reserved1", &self.reserved1)
+		.field("reserved1", &format_args!("{}", to_byte_array_string(&self.reserved1)))
 		.field("pMiColStarts", &self.pMiColStarts)
 		.field("pMiRowStarts", &self.pMiRowStarts)
 		.field("pWidthInSbsMinus1", &self.pWidthInSbsMinus1)
@@ -31229,10 +31233,10 @@ impl Debug for StdVideoAV1CDEF {
 		f.debug_struct("StdVideoAV1CDEF")
 		.field("cdef_damping_minus_3", &self.cdef_damping_minus_3)
 		.field("cdef_bits", &self.cdef_bits)
-		.field("cdef_y_pri_strength", &self.cdef_y_pri_strength)
-		.field("cdef_y_sec_strength", &self.cdef_y_sec_strength)
-		.field("cdef_uv_pri_strength", &self.cdef_uv_pri_strength)
-		.field("cdef_uv_sec_strength", &self.cdef_uv_sec_strength)
+		.field("cdef_y_pri_strength", &format_args!("{}", to_byte_array_string(&self.cdef_y_pri_strength)))
+		.field("cdef_y_sec_strength", &format_args!("{}", to_byte_array_string(&self.cdef_y_sec_strength)))
+		.field("cdef_uv_pri_strength", &format_args!("{}", to_byte_array_string(&self.cdef_uv_pri_strength)))
+		.field("cdef_uv_sec_strength", &format_args!("{}", to_byte_array_string(&self.cdef_uv_sec_strength)))
 		.finish()
 	}
 }
@@ -31261,7 +31265,7 @@ pub struct StdVideoAV1GlobalMotion {
 impl Debug for StdVideoAV1GlobalMotion {
 	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
 		f.debug_struct("StdVideoAV1GlobalMotion")
-		.field("GmType", &self.GmType)
+		.field("GmType", &format_args!("{}", to_byte_array_string(&self.GmType)))
 		.field("gm_params", &self.gm_params)
 		.finish()
 	}
@@ -31361,14 +31365,14 @@ impl Debug for StdVideoAV1FilmGrain {
 		.field("grain_seed", &self.grain_seed)
 		.field("film_grain_params_ref_idx", &self.film_grain_params_ref_idx)
 		.field("num_y_points", &self.num_y_points)
-		.field("point_y_value", &self.point_y_value)
-		.field("point_y_scaling", &self.point_y_scaling)
+		.field("point_y_value", &format_args!("{}", to_byte_array_string(&self.point_y_value)))
+		.field("point_y_scaling", &format_args!("{}", to_byte_array_string(&self.point_y_scaling)))
 		.field("num_cb_points", &self.num_cb_points)
-		.field("point_cb_value", &self.point_cb_value)
-		.field("point_cb_scaling", &self.point_cb_scaling)
+		.field("point_cb_value", &format_args!("{}", to_byte_array_string(&self.point_cb_value)))
+		.field("point_cb_scaling", &format_args!("{}", to_byte_array_string(&self.point_cb_scaling)))
 		.field("num_cr_points", &self.num_cr_points)
-		.field("point_cr_value", &self.point_cr_value)
-		.field("point_cr_scaling", &self.point_cr_scaling)
+		.field("point_cr_value", &format_args!("{}", to_byte_array_string(&self.point_cr_value)))
+		.field("point_cr_scaling", &format_args!("{}", to_byte_array_string(&self.point_cr_scaling)))
 		.field("ar_coeffs_y_plus_128", &format_args!("{}", maybe_string(&self.ar_coeffs_y_plus_128)))
 		.field("ar_coeffs_cb_plus_128", &format_args!("{}", maybe_string(&self.ar_coeffs_cb_plus_128)))
 		.field("ar_coeffs_cr_plus_128", &format_args!("{}", maybe_string(&self.ar_coeffs_cr_plus_128)))
@@ -31588,7 +31592,7 @@ impl Debug for StdVideoAV1SequenceHeader {
 		.field("order_hint_bits_minus_1", &self.order_hint_bits_minus_1)
 		.field("seq_force_integer_mv", &self.seq_force_integer_mv)
 		.field("seq_force_screen_content_tools", &self.seq_force_screen_content_tools)
-		.field("reserved1", &self.reserved1)
+		.field("reserved1", &format_args!("{}", to_byte_array_string(&self.reserved1)))
 		.field("pColorConfig", &self.pColorConfig)
 		.field("pTimingInfo", &self.pTimingInfo)
 		.finish()
@@ -31911,10 +31915,10 @@ impl Debug for StdVideoDecodeAV1PictureInfo {
 		.field("TxMode", &self.TxMode)
 		.field("delta_q_res", &self.delta_q_res)
 		.field("delta_lf_res", &self.delta_lf_res)
-		.field("SkipModeFrame", &self.SkipModeFrame)
+		.field("SkipModeFrame", &format_args!("{}", to_byte_array_string(&self.SkipModeFrame)))
 		.field("coded_denom", &self.coded_denom)
-		.field("reserved2", &self.reserved2)
-		.field("OrderHints", &self.OrderHints)
+		.field("reserved2", &format_args!("{}", to_byte_array_string(&self.reserved2)))
+		.field("OrderHints", &format_args!("{}", to_byte_array_string(&self.OrderHints)))
 		.field("expectedFrameId", &self.expectedFrameId)
 		.field("pTileInfo", &self.pTileInfo)
 		.field("pQuantization", &self.pQuantization)
@@ -31982,7 +31986,7 @@ impl Debug for StdVideoDecodeAV1ReferenceInfo {
 		.field("frame_type", &self.frame_type)
 		.field("RefFrameSignBias", &self.RefFrameSignBias)
 		.field("OrderHint", &self.OrderHint)
-		.field("SavedOrderHints", &self.SavedOrderHints)
+		.field("SavedOrderHints", &format_args!("{}", to_byte_array_string(&self.SavedOrderHints)))
 		.finish()
 	}
 }
@@ -32862,9 +32866,9 @@ impl Debug for StdVideoEncodeAV1PictureInfo {
 		.field("TxMode", &self.TxMode)
 		.field("delta_q_res", &self.delta_q_res)
 		.field("delta_lf_res", &self.delta_lf_res)
-		.field("ref_order_hint", &self.ref_order_hint)
+		.field("ref_order_hint", &format_args!("{}", to_byte_array_string(&self.ref_order_hint)))
 		.field("ref_frame_idx", &format_args!("{}", maybe_string(&self.ref_frame_idx)))
-		.field("reserved1", &self.reserved1)
+		.field("reserved1", &format_args!("{}", to_byte_array_string(&self.reserved1)))
 		.field("delta_frame_id_minus_1", &self.delta_frame_id_minus_1)
 		.field("pTileInfo", &self.pTileInfo)
 		.field("pQuantization", &self.pQuantization)
@@ -32934,7 +32938,7 @@ impl Debug for StdVideoEncodeAV1ReferenceInfo {
 		.field("RefFrameId", &self.RefFrameId)
 		.field("frame_type", &self.frame_type)
 		.field("OrderHint", &self.OrderHint)
-		.field("reserved1", &self.reserved1)
+		.field("reserved1", &format_args!("{}", to_byte_array_string(&self.reserved1)))
 		.field("pExtensionHeader", &self.pExtensionHeader)
 		.finish()
 	}
@@ -33355,9 +33359,9 @@ impl Debug for StdVideoVP9Segmentation {
 	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
 		f.debug_struct("StdVideoVP9Segmentation")
 		.field("flags", &self.flags)
-		.field("segmentation_tree_probs", &self.segmentation_tree_probs)
-		.field("segmentation_pred_prob", &self.segmentation_pred_prob)
-		.field("FeatureEnabled", &self.FeatureEnabled)
+		.field("segmentation_tree_probs", &format_args!("{}", to_byte_array_string(&self.segmentation_tree_probs)))
+		.field("segmentation_pred_prob", &format_args!("{}", to_byte_array_string(&self.segmentation_pred_prob)))
+		.field("FeatureEnabled", &format_args!("{}", to_byte_array_string(&self.FeatureEnabled)))
 		.field("FeatureData", &self.FeatureData)
 		.finish()
 	}
@@ -45509,7 +45513,7 @@ impl Debug for VkDeviceFaultVendorBinaryHeaderVersionOneEXT {
 		.field("vendorID", &self.vendorID)
 		.field("deviceID", &self.deviceID)
 		.field("driverVersion", &self.driverVersion)
-		.field("pipelineCacheUUID", &self.pipelineCacheUUID)
+		.field("pipelineCacheUUID", &format_args!("{}", to_byte_array_string(&self.pipelineCacheUUID)))
 		.field("applicationNameOffset", &self.applicationNameOffset)
 		.field("applicationVersion", &self.applicationVersion)
 		.field("engineNameOffset", &self.engineNameOffset)
@@ -46295,7 +46299,7 @@ impl Debug for VkPipelinePropertiesIdentifierEXT {
 		f.debug_struct("VkPipelinePropertiesIdentifierEXT")
 		.field("sType", &self.sType)
 		.field("pNext", &self.pNext)
-		.field("pipelineIdentifier", &self.pipelineIdentifier)
+		.field("pipelineIdentifier", &format_args!("{}", to_byte_array_string(&self.pipelineIdentifier)))
 		.finish()
 	}
 }
@@ -50095,7 +50099,7 @@ impl Debug for VkPhysicalDeviceShaderModuleIdentifierPropertiesEXT {
 		f.debug_struct("VkPhysicalDeviceShaderModuleIdentifierPropertiesEXT")
 		.field("sType", &self.sType)
 		.field("pNext", &self.pNext)
-		.field("shaderModuleIdentifierAlgorithmUUID", &self.shaderModuleIdentifierAlgorithmUUID)
+		.field("shaderModuleIdentifierAlgorithmUUID", &format_args!("{}", to_byte_array_string(&self.shaderModuleIdentifierAlgorithmUUID)))
 		.finish()
 	}
 }
@@ -50135,7 +50139,7 @@ impl Debug for VkShaderModuleIdentifierEXT {
 		.field("sType", &self.sType)
 		.field("pNext", &self.pNext)
 		.field("identifierSize", &self.identifierSize)
-		.field("identifier", &self.identifier)
+		.field("identifier", &format_args!("{}", to_byte_array_string(&self.identifier)))
 		.finish()
 	}
 }
@@ -50752,7 +50756,7 @@ impl Debug for VkPhysicalDeviceShaderObjectPropertiesEXT {
 		f.debug_struct("VkPhysicalDeviceShaderObjectPropertiesEXT")
 		.field("sType", &self.sType)
 		.field("pNext", &self.pNext)
-		.field("shaderBinaryUUID", &self.shaderBinaryUUID)
+		.field("shaderBinaryUUID", &format_args!("{}", to_byte_array_string(&self.shaderBinaryUUID)))
 		.field("shaderBinaryVersion", &self.shaderBinaryVersion)
 		.finish()
 	}
