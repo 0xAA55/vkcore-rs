@@ -9,7 +9,7 @@ use std::{
 	ffi::{c_void, CStr, CString},
 	fmt::{self, Debug, Formatter},
 	mem::transmute,
-	panic::catch_unwind,
+	panic::{panic_any, catch_unwind, resume_unwind},
 	ptr::{null, null_mut},
 };
 
@@ -85,11 +85,15 @@ pub enum VkError {
 type Result<T> = std::result::Result<T, VkError>;
 
 /// Translate the returned `Result<T>` from `std::panic::catch_unwind()` to our `Result<T>`
-fn process_catch<T>(funcname: &'static str, ret: std::thread::Result<T>) -> Result<T> {
+fn process_catch<T>(ret: std::thread::Result<T>) -> Result<T> {
 	match ret {
 		Ok(ret) => Ok(ret),
-		Err(_) => {
-			Err(VkError::NullFunctionPointer(funcname))
+		Err(e) => {
+			if let Some(e) = e.downcast_ref::<VkError>() {
+				Err(e.clone())
+			} else {
+				resume_unwind(e)
+			}
 		}
 	}
 }
@@ -5752,551 +5756,551 @@ type PFN_vkCmdEndRenderPass = extern "system" fn(commandBuffer: VkCommandBuffer)
 type PFN_vkCmdExecuteCommands = extern "system" fn(commandBuffer: VkCommandBuffer, commandBufferCount: u32, pCommandBuffers: *const VkCommandBuffer);
 /// The dummy function for `vkCreateInstance` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkCreateInstance(_: *const VkInstanceCreateInfo, _: *const VkAllocationCallbacks, _: *mut VkInstance) -> VkResult {
-	panic!("Vulkan function pointer of `vkCreateInstance()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCreateInstance"))
 }
 /// The dummy function for `vkDestroyInstance` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkDestroyInstance(_: VkInstance, _: *const VkAllocationCallbacks) {
-	panic!("Vulkan function pointer of `vkDestroyInstance()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkDestroyInstance"))
 }
 /// The dummy function for `vkEnumeratePhysicalDevices` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkEnumeratePhysicalDevices(_: VkInstance, _: *mut uint32_t, _: *mut VkPhysicalDevice) -> VkResult {
-	panic!("Vulkan function pointer of `vkEnumeratePhysicalDevices()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkEnumeratePhysicalDevices"))
 }
 /// The dummy function for `vkGetPhysicalDeviceFeatures` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkGetPhysicalDeviceFeatures(_: VkPhysicalDevice, _: *mut VkPhysicalDeviceFeatures) {
-	panic!("Vulkan function pointer of `vkGetPhysicalDeviceFeatures()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetPhysicalDeviceFeatures"))
 }
 /// The dummy function for `vkGetPhysicalDeviceFormatProperties` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkGetPhysicalDeviceFormatProperties(_: VkPhysicalDevice, _: VkFormat, _: *mut VkFormatProperties) {
-	panic!("Vulkan function pointer of `vkGetPhysicalDeviceFormatProperties()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetPhysicalDeviceFormatProperties"))
 }
 /// The dummy function for `vkGetPhysicalDeviceImageFormatProperties` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkGetPhysicalDeviceImageFormatProperties(_: VkPhysicalDevice, _: VkFormat, _: VkImageType, _: VkImageTiling, _: VkImageUsageFlags, _: VkImageCreateFlags, _: *mut VkImageFormatProperties) -> VkResult {
-	panic!("Vulkan function pointer of `vkGetPhysicalDeviceImageFormatProperties()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetPhysicalDeviceImageFormatProperties"))
 }
 /// The dummy function for `vkGetPhysicalDeviceProperties` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkGetPhysicalDeviceProperties(_: VkPhysicalDevice, _: *mut VkPhysicalDeviceProperties) {
-	panic!("Vulkan function pointer of `vkGetPhysicalDeviceProperties()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetPhysicalDeviceProperties"))
 }
 /// The dummy function for `vkGetPhysicalDeviceQueueFamilyProperties` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkGetPhysicalDeviceQueueFamilyProperties(_: VkPhysicalDevice, _: *mut uint32_t, _: *mut VkQueueFamilyProperties) {
-	panic!("Vulkan function pointer of `vkGetPhysicalDeviceQueueFamilyProperties()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetPhysicalDeviceQueueFamilyProperties"))
 }
 /// The dummy function for `vkGetPhysicalDeviceMemoryProperties` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkGetPhysicalDeviceMemoryProperties(_: VkPhysicalDevice, _: *mut VkPhysicalDeviceMemoryProperties) {
-	panic!("Vulkan function pointer of `vkGetPhysicalDeviceMemoryProperties()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetPhysicalDeviceMemoryProperties"))
 }
 /// The dummy function for `vkGetInstanceProcAddr` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkGetInstanceProcAddr(_: VkInstance, _: *const i8) -> PFN_vkVoidFunction {
-	panic!("Vulkan function pointer of `vkGetInstanceProcAddr()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetInstanceProcAddr"))
 }
 /// The dummy function for `vkGetDeviceProcAddr` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkGetDeviceProcAddr(_: VkDevice, _: *const i8) -> PFN_vkVoidFunction {
-	panic!("Vulkan function pointer of `vkGetDeviceProcAddr()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetDeviceProcAddr"))
 }
 /// The dummy function for `vkCreateDevice` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkCreateDevice(_: VkPhysicalDevice, _: *const VkDeviceCreateInfo, _: *const VkAllocationCallbacks, _: *mut VkDevice) -> VkResult {
-	panic!("Vulkan function pointer of `vkCreateDevice()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCreateDevice"))
 }
 /// The dummy function for `vkDestroyDevice` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkDestroyDevice(_: VkDevice, _: *const VkAllocationCallbacks) {
-	panic!("Vulkan function pointer of `vkDestroyDevice()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkDestroyDevice"))
 }
 /// The dummy function for `vkEnumerateInstanceExtensionProperties` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkEnumerateInstanceExtensionProperties(_: *const i8, _: *mut uint32_t, _: *mut VkExtensionProperties) -> VkResult {
-	panic!("Vulkan function pointer of `vkEnumerateInstanceExtensionProperties()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkEnumerateInstanceExtensionProperties"))
 }
 /// The dummy function for `vkEnumerateDeviceExtensionProperties` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkEnumerateDeviceExtensionProperties(_: VkPhysicalDevice, _: *const i8, _: *mut uint32_t, _: *mut VkExtensionProperties) -> VkResult {
-	panic!("Vulkan function pointer of `vkEnumerateDeviceExtensionProperties()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkEnumerateDeviceExtensionProperties"))
 }
 /// The dummy function for `vkEnumerateInstanceLayerProperties` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkEnumerateInstanceLayerProperties(_: *mut uint32_t, _: *mut VkLayerProperties) -> VkResult {
-	panic!("Vulkan function pointer of `vkEnumerateInstanceLayerProperties()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkEnumerateInstanceLayerProperties"))
 }
 /// The dummy function for `vkEnumerateDeviceLayerProperties` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkEnumerateDeviceLayerProperties(_: VkPhysicalDevice, _: *mut uint32_t, _: *mut VkLayerProperties) -> VkResult {
-	panic!("Vulkan function pointer of `vkEnumerateDeviceLayerProperties()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkEnumerateDeviceLayerProperties"))
 }
 /// The dummy function for `vkGetDeviceQueue` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkGetDeviceQueue(_: VkDevice, _: u32, _: u32, _: *mut VkQueue) {
-	panic!("Vulkan function pointer of `vkGetDeviceQueue()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetDeviceQueue"))
 }
 /// The dummy function for `vkQueueSubmit` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkQueueSubmit(_: VkQueue, _: u32, _: *const VkSubmitInfo, _: VkFence) -> VkResult {
-	panic!("Vulkan function pointer of `vkQueueSubmit()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkQueueSubmit"))
 }
 /// The dummy function for `vkQueueWaitIdle` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkQueueWaitIdle(_: VkQueue) -> VkResult {
-	panic!("Vulkan function pointer of `vkQueueWaitIdle()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkQueueWaitIdle"))
 }
 /// The dummy function for `vkDeviceWaitIdle` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkDeviceWaitIdle(_: VkDevice) -> VkResult {
-	panic!("Vulkan function pointer of `vkDeviceWaitIdle()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkDeviceWaitIdle"))
 }
 /// The dummy function for `vkAllocateMemory` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkAllocateMemory(_: VkDevice, _: *const VkMemoryAllocateInfo, _: *const VkAllocationCallbacks, _: *mut VkDeviceMemory) -> VkResult {
-	panic!("Vulkan function pointer of `vkAllocateMemory()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkAllocateMemory"))
 }
 /// The dummy function for `vkFreeMemory` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkFreeMemory(_: VkDevice, _: VkDeviceMemory, _: *const VkAllocationCallbacks) {
-	panic!("Vulkan function pointer of `vkFreeMemory()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkFreeMemory"))
 }
 /// The dummy function for `vkMapMemory` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkMapMemory(_: VkDevice, _: VkDeviceMemory, _: VkDeviceSize, _: VkDeviceSize, _: VkMemoryMapFlags, _: *mut *mut c_void) -> VkResult {
-	panic!("Vulkan function pointer of `vkMapMemory()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkMapMemory"))
 }
 /// The dummy function for `vkUnmapMemory` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkUnmapMemory(_: VkDevice, _: VkDeviceMemory) {
-	panic!("Vulkan function pointer of `vkUnmapMemory()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkUnmapMemory"))
 }
 /// The dummy function for `vkFlushMappedMemoryRanges` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkFlushMappedMemoryRanges(_: VkDevice, _: u32, _: *const VkMappedMemoryRange) -> VkResult {
-	panic!("Vulkan function pointer of `vkFlushMappedMemoryRanges()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkFlushMappedMemoryRanges"))
 }
 /// The dummy function for `vkInvalidateMappedMemoryRanges` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkInvalidateMappedMemoryRanges(_: VkDevice, _: u32, _: *const VkMappedMemoryRange) -> VkResult {
-	panic!("Vulkan function pointer of `vkInvalidateMappedMemoryRanges()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkInvalidateMappedMemoryRanges"))
 }
 /// The dummy function for `vkGetDeviceMemoryCommitment` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkGetDeviceMemoryCommitment(_: VkDevice, _: VkDeviceMemory, _: *mut VkDeviceSize) {
-	panic!("Vulkan function pointer of `vkGetDeviceMemoryCommitment()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetDeviceMemoryCommitment"))
 }
 /// The dummy function for `vkBindBufferMemory` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkBindBufferMemory(_: VkDevice, _: VkBuffer, _: VkDeviceMemory, _: VkDeviceSize) -> VkResult {
-	panic!("Vulkan function pointer of `vkBindBufferMemory()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkBindBufferMemory"))
 }
 /// The dummy function for `vkBindImageMemory` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkBindImageMemory(_: VkDevice, _: VkImage, _: VkDeviceMemory, _: VkDeviceSize) -> VkResult {
-	panic!("Vulkan function pointer of `vkBindImageMemory()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkBindImageMemory"))
 }
 /// The dummy function for `vkGetBufferMemoryRequirements` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkGetBufferMemoryRequirements(_: VkDevice, _: VkBuffer, _: *mut VkMemoryRequirements) {
-	panic!("Vulkan function pointer of `vkGetBufferMemoryRequirements()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetBufferMemoryRequirements"))
 }
 /// The dummy function for `vkGetImageMemoryRequirements` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkGetImageMemoryRequirements(_: VkDevice, _: VkImage, _: *mut VkMemoryRequirements) {
-	panic!("Vulkan function pointer of `vkGetImageMemoryRequirements()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetImageMemoryRequirements"))
 }
 /// The dummy function for `vkGetImageSparseMemoryRequirements` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkGetImageSparseMemoryRequirements(_: VkDevice, _: VkImage, _: *mut uint32_t, _: *mut VkSparseImageMemoryRequirements) {
-	panic!("Vulkan function pointer of `vkGetImageSparseMemoryRequirements()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetImageSparseMemoryRequirements"))
 }
 /// The dummy function for `vkGetPhysicalDeviceSparseImageFormatProperties` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkGetPhysicalDeviceSparseImageFormatProperties(_: VkPhysicalDevice, _: VkFormat, _: VkImageType, _: VkSampleCountFlagBits, _: VkImageUsageFlags, _: VkImageTiling, _: *mut uint32_t, _: *mut VkSparseImageFormatProperties) {
-	panic!("Vulkan function pointer of `vkGetPhysicalDeviceSparseImageFormatProperties()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetPhysicalDeviceSparseImageFormatProperties"))
 }
 /// The dummy function for `vkQueueBindSparse` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkQueueBindSparse(_: VkQueue, _: u32, _: *const VkBindSparseInfo, _: VkFence) -> VkResult {
-	panic!("Vulkan function pointer of `vkQueueBindSparse()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkQueueBindSparse"))
 }
 /// The dummy function for `vkCreateFence` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkCreateFence(_: VkDevice, _: *const VkFenceCreateInfo, _: *const VkAllocationCallbacks, _: *mut VkFence) -> VkResult {
-	panic!("Vulkan function pointer of `vkCreateFence()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCreateFence"))
 }
 /// The dummy function for `vkDestroyFence` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkDestroyFence(_: VkDevice, _: VkFence, _: *const VkAllocationCallbacks) {
-	panic!("Vulkan function pointer of `vkDestroyFence()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkDestroyFence"))
 }
 /// The dummy function for `vkResetFences` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkResetFences(_: VkDevice, _: u32, _: *const VkFence) -> VkResult {
-	panic!("Vulkan function pointer of `vkResetFences()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkResetFences"))
 }
 /// The dummy function for `vkGetFenceStatus` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkGetFenceStatus(_: VkDevice, _: VkFence) -> VkResult {
-	panic!("Vulkan function pointer of `vkGetFenceStatus()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetFenceStatus"))
 }
 /// The dummy function for `vkWaitForFences` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkWaitForFences(_: VkDevice, _: u32, _: *const VkFence, _: VkBool32, _: u64) -> VkResult {
-	panic!("Vulkan function pointer of `vkWaitForFences()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkWaitForFences"))
 }
 /// The dummy function for `vkCreateSemaphore` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkCreateSemaphore(_: VkDevice, _: *const VkSemaphoreCreateInfo, _: *const VkAllocationCallbacks, _: *mut VkSemaphore) -> VkResult {
-	panic!("Vulkan function pointer of `vkCreateSemaphore()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCreateSemaphore"))
 }
 /// The dummy function for `vkDestroySemaphore` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkDestroySemaphore(_: VkDevice, _: VkSemaphore, _: *const VkAllocationCallbacks) {
-	panic!("Vulkan function pointer of `vkDestroySemaphore()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkDestroySemaphore"))
 }
 /// The dummy function for `vkCreateEvent` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkCreateEvent(_: VkDevice, _: *const VkEventCreateInfo, _: *const VkAllocationCallbacks, _: *mut VkEvent) -> VkResult {
-	panic!("Vulkan function pointer of `vkCreateEvent()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCreateEvent"))
 }
 /// The dummy function for `vkDestroyEvent` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkDestroyEvent(_: VkDevice, _: VkEvent, _: *const VkAllocationCallbacks) {
-	panic!("Vulkan function pointer of `vkDestroyEvent()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkDestroyEvent"))
 }
 /// The dummy function for `vkGetEventStatus` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkGetEventStatus(_: VkDevice, _: VkEvent) -> VkResult {
-	panic!("Vulkan function pointer of `vkGetEventStatus()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetEventStatus"))
 }
 /// The dummy function for `vkSetEvent` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkSetEvent(_: VkDevice, _: VkEvent) -> VkResult {
-	panic!("Vulkan function pointer of `vkSetEvent()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkSetEvent"))
 }
 /// The dummy function for `vkResetEvent` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkResetEvent(_: VkDevice, _: VkEvent) -> VkResult {
-	panic!("Vulkan function pointer of `vkResetEvent()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkResetEvent"))
 }
 /// The dummy function for `vkCreateQueryPool` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkCreateQueryPool(_: VkDevice, _: *const VkQueryPoolCreateInfo, _: *const VkAllocationCallbacks, _: *mut VkQueryPool) -> VkResult {
-	panic!("Vulkan function pointer of `vkCreateQueryPool()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCreateQueryPool"))
 }
 /// The dummy function for `vkDestroyQueryPool` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkDestroyQueryPool(_: VkDevice, _: VkQueryPool, _: *const VkAllocationCallbacks) {
-	panic!("Vulkan function pointer of `vkDestroyQueryPool()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkDestroyQueryPool"))
 }
 /// The dummy function for `vkGetQueryPoolResults` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkGetQueryPoolResults(_: VkDevice, _: VkQueryPool, _: u32, _: u32, _: usize, _: *mut c_void, _: VkDeviceSize, _: VkQueryResultFlags) -> VkResult {
-	panic!("Vulkan function pointer of `vkGetQueryPoolResults()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetQueryPoolResults"))
 }
 /// The dummy function for `vkCreateBuffer` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkCreateBuffer(_: VkDevice, _: *const VkBufferCreateInfo, _: *const VkAllocationCallbacks, _: *mut VkBuffer) -> VkResult {
-	panic!("Vulkan function pointer of `vkCreateBuffer()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCreateBuffer"))
 }
 /// The dummy function for `vkDestroyBuffer` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkDestroyBuffer(_: VkDevice, _: VkBuffer, _: *const VkAllocationCallbacks) {
-	panic!("Vulkan function pointer of `vkDestroyBuffer()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkDestroyBuffer"))
 }
 /// The dummy function for `vkCreateBufferView` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkCreateBufferView(_: VkDevice, _: *const VkBufferViewCreateInfo, _: *const VkAllocationCallbacks, _: *mut VkBufferView) -> VkResult {
-	panic!("Vulkan function pointer of `vkCreateBufferView()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCreateBufferView"))
 }
 /// The dummy function for `vkDestroyBufferView` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkDestroyBufferView(_: VkDevice, _: VkBufferView, _: *const VkAllocationCallbacks) {
-	panic!("Vulkan function pointer of `vkDestroyBufferView()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkDestroyBufferView"))
 }
 /// The dummy function for `vkCreateImage` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkCreateImage(_: VkDevice, _: *const VkImageCreateInfo, _: *const VkAllocationCallbacks, _: *mut VkImage) -> VkResult {
-	panic!("Vulkan function pointer of `vkCreateImage()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCreateImage"))
 }
 /// The dummy function for `vkDestroyImage` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkDestroyImage(_: VkDevice, _: VkImage, _: *const VkAllocationCallbacks) {
-	panic!("Vulkan function pointer of `vkDestroyImage()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkDestroyImage"))
 }
 /// The dummy function for `vkGetImageSubresourceLayout` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkGetImageSubresourceLayout(_: VkDevice, _: VkImage, _: *const VkImageSubresource, _: *mut VkSubresourceLayout) {
-	panic!("Vulkan function pointer of `vkGetImageSubresourceLayout()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetImageSubresourceLayout"))
 }
 /// The dummy function for `vkCreateImageView` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkCreateImageView(_: VkDevice, _: *const VkImageViewCreateInfo, _: *const VkAllocationCallbacks, _: *mut VkImageView) -> VkResult {
-	panic!("Vulkan function pointer of `vkCreateImageView()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCreateImageView"))
 }
 /// The dummy function for `vkDestroyImageView` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkDestroyImageView(_: VkDevice, _: VkImageView, _: *const VkAllocationCallbacks) {
-	panic!("Vulkan function pointer of `vkDestroyImageView()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkDestroyImageView"))
 }
 /// The dummy function for `vkCreateShaderModule` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkCreateShaderModule(_: VkDevice, _: *const VkShaderModuleCreateInfo, _: *const VkAllocationCallbacks, _: *mut VkShaderModule) -> VkResult {
-	panic!("Vulkan function pointer of `vkCreateShaderModule()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCreateShaderModule"))
 }
 /// The dummy function for `vkDestroyShaderModule` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkDestroyShaderModule(_: VkDevice, _: VkShaderModule, _: *const VkAllocationCallbacks) {
-	panic!("Vulkan function pointer of `vkDestroyShaderModule()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkDestroyShaderModule"))
 }
 /// The dummy function for `vkCreatePipelineCache` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkCreatePipelineCache(_: VkDevice, _: *const VkPipelineCacheCreateInfo, _: *const VkAllocationCallbacks, _: *mut VkPipelineCache) -> VkResult {
-	panic!("Vulkan function pointer of `vkCreatePipelineCache()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCreatePipelineCache"))
 }
 /// The dummy function for `vkDestroyPipelineCache` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkDestroyPipelineCache(_: VkDevice, _: VkPipelineCache, _: *const VkAllocationCallbacks) {
-	panic!("Vulkan function pointer of `vkDestroyPipelineCache()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkDestroyPipelineCache"))
 }
 /// The dummy function for `vkGetPipelineCacheData` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkGetPipelineCacheData(_: VkDevice, _: VkPipelineCache, _: *mut size_t, _: *mut c_void) -> VkResult {
-	panic!("Vulkan function pointer of `vkGetPipelineCacheData()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetPipelineCacheData"))
 }
 /// The dummy function for `vkMergePipelineCaches` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkMergePipelineCaches(_: VkDevice, _: VkPipelineCache, _: u32, _: *const VkPipelineCache) -> VkResult {
-	panic!("Vulkan function pointer of `vkMergePipelineCaches()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkMergePipelineCaches"))
 }
 /// The dummy function for `vkCreateGraphicsPipelines` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkCreateGraphicsPipelines(_: VkDevice, _: VkPipelineCache, _: u32, _: *const VkGraphicsPipelineCreateInfo, _: *const VkAllocationCallbacks, _: *mut VkPipeline) -> VkResult {
-	panic!("Vulkan function pointer of `vkCreateGraphicsPipelines()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCreateGraphicsPipelines"))
 }
 /// The dummy function for `vkCreateComputePipelines` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkCreateComputePipelines(_: VkDevice, _: VkPipelineCache, _: u32, _: *const VkComputePipelineCreateInfo, _: *const VkAllocationCallbacks, _: *mut VkPipeline) -> VkResult {
-	panic!("Vulkan function pointer of `vkCreateComputePipelines()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCreateComputePipelines"))
 }
 /// The dummy function for `vkDestroyPipeline` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkDestroyPipeline(_: VkDevice, _: VkPipeline, _: *const VkAllocationCallbacks) {
-	panic!("Vulkan function pointer of `vkDestroyPipeline()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkDestroyPipeline"))
 }
 /// The dummy function for `vkCreatePipelineLayout` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkCreatePipelineLayout(_: VkDevice, _: *const VkPipelineLayoutCreateInfo, _: *const VkAllocationCallbacks, _: *mut VkPipelineLayout) -> VkResult {
-	panic!("Vulkan function pointer of `vkCreatePipelineLayout()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCreatePipelineLayout"))
 }
 /// The dummy function for `vkDestroyPipelineLayout` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkDestroyPipelineLayout(_: VkDevice, _: VkPipelineLayout, _: *const VkAllocationCallbacks) {
-	panic!("Vulkan function pointer of `vkDestroyPipelineLayout()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkDestroyPipelineLayout"))
 }
 /// The dummy function for `vkCreateSampler` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkCreateSampler(_: VkDevice, _: *const VkSamplerCreateInfo, _: *const VkAllocationCallbacks, _: *mut VkSampler) -> VkResult {
-	panic!("Vulkan function pointer of `vkCreateSampler()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCreateSampler"))
 }
 /// The dummy function for `vkDestroySampler` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkDestroySampler(_: VkDevice, _: VkSampler, _: *const VkAllocationCallbacks) {
-	panic!("Vulkan function pointer of `vkDestroySampler()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkDestroySampler"))
 }
 /// The dummy function for `vkCreateDescriptorSetLayout` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkCreateDescriptorSetLayout(_: VkDevice, _: *const VkDescriptorSetLayoutCreateInfo, _: *const VkAllocationCallbacks, _: *mut VkDescriptorSetLayout) -> VkResult {
-	panic!("Vulkan function pointer of `vkCreateDescriptorSetLayout()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCreateDescriptorSetLayout"))
 }
 /// The dummy function for `vkDestroyDescriptorSetLayout` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkDestroyDescriptorSetLayout(_: VkDevice, _: VkDescriptorSetLayout, _: *const VkAllocationCallbacks) {
-	panic!("Vulkan function pointer of `vkDestroyDescriptorSetLayout()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkDestroyDescriptorSetLayout"))
 }
 /// The dummy function for `vkCreateDescriptorPool` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkCreateDescriptorPool(_: VkDevice, _: *const VkDescriptorPoolCreateInfo, _: *const VkAllocationCallbacks, _: *mut VkDescriptorPool) -> VkResult {
-	panic!("Vulkan function pointer of `vkCreateDescriptorPool()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCreateDescriptorPool"))
 }
 /// The dummy function for `vkDestroyDescriptorPool` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkDestroyDescriptorPool(_: VkDevice, _: VkDescriptorPool, _: *const VkAllocationCallbacks) {
-	panic!("Vulkan function pointer of `vkDestroyDescriptorPool()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkDestroyDescriptorPool"))
 }
 /// The dummy function for `vkResetDescriptorPool` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkResetDescriptorPool(_: VkDevice, _: VkDescriptorPool, _: VkDescriptorPoolResetFlags) -> VkResult {
-	panic!("Vulkan function pointer of `vkResetDescriptorPool()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkResetDescriptorPool"))
 }
 /// The dummy function for `vkAllocateDescriptorSets` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkAllocateDescriptorSets(_: VkDevice, _: *const VkDescriptorSetAllocateInfo, _: *mut VkDescriptorSet) -> VkResult {
-	panic!("Vulkan function pointer of `vkAllocateDescriptorSets()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkAllocateDescriptorSets"))
 }
 /// The dummy function for `vkFreeDescriptorSets` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkFreeDescriptorSets(_: VkDevice, _: VkDescriptorPool, _: u32, _: *const VkDescriptorSet) -> VkResult {
-	panic!("Vulkan function pointer of `vkFreeDescriptorSets()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkFreeDescriptorSets"))
 }
 /// The dummy function for `vkUpdateDescriptorSets` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkUpdateDescriptorSets(_: VkDevice, _: u32, _: *const VkWriteDescriptorSet, _: u32, _: *const VkCopyDescriptorSet) {
-	panic!("Vulkan function pointer of `vkUpdateDescriptorSets()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkUpdateDescriptorSets"))
 }
 /// The dummy function for `vkCreateFramebuffer` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkCreateFramebuffer(_: VkDevice, _: *const VkFramebufferCreateInfo, _: *const VkAllocationCallbacks, _: *mut VkFramebuffer) -> VkResult {
-	panic!("Vulkan function pointer of `vkCreateFramebuffer()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCreateFramebuffer"))
 }
 /// The dummy function for `vkDestroyFramebuffer` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkDestroyFramebuffer(_: VkDevice, _: VkFramebuffer, _: *const VkAllocationCallbacks) {
-	panic!("Vulkan function pointer of `vkDestroyFramebuffer()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkDestroyFramebuffer"))
 }
 /// The dummy function for `vkCreateRenderPass` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkCreateRenderPass(_: VkDevice, _: *const VkRenderPassCreateInfo, _: *const VkAllocationCallbacks, _: *mut VkRenderPass) -> VkResult {
-	panic!("Vulkan function pointer of `vkCreateRenderPass()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCreateRenderPass"))
 }
 /// The dummy function for `vkDestroyRenderPass` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkDestroyRenderPass(_: VkDevice, _: VkRenderPass, _: *const VkAllocationCallbacks) {
-	panic!("Vulkan function pointer of `vkDestroyRenderPass()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkDestroyRenderPass"))
 }
 /// The dummy function for `vkGetRenderAreaGranularity` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkGetRenderAreaGranularity(_: VkDevice, _: VkRenderPass, _: *mut VkExtent2D) {
-	panic!("Vulkan function pointer of `vkGetRenderAreaGranularity()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetRenderAreaGranularity"))
 }
 /// The dummy function for `vkCreateCommandPool` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkCreateCommandPool(_: VkDevice, _: *const VkCommandPoolCreateInfo, _: *const VkAllocationCallbacks, _: *mut VkCommandPool) -> VkResult {
-	panic!("Vulkan function pointer of `vkCreateCommandPool()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCreateCommandPool"))
 }
 /// The dummy function for `vkDestroyCommandPool` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkDestroyCommandPool(_: VkDevice, _: VkCommandPool, _: *const VkAllocationCallbacks) {
-	panic!("Vulkan function pointer of `vkDestroyCommandPool()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkDestroyCommandPool"))
 }
 /// The dummy function for `vkResetCommandPool` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkResetCommandPool(_: VkDevice, _: VkCommandPool, _: VkCommandPoolResetFlags) -> VkResult {
-	panic!("Vulkan function pointer of `vkResetCommandPool()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkResetCommandPool"))
 }
 /// The dummy function for `vkAllocateCommandBuffers` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkAllocateCommandBuffers(_: VkDevice, _: *const VkCommandBufferAllocateInfo, _: *mut VkCommandBuffer) -> VkResult {
-	panic!("Vulkan function pointer of `vkAllocateCommandBuffers()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkAllocateCommandBuffers"))
 }
 /// The dummy function for `vkFreeCommandBuffers` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkFreeCommandBuffers(_: VkDevice, _: VkCommandPool, _: u32, _: *const VkCommandBuffer) {
-	panic!("Vulkan function pointer of `vkFreeCommandBuffers()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkFreeCommandBuffers"))
 }
 /// The dummy function for `vkBeginCommandBuffer` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkBeginCommandBuffer(_: VkCommandBuffer, _: *const VkCommandBufferBeginInfo) -> VkResult {
-	panic!("Vulkan function pointer of `vkBeginCommandBuffer()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkBeginCommandBuffer"))
 }
 /// The dummy function for `vkEndCommandBuffer` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkEndCommandBuffer(_: VkCommandBuffer) -> VkResult {
-	panic!("Vulkan function pointer of `vkEndCommandBuffer()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkEndCommandBuffer"))
 }
 /// The dummy function for `vkResetCommandBuffer` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkResetCommandBuffer(_: VkCommandBuffer, _: VkCommandBufferResetFlags) -> VkResult {
-	panic!("Vulkan function pointer of `vkResetCommandBuffer()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkResetCommandBuffer"))
 }
 /// The dummy function for `vkCmdBindPipeline` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkCmdBindPipeline(_: VkCommandBuffer, _: VkPipelineBindPoint, _: VkPipeline) {
-	panic!("Vulkan function pointer of `vkCmdBindPipeline()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdBindPipeline"))
 }
 /// The dummy function for `vkCmdSetViewport` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkCmdSetViewport(_: VkCommandBuffer, _: u32, _: u32, _: *const VkViewport) {
-	panic!("Vulkan function pointer of `vkCmdSetViewport()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdSetViewport"))
 }
 /// The dummy function for `vkCmdSetScissor` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkCmdSetScissor(_: VkCommandBuffer, _: u32, _: u32, _: *const VkRect2D) {
-	panic!("Vulkan function pointer of `vkCmdSetScissor()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdSetScissor"))
 }
 /// The dummy function for `vkCmdSetLineWidth` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkCmdSetLineWidth(_: VkCommandBuffer, _: f32) {
-	panic!("Vulkan function pointer of `vkCmdSetLineWidth()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdSetLineWidth"))
 }
 /// The dummy function for `vkCmdSetDepthBias` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkCmdSetDepthBias(_: VkCommandBuffer, _: f32, _: f32, _: f32) {
-	panic!("Vulkan function pointer of `vkCmdSetDepthBias()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdSetDepthBias"))
 }
 /// The dummy function for `vkCmdSetBlendConstants` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkCmdSetBlendConstants(_: VkCommandBuffer, _: &[float; 4 as usize]) {
-	panic!("Vulkan function pointer of `vkCmdSetBlendConstants()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdSetBlendConstants"))
 }
 /// The dummy function for `vkCmdSetDepthBounds` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkCmdSetDepthBounds(_: VkCommandBuffer, _: f32, _: f32) {
-	panic!("Vulkan function pointer of `vkCmdSetDepthBounds()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdSetDepthBounds"))
 }
 /// The dummy function for `vkCmdSetStencilCompareMask` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkCmdSetStencilCompareMask(_: VkCommandBuffer, _: VkStencilFaceFlags, _: u32) {
-	panic!("Vulkan function pointer of `vkCmdSetStencilCompareMask()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdSetStencilCompareMask"))
 }
 /// The dummy function for `vkCmdSetStencilWriteMask` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkCmdSetStencilWriteMask(_: VkCommandBuffer, _: VkStencilFaceFlags, _: u32) {
-	panic!("Vulkan function pointer of `vkCmdSetStencilWriteMask()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdSetStencilWriteMask"))
 }
 /// The dummy function for `vkCmdSetStencilReference` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkCmdSetStencilReference(_: VkCommandBuffer, _: VkStencilFaceFlags, _: u32) {
-	panic!("Vulkan function pointer of `vkCmdSetStencilReference()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdSetStencilReference"))
 }
 /// The dummy function for `vkCmdBindDescriptorSets` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkCmdBindDescriptorSets(_: VkCommandBuffer, _: VkPipelineBindPoint, _: VkPipelineLayout, _: u32, _: u32, _: *const VkDescriptorSet, _: u32, _: *const uint32_t) {
-	panic!("Vulkan function pointer of `vkCmdBindDescriptorSets()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdBindDescriptorSets"))
 }
 /// The dummy function for `vkCmdBindIndexBuffer` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkCmdBindIndexBuffer(_: VkCommandBuffer, _: VkBuffer, _: VkDeviceSize, _: VkIndexType) {
-	panic!("Vulkan function pointer of `vkCmdBindIndexBuffer()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdBindIndexBuffer"))
 }
 /// The dummy function for `vkCmdBindVertexBuffers` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkCmdBindVertexBuffers(_: VkCommandBuffer, _: u32, _: u32, _: *const VkBuffer, _: *const VkDeviceSize) {
-	panic!("Vulkan function pointer of `vkCmdBindVertexBuffers()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdBindVertexBuffers"))
 }
 /// The dummy function for `vkCmdDraw` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkCmdDraw(_: VkCommandBuffer, _: u32, _: u32, _: u32, _: u32) {
-	panic!("Vulkan function pointer of `vkCmdDraw()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdDraw"))
 }
 /// The dummy function for `vkCmdDrawIndexed` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkCmdDrawIndexed(_: VkCommandBuffer, _: u32, _: u32, _: u32, _: i32, _: u32) {
-	panic!("Vulkan function pointer of `vkCmdDrawIndexed()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdDrawIndexed"))
 }
 /// The dummy function for `vkCmdDrawIndirect` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkCmdDrawIndirect(_: VkCommandBuffer, _: VkBuffer, _: VkDeviceSize, _: u32, _: u32) {
-	panic!("Vulkan function pointer of `vkCmdDrawIndirect()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdDrawIndirect"))
 }
 /// The dummy function for `vkCmdDrawIndexedIndirect` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkCmdDrawIndexedIndirect(_: VkCommandBuffer, _: VkBuffer, _: VkDeviceSize, _: u32, _: u32) {
-	panic!("Vulkan function pointer of `vkCmdDrawIndexedIndirect()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdDrawIndexedIndirect"))
 }
 /// The dummy function for `vkCmdDispatch` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkCmdDispatch(_: VkCommandBuffer, _: u32, _: u32, _: u32) {
-	panic!("Vulkan function pointer of `vkCmdDispatch()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdDispatch"))
 }
 /// The dummy function for `vkCmdDispatchIndirect` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkCmdDispatchIndirect(_: VkCommandBuffer, _: VkBuffer, _: VkDeviceSize) {
-	panic!("Vulkan function pointer of `vkCmdDispatchIndirect()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdDispatchIndirect"))
 }
 /// The dummy function for `vkCmdCopyBuffer` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkCmdCopyBuffer(_: VkCommandBuffer, _: VkBuffer, _: VkBuffer, _: u32, _: *const VkBufferCopy) {
-	panic!("Vulkan function pointer of `vkCmdCopyBuffer()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdCopyBuffer"))
 }
 /// The dummy function for `vkCmdCopyImage` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkCmdCopyImage(_: VkCommandBuffer, _: VkImage, _: VkImageLayout, _: VkImage, _: VkImageLayout, _: u32, _: *const VkImageCopy) {
-	panic!("Vulkan function pointer of `vkCmdCopyImage()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdCopyImage"))
 }
 /// The dummy function for `vkCmdBlitImage` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkCmdBlitImage(_: VkCommandBuffer, _: VkImage, _: VkImageLayout, _: VkImage, _: VkImageLayout, _: u32, _: *const VkImageBlit, _: VkFilter) {
-	panic!("Vulkan function pointer of `vkCmdBlitImage()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdBlitImage"))
 }
 /// The dummy function for `vkCmdCopyBufferToImage` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkCmdCopyBufferToImage(_: VkCommandBuffer, _: VkBuffer, _: VkImage, _: VkImageLayout, _: u32, _: *const VkBufferImageCopy) {
-	panic!("Vulkan function pointer of `vkCmdCopyBufferToImage()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdCopyBufferToImage"))
 }
 /// The dummy function for `vkCmdCopyImageToBuffer` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkCmdCopyImageToBuffer(_: VkCommandBuffer, _: VkImage, _: VkImageLayout, _: VkBuffer, _: u32, _: *const VkBufferImageCopy) {
-	panic!("Vulkan function pointer of `vkCmdCopyImageToBuffer()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdCopyImageToBuffer"))
 }
 /// The dummy function for `vkCmdUpdateBuffer` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkCmdUpdateBuffer(_: VkCommandBuffer, _: VkBuffer, _: VkDeviceSize, _: VkDeviceSize, _: *const c_void) {
-	panic!("Vulkan function pointer of `vkCmdUpdateBuffer()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdUpdateBuffer"))
 }
 /// The dummy function for `vkCmdFillBuffer` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkCmdFillBuffer(_: VkCommandBuffer, _: VkBuffer, _: VkDeviceSize, _: VkDeviceSize, _: u32) {
-	panic!("Vulkan function pointer of `vkCmdFillBuffer()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdFillBuffer"))
 }
 /// The dummy function for `vkCmdClearColorImage` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkCmdClearColorImage(_: VkCommandBuffer, _: VkImage, _: VkImageLayout, _: *const VkClearColorValue, _: u32, _: *const VkImageSubresourceRange) {
-	panic!("Vulkan function pointer of `vkCmdClearColorImage()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdClearColorImage"))
 }
 /// The dummy function for `vkCmdClearDepthStencilImage` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkCmdClearDepthStencilImage(_: VkCommandBuffer, _: VkImage, _: VkImageLayout, _: *const VkClearDepthStencilValue, _: u32, _: *const VkImageSubresourceRange) {
-	panic!("Vulkan function pointer of `vkCmdClearDepthStencilImage()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdClearDepthStencilImage"))
 }
 /// The dummy function for `vkCmdClearAttachments` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkCmdClearAttachments(_: VkCommandBuffer, _: u32, _: *const VkClearAttachment, _: u32, _: *const VkClearRect) {
-	panic!("Vulkan function pointer of `vkCmdClearAttachments()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdClearAttachments"))
 }
 /// The dummy function for `vkCmdResolveImage` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkCmdResolveImage(_: VkCommandBuffer, _: VkImage, _: VkImageLayout, _: VkImage, _: VkImageLayout, _: u32, _: *const VkImageResolve) {
-	panic!("Vulkan function pointer of `vkCmdResolveImage()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdResolveImage"))
 }
 /// The dummy function for `vkCmdSetEvent` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkCmdSetEvent(_: VkCommandBuffer, _: VkEvent, _: VkPipelineStageFlags) {
-	panic!("Vulkan function pointer of `vkCmdSetEvent()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdSetEvent"))
 }
 /// The dummy function for `vkCmdResetEvent` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkCmdResetEvent(_: VkCommandBuffer, _: VkEvent, _: VkPipelineStageFlags) {
-	panic!("Vulkan function pointer of `vkCmdResetEvent()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdResetEvent"))
 }
 /// The dummy function for `vkCmdWaitEvents` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkCmdWaitEvents(_: VkCommandBuffer, _: u32, _: *const VkEvent, _: VkPipelineStageFlags, _: VkPipelineStageFlags, _: u32, _: *const VkMemoryBarrier, _: u32, _: *const VkBufferMemoryBarrier, _: u32, _: *const VkImageMemoryBarrier) {
-	panic!("Vulkan function pointer of `vkCmdWaitEvents()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdWaitEvents"))
 }
 /// The dummy function for `vkCmdPipelineBarrier` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkCmdPipelineBarrier(_: VkCommandBuffer, _: VkPipelineStageFlags, _: VkPipelineStageFlags, _: VkDependencyFlags, _: u32, _: *const VkMemoryBarrier, _: u32, _: *const VkBufferMemoryBarrier, _: u32, _: *const VkImageMemoryBarrier) {
-	panic!("Vulkan function pointer of `vkCmdPipelineBarrier()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdPipelineBarrier"))
 }
 /// The dummy function for `vkCmdBeginQuery` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkCmdBeginQuery(_: VkCommandBuffer, _: VkQueryPool, _: u32, _: VkQueryControlFlags) {
-	panic!("Vulkan function pointer of `vkCmdBeginQuery()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdBeginQuery"))
 }
 /// The dummy function for `vkCmdEndQuery` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkCmdEndQuery(_: VkCommandBuffer, _: VkQueryPool, _: u32) {
-	panic!("Vulkan function pointer of `vkCmdEndQuery()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdEndQuery"))
 }
 /// The dummy function for `vkCmdResetQueryPool` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkCmdResetQueryPool(_: VkCommandBuffer, _: VkQueryPool, _: u32, _: u32) {
-	panic!("Vulkan function pointer of `vkCmdResetQueryPool()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdResetQueryPool"))
 }
 /// The dummy function for `vkCmdWriteTimestamp` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkCmdWriteTimestamp(_: VkCommandBuffer, _: VkPipelineStageFlagBits, _: VkQueryPool, _: u32) {
-	panic!("Vulkan function pointer of `vkCmdWriteTimestamp()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdWriteTimestamp"))
 }
 /// The dummy function for `vkCmdCopyQueryPoolResults` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkCmdCopyQueryPoolResults(_: VkCommandBuffer, _: VkQueryPool, _: u32, _: u32, _: VkBuffer, _: VkDeviceSize, _: VkDeviceSize, _: VkQueryResultFlags) {
-	panic!("Vulkan function pointer of `vkCmdCopyQueryPoolResults()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdCopyQueryPoolResults"))
 }
 /// The dummy function for `vkCmdPushConstants` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkCmdPushConstants(_: VkCommandBuffer, _: VkPipelineLayout, _: VkShaderStageFlags, _: u32, _: u32, _: *const c_void) {
-	panic!("Vulkan function pointer of `vkCmdPushConstants()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdPushConstants"))
 }
 /// The dummy function for `vkCmdBeginRenderPass` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkCmdBeginRenderPass(_: VkCommandBuffer, _: *const VkRenderPassBeginInfo, _: VkSubpassContents) {
-	panic!("Vulkan function pointer of `vkCmdBeginRenderPass()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdBeginRenderPass"))
 }
 /// The dummy function for `vkCmdNextSubpass` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkCmdNextSubpass(_: VkCommandBuffer, _: VkSubpassContents) {
-	panic!("Vulkan function pointer of `vkCmdNextSubpass()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdNextSubpass"))
 }
 /// The dummy function for `vkCmdEndRenderPass` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkCmdEndRenderPass(_: VkCommandBuffer) {
-	panic!("Vulkan function pointer of `vkCmdEndRenderPass()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdEndRenderPass"))
 }
 /// The dummy function for `vkCmdExecuteCommands` from `VK_VERSION_1_0`
 extern "system" fn dummy_vkCmdExecuteCommands(_: VkCommandBuffer, _: u32, _: *const VkCommandBuffer) {
-	panic!("Vulkan function pointer of `vkCmdExecuteCommands()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdExecuteCommands"))
 }
 /// trait for `VK_VERSION_1_0`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_VERSION_1_0.html>
@@ -6722,40 +6726,40 @@ impl VK_VERSION_1_0 for Vulkan_VERSION_1_0 {
 		convert_result("vkCreateInstance", catch_unwind(||((self.vk_create_instance)(pCreateInfo, pAllocator, pInstance))))
 	}
 	fn vkDestroyInstance(&self, instance: VkInstance, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch("vkDestroyInstance", catch_unwind(||((self.vk_destroy_instance)(instance, pAllocator))))
+		process_catch(catch_unwind(||((self.vk_destroy_instance)(instance, pAllocator))))
 	}
 	fn vkEnumeratePhysicalDevices(&self, instance: VkInstance, pPhysicalDeviceCount: *mut uint32_t, pPhysicalDevices: *mut VkPhysicalDevice) -> Result<()> {
 		convert_result("vkEnumeratePhysicalDevices", catch_unwind(||((self.vk_enumerate_physical_devices)(instance, pPhysicalDeviceCount, pPhysicalDevices))))
 	}
 	fn vkGetPhysicalDeviceFeatures(&self, physicalDevice: VkPhysicalDevice, pFeatures: *mut VkPhysicalDeviceFeatures) -> Result<()> {
-		process_catch("vkGetPhysicalDeviceFeatures", catch_unwind(||((self.vk_get_physical_device_features)(physicalDevice, pFeatures))))
+		process_catch(catch_unwind(||((self.vk_get_physical_device_features)(physicalDevice, pFeatures))))
 	}
 	fn vkGetPhysicalDeviceFormatProperties(&self, physicalDevice: VkPhysicalDevice, format: VkFormat, pFormatProperties: *mut VkFormatProperties) -> Result<()> {
-		process_catch("vkGetPhysicalDeviceFormatProperties", catch_unwind(||((self.vk_get_physical_device_format_properties)(physicalDevice, format, pFormatProperties))))
+		process_catch(catch_unwind(||((self.vk_get_physical_device_format_properties)(physicalDevice, format, pFormatProperties))))
 	}
 	fn vkGetPhysicalDeviceImageFormatProperties(&self, physicalDevice: VkPhysicalDevice, format: VkFormat, type_: VkImageType, tiling: VkImageTiling, usage: VkImageUsageFlags, flags: VkImageCreateFlags, pImageFormatProperties: *mut VkImageFormatProperties) -> Result<()> {
 		convert_result("vkGetPhysicalDeviceImageFormatProperties", catch_unwind(||((self.vk_get_physical_device_image_format_properties)(physicalDevice, format, type_, tiling, usage, flags, pImageFormatProperties))))
 	}
 	fn vkGetPhysicalDeviceProperties(&self, physicalDevice: VkPhysicalDevice, pProperties: *mut VkPhysicalDeviceProperties) -> Result<()> {
-		process_catch("vkGetPhysicalDeviceProperties", catch_unwind(||((self.vk_get_physical_device_properties)(physicalDevice, pProperties))))
+		process_catch(catch_unwind(||((self.vk_get_physical_device_properties)(physicalDevice, pProperties))))
 	}
 	fn vkGetPhysicalDeviceQueueFamilyProperties(&self, physicalDevice: VkPhysicalDevice, pQueueFamilyPropertyCount: *mut uint32_t, pQueueFamilyProperties: *mut VkQueueFamilyProperties) -> Result<()> {
-		process_catch("vkGetPhysicalDeviceQueueFamilyProperties", catch_unwind(||((self.vk_get_physical_device_queue_family_properties)(physicalDevice, pQueueFamilyPropertyCount, pQueueFamilyProperties))))
+		process_catch(catch_unwind(||((self.vk_get_physical_device_queue_family_properties)(physicalDevice, pQueueFamilyPropertyCount, pQueueFamilyProperties))))
 	}
 	fn vkGetPhysicalDeviceMemoryProperties(&self, physicalDevice: VkPhysicalDevice, pMemoryProperties: *mut VkPhysicalDeviceMemoryProperties) -> Result<()> {
-		process_catch("vkGetPhysicalDeviceMemoryProperties", catch_unwind(||((self.vk_get_physical_device_memory_properties)(physicalDevice, pMemoryProperties))))
+		process_catch(catch_unwind(||((self.vk_get_physical_device_memory_properties)(physicalDevice, pMemoryProperties))))
 	}
 	fn vkGetInstanceProcAddr(&self, instance: VkInstance, pName: *const i8) -> Result<PFN_vkVoidFunction> {
-		process_catch("vkGetInstanceProcAddr", catch_unwind(||((self.vk_get_instance_proc_addr)(instance, pName))))
+		process_catch(catch_unwind(||((self.vk_get_instance_proc_addr)(instance, pName))))
 	}
 	fn vkGetDeviceProcAddr(&self, device: VkDevice, pName: *const i8) -> Result<PFN_vkVoidFunction> {
-		process_catch("vkGetDeviceProcAddr", catch_unwind(||((self.vk_get_device_proc_addr)(device, pName))))
+		process_catch(catch_unwind(||((self.vk_get_device_proc_addr)(device, pName))))
 	}
 	fn vkCreateDevice(&self, physicalDevice: VkPhysicalDevice, pCreateInfo: *const VkDeviceCreateInfo, pAllocator: *const VkAllocationCallbacks, pDevice: *mut VkDevice) -> Result<()> {
 		convert_result("vkCreateDevice", catch_unwind(||((self.vk_create_device)(physicalDevice, pCreateInfo, pAllocator, pDevice))))
 	}
 	fn vkDestroyDevice(&self, device: VkDevice, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch("vkDestroyDevice", catch_unwind(||((self.vk_destroy_device)(device, pAllocator))))
+		process_catch(catch_unwind(||((self.vk_destroy_device)(device, pAllocator))))
 	}
 	fn vkEnumerateInstanceExtensionProperties(&self, pLayerName: *const i8, pPropertyCount: *mut uint32_t, pProperties: *mut VkExtensionProperties) -> Result<()> {
 		convert_result("vkEnumerateInstanceExtensionProperties", catch_unwind(||((self.vk_enumerate_instance_extension_properties)(pLayerName, pPropertyCount, pProperties))))
@@ -6770,7 +6774,7 @@ impl VK_VERSION_1_0 for Vulkan_VERSION_1_0 {
 		convert_result("vkEnumerateDeviceLayerProperties", catch_unwind(||((self.vk_enumerate_device_layer_properties)(physicalDevice, pPropertyCount, pProperties))))
 	}
 	fn vkGetDeviceQueue(&self, device: VkDevice, queueFamilyIndex: u32, queueIndex: u32, pQueue: *mut VkQueue) -> Result<()> {
-		process_catch("vkGetDeviceQueue", catch_unwind(||((self.vk_get_device_queue)(device, queueFamilyIndex, queueIndex, pQueue))))
+		process_catch(catch_unwind(||((self.vk_get_device_queue)(device, queueFamilyIndex, queueIndex, pQueue))))
 	}
 	fn vkQueueSubmit(&self, queue: VkQueue, submitCount: u32, pSubmits: *const VkSubmitInfo, fence: VkFence) -> Result<()> {
 		convert_result("vkQueueSubmit", catch_unwind(||((self.vk_queue_submit)(queue, submitCount, pSubmits, fence))))
@@ -6785,13 +6789,13 @@ impl VK_VERSION_1_0 for Vulkan_VERSION_1_0 {
 		convert_result("vkAllocateMemory", catch_unwind(||((self.vk_allocate_memory)(device, pAllocateInfo, pAllocator, pMemory))))
 	}
 	fn vkFreeMemory(&self, device: VkDevice, memory: VkDeviceMemory, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch("vkFreeMemory", catch_unwind(||((self.vk_free_memory)(device, memory, pAllocator))))
+		process_catch(catch_unwind(||((self.vk_free_memory)(device, memory, pAllocator))))
 	}
 	fn vkMapMemory(&self, device: VkDevice, memory: VkDeviceMemory, offset: VkDeviceSize, size: VkDeviceSize, flags: VkMemoryMapFlags, ppData: *mut *mut c_void) -> Result<()> {
 		convert_result("vkMapMemory", catch_unwind(||((self.vk_map_memory)(device, memory, offset, size, flags, ppData))))
 	}
 	fn vkUnmapMemory(&self, device: VkDevice, memory: VkDeviceMemory) -> Result<()> {
-		process_catch("vkUnmapMemory", catch_unwind(||((self.vk_unmap_memory)(device, memory))))
+		process_catch(catch_unwind(||((self.vk_unmap_memory)(device, memory))))
 	}
 	fn vkFlushMappedMemoryRanges(&self, device: VkDevice, memoryRangeCount: u32, pMemoryRanges: *const VkMappedMemoryRange) -> Result<()> {
 		convert_result("vkFlushMappedMemoryRanges", catch_unwind(||((self.vk_flush_mapped_memory_ranges)(device, memoryRangeCount, pMemoryRanges))))
@@ -6800,7 +6804,7 @@ impl VK_VERSION_1_0 for Vulkan_VERSION_1_0 {
 		convert_result("vkInvalidateMappedMemoryRanges", catch_unwind(||((self.vk_invalidate_mapped_memory_ranges)(device, memoryRangeCount, pMemoryRanges))))
 	}
 	fn vkGetDeviceMemoryCommitment(&self, device: VkDevice, memory: VkDeviceMemory, pCommittedMemoryInBytes: *mut VkDeviceSize) -> Result<()> {
-		process_catch("vkGetDeviceMemoryCommitment", catch_unwind(||((self.vk_get_device_memory_commitment)(device, memory, pCommittedMemoryInBytes))))
+		process_catch(catch_unwind(||((self.vk_get_device_memory_commitment)(device, memory, pCommittedMemoryInBytes))))
 	}
 	fn vkBindBufferMemory(&self, device: VkDevice, buffer: VkBuffer, memory: VkDeviceMemory, memoryOffset: VkDeviceSize) -> Result<()> {
 		convert_result("vkBindBufferMemory", catch_unwind(||((self.vk_bind_buffer_memory)(device, buffer, memory, memoryOffset))))
@@ -6809,16 +6813,16 @@ impl VK_VERSION_1_0 for Vulkan_VERSION_1_0 {
 		convert_result("vkBindImageMemory", catch_unwind(||((self.vk_bind_image_memory)(device, image, memory, memoryOffset))))
 	}
 	fn vkGetBufferMemoryRequirements(&self, device: VkDevice, buffer: VkBuffer, pMemoryRequirements: *mut VkMemoryRequirements) -> Result<()> {
-		process_catch("vkGetBufferMemoryRequirements", catch_unwind(||((self.vk_get_buffer_memory_requirements)(device, buffer, pMemoryRequirements))))
+		process_catch(catch_unwind(||((self.vk_get_buffer_memory_requirements)(device, buffer, pMemoryRequirements))))
 	}
 	fn vkGetImageMemoryRequirements(&self, device: VkDevice, image: VkImage, pMemoryRequirements: *mut VkMemoryRequirements) -> Result<()> {
-		process_catch("vkGetImageMemoryRequirements", catch_unwind(||((self.vk_get_image_memory_requirements)(device, image, pMemoryRequirements))))
+		process_catch(catch_unwind(||((self.vk_get_image_memory_requirements)(device, image, pMemoryRequirements))))
 	}
 	fn vkGetImageSparseMemoryRequirements(&self, device: VkDevice, image: VkImage, pSparseMemoryRequirementCount: *mut uint32_t, pSparseMemoryRequirements: *mut VkSparseImageMemoryRequirements) -> Result<()> {
-		process_catch("vkGetImageSparseMemoryRequirements", catch_unwind(||((self.vk_get_image_sparse_memory_requirements)(device, image, pSparseMemoryRequirementCount, pSparseMemoryRequirements))))
+		process_catch(catch_unwind(||((self.vk_get_image_sparse_memory_requirements)(device, image, pSparseMemoryRequirementCount, pSparseMemoryRequirements))))
 	}
 	fn vkGetPhysicalDeviceSparseImageFormatProperties(&self, physicalDevice: VkPhysicalDevice, format: VkFormat, type_: VkImageType, samples: VkSampleCountFlagBits, usage: VkImageUsageFlags, tiling: VkImageTiling, pPropertyCount: *mut uint32_t, pProperties: *mut VkSparseImageFormatProperties) -> Result<()> {
-		process_catch("vkGetPhysicalDeviceSparseImageFormatProperties", catch_unwind(||((self.vk_get_physical_device_sparse_image_format_properties)(physicalDevice, format, type_, samples, usage, tiling, pPropertyCount, pProperties))))
+		process_catch(catch_unwind(||((self.vk_get_physical_device_sparse_image_format_properties)(physicalDevice, format, type_, samples, usage, tiling, pPropertyCount, pProperties))))
 	}
 	fn vkQueueBindSparse(&self, queue: VkQueue, bindInfoCount: u32, pBindInfo: *const VkBindSparseInfo, fence: VkFence) -> Result<()> {
 		convert_result("vkQueueBindSparse", catch_unwind(||((self.vk_queue_bind_sparse)(queue, bindInfoCount, pBindInfo, fence))))
@@ -6827,7 +6831,7 @@ impl VK_VERSION_1_0 for Vulkan_VERSION_1_0 {
 		convert_result("vkCreateFence", catch_unwind(||((self.vk_create_fence)(device, pCreateInfo, pAllocator, pFence))))
 	}
 	fn vkDestroyFence(&self, device: VkDevice, fence: VkFence, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch("vkDestroyFence", catch_unwind(||((self.vk_destroy_fence)(device, fence, pAllocator))))
+		process_catch(catch_unwind(||((self.vk_destroy_fence)(device, fence, pAllocator))))
 	}
 	fn vkResetFences(&self, device: VkDevice, fenceCount: u32, pFences: *const VkFence) -> Result<()> {
 		convert_result("vkResetFences", catch_unwind(||((self.vk_reset_fences)(device, fenceCount, pFences))))
@@ -6842,13 +6846,13 @@ impl VK_VERSION_1_0 for Vulkan_VERSION_1_0 {
 		convert_result("vkCreateSemaphore", catch_unwind(||((self.vk_create_semaphore)(device, pCreateInfo, pAllocator, pSemaphore))))
 	}
 	fn vkDestroySemaphore(&self, device: VkDevice, semaphore: VkSemaphore, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch("vkDestroySemaphore", catch_unwind(||((self.vk_destroy_semaphore)(device, semaphore, pAllocator))))
+		process_catch(catch_unwind(||((self.vk_destroy_semaphore)(device, semaphore, pAllocator))))
 	}
 	fn vkCreateEvent(&self, device: VkDevice, pCreateInfo: *const VkEventCreateInfo, pAllocator: *const VkAllocationCallbacks, pEvent: *mut VkEvent) -> Result<()> {
 		convert_result("vkCreateEvent", catch_unwind(||((self.vk_create_event)(device, pCreateInfo, pAllocator, pEvent))))
 	}
 	fn vkDestroyEvent(&self, device: VkDevice, event: VkEvent, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch("vkDestroyEvent", catch_unwind(||((self.vk_destroy_event)(device, event, pAllocator))))
+		process_catch(catch_unwind(||((self.vk_destroy_event)(device, event, pAllocator))))
 	}
 	fn vkGetEventStatus(&self, device: VkDevice, event: VkEvent) -> Result<()> {
 		convert_result("vkGetEventStatus", catch_unwind(||((self.vk_get_event_status)(device, event))))
@@ -6863,7 +6867,7 @@ impl VK_VERSION_1_0 for Vulkan_VERSION_1_0 {
 		convert_result("vkCreateQueryPool", catch_unwind(||((self.vk_create_query_pool)(device, pCreateInfo, pAllocator, pQueryPool))))
 	}
 	fn vkDestroyQueryPool(&self, device: VkDevice, queryPool: VkQueryPool, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch("vkDestroyQueryPool", catch_unwind(||((self.vk_destroy_query_pool)(device, queryPool, pAllocator))))
+		process_catch(catch_unwind(||((self.vk_destroy_query_pool)(device, queryPool, pAllocator))))
 	}
 	fn vkGetQueryPoolResults(&self, device: VkDevice, queryPool: VkQueryPool, firstQuery: u32, queryCount: u32, dataSize: usize, pData: *mut c_void, stride: VkDeviceSize, flags: VkQueryResultFlags) -> Result<()> {
 		convert_result("vkGetQueryPoolResults", catch_unwind(||((self.vk_get_query_pool_results)(device, queryPool, firstQuery, queryCount, dataSize, pData, stride, flags))))
@@ -6872,40 +6876,40 @@ impl VK_VERSION_1_0 for Vulkan_VERSION_1_0 {
 		convert_result("vkCreateBuffer", catch_unwind(||((self.vk_create_buffer)(device, pCreateInfo, pAllocator, pBuffer))))
 	}
 	fn vkDestroyBuffer(&self, device: VkDevice, buffer: VkBuffer, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch("vkDestroyBuffer", catch_unwind(||((self.vk_destroy_buffer)(device, buffer, pAllocator))))
+		process_catch(catch_unwind(||((self.vk_destroy_buffer)(device, buffer, pAllocator))))
 	}
 	fn vkCreateBufferView(&self, device: VkDevice, pCreateInfo: *const VkBufferViewCreateInfo, pAllocator: *const VkAllocationCallbacks, pView: *mut VkBufferView) -> Result<()> {
 		convert_result("vkCreateBufferView", catch_unwind(||((self.vk_create_buffer_view)(device, pCreateInfo, pAllocator, pView))))
 	}
 	fn vkDestroyBufferView(&self, device: VkDevice, bufferView: VkBufferView, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch("vkDestroyBufferView", catch_unwind(||((self.vk_destroy_buffer_view)(device, bufferView, pAllocator))))
+		process_catch(catch_unwind(||((self.vk_destroy_buffer_view)(device, bufferView, pAllocator))))
 	}
 	fn vkCreateImage(&self, device: VkDevice, pCreateInfo: *const VkImageCreateInfo, pAllocator: *const VkAllocationCallbacks, pImage: *mut VkImage) -> Result<()> {
 		convert_result("vkCreateImage", catch_unwind(||((self.vk_create_image)(device, pCreateInfo, pAllocator, pImage))))
 	}
 	fn vkDestroyImage(&self, device: VkDevice, image: VkImage, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch("vkDestroyImage", catch_unwind(||((self.vk_destroy_image)(device, image, pAllocator))))
+		process_catch(catch_unwind(||((self.vk_destroy_image)(device, image, pAllocator))))
 	}
 	fn vkGetImageSubresourceLayout(&self, device: VkDevice, image: VkImage, pSubresource: *const VkImageSubresource, pLayout: *mut VkSubresourceLayout) -> Result<()> {
-		process_catch("vkGetImageSubresourceLayout", catch_unwind(||((self.vk_get_image_subresource_layout)(device, image, pSubresource, pLayout))))
+		process_catch(catch_unwind(||((self.vk_get_image_subresource_layout)(device, image, pSubresource, pLayout))))
 	}
 	fn vkCreateImageView(&self, device: VkDevice, pCreateInfo: *const VkImageViewCreateInfo, pAllocator: *const VkAllocationCallbacks, pView: *mut VkImageView) -> Result<()> {
 		convert_result("vkCreateImageView", catch_unwind(||((self.vk_create_image_view)(device, pCreateInfo, pAllocator, pView))))
 	}
 	fn vkDestroyImageView(&self, device: VkDevice, imageView: VkImageView, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch("vkDestroyImageView", catch_unwind(||((self.vk_destroy_image_view)(device, imageView, pAllocator))))
+		process_catch(catch_unwind(||((self.vk_destroy_image_view)(device, imageView, pAllocator))))
 	}
 	fn vkCreateShaderModule(&self, device: VkDevice, pCreateInfo: *const VkShaderModuleCreateInfo, pAllocator: *const VkAllocationCallbacks, pShaderModule: *mut VkShaderModule) -> Result<()> {
 		convert_result("vkCreateShaderModule", catch_unwind(||((self.vk_create_shader_module)(device, pCreateInfo, pAllocator, pShaderModule))))
 	}
 	fn vkDestroyShaderModule(&self, device: VkDevice, shaderModule: VkShaderModule, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch("vkDestroyShaderModule", catch_unwind(||((self.vk_destroy_shader_module)(device, shaderModule, pAllocator))))
+		process_catch(catch_unwind(||((self.vk_destroy_shader_module)(device, shaderModule, pAllocator))))
 	}
 	fn vkCreatePipelineCache(&self, device: VkDevice, pCreateInfo: *const VkPipelineCacheCreateInfo, pAllocator: *const VkAllocationCallbacks, pPipelineCache: *mut VkPipelineCache) -> Result<()> {
 		convert_result("vkCreatePipelineCache", catch_unwind(||((self.vk_create_pipeline_cache)(device, pCreateInfo, pAllocator, pPipelineCache))))
 	}
 	fn vkDestroyPipelineCache(&self, device: VkDevice, pipelineCache: VkPipelineCache, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch("vkDestroyPipelineCache", catch_unwind(||((self.vk_destroy_pipeline_cache)(device, pipelineCache, pAllocator))))
+		process_catch(catch_unwind(||((self.vk_destroy_pipeline_cache)(device, pipelineCache, pAllocator))))
 	}
 	fn vkGetPipelineCacheData(&self, device: VkDevice, pipelineCache: VkPipelineCache, pDataSize: *mut size_t, pData: *mut c_void) -> Result<()> {
 		convert_result("vkGetPipelineCacheData", catch_unwind(||((self.vk_get_pipeline_cache_data)(device, pipelineCache, pDataSize, pData))))
@@ -6920,31 +6924,31 @@ impl VK_VERSION_1_0 for Vulkan_VERSION_1_0 {
 		convert_result("vkCreateComputePipelines", catch_unwind(||((self.vk_create_compute_pipelines)(device, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines))))
 	}
 	fn vkDestroyPipeline(&self, device: VkDevice, pipeline: VkPipeline, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch("vkDestroyPipeline", catch_unwind(||((self.vk_destroy_pipeline)(device, pipeline, pAllocator))))
+		process_catch(catch_unwind(||((self.vk_destroy_pipeline)(device, pipeline, pAllocator))))
 	}
 	fn vkCreatePipelineLayout(&self, device: VkDevice, pCreateInfo: *const VkPipelineLayoutCreateInfo, pAllocator: *const VkAllocationCallbacks, pPipelineLayout: *mut VkPipelineLayout) -> Result<()> {
 		convert_result("vkCreatePipelineLayout", catch_unwind(||((self.vk_create_pipeline_layout)(device, pCreateInfo, pAllocator, pPipelineLayout))))
 	}
 	fn vkDestroyPipelineLayout(&self, device: VkDevice, pipelineLayout: VkPipelineLayout, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch("vkDestroyPipelineLayout", catch_unwind(||((self.vk_destroy_pipeline_layout)(device, pipelineLayout, pAllocator))))
+		process_catch(catch_unwind(||((self.vk_destroy_pipeline_layout)(device, pipelineLayout, pAllocator))))
 	}
 	fn vkCreateSampler(&self, device: VkDevice, pCreateInfo: *const VkSamplerCreateInfo, pAllocator: *const VkAllocationCallbacks, pSampler: *mut VkSampler) -> Result<()> {
 		convert_result("vkCreateSampler", catch_unwind(||((self.vk_create_sampler)(device, pCreateInfo, pAllocator, pSampler))))
 	}
 	fn vkDestroySampler(&self, device: VkDevice, sampler: VkSampler, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch("vkDestroySampler", catch_unwind(||((self.vk_destroy_sampler)(device, sampler, pAllocator))))
+		process_catch(catch_unwind(||((self.vk_destroy_sampler)(device, sampler, pAllocator))))
 	}
 	fn vkCreateDescriptorSetLayout(&self, device: VkDevice, pCreateInfo: *const VkDescriptorSetLayoutCreateInfo, pAllocator: *const VkAllocationCallbacks, pSetLayout: *mut VkDescriptorSetLayout) -> Result<()> {
 		convert_result("vkCreateDescriptorSetLayout", catch_unwind(||((self.vk_create_descriptor_set_layout)(device, pCreateInfo, pAllocator, pSetLayout))))
 	}
 	fn vkDestroyDescriptorSetLayout(&self, device: VkDevice, descriptorSetLayout: VkDescriptorSetLayout, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch("vkDestroyDescriptorSetLayout", catch_unwind(||((self.vk_destroy_descriptor_set_layout)(device, descriptorSetLayout, pAllocator))))
+		process_catch(catch_unwind(||((self.vk_destroy_descriptor_set_layout)(device, descriptorSetLayout, pAllocator))))
 	}
 	fn vkCreateDescriptorPool(&self, device: VkDevice, pCreateInfo: *const VkDescriptorPoolCreateInfo, pAllocator: *const VkAllocationCallbacks, pDescriptorPool: *mut VkDescriptorPool) -> Result<()> {
 		convert_result("vkCreateDescriptorPool", catch_unwind(||((self.vk_create_descriptor_pool)(device, pCreateInfo, pAllocator, pDescriptorPool))))
 	}
 	fn vkDestroyDescriptorPool(&self, device: VkDevice, descriptorPool: VkDescriptorPool, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch("vkDestroyDescriptorPool", catch_unwind(||((self.vk_destroy_descriptor_pool)(device, descriptorPool, pAllocator))))
+		process_catch(catch_unwind(||((self.vk_destroy_descriptor_pool)(device, descriptorPool, pAllocator))))
 	}
 	fn vkResetDescriptorPool(&self, device: VkDevice, descriptorPool: VkDescriptorPool, flags: VkDescriptorPoolResetFlags) -> Result<()> {
 		convert_result("vkResetDescriptorPool", catch_unwind(||((self.vk_reset_descriptor_pool)(device, descriptorPool, flags))))
@@ -6956,28 +6960,28 @@ impl VK_VERSION_1_0 for Vulkan_VERSION_1_0 {
 		convert_result("vkFreeDescriptorSets", catch_unwind(||((self.vk_free_descriptor_sets)(device, descriptorPool, descriptorSetCount, pDescriptorSets))))
 	}
 	fn vkUpdateDescriptorSets(&self, device: VkDevice, descriptorWriteCount: u32, pDescriptorWrites: *const VkWriteDescriptorSet, descriptorCopyCount: u32, pDescriptorCopies: *const VkCopyDescriptorSet) -> Result<()> {
-		process_catch("vkUpdateDescriptorSets", catch_unwind(||((self.vk_update_descriptor_sets)(device, descriptorWriteCount, pDescriptorWrites, descriptorCopyCount, pDescriptorCopies))))
+		process_catch(catch_unwind(||((self.vk_update_descriptor_sets)(device, descriptorWriteCount, pDescriptorWrites, descriptorCopyCount, pDescriptorCopies))))
 	}
 	fn vkCreateFramebuffer(&self, device: VkDevice, pCreateInfo: *const VkFramebufferCreateInfo, pAllocator: *const VkAllocationCallbacks, pFramebuffer: *mut VkFramebuffer) -> Result<()> {
 		convert_result("vkCreateFramebuffer", catch_unwind(||((self.vk_create_framebuffer)(device, pCreateInfo, pAllocator, pFramebuffer))))
 	}
 	fn vkDestroyFramebuffer(&self, device: VkDevice, framebuffer: VkFramebuffer, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch("vkDestroyFramebuffer", catch_unwind(||((self.vk_destroy_framebuffer)(device, framebuffer, pAllocator))))
+		process_catch(catch_unwind(||((self.vk_destroy_framebuffer)(device, framebuffer, pAllocator))))
 	}
 	fn vkCreateRenderPass(&self, device: VkDevice, pCreateInfo: *const VkRenderPassCreateInfo, pAllocator: *const VkAllocationCallbacks, pRenderPass: *mut VkRenderPass) -> Result<()> {
 		convert_result("vkCreateRenderPass", catch_unwind(||((self.vk_create_render_pass)(device, pCreateInfo, pAllocator, pRenderPass))))
 	}
 	fn vkDestroyRenderPass(&self, device: VkDevice, renderPass: VkRenderPass, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch("vkDestroyRenderPass", catch_unwind(||((self.vk_destroy_render_pass)(device, renderPass, pAllocator))))
+		process_catch(catch_unwind(||((self.vk_destroy_render_pass)(device, renderPass, pAllocator))))
 	}
 	fn vkGetRenderAreaGranularity(&self, device: VkDevice, renderPass: VkRenderPass, pGranularity: *mut VkExtent2D) -> Result<()> {
-		process_catch("vkGetRenderAreaGranularity", catch_unwind(||((self.vk_get_render_area_granularity)(device, renderPass, pGranularity))))
+		process_catch(catch_unwind(||((self.vk_get_render_area_granularity)(device, renderPass, pGranularity))))
 	}
 	fn vkCreateCommandPool(&self, device: VkDevice, pCreateInfo: *const VkCommandPoolCreateInfo, pAllocator: *const VkAllocationCallbacks, pCommandPool: *mut VkCommandPool) -> Result<()> {
 		convert_result("vkCreateCommandPool", catch_unwind(||((self.vk_create_command_pool)(device, pCreateInfo, pAllocator, pCommandPool))))
 	}
 	fn vkDestroyCommandPool(&self, device: VkDevice, commandPool: VkCommandPool, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch("vkDestroyCommandPool", catch_unwind(||((self.vk_destroy_command_pool)(device, commandPool, pAllocator))))
+		process_catch(catch_unwind(||((self.vk_destroy_command_pool)(device, commandPool, pAllocator))))
 	}
 	fn vkResetCommandPool(&self, device: VkDevice, commandPool: VkCommandPool, flags: VkCommandPoolResetFlags) -> Result<()> {
 		convert_result("vkResetCommandPool", catch_unwind(||((self.vk_reset_command_pool)(device, commandPool, flags))))
@@ -6986,7 +6990,7 @@ impl VK_VERSION_1_0 for Vulkan_VERSION_1_0 {
 		convert_result("vkAllocateCommandBuffers", catch_unwind(||((self.vk_allocate_command_buffers)(device, pAllocateInfo, pCommandBuffers))))
 	}
 	fn vkFreeCommandBuffers(&self, device: VkDevice, commandPool: VkCommandPool, commandBufferCount: u32, pCommandBuffers: *const VkCommandBuffer) -> Result<()> {
-		process_catch("vkFreeCommandBuffers", catch_unwind(||((self.vk_free_command_buffers)(device, commandPool, commandBufferCount, pCommandBuffers))))
+		process_catch(catch_unwind(||((self.vk_free_command_buffers)(device, commandPool, commandBufferCount, pCommandBuffers))))
 	}
 	fn vkBeginCommandBuffer(&self, commandBuffer: VkCommandBuffer, pBeginInfo: *const VkCommandBufferBeginInfo) -> Result<()> {
 		convert_result("vkBeginCommandBuffer", catch_unwind(||((self.vk_begin_command_buffer)(commandBuffer, pBeginInfo))))
@@ -6998,136 +7002,136 @@ impl VK_VERSION_1_0 for Vulkan_VERSION_1_0 {
 		convert_result("vkResetCommandBuffer", catch_unwind(||((self.vk_reset_command_buffer)(commandBuffer, flags))))
 	}
 	fn vkCmdBindPipeline(&self, commandBuffer: VkCommandBuffer, pipelineBindPoint: VkPipelineBindPoint, pipeline: VkPipeline) -> Result<()> {
-		process_catch("vkCmdBindPipeline", catch_unwind(||((self.vk_cmd_bind_pipeline)(commandBuffer, pipelineBindPoint, pipeline))))
+		process_catch(catch_unwind(||((self.vk_cmd_bind_pipeline)(commandBuffer, pipelineBindPoint, pipeline))))
 	}
 	fn vkCmdSetViewport(&self, commandBuffer: VkCommandBuffer, firstViewport: u32, viewportCount: u32, pViewports: *const VkViewport) -> Result<()> {
-		process_catch("vkCmdSetViewport", catch_unwind(||((self.vk_cmd_set_viewport)(commandBuffer, firstViewport, viewportCount, pViewports))))
+		process_catch(catch_unwind(||((self.vk_cmd_set_viewport)(commandBuffer, firstViewport, viewportCount, pViewports))))
 	}
 	fn vkCmdSetScissor(&self, commandBuffer: VkCommandBuffer, firstScissor: u32, scissorCount: u32, pScissors: *const VkRect2D) -> Result<()> {
-		process_catch("vkCmdSetScissor", catch_unwind(||((self.vk_cmd_set_scissor)(commandBuffer, firstScissor, scissorCount, pScissors))))
+		process_catch(catch_unwind(||((self.vk_cmd_set_scissor)(commandBuffer, firstScissor, scissorCount, pScissors))))
 	}
 	fn vkCmdSetLineWidth(&self, commandBuffer: VkCommandBuffer, lineWidth: f32) -> Result<()> {
-		process_catch("vkCmdSetLineWidth", catch_unwind(||((self.vk_cmd_set_line_width)(commandBuffer, lineWidth))))
+		process_catch(catch_unwind(||((self.vk_cmd_set_line_width)(commandBuffer, lineWidth))))
 	}
 	fn vkCmdSetDepthBias(&self, commandBuffer: VkCommandBuffer, depthBiasConstantFactor: f32, depthBiasClamp: f32, depthBiasSlopeFactor: f32) -> Result<()> {
-		process_catch("vkCmdSetDepthBias", catch_unwind(||((self.vk_cmd_set_depth_bias)(commandBuffer, depthBiasConstantFactor, depthBiasClamp, depthBiasSlopeFactor))))
+		process_catch(catch_unwind(||((self.vk_cmd_set_depth_bias)(commandBuffer, depthBiasConstantFactor, depthBiasClamp, depthBiasSlopeFactor))))
 	}
 	fn vkCmdSetBlendConstants(&self, commandBuffer: VkCommandBuffer, blendConstants: &[float; 4 as usize]) -> Result<()> {
-		process_catch("vkCmdSetBlendConstants", catch_unwind(||((self.vk_cmd_set_blend_constants)(commandBuffer, blendConstants))))
+		process_catch(catch_unwind(||((self.vk_cmd_set_blend_constants)(commandBuffer, blendConstants))))
 	}
 	fn vkCmdSetDepthBounds(&self, commandBuffer: VkCommandBuffer, minDepthBounds: f32, maxDepthBounds: f32) -> Result<()> {
-		process_catch("vkCmdSetDepthBounds", catch_unwind(||((self.vk_cmd_set_depth_bounds)(commandBuffer, minDepthBounds, maxDepthBounds))))
+		process_catch(catch_unwind(||((self.vk_cmd_set_depth_bounds)(commandBuffer, minDepthBounds, maxDepthBounds))))
 	}
 	fn vkCmdSetStencilCompareMask(&self, commandBuffer: VkCommandBuffer, faceMask: VkStencilFaceFlags, compareMask: u32) -> Result<()> {
-		process_catch("vkCmdSetStencilCompareMask", catch_unwind(||((self.vk_cmd_set_stencil_compare_mask)(commandBuffer, faceMask, compareMask))))
+		process_catch(catch_unwind(||((self.vk_cmd_set_stencil_compare_mask)(commandBuffer, faceMask, compareMask))))
 	}
 	fn vkCmdSetStencilWriteMask(&self, commandBuffer: VkCommandBuffer, faceMask: VkStencilFaceFlags, writeMask: u32) -> Result<()> {
-		process_catch("vkCmdSetStencilWriteMask", catch_unwind(||((self.vk_cmd_set_stencil_write_mask)(commandBuffer, faceMask, writeMask))))
+		process_catch(catch_unwind(||((self.vk_cmd_set_stencil_write_mask)(commandBuffer, faceMask, writeMask))))
 	}
 	fn vkCmdSetStencilReference(&self, commandBuffer: VkCommandBuffer, faceMask: VkStencilFaceFlags, reference: u32) -> Result<()> {
-		process_catch("vkCmdSetStencilReference", catch_unwind(||((self.vk_cmd_set_stencil_reference)(commandBuffer, faceMask, reference))))
+		process_catch(catch_unwind(||((self.vk_cmd_set_stencil_reference)(commandBuffer, faceMask, reference))))
 	}
 	fn vkCmdBindDescriptorSets(&self, commandBuffer: VkCommandBuffer, pipelineBindPoint: VkPipelineBindPoint, layout: VkPipelineLayout, firstSet: u32, descriptorSetCount: u32, pDescriptorSets: *const VkDescriptorSet, dynamicOffsetCount: u32, pDynamicOffsets: *const uint32_t) -> Result<()> {
-		process_catch("vkCmdBindDescriptorSets", catch_unwind(||((self.vk_cmd_bind_descriptor_sets)(commandBuffer, pipelineBindPoint, layout, firstSet, descriptorSetCount, pDescriptorSets, dynamicOffsetCount, pDynamicOffsets))))
+		process_catch(catch_unwind(||((self.vk_cmd_bind_descriptor_sets)(commandBuffer, pipelineBindPoint, layout, firstSet, descriptorSetCount, pDescriptorSets, dynamicOffsetCount, pDynamicOffsets))))
 	}
 	fn vkCmdBindIndexBuffer(&self, commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize, indexType: VkIndexType) -> Result<()> {
-		process_catch("vkCmdBindIndexBuffer", catch_unwind(||((self.vk_cmd_bind_index_buffer)(commandBuffer, buffer, offset, indexType))))
+		process_catch(catch_unwind(||((self.vk_cmd_bind_index_buffer)(commandBuffer, buffer, offset, indexType))))
 	}
 	fn vkCmdBindVertexBuffers(&self, commandBuffer: VkCommandBuffer, firstBinding: u32, bindingCount: u32, pBuffers: *const VkBuffer, pOffsets: *const VkDeviceSize) -> Result<()> {
-		process_catch("vkCmdBindVertexBuffers", catch_unwind(||((self.vk_cmd_bind_vertex_buffers)(commandBuffer, firstBinding, bindingCount, pBuffers, pOffsets))))
+		process_catch(catch_unwind(||((self.vk_cmd_bind_vertex_buffers)(commandBuffer, firstBinding, bindingCount, pBuffers, pOffsets))))
 	}
 	fn vkCmdDraw(&self, commandBuffer: VkCommandBuffer, vertexCount: u32, instanceCount: u32, firstVertex: u32, firstInstance: u32) -> Result<()> {
-		process_catch("vkCmdDraw", catch_unwind(||((self.vk_cmd_draw)(commandBuffer, vertexCount, instanceCount, firstVertex, firstInstance))))
+		process_catch(catch_unwind(||((self.vk_cmd_draw)(commandBuffer, vertexCount, instanceCount, firstVertex, firstInstance))))
 	}
 	fn vkCmdDrawIndexed(&self, commandBuffer: VkCommandBuffer, indexCount: u32, instanceCount: u32, firstIndex: u32, vertexOffset: i32, firstInstance: u32) -> Result<()> {
-		process_catch("vkCmdDrawIndexed", catch_unwind(||((self.vk_cmd_draw_indexed)(commandBuffer, indexCount, instanceCount, firstIndex, vertexOffset, firstInstance))))
+		process_catch(catch_unwind(||((self.vk_cmd_draw_indexed)(commandBuffer, indexCount, instanceCount, firstIndex, vertexOffset, firstInstance))))
 	}
 	fn vkCmdDrawIndirect(&self, commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize, drawCount: u32, stride: u32) -> Result<()> {
-		process_catch("vkCmdDrawIndirect", catch_unwind(||((self.vk_cmd_draw_indirect)(commandBuffer, buffer, offset, drawCount, stride))))
+		process_catch(catch_unwind(||((self.vk_cmd_draw_indirect)(commandBuffer, buffer, offset, drawCount, stride))))
 	}
 	fn vkCmdDrawIndexedIndirect(&self, commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize, drawCount: u32, stride: u32) -> Result<()> {
-		process_catch("vkCmdDrawIndexedIndirect", catch_unwind(||((self.vk_cmd_draw_indexed_indirect)(commandBuffer, buffer, offset, drawCount, stride))))
+		process_catch(catch_unwind(||((self.vk_cmd_draw_indexed_indirect)(commandBuffer, buffer, offset, drawCount, stride))))
 	}
 	fn vkCmdDispatch(&self, commandBuffer: VkCommandBuffer, groupCountX: u32, groupCountY: u32, groupCountZ: u32) -> Result<()> {
-		process_catch("vkCmdDispatch", catch_unwind(||((self.vk_cmd_dispatch)(commandBuffer, groupCountX, groupCountY, groupCountZ))))
+		process_catch(catch_unwind(||((self.vk_cmd_dispatch)(commandBuffer, groupCountX, groupCountY, groupCountZ))))
 	}
 	fn vkCmdDispatchIndirect(&self, commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize) -> Result<()> {
-		process_catch("vkCmdDispatchIndirect", catch_unwind(||((self.vk_cmd_dispatch_indirect)(commandBuffer, buffer, offset))))
+		process_catch(catch_unwind(||((self.vk_cmd_dispatch_indirect)(commandBuffer, buffer, offset))))
 	}
 	fn vkCmdCopyBuffer(&self, commandBuffer: VkCommandBuffer, srcBuffer: VkBuffer, dstBuffer: VkBuffer, regionCount: u32, pRegions: *const VkBufferCopy) -> Result<()> {
-		process_catch("vkCmdCopyBuffer", catch_unwind(||((self.vk_cmd_copy_buffer)(commandBuffer, srcBuffer, dstBuffer, regionCount, pRegions))))
+		process_catch(catch_unwind(||((self.vk_cmd_copy_buffer)(commandBuffer, srcBuffer, dstBuffer, regionCount, pRegions))))
 	}
 	fn vkCmdCopyImage(&self, commandBuffer: VkCommandBuffer, srcImage: VkImage, srcImageLayout: VkImageLayout, dstImage: VkImage, dstImageLayout: VkImageLayout, regionCount: u32, pRegions: *const VkImageCopy) -> Result<()> {
-		process_catch("vkCmdCopyImage", catch_unwind(||((self.vk_cmd_copy_image)(commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, regionCount, pRegions))))
+		process_catch(catch_unwind(||((self.vk_cmd_copy_image)(commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, regionCount, pRegions))))
 	}
 	fn vkCmdBlitImage(&self, commandBuffer: VkCommandBuffer, srcImage: VkImage, srcImageLayout: VkImageLayout, dstImage: VkImage, dstImageLayout: VkImageLayout, regionCount: u32, pRegions: *const VkImageBlit, filter: VkFilter) -> Result<()> {
-		process_catch("vkCmdBlitImage", catch_unwind(||((self.vk_cmd_blit_image)(commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, regionCount, pRegions, filter))))
+		process_catch(catch_unwind(||((self.vk_cmd_blit_image)(commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, regionCount, pRegions, filter))))
 	}
 	fn vkCmdCopyBufferToImage(&self, commandBuffer: VkCommandBuffer, srcBuffer: VkBuffer, dstImage: VkImage, dstImageLayout: VkImageLayout, regionCount: u32, pRegions: *const VkBufferImageCopy) -> Result<()> {
-		process_catch("vkCmdCopyBufferToImage", catch_unwind(||((self.vk_cmd_copy_buffer_to_image)(commandBuffer, srcBuffer, dstImage, dstImageLayout, regionCount, pRegions))))
+		process_catch(catch_unwind(||((self.vk_cmd_copy_buffer_to_image)(commandBuffer, srcBuffer, dstImage, dstImageLayout, regionCount, pRegions))))
 	}
 	fn vkCmdCopyImageToBuffer(&self, commandBuffer: VkCommandBuffer, srcImage: VkImage, srcImageLayout: VkImageLayout, dstBuffer: VkBuffer, regionCount: u32, pRegions: *const VkBufferImageCopy) -> Result<()> {
-		process_catch("vkCmdCopyImageToBuffer", catch_unwind(||((self.vk_cmd_copy_image_to_buffer)(commandBuffer, srcImage, srcImageLayout, dstBuffer, regionCount, pRegions))))
+		process_catch(catch_unwind(||((self.vk_cmd_copy_image_to_buffer)(commandBuffer, srcImage, srcImageLayout, dstBuffer, regionCount, pRegions))))
 	}
 	fn vkCmdUpdateBuffer(&self, commandBuffer: VkCommandBuffer, dstBuffer: VkBuffer, dstOffset: VkDeviceSize, dataSize: VkDeviceSize, pData: *const c_void) -> Result<()> {
-		process_catch("vkCmdUpdateBuffer", catch_unwind(||((self.vk_cmd_update_buffer)(commandBuffer, dstBuffer, dstOffset, dataSize, pData))))
+		process_catch(catch_unwind(||((self.vk_cmd_update_buffer)(commandBuffer, dstBuffer, dstOffset, dataSize, pData))))
 	}
 	fn vkCmdFillBuffer(&self, commandBuffer: VkCommandBuffer, dstBuffer: VkBuffer, dstOffset: VkDeviceSize, size: VkDeviceSize, data: u32) -> Result<()> {
-		process_catch("vkCmdFillBuffer", catch_unwind(||((self.vk_cmd_fill_buffer)(commandBuffer, dstBuffer, dstOffset, size, data))))
+		process_catch(catch_unwind(||((self.vk_cmd_fill_buffer)(commandBuffer, dstBuffer, dstOffset, size, data))))
 	}
 	fn vkCmdClearColorImage(&self, commandBuffer: VkCommandBuffer, image: VkImage, imageLayout: VkImageLayout, pColor: *const VkClearColorValue, rangeCount: u32, pRanges: *const VkImageSubresourceRange) -> Result<()> {
-		process_catch("vkCmdClearColorImage", catch_unwind(||((self.vk_cmd_clear_color_image)(commandBuffer, image, imageLayout, pColor, rangeCount, pRanges))))
+		process_catch(catch_unwind(||((self.vk_cmd_clear_color_image)(commandBuffer, image, imageLayout, pColor, rangeCount, pRanges))))
 	}
 	fn vkCmdClearDepthStencilImage(&self, commandBuffer: VkCommandBuffer, image: VkImage, imageLayout: VkImageLayout, pDepthStencil: *const VkClearDepthStencilValue, rangeCount: u32, pRanges: *const VkImageSubresourceRange) -> Result<()> {
-		process_catch("vkCmdClearDepthStencilImage", catch_unwind(||((self.vk_cmd_clear_depth_stencil_image)(commandBuffer, image, imageLayout, pDepthStencil, rangeCount, pRanges))))
+		process_catch(catch_unwind(||((self.vk_cmd_clear_depth_stencil_image)(commandBuffer, image, imageLayout, pDepthStencil, rangeCount, pRanges))))
 	}
 	fn vkCmdClearAttachments(&self, commandBuffer: VkCommandBuffer, attachmentCount: u32, pAttachments: *const VkClearAttachment, rectCount: u32, pRects: *const VkClearRect) -> Result<()> {
-		process_catch("vkCmdClearAttachments", catch_unwind(||((self.vk_cmd_clear_attachments)(commandBuffer, attachmentCount, pAttachments, rectCount, pRects))))
+		process_catch(catch_unwind(||((self.vk_cmd_clear_attachments)(commandBuffer, attachmentCount, pAttachments, rectCount, pRects))))
 	}
 	fn vkCmdResolveImage(&self, commandBuffer: VkCommandBuffer, srcImage: VkImage, srcImageLayout: VkImageLayout, dstImage: VkImage, dstImageLayout: VkImageLayout, regionCount: u32, pRegions: *const VkImageResolve) -> Result<()> {
-		process_catch("vkCmdResolveImage", catch_unwind(||((self.vk_cmd_resolve_image)(commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, regionCount, pRegions))))
+		process_catch(catch_unwind(||((self.vk_cmd_resolve_image)(commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, regionCount, pRegions))))
 	}
 	fn vkCmdSetEvent(&self, commandBuffer: VkCommandBuffer, event: VkEvent, stageMask: VkPipelineStageFlags) -> Result<()> {
-		process_catch("vkCmdSetEvent", catch_unwind(||((self.vk_cmd_set_event)(commandBuffer, event, stageMask))))
+		process_catch(catch_unwind(||((self.vk_cmd_set_event)(commandBuffer, event, stageMask))))
 	}
 	fn vkCmdResetEvent(&self, commandBuffer: VkCommandBuffer, event: VkEvent, stageMask: VkPipelineStageFlags) -> Result<()> {
-		process_catch("vkCmdResetEvent", catch_unwind(||((self.vk_cmd_reset_event)(commandBuffer, event, stageMask))))
+		process_catch(catch_unwind(||((self.vk_cmd_reset_event)(commandBuffer, event, stageMask))))
 	}
 	fn vkCmdWaitEvents(&self, commandBuffer: VkCommandBuffer, eventCount: u32, pEvents: *const VkEvent, srcStageMask: VkPipelineStageFlags, dstStageMask: VkPipelineStageFlags, memoryBarrierCount: u32, pMemoryBarriers: *const VkMemoryBarrier, bufferMemoryBarrierCount: u32, pBufferMemoryBarriers: *const VkBufferMemoryBarrier, imageMemoryBarrierCount: u32, pImageMemoryBarriers: *const VkImageMemoryBarrier) -> Result<()> {
-		process_catch("vkCmdWaitEvents", catch_unwind(||((self.vk_cmd_wait_events)(commandBuffer, eventCount, pEvents, srcStageMask, dstStageMask, memoryBarrierCount, pMemoryBarriers, bufferMemoryBarrierCount, pBufferMemoryBarriers, imageMemoryBarrierCount, pImageMemoryBarriers))))
+		process_catch(catch_unwind(||((self.vk_cmd_wait_events)(commandBuffer, eventCount, pEvents, srcStageMask, dstStageMask, memoryBarrierCount, pMemoryBarriers, bufferMemoryBarrierCount, pBufferMemoryBarriers, imageMemoryBarrierCount, pImageMemoryBarriers))))
 	}
 	fn vkCmdPipelineBarrier(&self, commandBuffer: VkCommandBuffer, srcStageMask: VkPipelineStageFlags, dstStageMask: VkPipelineStageFlags, dependencyFlags: VkDependencyFlags, memoryBarrierCount: u32, pMemoryBarriers: *const VkMemoryBarrier, bufferMemoryBarrierCount: u32, pBufferMemoryBarriers: *const VkBufferMemoryBarrier, imageMemoryBarrierCount: u32, pImageMemoryBarriers: *const VkImageMemoryBarrier) -> Result<()> {
-		process_catch("vkCmdPipelineBarrier", catch_unwind(||((self.vk_cmd_pipeline_barrier)(commandBuffer, srcStageMask, dstStageMask, dependencyFlags, memoryBarrierCount, pMemoryBarriers, bufferMemoryBarrierCount, pBufferMemoryBarriers, imageMemoryBarrierCount, pImageMemoryBarriers))))
+		process_catch(catch_unwind(||((self.vk_cmd_pipeline_barrier)(commandBuffer, srcStageMask, dstStageMask, dependencyFlags, memoryBarrierCount, pMemoryBarriers, bufferMemoryBarrierCount, pBufferMemoryBarriers, imageMemoryBarrierCount, pImageMemoryBarriers))))
 	}
 	fn vkCmdBeginQuery(&self, commandBuffer: VkCommandBuffer, queryPool: VkQueryPool, query: u32, flags: VkQueryControlFlags) -> Result<()> {
-		process_catch("vkCmdBeginQuery", catch_unwind(||((self.vk_cmd_begin_query)(commandBuffer, queryPool, query, flags))))
+		process_catch(catch_unwind(||((self.vk_cmd_begin_query)(commandBuffer, queryPool, query, flags))))
 	}
 	fn vkCmdEndQuery(&self, commandBuffer: VkCommandBuffer, queryPool: VkQueryPool, query: u32) -> Result<()> {
-		process_catch("vkCmdEndQuery", catch_unwind(||((self.vk_cmd_end_query)(commandBuffer, queryPool, query))))
+		process_catch(catch_unwind(||((self.vk_cmd_end_query)(commandBuffer, queryPool, query))))
 	}
 	fn vkCmdResetQueryPool(&self, commandBuffer: VkCommandBuffer, queryPool: VkQueryPool, firstQuery: u32, queryCount: u32) -> Result<()> {
-		process_catch("vkCmdResetQueryPool", catch_unwind(||((self.vk_cmd_reset_query_pool)(commandBuffer, queryPool, firstQuery, queryCount))))
+		process_catch(catch_unwind(||((self.vk_cmd_reset_query_pool)(commandBuffer, queryPool, firstQuery, queryCount))))
 	}
 	fn vkCmdWriteTimestamp(&self, commandBuffer: VkCommandBuffer, pipelineStage: VkPipelineStageFlagBits, queryPool: VkQueryPool, query: u32) -> Result<()> {
-		process_catch("vkCmdWriteTimestamp", catch_unwind(||((self.vk_cmd_write_timestamp)(commandBuffer, pipelineStage, queryPool, query))))
+		process_catch(catch_unwind(||((self.vk_cmd_write_timestamp)(commandBuffer, pipelineStage, queryPool, query))))
 	}
 	fn vkCmdCopyQueryPoolResults(&self, commandBuffer: VkCommandBuffer, queryPool: VkQueryPool, firstQuery: u32, queryCount: u32, dstBuffer: VkBuffer, dstOffset: VkDeviceSize, stride: VkDeviceSize, flags: VkQueryResultFlags) -> Result<()> {
-		process_catch("vkCmdCopyQueryPoolResults", catch_unwind(||((self.vk_cmd_copy_query_pool_results)(commandBuffer, queryPool, firstQuery, queryCount, dstBuffer, dstOffset, stride, flags))))
+		process_catch(catch_unwind(||((self.vk_cmd_copy_query_pool_results)(commandBuffer, queryPool, firstQuery, queryCount, dstBuffer, dstOffset, stride, flags))))
 	}
 	fn vkCmdPushConstants(&self, commandBuffer: VkCommandBuffer, layout: VkPipelineLayout, stageFlags: VkShaderStageFlags, offset: u32, size: u32, pValues: *const c_void) -> Result<()> {
-		process_catch("vkCmdPushConstants", catch_unwind(||((self.vk_cmd_push_constants)(commandBuffer, layout, stageFlags, offset, size, pValues))))
+		process_catch(catch_unwind(||((self.vk_cmd_push_constants)(commandBuffer, layout, stageFlags, offset, size, pValues))))
 	}
 	fn vkCmdBeginRenderPass(&self, commandBuffer: VkCommandBuffer, pRenderPassBegin: *const VkRenderPassBeginInfo, contents: VkSubpassContents) -> Result<()> {
-		process_catch("vkCmdBeginRenderPass", catch_unwind(||((self.vk_cmd_begin_render_pass)(commandBuffer, pRenderPassBegin, contents))))
+		process_catch(catch_unwind(||((self.vk_cmd_begin_render_pass)(commandBuffer, pRenderPassBegin, contents))))
 	}
 	fn vkCmdNextSubpass(&self, commandBuffer: VkCommandBuffer, contents: VkSubpassContents) -> Result<()> {
-		process_catch("vkCmdNextSubpass", catch_unwind(||((self.vk_cmd_next_subpass)(commandBuffer, contents))))
+		process_catch(catch_unwind(||((self.vk_cmd_next_subpass)(commandBuffer, contents))))
 	}
 	fn vkCmdEndRenderPass(&self, commandBuffer: VkCommandBuffer) -> Result<()> {
-		process_catch("vkCmdEndRenderPass", catch_unwind(||((self.vk_cmd_end_render_pass)(commandBuffer))))
+		process_catch(catch_unwind(||((self.vk_cmd_end_render_pass)(commandBuffer))))
 	}
 	fn vkCmdExecuteCommands(&self, commandBuffer: VkCommandBuffer, commandBufferCount: u32, pCommandBuffers: *const VkCommandBuffer) -> Result<()> {
-		process_catch("vkCmdExecuteCommands", catch_unwind(||((self.vk_cmd_execute_commands)(commandBuffer, commandBufferCount, pCommandBuffers))))
+		process_catch(catch_unwind(||((self.vk_cmd_execute_commands)(commandBuffer, commandBufferCount, pCommandBuffers))))
 	}
 }
 impl Default for Vulkan_VERSION_1_0 {
@@ -8530,115 +8534,115 @@ type PFN_vkGetPhysicalDeviceExternalSemaphoreProperties = extern "system" fn(phy
 type PFN_vkGetDescriptorSetLayoutSupport = extern "system" fn(device: VkDevice, pCreateInfo: *const VkDescriptorSetLayoutCreateInfo, pSupport: *mut VkDescriptorSetLayoutSupport);
 /// The dummy function for `vkEnumerateInstanceVersion` from `VK_VERSION_1_1`
 extern "system" fn dummy_vkEnumerateInstanceVersion(_: *mut uint32_t) -> VkResult {
-	panic!("Vulkan function pointer of `vkEnumerateInstanceVersion()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkEnumerateInstanceVersion"))
 }
 /// The dummy function for `vkBindBufferMemory2` from `VK_VERSION_1_1`
 extern "system" fn dummy_vkBindBufferMemory2(_: VkDevice, _: u32, _: *const VkBindBufferMemoryInfo) -> VkResult {
-	panic!("Vulkan function pointer of `vkBindBufferMemory2()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkBindBufferMemory2"))
 }
 /// The dummy function for `vkBindImageMemory2` from `VK_VERSION_1_1`
 extern "system" fn dummy_vkBindImageMemory2(_: VkDevice, _: u32, _: *const VkBindImageMemoryInfo) -> VkResult {
-	panic!("Vulkan function pointer of `vkBindImageMemory2()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkBindImageMemory2"))
 }
 /// The dummy function for `vkGetDeviceGroupPeerMemoryFeatures` from `VK_VERSION_1_1`
 extern "system" fn dummy_vkGetDeviceGroupPeerMemoryFeatures(_: VkDevice, _: u32, _: u32, _: u32, _: *mut VkPeerMemoryFeatureFlags) {
-	panic!("Vulkan function pointer of `vkGetDeviceGroupPeerMemoryFeatures()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetDeviceGroupPeerMemoryFeatures"))
 }
 /// The dummy function for `vkCmdSetDeviceMask` from `VK_VERSION_1_1`
 extern "system" fn dummy_vkCmdSetDeviceMask(_: VkCommandBuffer, _: u32) {
-	panic!("Vulkan function pointer of `vkCmdSetDeviceMask()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdSetDeviceMask"))
 }
 /// The dummy function for `vkCmdDispatchBase` from `VK_VERSION_1_1`
 extern "system" fn dummy_vkCmdDispatchBase(_: VkCommandBuffer, _: u32, _: u32, _: u32, _: u32, _: u32, _: u32) {
-	panic!("Vulkan function pointer of `vkCmdDispatchBase()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdDispatchBase"))
 }
 /// The dummy function for `vkEnumeratePhysicalDeviceGroups` from `VK_VERSION_1_1`
 extern "system" fn dummy_vkEnumeratePhysicalDeviceGroups(_: VkInstance, _: *mut uint32_t, _: *mut VkPhysicalDeviceGroupProperties) -> VkResult {
-	panic!("Vulkan function pointer of `vkEnumeratePhysicalDeviceGroups()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkEnumeratePhysicalDeviceGroups"))
 }
 /// The dummy function for `vkGetImageMemoryRequirements2` from `VK_VERSION_1_1`
 extern "system" fn dummy_vkGetImageMemoryRequirements2(_: VkDevice, _: *const VkImageMemoryRequirementsInfo2, _: *mut VkMemoryRequirements2) {
-	panic!("Vulkan function pointer of `vkGetImageMemoryRequirements2()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetImageMemoryRequirements2"))
 }
 /// The dummy function for `vkGetBufferMemoryRequirements2` from `VK_VERSION_1_1`
 extern "system" fn dummy_vkGetBufferMemoryRequirements2(_: VkDevice, _: *const VkBufferMemoryRequirementsInfo2, _: *mut VkMemoryRequirements2) {
-	panic!("Vulkan function pointer of `vkGetBufferMemoryRequirements2()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetBufferMemoryRequirements2"))
 }
 /// The dummy function for `vkGetImageSparseMemoryRequirements2` from `VK_VERSION_1_1`
 extern "system" fn dummy_vkGetImageSparseMemoryRequirements2(_: VkDevice, _: *const VkImageSparseMemoryRequirementsInfo2, _: *mut uint32_t, _: *mut VkSparseImageMemoryRequirements2) {
-	panic!("Vulkan function pointer of `vkGetImageSparseMemoryRequirements2()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetImageSparseMemoryRequirements2"))
 }
 /// The dummy function for `vkGetPhysicalDeviceFeatures2` from `VK_VERSION_1_1`
 extern "system" fn dummy_vkGetPhysicalDeviceFeatures2(_: VkPhysicalDevice, _: *mut VkPhysicalDeviceFeatures2) {
-	panic!("Vulkan function pointer of `vkGetPhysicalDeviceFeatures2()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetPhysicalDeviceFeatures2"))
 }
 /// The dummy function for `vkGetPhysicalDeviceProperties2` from `VK_VERSION_1_1`
 extern "system" fn dummy_vkGetPhysicalDeviceProperties2(_: VkPhysicalDevice, _: *mut VkPhysicalDeviceProperties2) {
-	panic!("Vulkan function pointer of `vkGetPhysicalDeviceProperties2()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetPhysicalDeviceProperties2"))
 }
 /// The dummy function for `vkGetPhysicalDeviceFormatProperties2` from `VK_VERSION_1_1`
 extern "system" fn dummy_vkGetPhysicalDeviceFormatProperties2(_: VkPhysicalDevice, _: VkFormat, _: *mut VkFormatProperties2) {
-	panic!("Vulkan function pointer of `vkGetPhysicalDeviceFormatProperties2()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetPhysicalDeviceFormatProperties2"))
 }
 /// The dummy function for `vkGetPhysicalDeviceImageFormatProperties2` from `VK_VERSION_1_1`
 extern "system" fn dummy_vkGetPhysicalDeviceImageFormatProperties2(_: VkPhysicalDevice, _: *const VkPhysicalDeviceImageFormatInfo2, _: *mut VkImageFormatProperties2) -> VkResult {
-	panic!("Vulkan function pointer of `vkGetPhysicalDeviceImageFormatProperties2()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetPhysicalDeviceImageFormatProperties2"))
 }
 /// The dummy function for `vkGetPhysicalDeviceQueueFamilyProperties2` from `VK_VERSION_1_1`
 extern "system" fn dummy_vkGetPhysicalDeviceQueueFamilyProperties2(_: VkPhysicalDevice, _: *mut uint32_t, _: *mut VkQueueFamilyProperties2) {
-	panic!("Vulkan function pointer of `vkGetPhysicalDeviceQueueFamilyProperties2()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetPhysicalDeviceQueueFamilyProperties2"))
 }
 /// The dummy function for `vkGetPhysicalDeviceMemoryProperties2` from `VK_VERSION_1_1`
 extern "system" fn dummy_vkGetPhysicalDeviceMemoryProperties2(_: VkPhysicalDevice, _: *mut VkPhysicalDeviceMemoryProperties2) {
-	panic!("Vulkan function pointer of `vkGetPhysicalDeviceMemoryProperties2()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetPhysicalDeviceMemoryProperties2"))
 }
 /// The dummy function for `vkGetPhysicalDeviceSparseImageFormatProperties2` from `VK_VERSION_1_1`
 extern "system" fn dummy_vkGetPhysicalDeviceSparseImageFormatProperties2(_: VkPhysicalDevice, _: *const VkPhysicalDeviceSparseImageFormatInfo2, _: *mut uint32_t, _: *mut VkSparseImageFormatProperties2) {
-	panic!("Vulkan function pointer of `vkGetPhysicalDeviceSparseImageFormatProperties2()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetPhysicalDeviceSparseImageFormatProperties2"))
 }
 /// The dummy function for `vkTrimCommandPool` from `VK_VERSION_1_1`
 extern "system" fn dummy_vkTrimCommandPool(_: VkDevice, _: VkCommandPool, _: VkCommandPoolTrimFlags) {
-	panic!("Vulkan function pointer of `vkTrimCommandPool()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkTrimCommandPool"))
 }
 /// The dummy function for `vkGetDeviceQueue2` from `VK_VERSION_1_1`
 extern "system" fn dummy_vkGetDeviceQueue2(_: VkDevice, _: *const VkDeviceQueueInfo2, _: *mut VkQueue) {
-	panic!("Vulkan function pointer of `vkGetDeviceQueue2()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetDeviceQueue2"))
 }
 /// The dummy function for `vkCreateSamplerYcbcrConversion` from `VK_VERSION_1_1`
 extern "system" fn dummy_vkCreateSamplerYcbcrConversion(_: VkDevice, _: *const VkSamplerYcbcrConversionCreateInfo, _: *const VkAllocationCallbacks, _: *mut VkSamplerYcbcrConversion) -> VkResult {
-	panic!("Vulkan function pointer of `vkCreateSamplerYcbcrConversion()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCreateSamplerYcbcrConversion"))
 }
 /// The dummy function for `vkDestroySamplerYcbcrConversion` from `VK_VERSION_1_1`
 extern "system" fn dummy_vkDestroySamplerYcbcrConversion(_: VkDevice, _: VkSamplerYcbcrConversion, _: *const VkAllocationCallbacks) {
-	panic!("Vulkan function pointer of `vkDestroySamplerYcbcrConversion()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkDestroySamplerYcbcrConversion"))
 }
 /// The dummy function for `vkCreateDescriptorUpdateTemplate` from `VK_VERSION_1_1`
 extern "system" fn dummy_vkCreateDescriptorUpdateTemplate(_: VkDevice, _: *const VkDescriptorUpdateTemplateCreateInfo, _: *const VkAllocationCallbacks, _: *mut VkDescriptorUpdateTemplate) -> VkResult {
-	panic!("Vulkan function pointer of `vkCreateDescriptorUpdateTemplate()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCreateDescriptorUpdateTemplate"))
 }
 /// The dummy function for `vkDestroyDescriptorUpdateTemplate` from `VK_VERSION_1_1`
 extern "system" fn dummy_vkDestroyDescriptorUpdateTemplate(_: VkDevice, _: VkDescriptorUpdateTemplate, _: *const VkAllocationCallbacks) {
-	panic!("Vulkan function pointer of `vkDestroyDescriptorUpdateTemplate()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkDestroyDescriptorUpdateTemplate"))
 }
 /// The dummy function for `vkUpdateDescriptorSetWithTemplate` from `VK_VERSION_1_1`
 extern "system" fn dummy_vkUpdateDescriptorSetWithTemplate(_: VkDevice, _: VkDescriptorSet, _: VkDescriptorUpdateTemplate, _: *const c_void) {
-	panic!("Vulkan function pointer of `vkUpdateDescriptorSetWithTemplate()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkUpdateDescriptorSetWithTemplate"))
 }
 /// The dummy function for `vkGetPhysicalDeviceExternalBufferProperties` from `VK_VERSION_1_1`
 extern "system" fn dummy_vkGetPhysicalDeviceExternalBufferProperties(_: VkPhysicalDevice, _: *const VkPhysicalDeviceExternalBufferInfo, _: *mut VkExternalBufferProperties) {
-	panic!("Vulkan function pointer of `vkGetPhysicalDeviceExternalBufferProperties()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetPhysicalDeviceExternalBufferProperties"))
 }
 /// The dummy function for `vkGetPhysicalDeviceExternalFenceProperties` from `VK_VERSION_1_1`
 extern "system" fn dummy_vkGetPhysicalDeviceExternalFenceProperties(_: VkPhysicalDevice, _: *const VkPhysicalDeviceExternalFenceInfo, _: *mut VkExternalFenceProperties) {
-	panic!("Vulkan function pointer of `vkGetPhysicalDeviceExternalFenceProperties()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetPhysicalDeviceExternalFenceProperties"))
 }
 /// The dummy function for `vkGetPhysicalDeviceExternalSemaphoreProperties` from `VK_VERSION_1_1`
 extern "system" fn dummy_vkGetPhysicalDeviceExternalSemaphoreProperties(_: VkPhysicalDevice, _: *const VkPhysicalDeviceExternalSemaphoreInfo, _: *mut VkExternalSemaphoreProperties) {
-	panic!("Vulkan function pointer of `vkGetPhysicalDeviceExternalSemaphoreProperties()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetPhysicalDeviceExternalSemaphoreProperties"))
 }
 /// The dummy function for `vkGetDescriptorSetLayoutSupport` from `VK_VERSION_1_1`
 extern "system" fn dummy_vkGetDescriptorSetLayoutSupport(_: VkDevice, _: *const VkDescriptorSetLayoutCreateInfo, _: *mut VkDescriptorSetLayoutSupport) {
-	panic!("Vulkan function pointer of `vkGetDescriptorSetLayoutSupport()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetDescriptorSetLayoutSupport"))
 }
 /// trait for `VK_VERSION_1_1`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_VERSION_1_1.html>
@@ -8743,79 +8747,79 @@ impl VK_VERSION_1_1 for Vulkan_VERSION_1_1 {
 		convert_result("vkBindImageMemory2", catch_unwind(||((self.vk_bind_image_memory2)(device, bindInfoCount, pBindInfos))))
 	}
 	fn vkGetDeviceGroupPeerMemoryFeatures(&self, device: VkDevice, heapIndex: u32, localDeviceIndex: u32, remoteDeviceIndex: u32, pPeerMemoryFeatures: *mut VkPeerMemoryFeatureFlags) -> Result<()> {
-		process_catch("vkGetDeviceGroupPeerMemoryFeatures", catch_unwind(||((self.vk_get_device_group_peer_memory_features)(device, heapIndex, localDeviceIndex, remoteDeviceIndex, pPeerMemoryFeatures))))
+		process_catch(catch_unwind(||((self.vk_get_device_group_peer_memory_features)(device, heapIndex, localDeviceIndex, remoteDeviceIndex, pPeerMemoryFeatures))))
 	}
 	fn vkCmdSetDeviceMask(&self, commandBuffer: VkCommandBuffer, deviceMask: u32) -> Result<()> {
-		process_catch("vkCmdSetDeviceMask", catch_unwind(||((self.vk_cmd_set_device_mask)(commandBuffer, deviceMask))))
+		process_catch(catch_unwind(||((self.vk_cmd_set_device_mask)(commandBuffer, deviceMask))))
 	}
 	fn vkCmdDispatchBase(&self, commandBuffer: VkCommandBuffer, baseGroupX: u32, baseGroupY: u32, baseGroupZ: u32, groupCountX: u32, groupCountY: u32, groupCountZ: u32) -> Result<()> {
-		process_catch("vkCmdDispatchBase", catch_unwind(||((self.vk_cmd_dispatch_base)(commandBuffer, baseGroupX, baseGroupY, baseGroupZ, groupCountX, groupCountY, groupCountZ))))
+		process_catch(catch_unwind(||((self.vk_cmd_dispatch_base)(commandBuffer, baseGroupX, baseGroupY, baseGroupZ, groupCountX, groupCountY, groupCountZ))))
 	}
 	fn vkEnumeratePhysicalDeviceGroups(&self, instance: VkInstance, pPhysicalDeviceGroupCount: *mut uint32_t, pPhysicalDeviceGroupProperties: *mut VkPhysicalDeviceGroupProperties) -> Result<()> {
 		convert_result("vkEnumeratePhysicalDeviceGroups", catch_unwind(||((self.vk_enumerate_physical_device_groups)(instance, pPhysicalDeviceGroupCount, pPhysicalDeviceGroupProperties))))
 	}
 	fn vkGetImageMemoryRequirements2(&self, device: VkDevice, pInfo: *const VkImageMemoryRequirementsInfo2, pMemoryRequirements: *mut VkMemoryRequirements2) -> Result<()> {
-		process_catch("vkGetImageMemoryRequirements2", catch_unwind(||((self.vk_get_image_memory_requirements2)(device, pInfo, pMemoryRequirements))))
+		process_catch(catch_unwind(||((self.vk_get_image_memory_requirements2)(device, pInfo, pMemoryRequirements))))
 	}
 	fn vkGetBufferMemoryRequirements2(&self, device: VkDevice, pInfo: *const VkBufferMemoryRequirementsInfo2, pMemoryRequirements: *mut VkMemoryRequirements2) -> Result<()> {
-		process_catch("vkGetBufferMemoryRequirements2", catch_unwind(||((self.vk_get_buffer_memory_requirements2)(device, pInfo, pMemoryRequirements))))
+		process_catch(catch_unwind(||((self.vk_get_buffer_memory_requirements2)(device, pInfo, pMemoryRequirements))))
 	}
 	fn vkGetImageSparseMemoryRequirements2(&self, device: VkDevice, pInfo: *const VkImageSparseMemoryRequirementsInfo2, pSparseMemoryRequirementCount: *mut uint32_t, pSparseMemoryRequirements: *mut VkSparseImageMemoryRequirements2) -> Result<()> {
-		process_catch("vkGetImageSparseMemoryRequirements2", catch_unwind(||((self.vk_get_image_sparse_memory_requirements2)(device, pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements))))
+		process_catch(catch_unwind(||((self.vk_get_image_sparse_memory_requirements2)(device, pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements))))
 	}
 	fn vkGetPhysicalDeviceFeatures2(&self, physicalDevice: VkPhysicalDevice, pFeatures: *mut VkPhysicalDeviceFeatures2) -> Result<()> {
-		process_catch("vkGetPhysicalDeviceFeatures2", catch_unwind(||((self.vk_get_physical_device_features2)(physicalDevice, pFeatures))))
+		process_catch(catch_unwind(||((self.vk_get_physical_device_features2)(physicalDevice, pFeatures))))
 	}
 	fn vkGetPhysicalDeviceProperties2(&self, physicalDevice: VkPhysicalDevice, pProperties: *mut VkPhysicalDeviceProperties2) -> Result<()> {
-		process_catch("vkGetPhysicalDeviceProperties2", catch_unwind(||((self.vk_get_physical_device_properties2)(physicalDevice, pProperties))))
+		process_catch(catch_unwind(||((self.vk_get_physical_device_properties2)(physicalDevice, pProperties))))
 	}
 	fn vkGetPhysicalDeviceFormatProperties2(&self, physicalDevice: VkPhysicalDevice, format: VkFormat, pFormatProperties: *mut VkFormatProperties2) -> Result<()> {
-		process_catch("vkGetPhysicalDeviceFormatProperties2", catch_unwind(||((self.vk_get_physical_device_format_properties2)(physicalDevice, format, pFormatProperties))))
+		process_catch(catch_unwind(||((self.vk_get_physical_device_format_properties2)(physicalDevice, format, pFormatProperties))))
 	}
 	fn vkGetPhysicalDeviceImageFormatProperties2(&self, physicalDevice: VkPhysicalDevice, pImageFormatInfo: *const VkPhysicalDeviceImageFormatInfo2, pImageFormatProperties: *mut VkImageFormatProperties2) -> Result<()> {
 		convert_result("vkGetPhysicalDeviceImageFormatProperties2", catch_unwind(||((self.vk_get_physical_device_image_format_properties2)(physicalDevice, pImageFormatInfo, pImageFormatProperties))))
 	}
 	fn vkGetPhysicalDeviceQueueFamilyProperties2(&self, physicalDevice: VkPhysicalDevice, pQueueFamilyPropertyCount: *mut uint32_t, pQueueFamilyProperties: *mut VkQueueFamilyProperties2) -> Result<()> {
-		process_catch("vkGetPhysicalDeviceQueueFamilyProperties2", catch_unwind(||((self.vk_get_physical_device_queue_family_properties2)(physicalDevice, pQueueFamilyPropertyCount, pQueueFamilyProperties))))
+		process_catch(catch_unwind(||((self.vk_get_physical_device_queue_family_properties2)(physicalDevice, pQueueFamilyPropertyCount, pQueueFamilyProperties))))
 	}
 	fn vkGetPhysicalDeviceMemoryProperties2(&self, physicalDevice: VkPhysicalDevice, pMemoryProperties: *mut VkPhysicalDeviceMemoryProperties2) -> Result<()> {
-		process_catch("vkGetPhysicalDeviceMemoryProperties2", catch_unwind(||((self.vk_get_physical_device_memory_properties2)(physicalDevice, pMemoryProperties))))
+		process_catch(catch_unwind(||((self.vk_get_physical_device_memory_properties2)(physicalDevice, pMemoryProperties))))
 	}
 	fn vkGetPhysicalDeviceSparseImageFormatProperties2(&self, physicalDevice: VkPhysicalDevice, pFormatInfo: *const VkPhysicalDeviceSparseImageFormatInfo2, pPropertyCount: *mut uint32_t, pProperties: *mut VkSparseImageFormatProperties2) -> Result<()> {
-		process_catch("vkGetPhysicalDeviceSparseImageFormatProperties2", catch_unwind(||((self.vk_get_physical_device_sparse_image_format_properties2)(physicalDevice, pFormatInfo, pPropertyCount, pProperties))))
+		process_catch(catch_unwind(||((self.vk_get_physical_device_sparse_image_format_properties2)(physicalDevice, pFormatInfo, pPropertyCount, pProperties))))
 	}
 	fn vkTrimCommandPool(&self, device: VkDevice, commandPool: VkCommandPool, flags: VkCommandPoolTrimFlags) -> Result<()> {
-		process_catch("vkTrimCommandPool", catch_unwind(||((self.vk_trim_command_pool)(device, commandPool, flags))))
+		process_catch(catch_unwind(||((self.vk_trim_command_pool)(device, commandPool, flags))))
 	}
 	fn vkGetDeviceQueue2(&self, device: VkDevice, pQueueInfo: *const VkDeviceQueueInfo2, pQueue: *mut VkQueue) -> Result<()> {
-		process_catch("vkGetDeviceQueue2", catch_unwind(||((self.vk_get_device_queue2)(device, pQueueInfo, pQueue))))
+		process_catch(catch_unwind(||((self.vk_get_device_queue2)(device, pQueueInfo, pQueue))))
 	}
 	fn vkCreateSamplerYcbcrConversion(&self, device: VkDevice, pCreateInfo: *const VkSamplerYcbcrConversionCreateInfo, pAllocator: *const VkAllocationCallbacks, pYcbcrConversion: *mut VkSamplerYcbcrConversion) -> Result<()> {
 		convert_result("vkCreateSamplerYcbcrConversion", catch_unwind(||((self.vk_create_sampler_ycbcr_conversion)(device, pCreateInfo, pAllocator, pYcbcrConversion))))
 	}
 	fn vkDestroySamplerYcbcrConversion(&self, device: VkDevice, ycbcrConversion: VkSamplerYcbcrConversion, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch("vkDestroySamplerYcbcrConversion", catch_unwind(||((self.vk_destroy_sampler_ycbcr_conversion)(device, ycbcrConversion, pAllocator))))
+		process_catch(catch_unwind(||((self.vk_destroy_sampler_ycbcr_conversion)(device, ycbcrConversion, pAllocator))))
 	}
 	fn vkCreateDescriptorUpdateTemplate(&self, device: VkDevice, pCreateInfo: *const VkDescriptorUpdateTemplateCreateInfo, pAllocator: *const VkAllocationCallbacks, pDescriptorUpdateTemplate: *mut VkDescriptorUpdateTemplate) -> Result<()> {
 		convert_result("vkCreateDescriptorUpdateTemplate", catch_unwind(||((self.vk_create_descriptor_update_template)(device, pCreateInfo, pAllocator, pDescriptorUpdateTemplate))))
 	}
 	fn vkDestroyDescriptorUpdateTemplate(&self, device: VkDevice, descriptorUpdateTemplate: VkDescriptorUpdateTemplate, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch("vkDestroyDescriptorUpdateTemplate", catch_unwind(||((self.vk_destroy_descriptor_update_template)(device, descriptorUpdateTemplate, pAllocator))))
+		process_catch(catch_unwind(||((self.vk_destroy_descriptor_update_template)(device, descriptorUpdateTemplate, pAllocator))))
 	}
 	fn vkUpdateDescriptorSetWithTemplate(&self, device: VkDevice, descriptorSet: VkDescriptorSet, descriptorUpdateTemplate: VkDescriptorUpdateTemplate, pData: *const c_void) -> Result<()> {
-		process_catch("vkUpdateDescriptorSetWithTemplate", catch_unwind(||((self.vk_update_descriptor_set_with_template)(device, descriptorSet, descriptorUpdateTemplate, pData))))
+		process_catch(catch_unwind(||((self.vk_update_descriptor_set_with_template)(device, descriptorSet, descriptorUpdateTemplate, pData))))
 	}
 	fn vkGetPhysicalDeviceExternalBufferProperties(&self, physicalDevice: VkPhysicalDevice, pExternalBufferInfo: *const VkPhysicalDeviceExternalBufferInfo, pExternalBufferProperties: *mut VkExternalBufferProperties) -> Result<()> {
-		process_catch("vkGetPhysicalDeviceExternalBufferProperties", catch_unwind(||((self.vk_get_physical_device_external_buffer_properties)(physicalDevice, pExternalBufferInfo, pExternalBufferProperties))))
+		process_catch(catch_unwind(||((self.vk_get_physical_device_external_buffer_properties)(physicalDevice, pExternalBufferInfo, pExternalBufferProperties))))
 	}
 	fn vkGetPhysicalDeviceExternalFenceProperties(&self, physicalDevice: VkPhysicalDevice, pExternalFenceInfo: *const VkPhysicalDeviceExternalFenceInfo, pExternalFenceProperties: *mut VkExternalFenceProperties) -> Result<()> {
-		process_catch("vkGetPhysicalDeviceExternalFenceProperties", catch_unwind(||((self.vk_get_physical_device_external_fence_properties)(physicalDevice, pExternalFenceInfo, pExternalFenceProperties))))
+		process_catch(catch_unwind(||((self.vk_get_physical_device_external_fence_properties)(physicalDevice, pExternalFenceInfo, pExternalFenceProperties))))
 	}
 	fn vkGetPhysicalDeviceExternalSemaphoreProperties(&self, physicalDevice: VkPhysicalDevice, pExternalSemaphoreInfo: *const VkPhysicalDeviceExternalSemaphoreInfo, pExternalSemaphoreProperties: *mut VkExternalSemaphoreProperties) -> Result<()> {
-		process_catch("vkGetPhysicalDeviceExternalSemaphoreProperties", catch_unwind(||((self.vk_get_physical_device_external_semaphore_properties)(physicalDevice, pExternalSemaphoreInfo, pExternalSemaphoreProperties))))
+		process_catch(catch_unwind(||((self.vk_get_physical_device_external_semaphore_properties)(physicalDevice, pExternalSemaphoreInfo, pExternalSemaphoreProperties))))
 	}
 	fn vkGetDescriptorSetLayoutSupport(&self, device: VkDevice, pCreateInfo: *const VkDescriptorSetLayoutCreateInfo, pSupport: *mut VkDescriptorSetLayoutSupport) -> Result<()> {
-		process_catch("vkGetDescriptorSetLayoutSupport", catch_unwind(||((self.vk_get_descriptor_set_layout_support)(device, pCreateInfo, pSupport))))
+		process_catch(catch_unwind(||((self.vk_get_descriptor_set_layout_support)(device, pCreateInfo, pSupport))))
 	}
 }
 impl Default for Vulkan_VERSION_1_1 {
@@ -9796,55 +9800,55 @@ type PFN_vkGetBufferOpaqueCaptureAddress = extern "system" fn(device: VkDevice, 
 type PFN_vkGetDeviceMemoryOpaqueCaptureAddress = extern "system" fn(device: VkDevice, pInfo: *const VkDeviceMemoryOpaqueCaptureAddressInfo) -> u64;
 /// The dummy function for `vkCmdDrawIndirectCount` from `VK_VERSION_1_2`
 extern "system" fn dummy_vkCmdDrawIndirectCount(_: VkCommandBuffer, _: VkBuffer, _: VkDeviceSize, _: VkBuffer, _: VkDeviceSize, _: u32, _: u32) {
-	panic!("Vulkan function pointer of `vkCmdDrawIndirectCount()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdDrawIndirectCount"))
 }
 /// The dummy function for `vkCmdDrawIndexedIndirectCount` from `VK_VERSION_1_2`
 extern "system" fn dummy_vkCmdDrawIndexedIndirectCount(_: VkCommandBuffer, _: VkBuffer, _: VkDeviceSize, _: VkBuffer, _: VkDeviceSize, _: u32, _: u32) {
-	panic!("Vulkan function pointer of `vkCmdDrawIndexedIndirectCount()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdDrawIndexedIndirectCount"))
 }
 /// The dummy function for `vkCreateRenderPass2` from `VK_VERSION_1_2`
 extern "system" fn dummy_vkCreateRenderPass2(_: VkDevice, _: *const VkRenderPassCreateInfo2, _: *const VkAllocationCallbacks, _: *mut VkRenderPass) -> VkResult {
-	panic!("Vulkan function pointer of `vkCreateRenderPass2()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCreateRenderPass2"))
 }
 /// The dummy function for `vkCmdBeginRenderPass2` from `VK_VERSION_1_2`
 extern "system" fn dummy_vkCmdBeginRenderPass2(_: VkCommandBuffer, _: *const VkRenderPassBeginInfo, _: *const VkSubpassBeginInfo) {
-	panic!("Vulkan function pointer of `vkCmdBeginRenderPass2()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdBeginRenderPass2"))
 }
 /// The dummy function for `vkCmdNextSubpass2` from `VK_VERSION_1_2`
 extern "system" fn dummy_vkCmdNextSubpass2(_: VkCommandBuffer, _: *const VkSubpassBeginInfo, _: *const VkSubpassEndInfo) {
-	panic!("Vulkan function pointer of `vkCmdNextSubpass2()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdNextSubpass2"))
 }
 /// The dummy function for `vkCmdEndRenderPass2` from `VK_VERSION_1_2`
 extern "system" fn dummy_vkCmdEndRenderPass2(_: VkCommandBuffer, _: *const VkSubpassEndInfo) {
-	panic!("Vulkan function pointer of `vkCmdEndRenderPass2()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdEndRenderPass2"))
 }
 /// The dummy function for `vkResetQueryPool` from `VK_VERSION_1_2`
 extern "system" fn dummy_vkResetQueryPool(_: VkDevice, _: VkQueryPool, _: u32, _: u32) {
-	panic!("Vulkan function pointer of `vkResetQueryPool()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkResetQueryPool"))
 }
 /// The dummy function for `vkGetSemaphoreCounterValue` from `VK_VERSION_1_2`
 extern "system" fn dummy_vkGetSemaphoreCounterValue(_: VkDevice, _: VkSemaphore, _: *mut uint64_t) -> VkResult {
-	panic!("Vulkan function pointer of `vkGetSemaphoreCounterValue()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetSemaphoreCounterValue"))
 }
 /// The dummy function for `vkWaitSemaphores` from `VK_VERSION_1_2`
 extern "system" fn dummy_vkWaitSemaphores(_: VkDevice, _: *const VkSemaphoreWaitInfo, _: u64) -> VkResult {
-	panic!("Vulkan function pointer of `vkWaitSemaphores()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkWaitSemaphores"))
 }
 /// The dummy function for `vkSignalSemaphore` from `VK_VERSION_1_2`
 extern "system" fn dummy_vkSignalSemaphore(_: VkDevice, _: *const VkSemaphoreSignalInfo) -> VkResult {
-	panic!("Vulkan function pointer of `vkSignalSemaphore()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkSignalSemaphore"))
 }
 /// The dummy function for `vkGetBufferDeviceAddress` from `VK_VERSION_1_2`
 extern "system" fn dummy_vkGetBufferDeviceAddress(_: VkDevice, _: *const VkBufferDeviceAddressInfo) -> VkDeviceAddress {
-	panic!("Vulkan function pointer of `vkGetBufferDeviceAddress()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetBufferDeviceAddress"))
 }
 /// The dummy function for `vkGetBufferOpaqueCaptureAddress` from `VK_VERSION_1_2`
 extern "system" fn dummy_vkGetBufferOpaqueCaptureAddress(_: VkDevice, _: *const VkBufferDeviceAddressInfo) -> u64 {
-	panic!("Vulkan function pointer of `vkGetBufferOpaqueCaptureAddress()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetBufferOpaqueCaptureAddress"))
 }
 /// The dummy function for `vkGetDeviceMemoryOpaqueCaptureAddress` from `VK_VERSION_1_2`
 extern "system" fn dummy_vkGetDeviceMemoryOpaqueCaptureAddress(_: VkDevice, _: *const VkDeviceMemoryOpaqueCaptureAddressInfo) -> u64 {
-	panic!("Vulkan function pointer of `vkGetDeviceMemoryOpaqueCaptureAddress()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetDeviceMemoryOpaqueCaptureAddress"))
 }
 /// trait for `VK_VERSION_1_2`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_VERSION_1_2.html>
@@ -9895,25 +9899,25 @@ pub struct Vulkan_VERSION_1_2 {
 }
 impl VK_VERSION_1_2 for Vulkan_VERSION_1_2 {
 	fn vkCmdDrawIndirectCount(&self, commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize, countBuffer: VkBuffer, countBufferOffset: VkDeviceSize, maxDrawCount: u32, stride: u32) -> Result<()> {
-		process_catch("vkCmdDrawIndirectCount", catch_unwind(||((self.vk_cmd_draw_indirect_count)(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride))))
+		process_catch(catch_unwind(||((self.vk_cmd_draw_indirect_count)(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride))))
 	}
 	fn vkCmdDrawIndexedIndirectCount(&self, commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize, countBuffer: VkBuffer, countBufferOffset: VkDeviceSize, maxDrawCount: u32, stride: u32) -> Result<()> {
-		process_catch("vkCmdDrawIndexedIndirectCount", catch_unwind(||((self.vk_cmd_draw_indexed_indirect_count)(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride))))
+		process_catch(catch_unwind(||((self.vk_cmd_draw_indexed_indirect_count)(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride))))
 	}
 	fn vkCreateRenderPass2(&self, device: VkDevice, pCreateInfo: *const VkRenderPassCreateInfo2, pAllocator: *const VkAllocationCallbacks, pRenderPass: *mut VkRenderPass) -> Result<()> {
 		convert_result("vkCreateRenderPass2", catch_unwind(||((self.vk_create_render_pass2)(device, pCreateInfo, pAllocator, pRenderPass))))
 	}
 	fn vkCmdBeginRenderPass2(&self, commandBuffer: VkCommandBuffer, pRenderPassBegin: *const VkRenderPassBeginInfo, pSubpassBeginInfo: *const VkSubpassBeginInfo) -> Result<()> {
-		process_catch("vkCmdBeginRenderPass2", catch_unwind(||((self.vk_cmd_begin_render_pass2)(commandBuffer, pRenderPassBegin, pSubpassBeginInfo))))
+		process_catch(catch_unwind(||((self.vk_cmd_begin_render_pass2)(commandBuffer, pRenderPassBegin, pSubpassBeginInfo))))
 	}
 	fn vkCmdNextSubpass2(&self, commandBuffer: VkCommandBuffer, pSubpassBeginInfo: *const VkSubpassBeginInfo, pSubpassEndInfo: *const VkSubpassEndInfo) -> Result<()> {
-		process_catch("vkCmdNextSubpass2", catch_unwind(||((self.vk_cmd_next_subpass2)(commandBuffer, pSubpassBeginInfo, pSubpassEndInfo))))
+		process_catch(catch_unwind(||((self.vk_cmd_next_subpass2)(commandBuffer, pSubpassBeginInfo, pSubpassEndInfo))))
 	}
 	fn vkCmdEndRenderPass2(&self, commandBuffer: VkCommandBuffer, pSubpassEndInfo: *const VkSubpassEndInfo) -> Result<()> {
-		process_catch("vkCmdEndRenderPass2", catch_unwind(||((self.vk_cmd_end_render_pass2)(commandBuffer, pSubpassEndInfo))))
+		process_catch(catch_unwind(||((self.vk_cmd_end_render_pass2)(commandBuffer, pSubpassEndInfo))))
 	}
 	fn vkResetQueryPool(&self, device: VkDevice, queryPool: VkQueryPool, firstQuery: u32, queryCount: u32) -> Result<()> {
-		process_catch("vkResetQueryPool", catch_unwind(||((self.vk_reset_query_pool)(device, queryPool, firstQuery, queryCount))))
+		process_catch(catch_unwind(||((self.vk_reset_query_pool)(device, queryPool, firstQuery, queryCount))))
 	}
 	fn vkGetSemaphoreCounterValue(&self, device: VkDevice, semaphore: VkSemaphore, pValue: *mut uint64_t) -> Result<()> {
 		convert_result("vkGetSemaphoreCounterValue", catch_unwind(||((self.vk_get_semaphore_counter_value)(device, semaphore, pValue))))
@@ -9925,13 +9929,13 @@ impl VK_VERSION_1_2 for Vulkan_VERSION_1_2 {
 		convert_result("vkSignalSemaphore", catch_unwind(||((self.vk_signal_semaphore)(device, pSignalInfo))))
 	}
 	fn vkGetBufferDeviceAddress(&self, device: VkDevice, pInfo: *const VkBufferDeviceAddressInfo) -> Result<VkDeviceAddress> {
-		process_catch("vkGetBufferDeviceAddress", catch_unwind(||((self.vk_get_buffer_device_address)(device, pInfo))))
+		process_catch(catch_unwind(||((self.vk_get_buffer_device_address)(device, pInfo))))
 	}
 	fn vkGetBufferOpaqueCaptureAddress(&self, device: VkDevice, pInfo: *const VkBufferDeviceAddressInfo) -> Result<u64> {
-		process_catch("vkGetBufferOpaqueCaptureAddress", catch_unwind(||((self.vk_get_buffer_opaque_capture_address)(device, pInfo))))
+		process_catch(catch_unwind(||((self.vk_get_buffer_opaque_capture_address)(device, pInfo))))
 	}
 	fn vkGetDeviceMemoryOpaqueCaptureAddress(&self, device: VkDevice, pInfo: *const VkDeviceMemoryOpaqueCaptureAddressInfo) -> Result<u64> {
-		process_catch("vkGetDeviceMemoryOpaqueCaptureAddress", catch_unwind(||((self.vk_get_device_memory_opaque_capture_address)(device, pInfo))))
+		process_catch(catch_unwind(||((self.vk_get_device_memory_opaque_capture_address)(device, pInfo))))
 	}
 }
 impl Default for Vulkan_VERSION_1_2 {
@@ -10885,151 +10889,151 @@ type PFN_vkGetDeviceImageMemoryRequirements = extern "system" fn(device: VkDevic
 type PFN_vkGetDeviceImageSparseMemoryRequirements = extern "system" fn(device: VkDevice, pInfo: *const VkDeviceImageMemoryRequirements, pSparseMemoryRequirementCount: *mut uint32_t, pSparseMemoryRequirements: *mut VkSparseImageMemoryRequirements2);
 /// The dummy function for `vkGetPhysicalDeviceToolProperties` from `VK_VERSION_1_3`
 extern "system" fn dummy_vkGetPhysicalDeviceToolProperties(_: VkPhysicalDevice, _: *mut uint32_t, _: *mut VkPhysicalDeviceToolProperties) -> VkResult {
-	panic!("Vulkan function pointer of `vkGetPhysicalDeviceToolProperties()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetPhysicalDeviceToolProperties"))
 }
 /// The dummy function for `vkCreatePrivateDataSlot` from `VK_VERSION_1_3`
 extern "system" fn dummy_vkCreatePrivateDataSlot(_: VkDevice, _: *const VkPrivateDataSlotCreateInfo, _: *const VkAllocationCallbacks, _: *mut VkPrivateDataSlot) -> VkResult {
-	panic!("Vulkan function pointer of `vkCreatePrivateDataSlot()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCreatePrivateDataSlot"))
 }
 /// The dummy function for `vkDestroyPrivateDataSlot` from `VK_VERSION_1_3`
 extern "system" fn dummy_vkDestroyPrivateDataSlot(_: VkDevice, _: VkPrivateDataSlot, _: *const VkAllocationCallbacks) {
-	panic!("Vulkan function pointer of `vkDestroyPrivateDataSlot()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkDestroyPrivateDataSlot"))
 }
 /// The dummy function for `vkSetPrivateData` from `VK_VERSION_1_3`
 extern "system" fn dummy_vkSetPrivateData(_: VkDevice, _: VkObjectType, _: u64, _: VkPrivateDataSlot, _: u64) -> VkResult {
-	panic!("Vulkan function pointer of `vkSetPrivateData()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkSetPrivateData"))
 }
 /// The dummy function for `vkGetPrivateData` from `VK_VERSION_1_3`
 extern "system" fn dummy_vkGetPrivateData(_: VkDevice, _: VkObjectType, _: u64, _: VkPrivateDataSlot, _: *mut uint64_t) {
-	panic!("Vulkan function pointer of `vkGetPrivateData()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetPrivateData"))
 }
 /// The dummy function for `vkCmdSetEvent2` from `VK_VERSION_1_3`
 extern "system" fn dummy_vkCmdSetEvent2(_: VkCommandBuffer, _: VkEvent, _: *const VkDependencyInfo) {
-	panic!("Vulkan function pointer of `vkCmdSetEvent2()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdSetEvent2"))
 }
 /// The dummy function for `vkCmdResetEvent2` from `VK_VERSION_1_3`
 extern "system" fn dummy_vkCmdResetEvent2(_: VkCommandBuffer, _: VkEvent, _: VkPipelineStageFlags2) {
-	panic!("Vulkan function pointer of `vkCmdResetEvent2()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdResetEvent2"))
 }
 /// The dummy function for `vkCmdWaitEvents2` from `VK_VERSION_1_3`
 extern "system" fn dummy_vkCmdWaitEvents2(_: VkCommandBuffer, _: u32, _: *const VkEvent, _: *const VkDependencyInfo) {
-	panic!("Vulkan function pointer of `vkCmdWaitEvents2()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdWaitEvents2"))
 }
 /// The dummy function for `vkCmdPipelineBarrier2` from `VK_VERSION_1_3`
 extern "system" fn dummy_vkCmdPipelineBarrier2(_: VkCommandBuffer, _: *const VkDependencyInfo) {
-	panic!("Vulkan function pointer of `vkCmdPipelineBarrier2()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdPipelineBarrier2"))
 }
 /// The dummy function for `vkCmdWriteTimestamp2` from `VK_VERSION_1_3`
 extern "system" fn dummy_vkCmdWriteTimestamp2(_: VkCommandBuffer, _: VkPipelineStageFlags2, _: VkQueryPool, _: u32) {
-	panic!("Vulkan function pointer of `vkCmdWriteTimestamp2()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdWriteTimestamp2"))
 }
 /// The dummy function for `vkQueueSubmit2` from `VK_VERSION_1_3`
 extern "system" fn dummy_vkQueueSubmit2(_: VkQueue, _: u32, _: *const VkSubmitInfo2, _: VkFence) -> VkResult {
-	panic!("Vulkan function pointer of `vkQueueSubmit2()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkQueueSubmit2"))
 }
 /// The dummy function for `vkCmdCopyBuffer2` from `VK_VERSION_1_3`
 extern "system" fn dummy_vkCmdCopyBuffer2(_: VkCommandBuffer, _: *const VkCopyBufferInfo2) {
-	panic!("Vulkan function pointer of `vkCmdCopyBuffer2()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdCopyBuffer2"))
 }
 /// The dummy function for `vkCmdCopyImage2` from `VK_VERSION_1_3`
 extern "system" fn dummy_vkCmdCopyImage2(_: VkCommandBuffer, _: *const VkCopyImageInfo2) {
-	panic!("Vulkan function pointer of `vkCmdCopyImage2()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdCopyImage2"))
 }
 /// The dummy function for `vkCmdCopyBufferToImage2` from `VK_VERSION_1_3`
 extern "system" fn dummy_vkCmdCopyBufferToImage2(_: VkCommandBuffer, _: *const VkCopyBufferToImageInfo2) {
-	panic!("Vulkan function pointer of `vkCmdCopyBufferToImage2()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdCopyBufferToImage2"))
 }
 /// The dummy function for `vkCmdCopyImageToBuffer2` from `VK_VERSION_1_3`
 extern "system" fn dummy_vkCmdCopyImageToBuffer2(_: VkCommandBuffer, _: *const VkCopyImageToBufferInfo2) {
-	panic!("Vulkan function pointer of `vkCmdCopyImageToBuffer2()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdCopyImageToBuffer2"))
 }
 /// The dummy function for `vkCmdBlitImage2` from `VK_VERSION_1_3`
 extern "system" fn dummy_vkCmdBlitImage2(_: VkCommandBuffer, _: *const VkBlitImageInfo2) {
-	panic!("Vulkan function pointer of `vkCmdBlitImage2()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdBlitImage2"))
 }
 /// The dummy function for `vkCmdResolveImage2` from `VK_VERSION_1_3`
 extern "system" fn dummy_vkCmdResolveImage2(_: VkCommandBuffer, _: *const VkResolveImageInfo2) {
-	panic!("Vulkan function pointer of `vkCmdResolveImage2()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdResolveImage2"))
 }
 /// The dummy function for `vkCmdBeginRendering` from `VK_VERSION_1_3`
 extern "system" fn dummy_vkCmdBeginRendering(_: VkCommandBuffer, _: *const VkRenderingInfo) {
-	panic!("Vulkan function pointer of `vkCmdBeginRendering()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdBeginRendering"))
 }
 /// The dummy function for `vkCmdEndRendering` from `VK_VERSION_1_3`
 extern "system" fn dummy_vkCmdEndRendering(_: VkCommandBuffer) {
-	panic!("Vulkan function pointer of `vkCmdEndRendering()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdEndRendering"))
 }
 /// The dummy function for `vkCmdSetCullMode` from `VK_VERSION_1_3`
 extern "system" fn dummy_vkCmdSetCullMode(_: VkCommandBuffer, _: VkCullModeFlags) {
-	panic!("Vulkan function pointer of `vkCmdSetCullMode()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdSetCullMode"))
 }
 /// The dummy function for `vkCmdSetFrontFace` from `VK_VERSION_1_3`
 extern "system" fn dummy_vkCmdSetFrontFace(_: VkCommandBuffer, _: VkFrontFace) {
-	panic!("Vulkan function pointer of `vkCmdSetFrontFace()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdSetFrontFace"))
 }
 /// The dummy function for `vkCmdSetPrimitiveTopology` from `VK_VERSION_1_3`
 extern "system" fn dummy_vkCmdSetPrimitiveTopology(_: VkCommandBuffer, _: VkPrimitiveTopology) {
-	panic!("Vulkan function pointer of `vkCmdSetPrimitiveTopology()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdSetPrimitiveTopology"))
 }
 /// The dummy function for `vkCmdSetViewportWithCount` from `VK_VERSION_1_3`
 extern "system" fn dummy_vkCmdSetViewportWithCount(_: VkCommandBuffer, _: u32, _: *const VkViewport) {
-	panic!("Vulkan function pointer of `vkCmdSetViewportWithCount()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdSetViewportWithCount"))
 }
 /// The dummy function for `vkCmdSetScissorWithCount` from `VK_VERSION_1_3`
 extern "system" fn dummy_vkCmdSetScissorWithCount(_: VkCommandBuffer, _: u32, _: *const VkRect2D) {
-	panic!("Vulkan function pointer of `vkCmdSetScissorWithCount()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdSetScissorWithCount"))
 }
 /// The dummy function for `vkCmdBindVertexBuffers2` from `VK_VERSION_1_3`
 extern "system" fn dummy_vkCmdBindVertexBuffers2(_: VkCommandBuffer, _: u32, _: u32, _: *const VkBuffer, _: *const VkDeviceSize, _: *const VkDeviceSize, _: *const VkDeviceSize) {
-	panic!("Vulkan function pointer of `vkCmdBindVertexBuffers2()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdBindVertexBuffers2"))
 }
 /// The dummy function for `vkCmdSetDepthTestEnable` from `VK_VERSION_1_3`
 extern "system" fn dummy_vkCmdSetDepthTestEnable(_: VkCommandBuffer, _: VkBool32) {
-	panic!("Vulkan function pointer of `vkCmdSetDepthTestEnable()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdSetDepthTestEnable"))
 }
 /// The dummy function for `vkCmdSetDepthWriteEnable` from `VK_VERSION_1_3`
 extern "system" fn dummy_vkCmdSetDepthWriteEnable(_: VkCommandBuffer, _: VkBool32) {
-	panic!("Vulkan function pointer of `vkCmdSetDepthWriteEnable()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdSetDepthWriteEnable"))
 }
 /// The dummy function for `vkCmdSetDepthCompareOp` from `VK_VERSION_1_3`
 extern "system" fn dummy_vkCmdSetDepthCompareOp(_: VkCommandBuffer, _: VkCompareOp) {
-	panic!("Vulkan function pointer of `vkCmdSetDepthCompareOp()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdSetDepthCompareOp"))
 }
 /// The dummy function for `vkCmdSetDepthBoundsTestEnable` from `VK_VERSION_1_3`
 extern "system" fn dummy_vkCmdSetDepthBoundsTestEnable(_: VkCommandBuffer, _: VkBool32) {
-	panic!("Vulkan function pointer of `vkCmdSetDepthBoundsTestEnable()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdSetDepthBoundsTestEnable"))
 }
 /// The dummy function for `vkCmdSetStencilTestEnable` from `VK_VERSION_1_3`
 extern "system" fn dummy_vkCmdSetStencilTestEnable(_: VkCommandBuffer, _: VkBool32) {
-	panic!("Vulkan function pointer of `vkCmdSetStencilTestEnable()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdSetStencilTestEnable"))
 }
 /// The dummy function for `vkCmdSetStencilOp` from `VK_VERSION_1_3`
 extern "system" fn dummy_vkCmdSetStencilOp(_: VkCommandBuffer, _: VkStencilFaceFlags, _: VkStencilOp, _: VkStencilOp, _: VkStencilOp, _: VkCompareOp) {
-	panic!("Vulkan function pointer of `vkCmdSetStencilOp()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdSetStencilOp"))
 }
 /// The dummy function for `vkCmdSetRasterizerDiscardEnable` from `VK_VERSION_1_3`
 extern "system" fn dummy_vkCmdSetRasterizerDiscardEnable(_: VkCommandBuffer, _: VkBool32) {
-	panic!("Vulkan function pointer of `vkCmdSetRasterizerDiscardEnable()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdSetRasterizerDiscardEnable"))
 }
 /// The dummy function for `vkCmdSetDepthBiasEnable` from `VK_VERSION_1_3`
 extern "system" fn dummy_vkCmdSetDepthBiasEnable(_: VkCommandBuffer, _: VkBool32) {
-	panic!("Vulkan function pointer of `vkCmdSetDepthBiasEnable()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdSetDepthBiasEnable"))
 }
 /// The dummy function for `vkCmdSetPrimitiveRestartEnable` from `VK_VERSION_1_3`
 extern "system" fn dummy_vkCmdSetPrimitiveRestartEnable(_: VkCommandBuffer, _: VkBool32) {
-	panic!("Vulkan function pointer of `vkCmdSetPrimitiveRestartEnable()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdSetPrimitiveRestartEnable"))
 }
 /// The dummy function for `vkGetDeviceBufferMemoryRequirements` from `VK_VERSION_1_3`
 extern "system" fn dummy_vkGetDeviceBufferMemoryRequirements(_: VkDevice, _: *const VkDeviceBufferMemoryRequirements, _: *mut VkMemoryRequirements2) {
-	panic!("Vulkan function pointer of `vkGetDeviceBufferMemoryRequirements()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetDeviceBufferMemoryRequirements"))
 }
 /// The dummy function for `vkGetDeviceImageMemoryRequirements` from `VK_VERSION_1_3`
 extern "system" fn dummy_vkGetDeviceImageMemoryRequirements(_: VkDevice, _: *const VkDeviceImageMemoryRequirements, _: *mut VkMemoryRequirements2) {
-	panic!("Vulkan function pointer of `vkGetDeviceImageMemoryRequirements()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetDeviceImageMemoryRequirements"))
 }
 /// The dummy function for `vkGetDeviceImageSparseMemoryRequirements` from `VK_VERSION_1_3`
 extern "system" fn dummy_vkGetDeviceImageSparseMemoryRequirements(_: VkDevice, _: *const VkDeviceImageMemoryRequirements, _: *mut uint32_t, _: *mut VkSparseImageMemoryRequirements2) {
-	panic!("Vulkan function pointer of `vkGetDeviceImageSparseMemoryRequirements()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetDeviceImageSparseMemoryRequirements"))
 }
 /// trait for `VK_VERSION_1_3`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_VERSION_1_3.html>
@@ -11158,109 +11162,109 @@ impl VK_VERSION_1_3 for Vulkan_VERSION_1_3 {
 		convert_result("vkCreatePrivateDataSlot", catch_unwind(||((self.vk_create_private_data_slot)(device, pCreateInfo, pAllocator, pPrivateDataSlot))))
 	}
 	fn vkDestroyPrivateDataSlot(&self, device: VkDevice, privateDataSlot: VkPrivateDataSlot, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch("vkDestroyPrivateDataSlot", catch_unwind(||((self.vk_destroy_private_data_slot)(device, privateDataSlot, pAllocator))))
+		process_catch(catch_unwind(||((self.vk_destroy_private_data_slot)(device, privateDataSlot, pAllocator))))
 	}
 	fn vkSetPrivateData(&self, device: VkDevice, objectType: VkObjectType, objectHandle: u64, privateDataSlot: VkPrivateDataSlot, data: u64) -> Result<()> {
 		convert_result("vkSetPrivateData", catch_unwind(||((self.vk_set_private_data)(device, objectType, objectHandle, privateDataSlot, data))))
 	}
 	fn vkGetPrivateData(&self, device: VkDevice, objectType: VkObjectType, objectHandle: u64, privateDataSlot: VkPrivateDataSlot, pData: *mut uint64_t) -> Result<()> {
-		process_catch("vkGetPrivateData", catch_unwind(||((self.vk_get_private_data)(device, objectType, objectHandle, privateDataSlot, pData))))
+		process_catch(catch_unwind(||((self.vk_get_private_data)(device, objectType, objectHandle, privateDataSlot, pData))))
 	}
 	fn vkCmdSetEvent2(&self, commandBuffer: VkCommandBuffer, event: VkEvent, pDependencyInfo: *const VkDependencyInfo) -> Result<()> {
-		process_catch("vkCmdSetEvent2", catch_unwind(||((self.vk_cmd_set_event2)(commandBuffer, event, pDependencyInfo))))
+		process_catch(catch_unwind(||((self.vk_cmd_set_event2)(commandBuffer, event, pDependencyInfo))))
 	}
 	fn vkCmdResetEvent2(&self, commandBuffer: VkCommandBuffer, event: VkEvent, stageMask: VkPipelineStageFlags2) -> Result<()> {
-		process_catch("vkCmdResetEvent2", catch_unwind(||((self.vk_cmd_reset_event2)(commandBuffer, event, stageMask))))
+		process_catch(catch_unwind(||((self.vk_cmd_reset_event2)(commandBuffer, event, stageMask))))
 	}
 	fn vkCmdWaitEvents2(&self, commandBuffer: VkCommandBuffer, eventCount: u32, pEvents: *const VkEvent, pDependencyInfos: *const VkDependencyInfo) -> Result<()> {
-		process_catch("vkCmdWaitEvents2", catch_unwind(||((self.vk_cmd_wait_events2)(commandBuffer, eventCount, pEvents, pDependencyInfos))))
+		process_catch(catch_unwind(||((self.vk_cmd_wait_events2)(commandBuffer, eventCount, pEvents, pDependencyInfos))))
 	}
 	fn vkCmdPipelineBarrier2(&self, commandBuffer: VkCommandBuffer, pDependencyInfo: *const VkDependencyInfo) -> Result<()> {
-		process_catch("vkCmdPipelineBarrier2", catch_unwind(||((self.vk_cmd_pipeline_barrier2)(commandBuffer, pDependencyInfo))))
+		process_catch(catch_unwind(||((self.vk_cmd_pipeline_barrier2)(commandBuffer, pDependencyInfo))))
 	}
 	fn vkCmdWriteTimestamp2(&self, commandBuffer: VkCommandBuffer, stage: VkPipelineStageFlags2, queryPool: VkQueryPool, query: u32) -> Result<()> {
-		process_catch("vkCmdWriteTimestamp2", catch_unwind(||((self.vk_cmd_write_timestamp2)(commandBuffer, stage, queryPool, query))))
+		process_catch(catch_unwind(||((self.vk_cmd_write_timestamp2)(commandBuffer, stage, queryPool, query))))
 	}
 	fn vkQueueSubmit2(&self, queue: VkQueue, submitCount: u32, pSubmits: *const VkSubmitInfo2, fence: VkFence) -> Result<()> {
 		convert_result("vkQueueSubmit2", catch_unwind(||((self.vk_queue_submit2)(queue, submitCount, pSubmits, fence))))
 	}
 	fn vkCmdCopyBuffer2(&self, commandBuffer: VkCommandBuffer, pCopyBufferInfo: *const VkCopyBufferInfo2) -> Result<()> {
-		process_catch("vkCmdCopyBuffer2", catch_unwind(||((self.vk_cmd_copy_buffer2)(commandBuffer, pCopyBufferInfo))))
+		process_catch(catch_unwind(||((self.vk_cmd_copy_buffer2)(commandBuffer, pCopyBufferInfo))))
 	}
 	fn vkCmdCopyImage2(&self, commandBuffer: VkCommandBuffer, pCopyImageInfo: *const VkCopyImageInfo2) -> Result<()> {
-		process_catch("vkCmdCopyImage2", catch_unwind(||((self.vk_cmd_copy_image2)(commandBuffer, pCopyImageInfo))))
+		process_catch(catch_unwind(||((self.vk_cmd_copy_image2)(commandBuffer, pCopyImageInfo))))
 	}
 	fn vkCmdCopyBufferToImage2(&self, commandBuffer: VkCommandBuffer, pCopyBufferToImageInfo: *const VkCopyBufferToImageInfo2) -> Result<()> {
-		process_catch("vkCmdCopyBufferToImage2", catch_unwind(||((self.vk_cmd_copy_buffer_to_image2)(commandBuffer, pCopyBufferToImageInfo))))
+		process_catch(catch_unwind(||((self.vk_cmd_copy_buffer_to_image2)(commandBuffer, pCopyBufferToImageInfo))))
 	}
 	fn vkCmdCopyImageToBuffer2(&self, commandBuffer: VkCommandBuffer, pCopyImageToBufferInfo: *const VkCopyImageToBufferInfo2) -> Result<()> {
-		process_catch("vkCmdCopyImageToBuffer2", catch_unwind(||((self.vk_cmd_copy_image_to_buffer2)(commandBuffer, pCopyImageToBufferInfo))))
+		process_catch(catch_unwind(||((self.vk_cmd_copy_image_to_buffer2)(commandBuffer, pCopyImageToBufferInfo))))
 	}
 	fn vkCmdBlitImage2(&self, commandBuffer: VkCommandBuffer, pBlitImageInfo: *const VkBlitImageInfo2) -> Result<()> {
-		process_catch("vkCmdBlitImage2", catch_unwind(||((self.vk_cmd_blit_image2)(commandBuffer, pBlitImageInfo))))
+		process_catch(catch_unwind(||((self.vk_cmd_blit_image2)(commandBuffer, pBlitImageInfo))))
 	}
 	fn vkCmdResolveImage2(&self, commandBuffer: VkCommandBuffer, pResolveImageInfo: *const VkResolveImageInfo2) -> Result<()> {
-		process_catch("vkCmdResolveImage2", catch_unwind(||((self.vk_cmd_resolve_image2)(commandBuffer, pResolveImageInfo))))
+		process_catch(catch_unwind(||((self.vk_cmd_resolve_image2)(commandBuffer, pResolveImageInfo))))
 	}
 	fn vkCmdBeginRendering(&self, commandBuffer: VkCommandBuffer, pRenderingInfo: *const VkRenderingInfo) -> Result<()> {
-		process_catch("vkCmdBeginRendering", catch_unwind(||((self.vk_cmd_begin_rendering)(commandBuffer, pRenderingInfo))))
+		process_catch(catch_unwind(||((self.vk_cmd_begin_rendering)(commandBuffer, pRenderingInfo))))
 	}
 	fn vkCmdEndRendering(&self, commandBuffer: VkCommandBuffer) -> Result<()> {
-		process_catch("vkCmdEndRendering", catch_unwind(||((self.vk_cmd_end_rendering)(commandBuffer))))
+		process_catch(catch_unwind(||((self.vk_cmd_end_rendering)(commandBuffer))))
 	}
 	fn vkCmdSetCullMode(&self, commandBuffer: VkCommandBuffer, cullMode: VkCullModeFlags) -> Result<()> {
-		process_catch("vkCmdSetCullMode", catch_unwind(||((self.vk_cmd_set_cull_mode)(commandBuffer, cullMode))))
+		process_catch(catch_unwind(||((self.vk_cmd_set_cull_mode)(commandBuffer, cullMode))))
 	}
 	fn vkCmdSetFrontFace(&self, commandBuffer: VkCommandBuffer, frontFace: VkFrontFace) -> Result<()> {
-		process_catch("vkCmdSetFrontFace", catch_unwind(||((self.vk_cmd_set_front_face)(commandBuffer, frontFace))))
+		process_catch(catch_unwind(||((self.vk_cmd_set_front_face)(commandBuffer, frontFace))))
 	}
 	fn vkCmdSetPrimitiveTopology(&self, commandBuffer: VkCommandBuffer, primitiveTopology: VkPrimitiveTopology) -> Result<()> {
-		process_catch("vkCmdSetPrimitiveTopology", catch_unwind(||((self.vk_cmd_set_primitive_topology)(commandBuffer, primitiveTopology))))
+		process_catch(catch_unwind(||((self.vk_cmd_set_primitive_topology)(commandBuffer, primitiveTopology))))
 	}
 	fn vkCmdSetViewportWithCount(&self, commandBuffer: VkCommandBuffer, viewportCount: u32, pViewports: *const VkViewport) -> Result<()> {
-		process_catch("vkCmdSetViewportWithCount", catch_unwind(||((self.vk_cmd_set_viewport_with_count)(commandBuffer, viewportCount, pViewports))))
+		process_catch(catch_unwind(||((self.vk_cmd_set_viewport_with_count)(commandBuffer, viewportCount, pViewports))))
 	}
 	fn vkCmdSetScissorWithCount(&self, commandBuffer: VkCommandBuffer, scissorCount: u32, pScissors: *const VkRect2D) -> Result<()> {
-		process_catch("vkCmdSetScissorWithCount", catch_unwind(||((self.vk_cmd_set_scissor_with_count)(commandBuffer, scissorCount, pScissors))))
+		process_catch(catch_unwind(||((self.vk_cmd_set_scissor_with_count)(commandBuffer, scissorCount, pScissors))))
 	}
 	fn vkCmdBindVertexBuffers2(&self, commandBuffer: VkCommandBuffer, firstBinding: u32, bindingCount: u32, pBuffers: *const VkBuffer, pOffsets: *const VkDeviceSize, pSizes: *const VkDeviceSize, pStrides: *const VkDeviceSize) -> Result<()> {
-		process_catch("vkCmdBindVertexBuffers2", catch_unwind(||((self.vk_cmd_bind_vertex_buffers2)(commandBuffer, firstBinding, bindingCount, pBuffers, pOffsets, pSizes, pStrides))))
+		process_catch(catch_unwind(||((self.vk_cmd_bind_vertex_buffers2)(commandBuffer, firstBinding, bindingCount, pBuffers, pOffsets, pSizes, pStrides))))
 	}
 	fn vkCmdSetDepthTestEnable(&self, commandBuffer: VkCommandBuffer, depthTestEnable: VkBool32) -> Result<()> {
-		process_catch("vkCmdSetDepthTestEnable", catch_unwind(||((self.vk_cmd_set_depth_test_enable)(commandBuffer, depthTestEnable))))
+		process_catch(catch_unwind(||((self.vk_cmd_set_depth_test_enable)(commandBuffer, depthTestEnable))))
 	}
 	fn vkCmdSetDepthWriteEnable(&self, commandBuffer: VkCommandBuffer, depthWriteEnable: VkBool32) -> Result<()> {
-		process_catch("vkCmdSetDepthWriteEnable", catch_unwind(||((self.vk_cmd_set_depth_write_enable)(commandBuffer, depthWriteEnable))))
+		process_catch(catch_unwind(||((self.vk_cmd_set_depth_write_enable)(commandBuffer, depthWriteEnable))))
 	}
 	fn vkCmdSetDepthCompareOp(&self, commandBuffer: VkCommandBuffer, depthCompareOp: VkCompareOp) -> Result<()> {
-		process_catch("vkCmdSetDepthCompareOp", catch_unwind(||((self.vk_cmd_set_depth_compare_op)(commandBuffer, depthCompareOp))))
+		process_catch(catch_unwind(||((self.vk_cmd_set_depth_compare_op)(commandBuffer, depthCompareOp))))
 	}
 	fn vkCmdSetDepthBoundsTestEnable(&self, commandBuffer: VkCommandBuffer, depthBoundsTestEnable: VkBool32) -> Result<()> {
-		process_catch("vkCmdSetDepthBoundsTestEnable", catch_unwind(||((self.vk_cmd_set_depth_bounds_test_enable)(commandBuffer, depthBoundsTestEnable))))
+		process_catch(catch_unwind(||((self.vk_cmd_set_depth_bounds_test_enable)(commandBuffer, depthBoundsTestEnable))))
 	}
 	fn vkCmdSetStencilTestEnable(&self, commandBuffer: VkCommandBuffer, stencilTestEnable: VkBool32) -> Result<()> {
-		process_catch("vkCmdSetStencilTestEnable", catch_unwind(||((self.vk_cmd_set_stencil_test_enable)(commandBuffer, stencilTestEnable))))
+		process_catch(catch_unwind(||((self.vk_cmd_set_stencil_test_enable)(commandBuffer, stencilTestEnable))))
 	}
 	fn vkCmdSetStencilOp(&self, commandBuffer: VkCommandBuffer, faceMask: VkStencilFaceFlags, failOp: VkStencilOp, passOp: VkStencilOp, depthFailOp: VkStencilOp, compareOp: VkCompareOp) -> Result<()> {
-		process_catch("vkCmdSetStencilOp", catch_unwind(||((self.vk_cmd_set_stencil_op)(commandBuffer, faceMask, failOp, passOp, depthFailOp, compareOp))))
+		process_catch(catch_unwind(||((self.vk_cmd_set_stencil_op)(commandBuffer, faceMask, failOp, passOp, depthFailOp, compareOp))))
 	}
 	fn vkCmdSetRasterizerDiscardEnable(&self, commandBuffer: VkCommandBuffer, rasterizerDiscardEnable: VkBool32) -> Result<()> {
-		process_catch("vkCmdSetRasterizerDiscardEnable", catch_unwind(||((self.vk_cmd_set_rasterizer_discard_enable)(commandBuffer, rasterizerDiscardEnable))))
+		process_catch(catch_unwind(||((self.vk_cmd_set_rasterizer_discard_enable)(commandBuffer, rasterizerDiscardEnable))))
 	}
 	fn vkCmdSetDepthBiasEnable(&self, commandBuffer: VkCommandBuffer, depthBiasEnable: VkBool32) -> Result<()> {
-		process_catch("vkCmdSetDepthBiasEnable", catch_unwind(||((self.vk_cmd_set_depth_bias_enable)(commandBuffer, depthBiasEnable))))
+		process_catch(catch_unwind(||((self.vk_cmd_set_depth_bias_enable)(commandBuffer, depthBiasEnable))))
 	}
 	fn vkCmdSetPrimitiveRestartEnable(&self, commandBuffer: VkCommandBuffer, primitiveRestartEnable: VkBool32) -> Result<()> {
-		process_catch("vkCmdSetPrimitiveRestartEnable", catch_unwind(||((self.vk_cmd_set_primitive_restart_enable)(commandBuffer, primitiveRestartEnable))))
+		process_catch(catch_unwind(||((self.vk_cmd_set_primitive_restart_enable)(commandBuffer, primitiveRestartEnable))))
 	}
 	fn vkGetDeviceBufferMemoryRequirements(&self, device: VkDevice, pInfo: *const VkDeviceBufferMemoryRequirements, pMemoryRequirements: *mut VkMemoryRequirements2) -> Result<()> {
-		process_catch("vkGetDeviceBufferMemoryRequirements", catch_unwind(||((self.vk_get_device_buffer_memory_requirements)(device, pInfo, pMemoryRequirements))))
+		process_catch(catch_unwind(||((self.vk_get_device_buffer_memory_requirements)(device, pInfo, pMemoryRequirements))))
 	}
 	fn vkGetDeviceImageMemoryRequirements(&self, device: VkDevice, pInfo: *const VkDeviceImageMemoryRequirements, pMemoryRequirements: *mut VkMemoryRequirements2) -> Result<()> {
-		process_catch("vkGetDeviceImageMemoryRequirements", catch_unwind(||((self.vk_get_device_image_memory_requirements)(device, pInfo, pMemoryRequirements))))
+		process_catch(catch_unwind(||((self.vk_get_device_image_memory_requirements)(device, pInfo, pMemoryRequirements))))
 	}
 	fn vkGetDeviceImageSparseMemoryRequirements(&self, device: VkDevice, pInfo: *const VkDeviceImageMemoryRequirements, pSparseMemoryRequirementCount: *mut uint32_t, pSparseMemoryRequirements: *mut VkSparseImageMemoryRequirements2) -> Result<()> {
-		process_catch("vkGetDeviceImageSparseMemoryRequirements", catch_unwind(||((self.vk_get_device_image_sparse_memory_requirements)(device, pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements))))
+		process_catch(catch_unwind(||((self.vk_get_device_image_sparse_memory_requirements)(device, pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements))))
 	}
 }
 impl Default for Vulkan_VERSION_1_3 {
@@ -12120,79 +12124,79 @@ type PFN_vkCopyImageToImage = extern "system" fn(device: VkDevice, pCopyImageToI
 type PFN_vkTransitionImageLayout = extern "system" fn(device: VkDevice, transitionCount: u32, pTransitions: *const VkHostImageLayoutTransitionInfo) -> VkResult;
 /// The dummy function for `vkCmdSetLineStipple` from `VK_VERSION_1_4`
 extern "system" fn dummy_vkCmdSetLineStipple(_: VkCommandBuffer, _: u32, _: u16) {
-	panic!("Vulkan function pointer of `vkCmdSetLineStipple()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdSetLineStipple"))
 }
 /// The dummy function for `vkMapMemory2` from `VK_VERSION_1_4`
 extern "system" fn dummy_vkMapMemory2(_: VkDevice, _: *const VkMemoryMapInfo, _: *mut *mut c_void) -> VkResult {
-	panic!("Vulkan function pointer of `vkMapMemory2()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkMapMemory2"))
 }
 /// The dummy function for `vkUnmapMemory2` from `VK_VERSION_1_4`
 extern "system" fn dummy_vkUnmapMemory2(_: VkDevice, _: *const VkMemoryUnmapInfo) -> VkResult {
-	panic!("Vulkan function pointer of `vkUnmapMemory2()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkUnmapMemory2"))
 }
 /// The dummy function for `vkCmdBindIndexBuffer2` from `VK_VERSION_1_4`
 extern "system" fn dummy_vkCmdBindIndexBuffer2(_: VkCommandBuffer, _: VkBuffer, _: VkDeviceSize, _: VkDeviceSize, _: VkIndexType) {
-	panic!("Vulkan function pointer of `vkCmdBindIndexBuffer2()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdBindIndexBuffer2"))
 }
 /// The dummy function for `vkGetRenderingAreaGranularity` from `VK_VERSION_1_4`
 extern "system" fn dummy_vkGetRenderingAreaGranularity(_: VkDevice, _: *const VkRenderingAreaInfo, _: *mut VkExtent2D) {
-	panic!("Vulkan function pointer of `vkGetRenderingAreaGranularity()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetRenderingAreaGranularity"))
 }
 /// The dummy function for `vkGetDeviceImageSubresourceLayout` from `VK_VERSION_1_4`
 extern "system" fn dummy_vkGetDeviceImageSubresourceLayout(_: VkDevice, _: *const VkDeviceImageSubresourceInfo, _: *mut VkSubresourceLayout2) {
-	panic!("Vulkan function pointer of `vkGetDeviceImageSubresourceLayout()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetDeviceImageSubresourceLayout"))
 }
 /// The dummy function for `vkGetImageSubresourceLayout2` from `VK_VERSION_1_4`
 extern "system" fn dummy_vkGetImageSubresourceLayout2(_: VkDevice, _: VkImage, _: *const VkImageSubresource2, _: *mut VkSubresourceLayout2) {
-	panic!("Vulkan function pointer of `vkGetImageSubresourceLayout2()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetImageSubresourceLayout2"))
 }
 /// The dummy function for `vkCmdPushDescriptorSet` from `VK_VERSION_1_4`
 extern "system" fn dummy_vkCmdPushDescriptorSet(_: VkCommandBuffer, _: VkPipelineBindPoint, _: VkPipelineLayout, _: u32, _: u32, _: *const VkWriteDescriptorSet) {
-	panic!("Vulkan function pointer of `vkCmdPushDescriptorSet()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdPushDescriptorSet"))
 }
 /// The dummy function for `vkCmdPushDescriptorSetWithTemplate` from `VK_VERSION_1_4`
 extern "system" fn dummy_vkCmdPushDescriptorSetWithTemplate(_: VkCommandBuffer, _: VkDescriptorUpdateTemplate, _: VkPipelineLayout, _: u32, _: *const c_void) {
-	panic!("Vulkan function pointer of `vkCmdPushDescriptorSetWithTemplate()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdPushDescriptorSetWithTemplate"))
 }
 /// The dummy function for `vkCmdSetRenderingAttachmentLocations` from `VK_VERSION_1_4`
 extern "system" fn dummy_vkCmdSetRenderingAttachmentLocations(_: VkCommandBuffer, _: *const VkRenderingAttachmentLocationInfo) {
-	panic!("Vulkan function pointer of `vkCmdSetRenderingAttachmentLocations()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdSetRenderingAttachmentLocations"))
 }
 /// The dummy function for `vkCmdSetRenderingInputAttachmentIndices` from `VK_VERSION_1_4`
 extern "system" fn dummy_vkCmdSetRenderingInputAttachmentIndices(_: VkCommandBuffer, _: *const VkRenderingInputAttachmentIndexInfo) {
-	panic!("Vulkan function pointer of `vkCmdSetRenderingInputAttachmentIndices()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdSetRenderingInputAttachmentIndices"))
 }
 /// The dummy function for `vkCmdBindDescriptorSets2` from `VK_VERSION_1_4`
 extern "system" fn dummy_vkCmdBindDescriptorSets2(_: VkCommandBuffer, _: *const VkBindDescriptorSetsInfo) {
-	panic!("Vulkan function pointer of `vkCmdBindDescriptorSets2()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdBindDescriptorSets2"))
 }
 /// The dummy function for `vkCmdPushConstants2` from `VK_VERSION_1_4`
 extern "system" fn dummy_vkCmdPushConstants2(_: VkCommandBuffer, _: *const VkPushConstantsInfo) {
-	panic!("Vulkan function pointer of `vkCmdPushConstants2()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdPushConstants2"))
 }
 /// The dummy function for `vkCmdPushDescriptorSet2` from `VK_VERSION_1_4`
 extern "system" fn dummy_vkCmdPushDescriptorSet2(_: VkCommandBuffer, _: *const VkPushDescriptorSetInfo) {
-	panic!("Vulkan function pointer of `vkCmdPushDescriptorSet2()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdPushDescriptorSet2"))
 }
 /// The dummy function for `vkCmdPushDescriptorSetWithTemplate2` from `VK_VERSION_1_4`
 extern "system" fn dummy_vkCmdPushDescriptorSetWithTemplate2(_: VkCommandBuffer, _: *const VkPushDescriptorSetWithTemplateInfo) {
-	panic!("Vulkan function pointer of `vkCmdPushDescriptorSetWithTemplate2()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdPushDescriptorSetWithTemplate2"))
 }
 /// The dummy function for `vkCopyMemoryToImage` from `VK_VERSION_1_4`
 extern "system" fn dummy_vkCopyMemoryToImage(_: VkDevice, _: *const VkCopyMemoryToImageInfo) -> VkResult {
-	panic!("Vulkan function pointer of `vkCopyMemoryToImage()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCopyMemoryToImage"))
 }
 /// The dummy function for `vkCopyImageToMemory` from `VK_VERSION_1_4`
 extern "system" fn dummy_vkCopyImageToMemory(_: VkDevice, _: *const VkCopyImageToMemoryInfo) -> VkResult {
-	panic!("Vulkan function pointer of `vkCopyImageToMemory()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCopyImageToMemory"))
 }
 /// The dummy function for `vkCopyImageToImage` from `VK_VERSION_1_4`
 extern "system" fn dummy_vkCopyImageToImage(_: VkDevice, _: *const VkCopyImageToImageInfo) -> VkResult {
-	panic!("Vulkan function pointer of `vkCopyImageToImage()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCopyImageToImage"))
 }
 /// The dummy function for `vkTransitionImageLayout` from `VK_VERSION_1_4`
 extern "system" fn dummy_vkTransitionImageLayout(_: VkDevice, _: u32, _: *const VkHostImageLayoutTransitionInfo) -> VkResult {
-	panic!("Vulkan function pointer of `vkTransitionImageLayout()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkTransitionImageLayout"))
 }
 /// trait for `VK_VERSION_1_4`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_VERSION_1_4.html>
@@ -12261,7 +12265,7 @@ pub struct Vulkan_VERSION_1_4 {
 }
 impl VK_VERSION_1_4 for Vulkan_VERSION_1_4 {
 	fn vkCmdSetLineStipple(&self, commandBuffer: VkCommandBuffer, lineStippleFactor: u32, lineStipplePattern: u16) -> Result<()> {
-		process_catch("vkCmdSetLineStipple", catch_unwind(||((self.vk_cmd_set_line_stipple)(commandBuffer, lineStippleFactor, lineStipplePattern))))
+		process_catch(catch_unwind(||((self.vk_cmd_set_line_stipple)(commandBuffer, lineStippleFactor, lineStipplePattern))))
 	}
 	fn vkMapMemory2(&self, device: VkDevice, pMemoryMapInfo: *const VkMemoryMapInfo, ppData: *mut *mut c_void) -> Result<()> {
 		convert_result("vkMapMemory2", catch_unwind(||((self.vk_map_memory2)(device, pMemoryMapInfo, ppData))))
@@ -12270,40 +12274,40 @@ impl VK_VERSION_1_4 for Vulkan_VERSION_1_4 {
 		convert_result("vkUnmapMemory2", catch_unwind(||((self.vk_unmap_memory2)(device, pMemoryUnmapInfo))))
 	}
 	fn vkCmdBindIndexBuffer2(&self, commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize, size: VkDeviceSize, indexType: VkIndexType) -> Result<()> {
-		process_catch("vkCmdBindIndexBuffer2", catch_unwind(||((self.vk_cmd_bind_index_buffer2)(commandBuffer, buffer, offset, size, indexType))))
+		process_catch(catch_unwind(||((self.vk_cmd_bind_index_buffer2)(commandBuffer, buffer, offset, size, indexType))))
 	}
 	fn vkGetRenderingAreaGranularity(&self, device: VkDevice, pRenderingAreaInfo: *const VkRenderingAreaInfo, pGranularity: *mut VkExtent2D) -> Result<()> {
-		process_catch("vkGetRenderingAreaGranularity", catch_unwind(||((self.vk_get_rendering_area_granularity)(device, pRenderingAreaInfo, pGranularity))))
+		process_catch(catch_unwind(||((self.vk_get_rendering_area_granularity)(device, pRenderingAreaInfo, pGranularity))))
 	}
 	fn vkGetDeviceImageSubresourceLayout(&self, device: VkDevice, pInfo: *const VkDeviceImageSubresourceInfo, pLayout: *mut VkSubresourceLayout2) -> Result<()> {
-		process_catch("vkGetDeviceImageSubresourceLayout", catch_unwind(||((self.vk_get_device_image_subresource_layout)(device, pInfo, pLayout))))
+		process_catch(catch_unwind(||((self.vk_get_device_image_subresource_layout)(device, pInfo, pLayout))))
 	}
 	fn vkGetImageSubresourceLayout2(&self, device: VkDevice, image: VkImage, pSubresource: *const VkImageSubresource2, pLayout: *mut VkSubresourceLayout2) -> Result<()> {
-		process_catch("vkGetImageSubresourceLayout2", catch_unwind(||((self.vk_get_image_subresource_layout2)(device, image, pSubresource, pLayout))))
+		process_catch(catch_unwind(||((self.vk_get_image_subresource_layout2)(device, image, pSubresource, pLayout))))
 	}
 	fn vkCmdPushDescriptorSet(&self, commandBuffer: VkCommandBuffer, pipelineBindPoint: VkPipelineBindPoint, layout: VkPipelineLayout, set: u32, descriptorWriteCount: u32, pDescriptorWrites: *const VkWriteDescriptorSet) -> Result<()> {
-		process_catch("vkCmdPushDescriptorSet", catch_unwind(||((self.vk_cmd_push_descriptor_set)(commandBuffer, pipelineBindPoint, layout, set, descriptorWriteCount, pDescriptorWrites))))
+		process_catch(catch_unwind(||((self.vk_cmd_push_descriptor_set)(commandBuffer, pipelineBindPoint, layout, set, descriptorWriteCount, pDescriptorWrites))))
 	}
 	fn vkCmdPushDescriptorSetWithTemplate(&self, commandBuffer: VkCommandBuffer, descriptorUpdateTemplate: VkDescriptorUpdateTemplate, layout: VkPipelineLayout, set: u32, pData: *const c_void) -> Result<()> {
-		process_catch("vkCmdPushDescriptorSetWithTemplate", catch_unwind(||((self.vk_cmd_push_descriptor_set_with_template)(commandBuffer, descriptorUpdateTemplate, layout, set, pData))))
+		process_catch(catch_unwind(||((self.vk_cmd_push_descriptor_set_with_template)(commandBuffer, descriptorUpdateTemplate, layout, set, pData))))
 	}
 	fn vkCmdSetRenderingAttachmentLocations(&self, commandBuffer: VkCommandBuffer, pLocationInfo: *const VkRenderingAttachmentLocationInfo) -> Result<()> {
-		process_catch("vkCmdSetRenderingAttachmentLocations", catch_unwind(||((self.vk_cmd_set_rendering_attachment_locations)(commandBuffer, pLocationInfo))))
+		process_catch(catch_unwind(||((self.vk_cmd_set_rendering_attachment_locations)(commandBuffer, pLocationInfo))))
 	}
 	fn vkCmdSetRenderingInputAttachmentIndices(&self, commandBuffer: VkCommandBuffer, pInputAttachmentIndexInfo: *const VkRenderingInputAttachmentIndexInfo) -> Result<()> {
-		process_catch("vkCmdSetRenderingInputAttachmentIndices", catch_unwind(||((self.vk_cmd_set_rendering_input_attachment_indices)(commandBuffer, pInputAttachmentIndexInfo))))
+		process_catch(catch_unwind(||((self.vk_cmd_set_rendering_input_attachment_indices)(commandBuffer, pInputAttachmentIndexInfo))))
 	}
 	fn vkCmdBindDescriptorSets2(&self, commandBuffer: VkCommandBuffer, pBindDescriptorSetsInfo: *const VkBindDescriptorSetsInfo) -> Result<()> {
-		process_catch("vkCmdBindDescriptorSets2", catch_unwind(||((self.vk_cmd_bind_descriptor_sets2)(commandBuffer, pBindDescriptorSetsInfo))))
+		process_catch(catch_unwind(||((self.vk_cmd_bind_descriptor_sets2)(commandBuffer, pBindDescriptorSetsInfo))))
 	}
 	fn vkCmdPushConstants2(&self, commandBuffer: VkCommandBuffer, pPushConstantsInfo: *const VkPushConstantsInfo) -> Result<()> {
-		process_catch("vkCmdPushConstants2", catch_unwind(||((self.vk_cmd_push_constants2)(commandBuffer, pPushConstantsInfo))))
+		process_catch(catch_unwind(||((self.vk_cmd_push_constants2)(commandBuffer, pPushConstantsInfo))))
 	}
 	fn vkCmdPushDescriptorSet2(&self, commandBuffer: VkCommandBuffer, pPushDescriptorSetInfo: *const VkPushDescriptorSetInfo) -> Result<()> {
-		process_catch("vkCmdPushDescriptorSet2", catch_unwind(||((self.vk_cmd_push_descriptor_set2)(commandBuffer, pPushDescriptorSetInfo))))
+		process_catch(catch_unwind(||((self.vk_cmd_push_descriptor_set2)(commandBuffer, pPushDescriptorSetInfo))))
 	}
 	fn vkCmdPushDescriptorSetWithTemplate2(&self, commandBuffer: VkCommandBuffer, pPushDescriptorSetWithTemplateInfo: *const VkPushDescriptorSetWithTemplateInfo) -> Result<()> {
-		process_catch("vkCmdPushDescriptorSetWithTemplate2", catch_unwind(||((self.vk_cmd_push_descriptor_set_with_template2)(commandBuffer, pPushDescriptorSetWithTemplateInfo))))
+		process_catch(catch_unwind(||((self.vk_cmd_push_descriptor_set_with_template2)(commandBuffer, pPushDescriptorSetWithTemplateInfo))))
 	}
 	fn vkCopyMemoryToImage(&self, device: VkDevice, pCopyMemoryToImageInfo: *const VkCopyMemoryToImageInfo) -> Result<()> {
 		convert_result("vkCopyMemoryToImage", catch_unwind(||((self.vk_copy_memory_to_image)(device, pCopyMemoryToImageInfo))))
@@ -12491,7 +12495,7 @@ type PFN_vkGetPhysicalDeviceSurfaceFormatsKHR = extern "system" fn(physicalDevic
 type PFN_vkGetPhysicalDeviceSurfacePresentModesKHR = extern "system" fn(physicalDevice: VkPhysicalDevice, surface: VkSurfaceKHR, pPresentModeCount: *mut uint32_t, pPresentModes: *mut VkPresentModeKHR) -> VkResult;
 /// The dummy function for `vkDestroySurfaceKHR` from `VK_KHR_surface`
 extern "system" fn dummy_vkDestroySurfaceKHR(_: VkInstance, _: VkSurfaceKHR, _: *const VkAllocationCallbacks) {
-	panic!("Vulkan function pointer of `vkDestroySurfaceKHR()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkDestroySurfaceKHR"))
 }
 /// trait for `VK_KHR_surface`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_surface.html>
@@ -12506,7 +12510,7 @@ pub struct Vulkan_KHR_surface {
 }
 impl VK_KHR_surface for Vulkan_KHR_surface {
 	fn vkDestroySurfaceKHR(&self, instance: VkInstance, surface: VkSurfaceKHR, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch("vkDestroySurfaceKHR", catch_unwind(||((self.vk_destroy_surface_khr)(instance, surface, pAllocator))))
+		process_catch(catch_unwind(||((self.vk_destroy_surface_khr)(instance, surface, pAllocator))))
 	}
 }
 impl Default for Vulkan_KHR_surface {
@@ -12690,7 +12694,7 @@ type PFN_vkGetPhysicalDevicePresentRectanglesKHR = extern "system" fn(physicalDe
 type PFN_vkAcquireNextImage2KHR = extern "system" fn(device: VkDevice, pAcquireInfo: *const VkAcquireNextImageInfoKHR, pImageIndex: *mut uint32_t) -> VkResult;
 /// The dummy function for `vkCreateSwapchainKHR` from `VK_KHR_swapchain`
 extern "system" fn dummy_vkCreateSwapchainKHR(_: VkDevice, _: *const VkSwapchainCreateInfoKHR, _: *const VkAllocationCallbacks, _: *mut VkSwapchainKHR) -> VkResult {
-	panic!("Vulkan function pointer of `vkCreateSwapchainKHR()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCreateSwapchainKHR"))
 }
 /// trait for `VK_KHR_swapchain`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_swapchain.html>
@@ -12853,7 +12857,7 @@ type PFN_vkGetDisplayPlaneCapabilitiesKHR = extern "system" fn(physicalDevice: V
 type PFN_vkCreateDisplayPlaneSurfaceKHR = extern "system" fn(instance: VkInstance, pCreateInfo: *const VkDisplaySurfaceCreateInfoKHR, pAllocator: *const VkAllocationCallbacks, pSurface: *mut VkSurfaceKHR) -> VkResult;
 /// The dummy function for `vkGetPhysicalDeviceDisplayPropertiesKHR` from `VK_KHR_display`
 extern "system" fn dummy_vkGetPhysicalDeviceDisplayPropertiesKHR(_: VkPhysicalDevice, _: *mut uint32_t, _: *mut VkDisplayPropertiesKHR) -> VkResult {
-	panic!("Vulkan function pointer of `vkGetPhysicalDeviceDisplayPropertiesKHR()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetPhysicalDeviceDisplayPropertiesKHR"))
 }
 /// trait for `VK_KHR_display`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_display.html>
@@ -12901,7 +12905,7 @@ pub struct VkDisplayPresentInfoKHR {
 type PFN_vkCreateSharedSwapchainsKHR = extern "system" fn(device: VkDevice, swapchainCount: u32, pCreateInfos: *const VkSwapchainCreateInfoKHR, pAllocator: *const VkAllocationCallbacks, pSwapchains: *mut VkSwapchainKHR) -> VkResult;
 /// The dummy function for `vkCreateSharedSwapchainsKHR` from `VK_KHR_display_swapchain`
 extern "system" fn dummy_vkCreateSharedSwapchainsKHR(_: VkDevice, _: u32, _: *const VkSwapchainCreateInfoKHR, _: *const VkAllocationCallbacks, _: *mut VkSwapchainKHR) -> VkResult {
-	panic!("Vulkan function pointer of `vkCreateSharedSwapchainsKHR()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCreateSharedSwapchainsKHR"))
 }
 /// trait for `VK_KHR_display_swapchain`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_display_swapchain.html>
@@ -13306,7 +13310,7 @@ type PFN_vkCmdEndVideoCodingKHR = extern "system" fn(commandBuffer: VkCommandBuf
 type PFN_vkCmdControlVideoCodingKHR = extern "system" fn(commandBuffer: VkCommandBuffer, pCodingControlInfo: *const VkVideoCodingControlInfoKHR);
 /// The dummy function for `vkGetPhysicalDeviceVideoCapabilitiesKHR` from `VK_KHR_video_queue`
 extern "system" fn dummy_vkGetPhysicalDeviceVideoCapabilitiesKHR(_: VkPhysicalDevice, _: *const VkVideoProfileInfoKHR, _: *mut VkVideoCapabilitiesKHR) -> VkResult {
-	panic!("Vulkan function pointer of `vkGetPhysicalDeviceVideoCapabilitiesKHR()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetPhysicalDeviceVideoCapabilitiesKHR"))
 }
 /// trait for `VK_KHR_video_queue`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_video_queue.html>
@@ -13406,7 +13410,7 @@ pub struct VkVideoDecodeInfoKHR {
 type PFN_vkCmdDecodeVideoKHR = extern "system" fn(commandBuffer: VkCommandBuffer, pDecodeInfo: *const VkVideoDecodeInfoKHR);
 /// The dummy function for `vkCmdDecodeVideoKHR` from `VK_KHR_video_decode_queue`
 extern "system" fn dummy_vkCmdDecodeVideoKHR(_: VkCommandBuffer, _: *const VkVideoDecodeInfoKHR) {
-	panic!("Vulkan function pointer of `vkCmdDecodeVideoKHR()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdDecodeVideoKHR"))
 }
 /// trait for `VK_KHR_video_decode_queue`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_video_decode_queue.html>
@@ -13421,7 +13425,7 @@ pub struct Vulkan_KHR_video_decode_queue {
 }
 impl VK_KHR_video_decode_queue for Vulkan_KHR_video_decode_queue {
 	fn vkCmdDecodeVideoKHR(&self, commandBuffer: VkCommandBuffer, pDecodeInfo: *const VkVideoDecodeInfoKHR) -> Result<()> {
-		process_catch("vkCmdDecodeVideoKHR", catch_unwind(||((self.vk_cmd_decode_video_khr)(commandBuffer, pDecodeInfo))))
+		process_catch(catch_unwind(||((self.vk_cmd_decode_video_khr)(commandBuffer, pDecodeInfo))))
 	}
 }
 impl Default for Vulkan_KHR_video_decode_queue {
@@ -16655,7 +16659,7 @@ type PFN_vkCmdBeginRenderingKHR = extern "system" fn(commandBuffer: VkCommandBuf
 type PFN_vkCmdEndRenderingKHR = extern "system" fn(commandBuffer: VkCommandBuffer);
 /// The dummy function for `vkCmdBeginRenderingKHR` from `VK_KHR_dynamic_rendering`
 extern "system" fn dummy_vkCmdBeginRenderingKHR(_: VkCommandBuffer, _: *const VkRenderingInfo) {
-	panic!("Vulkan function pointer of `vkCmdBeginRenderingKHR()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdBeginRenderingKHR"))
 }
 /// trait for `VK_KHR_dynamic_rendering`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_dynamic_rendering.html>
@@ -16670,7 +16674,7 @@ pub struct Vulkan_KHR_dynamic_rendering {
 }
 impl VK_KHR_dynamic_rendering for Vulkan_KHR_dynamic_rendering {
 	fn vkCmdBeginRenderingKHR(&self, commandBuffer: VkCommandBuffer, pRenderingInfo: *const VkRenderingInfo) -> Result<()> {
-		process_catch("vkCmdBeginRenderingKHR", catch_unwind(||((self.vk_cmd_begin_rendering_khr)(commandBuffer, pRenderingInfo))))
+		process_catch(catch_unwind(||((self.vk_cmd_begin_rendering_khr)(commandBuffer, pRenderingInfo))))
 	}
 }
 impl Default for Vulkan_KHR_dynamic_rendering {
@@ -16763,7 +16767,7 @@ type PFN_vkGetPhysicalDeviceMemoryProperties2KHR = extern "system" fn(physicalDe
 type PFN_vkGetPhysicalDeviceSparseImageFormatProperties2KHR = extern "system" fn(physicalDevice: VkPhysicalDevice, pFormatInfo: *const VkPhysicalDeviceSparseImageFormatInfo2, pPropertyCount: *mut uint32_t, pProperties: *mut VkSparseImageFormatProperties2);
 /// The dummy function for `vkGetPhysicalDeviceFeatures2KHR` from `VK_KHR_get_physical_device_properties2`
 extern "system" fn dummy_vkGetPhysicalDeviceFeatures2KHR(_: VkPhysicalDevice, _: *mut VkPhysicalDeviceFeatures2) {
-	panic!("Vulkan function pointer of `vkGetPhysicalDeviceFeatures2KHR()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetPhysicalDeviceFeatures2KHR"))
 }
 /// trait for `VK_KHR_get_physical_device_properties2`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_get_physical_device_properties2.html>
@@ -16778,7 +16782,7 @@ pub struct Vulkan_KHR_get_physical_device_properties2 {
 }
 impl VK_KHR_get_physical_device_properties2 for Vulkan_KHR_get_physical_device_properties2 {
 	fn vkGetPhysicalDeviceFeatures2KHR(&self, physicalDevice: VkPhysicalDevice, pFeatures: *mut VkPhysicalDeviceFeatures2) -> Result<()> {
-		process_catch("vkGetPhysicalDeviceFeatures2KHR", catch_unwind(||((self.vk_get_physical_device_features2_khr)(physicalDevice, pFeatures))))
+		process_catch(catch_unwind(||((self.vk_get_physical_device_features2_khr)(physicalDevice, pFeatures))))
 	}
 }
 impl Default for Vulkan_KHR_get_physical_device_properties2 {
@@ -16839,7 +16843,7 @@ type PFN_vkCmdSetDeviceMaskKHR = extern "system" fn(commandBuffer: VkCommandBuff
 type PFN_vkCmdDispatchBaseKHR = extern "system" fn(commandBuffer: VkCommandBuffer, baseGroupX: u32, baseGroupY: u32, baseGroupZ: u32, groupCountX: u32, groupCountY: u32, groupCountZ: u32);
 /// The dummy function for `vkGetDeviceGroupPeerMemoryFeaturesKHR` from `VK_KHR_device_group`
 extern "system" fn dummy_vkGetDeviceGroupPeerMemoryFeaturesKHR(_: VkDevice, _: u32, _: u32, _: u32, _: *mut VkPeerMemoryFeatureFlags) {
-	panic!("Vulkan function pointer of `vkGetDeviceGroupPeerMemoryFeaturesKHR()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetDeviceGroupPeerMemoryFeaturesKHR"))
 }
 /// trait for `VK_KHR_device_group`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_device_group.html>
@@ -16854,7 +16858,7 @@ pub struct Vulkan_KHR_device_group {
 }
 impl VK_KHR_device_group for Vulkan_KHR_device_group {
 	fn vkGetDeviceGroupPeerMemoryFeaturesKHR(&self, device: VkDevice, heapIndex: u32, localDeviceIndex: u32, remoteDeviceIndex: u32, pPeerMemoryFeatures: *mut VkPeerMemoryFeatureFlags) -> Result<()> {
-		process_catch("vkGetDeviceGroupPeerMemoryFeaturesKHR", catch_unwind(||((self.vk_get_device_group_peer_memory_features_khr)(device, heapIndex, localDeviceIndex, remoteDeviceIndex, pPeerMemoryFeatures))))
+		process_catch(catch_unwind(||((self.vk_get_device_group_peer_memory_features_khr)(device, heapIndex, localDeviceIndex, remoteDeviceIndex, pPeerMemoryFeatures))))
 	}
 }
 impl Default for Vulkan_KHR_device_group {
@@ -16896,7 +16900,7 @@ pub type VkCommandPoolTrimFlagsKHR = VkCommandPoolTrimFlags;
 type PFN_vkTrimCommandPoolKHR = extern "system" fn(device: VkDevice, commandPool: VkCommandPool, flags: VkCommandPoolTrimFlags);
 /// The dummy function for `vkTrimCommandPoolKHR` from `VK_KHR_maintenance1`
 extern "system" fn dummy_vkTrimCommandPoolKHR(_: VkDevice, _: VkCommandPool, _: VkCommandPoolTrimFlags) {
-	panic!("Vulkan function pointer of `vkTrimCommandPoolKHR()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkTrimCommandPoolKHR"))
 }
 /// trait for `VK_KHR_maintenance1`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_maintenance1.html>
@@ -16911,7 +16915,7 @@ pub struct Vulkan_KHR_maintenance1 {
 }
 impl VK_KHR_maintenance1 for Vulkan_KHR_maintenance1 {
 	fn vkTrimCommandPoolKHR(&self, device: VkDevice, commandPool: VkCommandPool, flags: VkCommandPoolTrimFlags) -> Result<()> {
-		process_catch("vkTrimCommandPoolKHR", catch_unwind(||((self.vk_trim_command_pool_khr)(device, commandPool, flags))))
+		process_catch(catch_unwind(||((self.vk_trim_command_pool_khr)(device, commandPool, flags))))
 	}
 }
 impl Default for Vulkan_KHR_maintenance1 {
@@ -16942,7 +16946,7 @@ pub type VkDeviceGroupDeviceCreateInfoKHR = VkDeviceGroupDeviceCreateInfo;
 type PFN_vkEnumeratePhysicalDeviceGroupsKHR = extern "system" fn(instance: VkInstance, pPhysicalDeviceGroupCount: *mut uint32_t, pPhysicalDeviceGroupProperties: *mut VkPhysicalDeviceGroupProperties) -> VkResult;
 /// The dummy function for `vkEnumeratePhysicalDeviceGroupsKHR` from `VK_KHR_device_group_creation`
 extern "system" fn dummy_vkEnumeratePhysicalDeviceGroupsKHR(_: VkInstance, _: *mut uint32_t, _: *mut VkPhysicalDeviceGroupProperties) -> VkResult {
-	panic!("Vulkan function pointer of `vkEnumeratePhysicalDeviceGroupsKHR()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkEnumeratePhysicalDeviceGroupsKHR"))
 }
 /// trait for `VK_KHR_device_group_creation`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_device_group_creation.html>
@@ -17012,7 +17016,7 @@ pub type VkPhysicalDeviceIDPropertiesKHR = VkPhysicalDeviceIDProperties;
 type PFN_vkGetPhysicalDeviceExternalBufferPropertiesKHR = extern "system" fn(physicalDevice: VkPhysicalDevice, pExternalBufferInfo: *const VkPhysicalDeviceExternalBufferInfo, pExternalBufferProperties: *mut VkExternalBufferProperties);
 /// The dummy function for `vkGetPhysicalDeviceExternalBufferPropertiesKHR` from `VK_KHR_external_memory_capabilities`
 extern "system" fn dummy_vkGetPhysicalDeviceExternalBufferPropertiesKHR(_: VkPhysicalDevice, _: *const VkPhysicalDeviceExternalBufferInfo, _: *mut VkExternalBufferProperties) {
-	panic!("Vulkan function pointer of `vkGetPhysicalDeviceExternalBufferPropertiesKHR()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetPhysicalDeviceExternalBufferPropertiesKHR"))
 }
 /// trait for `VK_KHR_external_memory_capabilities`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_external_memory_capabilities.html>
@@ -17027,7 +17031,7 @@ pub struct Vulkan_KHR_external_memory_capabilities {
 }
 impl VK_KHR_external_memory_capabilities for Vulkan_KHR_external_memory_capabilities {
 	fn vkGetPhysicalDeviceExternalBufferPropertiesKHR(&self, physicalDevice: VkPhysicalDevice, pExternalBufferInfo: *const VkPhysicalDeviceExternalBufferInfo, pExternalBufferProperties: *mut VkExternalBufferProperties) -> Result<()> {
-		process_catch("vkGetPhysicalDeviceExternalBufferPropertiesKHR", catch_unwind(||((self.vk_get_physical_device_external_buffer_properties_khr)(physicalDevice, pExternalBufferInfo, pExternalBufferProperties))))
+		process_catch(catch_unwind(||((self.vk_get_physical_device_external_buffer_properties_khr)(physicalDevice, pExternalBufferInfo, pExternalBufferProperties))))
 	}
 }
 impl Default for Vulkan_KHR_external_memory_capabilities {
@@ -17110,7 +17114,7 @@ type PFN_vkGetMemoryFdKHR = extern "system" fn(device: VkDevice, pGetFdInfo: *co
 type PFN_vkGetMemoryFdPropertiesKHR = extern "system" fn(device: VkDevice, handleType: VkExternalMemoryHandleTypeFlagBits, fd: i32, pMemoryFdProperties: *mut VkMemoryFdPropertiesKHR) -> VkResult;
 /// The dummy function for `vkGetMemoryFdKHR` from `VK_KHR_external_memory_fd`
 extern "system" fn dummy_vkGetMemoryFdKHR(_: VkDevice, _: *const VkMemoryGetFdInfoKHR, _: *mut int) -> VkResult {
-	panic!("Vulkan function pointer of `vkGetMemoryFdKHR()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetMemoryFdKHR"))
 }
 /// trait for `VK_KHR_external_memory_fd`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_external_memory_fd.html>
@@ -17165,7 +17169,7 @@ pub type VkExternalSemaphorePropertiesKHR = VkExternalSemaphoreProperties;
 type PFN_vkGetPhysicalDeviceExternalSemaphorePropertiesKHR = extern "system" fn(physicalDevice: VkPhysicalDevice, pExternalSemaphoreInfo: *const VkPhysicalDeviceExternalSemaphoreInfo, pExternalSemaphoreProperties: *mut VkExternalSemaphoreProperties);
 /// The dummy function for `vkGetPhysicalDeviceExternalSemaphorePropertiesKHR` from `VK_KHR_external_semaphore_capabilities`
 extern "system" fn dummy_vkGetPhysicalDeviceExternalSemaphorePropertiesKHR(_: VkPhysicalDevice, _: *const VkPhysicalDeviceExternalSemaphoreInfo, _: *mut VkExternalSemaphoreProperties) {
-	panic!("Vulkan function pointer of `vkGetPhysicalDeviceExternalSemaphorePropertiesKHR()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetPhysicalDeviceExternalSemaphorePropertiesKHR"))
 }
 /// trait for `VK_KHR_external_semaphore_capabilities`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_external_semaphore_capabilities.html>
@@ -17180,7 +17184,7 @@ pub struct Vulkan_KHR_external_semaphore_capabilities {
 }
 impl VK_KHR_external_semaphore_capabilities for Vulkan_KHR_external_semaphore_capabilities {
 	fn vkGetPhysicalDeviceExternalSemaphorePropertiesKHR(&self, physicalDevice: VkPhysicalDevice, pExternalSemaphoreInfo: *const VkPhysicalDeviceExternalSemaphoreInfo, pExternalSemaphoreProperties: *mut VkExternalSemaphoreProperties) -> Result<()> {
-		process_catch("vkGetPhysicalDeviceExternalSemaphorePropertiesKHR", catch_unwind(||((self.vk_get_physical_device_external_semaphore_properties_khr)(physicalDevice, pExternalSemaphoreInfo, pExternalSemaphoreProperties))))
+		process_catch(catch_unwind(||((self.vk_get_physical_device_external_semaphore_properties_khr)(physicalDevice, pExternalSemaphoreInfo, pExternalSemaphoreProperties))))
 	}
 }
 impl Default for Vulkan_KHR_external_semaphore_capabilities {
@@ -17253,7 +17257,7 @@ type PFN_vkImportSemaphoreFdKHR = extern "system" fn(device: VkDevice, pImportSe
 type PFN_vkGetSemaphoreFdKHR = extern "system" fn(device: VkDevice, pGetFdInfo: *const VkSemaphoreGetFdInfoKHR, pFd: *mut int) -> VkResult;
 /// The dummy function for `vkImportSemaphoreFdKHR` from `VK_KHR_external_semaphore_fd`
 extern "system" fn dummy_vkImportSemaphoreFdKHR(_: VkDevice, _: *const VkImportSemaphoreFdInfoKHR) -> VkResult {
-	panic!("Vulkan function pointer of `vkImportSemaphoreFdKHR()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkImportSemaphoreFdKHR"))
 }
 /// trait for `VK_KHR_external_semaphore_fd`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_external_semaphore_fd.html>
@@ -17296,7 +17300,7 @@ type PFN_vkCmdPushDescriptorSetKHR = extern "system" fn(commandBuffer: VkCommand
 type PFN_vkCmdPushDescriptorSetWithTemplateKHR = extern "system" fn(commandBuffer: VkCommandBuffer, descriptorUpdateTemplate: VkDescriptorUpdateTemplate, layout: VkPipelineLayout, set: u32, pData: *const c_void);
 /// The dummy function for `vkCmdPushDescriptorSetKHR` from `VK_KHR_push_descriptor`
 extern "system" fn dummy_vkCmdPushDescriptorSetKHR(_: VkCommandBuffer, _: VkPipelineBindPoint, _: VkPipelineLayout, _: u32, _: u32, _: *const VkWriteDescriptorSet) {
-	panic!("Vulkan function pointer of `vkCmdPushDescriptorSetKHR()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdPushDescriptorSetKHR"))
 }
 /// trait for `VK_KHR_push_descriptor`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_push_descriptor.html>
@@ -17311,7 +17315,7 @@ pub struct Vulkan_KHR_push_descriptor {
 }
 impl VK_KHR_push_descriptor for Vulkan_KHR_push_descriptor {
 	fn vkCmdPushDescriptorSetKHR(&self, commandBuffer: VkCommandBuffer, pipelineBindPoint: VkPipelineBindPoint, layout: VkPipelineLayout, set: u32, descriptorWriteCount: u32, pDescriptorWrites: *const VkWriteDescriptorSet) -> Result<()> {
-		process_catch("vkCmdPushDescriptorSetKHR", catch_unwind(||((self.vk_cmd_push_descriptor_set_khr)(commandBuffer, pipelineBindPoint, layout, set, descriptorWriteCount, pDescriptorWrites))))
+		process_catch(catch_unwind(||((self.vk_cmd_push_descriptor_set_khr)(commandBuffer, pipelineBindPoint, layout, set, descriptorWriteCount, pDescriptorWrites))))
 	}
 }
 impl Default for Vulkan_KHR_push_descriptor {
@@ -17441,7 +17445,7 @@ type PFN_vkDestroyDescriptorUpdateTemplateKHR = extern "system" fn(device: VkDev
 type PFN_vkUpdateDescriptorSetWithTemplateKHR = extern "system" fn(device: VkDevice, descriptorSet: VkDescriptorSet, descriptorUpdateTemplate: VkDescriptorUpdateTemplate, pData: *const c_void);
 /// The dummy function for `vkCreateDescriptorUpdateTemplateKHR` from `VK_KHR_descriptor_update_template`
 extern "system" fn dummy_vkCreateDescriptorUpdateTemplateKHR(_: VkDevice, _: *const VkDescriptorUpdateTemplateCreateInfo, _: *const VkAllocationCallbacks, _: *mut VkDescriptorUpdateTemplate) -> VkResult {
-	panic!("Vulkan function pointer of `vkCreateDescriptorUpdateTemplateKHR()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCreateDescriptorUpdateTemplateKHR"))
 }
 /// trait for `VK_KHR_descriptor_update_template`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_descriptor_update_template.html>
@@ -17537,7 +17541,7 @@ type PFN_vkCmdNextSubpass2KHR = extern "system" fn(commandBuffer: VkCommandBuffe
 type PFN_vkCmdEndRenderPass2KHR = extern "system" fn(commandBuffer: VkCommandBuffer, pSubpassEndInfo: *const VkSubpassEndInfo);
 /// The dummy function for `vkCreateRenderPass2KHR` from `VK_KHR_create_renderpass2`
 extern "system" fn dummy_vkCreateRenderPass2KHR(_: VkDevice, _: *const VkRenderPassCreateInfo2, _: *const VkAllocationCallbacks, _: *mut VkRenderPass) -> VkResult {
-	panic!("Vulkan function pointer of `vkCreateRenderPass2KHR()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCreateRenderPass2KHR"))
 }
 /// trait for `VK_KHR_create_renderpass2`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_create_renderpass2.html>
@@ -17583,7 +17587,7 @@ pub struct VkSharedPresentSurfaceCapabilitiesKHR {
 type PFN_vkGetSwapchainStatusKHR = extern "system" fn(device: VkDevice, swapchain: VkSwapchainKHR) -> VkResult;
 /// The dummy function for `vkGetSwapchainStatusKHR` from `VK_KHR_shared_presentable_image`
 extern "system" fn dummy_vkGetSwapchainStatusKHR(_: VkDevice, _: VkSwapchainKHR) -> VkResult {
-	panic!("Vulkan function pointer of `vkGetSwapchainStatusKHR()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetSwapchainStatusKHR"))
 }
 /// trait for `VK_KHR_shared_presentable_image`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_shared_presentable_image.html>
@@ -17638,7 +17642,7 @@ pub type VkExternalFencePropertiesKHR = VkExternalFenceProperties;
 type PFN_vkGetPhysicalDeviceExternalFencePropertiesKHR = extern "system" fn(physicalDevice: VkPhysicalDevice, pExternalFenceInfo: *const VkPhysicalDeviceExternalFenceInfo, pExternalFenceProperties: *mut VkExternalFenceProperties);
 /// The dummy function for `vkGetPhysicalDeviceExternalFencePropertiesKHR` from `VK_KHR_external_fence_capabilities`
 extern "system" fn dummy_vkGetPhysicalDeviceExternalFencePropertiesKHR(_: VkPhysicalDevice, _: *const VkPhysicalDeviceExternalFenceInfo, _: *mut VkExternalFenceProperties) {
-	panic!("Vulkan function pointer of `vkGetPhysicalDeviceExternalFencePropertiesKHR()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetPhysicalDeviceExternalFencePropertiesKHR"))
 }
 /// trait for `VK_KHR_external_fence_capabilities`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_external_fence_capabilities.html>
@@ -17653,7 +17657,7 @@ pub struct Vulkan_KHR_external_fence_capabilities {
 }
 impl VK_KHR_external_fence_capabilities for Vulkan_KHR_external_fence_capabilities {
 	fn vkGetPhysicalDeviceExternalFencePropertiesKHR(&self, physicalDevice: VkPhysicalDevice, pExternalFenceInfo: *const VkPhysicalDeviceExternalFenceInfo, pExternalFenceProperties: *mut VkExternalFenceProperties) -> Result<()> {
-		process_catch("vkGetPhysicalDeviceExternalFencePropertiesKHR", catch_unwind(||((self.vk_get_physical_device_external_fence_properties_khr)(physicalDevice, pExternalFenceInfo, pExternalFenceProperties))))
+		process_catch(catch_unwind(||((self.vk_get_physical_device_external_fence_properties_khr)(physicalDevice, pExternalFenceInfo, pExternalFenceProperties))))
 	}
 }
 impl Default for Vulkan_KHR_external_fence_capabilities {
@@ -17726,7 +17730,7 @@ type PFN_vkImportFenceFdKHR = extern "system" fn(device: VkDevice, pImportFenceF
 type PFN_vkGetFenceFdKHR = extern "system" fn(device: VkDevice, pGetFdInfo: *const VkFenceGetFdInfoKHR, pFd: *mut int) -> VkResult;
 /// The dummy function for `vkImportFenceFdKHR` from `VK_KHR_external_fence_fd`
 extern "system" fn dummy_vkImportFenceFdKHR(_: VkDevice, _: *const VkImportFenceFdInfoKHR) -> VkResult {
-	panic!("Vulkan function pointer of `vkImportFenceFdKHR()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkImportFenceFdKHR"))
 }
 /// trait for `VK_KHR_external_fence_fd`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_external_fence_fd.html>
@@ -17941,7 +17945,7 @@ type PFN_vkAcquireProfilingLockKHR = extern "system" fn(device: VkDevice, pInfo:
 type PFN_vkReleaseProfilingLockKHR = extern "system" fn(device: VkDevice);
 /// The dummy function for `vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR` from `VK_KHR_performance_query`
 extern "system" fn dummy_vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR(_: VkPhysicalDevice, _: u32, _: *mut uint32_t, _: *mut VkPerformanceCounterKHR, _: *mut VkPerformanceCounterDescriptionKHR) -> VkResult {
-	panic!("Vulkan function pointer of `vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR"))
 }
 /// trait for `VK_KHR_performance_query`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_performance_query.html>
@@ -18046,7 +18050,7 @@ type PFN_vkGetPhysicalDeviceSurfaceCapabilities2KHR = extern "system" fn(physica
 type PFN_vkGetPhysicalDeviceSurfaceFormats2KHR = extern "system" fn(physicalDevice: VkPhysicalDevice, pSurfaceInfo: *const VkPhysicalDeviceSurfaceInfo2KHR, pSurfaceFormatCount: *mut uint32_t, pSurfaceFormats: *mut VkSurfaceFormat2KHR) -> VkResult;
 /// The dummy function for `vkGetPhysicalDeviceSurfaceCapabilities2KHR` from `VK_KHR_get_surface_capabilities2`
 extern "system" fn dummy_vkGetPhysicalDeviceSurfaceCapabilities2KHR(_: VkPhysicalDevice, _: *const VkPhysicalDeviceSurfaceInfo2KHR, _: *mut VkSurfaceCapabilities2KHR) -> VkResult {
-	panic!("Vulkan function pointer of `vkGetPhysicalDeviceSurfaceCapabilities2KHR()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetPhysicalDeviceSurfaceCapabilities2KHR"))
 }
 /// trait for `VK_KHR_get_surface_capabilities2`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_get_surface_capabilities2.html>
@@ -18161,7 +18165,7 @@ type PFN_vkGetDisplayModeProperties2KHR = extern "system" fn(physicalDevice: VkP
 type PFN_vkGetDisplayPlaneCapabilities2KHR = extern "system" fn(physicalDevice: VkPhysicalDevice, pDisplayPlaneInfo: *const VkDisplayPlaneInfo2KHR, pCapabilities: *mut VkDisplayPlaneCapabilities2KHR) -> VkResult;
 /// The dummy function for `vkGetPhysicalDeviceDisplayProperties2KHR` from `VK_KHR_get_display_properties2`
 extern "system" fn dummy_vkGetPhysicalDeviceDisplayProperties2KHR(_: VkPhysicalDevice, _: *mut uint32_t, _: *mut VkDisplayProperties2KHR) -> VkResult {
-	panic!("Vulkan function pointer of `vkGetPhysicalDeviceDisplayProperties2KHR()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetPhysicalDeviceDisplayProperties2KHR"))
 }
 /// trait for `VK_KHR_get_display_properties2`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_get_display_properties2.html>
@@ -18304,7 +18308,7 @@ type PFN_vkGetBufferMemoryRequirements2KHR = extern "system" fn(device: VkDevice
 type PFN_vkGetImageSparseMemoryRequirements2KHR = extern "system" fn(device: VkDevice, pInfo: *const VkImageSparseMemoryRequirementsInfo2, pSparseMemoryRequirementCount: *mut uint32_t, pSparseMemoryRequirements: *mut VkSparseImageMemoryRequirements2);
 /// The dummy function for `vkGetImageMemoryRequirements2KHR` from `VK_KHR_get_memory_requirements2`
 extern "system" fn dummy_vkGetImageMemoryRequirements2KHR(_: VkDevice, _: *const VkImageMemoryRequirementsInfo2, _: *mut VkMemoryRequirements2) {
-	panic!("Vulkan function pointer of `vkGetImageMemoryRequirements2KHR()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetImageMemoryRequirements2KHR"))
 }
 /// trait for `VK_KHR_get_memory_requirements2`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_get_memory_requirements2.html>
@@ -18319,7 +18323,7 @@ pub struct Vulkan_KHR_get_memory_requirements2 {
 }
 impl VK_KHR_get_memory_requirements2 for Vulkan_KHR_get_memory_requirements2 {
 	fn vkGetImageMemoryRequirements2KHR(&self, device: VkDevice, pInfo: *const VkImageMemoryRequirementsInfo2, pMemoryRequirements: *mut VkMemoryRequirements2) -> Result<()> {
-		process_catch("vkGetImageMemoryRequirements2KHR", catch_unwind(||((self.vk_get_image_memory_requirements2_khr)(device, pInfo, pMemoryRequirements))))
+		process_catch(catch_unwind(||((self.vk_get_image_memory_requirements2_khr)(device, pInfo, pMemoryRequirements))))
 	}
 }
 impl Default for Vulkan_KHR_get_memory_requirements2 {
@@ -18394,7 +18398,7 @@ type PFN_vkCreateSamplerYcbcrConversionKHR = extern "system" fn(device: VkDevice
 type PFN_vkDestroySamplerYcbcrConversionKHR = extern "system" fn(device: VkDevice, ycbcrConversion: VkSamplerYcbcrConversion, pAllocator: *const VkAllocationCallbacks);
 /// The dummy function for `vkCreateSamplerYcbcrConversionKHR` from `VK_KHR_sampler_ycbcr_conversion`
 extern "system" fn dummy_vkCreateSamplerYcbcrConversionKHR(_: VkDevice, _: *const VkSamplerYcbcrConversionCreateInfo, _: *const VkAllocationCallbacks, _: *mut VkSamplerYcbcrConversion) -> VkResult {
-	panic!("Vulkan function pointer of `vkCreateSamplerYcbcrConversionKHR()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCreateSamplerYcbcrConversionKHR"))
 }
 /// trait for `VK_KHR_sampler_ycbcr_conversion`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_sampler_ycbcr_conversion.html>
@@ -18440,7 +18444,7 @@ type PFN_vkBindBufferMemory2KHR = extern "system" fn(device: VkDevice, bindInfoC
 type PFN_vkBindImageMemory2KHR = extern "system" fn(device: VkDevice, bindInfoCount: u32, pBindInfos: *const VkBindImageMemoryInfo) -> VkResult;
 /// The dummy function for `vkBindBufferMemory2KHR` from `VK_KHR_bind_memory2`
 extern "system" fn dummy_vkBindBufferMemory2KHR(_: VkDevice, _: u32, _: *const VkBindBufferMemoryInfo) -> VkResult {
-	panic!("Vulkan function pointer of `vkBindBufferMemory2KHR()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkBindBufferMemory2KHR"))
 }
 /// trait for `VK_KHR_bind_memory2`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_bind_memory2.html>
@@ -18483,7 +18487,7 @@ pub type VkDescriptorSetLayoutSupportKHR = VkDescriptorSetLayoutSupport;
 type PFN_vkGetDescriptorSetLayoutSupportKHR = extern "system" fn(device: VkDevice, pCreateInfo: *const VkDescriptorSetLayoutCreateInfo, pSupport: *mut VkDescriptorSetLayoutSupport);
 /// The dummy function for `vkGetDescriptorSetLayoutSupportKHR` from `VK_KHR_maintenance3`
 extern "system" fn dummy_vkGetDescriptorSetLayoutSupportKHR(_: VkDevice, _: *const VkDescriptorSetLayoutCreateInfo, _: *mut VkDescriptorSetLayoutSupport) {
-	panic!("Vulkan function pointer of `vkGetDescriptorSetLayoutSupportKHR()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetDescriptorSetLayoutSupportKHR"))
 }
 /// trait for `VK_KHR_maintenance3`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_maintenance3.html>
@@ -18498,7 +18502,7 @@ pub struct Vulkan_KHR_maintenance3 {
 }
 impl VK_KHR_maintenance3 for Vulkan_KHR_maintenance3 {
 	fn vkGetDescriptorSetLayoutSupportKHR(&self, device: VkDevice, pCreateInfo: *const VkDescriptorSetLayoutCreateInfo, pSupport: *mut VkDescriptorSetLayoutSupport) -> Result<()> {
-		process_catch("vkGetDescriptorSetLayoutSupportKHR", catch_unwind(||((self.vk_get_descriptor_set_layout_support_khr)(device, pCreateInfo, pSupport))))
+		process_catch(catch_unwind(||((self.vk_get_descriptor_set_layout_support_khr)(device, pCreateInfo, pSupport))))
 	}
 }
 impl Default for Vulkan_KHR_maintenance3 {
@@ -18523,7 +18527,7 @@ type PFN_vkCmdDrawIndirectCountKHR = extern "system" fn(commandBuffer: VkCommand
 type PFN_vkCmdDrawIndexedIndirectCountKHR = extern "system" fn(commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize, countBuffer: VkBuffer, countBufferOffset: VkDeviceSize, maxDrawCount: u32, stride: u32);
 /// The dummy function for `vkCmdDrawIndirectCountKHR` from `VK_KHR_draw_indirect_count`
 extern "system" fn dummy_vkCmdDrawIndirectCountKHR(_: VkCommandBuffer, _: VkBuffer, _: VkDeviceSize, _: VkBuffer, _: VkDeviceSize, _: u32, _: u32) {
-	panic!("Vulkan function pointer of `vkCmdDrawIndirectCountKHR()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdDrawIndirectCountKHR"))
 }
 /// trait for `VK_KHR_draw_indirect_count`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_draw_indirect_count.html>
@@ -18538,7 +18542,7 @@ pub struct Vulkan_KHR_draw_indirect_count {
 }
 impl VK_KHR_draw_indirect_count for Vulkan_KHR_draw_indirect_count {
 	fn vkCmdDrawIndirectCountKHR(&self, commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize, countBuffer: VkBuffer, countBufferOffset: VkDeviceSize, maxDrawCount: u32, stride: u32) -> Result<()> {
-		process_catch("vkCmdDrawIndirectCountKHR", catch_unwind(||((self.vk_cmd_draw_indirect_count_khr)(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride))))
+		process_catch(catch_unwind(||((self.vk_cmd_draw_indirect_count_khr)(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride))))
 	}
 }
 impl Default for Vulkan_KHR_draw_indirect_count {
@@ -18998,7 +19002,7 @@ type PFN_vkWaitSemaphoresKHR = extern "system" fn(device: VkDevice, pWaitInfo: *
 type PFN_vkSignalSemaphoreKHR = extern "system" fn(device: VkDevice, pSignalInfo: *const VkSemaphoreSignalInfo) -> VkResult;
 /// The dummy function for `vkGetSemaphoreCounterValueKHR` from `VK_KHR_timeline_semaphore`
 extern "system" fn dummy_vkGetSemaphoreCounterValueKHR(_: VkDevice, _: VkSemaphore, _: *mut uint64_t) -> VkResult {
-	panic!("Vulkan function pointer of `vkGetSemaphoreCounterValueKHR()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetSemaphoreCounterValueKHR"))
 }
 /// trait for `VK_KHR_timeline_semaphore`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_timeline_semaphore.html>
@@ -19167,7 +19171,7 @@ type PFN_vkGetPhysicalDeviceFragmentShadingRatesKHR = extern "system" fn(physica
 type PFN_vkCmdSetFragmentShadingRateKHR = extern "system" fn(commandBuffer: VkCommandBuffer, pFragmentSize: *const VkExtent2D, combinerOps: &[VkFragmentShadingRateCombinerOpKHR; 2 as usize]);
 /// The dummy function for `vkGetPhysicalDeviceFragmentShadingRatesKHR` from `VK_KHR_fragment_shading_rate`
 extern "system" fn dummy_vkGetPhysicalDeviceFragmentShadingRatesKHR(_: VkPhysicalDevice, _: *mut uint32_t, _: *mut VkPhysicalDeviceFragmentShadingRateKHR) -> VkResult {
-	panic!("Vulkan function pointer of `vkGetPhysicalDeviceFragmentShadingRatesKHR()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetPhysicalDeviceFragmentShadingRatesKHR"))
 }
 /// trait for `VK_KHR_fragment_shading_rate`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_fragment_shading_rate.html>
@@ -19216,7 +19220,7 @@ type PFN_vkCmdSetRenderingAttachmentLocationsKHR = extern "system" fn(commandBuf
 type PFN_vkCmdSetRenderingInputAttachmentIndicesKHR = extern "system" fn(commandBuffer: VkCommandBuffer, pInputAttachmentIndexInfo: *const VkRenderingInputAttachmentIndexInfo);
 /// The dummy function for `vkCmdSetRenderingAttachmentLocationsKHR` from `VK_KHR_dynamic_rendering_local_read`
 extern "system" fn dummy_vkCmdSetRenderingAttachmentLocationsKHR(_: VkCommandBuffer, _: *const VkRenderingAttachmentLocationInfo) {
-	panic!("Vulkan function pointer of `vkCmdSetRenderingAttachmentLocationsKHR()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdSetRenderingAttachmentLocationsKHR"))
 }
 /// trait for `VK_KHR_dynamic_rendering_local_read`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_dynamic_rendering_local_read.html>
@@ -19231,7 +19235,7 @@ pub struct Vulkan_KHR_dynamic_rendering_local_read {
 }
 impl VK_KHR_dynamic_rendering_local_read for Vulkan_KHR_dynamic_rendering_local_read {
 	fn vkCmdSetRenderingAttachmentLocationsKHR(&self, commandBuffer: VkCommandBuffer, pLocationInfo: *const VkRenderingAttachmentLocationInfo) -> Result<()> {
-		process_catch("vkCmdSetRenderingAttachmentLocationsKHR", catch_unwind(||((self.vk_cmd_set_rendering_attachment_locations_khr)(commandBuffer, pLocationInfo))))
+		process_catch(catch_unwind(||((self.vk_cmd_set_rendering_attachment_locations_khr)(commandBuffer, pLocationInfo))))
 	}
 }
 impl Default for Vulkan_KHR_dynamic_rendering_local_read {
@@ -19357,7 +19361,7 @@ pub struct VkPhysicalDevicePresentWaitFeaturesKHR {
 type PFN_vkWaitForPresentKHR = extern "system" fn(device: VkDevice, swapchain: VkSwapchainKHR, presentId: u64, timeout: u64) -> VkResult;
 /// The dummy function for `vkWaitForPresentKHR` from `VK_KHR_present_wait`
 extern "system" fn dummy_vkWaitForPresentKHR(_: VkDevice, _: VkSwapchainKHR, _: u64, _: u64) -> VkResult {
-	panic!("Vulkan function pointer of `vkWaitForPresentKHR()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkWaitForPresentKHR"))
 }
 /// trait for `VK_KHR_present_wait`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_present_wait.html>
@@ -19435,7 +19439,7 @@ type PFN_vkGetBufferOpaqueCaptureAddressKHR = extern "system" fn(device: VkDevic
 type PFN_vkGetDeviceMemoryOpaqueCaptureAddressKHR = extern "system" fn(device: VkDevice, pInfo: *const VkDeviceMemoryOpaqueCaptureAddressInfo) -> u64;
 /// The dummy function for `vkGetBufferDeviceAddressKHR` from `VK_KHR_buffer_device_address`
 extern "system" fn dummy_vkGetBufferDeviceAddressKHR(_: VkDevice, _: *const VkBufferDeviceAddressInfo) -> VkDeviceAddress {
-	panic!("Vulkan function pointer of `vkGetBufferDeviceAddressKHR()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetBufferDeviceAddressKHR"))
 }
 /// trait for `VK_KHR_buffer_device_address`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_buffer_device_address.html>
@@ -19450,7 +19454,7 @@ pub struct Vulkan_KHR_buffer_device_address {
 }
 impl VK_KHR_buffer_device_address for Vulkan_KHR_buffer_device_address {
 	fn vkGetBufferDeviceAddressKHR(&self, device: VkDevice, pInfo: *const VkBufferDeviceAddressInfo) -> Result<VkDeviceAddress> {
-		process_catch("vkGetBufferDeviceAddressKHR", catch_unwind(||((self.vk_get_buffer_device_address_khr)(device, pInfo))))
+		process_catch(catch_unwind(||((self.vk_get_buffer_device_address_khr)(device, pInfo))))
 	}
 }
 impl Default for Vulkan_KHR_buffer_device_address {
@@ -19489,7 +19493,7 @@ type PFN_vkGetDeferredOperationResultKHR = extern "system" fn(device: VkDevice, 
 type PFN_vkDeferredOperationJoinKHR = extern "system" fn(device: VkDevice, operation: VkDeferredOperationKHR) -> VkResult;
 /// The dummy function for `vkCreateDeferredOperationKHR` from `VK_KHR_deferred_host_operations`
 extern "system" fn dummy_vkCreateDeferredOperationKHR(_: VkDevice, _: *const VkAllocationCallbacks, _: *mut VkDeferredOperationKHR) -> VkResult {
-	panic!("Vulkan function pointer of `vkCreateDeferredOperationKHR()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCreateDeferredOperationKHR"))
 }
 /// trait for `VK_KHR_deferred_host_operations`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_deferred_host_operations.html>
@@ -19628,7 +19632,7 @@ type PFN_vkGetPipelineExecutableStatisticsKHR = extern "system" fn(device: VkDev
 type PFN_vkGetPipelineExecutableInternalRepresentationsKHR = extern "system" fn(device: VkDevice, pExecutableInfo: *const VkPipelineExecutableInfoKHR, pInternalRepresentationCount: *mut uint32_t, pInternalRepresentations: *mut VkPipelineExecutableInternalRepresentationKHR) -> VkResult;
 /// The dummy function for `vkGetPipelineExecutablePropertiesKHR` from `VK_KHR_pipeline_executable_properties`
 extern "system" fn dummy_vkGetPipelineExecutablePropertiesKHR(_: VkDevice, _: *const VkPipelineInfoKHR, _: *mut uint32_t, _: *mut VkPipelineExecutablePropertiesKHR) -> VkResult {
-	panic!("Vulkan function pointer of `vkGetPipelineExecutablePropertiesKHR()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetPipelineExecutablePropertiesKHR"))
 }
 /// trait for `VK_KHR_pipeline_executable_properties`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_pipeline_executable_properties.html>
@@ -19680,7 +19684,7 @@ type PFN_vkMapMemory2KHR = extern "system" fn(device: VkDevice, pMemoryMapInfo: 
 type PFN_vkUnmapMemory2KHR = extern "system" fn(device: VkDevice, pMemoryUnmapInfo: *const VkMemoryUnmapInfo) -> VkResult;
 /// The dummy function for `vkMapMemory2KHR` from `VK_KHR_map_memory2`
 extern "system" fn dummy_vkMapMemory2KHR(_: VkDevice, _: *const VkMemoryMapInfo, _: *mut *mut c_void) -> VkResult {
-	panic!("Vulkan function pointer of `vkMapMemory2KHR()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkMapMemory2KHR"))
 }
 /// trait for `VK_KHR_map_memory2`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_map_memory2.html>
@@ -20049,7 +20053,7 @@ type PFN_vkGetEncodedVideoSessionParametersKHR = extern "system" fn(device: VkDe
 type PFN_vkCmdEncodeVideoKHR = extern "system" fn(commandBuffer: VkCommandBuffer, pEncodeInfo: *const VkVideoEncodeInfoKHR);
 /// The dummy function for `vkGetPhysicalDeviceVideoEncodeQualityLevelPropertiesKHR` from `VK_KHR_video_encode_queue`
 extern "system" fn dummy_vkGetPhysicalDeviceVideoEncodeQualityLevelPropertiesKHR(_: VkPhysicalDevice, _: *const VkPhysicalDeviceVideoEncodeQualityLevelInfoKHR, _: *mut VkVideoEncodeQualityLevelPropertiesKHR) -> VkResult {
-	panic!("Vulkan function pointer of `vkGetPhysicalDeviceVideoEncodeQualityLevelPropertiesKHR()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetPhysicalDeviceVideoEncodeQualityLevelPropertiesKHR"))
 }
 /// trait for `VK_KHR_video_encode_queue`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_video_encode_queue.html>
@@ -20143,7 +20147,7 @@ type PFN_vkCmdWriteTimestamp2KHR = extern "system" fn(commandBuffer: VkCommandBu
 type PFN_vkQueueSubmit2KHR = extern "system" fn(queue: VkQueue, submitCount: u32, pSubmits: *const VkSubmitInfo2, fence: VkFence) -> VkResult;
 /// The dummy function for `vkCmdSetEvent2KHR` from `VK_KHR_synchronization2`
 extern "system" fn dummy_vkCmdSetEvent2KHR(_: VkCommandBuffer, _: VkEvent, _: *const VkDependencyInfo) {
-	panic!("Vulkan function pointer of `vkCmdSetEvent2KHR()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdSetEvent2KHR"))
 }
 /// trait for `VK_KHR_synchronization2`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_synchronization2.html>
@@ -20158,7 +20162,7 @@ pub struct Vulkan_KHR_synchronization2 {
 }
 impl VK_KHR_synchronization2 for Vulkan_KHR_synchronization2 {
 	fn vkCmdSetEvent2KHR(&self, commandBuffer: VkCommandBuffer, event: VkEvent, pDependencyInfo: *const VkDependencyInfo) -> Result<()> {
-		process_catch("vkCmdSetEvent2KHR", catch_unwind(||((self.vk_cmd_set_event2_khr)(commandBuffer, event, pDependencyInfo))))
+		process_catch(catch_unwind(||((self.vk_cmd_set_event2_khr)(commandBuffer, event, pDependencyInfo))))
 	}
 }
 impl Default for Vulkan_KHR_synchronization2 {
@@ -20338,7 +20342,7 @@ type PFN_vkCmdBlitImage2KHR = extern "system" fn(commandBuffer: VkCommandBuffer,
 type PFN_vkCmdResolveImage2KHR = extern "system" fn(commandBuffer: VkCommandBuffer, pResolveImageInfo: *const VkResolveImageInfo2);
 /// The dummy function for `vkCmdCopyBuffer2KHR` from `VK_KHR_copy_commands2`
 extern "system" fn dummy_vkCmdCopyBuffer2KHR(_: VkCommandBuffer, _: *const VkCopyBufferInfo2) {
-	panic!("Vulkan function pointer of `vkCmdCopyBuffer2KHR()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdCopyBuffer2KHR"))
 }
 /// trait for `VK_KHR_copy_commands2`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_copy_commands2.html>
@@ -20353,7 +20357,7 @@ pub struct Vulkan_KHR_copy_commands2 {
 }
 impl VK_KHR_copy_commands2 for Vulkan_KHR_copy_commands2 {
 	fn vkCmdCopyBuffer2KHR(&self, commandBuffer: VkCommandBuffer, pCopyBufferInfo: *const VkCopyBufferInfo2) -> Result<()> {
-		process_catch("vkCmdCopyBuffer2KHR", catch_unwind(||((self.vk_cmd_copy_buffer2_khr)(commandBuffer, pCopyBufferInfo))))
+		process_catch(catch_unwind(||((self.vk_cmd_copy_buffer2_khr)(commandBuffer, pCopyBufferInfo))))
 	}
 }
 impl Default for Vulkan_KHR_copy_commands2 {
@@ -20431,7 +20435,7 @@ pub struct VkTraceRaysIndirectCommand2KHR {
 type PFN_vkCmdTraceRaysIndirect2KHR = extern "system" fn(commandBuffer: VkCommandBuffer, indirectDeviceAddress: VkDeviceAddress);
 /// The dummy function for `vkCmdTraceRaysIndirect2KHR` from `VK_KHR_ray_tracing_maintenance1`
 extern "system" fn dummy_vkCmdTraceRaysIndirect2KHR(_: VkCommandBuffer, _: VkDeviceAddress) {
-	panic!("Vulkan function pointer of `vkCmdTraceRaysIndirect2KHR()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdTraceRaysIndirect2KHR"))
 }
 /// trait for `VK_KHR_ray_tracing_maintenance1`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_ray_tracing_maintenance1.html>
@@ -20446,7 +20450,7 @@ pub struct Vulkan_KHR_ray_tracing_maintenance1 {
 }
 impl VK_KHR_ray_tracing_maintenance1 for Vulkan_KHR_ray_tracing_maintenance1 {
 	fn vkCmdTraceRaysIndirect2KHR(&self, commandBuffer: VkCommandBuffer, indirectDeviceAddress: VkDeviceAddress) -> Result<()> {
-		process_catch("vkCmdTraceRaysIndirect2KHR", catch_unwind(||((self.vk_cmd_trace_rays_indirect2_khr)(commandBuffer, indirectDeviceAddress))))
+		process_catch(catch_unwind(||((self.vk_cmd_trace_rays_indirect2_khr)(commandBuffer, indirectDeviceAddress))))
 	}
 }
 impl Default for Vulkan_KHR_ray_tracing_maintenance1 {
@@ -20503,7 +20507,7 @@ type PFN_vkGetDeviceImageMemoryRequirementsKHR = extern "system" fn(device: VkDe
 type PFN_vkGetDeviceImageSparseMemoryRequirementsKHR = extern "system" fn(device: VkDevice, pInfo: *const VkDeviceImageMemoryRequirements, pSparseMemoryRequirementCount: *mut uint32_t, pSparseMemoryRequirements: *mut VkSparseImageMemoryRequirements2);
 /// The dummy function for `vkGetDeviceBufferMemoryRequirementsKHR` from `VK_KHR_maintenance4`
 extern "system" fn dummy_vkGetDeviceBufferMemoryRequirementsKHR(_: VkDevice, _: *const VkDeviceBufferMemoryRequirements, _: *mut VkMemoryRequirements2) {
-	panic!("Vulkan function pointer of `vkGetDeviceBufferMemoryRequirementsKHR()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetDeviceBufferMemoryRequirementsKHR"))
 }
 /// trait for `VK_KHR_maintenance4`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_maintenance4.html>
@@ -20518,7 +20522,7 @@ pub struct Vulkan_KHR_maintenance4 {
 }
 impl VK_KHR_maintenance4 for Vulkan_KHR_maintenance4 {
 	fn vkGetDeviceBufferMemoryRequirementsKHR(&self, device: VkDevice, pInfo: *const VkDeviceBufferMemoryRequirements, pMemoryRequirements: *mut VkMemoryRequirements2) -> Result<()> {
-		process_catch("vkGetDeviceBufferMemoryRequirementsKHR", catch_unwind(||((self.vk_get_device_buffer_memory_requirements_khr)(device, pInfo, pMemoryRequirements))))
+		process_catch(catch_unwind(||((self.vk_get_device_buffer_memory_requirements_khr)(device, pInfo, pMemoryRequirements))))
 	}
 }
 impl Default for Vulkan_KHR_maintenance4 {
@@ -20631,7 +20635,7 @@ type PFN_vkGetDeviceImageSubresourceLayoutKHR = extern "system" fn(device: VkDev
 type PFN_vkGetImageSubresourceLayout2KHR = extern "system" fn(device: VkDevice, image: VkImage, pSubresource: *const VkImageSubresource2, pLayout: *mut VkSubresourceLayout2);
 /// The dummy function for `vkCmdBindIndexBuffer2KHR` from `VK_KHR_maintenance5`
 extern "system" fn dummy_vkCmdBindIndexBuffer2KHR(_: VkCommandBuffer, _: VkBuffer, _: VkDeviceSize, _: VkDeviceSize, _: VkIndexType) {
-	panic!("Vulkan function pointer of `vkCmdBindIndexBuffer2KHR()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdBindIndexBuffer2KHR"))
 }
 /// trait for `VK_KHR_maintenance5`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_maintenance5.html>
@@ -20646,7 +20650,7 @@ pub struct Vulkan_KHR_maintenance5 {
 }
 impl VK_KHR_maintenance5 for Vulkan_KHR_maintenance5 {
 	fn vkCmdBindIndexBuffer2KHR(&self, commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize, size: VkDeviceSize, indexType: VkIndexType) -> Result<()> {
-		process_catch("vkCmdBindIndexBuffer2KHR", catch_unwind(||((self.vk_cmd_bind_index_buffer2_khr)(commandBuffer, buffer, offset, size, indexType))))
+		process_catch(catch_unwind(||((self.vk_cmd_bind_index_buffer2_khr)(commandBuffer, buffer, offset, size, indexType))))
 	}
 }
 impl Default for Vulkan_KHR_maintenance5 {
@@ -20741,7 +20745,7 @@ pub struct VkPresentWait2InfoKHR {
 type PFN_vkWaitForPresent2KHR = extern "system" fn(device: VkDevice, swapchain: VkSwapchainKHR, pPresentWait2Info: *const VkPresentWait2InfoKHR) -> VkResult;
 /// The dummy function for `vkWaitForPresent2KHR` from `VK_KHR_present_wait2`
 extern "system" fn dummy_vkWaitForPresent2KHR(_: VkDevice, _: VkSwapchainKHR, _: *const VkPresentWait2InfoKHR) -> VkResult {
-	panic!("Vulkan function pointer of `vkWaitForPresent2KHR()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkWaitForPresent2KHR"))
 }
 /// trait for `VK_KHR_present_wait2`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_present_wait2.html>
@@ -20939,7 +20943,7 @@ type PFN_vkGetPipelineBinaryDataKHR = extern "system" fn(device: VkDevice, pInfo
 type PFN_vkReleaseCapturedPipelineDataKHR = extern "system" fn(device: VkDevice, pInfo: *const VkReleaseCapturedPipelineDataInfoKHR, pAllocator: *const VkAllocationCallbacks) -> VkResult;
 /// The dummy function for `vkCreatePipelineBinariesKHR` from `VK_KHR_pipeline_binary`
 extern "system" fn dummy_vkCreatePipelineBinariesKHR(_: VkDevice, _: *const VkPipelineBinaryCreateInfoKHR, _: *const VkAllocationCallbacks, _: *mut VkPipelineBinaryHandlesInfoKHR) -> VkResult {
-	panic!("Vulkan function pointer of `vkCreatePipelineBinariesKHR()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCreatePipelineBinariesKHR"))
 }
 /// trait for `VK_KHR_pipeline_binary`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_pipeline_binary.html>
@@ -21122,7 +21126,7 @@ pub struct VkReleaseSwapchainImagesInfoKHR {
 type PFN_vkReleaseSwapchainImagesKHR = extern "system" fn(device: VkDevice, pReleaseInfo: *const VkReleaseSwapchainImagesInfoKHR) -> VkResult;
 /// The dummy function for `vkReleaseSwapchainImagesKHR` from `VK_KHR_swapchain_maintenance1`
 extern "system" fn dummy_vkReleaseSwapchainImagesKHR(_: VkDevice, _: *const VkReleaseSwapchainImagesInfoKHR) -> VkResult {
-	panic!("Vulkan function pointer of `vkReleaseSwapchainImagesKHR()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkReleaseSwapchainImagesKHR"))
 }
 /// trait for `VK_KHR_swapchain_maintenance1`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_swapchain_maintenance1.html>
@@ -21250,7 +21254,7 @@ pub struct VkPhysicalDeviceCooperativeMatrixPropertiesKHR {
 type PFN_vkGetPhysicalDeviceCooperativeMatrixPropertiesKHR = extern "system" fn(physicalDevice: VkPhysicalDevice, pPropertyCount: *mut uint32_t, pProperties: *mut VkCooperativeMatrixPropertiesKHR) -> VkResult;
 /// The dummy function for `vkGetPhysicalDeviceCooperativeMatrixPropertiesKHR` from `VK_KHR_cooperative_matrix`
 extern "system" fn dummy_vkGetPhysicalDeviceCooperativeMatrixPropertiesKHR(_: VkPhysicalDevice, _: *mut uint32_t, _: *mut VkCooperativeMatrixPropertiesKHR) -> VkResult {
-	panic!("Vulkan function pointer of `vkGetPhysicalDeviceCooperativeMatrixPropertiesKHR()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetPhysicalDeviceCooperativeMatrixPropertiesKHR"))
 }
 /// trait for `VK_KHR_cooperative_matrix`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_cooperative_matrix.html>
@@ -23712,7 +23716,7 @@ pub type VkPipelineRasterizationLineStateCreateInfoKHR = VkPipelineRasterization
 type PFN_vkCmdSetLineStippleKHR = extern "system" fn(commandBuffer: VkCommandBuffer, lineStippleFactor: u32, lineStipplePattern: u16);
 /// The dummy function for `vkCmdSetLineStippleKHR` from `VK_KHR_line_rasterization`
 extern "system" fn dummy_vkCmdSetLineStippleKHR(_: VkCommandBuffer, _: u32, _: u16) {
-	panic!("Vulkan function pointer of `vkCmdSetLineStippleKHR()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdSetLineStippleKHR"))
 }
 /// trait for `VK_KHR_line_rasterization`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_line_rasterization.html>
@@ -23727,7 +23731,7 @@ pub struct Vulkan_KHR_line_rasterization {
 }
 impl VK_KHR_line_rasterization for Vulkan_KHR_line_rasterization {
 	fn vkCmdSetLineStippleKHR(&self, commandBuffer: VkCommandBuffer, lineStippleFactor: u32, lineStipplePattern: u16) -> Result<()> {
-		process_catch("vkCmdSetLineStippleKHR", catch_unwind(||((self.vk_cmd_set_line_stipple_khr)(commandBuffer, lineStippleFactor, lineStipplePattern))))
+		process_catch(catch_unwind(||((self.vk_cmd_set_line_stipple_khr)(commandBuffer, lineStippleFactor, lineStipplePattern))))
 	}
 }
 impl Default for Vulkan_KHR_line_rasterization {
@@ -23778,7 +23782,7 @@ type PFN_vkGetPhysicalDeviceCalibrateableTimeDomainsKHR = extern "system" fn(phy
 type PFN_vkGetCalibratedTimestampsKHR = extern "system" fn(device: VkDevice, timestampCount: u32, pTimestampInfos: *const VkCalibratedTimestampInfoKHR, pTimestamps: *mut uint64_t, pMaxDeviation: *mut uint64_t) -> VkResult;
 /// The dummy function for `vkGetPhysicalDeviceCalibrateableTimeDomainsKHR` from `VK_KHR_calibrated_timestamps`
 extern "system" fn dummy_vkGetPhysicalDeviceCalibrateableTimeDomainsKHR(_: VkPhysicalDevice, _: *mut uint32_t, _: *mut VkTimeDomainKHR) -> VkResult {
-	panic!("Vulkan function pointer of `vkGetPhysicalDeviceCalibrateableTimeDomainsKHR()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetPhysicalDeviceCalibrateableTimeDomainsKHR"))
 }
 /// trait for `VK_KHR_calibrated_timestamps`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_calibrated_timestamps.html>
@@ -23896,7 +23900,7 @@ type PFN_vkCmdSetDescriptorBufferOffsets2EXT = extern "system" fn(commandBuffer:
 type PFN_vkCmdBindDescriptorBufferEmbeddedSamplers2EXT = extern "system" fn(commandBuffer: VkCommandBuffer, pBindDescriptorBufferEmbeddedSamplersInfo: *const VkBindDescriptorBufferEmbeddedSamplersInfoEXT);
 /// The dummy function for `vkCmdBindDescriptorSets2KHR` from `VK_KHR_maintenance6`
 extern "system" fn dummy_vkCmdBindDescriptorSets2KHR(_: VkCommandBuffer, _: *const VkBindDescriptorSetsInfo) {
-	panic!("Vulkan function pointer of `vkCmdBindDescriptorSets2KHR()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdBindDescriptorSets2KHR"))
 }
 /// trait for `VK_KHR_maintenance6`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_maintenance6.html>
@@ -23911,7 +23915,7 @@ pub struct Vulkan_KHR_maintenance6 {
 }
 impl VK_KHR_maintenance6 for Vulkan_KHR_maintenance6 {
 	fn vkCmdBindDescriptorSets2KHR(&self, commandBuffer: VkCommandBuffer, pBindDescriptorSetsInfo: *const VkBindDescriptorSetsInfo) -> Result<()> {
-		process_catch("vkCmdBindDescriptorSets2KHR", catch_unwind(||((self.vk_cmd_bind_descriptor_sets2_khr)(commandBuffer, pBindDescriptorSetsInfo))))
+		process_catch(catch_unwind(||((self.vk_cmd_bind_descriptor_sets2_khr)(commandBuffer, pBindDescriptorSetsInfo))))
 	}
 }
 impl Default for Vulkan_KHR_maintenance6 {
@@ -24573,7 +24577,7 @@ type PFN_vkDestroyDebugReportCallbackEXT = extern "system" fn(instance: VkInstan
 type PFN_vkDebugReportMessageEXT = extern "system" fn(instance: VkInstance, flags: VkDebugReportFlagsEXT, objectType: VkDebugReportObjectTypeEXT, object: u64, location: usize, messageCode: i32, pLayerPrefix: *const i8, pMessage: *const i8);
 /// The dummy function for `vkCreateDebugReportCallbackEXT` from `VK_EXT_debug_report`
 extern "system" fn dummy_vkCreateDebugReportCallbackEXT(_: VkInstance, _: *const VkDebugReportCallbackCreateInfoEXT, _: *const VkAllocationCallbacks, _: *mut VkDebugReportCallbackEXT) -> VkResult {
-	panic!("Vulkan function pointer of `vkCreateDebugReportCallbackEXT()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCreateDebugReportCallbackEXT"))
 }
 /// trait for `VK_EXT_debug_report`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_debug_report.html>
@@ -24776,7 +24780,7 @@ type PFN_vkCmdDebugMarkerEndEXT = extern "system" fn(commandBuffer: VkCommandBuf
 type PFN_vkCmdDebugMarkerInsertEXT = extern "system" fn(commandBuffer: VkCommandBuffer, pMarkerInfo: *const VkDebugMarkerMarkerInfoEXT);
 /// The dummy function for `vkDebugMarkerSetObjectTagEXT` from `VK_EXT_debug_marker`
 extern "system" fn dummy_vkDebugMarkerSetObjectTagEXT(_: VkDevice, _: *const VkDebugMarkerObjectTagInfoEXT) -> VkResult {
-	panic!("Vulkan function pointer of `vkDebugMarkerSetObjectTagEXT()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkDebugMarkerSetObjectTagEXT"))
 }
 /// trait for `VK_EXT_debug_marker`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_debug_marker.html>
@@ -24931,7 +24935,7 @@ type PFN_vkCmdEndQueryIndexedEXT = extern "system" fn(commandBuffer: VkCommandBu
 type PFN_vkCmdDrawIndirectByteCountEXT = extern "system" fn(commandBuffer: VkCommandBuffer, instanceCount: u32, firstInstance: u32, counterBuffer: VkBuffer, counterBufferOffset: VkDeviceSize, counterOffset: u32, vertexStride: u32);
 /// The dummy function for `vkCmdBindTransformFeedbackBuffersEXT` from `VK_EXT_transform_feedback`
 extern "system" fn dummy_vkCmdBindTransformFeedbackBuffersEXT(_: VkCommandBuffer, _: u32, _: u32, _: *const VkBuffer, _: *const VkDeviceSize, _: *const VkDeviceSize) {
-	panic!("Vulkan function pointer of `vkCmdBindTransformFeedbackBuffersEXT()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdBindTransformFeedbackBuffersEXT"))
 }
 /// trait for `VK_EXT_transform_feedback`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_transform_feedback.html>
@@ -24946,7 +24950,7 @@ pub struct Vulkan_EXT_transform_feedback {
 }
 impl VK_EXT_transform_feedback for Vulkan_EXT_transform_feedback {
 	fn vkCmdBindTransformFeedbackBuffersEXT(&self, commandBuffer: VkCommandBuffer, firstBinding: u32, bindingCount: u32, pBuffers: *const VkBuffer, pOffsets: *const VkDeviceSize, pSizes: *const VkDeviceSize) -> Result<()> {
-		process_catch("vkCmdBindTransformFeedbackBuffersEXT", catch_unwind(||((self.vk_cmd_bind_transform_feedback_buffers_ext)(commandBuffer, firstBinding, bindingCount, pBuffers, pOffsets, pSizes))))
+		process_catch(catch_unwind(||((self.vk_cmd_bind_transform_feedback_buffers_ext)(commandBuffer, firstBinding, bindingCount, pBuffers, pOffsets, pSizes))))
 	}
 }
 impl Default for Vulkan_EXT_transform_feedback {
@@ -25039,7 +25043,7 @@ type PFN_vkDestroyCuFunctionNVX = extern "system" fn(device: VkDevice, function:
 type PFN_vkCmdCuLaunchKernelNVX = extern "system" fn(commandBuffer: VkCommandBuffer, pLaunchInfo: *const VkCuLaunchInfoNVX);
 /// The dummy function for `vkCreateCuModuleNVX` from `VK_NVX_binary_import`
 extern "system" fn dummy_vkCreateCuModuleNVX(_: VkDevice, _: *const VkCuModuleCreateInfoNVX, _: *const VkAllocationCallbacks, _: *mut VkCuModuleNVX) -> VkResult {
-	panic!("Vulkan function pointer of `vkCreateCuModuleNVX()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCreateCuModuleNVX"))
 }
 /// trait for `VK_NVX_binary_import`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NVX_binary_import.html>
@@ -25103,7 +25107,7 @@ type PFN_vkGetImageViewHandle64NVX = extern "system" fn(device: VkDevice, pInfo:
 type PFN_vkGetImageViewAddressNVX = extern "system" fn(device: VkDevice, imageView: VkImageView, pProperties: *mut VkImageViewAddressPropertiesNVX) -> VkResult;
 /// The dummy function for `vkGetImageViewHandleNVX` from `VK_NVX_image_view_handle`
 extern "system" fn dummy_vkGetImageViewHandleNVX(_: VkDevice, _: *const VkImageViewHandleInfoNVX) -> u32 {
-	panic!("Vulkan function pointer of `vkGetImageViewHandleNVX()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetImageViewHandleNVX"))
 }
 /// trait for `VK_NVX_image_view_handle`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NVX_image_view_handle.html>
@@ -25118,7 +25122,7 @@ pub struct Vulkan_NVX_image_view_handle {
 }
 impl VK_NVX_image_view_handle for Vulkan_NVX_image_view_handle {
 	fn vkGetImageViewHandleNVX(&self, device: VkDevice, pInfo: *const VkImageViewHandleInfoNVX) -> Result<u32> {
-		process_catch("vkGetImageViewHandleNVX", catch_unwind(||((self.vk_get_image_view_handle_nvx)(device, pInfo))))
+		process_catch(catch_unwind(||((self.vk_get_image_view_handle_nvx)(device, pInfo))))
 	}
 }
 impl Default for Vulkan_NVX_image_view_handle {
@@ -25143,7 +25147,7 @@ type PFN_vkCmdDrawIndirectCountAMD = extern "system" fn(commandBuffer: VkCommand
 type PFN_vkCmdDrawIndexedIndirectCountAMD = extern "system" fn(commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize, countBuffer: VkBuffer, countBufferOffset: VkDeviceSize, maxDrawCount: u32, stride: u32);
 /// The dummy function for `vkCmdDrawIndirectCountAMD` from `VK_AMD_draw_indirect_count`
 extern "system" fn dummy_vkCmdDrawIndirectCountAMD(_: VkCommandBuffer, _: VkBuffer, _: VkDeviceSize, _: VkBuffer, _: VkDeviceSize, _: u32, _: u32) {
-	panic!("Vulkan function pointer of `vkCmdDrawIndirectCountAMD()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdDrawIndirectCountAMD"))
 }
 /// trait for `VK_AMD_draw_indirect_count`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_AMD_draw_indirect_count.html>
@@ -25158,7 +25162,7 @@ pub struct Vulkan_AMD_draw_indirect_count {
 }
 impl VK_AMD_draw_indirect_count for Vulkan_AMD_draw_indirect_count {
 	fn vkCmdDrawIndirectCountAMD(&self, commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize, countBuffer: VkBuffer, countBufferOffset: VkDeviceSize, maxDrawCount: u32, stride: u32) -> Result<()> {
-		process_catch("vkCmdDrawIndirectCountAMD", catch_unwind(||((self.vk_cmd_draw_indirect_count_amd)(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride))))
+		process_catch(catch_unwind(||((self.vk_cmd_draw_indirect_count_amd)(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride))))
 	}
 }
 impl Default for Vulkan_AMD_draw_indirect_count {
@@ -25291,7 +25295,7 @@ pub struct VkShaderStatisticsInfoAMD {
 type PFN_vkGetShaderInfoAMD = extern "system" fn(device: VkDevice, pipeline: VkPipeline, shaderStage: VkShaderStageFlagBits, infoType: VkShaderInfoTypeAMD, pInfoSize: *mut size_t, pInfo: *mut c_void) -> VkResult;
 /// The dummy function for `vkGetShaderInfoAMD` from `VK_AMD_shader_info`
 extern "system" fn dummy_vkGetShaderInfoAMD(_: VkDevice, _: VkPipeline, _: VkShaderStageFlagBits, _: VkShaderInfoTypeAMD, _: *mut size_t, _: *mut c_void) -> VkResult {
-	panic!("Vulkan function pointer of `vkGetShaderInfoAMD()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetShaderInfoAMD"))
 }
 /// trait for `VK_AMD_shader_info`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_AMD_shader_info.html>
@@ -25425,7 +25429,7 @@ pub struct VkExternalImageFormatPropertiesNV {
 type PFN_vkGetPhysicalDeviceExternalImageFormatPropertiesNV = extern "system" fn(physicalDevice: VkPhysicalDevice, format: VkFormat, type_: VkImageType, tiling: VkImageTiling, usage: VkImageUsageFlags, flags: VkImageCreateFlags, externalHandleType: VkExternalMemoryHandleTypeFlagsNV, pExternalImageFormatProperties: *mut VkExternalImageFormatPropertiesNV) -> VkResult;
 /// The dummy function for `vkGetPhysicalDeviceExternalImageFormatPropertiesNV` from `VK_NV_external_memory_capabilities`
 extern "system" fn dummy_vkGetPhysicalDeviceExternalImageFormatPropertiesNV(_: VkPhysicalDevice, _: VkFormat, _: VkImageType, _: VkImageTiling, _: VkImageUsageFlags, _: VkImageCreateFlags, _: VkExternalMemoryHandleTypeFlagsNV, _: *mut VkExternalImageFormatPropertiesNV) -> VkResult {
-	panic!("Vulkan function pointer of `vkGetPhysicalDeviceExternalImageFormatPropertiesNV()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetPhysicalDeviceExternalImageFormatPropertiesNV"))
 }
 /// trait for `VK_NV_external_memory_capabilities`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NV_external_memory_capabilities.html>
@@ -25698,7 +25702,7 @@ type PFN_vkCmdBeginConditionalRenderingEXT = extern "system" fn(commandBuffer: V
 type PFN_vkCmdEndConditionalRenderingEXT = extern "system" fn(commandBuffer: VkCommandBuffer);
 /// The dummy function for `vkCmdBeginConditionalRenderingEXT` from `VK_EXT_conditional_rendering`
 extern "system" fn dummy_vkCmdBeginConditionalRenderingEXT(_: VkCommandBuffer, _: *const VkConditionalRenderingBeginInfoEXT) {
-	panic!("Vulkan function pointer of `vkCmdBeginConditionalRenderingEXT()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdBeginConditionalRenderingEXT"))
 }
 /// trait for `VK_EXT_conditional_rendering`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_conditional_rendering.html>
@@ -25713,7 +25717,7 @@ pub struct Vulkan_EXT_conditional_rendering {
 }
 impl VK_EXT_conditional_rendering for Vulkan_EXT_conditional_rendering {
 	fn vkCmdBeginConditionalRenderingEXT(&self, commandBuffer: VkCommandBuffer, pConditionalRenderingBegin: *const VkConditionalRenderingBeginInfoEXT) -> Result<()> {
-		process_catch("vkCmdBeginConditionalRenderingEXT", catch_unwind(||((self.vk_cmd_begin_conditional_rendering_ext)(commandBuffer, pConditionalRenderingBegin))))
+		process_catch(catch_unwind(||((self.vk_cmd_begin_conditional_rendering_ext)(commandBuffer, pConditionalRenderingBegin))))
 	}
 }
 impl Default for Vulkan_EXT_conditional_rendering {
@@ -25754,7 +25758,7 @@ pub struct VkPipelineViewportWScalingStateCreateInfoNV {
 type PFN_vkCmdSetViewportWScalingNV = extern "system" fn(commandBuffer: VkCommandBuffer, firstViewport: u32, viewportCount: u32, pViewportWScalings: *const VkViewportWScalingNV);
 /// The dummy function for `vkCmdSetViewportWScalingNV` from `VK_NV_clip_space_w_scaling`
 extern "system" fn dummy_vkCmdSetViewportWScalingNV(_: VkCommandBuffer, _: u32, _: u32, _: *const VkViewportWScalingNV) {
-	panic!("Vulkan function pointer of `vkCmdSetViewportWScalingNV()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdSetViewportWScalingNV"))
 }
 /// trait for `VK_NV_clip_space_w_scaling`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NV_clip_space_w_scaling.html>
@@ -25769,7 +25773,7 @@ pub struct Vulkan_NV_clip_space_w_scaling {
 }
 impl VK_NV_clip_space_w_scaling for Vulkan_NV_clip_space_w_scaling {
 	fn vkCmdSetViewportWScalingNV(&self, commandBuffer: VkCommandBuffer, firstViewport: u32, viewportCount: u32, pViewportWScalings: *const VkViewportWScalingNV) -> Result<()> {
-		process_catch("vkCmdSetViewportWScalingNV", catch_unwind(||((self.vk_cmd_set_viewport_wscaling_nv)(commandBuffer, firstViewport, viewportCount, pViewportWScalings))))
+		process_catch(catch_unwind(||((self.vk_cmd_set_viewport_wscaling_nv)(commandBuffer, firstViewport, viewportCount, pViewportWScalings))))
 	}
 }
 impl Default for Vulkan_NV_clip_space_w_scaling {
@@ -25791,7 +25795,7 @@ impl Vulkan_NV_clip_space_w_scaling {
 type PFN_vkReleaseDisplayEXT = extern "system" fn(physicalDevice: VkPhysicalDevice, display: VkDisplayKHR) -> VkResult;
 /// The dummy function for `vkReleaseDisplayEXT` from `VK_EXT_direct_mode_display`
 extern "system" fn dummy_vkReleaseDisplayEXT(_: VkPhysicalDevice, _: VkDisplayKHR) -> VkResult {
-	panic!("Vulkan function pointer of `vkReleaseDisplayEXT()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkReleaseDisplayEXT"))
 }
 /// trait for `VK_EXT_direct_mode_display`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_direct_mode_display.html>
@@ -25861,7 +25865,7 @@ pub struct VkSurfaceCapabilities2EXT {
 type PFN_vkGetPhysicalDeviceSurfaceCapabilities2EXT = extern "system" fn(physicalDevice: VkPhysicalDevice, surface: VkSurfaceKHR, pSurfaceCapabilities: *mut VkSurfaceCapabilities2EXT) -> VkResult;
 /// The dummy function for `vkGetPhysicalDeviceSurfaceCapabilities2EXT` from `VK_EXT_display_surface_counter`
 extern "system" fn dummy_vkGetPhysicalDeviceSurfaceCapabilities2EXT(_: VkPhysicalDevice, _: VkSurfaceKHR, _: *mut VkSurfaceCapabilities2EXT) -> VkResult {
-	panic!("Vulkan function pointer of `vkGetPhysicalDeviceSurfaceCapabilities2EXT()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetPhysicalDeviceSurfaceCapabilities2EXT"))
 }
 /// trait for `VK_EXT_display_surface_counter`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_display_surface_counter.html>
@@ -25969,7 +25973,7 @@ type PFN_vkRegisterDisplayEventEXT = extern "system" fn(device: VkDevice, displa
 type PFN_vkGetSwapchainCounterEXT = extern "system" fn(device: VkDevice, swapchain: VkSwapchainKHR, counter: VkSurfaceCounterFlagBitsEXT, pCounterValue: *mut uint64_t) -> VkResult;
 /// The dummy function for `vkDisplayPowerControlEXT` from `VK_EXT_display_control`
 extern "system" fn dummy_vkDisplayPowerControlEXT(_: VkDevice, _: VkDisplayKHR, _: *const VkDisplayPowerInfoEXT) -> VkResult {
-	panic!("Vulkan function pointer of `vkDisplayPowerControlEXT()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkDisplayPowerControlEXT"))
 }
 /// trait for `VK_EXT_display_control`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_display_control.html>
@@ -26045,7 +26049,7 @@ type PFN_vkGetRefreshCycleDurationGOOGLE = extern "system" fn(device: VkDevice, 
 type PFN_vkGetPastPresentationTimingGOOGLE = extern "system" fn(device: VkDevice, swapchain: VkSwapchainKHR, pPresentationTimingCount: *mut uint32_t, pPresentationTimings: *mut VkPastPresentationTimingGOOGLE) -> VkResult;
 /// The dummy function for `vkGetRefreshCycleDurationGOOGLE` from `VK_GOOGLE_display_timing`
 extern "system" fn dummy_vkGetRefreshCycleDurationGOOGLE(_: VkDevice, _: VkSwapchainKHR, _: *mut VkRefreshCycleDurationGOOGLE) -> VkResult {
-	panic!("Vulkan function pointer of `vkGetRefreshCycleDurationGOOGLE()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetRefreshCycleDurationGOOGLE"))
 }
 /// trait for `VK_GOOGLE_display_timing`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_GOOGLE_display_timing.html>
@@ -26264,7 +26268,7 @@ type PFN_vkCmdSetDiscardRectangleEnableEXT = extern "system" fn(commandBuffer: V
 type PFN_vkCmdSetDiscardRectangleModeEXT = extern "system" fn(commandBuffer: VkCommandBuffer, discardRectangleMode: VkDiscardRectangleModeEXT);
 /// The dummy function for `vkCmdSetDiscardRectangleEXT` from `VK_EXT_discard_rectangles`
 extern "system" fn dummy_vkCmdSetDiscardRectangleEXT(_: VkCommandBuffer, _: u32, _: u32, _: *const VkRect2D) {
-	panic!("Vulkan function pointer of `vkCmdSetDiscardRectangleEXT()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdSetDiscardRectangleEXT"))
 }
 /// trait for `VK_EXT_discard_rectangles`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_discard_rectangles.html>
@@ -26279,7 +26283,7 @@ pub struct Vulkan_EXT_discard_rectangles {
 }
 impl VK_EXT_discard_rectangles for Vulkan_EXT_discard_rectangles {
 	fn vkCmdSetDiscardRectangleEXT(&self, commandBuffer: VkCommandBuffer, firstDiscardRectangle: u32, discardRectangleCount: u32, pDiscardRectangles: *const VkRect2D) -> Result<()> {
-		process_catch("vkCmdSetDiscardRectangleEXT", catch_unwind(||((self.vk_cmd_set_discard_rectangle_ext)(commandBuffer, firstDiscardRectangle, discardRectangleCount, pDiscardRectangles))))
+		process_catch(catch_unwind(||((self.vk_cmd_set_discard_rectangle_ext)(commandBuffer, firstDiscardRectangle, discardRectangleCount, pDiscardRectangles))))
 	}
 }
 impl Default for Vulkan_EXT_discard_rectangles {
@@ -26439,7 +26443,7 @@ pub struct VkHdrMetadataEXT {
 type PFN_vkSetHdrMetadataEXT = extern "system" fn(device: VkDevice, swapchainCount: u32, pSwapchains: *const VkSwapchainKHR, pMetadata: *const VkHdrMetadataEXT);
 /// The dummy function for `vkSetHdrMetadataEXT` from `VK_EXT_hdr_metadata`
 extern "system" fn dummy_vkSetHdrMetadataEXT(_: VkDevice, _: u32, _: *const VkSwapchainKHR, _: *const VkHdrMetadataEXT) {
-	panic!("Vulkan function pointer of `vkSetHdrMetadataEXT()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkSetHdrMetadataEXT"))
 }
 /// trait for `VK_EXT_hdr_metadata`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_hdr_metadata.html>
@@ -26454,7 +26458,7 @@ pub struct Vulkan_EXT_hdr_metadata {
 }
 impl VK_EXT_hdr_metadata for Vulkan_EXT_hdr_metadata {
 	fn vkSetHdrMetadataEXT(&self, device: VkDevice, swapchainCount: u32, pSwapchains: *const VkSwapchainKHR, pMetadata: *const VkHdrMetadataEXT) -> Result<()> {
-		process_catch("vkSetHdrMetadataEXT", catch_unwind(||((self.vk_set_hdr_metadata_ext)(device, swapchainCount, pSwapchains, pMetadata))))
+		process_catch(catch_unwind(||((self.vk_set_hdr_metadata_ext)(device, swapchainCount, pSwapchains, pMetadata))))
 	}
 }
 impl Default for Vulkan_EXT_hdr_metadata {
@@ -26676,7 +26680,7 @@ type PFN_vkDestroyDebugUtilsMessengerEXT = extern "system" fn(instance: VkInstan
 type PFN_vkSubmitDebugUtilsMessageEXT = extern "system" fn(instance: VkInstance, messageSeverity: VkDebugUtilsMessageSeverityFlagBitsEXT, messageTypes: VkDebugUtilsMessageTypeFlagsEXT, pCallbackData: *const VkDebugUtilsMessengerCallbackDataEXT);
 /// The dummy function for `vkSetDebugUtilsObjectNameEXT` from `VK_EXT_debug_utils`
 extern "system" fn dummy_vkSetDebugUtilsObjectNameEXT(_: VkDevice, _: *const VkDebugUtilsObjectNameInfoEXT) -> VkResult {
-	panic!("Vulkan function pointer of `vkSetDebugUtilsObjectNameEXT()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkSetDebugUtilsObjectNameEXT"))
 }
 /// trait for `VK_EXT_debug_utils`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_debug_utils.html>
@@ -26930,7 +26934,7 @@ type PFN_vkCmdSetSampleLocationsEXT = extern "system" fn(commandBuffer: VkComman
 type PFN_vkGetPhysicalDeviceMultisamplePropertiesEXT = extern "system" fn(physicalDevice: VkPhysicalDevice, samples: VkSampleCountFlagBits, pMultisampleProperties: *mut VkMultisamplePropertiesEXT);
 /// The dummy function for `vkCmdSetSampleLocationsEXT` from `VK_EXT_sample_locations`
 extern "system" fn dummy_vkCmdSetSampleLocationsEXT(_: VkCommandBuffer, _: *const VkSampleLocationsInfoEXT) {
-	panic!("Vulkan function pointer of `vkCmdSetSampleLocationsEXT()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdSetSampleLocationsEXT"))
 }
 /// trait for `VK_EXT_sample_locations`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_sample_locations.html>
@@ -26945,7 +26949,7 @@ pub struct Vulkan_EXT_sample_locations {
 }
 impl VK_EXT_sample_locations for Vulkan_EXT_sample_locations {
 	fn vkCmdSetSampleLocationsEXT(&self, commandBuffer: VkCommandBuffer, pSampleLocationsInfo: *const VkSampleLocationsInfoEXT) -> Result<()> {
-		process_catch("vkCmdSetSampleLocationsEXT", catch_unwind(||((self.vk_cmd_set_sample_locations_ext)(commandBuffer, pSampleLocationsInfo))))
+		process_catch(catch_unwind(||((self.vk_cmd_set_sample_locations_ext)(commandBuffer, pSampleLocationsInfo))))
 	}
 }
 impl Default for Vulkan_EXT_sample_locations {
@@ -27256,7 +27260,7 @@ pub struct VkDrmFormatModifierPropertiesList2EXT {
 type PFN_vkGetImageDrmFormatModifierPropertiesEXT = extern "system" fn(device: VkDevice, image: VkImage, pProperties: *mut VkImageDrmFormatModifierPropertiesEXT) -> VkResult;
 /// The dummy function for `vkGetImageDrmFormatModifierPropertiesEXT` from `VK_EXT_image_drm_format_modifier`
 extern "system" fn dummy_vkGetImageDrmFormatModifierPropertiesEXT(_: VkDevice, _: VkImage, _: *mut VkImageDrmFormatModifierPropertiesEXT) -> VkResult {
-	panic!("Vulkan function pointer of `vkGetImageDrmFormatModifierPropertiesEXT()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetImageDrmFormatModifierPropertiesEXT"))
 }
 /// trait for `VK_EXT_image_drm_format_modifier`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_image_drm_format_modifier.html>
@@ -27338,7 +27342,7 @@ type PFN_vkMergeValidationCachesEXT = extern "system" fn(device: VkDevice, dstCa
 type PFN_vkGetValidationCacheDataEXT = extern "system" fn(device: VkDevice, validationCache: VkValidationCacheEXT, pDataSize: *mut size_t, pData: *mut c_void) -> VkResult;
 /// The dummy function for `vkCreateValidationCacheEXT` from `VK_EXT_validation_cache`
 extern "system" fn dummy_vkCreateValidationCacheEXT(_: VkDevice, _: *const VkValidationCacheCreateInfoEXT, _: *const VkAllocationCallbacks, _: *mut VkValidationCacheEXT) -> VkResult {
-	panic!("Vulkan function pointer of `vkCreateValidationCacheEXT()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCreateValidationCacheEXT"))
 }
 /// trait for `VK_EXT_validation_cache`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_validation_cache.html>
@@ -27536,7 +27540,7 @@ type PFN_vkCmdSetViewportShadingRatePaletteNV = extern "system" fn(commandBuffer
 type PFN_vkCmdSetCoarseSampleOrderNV = extern "system" fn(commandBuffer: VkCommandBuffer, sampleOrderType: VkCoarseSampleOrderTypeNV, customSampleOrderCount: u32, pCustomSampleOrders: *const VkCoarseSampleOrderCustomNV);
 /// The dummy function for `vkCmdBindShadingRateImageNV` from `VK_NV_shading_rate_image`
 extern "system" fn dummy_vkCmdBindShadingRateImageNV(_: VkCommandBuffer, _: VkImageView, _: VkImageLayout) {
-	panic!("Vulkan function pointer of `vkCmdBindShadingRateImageNV()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdBindShadingRateImageNV"))
 }
 /// trait for `VK_NV_shading_rate_image`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NV_shading_rate_image.html>
@@ -27551,7 +27555,7 @@ pub struct Vulkan_NV_shading_rate_image {
 }
 impl VK_NV_shading_rate_image for Vulkan_NV_shading_rate_image {
 	fn vkCmdBindShadingRateImageNV(&self, commandBuffer: VkCommandBuffer, imageView: VkImageView, imageLayout: VkImageLayout) -> Result<()> {
-		process_catch("vkCmdBindShadingRateImageNV", catch_unwind(||((self.vk_cmd_bind_shading_rate_image_nv)(commandBuffer, imageView, imageLayout))))
+		process_catch(catch_unwind(||((self.vk_cmd_bind_shading_rate_image_nv)(commandBuffer, imageView, imageLayout))))
 	}
 }
 impl Default for Vulkan_NV_shading_rate_image {
@@ -28016,7 +28020,7 @@ type PFN_vkCmdWriteAccelerationStructuresPropertiesNV = extern "system" fn(comma
 type PFN_vkCompileDeferredNV = extern "system" fn(device: VkDevice, pipeline: VkPipeline, shader: u32) -> VkResult;
 /// The dummy function for `vkCreateAccelerationStructureNV` from `VK_NV_ray_tracing`
 extern "system" fn dummy_vkCreateAccelerationStructureNV(_: VkDevice, _: *const VkAccelerationStructureCreateInfoNV, _: *const VkAllocationCallbacks, _: *mut VkAccelerationStructureNV) -> VkResult {
-	panic!("Vulkan function pointer of `vkCreateAccelerationStructureNV()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCreateAccelerationStructureNV"))
 }
 /// trait for `VK_NV_ray_tracing`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NV_ray_tracing.html>
@@ -28192,7 +28196,7 @@ pub struct VkPhysicalDeviceExternalMemoryHostPropertiesEXT {
 type PFN_vkGetMemoryHostPointerPropertiesEXT = extern "system" fn(device: VkDevice, handleType: VkExternalMemoryHandleTypeFlagBits, pHostPointer: *const c_void, pMemoryHostPointerProperties: *mut VkMemoryHostPointerPropertiesEXT) -> VkResult;
 /// The dummy function for `vkGetMemoryHostPointerPropertiesEXT` from `VK_EXT_external_memory_host`
 extern "system" fn dummy_vkGetMemoryHostPointerPropertiesEXT(_: VkDevice, _: VkExternalMemoryHandleTypeFlagBits, _: *const c_void, _: *mut VkMemoryHostPointerPropertiesEXT) -> VkResult {
-	panic!("Vulkan function pointer of `vkGetMemoryHostPointerPropertiesEXT()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetMemoryHostPointerPropertiesEXT"))
 }
 /// trait for `VK_EXT_external_memory_host`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_external_memory_host.html>
@@ -28232,7 +28236,7 @@ type PFN_vkCmdWriteBufferMarkerAMD = extern "system" fn(commandBuffer: VkCommand
 type PFN_vkCmdWriteBufferMarker2AMD = extern "system" fn(commandBuffer: VkCommandBuffer, stage: VkPipelineStageFlags2, dstBuffer: VkBuffer, dstOffset: VkDeviceSize, marker: u32);
 /// The dummy function for `vkCmdWriteBufferMarkerAMD` from `VK_AMD_buffer_marker`
 extern "system" fn dummy_vkCmdWriteBufferMarkerAMD(_: VkCommandBuffer, _: VkPipelineStageFlagBits, _: VkBuffer, _: VkDeviceSize, _: u32) {
-	panic!("Vulkan function pointer of `vkCmdWriteBufferMarkerAMD()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdWriteBufferMarkerAMD"))
 }
 /// trait for `VK_AMD_buffer_marker`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_AMD_buffer_marker.html>
@@ -28247,7 +28251,7 @@ pub struct Vulkan_AMD_buffer_marker {
 }
 impl VK_AMD_buffer_marker for Vulkan_AMD_buffer_marker {
 	fn vkCmdWriteBufferMarkerAMD(&self, commandBuffer: VkCommandBuffer, pipelineStage: VkPipelineStageFlagBits, dstBuffer: VkBuffer, dstOffset: VkDeviceSize, marker: u32) -> Result<()> {
-		process_catch("vkCmdWriteBufferMarkerAMD", catch_unwind(||((self.vk_cmd_write_buffer_marker_amd)(commandBuffer, pipelineStage, dstBuffer, dstOffset, marker))))
+		process_catch(catch_unwind(||((self.vk_cmd_write_buffer_marker_amd)(commandBuffer, pipelineStage, dstBuffer, dstOffset, marker))))
 	}
 }
 impl Default for Vulkan_AMD_buffer_marker {
@@ -28314,7 +28318,7 @@ type PFN_vkGetPhysicalDeviceCalibrateableTimeDomainsEXT = extern "system" fn(phy
 type PFN_vkGetCalibratedTimestampsEXT = extern "system" fn(device: VkDevice, timestampCount: u32, pTimestampInfos: *const VkCalibratedTimestampInfoKHR, pTimestamps: *mut uint64_t, pMaxDeviation: *mut uint64_t) -> VkResult;
 /// The dummy function for `vkGetPhysicalDeviceCalibrateableTimeDomainsEXT` from `VK_EXT_calibrated_timestamps`
 extern "system" fn dummy_vkGetPhysicalDeviceCalibrateableTimeDomainsEXT(_: VkPhysicalDevice, _: *mut uint32_t, _: *mut VkTimeDomainKHR) -> VkResult {
-	panic!("Vulkan function pointer of `vkGetPhysicalDeviceCalibrateableTimeDomainsEXT()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetPhysicalDeviceCalibrateableTimeDomainsEXT"))
 }
 /// trait for `VK_EXT_calibrated_timestamps`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_calibrated_timestamps.html>
@@ -28572,7 +28576,7 @@ type PFN_vkCmdDrawMeshTasksIndirectNV = extern "system" fn(commandBuffer: VkComm
 type PFN_vkCmdDrawMeshTasksIndirectCountNV = extern "system" fn(commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize, countBuffer: VkBuffer, countBufferOffset: VkDeviceSize, maxDrawCount: u32, stride: u32);
 /// The dummy function for `vkCmdDrawMeshTasksNV` from `VK_NV_mesh_shader`
 extern "system" fn dummy_vkCmdDrawMeshTasksNV(_: VkCommandBuffer, _: u32, _: u32) {
-	panic!("Vulkan function pointer of `vkCmdDrawMeshTasksNV()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdDrawMeshTasksNV"))
 }
 /// trait for `VK_NV_mesh_shader`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NV_mesh_shader.html>
@@ -28587,7 +28591,7 @@ pub struct Vulkan_NV_mesh_shader {
 }
 impl VK_NV_mesh_shader for Vulkan_NV_mesh_shader {
 	fn vkCmdDrawMeshTasksNV(&self, commandBuffer: VkCommandBuffer, taskCount: u32, firstTask: u32) -> Result<()> {
-		process_catch("vkCmdDrawMeshTasksNV", catch_unwind(||((self.vk_cmd_draw_mesh_tasks_nv)(commandBuffer, taskCount, firstTask))))
+		process_catch(catch_unwind(||((self.vk_cmd_draw_mesh_tasks_nv)(commandBuffer, taskCount, firstTask))))
 	}
 }
 impl Default for Vulkan_NV_mesh_shader {
@@ -28677,7 +28681,7 @@ type PFN_vkCmdSetExclusiveScissorEnableNV = extern "system" fn(commandBuffer: Vk
 type PFN_vkCmdSetExclusiveScissorNV = extern "system" fn(commandBuffer: VkCommandBuffer, firstExclusiveScissor: u32, exclusiveScissorCount: u32, pExclusiveScissors: *const VkRect2D);
 /// The dummy function for `vkCmdSetExclusiveScissorEnableNV` from `VK_NV_scissor_exclusive`
 extern "system" fn dummy_vkCmdSetExclusiveScissorEnableNV(_: VkCommandBuffer, _: u32, _: u32, _: *const VkBool32) {
-	panic!("Vulkan function pointer of `vkCmdSetExclusiveScissorEnableNV()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdSetExclusiveScissorEnableNV"))
 }
 /// trait for `VK_NV_scissor_exclusive`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NV_scissor_exclusive.html>
@@ -28692,7 +28696,7 @@ pub struct Vulkan_NV_scissor_exclusive {
 }
 impl VK_NV_scissor_exclusive for Vulkan_NV_scissor_exclusive {
 	fn vkCmdSetExclusiveScissorEnableNV(&self, commandBuffer: VkCommandBuffer, firstExclusiveScissor: u32, exclusiveScissorCount: u32, pExclusiveScissorEnables: *const VkBool32) -> Result<()> {
-		process_catch("vkCmdSetExclusiveScissorEnableNV", catch_unwind(||((self.vk_cmd_set_exclusive_scissor_enable_nv)(commandBuffer, firstExclusiveScissor, exclusiveScissorCount, pExclusiveScissorEnables))))
+		process_catch(catch_unwind(||((self.vk_cmd_set_exclusive_scissor_enable_nv)(commandBuffer, firstExclusiveScissor, exclusiveScissorCount, pExclusiveScissorEnables))))
 	}
 }
 impl Default for Vulkan_NV_scissor_exclusive {
@@ -28758,7 +28762,7 @@ type PFN_vkGetQueueCheckpointDataNV = extern "system" fn(queue: VkQueue, pCheckp
 type PFN_vkGetQueueCheckpointData2NV = extern "system" fn(queue: VkQueue, pCheckpointDataCount: *mut uint32_t, pCheckpointData: *mut VkCheckpointData2NV);
 /// The dummy function for `vkCmdSetCheckpointNV` from `VK_NV_device_diagnostic_checkpoints`
 extern "system" fn dummy_vkCmdSetCheckpointNV(_: VkCommandBuffer, _: *const c_void) {
-	panic!("Vulkan function pointer of `vkCmdSetCheckpointNV()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdSetCheckpointNV"))
 }
 /// trait for `VK_NV_device_diagnostic_checkpoints`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NV_device_diagnostic_checkpoints.html>
@@ -28773,7 +28777,7 @@ pub struct Vulkan_NV_device_diagnostic_checkpoints {
 }
 impl VK_NV_device_diagnostic_checkpoints for Vulkan_NV_device_diagnostic_checkpoints {
 	fn vkCmdSetCheckpointNV(&self, commandBuffer: VkCommandBuffer, pCheckpointMarker: *const c_void) -> Result<()> {
-		process_catch("vkCmdSetCheckpointNV", catch_unwind(||((self.vk_cmd_set_checkpoint_nv)(commandBuffer, pCheckpointMarker))))
+		process_catch(catch_unwind(||((self.vk_cmd_set_checkpoint_nv)(commandBuffer, pCheckpointMarker))))
 	}
 }
 impl Default for Vulkan_NV_device_diagnostic_checkpoints {
@@ -28985,7 +28989,7 @@ type PFN_vkQueueSetPerformanceConfigurationINTEL = extern "system" fn(queue: VkQ
 type PFN_vkGetPerformanceParameterINTEL = extern "system" fn(device: VkDevice, parameter: VkPerformanceParameterTypeINTEL, pValue: *mut VkPerformanceValueINTEL) -> VkResult;
 /// The dummy function for `vkInitializePerformanceApiINTEL` from `VK_INTEL_performance_query`
 extern "system" fn dummy_vkInitializePerformanceApiINTEL(_: VkDevice, _: *const VkInitializePerformanceApiInfoINTEL) -> VkResult {
-	panic!("Vulkan function pointer of `vkInitializePerformanceApiINTEL()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkInitializePerformanceApiINTEL"))
 }
 /// trait for `VK_INTEL_performance_query`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_INTEL_performance_query.html>
@@ -29069,7 +29073,7 @@ pub struct VkSwapchainDisplayNativeHdrCreateInfoAMD {
 type PFN_vkSetLocalDimmingAMD = extern "system" fn(device: VkDevice, swapChain: VkSwapchainKHR, localDimmingEnable: VkBool32);
 /// The dummy function for `vkSetLocalDimmingAMD` from `VK_AMD_display_native_hdr`
 extern "system" fn dummy_vkSetLocalDimmingAMD(_: VkDevice, _: VkSwapchainKHR, _: VkBool32) {
-	panic!("Vulkan function pointer of `vkSetLocalDimmingAMD()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkSetLocalDimmingAMD"))
 }
 /// trait for `VK_AMD_display_native_hdr`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_AMD_display_native_hdr.html>
@@ -29084,7 +29088,7 @@ pub struct Vulkan_AMD_display_native_hdr {
 }
 impl VK_AMD_display_native_hdr for Vulkan_AMD_display_native_hdr {
 	fn vkSetLocalDimmingAMD(&self, device: VkDevice, swapChain: VkSwapchainKHR, localDimmingEnable: VkBool32) -> Result<()> {
-		process_catch("vkSetLocalDimmingAMD", catch_unwind(||((self.vk_set_local_dimming_amd)(device, swapChain, localDimmingEnable))))
+		process_catch(catch_unwind(||((self.vk_set_local_dimming_amd)(device, swapChain, localDimmingEnable))))
 	}
 }
 impl Default for Vulkan_AMD_display_native_hdr {
@@ -29448,7 +29452,7 @@ pub struct VkBufferDeviceAddressCreateInfoEXT {
 type PFN_vkGetBufferDeviceAddressEXT = extern "system" fn(device: VkDevice, pInfo: *const VkBufferDeviceAddressInfo) -> VkDeviceAddress;
 /// The dummy function for `vkGetBufferDeviceAddressEXT` from `VK_EXT_buffer_device_address`
 extern "system" fn dummy_vkGetBufferDeviceAddressEXT(_: VkDevice, _: *const VkBufferDeviceAddressInfo) -> VkDeviceAddress {
-	panic!("Vulkan function pointer of `vkGetBufferDeviceAddressEXT()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetBufferDeviceAddressEXT"))
 }
 /// trait for `VK_EXT_buffer_device_address`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_buffer_device_address.html>
@@ -29463,7 +29467,7 @@ pub struct Vulkan_EXT_buffer_device_address {
 }
 impl VK_EXT_buffer_device_address for Vulkan_EXT_buffer_device_address {
 	fn vkGetBufferDeviceAddressEXT(&self, device: VkDevice, pInfo: *const VkBufferDeviceAddressInfo) -> Result<VkDeviceAddress> {
-		process_catch("vkGetBufferDeviceAddressEXT", catch_unwind(||((self.vk_get_buffer_device_address_ext)(device, pInfo))))
+		process_catch(catch_unwind(||((self.vk_get_buffer_device_address_ext)(device, pInfo))))
 	}
 }
 impl Default for Vulkan_EXT_buffer_device_address {
@@ -29494,7 +29498,7 @@ pub type VkPhysicalDeviceToolPropertiesEXT = VkPhysicalDeviceToolProperties;
 type PFN_vkGetPhysicalDeviceToolPropertiesEXT = extern "system" fn(physicalDevice: VkPhysicalDevice, pToolCount: *mut uint32_t, pToolProperties: *mut VkPhysicalDeviceToolProperties) -> VkResult;
 /// The dummy function for `vkGetPhysicalDeviceToolPropertiesEXT` from `VK_EXT_tooling_info`
 extern "system" fn dummy_vkGetPhysicalDeviceToolPropertiesEXT(_: VkPhysicalDevice, _: *mut uint32_t, _: *mut VkPhysicalDeviceToolProperties) -> VkResult {
-	panic!("Vulkan function pointer of `vkGetPhysicalDeviceToolPropertiesEXT()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetPhysicalDeviceToolPropertiesEXT"))
 }
 /// trait for `VK_EXT_tooling_info`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_tooling_info.html>
@@ -29648,7 +29652,7 @@ pub struct VkPhysicalDeviceCooperativeMatrixPropertiesNV {
 type PFN_vkGetPhysicalDeviceCooperativeMatrixPropertiesNV = extern "system" fn(physicalDevice: VkPhysicalDevice, pPropertyCount: *mut uint32_t, pProperties: *mut VkCooperativeMatrixPropertiesNV) -> VkResult;
 /// The dummy function for `vkGetPhysicalDeviceCooperativeMatrixPropertiesNV` from `VK_NV_cooperative_matrix`
 extern "system" fn dummy_vkGetPhysicalDeviceCooperativeMatrixPropertiesNV(_: VkPhysicalDevice, _: *mut uint32_t, _: *mut VkCooperativeMatrixPropertiesNV) -> VkResult {
-	panic!("Vulkan function pointer of `vkGetPhysicalDeviceCooperativeMatrixPropertiesNV()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetPhysicalDeviceCooperativeMatrixPropertiesNV"))
 }
 /// trait for `VK_NV_cooperative_matrix`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NV_cooperative_matrix.html>
@@ -29728,7 +29732,7 @@ pub struct VkFramebufferMixedSamplesCombinationNV {
 type PFN_vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV = extern "system" fn(physicalDevice: VkPhysicalDevice, pCombinationCount: *mut uint32_t, pCombinations: *mut VkFramebufferMixedSamplesCombinationNV) -> VkResult;
 /// The dummy function for `vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV` from `VK_NV_coverage_reduction_mode`
 extern "system" fn dummy_vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV(_: VkPhysicalDevice, _: *mut uint32_t, _: *mut VkFramebufferMixedSamplesCombinationNV) -> VkResult {
-	panic!("Vulkan function pointer of `vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV"))
 }
 /// trait for `VK_NV_coverage_reduction_mode`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NV_coverage_reduction_mode.html>
@@ -29886,7 +29890,7 @@ pub struct VkHeadlessSurfaceCreateInfoEXT {
 type PFN_vkCreateHeadlessSurfaceEXT = extern "system" fn(instance: VkInstance, pCreateInfo: *const VkHeadlessSurfaceCreateInfoEXT, pAllocator: *const VkAllocationCallbacks, pSurface: *mut VkSurfaceKHR) -> VkResult;
 /// The dummy function for `vkCreateHeadlessSurfaceEXT` from `VK_EXT_headless_surface`
 extern "system" fn dummy_vkCreateHeadlessSurfaceEXT(_: VkInstance, _: *const VkHeadlessSurfaceCreateInfoEXT, _: *const VkAllocationCallbacks, _: *mut VkSurfaceKHR) -> VkResult {
-	panic!("Vulkan function pointer of `vkCreateHeadlessSurfaceEXT()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCreateHeadlessSurfaceEXT"))
 }
 /// trait for `VK_EXT_headless_surface`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_headless_surface.html>
@@ -29935,7 +29939,7 @@ pub type VkPipelineRasterizationLineStateCreateInfoEXT = VkPipelineRasterization
 type PFN_vkCmdSetLineStippleEXT = extern "system" fn(commandBuffer: VkCommandBuffer, lineStippleFactor: u32, lineStipplePattern: u16);
 /// The dummy function for `vkCmdSetLineStippleEXT` from `VK_EXT_line_rasterization`
 extern "system" fn dummy_vkCmdSetLineStippleEXT(_: VkCommandBuffer, _: u32, _: u16) {
-	panic!("Vulkan function pointer of `vkCmdSetLineStippleEXT()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdSetLineStippleEXT"))
 }
 /// trait for `VK_EXT_line_rasterization`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_line_rasterization.html>
@@ -29950,7 +29954,7 @@ pub struct Vulkan_EXT_line_rasterization {
 }
 impl VK_EXT_line_rasterization for Vulkan_EXT_line_rasterization {
 	fn vkCmdSetLineStippleEXT(&self, commandBuffer: VkCommandBuffer, lineStippleFactor: u32, lineStipplePattern: u16) -> Result<()> {
-		process_catch("vkCmdSetLineStippleEXT", catch_unwind(||((self.vk_cmd_set_line_stipple_ext)(commandBuffer, lineStippleFactor, lineStipplePattern))))
+		process_catch(catch_unwind(||((self.vk_cmd_set_line_stipple_ext)(commandBuffer, lineStippleFactor, lineStipplePattern))))
 	}
 }
 impl Default for Vulkan_EXT_line_rasterization {
@@ -30012,7 +30016,7 @@ pub type VkPhysicalDeviceHostQueryResetFeaturesEXT = VkPhysicalDeviceHostQueryRe
 type PFN_vkResetQueryPoolEXT = extern "system" fn(device: VkDevice, queryPool: VkQueryPool, firstQuery: u32, queryCount: u32);
 /// The dummy function for `vkResetQueryPoolEXT` from `VK_EXT_host_query_reset`
 extern "system" fn dummy_vkResetQueryPoolEXT(_: VkDevice, _: VkQueryPool, _: u32, _: u32) {
-	panic!("Vulkan function pointer of `vkResetQueryPoolEXT()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkResetQueryPoolEXT"))
 }
 /// trait for `VK_EXT_host_query_reset`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_host_query_reset.html>
@@ -30027,7 +30031,7 @@ pub struct Vulkan_EXT_host_query_reset {
 }
 impl VK_EXT_host_query_reset for Vulkan_EXT_host_query_reset {
 	fn vkResetQueryPoolEXT(&self, device: VkDevice, queryPool: VkQueryPool, firstQuery: u32, queryCount: u32) -> Result<()> {
-		process_catch("vkResetQueryPoolEXT", catch_unwind(||((self.vk_reset_query_pool_ext)(device, queryPool, firstQuery, queryCount))))
+		process_catch(catch_unwind(||((self.vk_reset_query_pool_ext)(device, queryPool, firstQuery, queryCount))))
 	}
 }
 impl Default for Vulkan_EXT_host_query_reset {
@@ -30111,7 +30115,7 @@ type PFN_vkCmdSetStencilTestEnableEXT = extern "system" fn(commandBuffer: VkComm
 type PFN_vkCmdSetStencilOpEXT = extern "system" fn(commandBuffer: VkCommandBuffer, faceMask: VkStencilFaceFlags, failOp: VkStencilOp, passOp: VkStencilOp, depthFailOp: VkStencilOp, compareOp: VkCompareOp);
 /// The dummy function for `vkCmdSetCullModeEXT` from `VK_EXT_extended_dynamic_state`
 extern "system" fn dummy_vkCmdSetCullModeEXT(_: VkCommandBuffer, _: VkCullModeFlags) {
-	panic!("Vulkan function pointer of `vkCmdSetCullModeEXT()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdSetCullModeEXT"))
 }
 /// trait for `VK_EXT_extended_dynamic_state`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_extended_dynamic_state.html>
@@ -30126,7 +30130,7 @@ pub struct Vulkan_EXT_extended_dynamic_state {
 }
 impl VK_EXT_extended_dynamic_state for Vulkan_EXT_extended_dynamic_state {
 	fn vkCmdSetCullModeEXT(&self, commandBuffer: VkCommandBuffer, cullMode: VkCullModeFlags) -> Result<()> {
-		process_catch("vkCmdSetCullModeEXT", catch_unwind(||((self.vk_cmd_set_cull_mode_ext)(commandBuffer, cullMode))))
+		process_catch(catch_unwind(||((self.vk_cmd_set_cull_mode_ext)(commandBuffer, cullMode))))
 	}
 }
 impl Default for Vulkan_EXT_extended_dynamic_state {
@@ -30202,7 +30206,7 @@ type PFN_vkTransitionImageLayoutEXT = extern "system" fn(device: VkDevice, trans
 type PFN_vkGetImageSubresourceLayout2EXT = extern "system" fn(device: VkDevice, image: VkImage, pSubresource: *const VkImageSubresource2, pLayout: *mut VkSubresourceLayout2);
 /// The dummy function for `vkCopyMemoryToImageEXT` from `VK_EXT_host_image_copy`
 extern "system" fn dummy_vkCopyMemoryToImageEXT(_: VkDevice, _: *const VkCopyMemoryToImageInfo) -> VkResult {
-	panic!("Vulkan function pointer of `vkCopyMemoryToImageEXT()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCopyMemoryToImageEXT"))
 }
 /// trait for `VK_EXT_host_image_copy`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_host_image_copy.html>
@@ -30378,7 +30382,7 @@ pub type VkReleaseSwapchainImagesInfoEXT = VkReleaseSwapchainImagesInfoKHR;
 type PFN_vkReleaseSwapchainImagesEXT = extern "system" fn(device: VkDevice, pReleaseInfo: *const VkReleaseSwapchainImagesInfoKHR) -> VkResult;
 /// The dummy function for `vkReleaseSwapchainImagesEXT` from `VK_EXT_swapchain_maintenance1`
 extern "system" fn dummy_vkReleaseSwapchainImagesEXT(_: VkDevice, _: *const VkReleaseSwapchainImagesInfoKHR) -> VkResult {
-	panic!("Vulkan function pointer of `vkReleaseSwapchainImagesEXT()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkReleaseSwapchainImagesEXT"))
 }
 /// trait for `VK_EXT_swapchain_maintenance1`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_swapchain_maintenance1.html>
@@ -30655,7 +30659,7 @@ type PFN_vkCreateIndirectCommandsLayoutNV = extern "system" fn(device: VkDevice,
 type PFN_vkDestroyIndirectCommandsLayoutNV = extern "system" fn(device: VkDevice, indirectCommandsLayout: VkIndirectCommandsLayoutNV, pAllocator: *const VkAllocationCallbacks);
 /// The dummy function for `vkGetGeneratedCommandsMemoryRequirementsNV` from `VK_NV_device_generated_commands`
 extern "system" fn dummy_vkGetGeneratedCommandsMemoryRequirementsNV(_: VkDevice, _: *const VkGeneratedCommandsMemoryRequirementsInfoNV, _: *mut VkMemoryRequirements2) {
-	panic!("Vulkan function pointer of `vkGetGeneratedCommandsMemoryRequirementsNV()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetGeneratedCommandsMemoryRequirementsNV"))
 }
 /// trait for `VK_NV_device_generated_commands`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NV_device_generated_commands.html>
@@ -30670,7 +30674,7 @@ pub struct Vulkan_NV_device_generated_commands {
 }
 impl VK_NV_device_generated_commands for Vulkan_NV_device_generated_commands {
 	fn vkGetGeneratedCommandsMemoryRequirementsNV(&self, device: VkDevice, pInfo: *const VkGeneratedCommandsMemoryRequirementsInfoNV, pMemoryRequirements: *mut VkMemoryRequirements2) -> Result<()> {
-		process_catch("vkGetGeneratedCommandsMemoryRequirementsNV", catch_unwind(||((self.vk_get_generated_commands_memory_requirements_nv)(device, pInfo, pMemoryRequirements))))
+		process_catch(catch_unwind(||((self.vk_get_generated_commands_memory_requirements_nv)(device, pInfo, pMemoryRequirements))))
 	}
 }
 impl Default for Vulkan_NV_device_generated_commands {
@@ -30837,7 +30841,7 @@ pub struct VkDepthBiasRepresentationInfoEXT {
 type PFN_vkCmdSetDepthBias2EXT = extern "system" fn(commandBuffer: VkCommandBuffer, pDepthBiasInfo: *const VkDepthBiasInfoEXT);
 /// The dummy function for `vkCmdSetDepthBias2EXT` from `VK_EXT_depth_bias_control`
 extern "system" fn dummy_vkCmdSetDepthBias2EXT(_: VkCommandBuffer, _: *const VkDepthBiasInfoEXT) {
-	panic!("Vulkan function pointer of `vkCmdSetDepthBias2EXT()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdSetDepthBias2EXT"))
 }
 /// trait for `VK_EXT_depth_bias_control`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_depth_bias_control.html>
@@ -30852,7 +30856,7 @@ pub struct Vulkan_EXT_depth_bias_control {
 }
 impl VK_EXT_depth_bias_control for Vulkan_EXT_depth_bias_control {
 	fn vkCmdSetDepthBias2EXT(&self, commandBuffer: VkCommandBuffer, pDepthBiasInfo: *const VkDepthBiasInfoEXT) -> Result<()> {
-		process_catch("vkCmdSetDepthBias2EXT", catch_unwind(||((self.vk_cmd_set_depth_bias2_ext)(commandBuffer, pDepthBiasInfo))))
+		process_catch(catch_unwind(||((self.vk_cmd_set_depth_bias2_ext)(commandBuffer, pDepthBiasInfo))))
 	}
 }
 impl Default for Vulkan_EXT_depth_bias_control {
@@ -30947,7 +30951,7 @@ type PFN_vkAcquireDrmDisplayEXT = extern "system" fn(physicalDevice: VkPhysicalD
 type PFN_vkGetDrmDisplayEXT = extern "system" fn(physicalDevice: VkPhysicalDevice, drmFd: i32, connectorId: u32, display: *mut VkDisplayKHR) -> VkResult;
 /// The dummy function for `vkAcquireDrmDisplayEXT` from `VK_EXT_acquire_drm_display`
 extern "system" fn dummy_vkAcquireDrmDisplayEXT(_: VkPhysicalDevice, _: i32, _: VkDisplayKHR) -> VkResult {
-	panic!("Vulkan function pointer of `vkAcquireDrmDisplayEXT()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkAcquireDrmDisplayEXT"))
 }
 /// trait for `VK_EXT_acquire_drm_display`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_acquire_drm_display.html>
@@ -31138,7 +31142,7 @@ type PFN_vkSetPrivateDataEXT = extern "system" fn(device: VkDevice, objectType: 
 type PFN_vkGetPrivateDataEXT = extern "system" fn(device: VkDevice, objectType: VkObjectType, objectHandle: u64, privateDataSlot: VkPrivateDataSlot, pData: *mut uint64_t);
 /// The dummy function for `vkCreatePrivateDataSlotEXT` from `VK_EXT_private_data`
 extern "system" fn dummy_vkCreatePrivateDataSlotEXT(_: VkDevice, _: *const VkPrivateDataSlotCreateInfo, _: *const VkAllocationCallbacks, _: *mut VkPrivateDataSlot) -> VkResult {
-	panic!("Vulkan function pointer of `vkCreatePrivateDataSlotEXT()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCreatePrivateDataSlotEXT"))
 }
 /// trait for `VK_EXT_private_data`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_private_data.html>
@@ -31347,7 +31351,7 @@ type PFN_vkCmdBeginPerTileExecutionQCOM = extern "system" fn(commandBuffer: VkCo
 type PFN_vkCmdEndPerTileExecutionQCOM = extern "system" fn(commandBuffer: VkCommandBuffer, pPerTileEndInfo: *const VkPerTileEndInfoQCOM);
 /// The dummy function for `vkCmdDispatchTileQCOM` from `VK_QCOM_tile_shading`
 extern "system" fn dummy_vkCmdDispatchTileQCOM(_: VkCommandBuffer, _: *const VkDispatchTileInfoQCOM) {
-	panic!("Vulkan function pointer of `vkCmdDispatchTileQCOM()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdDispatchTileQCOM"))
 }
 /// trait for `VK_QCOM_tile_shading`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_QCOM_tile_shading.html>
@@ -31362,7 +31366,7 @@ pub struct Vulkan_QCOM_tile_shading {
 }
 impl VK_QCOM_tile_shading for Vulkan_QCOM_tile_shading {
 	fn vkCmdDispatchTileQCOM(&self, commandBuffer: VkCommandBuffer, pDispatchTileInfo: *const VkDispatchTileInfoQCOM) -> Result<()> {
-		process_catch("vkCmdDispatchTileQCOM", catch_unwind(||((self.vk_cmd_dispatch_tile_qcom)(commandBuffer, pDispatchTileInfo))))
+		process_catch(catch_unwind(||((self.vk_cmd_dispatch_tile_qcom)(commandBuffer, pDispatchTileInfo))))
 	}
 }
 impl Default for Vulkan_QCOM_tile_shading {
@@ -31634,7 +31638,7 @@ type PFN_vkGetSamplerOpaqueCaptureDescriptorDataEXT = extern "system" fn(device:
 type PFN_vkGetAccelerationStructureOpaqueCaptureDescriptorDataEXT = extern "system" fn(device: VkDevice, pInfo: *const VkAccelerationStructureCaptureDescriptorDataInfoEXT, pData: *mut c_void) -> VkResult;
 /// The dummy function for `vkGetDescriptorSetLayoutSizeEXT` from `VK_EXT_descriptor_buffer`
 extern "system" fn dummy_vkGetDescriptorSetLayoutSizeEXT(_: VkDevice, _: VkDescriptorSetLayout, _: *mut VkDeviceSize) {
-	panic!("Vulkan function pointer of `vkGetDescriptorSetLayoutSizeEXT()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetDescriptorSetLayoutSizeEXT"))
 }
 /// trait for `VK_EXT_descriptor_buffer`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_descriptor_buffer.html>
@@ -31649,7 +31653,7 @@ pub struct Vulkan_EXT_descriptor_buffer {
 }
 impl VK_EXT_descriptor_buffer for Vulkan_EXT_descriptor_buffer {
 	fn vkGetDescriptorSetLayoutSizeEXT(&self, device: VkDevice, layout: VkDescriptorSetLayout, pLayoutSizeInBytes: *mut VkDeviceSize) -> Result<()> {
-		process_catch("vkGetDescriptorSetLayoutSizeEXT", catch_unwind(||((self.vk_get_descriptor_set_layout_size_ext)(device, layout, pLayoutSizeInBytes))))
+		process_catch(catch_unwind(||((self.vk_get_descriptor_set_layout_size_ext)(device, layout, pLayoutSizeInBytes))))
 	}
 }
 impl Default for Vulkan_EXT_descriptor_buffer {
@@ -31815,7 +31819,7 @@ pub struct VkPipelineFragmentShadingRateEnumStateCreateInfoNV {
 type PFN_vkCmdSetFragmentShadingRateEnumNV = extern "system" fn(commandBuffer: VkCommandBuffer, shadingRate: VkFragmentShadingRateNV, combinerOps: &[VkFragmentShadingRateCombinerOpKHR; 2 as usize]);
 /// The dummy function for `vkCmdSetFragmentShadingRateEnumNV` from `VK_NV_fragment_shading_rate_enums`
 extern "system" fn dummy_vkCmdSetFragmentShadingRateEnumNV(_: VkCommandBuffer, _: VkFragmentShadingRateNV, _: &[VkFragmentShadingRateCombinerOpKHR; 2 as usize]) {
-	panic!("Vulkan function pointer of `vkCmdSetFragmentShadingRateEnumNV()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdSetFragmentShadingRateEnumNV"))
 }
 /// trait for `VK_NV_fragment_shading_rate_enums`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NV_fragment_shading_rate_enums.html>
@@ -31830,7 +31834,7 @@ pub struct Vulkan_NV_fragment_shading_rate_enums {
 }
 impl VK_NV_fragment_shading_rate_enums for Vulkan_NV_fragment_shading_rate_enums {
 	fn vkCmdSetFragmentShadingRateEnumNV(&self, commandBuffer: VkCommandBuffer, shadingRate: VkFragmentShadingRateNV, combinerOps: &[VkFragmentShadingRateCombinerOpKHR; 2 as usize]) -> Result<()> {
-		process_catch("vkCmdSetFragmentShadingRateEnumNV", catch_unwind(||((self.vk_cmd_set_fragment_shading_rate_enum_nv)(commandBuffer, shadingRate, combinerOps))))
+		process_catch(catch_unwind(||((self.vk_cmd_set_fragment_shading_rate_enum_nv)(commandBuffer, shadingRate, combinerOps))))
 	}
 }
 impl Default for Vulkan_NV_fragment_shading_rate_enums {
@@ -32410,7 +32414,7 @@ pub struct VkDeviceFaultVendorBinaryHeaderVersionOneEXT {
 type PFN_vkGetDeviceFaultInfoEXT = extern "system" fn(device: VkDevice, pFaultCounts: *mut VkDeviceFaultCountsEXT, pFaultInfo: *mut VkDeviceFaultInfoEXT) -> VkResult;
 /// The dummy function for `vkGetDeviceFaultInfoEXT` from `VK_EXT_device_fault`
 extern "system" fn dummy_vkGetDeviceFaultInfoEXT(_: VkDevice, _: *mut VkDeviceFaultCountsEXT, _: *mut VkDeviceFaultInfoEXT) -> VkResult {
-	panic!("Vulkan function pointer of `vkGetDeviceFaultInfoEXT()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetDeviceFaultInfoEXT"))
 }
 /// trait for `VK_EXT_device_fault`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_device_fault.html>
@@ -32590,7 +32594,7 @@ pub struct VkVertexInputAttributeDescription2EXT {
 type PFN_vkCmdSetVertexInputEXT = extern "system" fn(commandBuffer: VkCommandBuffer, vertexBindingDescriptionCount: u32, pVertexBindingDescriptions: *const VkVertexInputBindingDescription2EXT, vertexAttributeDescriptionCount: u32, pVertexAttributeDescriptions: *const VkVertexInputAttributeDescription2EXT);
 /// The dummy function for `vkCmdSetVertexInputEXT` from `VK_EXT_vertex_input_dynamic_state`
 extern "system" fn dummy_vkCmdSetVertexInputEXT(_: VkCommandBuffer, _: u32, _: *const VkVertexInputBindingDescription2EXT, _: u32, _: *const VkVertexInputAttributeDescription2EXT) {
-	panic!("Vulkan function pointer of `vkCmdSetVertexInputEXT()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdSetVertexInputEXT"))
 }
 /// trait for `VK_EXT_vertex_input_dynamic_state`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_vertex_input_dynamic_state.html>
@@ -32605,7 +32609,7 @@ pub struct Vulkan_EXT_vertex_input_dynamic_state {
 }
 impl VK_EXT_vertex_input_dynamic_state for Vulkan_EXT_vertex_input_dynamic_state {
 	fn vkCmdSetVertexInputEXT(&self, commandBuffer: VkCommandBuffer, vertexBindingDescriptionCount: u32, pVertexBindingDescriptions: *const VkVertexInputBindingDescription2EXT, vertexAttributeDescriptionCount: u32, pVertexAttributeDescriptions: *const VkVertexInputAttributeDescription2EXT) -> Result<()> {
-		process_catch("vkCmdSetVertexInputEXT", catch_unwind(||((self.vk_cmd_set_vertex_input_ext)(commandBuffer, vertexBindingDescriptionCount, pVertexBindingDescriptions, vertexAttributeDescriptionCount, pVertexAttributeDescriptions))))
+		process_catch(catch_unwind(||((self.vk_cmd_set_vertex_input_ext)(commandBuffer, vertexBindingDescriptionCount, pVertexBindingDescriptions, vertexAttributeDescriptionCount, pVertexAttributeDescriptions))))
 	}
 }
 impl Default for Vulkan_EXT_vertex_input_dynamic_state {
@@ -32829,7 +32833,7 @@ type PFN_vkGetDeviceSubpassShadingMaxWorkgroupSizeHUAWEI = extern "system" fn(de
 type PFN_vkCmdSubpassShadingHUAWEI = extern "system" fn(commandBuffer: VkCommandBuffer);
 /// The dummy function for `vkGetDeviceSubpassShadingMaxWorkgroupSizeHUAWEI` from `VK_HUAWEI_subpass_shading`
 extern "system" fn dummy_vkGetDeviceSubpassShadingMaxWorkgroupSizeHUAWEI(_: VkDevice, _: VkRenderPass, _: *mut VkExtent2D) -> VkResult {
-	panic!("Vulkan function pointer of `vkGetDeviceSubpassShadingMaxWorkgroupSizeHUAWEI()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetDeviceSubpassShadingMaxWorkgroupSizeHUAWEI"))
 }
 /// trait for `VK_HUAWEI_subpass_shading`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_HUAWEI_subpass_shading.html>
@@ -32875,7 +32879,7 @@ pub struct VkPhysicalDeviceInvocationMaskFeaturesHUAWEI {
 type PFN_vkCmdBindInvocationMaskHUAWEI = extern "system" fn(commandBuffer: VkCommandBuffer, imageView: VkImageView, imageLayout: VkImageLayout);
 /// The dummy function for `vkCmdBindInvocationMaskHUAWEI` from `VK_HUAWEI_invocation_mask`
 extern "system" fn dummy_vkCmdBindInvocationMaskHUAWEI(_: VkCommandBuffer, _: VkImageView, _: VkImageLayout) {
-	panic!("Vulkan function pointer of `vkCmdBindInvocationMaskHUAWEI()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdBindInvocationMaskHUAWEI"))
 }
 /// trait for `VK_HUAWEI_invocation_mask`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_HUAWEI_invocation_mask.html>
@@ -32890,7 +32894,7 @@ pub struct Vulkan_HUAWEI_invocation_mask {
 }
 impl VK_HUAWEI_invocation_mask for Vulkan_HUAWEI_invocation_mask {
 	fn vkCmdBindInvocationMaskHUAWEI(&self, commandBuffer: VkCommandBuffer, imageView: VkImageView, imageLayout: VkImageLayout) -> Result<()> {
-		process_catch("vkCmdBindInvocationMaskHUAWEI", catch_unwind(||((self.vk_cmd_bind_invocation_mask_huawei)(commandBuffer, imageView, imageLayout))))
+		process_catch(catch_unwind(||((self.vk_cmd_bind_invocation_mask_huawei)(commandBuffer, imageView, imageLayout))))
 	}
 }
 impl Default for Vulkan_HUAWEI_invocation_mask {
@@ -32934,7 +32938,7 @@ pub struct VkPhysicalDeviceExternalMemoryRDMAFeaturesNV {
 type PFN_vkGetMemoryRemoteAddressNV = extern "system" fn(device: VkDevice, pMemoryGetRemoteAddressInfo: *const VkMemoryGetRemoteAddressInfoNV, pAddress: *mut VkRemoteAddressNV) -> VkResult;
 /// The dummy function for `vkGetMemoryRemoteAddressNV` from `VK_NV_external_memory_rdma`
 extern "system" fn dummy_vkGetMemoryRemoteAddressNV(_: VkDevice, _: *const VkMemoryGetRemoteAddressInfoNV, _: *mut VkRemoteAddressNV) -> VkResult {
-	panic!("Vulkan function pointer of `vkGetMemoryRemoteAddressNV()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetMemoryRemoteAddressNV"))
 }
 /// trait for `VK_NV_external_memory_rdma`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NV_external_memory_rdma.html>
@@ -32992,7 +32996,7 @@ pub struct VkPhysicalDevicePipelinePropertiesFeaturesEXT {
 type PFN_vkGetPipelinePropertiesEXT = extern "system" fn(device: VkDevice, pPipelineInfo: *const VkPipelineInfoEXT, pPipelineProperties: *mut VkBaseOutStructure) -> VkResult;
 /// The dummy function for `vkGetPipelinePropertiesEXT` from `VK_EXT_pipeline_properties`
 extern "system" fn dummy_vkGetPipelinePropertiesEXT(_: VkDevice, _: *const VkPipelineInfoEXT, _: *mut VkBaseOutStructure) -> VkResult {
-	panic!("Vulkan function pointer of `vkGetPipelinePropertiesEXT()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetPipelinePropertiesEXT"))
 }
 /// trait for `VK_EXT_pipeline_properties`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_pipeline_properties.html>
@@ -33151,7 +33155,7 @@ type PFN_vkCmdSetLogicOpEXT = extern "system" fn(commandBuffer: VkCommandBuffer,
 type PFN_vkCmdSetPrimitiveRestartEnableEXT = extern "system" fn(commandBuffer: VkCommandBuffer, primitiveRestartEnable: VkBool32);
 /// The dummy function for `vkCmdSetPatchControlPointsEXT` from `VK_EXT_extended_dynamic_state2`
 extern "system" fn dummy_vkCmdSetPatchControlPointsEXT(_: VkCommandBuffer, _: u32) {
-	panic!("Vulkan function pointer of `vkCmdSetPatchControlPointsEXT()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdSetPatchControlPointsEXT"))
 }
 /// trait for `VK_EXT_extended_dynamic_state2`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_extended_dynamic_state2.html>
@@ -33166,7 +33170,7 @@ pub struct Vulkan_EXT_extended_dynamic_state2 {
 }
 impl VK_EXT_extended_dynamic_state2 for Vulkan_EXT_extended_dynamic_state2 {
 	fn vkCmdSetPatchControlPointsEXT(&self, commandBuffer: VkCommandBuffer, patchControlPoints: u32) -> Result<()> {
-		process_catch("vkCmdSetPatchControlPointsEXT", catch_unwind(||((self.vk_cmd_set_patch_control_points_ext)(commandBuffer, patchControlPoints))))
+		process_catch(catch_unwind(||((self.vk_cmd_set_patch_control_points_ext)(commandBuffer, patchControlPoints))))
 	}
 }
 impl Default for Vulkan_EXT_extended_dynamic_state2 {
@@ -33207,7 +33211,7 @@ pub struct VkPipelineColorWriteCreateInfoEXT {
 type PFN_vkCmdSetColorWriteEnableEXT = extern "system" fn(commandBuffer: VkCommandBuffer, attachmentCount: u32, pColorWriteEnables: *const VkBool32);
 /// The dummy function for `vkCmdSetColorWriteEnableEXT` from `VK_EXT_color_write_enable`
 extern "system" fn dummy_vkCmdSetColorWriteEnableEXT(_: VkCommandBuffer, _: u32, _: *const VkBool32) {
-	panic!("Vulkan function pointer of `vkCmdSetColorWriteEnableEXT()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdSetColorWriteEnableEXT"))
 }
 /// trait for `VK_EXT_color_write_enable`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_color_write_enable.html>
@@ -33222,7 +33226,7 @@ pub struct Vulkan_EXT_color_write_enable {
 }
 impl VK_EXT_color_write_enable for Vulkan_EXT_color_write_enable {
 	fn vkCmdSetColorWriteEnableEXT(&self, commandBuffer: VkCommandBuffer, attachmentCount: u32, pColorWriteEnables: *const VkBool32) -> Result<()> {
-		process_catch("vkCmdSetColorWriteEnableEXT", catch_unwind(||((self.vk_cmd_set_color_write_enable_ext)(commandBuffer, attachmentCount, pColorWriteEnables))))
+		process_catch(catch_unwind(||((self.vk_cmd_set_color_write_enable_ext)(commandBuffer, attachmentCount, pColorWriteEnables))))
 	}
 }
 impl Default for Vulkan_EXT_color_write_enable {
@@ -33371,7 +33375,7 @@ type PFN_vkCmdDrawMultiEXT = extern "system" fn(commandBuffer: VkCommandBuffer, 
 type PFN_vkCmdDrawMultiIndexedEXT = extern "system" fn(commandBuffer: VkCommandBuffer, drawCount: u32, pIndexInfo: *const VkMultiDrawIndexedInfoEXT, instanceCount: u32, firstInstance: u32, stride: u32, pVertexOffset: *const int32_t);
 /// The dummy function for `vkCmdDrawMultiEXT` from `VK_EXT_multi_draw`
 extern "system" fn dummy_vkCmdDrawMultiEXT(_: VkCommandBuffer, _: u32, _: *const VkMultiDrawInfoEXT, _: u32, _: u32, _: u32) {
-	panic!("Vulkan function pointer of `vkCmdDrawMultiEXT()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdDrawMultiEXT"))
 }
 /// trait for `VK_EXT_multi_draw`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_multi_draw.html>
@@ -33386,7 +33390,7 @@ pub struct Vulkan_EXT_multi_draw {
 }
 impl VK_EXT_multi_draw for Vulkan_EXT_multi_draw {
 	fn vkCmdDrawMultiEXT(&self, commandBuffer: VkCommandBuffer, drawCount: u32, pVertexInfo: *const VkMultiDrawInfoEXT, instanceCount: u32, firstInstance: u32, stride: u32) -> Result<()> {
-		process_catch("vkCmdDrawMultiEXT", catch_unwind(||((self.vk_cmd_draw_multi_ext)(commandBuffer, drawCount, pVertexInfo, instanceCount, firstInstance, stride))))
+		process_catch(catch_unwind(||((self.vk_cmd_draw_multi_ext)(commandBuffer, drawCount, pVertexInfo, instanceCount, firstInstance, stride))))
 	}
 }
 impl Default for Vulkan_EXT_multi_draw {
@@ -33767,7 +33771,7 @@ type PFN_vkGetDeviceMicromapCompatibilityEXT = extern "system" fn(device: VkDevi
 type PFN_vkGetMicromapBuildSizesEXT = extern "system" fn(device: VkDevice, buildType: VkAccelerationStructureBuildTypeKHR, pBuildInfo: *const VkMicromapBuildInfoEXT, pSizeInfo: *mut VkMicromapBuildSizesInfoEXT);
 /// The dummy function for `vkCreateMicromapEXT` from `VK_EXT_opacity_micromap`
 extern "system" fn dummy_vkCreateMicromapEXT(_: VkDevice, _: *const VkMicromapCreateInfoEXT, _: *const VkAllocationCallbacks, _: *mut VkMicromapEXT) -> VkResult {
-	panic!("Vulkan function pointer of `vkCreateMicromapEXT()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCreateMicromapEXT"))
 }
 /// trait for `VK_EXT_opacity_micromap`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_opacity_micromap.html>
@@ -33855,7 +33859,7 @@ type PFN_vkCmdDrawClusterHUAWEI = extern "system" fn(commandBuffer: VkCommandBuf
 type PFN_vkCmdDrawClusterIndirectHUAWEI = extern "system" fn(commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize);
 /// The dummy function for `vkCmdDrawClusterHUAWEI` from `VK_HUAWEI_cluster_culling_shader`
 extern "system" fn dummy_vkCmdDrawClusterHUAWEI(_: VkCommandBuffer, _: u32, _: u32, _: u32) {
-	panic!("Vulkan function pointer of `vkCmdDrawClusterHUAWEI()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdDrawClusterHUAWEI"))
 }
 /// trait for `VK_HUAWEI_cluster_culling_shader`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_HUAWEI_cluster_culling_shader.html>
@@ -33870,7 +33874,7 @@ pub struct Vulkan_HUAWEI_cluster_culling_shader {
 }
 impl VK_HUAWEI_cluster_culling_shader for Vulkan_HUAWEI_cluster_culling_shader {
 	fn vkCmdDrawClusterHUAWEI(&self, commandBuffer: VkCommandBuffer, groupCountX: u32, groupCountY: u32, groupCountZ: u32) -> Result<()> {
-		process_catch("vkCmdDrawClusterHUAWEI", catch_unwind(||((self.vk_cmd_draw_cluster_huawei)(commandBuffer, groupCountX, groupCountY, groupCountZ))))
+		process_catch(catch_unwind(||((self.vk_cmd_draw_cluster_huawei)(commandBuffer, groupCountX, groupCountY, groupCountZ))))
 	}
 }
 impl Default for Vulkan_HUAWEI_cluster_culling_shader {
@@ -33938,7 +33942,7 @@ pub struct VkPhysicalDevicePageableDeviceLocalMemoryFeaturesEXT {
 type PFN_vkSetDeviceMemoryPriorityEXT = extern "system" fn(device: VkDevice, memory: VkDeviceMemory, priority: f32);
 /// The dummy function for `vkSetDeviceMemoryPriorityEXT` from `VK_EXT_pageable_device_local_memory`
 extern "system" fn dummy_vkSetDeviceMemoryPriorityEXT(_: VkDevice, _: VkDeviceMemory, _: f32) {
-	panic!("Vulkan function pointer of `vkSetDeviceMemoryPriorityEXT()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkSetDeviceMemoryPriorityEXT"))
 }
 /// trait for `VK_EXT_pageable_device_local_memory`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_pageable_device_local_memory.html>
@@ -33953,7 +33957,7 @@ pub struct Vulkan_EXT_pageable_device_local_memory {
 }
 impl VK_EXT_pageable_device_local_memory for Vulkan_EXT_pageable_device_local_memory {
 	fn vkSetDeviceMemoryPriorityEXT(&self, device: VkDevice, memory: VkDeviceMemory, priority: f32) -> Result<()> {
-		process_catch("vkSetDeviceMemoryPriorityEXT", catch_unwind(||((self.vk_set_device_memory_priority_ext)(device, memory, priority))))
+		process_catch(catch_unwind(||((self.vk_set_device_memory_priority_ext)(device, memory, priority))))
 	}
 }
 impl Default for Vulkan_EXT_pageable_device_local_memory {
@@ -34124,7 +34128,7 @@ type PFN_vkGetDescriptorSetLayoutHostMappingInfoVALVE = extern "system" fn(devic
 type PFN_vkGetDescriptorSetHostMappingVALVE = extern "system" fn(device: VkDevice, descriptorSet: VkDescriptorSet, ppData: *mut *mut c_void);
 /// The dummy function for `vkGetDescriptorSetLayoutHostMappingInfoVALVE` from `VK_VALVE_descriptor_set_host_mapping`
 extern "system" fn dummy_vkGetDescriptorSetLayoutHostMappingInfoVALVE(_: VkDevice, _: *const VkDescriptorSetBindingReferenceVALVE, _: *mut VkDescriptorSetLayoutHostMappingInfoVALVE) {
-	panic!("Vulkan function pointer of `vkGetDescriptorSetLayoutHostMappingInfoVALVE()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetDescriptorSetLayoutHostMappingInfoVALVE"))
 }
 /// trait for `VK_VALVE_descriptor_set_host_mapping`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_VALVE_descriptor_set_host_mapping.html>
@@ -34139,7 +34143,7 @@ pub struct Vulkan_VALVE_descriptor_set_host_mapping {
 }
 impl VK_VALVE_descriptor_set_host_mapping for Vulkan_VALVE_descriptor_set_host_mapping {
 	fn vkGetDescriptorSetLayoutHostMappingInfoVALVE(&self, device: VkDevice, pBindingReference: *const VkDescriptorSetBindingReferenceVALVE, pHostMapping: *mut VkDescriptorSetLayoutHostMappingInfoVALVE) -> Result<()> {
-		process_catch("vkGetDescriptorSetLayoutHostMappingInfoVALVE", catch_unwind(||((self.vk_get_descriptor_set_layout_host_mapping_info_valve)(device, pBindingReference, pHostMapping))))
+		process_catch(catch_unwind(||((self.vk_get_descriptor_set_layout_host_mapping_info_valve)(device, pBindingReference, pHostMapping))))
 	}
 }
 impl Default for Vulkan_VALVE_descriptor_set_host_mapping {
@@ -34368,7 +34372,7 @@ type PFN_vkCmdCopyMemoryIndirectNV = extern "system" fn(commandBuffer: VkCommand
 type PFN_vkCmdCopyMemoryToImageIndirectNV = extern "system" fn(commandBuffer: VkCommandBuffer, copyBufferAddress: VkDeviceAddress, copyCount: u32, stride: u32, dstImage: VkImage, dstImageLayout: VkImageLayout, pImageSubresources: *const VkImageSubresourceLayers);
 /// The dummy function for `vkCmdCopyMemoryIndirectNV` from `VK_NV_copy_memory_indirect`
 extern "system" fn dummy_vkCmdCopyMemoryIndirectNV(_: VkCommandBuffer, _: VkDeviceAddress, _: u32, _: u32) {
-	panic!("Vulkan function pointer of `vkCmdCopyMemoryIndirectNV()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdCopyMemoryIndirectNV"))
 }
 /// trait for `VK_NV_copy_memory_indirect`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NV_copy_memory_indirect.html>
@@ -34383,7 +34387,7 @@ pub struct Vulkan_NV_copy_memory_indirect {
 }
 impl VK_NV_copy_memory_indirect for Vulkan_NV_copy_memory_indirect {
 	fn vkCmdCopyMemoryIndirectNV(&self, commandBuffer: VkCommandBuffer, copyBufferAddress: VkDeviceAddress, copyCount: u32, stride: u32) -> Result<()> {
-		process_catch("vkCmdCopyMemoryIndirectNV", catch_unwind(||((self.vk_cmd_copy_memory_indirect_nv)(commandBuffer, copyBufferAddress, copyCount, stride))))
+		process_catch(catch_unwind(||((self.vk_cmd_copy_memory_indirect_nv)(commandBuffer, copyBufferAddress, copyCount, stride))))
 	}
 }
 impl Default for Vulkan_NV_copy_memory_indirect {
@@ -34444,7 +34448,7 @@ type PFN_vkCmdDecompressMemoryNV = extern "system" fn(commandBuffer: VkCommandBu
 type PFN_vkCmdDecompressMemoryIndirectCountNV = extern "system" fn(commandBuffer: VkCommandBuffer, indirectCommandsAddress: VkDeviceAddress, indirectCommandsCountAddress: VkDeviceAddress, stride: u32);
 /// The dummy function for `vkCmdDecompressMemoryNV` from `VK_NV_memory_decompression`
 extern "system" fn dummy_vkCmdDecompressMemoryNV(_: VkCommandBuffer, _: u32, _: *const VkDecompressMemoryRegionNV) {
-	panic!("Vulkan function pointer of `vkCmdDecompressMemoryNV()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdDecompressMemoryNV"))
 }
 /// trait for `VK_NV_memory_decompression`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NV_memory_decompression.html>
@@ -34459,7 +34463,7 @@ pub struct Vulkan_NV_memory_decompression {
 }
 impl VK_NV_memory_decompression for Vulkan_NV_memory_decompression {
 	fn vkCmdDecompressMemoryNV(&self, commandBuffer: VkCommandBuffer, decompressRegionCount: u32, pDecompressMemoryRegions: *const VkDecompressMemoryRegionNV) -> Result<()> {
-		process_catch("vkCmdDecompressMemoryNV", catch_unwind(||((self.vk_cmd_decompress_memory_nv)(commandBuffer, decompressRegionCount, pDecompressMemoryRegions))))
+		process_catch(catch_unwind(||((self.vk_cmd_decompress_memory_nv)(commandBuffer, decompressRegionCount, pDecompressMemoryRegions))))
 	}
 }
 impl Default for Vulkan_NV_memory_decompression {
@@ -34526,7 +34530,7 @@ type PFN_vkCmdUpdatePipelineIndirectBufferNV = extern "system" fn(commandBuffer:
 type PFN_vkGetPipelineIndirectDeviceAddressNV = extern "system" fn(device: VkDevice, pInfo: *const VkPipelineIndirectDeviceAddressInfoNV) -> VkDeviceAddress;
 /// The dummy function for `vkGetPipelineIndirectMemoryRequirementsNV` from `VK_NV_device_generated_commands_compute`
 extern "system" fn dummy_vkGetPipelineIndirectMemoryRequirementsNV(_: VkDevice, _: *const VkComputePipelineCreateInfo, _: *mut VkMemoryRequirements2) {
-	panic!("Vulkan function pointer of `vkGetPipelineIndirectMemoryRequirementsNV()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetPipelineIndirectMemoryRequirementsNV"))
 }
 /// trait for `VK_NV_device_generated_commands_compute`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NV_device_generated_commands_compute.html>
@@ -34541,7 +34545,7 @@ pub struct Vulkan_NV_device_generated_commands_compute {
 }
 impl VK_NV_device_generated_commands_compute for Vulkan_NV_device_generated_commands_compute {
 	fn vkGetPipelineIndirectMemoryRequirementsNV(&self, device: VkDevice, pCreateInfo: *const VkComputePipelineCreateInfo, pMemoryRequirements: *mut VkMemoryRequirements2) -> Result<()> {
-		process_catch("vkGetPipelineIndirectMemoryRequirementsNV", catch_unwind(||((self.vk_get_pipeline_indirect_memory_requirements_nv)(device, pCreateInfo, pMemoryRequirements))))
+		process_catch(catch_unwind(||((self.vk_get_pipeline_indirect_memory_requirements_nv)(device, pCreateInfo, pMemoryRequirements))))
 	}
 }
 impl Default for Vulkan_NV_device_generated_commands_compute {
@@ -34988,7 +34992,7 @@ type PFN_vkCmdSetRepresentativeFragmentTestEnableNV = extern "system" fn(command
 type PFN_vkCmdSetCoverageReductionModeNV = extern "system" fn(commandBuffer: VkCommandBuffer, coverageReductionMode: VkCoverageReductionModeNV);
 /// The dummy function for `vkCmdSetDepthClampEnableEXT` from `VK_EXT_extended_dynamic_state3`
 extern "system" fn dummy_vkCmdSetDepthClampEnableEXT(_: VkCommandBuffer, _: VkBool32) {
-	panic!("Vulkan function pointer of `vkCmdSetDepthClampEnableEXT()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdSetDepthClampEnableEXT"))
 }
 /// trait for `VK_EXT_extended_dynamic_state3`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_extended_dynamic_state3.html>
@@ -35003,7 +35007,7 @@ pub struct Vulkan_EXT_extended_dynamic_state3 {
 }
 impl VK_EXT_extended_dynamic_state3 for Vulkan_EXT_extended_dynamic_state3 {
 	fn vkCmdSetDepthClampEnableEXT(&self, commandBuffer: VkCommandBuffer, depthClampEnable: VkBool32) -> Result<()> {
-		process_catch("vkCmdSetDepthClampEnableEXT", catch_unwind(||((self.vk_cmd_set_depth_clamp_enable_ext)(commandBuffer, depthClampEnable))))
+		process_catch(catch_unwind(||((self.vk_cmd_set_depth_clamp_enable_ext)(commandBuffer, depthClampEnable))))
 	}
 }
 impl Default for Vulkan_EXT_extended_dynamic_state3 {
@@ -35501,7 +35505,7 @@ type PFN_vkGetTensorOpaqueCaptureDescriptorDataARM = extern "system" fn(device: 
 type PFN_vkGetTensorViewOpaqueCaptureDescriptorDataARM = extern "system" fn(device: VkDevice, pInfo: *const VkTensorViewCaptureDescriptorDataInfoARM, pData: *mut c_void) -> VkResult;
 /// The dummy function for `vkCreateTensorARM` from `VK_ARM_tensors`
 extern "system" fn dummy_vkCreateTensorARM(_: VkDevice, _: *const VkTensorCreateInfoARM, _: *const VkAllocationCallbacks, _: *mut VkTensorARM) -> VkResult {
-	panic!("Vulkan function pointer of `vkCreateTensorARM()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCreateTensorARM"))
 }
 /// trait for `VK_ARM_tensors`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_ARM_tensors.html>
@@ -35582,7 +35586,7 @@ type PFN_vkGetShaderModuleIdentifierEXT = extern "system" fn(device: VkDevice, s
 type PFN_vkGetShaderModuleCreateInfoIdentifierEXT = extern "system" fn(device: VkDevice, pCreateInfo: *const VkShaderModuleCreateInfo, pIdentifier: *mut VkShaderModuleIdentifierEXT);
 /// The dummy function for `vkGetShaderModuleIdentifierEXT` from `VK_EXT_shader_module_identifier`
 extern "system" fn dummy_vkGetShaderModuleIdentifierEXT(_: VkDevice, _: VkShaderModule, _: *mut VkShaderModuleIdentifierEXT) {
-	panic!("Vulkan function pointer of `vkGetShaderModuleIdentifierEXT()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetShaderModuleIdentifierEXT"))
 }
 /// trait for `VK_EXT_shader_module_identifier`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_shader_module_identifier.html>
@@ -35597,7 +35601,7 @@ pub struct Vulkan_EXT_shader_module_identifier {
 }
 impl VK_EXT_shader_module_identifier for Vulkan_EXT_shader_module_identifier {
 	fn vkGetShaderModuleIdentifierEXT(&self, device: VkDevice, shaderModule: VkShaderModule, pIdentifier: *mut VkShaderModuleIdentifierEXT) -> Result<()> {
-		process_catch("vkGetShaderModuleIdentifierEXT", catch_unwind(||((self.vk_get_shader_module_identifier_ext)(device, shaderModule, pIdentifier))))
+		process_catch(catch_unwind(||((self.vk_get_shader_module_identifier_ext)(device, shaderModule, pIdentifier))))
 	}
 }
 impl Default for Vulkan_EXT_shader_module_identifier {
@@ -35822,7 +35826,7 @@ type PFN_vkBindOpticalFlowSessionImageNV = extern "system" fn(device: VkDevice, 
 type PFN_vkCmdOpticalFlowExecuteNV = extern "system" fn(commandBuffer: VkCommandBuffer, session: VkOpticalFlowSessionNV, pExecuteInfo: *const VkOpticalFlowExecuteInfoNV);
 /// The dummy function for `vkGetPhysicalDeviceOpticalFlowImageFormatsNV` from `VK_NV_optical_flow`
 extern "system" fn dummy_vkGetPhysicalDeviceOpticalFlowImageFormatsNV(_: VkPhysicalDevice, _: *const VkOpticalFlowImageFormatInfoNV, _: *mut uint32_t, _: *mut VkOpticalFlowImageFormatPropertiesNV) -> VkResult {
-	panic!("Vulkan function pointer of `vkGetPhysicalDeviceOpticalFlowImageFormatsNV()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetPhysicalDeviceOpticalFlowImageFormatsNV"))
 }
 /// trait for `VK_NV_optical_flow`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NV_optical_flow.html>
@@ -35954,7 +35958,7 @@ pub struct VkAntiLagDataAMD {
 type PFN_vkAntiLagUpdateAMD = extern "system" fn(device: VkDevice, pData: *const VkAntiLagDataAMD);
 /// The dummy function for `vkAntiLagUpdateAMD` from `VK_AMD_anti_lag`
 extern "system" fn dummy_vkAntiLagUpdateAMD(_: VkDevice, _: *const VkAntiLagDataAMD) {
-	panic!("Vulkan function pointer of `vkAntiLagUpdateAMD()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkAntiLagUpdateAMD"))
 }
 /// trait for `VK_AMD_anti_lag`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_AMD_anti_lag.html>
@@ -35969,7 +35973,7 @@ pub struct Vulkan_AMD_anti_lag {
 }
 impl VK_AMD_anti_lag for Vulkan_AMD_anti_lag {
 	fn vkAntiLagUpdateAMD(&self, device: VkDevice, pData: *const VkAntiLagDataAMD) -> Result<()> {
-		process_catch("vkAntiLagUpdateAMD", catch_unwind(||((self.vk_anti_lag_update_amd)(device, pData))))
+		process_catch(catch_unwind(||((self.vk_anti_lag_update_amd)(device, pData))))
 	}
 }
 impl Default for Vulkan_AMD_anti_lag {
@@ -36094,7 +36098,7 @@ type PFN_vkCmdBindShadersEXT = extern "system" fn(commandBuffer: VkCommandBuffer
 type PFN_vkCmdSetDepthClampRangeEXT = extern "system" fn(commandBuffer: VkCommandBuffer, depthClampMode: VkDepthClampModeEXT, pDepthClampRange: *const VkDepthClampRangeEXT);
 /// The dummy function for `vkCreateShadersEXT` from `VK_EXT_shader_object`
 extern "system" fn dummy_vkCreateShadersEXT(_: VkDevice, _: u32, _: *const VkShaderCreateInfoEXT, _: *const VkAllocationCallbacks, _: *mut VkShaderEXT) -> VkResult {
-	panic!("Vulkan function pointer of `vkCreateShadersEXT()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCreateShadersEXT"))
 }
 /// trait for `VK_EXT_shader_object`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_shader_object.html>
@@ -36154,7 +36158,7 @@ type PFN_vkGetFramebufferTilePropertiesQCOM = extern "system" fn(device: VkDevic
 type PFN_vkGetDynamicRenderingTilePropertiesQCOM = extern "system" fn(device: VkDevice, pRenderingInfo: *const VkRenderingInfo, pProperties: *mut VkTilePropertiesQCOM) -> VkResult;
 /// The dummy function for `vkGetFramebufferTilePropertiesQCOM` from `VK_QCOM_tile_properties`
 extern "system" fn dummy_vkGetFramebufferTilePropertiesQCOM(_: VkDevice, _: VkFramebuffer, _: *mut uint32_t, _: *mut VkTilePropertiesQCOM) -> VkResult {
-	panic!("Vulkan function pointer of `vkGetFramebufferTilePropertiesQCOM()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetFramebufferTilePropertiesQCOM"))
 }
 /// trait for `VK_QCOM_tile_properties`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_QCOM_tile_properties.html>
@@ -36370,7 +36374,7 @@ type PFN_vkConvertCooperativeVectorMatrixNV = extern "system" fn(device: VkDevic
 type PFN_vkCmdConvertCooperativeVectorMatrixNV = extern "system" fn(commandBuffer: VkCommandBuffer, infoCount: u32, pInfos: *const VkConvertCooperativeVectorMatrixInfoNV);
 /// The dummy function for `vkGetPhysicalDeviceCooperativeVectorPropertiesNV` from `VK_NV_cooperative_vector`
 extern "system" fn dummy_vkGetPhysicalDeviceCooperativeVectorPropertiesNV(_: VkPhysicalDevice, _: *mut uint32_t, _: *mut VkCooperativeVectorPropertiesNV) -> VkResult {
-	panic!("Vulkan function pointer of `vkGetPhysicalDeviceCooperativeVectorPropertiesNV()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetPhysicalDeviceCooperativeVectorPropertiesNV"))
 }
 /// trait for `VK_NV_cooperative_vector`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NV_cooperative_vector.html>
@@ -36778,7 +36782,7 @@ type PFN_vkGetLatencyTimingsNV = extern "system" fn(device: VkDevice, swapchain:
 type PFN_vkQueueNotifyOutOfBandNV = extern "system" fn(queue: VkQueue, pQueueTypeInfo: *const VkOutOfBandQueueTypeInfoNV);
 /// The dummy function for `vkSetLatencySleepModeNV` from `VK_NV_low_latency2`
 extern "system" fn dummy_vkSetLatencySleepModeNV(_: VkDevice, _: VkSwapchainKHR, _: *const VkLatencySleepModeInfoNV) -> VkResult {
-	panic!("Vulkan function pointer of `vkSetLatencySleepModeNV()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkSetLatencySleepModeNV"))
 }
 /// trait for `VK_NV_low_latency2`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NV_low_latency2.html>
@@ -37136,7 +37140,7 @@ type PFN_vkGetPhysicalDeviceQueueFamilyDataGraphPropertiesARM = extern "system" 
 type PFN_vkGetPhysicalDeviceQueueFamilyDataGraphProcessingEnginePropertiesARM = extern "system" fn(physicalDevice: VkPhysicalDevice, pQueueFamilyDataGraphProcessingEngineInfo: *const VkPhysicalDeviceQueueFamilyDataGraphProcessingEngineInfoARM, pQueueFamilyDataGraphProcessingEngineProperties: *mut VkQueueFamilyDataGraphProcessingEnginePropertiesARM);
 /// The dummy function for `vkCreateDataGraphPipelinesARM` from `VK_ARM_data_graph`
 extern "system" fn dummy_vkCreateDataGraphPipelinesARM(_: VkDevice, _: VkDeferredOperationKHR, _: VkPipelineCache, _: u32, _: *const VkDataGraphPipelineCreateInfoARM, _: *const VkAllocationCallbacks, _: *mut VkPipeline) -> VkResult {
-	panic!("Vulkan function pointer of `vkCreateDataGraphPipelinesARM()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCreateDataGraphPipelinesARM"))
 }
 /// trait for `VK_ARM_data_graph`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_ARM_data_graph.html>
@@ -37416,7 +37420,7 @@ pub struct VkPhysicalDeviceAttachmentFeedbackLoopDynamicStateFeaturesEXT {
 type PFN_vkCmdSetAttachmentFeedbackLoopEnableEXT = extern "system" fn(commandBuffer: VkCommandBuffer, aspectMask: VkImageAspectFlags);
 /// The dummy function for `vkCmdSetAttachmentFeedbackLoopEnableEXT` from `VK_EXT_attachment_feedback_loop_dynamic_state`
 extern "system" fn dummy_vkCmdSetAttachmentFeedbackLoopEnableEXT(_: VkCommandBuffer, _: VkImageAspectFlags) {
-	panic!("Vulkan function pointer of `vkCmdSetAttachmentFeedbackLoopEnableEXT()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdSetAttachmentFeedbackLoopEnableEXT"))
 }
 /// trait for `VK_EXT_attachment_feedback_loop_dynamic_state`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_attachment_feedback_loop_dynamic_state.html>
@@ -37431,7 +37435,7 @@ pub struct Vulkan_EXT_attachment_feedback_loop_dynamic_state {
 }
 impl VK_EXT_attachment_feedback_loop_dynamic_state for Vulkan_EXT_attachment_feedback_loop_dynamic_state {
 	fn vkCmdSetAttachmentFeedbackLoopEnableEXT(&self, commandBuffer: VkCommandBuffer, aspectMask: VkImageAspectFlags) -> Result<()> {
-		process_catch("vkCmdSetAttachmentFeedbackLoopEnableEXT", catch_unwind(||((self.vk_cmd_set_attachment_feedback_loop_enable_ext)(commandBuffer, aspectMask))))
+		process_catch(catch_unwind(||((self.vk_cmd_set_attachment_feedback_loop_enable_ext)(commandBuffer, aspectMask))))
 	}
 }
 impl Default for Vulkan_EXT_attachment_feedback_loop_dynamic_state {
@@ -37561,7 +37565,7 @@ pub struct VkTileMemorySizeInfoQCOM {
 type PFN_vkCmdBindTileMemoryQCOM = extern "system" fn(commandBuffer: VkCommandBuffer, pTileMemoryBindInfo: *const VkTileMemoryBindInfoQCOM);
 /// The dummy function for `vkCmdBindTileMemoryQCOM` from `VK_QCOM_tile_memory_heap`
 extern "system" fn dummy_vkCmdBindTileMemoryQCOM(_: VkCommandBuffer, _: *const VkTileMemoryBindInfoQCOM) {
-	panic!("Vulkan function pointer of `vkCmdBindTileMemoryQCOM()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdBindTileMemoryQCOM"))
 }
 /// trait for `VK_QCOM_tile_memory_heap`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_QCOM_tile_memory_heap.html>
@@ -37576,7 +37580,7 @@ pub struct Vulkan_QCOM_tile_memory_heap {
 }
 impl VK_QCOM_tile_memory_heap for Vulkan_QCOM_tile_memory_heap {
 	fn vkCmdBindTileMemoryQCOM(&self, commandBuffer: VkCommandBuffer, pTileMemoryBindInfo: *const VkTileMemoryBindInfoQCOM) -> Result<()> {
-		process_catch("vkCmdBindTileMemoryQCOM", catch_unwind(||((self.vk_cmd_bind_tile_memory_qcom)(commandBuffer, pTileMemoryBindInfo))))
+		process_catch(catch_unwind(||((self.vk_cmd_bind_tile_memory_qcom)(commandBuffer, pTileMemoryBindInfo))))
 	}
 }
 impl Default for Vulkan_QCOM_tile_memory_heap {
@@ -37717,7 +37721,7 @@ type PFN_vkDestroyExternalComputeQueueNV = extern "system" fn(device: VkDevice, 
 type PFN_vkGetExternalComputeQueueDataNV = extern "system" fn(externalQueue: VkExternalComputeQueueNV, params: *mut VkExternalComputeQueueDataParamsNV, pData: *mut c_void);
 /// The dummy function for `vkCreateExternalComputeQueueNV` from `VK_NV_external_compute_queue`
 extern "system" fn dummy_vkCreateExternalComputeQueueNV(_: VkDevice, _: *const VkExternalComputeQueueCreateInfoNV, _: *const VkAllocationCallbacks, _: *mut VkExternalComputeQueueNV) -> VkResult {
-	panic!("Vulkan function pointer of `vkCreateExternalComputeQueueNV()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCreateExternalComputeQueueNV"))
 }
 /// trait for `VK_NV_external_compute_queue`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NV_external_compute_queue.html>
@@ -38313,7 +38317,7 @@ type PFN_vkGetClusterAccelerationStructureBuildSizesNV = extern "system" fn(devi
 type PFN_vkCmdBuildClusterAccelerationStructureIndirectNV = extern "system" fn(commandBuffer: VkCommandBuffer, pCommandInfos: *const VkClusterAccelerationStructureCommandsInfoNV);
 /// The dummy function for `vkGetClusterAccelerationStructureBuildSizesNV` from `VK_NV_cluster_acceleration_structure`
 extern "system" fn dummy_vkGetClusterAccelerationStructureBuildSizesNV(_: VkDevice, _: *const VkClusterAccelerationStructureInputInfoNV, _: *mut VkAccelerationStructureBuildSizesInfoKHR) {
-	panic!("Vulkan function pointer of `vkGetClusterAccelerationStructureBuildSizesNV()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetClusterAccelerationStructureBuildSizesNV"))
 }
 /// trait for `VK_NV_cluster_acceleration_structure`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NV_cluster_acceleration_structure.html>
@@ -38328,7 +38332,7 @@ pub struct Vulkan_NV_cluster_acceleration_structure {
 }
 impl VK_NV_cluster_acceleration_structure for Vulkan_NV_cluster_acceleration_structure {
 	fn vkGetClusterAccelerationStructureBuildSizesNV(&self, device: VkDevice, pInfo: *const VkClusterAccelerationStructureInputInfoNV, pSizeInfo: *mut VkAccelerationStructureBuildSizesInfoKHR) -> Result<()> {
-		process_catch("vkGetClusterAccelerationStructureBuildSizesNV", catch_unwind(||((self.vk_get_cluster_acceleration_structure_build_sizes_nv)(device, pInfo, pSizeInfo))))
+		process_catch(catch_unwind(||((self.vk_get_cluster_acceleration_structure_build_sizes_nv)(device, pInfo, pSizeInfo))))
 	}
 }
 impl Default for Vulkan_NV_cluster_acceleration_structure {
@@ -38486,7 +38490,7 @@ type PFN_vkGetPartitionedAccelerationStructuresBuildSizesNV = extern "system" fn
 type PFN_vkCmdBuildPartitionedAccelerationStructuresNV = extern "system" fn(commandBuffer: VkCommandBuffer, pBuildInfo: *const VkBuildPartitionedAccelerationStructureInfoNV);
 /// The dummy function for `vkGetPartitionedAccelerationStructuresBuildSizesNV` from `VK_NV_partitioned_acceleration_structure`
 extern "system" fn dummy_vkGetPartitionedAccelerationStructuresBuildSizesNV(_: VkDevice, _: *const VkPartitionedAccelerationStructureInstancesInputNV, _: *mut VkAccelerationStructureBuildSizesInfoKHR) {
-	panic!("Vulkan function pointer of `vkGetPartitionedAccelerationStructuresBuildSizesNV()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetPartitionedAccelerationStructuresBuildSizesNV"))
 }
 /// trait for `VK_NV_partitioned_acceleration_structure`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NV_partitioned_acceleration_structure.html>
@@ -38501,7 +38505,7 @@ pub struct Vulkan_NV_partitioned_acceleration_structure {
 }
 impl VK_NV_partitioned_acceleration_structure for Vulkan_NV_partitioned_acceleration_structure {
 	fn vkGetPartitionedAccelerationStructuresBuildSizesNV(&self, device: VkDevice, pInfo: *const VkPartitionedAccelerationStructureInstancesInputNV, pSizeInfo: *mut VkAccelerationStructureBuildSizesInfoKHR) -> Result<()> {
-		process_catch("vkGetPartitionedAccelerationStructuresBuildSizesNV", catch_unwind(||((self.vk_get_partitioned_acceleration_structures_build_sizes_nv)(device, pInfo, pSizeInfo))))
+		process_catch(catch_unwind(||((self.vk_get_partitioned_acceleration_structures_build_sizes_nv)(device, pInfo, pSizeInfo))))
 	}
 }
 impl Default for Vulkan_NV_partitioned_acceleration_structure {
@@ -38872,7 +38876,7 @@ type PFN_vkUpdateIndirectExecutionSetPipelineEXT = extern "system" fn(device: Vk
 type PFN_vkUpdateIndirectExecutionSetShaderEXT = extern "system" fn(device: VkDevice, indirectExecutionSet: VkIndirectExecutionSetEXT, executionSetWriteCount: u32, pExecutionSetWrites: *const VkWriteIndirectExecutionSetShaderEXT);
 /// The dummy function for `vkGetGeneratedCommandsMemoryRequirementsEXT` from `VK_EXT_device_generated_commands`
 extern "system" fn dummy_vkGetGeneratedCommandsMemoryRequirementsEXT(_: VkDevice, _: *const VkGeneratedCommandsMemoryRequirementsInfoEXT, _: *mut VkMemoryRequirements2) {
-	panic!("Vulkan function pointer of `vkGetGeneratedCommandsMemoryRequirementsEXT()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetGeneratedCommandsMemoryRequirementsEXT"))
 }
 /// trait for `VK_EXT_device_generated_commands`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_device_generated_commands.html>
@@ -38887,7 +38891,7 @@ pub struct Vulkan_EXT_device_generated_commands {
 }
 impl VK_EXT_device_generated_commands for Vulkan_EXT_device_generated_commands {
 	fn vkGetGeneratedCommandsMemoryRequirementsEXT(&self, device: VkDevice, pInfo: *const VkGeneratedCommandsMemoryRequirementsInfoEXT, pMemoryRequirements: *mut VkMemoryRequirements2) -> Result<()> {
-		process_catch("vkGetGeneratedCommandsMemoryRequirementsEXT", catch_unwind(||((self.vk_get_generated_commands_memory_requirements_ext)(device, pInfo, pMemoryRequirements))))
+		process_catch(catch_unwind(||((self.vk_get_generated_commands_memory_requirements_ext)(device, pInfo, pMemoryRequirements))))
 	}
 }
 impl Default for Vulkan_EXT_device_generated_commands {
@@ -39069,7 +39073,7 @@ pub struct VkPhysicalDeviceCooperativeMatrix2PropertiesNV {
 type PFN_vkGetPhysicalDeviceCooperativeMatrixFlexibleDimensionsPropertiesNV = extern "system" fn(physicalDevice: VkPhysicalDevice, pPropertyCount: *mut uint32_t, pProperties: *mut VkCooperativeMatrixFlexibleDimensionsPropertiesNV) -> VkResult;
 /// The dummy function for `vkGetPhysicalDeviceCooperativeMatrixFlexibleDimensionsPropertiesNV` from `VK_NV_cooperative_matrix2`
 extern "system" fn dummy_vkGetPhysicalDeviceCooperativeMatrixFlexibleDimensionsPropertiesNV(_: VkPhysicalDevice, _: *mut uint32_t, _: *mut VkCooperativeMatrixFlexibleDimensionsPropertiesNV) -> VkResult {
-	panic!("Vulkan function pointer of `vkGetPhysicalDeviceCooperativeMatrixFlexibleDimensionsPropertiesNV()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkGetPhysicalDeviceCooperativeMatrixFlexibleDimensionsPropertiesNV"))
 }
 /// trait for `VK_NV_cooperative_matrix2`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NV_cooperative_matrix2.html>
@@ -39272,7 +39276,7 @@ pub struct VkRenderingEndInfoEXT {
 type PFN_vkCmdEndRendering2EXT = extern "system" fn(commandBuffer: VkCommandBuffer, pRenderingEndInfo: *const VkRenderingEndInfoEXT);
 /// The dummy function for `vkCmdEndRendering2EXT` from `VK_EXT_fragment_density_map_offset`
 extern "system" fn dummy_vkCmdEndRendering2EXT(_: VkCommandBuffer, _: *const VkRenderingEndInfoEXT) {
-	panic!("Vulkan function pointer of `vkCmdEndRendering2EXT()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdEndRendering2EXT"))
 }
 /// trait for `VK_EXT_fragment_density_map_offset`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_fragment_density_map_offset.html>
@@ -39287,7 +39291,7 @@ pub struct Vulkan_EXT_fragment_density_map_offset {
 }
 impl VK_EXT_fragment_density_map_offset for Vulkan_EXT_fragment_density_map_offset {
 	fn vkCmdEndRendering2EXT(&self, commandBuffer: VkCommandBuffer, pRenderingEndInfo: *const VkRenderingEndInfoEXT) -> Result<()> {
-		process_catch("vkCmdEndRendering2EXT", catch_unwind(||((self.vk_cmd_end_rendering2_ext)(commandBuffer, pRenderingEndInfo))))
+		process_catch(catch_unwind(||((self.vk_cmd_end_rendering2_ext)(commandBuffer, pRenderingEndInfo))))
 	}
 }
 impl Default for Vulkan_EXT_fragment_density_map_offset {
@@ -39623,7 +39627,7 @@ type PFN_vkGetDeviceAccelerationStructureCompatibilityKHR = extern "system" fn(d
 type PFN_vkGetAccelerationStructureBuildSizesKHR = extern "system" fn(device: VkDevice, buildType: VkAccelerationStructureBuildTypeKHR, pBuildInfo: *const VkAccelerationStructureBuildGeometryInfoKHR, pMaxPrimitiveCounts: *const uint32_t, pSizeInfo: *mut VkAccelerationStructureBuildSizesInfoKHR);
 /// The dummy function for `vkCreateAccelerationStructureKHR` from `VK_KHR_acceleration_structure`
 extern "system" fn dummy_vkCreateAccelerationStructureKHR(_: VkDevice, _: *const VkAccelerationStructureCreateInfoKHR, _: *const VkAllocationCallbacks, _: *mut VkAccelerationStructureKHR) -> VkResult {
-	panic!("Vulkan function pointer of `vkCreateAccelerationStructureKHR()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCreateAccelerationStructureKHR"))
 }
 /// trait for `VK_KHR_acceleration_structure`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_acceleration_structure.html>
@@ -39768,7 +39772,7 @@ type PFN_vkGetRayTracingShaderGroupStackSizeKHR = extern "system" fn(device: VkD
 type PFN_vkCmdSetRayTracingPipelineStackSizeKHR = extern "system" fn(commandBuffer: VkCommandBuffer, pipelineStackSize: u32);
 /// The dummy function for `vkCmdTraceRaysKHR` from `VK_KHR_ray_tracing_pipeline`
 extern "system" fn dummy_vkCmdTraceRaysKHR(_: VkCommandBuffer, _: *const VkStridedDeviceAddressRegionKHR, _: *const VkStridedDeviceAddressRegionKHR, _: *const VkStridedDeviceAddressRegionKHR, _: *const VkStridedDeviceAddressRegionKHR, _: u32, _: u32, _: u32) {
-	panic!("Vulkan function pointer of `vkCmdTraceRaysKHR()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdTraceRaysKHR"))
 }
 /// trait for `VK_KHR_ray_tracing_pipeline`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_ray_tracing_pipeline.html>
@@ -39783,7 +39787,7 @@ pub struct Vulkan_KHR_ray_tracing_pipeline {
 }
 impl VK_KHR_ray_tracing_pipeline for Vulkan_KHR_ray_tracing_pipeline {
 	fn vkCmdTraceRaysKHR(&self, commandBuffer: VkCommandBuffer, pRaygenShaderBindingTable: *const VkStridedDeviceAddressRegionKHR, pMissShaderBindingTable: *const VkStridedDeviceAddressRegionKHR, pHitShaderBindingTable: *const VkStridedDeviceAddressRegionKHR, pCallableShaderBindingTable: *const VkStridedDeviceAddressRegionKHR, width: u32, height: u32, depth: u32) -> Result<()> {
-		process_catch("vkCmdTraceRaysKHR", catch_unwind(||((self.vk_cmd_trace_rays_khr)(commandBuffer, pRaygenShaderBindingTable, pMissShaderBindingTable, pHitShaderBindingTable, pCallableShaderBindingTable, width, height, depth))))
+		process_catch(catch_unwind(||((self.vk_cmd_trace_rays_khr)(commandBuffer, pRaygenShaderBindingTable, pMissShaderBindingTable, pHitShaderBindingTable, pCallableShaderBindingTable, width, height, depth))))
 	}
 }
 impl Default for Vulkan_KHR_ray_tracing_pipeline {
@@ -39895,7 +39899,7 @@ type PFN_vkCmdDrawMeshTasksIndirectEXT = extern "system" fn(commandBuffer: VkCom
 type PFN_vkCmdDrawMeshTasksIndirectCountEXT = extern "system" fn(commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize, countBuffer: VkBuffer, countBufferOffset: VkDeviceSize, maxDrawCount: u32, stride: u32);
 /// The dummy function for `vkCmdDrawMeshTasksEXT` from `VK_EXT_mesh_shader`
 extern "system" fn dummy_vkCmdDrawMeshTasksEXT(_: VkCommandBuffer, _: u32, _: u32, _: u32) {
-	panic!("Vulkan function pointer of `vkCmdDrawMeshTasksEXT()` is NULL")
+	panic_any(VkError::NullFunctionPointer("vkCmdDrawMeshTasksEXT"))
 }
 /// trait for `VK_EXT_mesh_shader`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_mesh_shader.html>
@@ -39910,7 +39914,7 @@ pub struct Vulkan_EXT_mesh_shader {
 }
 impl VK_EXT_mesh_shader for Vulkan_EXT_mesh_shader {
 	fn vkCmdDrawMeshTasksEXT(&self, commandBuffer: VkCommandBuffer, groupCountX: u32, groupCountY: u32, groupCountZ: u32) -> Result<()> {
-		process_catch("vkCmdDrawMeshTasksEXT", catch_unwind(||((self.vk_cmd_draw_mesh_tasks_ext)(commandBuffer, groupCountX, groupCountY, groupCountZ))))
+		process_catch(catch_unwind(||((self.vk_cmd_draw_mesh_tasks_ext)(commandBuffer, groupCountX, groupCountY, groupCountZ))))
 	}
 }
 impl Default for Vulkan_EXT_mesh_shader {
@@ -40747,40 +40751,40 @@ impl VK_VERSION_1_0 for VkCore {
 		convert_result("vkCreateInstance", catch_unwind(||((self.vk_version_1_0.vk_create_instance)(pCreateInfo, pAllocator, pInstance))))
 	}
 	fn vkDestroyInstance(&self, instance: VkInstance, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch("vkDestroyInstance", catch_unwind(||((self.vk_version_1_0.vk_destroy_instance)(instance, pAllocator))))
+		process_catch(catch_unwind(||((self.vk_version_1_0.vk_destroy_instance)(instance, pAllocator))))
 	}
 	fn vkEnumeratePhysicalDevices(&self, instance: VkInstance, pPhysicalDeviceCount: *mut uint32_t, pPhysicalDevices: *mut VkPhysicalDevice) -> Result<()> {
 		convert_result("vkEnumeratePhysicalDevices", catch_unwind(||((self.vk_version_1_0.vk_enumerate_physical_devices)(instance, pPhysicalDeviceCount, pPhysicalDevices))))
 	}
 	fn vkGetPhysicalDeviceFeatures(&self, physicalDevice: VkPhysicalDevice, pFeatures: *mut VkPhysicalDeviceFeatures) -> Result<()> {
-		process_catch("vkGetPhysicalDeviceFeatures", catch_unwind(||((self.vk_version_1_0.vk_get_physical_device_features)(physicalDevice, pFeatures))))
+		process_catch(catch_unwind(||((self.vk_version_1_0.vk_get_physical_device_features)(physicalDevice, pFeatures))))
 	}
 	fn vkGetPhysicalDeviceFormatProperties(&self, physicalDevice: VkPhysicalDevice, format: VkFormat, pFormatProperties: *mut VkFormatProperties) -> Result<()> {
-		process_catch("vkGetPhysicalDeviceFormatProperties", catch_unwind(||((self.vk_version_1_0.vk_get_physical_device_format_properties)(physicalDevice, format, pFormatProperties))))
+		process_catch(catch_unwind(||((self.vk_version_1_0.vk_get_physical_device_format_properties)(physicalDevice, format, pFormatProperties))))
 	}
 	fn vkGetPhysicalDeviceImageFormatProperties(&self, physicalDevice: VkPhysicalDevice, format: VkFormat, type_: VkImageType, tiling: VkImageTiling, usage: VkImageUsageFlags, flags: VkImageCreateFlags, pImageFormatProperties: *mut VkImageFormatProperties) -> Result<()> {
 		convert_result("vkGetPhysicalDeviceImageFormatProperties", catch_unwind(||((self.vk_version_1_0.vk_get_physical_device_image_format_properties)(physicalDevice, format, type_, tiling, usage, flags, pImageFormatProperties))))
 	}
 	fn vkGetPhysicalDeviceProperties(&self, physicalDevice: VkPhysicalDevice, pProperties: *mut VkPhysicalDeviceProperties) -> Result<()> {
-		process_catch("vkGetPhysicalDeviceProperties", catch_unwind(||((self.vk_version_1_0.vk_get_physical_device_properties)(physicalDevice, pProperties))))
+		process_catch(catch_unwind(||((self.vk_version_1_0.vk_get_physical_device_properties)(physicalDevice, pProperties))))
 	}
 	fn vkGetPhysicalDeviceQueueFamilyProperties(&self, physicalDevice: VkPhysicalDevice, pQueueFamilyPropertyCount: *mut uint32_t, pQueueFamilyProperties: *mut VkQueueFamilyProperties) -> Result<()> {
-		process_catch("vkGetPhysicalDeviceQueueFamilyProperties", catch_unwind(||((self.vk_version_1_0.vk_get_physical_device_queue_family_properties)(physicalDevice, pQueueFamilyPropertyCount, pQueueFamilyProperties))))
+		process_catch(catch_unwind(||((self.vk_version_1_0.vk_get_physical_device_queue_family_properties)(physicalDevice, pQueueFamilyPropertyCount, pQueueFamilyProperties))))
 	}
 	fn vkGetPhysicalDeviceMemoryProperties(&self, physicalDevice: VkPhysicalDevice, pMemoryProperties: *mut VkPhysicalDeviceMemoryProperties) -> Result<()> {
-		process_catch("vkGetPhysicalDeviceMemoryProperties", catch_unwind(||((self.vk_version_1_0.vk_get_physical_device_memory_properties)(physicalDevice, pMemoryProperties))))
+		process_catch(catch_unwind(||((self.vk_version_1_0.vk_get_physical_device_memory_properties)(physicalDevice, pMemoryProperties))))
 	}
 	fn vkGetInstanceProcAddr(&self, instance: VkInstance, pName: *const i8) -> Result<PFN_vkVoidFunction> {
-		process_catch("vkGetInstanceProcAddr", catch_unwind(||((self.vk_version_1_0.vk_get_instance_proc_addr)(instance, pName))))
+		process_catch(catch_unwind(||((self.vk_version_1_0.vk_get_instance_proc_addr)(instance, pName))))
 	}
 	fn vkGetDeviceProcAddr(&self, device: VkDevice, pName: *const i8) -> Result<PFN_vkVoidFunction> {
-		process_catch("vkGetDeviceProcAddr", catch_unwind(||((self.vk_version_1_0.vk_get_device_proc_addr)(device, pName))))
+		process_catch(catch_unwind(||((self.vk_version_1_0.vk_get_device_proc_addr)(device, pName))))
 	}
 	fn vkCreateDevice(&self, physicalDevice: VkPhysicalDevice, pCreateInfo: *const VkDeviceCreateInfo, pAllocator: *const VkAllocationCallbacks, pDevice: *mut VkDevice) -> Result<()> {
 		convert_result("vkCreateDevice", catch_unwind(||((self.vk_version_1_0.vk_create_device)(physicalDevice, pCreateInfo, pAllocator, pDevice))))
 	}
 	fn vkDestroyDevice(&self, device: VkDevice, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch("vkDestroyDevice", catch_unwind(||((self.vk_version_1_0.vk_destroy_device)(device, pAllocator))))
+		process_catch(catch_unwind(||((self.vk_version_1_0.vk_destroy_device)(device, pAllocator))))
 	}
 	fn vkEnumerateInstanceExtensionProperties(&self, pLayerName: *const i8, pPropertyCount: *mut uint32_t, pProperties: *mut VkExtensionProperties) -> Result<()> {
 		convert_result("vkEnumerateInstanceExtensionProperties", catch_unwind(||((self.vk_version_1_0.vk_enumerate_instance_extension_properties)(pLayerName, pPropertyCount, pProperties))))
@@ -40795,7 +40799,7 @@ impl VK_VERSION_1_0 for VkCore {
 		convert_result("vkEnumerateDeviceLayerProperties", catch_unwind(||((self.vk_version_1_0.vk_enumerate_device_layer_properties)(physicalDevice, pPropertyCount, pProperties))))
 	}
 	fn vkGetDeviceQueue(&self, device: VkDevice, queueFamilyIndex: u32, queueIndex: u32, pQueue: *mut VkQueue) -> Result<()> {
-		process_catch("vkGetDeviceQueue", catch_unwind(||((self.vk_version_1_0.vk_get_device_queue)(device, queueFamilyIndex, queueIndex, pQueue))))
+		process_catch(catch_unwind(||((self.vk_version_1_0.vk_get_device_queue)(device, queueFamilyIndex, queueIndex, pQueue))))
 	}
 	fn vkQueueSubmit(&self, queue: VkQueue, submitCount: u32, pSubmits: *const VkSubmitInfo, fence: VkFence) -> Result<()> {
 		convert_result("vkQueueSubmit", catch_unwind(||((self.vk_version_1_0.vk_queue_submit)(queue, submitCount, pSubmits, fence))))
@@ -40810,13 +40814,13 @@ impl VK_VERSION_1_0 for VkCore {
 		convert_result("vkAllocateMemory", catch_unwind(||((self.vk_version_1_0.vk_allocate_memory)(device, pAllocateInfo, pAllocator, pMemory))))
 	}
 	fn vkFreeMemory(&self, device: VkDevice, memory: VkDeviceMemory, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch("vkFreeMemory", catch_unwind(||((self.vk_version_1_0.vk_free_memory)(device, memory, pAllocator))))
+		process_catch(catch_unwind(||((self.vk_version_1_0.vk_free_memory)(device, memory, pAllocator))))
 	}
 	fn vkMapMemory(&self, device: VkDevice, memory: VkDeviceMemory, offset: VkDeviceSize, size: VkDeviceSize, flags: VkMemoryMapFlags, ppData: *mut *mut c_void) -> Result<()> {
 		convert_result("vkMapMemory", catch_unwind(||((self.vk_version_1_0.vk_map_memory)(device, memory, offset, size, flags, ppData))))
 	}
 	fn vkUnmapMemory(&self, device: VkDevice, memory: VkDeviceMemory) -> Result<()> {
-		process_catch("vkUnmapMemory", catch_unwind(||((self.vk_version_1_0.vk_unmap_memory)(device, memory))))
+		process_catch(catch_unwind(||((self.vk_version_1_0.vk_unmap_memory)(device, memory))))
 	}
 	fn vkFlushMappedMemoryRanges(&self, device: VkDevice, memoryRangeCount: u32, pMemoryRanges: *const VkMappedMemoryRange) -> Result<()> {
 		convert_result("vkFlushMappedMemoryRanges", catch_unwind(||((self.vk_version_1_0.vk_flush_mapped_memory_ranges)(device, memoryRangeCount, pMemoryRanges))))
@@ -40825,7 +40829,7 @@ impl VK_VERSION_1_0 for VkCore {
 		convert_result("vkInvalidateMappedMemoryRanges", catch_unwind(||((self.vk_version_1_0.vk_invalidate_mapped_memory_ranges)(device, memoryRangeCount, pMemoryRanges))))
 	}
 	fn vkGetDeviceMemoryCommitment(&self, device: VkDevice, memory: VkDeviceMemory, pCommittedMemoryInBytes: *mut VkDeviceSize) -> Result<()> {
-		process_catch("vkGetDeviceMemoryCommitment", catch_unwind(||((self.vk_version_1_0.vk_get_device_memory_commitment)(device, memory, pCommittedMemoryInBytes))))
+		process_catch(catch_unwind(||((self.vk_version_1_0.vk_get_device_memory_commitment)(device, memory, pCommittedMemoryInBytes))))
 	}
 	fn vkBindBufferMemory(&self, device: VkDevice, buffer: VkBuffer, memory: VkDeviceMemory, memoryOffset: VkDeviceSize) -> Result<()> {
 		convert_result("vkBindBufferMemory", catch_unwind(||((self.vk_version_1_0.vk_bind_buffer_memory)(device, buffer, memory, memoryOffset))))
@@ -40834,16 +40838,16 @@ impl VK_VERSION_1_0 for VkCore {
 		convert_result("vkBindImageMemory", catch_unwind(||((self.vk_version_1_0.vk_bind_image_memory)(device, image, memory, memoryOffset))))
 	}
 	fn vkGetBufferMemoryRequirements(&self, device: VkDevice, buffer: VkBuffer, pMemoryRequirements: *mut VkMemoryRequirements) -> Result<()> {
-		process_catch("vkGetBufferMemoryRequirements", catch_unwind(||((self.vk_version_1_0.vk_get_buffer_memory_requirements)(device, buffer, pMemoryRequirements))))
+		process_catch(catch_unwind(||((self.vk_version_1_0.vk_get_buffer_memory_requirements)(device, buffer, pMemoryRequirements))))
 	}
 	fn vkGetImageMemoryRequirements(&self, device: VkDevice, image: VkImage, pMemoryRequirements: *mut VkMemoryRequirements) -> Result<()> {
-		process_catch("vkGetImageMemoryRequirements", catch_unwind(||((self.vk_version_1_0.vk_get_image_memory_requirements)(device, image, pMemoryRequirements))))
+		process_catch(catch_unwind(||((self.vk_version_1_0.vk_get_image_memory_requirements)(device, image, pMemoryRequirements))))
 	}
 	fn vkGetImageSparseMemoryRequirements(&self, device: VkDevice, image: VkImage, pSparseMemoryRequirementCount: *mut uint32_t, pSparseMemoryRequirements: *mut VkSparseImageMemoryRequirements) -> Result<()> {
-		process_catch("vkGetImageSparseMemoryRequirements", catch_unwind(||((self.vk_version_1_0.vk_get_image_sparse_memory_requirements)(device, image, pSparseMemoryRequirementCount, pSparseMemoryRequirements))))
+		process_catch(catch_unwind(||((self.vk_version_1_0.vk_get_image_sparse_memory_requirements)(device, image, pSparseMemoryRequirementCount, pSparseMemoryRequirements))))
 	}
 	fn vkGetPhysicalDeviceSparseImageFormatProperties(&self, physicalDevice: VkPhysicalDevice, format: VkFormat, type_: VkImageType, samples: VkSampleCountFlagBits, usage: VkImageUsageFlags, tiling: VkImageTiling, pPropertyCount: *mut uint32_t, pProperties: *mut VkSparseImageFormatProperties) -> Result<()> {
-		process_catch("vkGetPhysicalDeviceSparseImageFormatProperties", catch_unwind(||((self.vk_version_1_0.vk_get_physical_device_sparse_image_format_properties)(physicalDevice, format, type_, samples, usage, tiling, pPropertyCount, pProperties))))
+		process_catch(catch_unwind(||((self.vk_version_1_0.vk_get_physical_device_sparse_image_format_properties)(physicalDevice, format, type_, samples, usage, tiling, pPropertyCount, pProperties))))
 	}
 	fn vkQueueBindSparse(&self, queue: VkQueue, bindInfoCount: u32, pBindInfo: *const VkBindSparseInfo, fence: VkFence) -> Result<()> {
 		convert_result("vkQueueBindSparse", catch_unwind(||((self.vk_version_1_0.vk_queue_bind_sparse)(queue, bindInfoCount, pBindInfo, fence))))
@@ -40852,7 +40856,7 @@ impl VK_VERSION_1_0 for VkCore {
 		convert_result("vkCreateFence", catch_unwind(||((self.vk_version_1_0.vk_create_fence)(device, pCreateInfo, pAllocator, pFence))))
 	}
 	fn vkDestroyFence(&self, device: VkDevice, fence: VkFence, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch("vkDestroyFence", catch_unwind(||((self.vk_version_1_0.vk_destroy_fence)(device, fence, pAllocator))))
+		process_catch(catch_unwind(||((self.vk_version_1_0.vk_destroy_fence)(device, fence, pAllocator))))
 	}
 	fn vkResetFences(&self, device: VkDevice, fenceCount: u32, pFences: *const VkFence) -> Result<()> {
 		convert_result("vkResetFences", catch_unwind(||((self.vk_version_1_0.vk_reset_fences)(device, fenceCount, pFences))))
@@ -40867,13 +40871,13 @@ impl VK_VERSION_1_0 for VkCore {
 		convert_result("vkCreateSemaphore", catch_unwind(||((self.vk_version_1_0.vk_create_semaphore)(device, pCreateInfo, pAllocator, pSemaphore))))
 	}
 	fn vkDestroySemaphore(&self, device: VkDevice, semaphore: VkSemaphore, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch("vkDestroySemaphore", catch_unwind(||((self.vk_version_1_0.vk_destroy_semaphore)(device, semaphore, pAllocator))))
+		process_catch(catch_unwind(||((self.vk_version_1_0.vk_destroy_semaphore)(device, semaphore, pAllocator))))
 	}
 	fn vkCreateEvent(&self, device: VkDevice, pCreateInfo: *const VkEventCreateInfo, pAllocator: *const VkAllocationCallbacks, pEvent: *mut VkEvent) -> Result<()> {
 		convert_result("vkCreateEvent", catch_unwind(||((self.vk_version_1_0.vk_create_event)(device, pCreateInfo, pAllocator, pEvent))))
 	}
 	fn vkDestroyEvent(&self, device: VkDevice, event: VkEvent, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch("vkDestroyEvent", catch_unwind(||((self.vk_version_1_0.vk_destroy_event)(device, event, pAllocator))))
+		process_catch(catch_unwind(||((self.vk_version_1_0.vk_destroy_event)(device, event, pAllocator))))
 	}
 	fn vkGetEventStatus(&self, device: VkDevice, event: VkEvent) -> Result<()> {
 		convert_result("vkGetEventStatus", catch_unwind(||((self.vk_version_1_0.vk_get_event_status)(device, event))))
@@ -40888,7 +40892,7 @@ impl VK_VERSION_1_0 for VkCore {
 		convert_result("vkCreateQueryPool", catch_unwind(||((self.vk_version_1_0.vk_create_query_pool)(device, pCreateInfo, pAllocator, pQueryPool))))
 	}
 	fn vkDestroyQueryPool(&self, device: VkDevice, queryPool: VkQueryPool, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch("vkDestroyQueryPool", catch_unwind(||((self.vk_version_1_0.vk_destroy_query_pool)(device, queryPool, pAllocator))))
+		process_catch(catch_unwind(||((self.vk_version_1_0.vk_destroy_query_pool)(device, queryPool, pAllocator))))
 	}
 	fn vkGetQueryPoolResults(&self, device: VkDevice, queryPool: VkQueryPool, firstQuery: u32, queryCount: u32, dataSize: usize, pData: *mut c_void, stride: VkDeviceSize, flags: VkQueryResultFlags) -> Result<()> {
 		convert_result("vkGetQueryPoolResults", catch_unwind(||((self.vk_version_1_0.vk_get_query_pool_results)(device, queryPool, firstQuery, queryCount, dataSize, pData, stride, flags))))
@@ -40897,40 +40901,40 @@ impl VK_VERSION_1_0 for VkCore {
 		convert_result("vkCreateBuffer", catch_unwind(||((self.vk_version_1_0.vk_create_buffer)(device, pCreateInfo, pAllocator, pBuffer))))
 	}
 	fn vkDestroyBuffer(&self, device: VkDevice, buffer: VkBuffer, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch("vkDestroyBuffer", catch_unwind(||((self.vk_version_1_0.vk_destroy_buffer)(device, buffer, pAllocator))))
+		process_catch(catch_unwind(||((self.vk_version_1_0.vk_destroy_buffer)(device, buffer, pAllocator))))
 	}
 	fn vkCreateBufferView(&self, device: VkDevice, pCreateInfo: *const VkBufferViewCreateInfo, pAllocator: *const VkAllocationCallbacks, pView: *mut VkBufferView) -> Result<()> {
 		convert_result("vkCreateBufferView", catch_unwind(||((self.vk_version_1_0.vk_create_buffer_view)(device, pCreateInfo, pAllocator, pView))))
 	}
 	fn vkDestroyBufferView(&self, device: VkDevice, bufferView: VkBufferView, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch("vkDestroyBufferView", catch_unwind(||((self.vk_version_1_0.vk_destroy_buffer_view)(device, bufferView, pAllocator))))
+		process_catch(catch_unwind(||((self.vk_version_1_0.vk_destroy_buffer_view)(device, bufferView, pAllocator))))
 	}
 	fn vkCreateImage(&self, device: VkDevice, pCreateInfo: *const VkImageCreateInfo, pAllocator: *const VkAllocationCallbacks, pImage: *mut VkImage) -> Result<()> {
 		convert_result("vkCreateImage", catch_unwind(||((self.vk_version_1_0.vk_create_image)(device, pCreateInfo, pAllocator, pImage))))
 	}
 	fn vkDestroyImage(&self, device: VkDevice, image: VkImage, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch("vkDestroyImage", catch_unwind(||((self.vk_version_1_0.vk_destroy_image)(device, image, pAllocator))))
+		process_catch(catch_unwind(||((self.vk_version_1_0.vk_destroy_image)(device, image, pAllocator))))
 	}
 	fn vkGetImageSubresourceLayout(&self, device: VkDevice, image: VkImage, pSubresource: *const VkImageSubresource, pLayout: *mut VkSubresourceLayout) -> Result<()> {
-		process_catch("vkGetImageSubresourceLayout", catch_unwind(||((self.vk_version_1_0.vk_get_image_subresource_layout)(device, image, pSubresource, pLayout))))
+		process_catch(catch_unwind(||((self.vk_version_1_0.vk_get_image_subresource_layout)(device, image, pSubresource, pLayout))))
 	}
 	fn vkCreateImageView(&self, device: VkDevice, pCreateInfo: *const VkImageViewCreateInfo, pAllocator: *const VkAllocationCallbacks, pView: *mut VkImageView) -> Result<()> {
 		convert_result("vkCreateImageView", catch_unwind(||((self.vk_version_1_0.vk_create_image_view)(device, pCreateInfo, pAllocator, pView))))
 	}
 	fn vkDestroyImageView(&self, device: VkDevice, imageView: VkImageView, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch("vkDestroyImageView", catch_unwind(||((self.vk_version_1_0.vk_destroy_image_view)(device, imageView, pAllocator))))
+		process_catch(catch_unwind(||((self.vk_version_1_0.vk_destroy_image_view)(device, imageView, pAllocator))))
 	}
 	fn vkCreateShaderModule(&self, device: VkDevice, pCreateInfo: *const VkShaderModuleCreateInfo, pAllocator: *const VkAllocationCallbacks, pShaderModule: *mut VkShaderModule) -> Result<()> {
 		convert_result("vkCreateShaderModule", catch_unwind(||((self.vk_version_1_0.vk_create_shader_module)(device, pCreateInfo, pAllocator, pShaderModule))))
 	}
 	fn vkDestroyShaderModule(&self, device: VkDevice, shaderModule: VkShaderModule, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch("vkDestroyShaderModule", catch_unwind(||((self.vk_version_1_0.vk_destroy_shader_module)(device, shaderModule, pAllocator))))
+		process_catch(catch_unwind(||((self.vk_version_1_0.vk_destroy_shader_module)(device, shaderModule, pAllocator))))
 	}
 	fn vkCreatePipelineCache(&self, device: VkDevice, pCreateInfo: *const VkPipelineCacheCreateInfo, pAllocator: *const VkAllocationCallbacks, pPipelineCache: *mut VkPipelineCache) -> Result<()> {
 		convert_result("vkCreatePipelineCache", catch_unwind(||((self.vk_version_1_0.vk_create_pipeline_cache)(device, pCreateInfo, pAllocator, pPipelineCache))))
 	}
 	fn vkDestroyPipelineCache(&self, device: VkDevice, pipelineCache: VkPipelineCache, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch("vkDestroyPipelineCache", catch_unwind(||((self.vk_version_1_0.vk_destroy_pipeline_cache)(device, pipelineCache, pAllocator))))
+		process_catch(catch_unwind(||((self.vk_version_1_0.vk_destroy_pipeline_cache)(device, pipelineCache, pAllocator))))
 	}
 	fn vkGetPipelineCacheData(&self, device: VkDevice, pipelineCache: VkPipelineCache, pDataSize: *mut size_t, pData: *mut c_void) -> Result<()> {
 		convert_result("vkGetPipelineCacheData", catch_unwind(||((self.vk_version_1_0.vk_get_pipeline_cache_data)(device, pipelineCache, pDataSize, pData))))
@@ -40945,31 +40949,31 @@ impl VK_VERSION_1_0 for VkCore {
 		convert_result("vkCreateComputePipelines", catch_unwind(||((self.vk_version_1_0.vk_create_compute_pipelines)(device, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines))))
 	}
 	fn vkDestroyPipeline(&self, device: VkDevice, pipeline: VkPipeline, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch("vkDestroyPipeline", catch_unwind(||((self.vk_version_1_0.vk_destroy_pipeline)(device, pipeline, pAllocator))))
+		process_catch(catch_unwind(||((self.vk_version_1_0.vk_destroy_pipeline)(device, pipeline, pAllocator))))
 	}
 	fn vkCreatePipelineLayout(&self, device: VkDevice, pCreateInfo: *const VkPipelineLayoutCreateInfo, pAllocator: *const VkAllocationCallbacks, pPipelineLayout: *mut VkPipelineLayout) -> Result<()> {
 		convert_result("vkCreatePipelineLayout", catch_unwind(||((self.vk_version_1_0.vk_create_pipeline_layout)(device, pCreateInfo, pAllocator, pPipelineLayout))))
 	}
 	fn vkDestroyPipelineLayout(&self, device: VkDevice, pipelineLayout: VkPipelineLayout, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch("vkDestroyPipelineLayout", catch_unwind(||((self.vk_version_1_0.vk_destroy_pipeline_layout)(device, pipelineLayout, pAllocator))))
+		process_catch(catch_unwind(||((self.vk_version_1_0.vk_destroy_pipeline_layout)(device, pipelineLayout, pAllocator))))
 	}
 	fn vkCreateSampler(&self, device: VkDevice, pCreateInfo: *const VkSamplerCreateInfo, pAllocator: *const VkAllocationCallbacks, pSampler: *mut VkSampler) -> Result<()> {
 		convert_result("vkCreateSampler", catch_unwind(||((self.vk_version_1_0.vk_create_sampler)(device, pCreateInfo, pAllocator, pSampler))))
 	}
 	fn vkDestroySampler(&self, device: VkDevice, sampler: VkSampler, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch("vkDestroySampler", catch_unwind(||((self.vk_version_1_0.vk_destroy_sampler)(device, sampler, pAllocator))))
+		process_catch(catch_unwind(||((self.vk_version_1_0.vk_destroy_sampler)(device, sampler, pAllocator))))
 	}
 	fn vkCreateDescriptorSetLayout(&self, device: VkDevice, pCreateInfo: *const VkDescriptorSetLayoutCreateInfo, pAllocator: *const VkAllocationCallbacks, pSetLayout: *mut VkDescriptorSetLayout) -> Result<()> {
 		convert_result("vkCreateDescriptorSetLayout", catch_unwind(||((self.vk_version_1_0.vk_create_descriptor_set_layout)(device, pCreateInfo, pAllocator, pSetLayout))))
 	}
 	fn vkDestroyDescriptorSetLayout(&self, device: VkDevice, descriptorSetLayout: VkDescriptorSetLayout, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch("vkDestroyDescriptorSetLayout", catch_unwind(||((self.vk_version_1_0.vk_destroy_descriptor_set_layout)(device, descriptorSetLayout, pAllocator))))
+		process_catch(catch_unwind(||((self.vk_version_1_0.vk_destroy_descriptor_set_layout)(device, descriptorSetLayout, pAllocator))))
 	}
 	fn vkCreateDescriptorPool(&self, device: VkDevice, pCreateInfo: *const VkDescriptorPoolCreateInfo, pAllocator: *const VkAllocationCallbacks, pDescriptorPool: *mut VkDescriptorPool) -> Result<()> {
 		convert_result("vkCreateDescriptorPool", catch_unwind(||((self.vk_version_1_0.vk_create_descriptor_pool)(device, pCreateInfo, pAllocator, pDescriptorPool))))
 	}
 	fn vkDestroyDescriptorPool(&self, device: VkDevice, descriptorPool: VkDescriptorPool, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch("vkDestroyDescriptorPool", catch_unwind(||((self.vk_version_1_0.vk_destroy_descriptor_pool)(device, descriptorPool, pAllocator))))
+		process_catch(catch_unwind(||((self.vk_version_1_0.vk_destroy_descriptor_pool)(device, descriptorPool, pAllocator))))
 	}
 	fn vkResetDescriptorPool(&self, device: VkDevice, descriptorPool: VkDescriptorPool, flags: VkDescriptorPoolResetFlags) -> Result<()> {
 		convert_result("vkResetDescriptorPool", catch_unwind(||((self.vk_version_1_0.vk_reset_descriptor_pool)(device, descriptorPool, flags))))
@@ -40981,28 +40985,28 @@ impl VK_VERSION_1_0 for VkCore {
 		convert_result("vkFreeDescriptorSets", catch_unwind(||((self.vk_version_1_0.vk_free_descriptor_sets)(device, descriptorPool, descriptorSetCount, pDescriptorSets))))
 	}
 	fn vkUpdateDescriptorSets(&self, device: VkDevice, descriptorWriteCount: u32, pDescriptorWrites: *const VkWriteDescriptorSet, descriptorCopyCount: u32, pDescriptorCopies: *const VkCopyDescriptorSet) -> Result<()> {
-		process_catch("vkUpdateDescriptorSets", catch_unwind(||((self.vk_version_1_0.vk_update_descriptor_sets)(device, descriptorWriteCount, pDescriptorWrites, descriptorCopyCount, pDescriptorCopies))))
+		process_catch(catch_unwind(||((self.vk_version_1_0.vk_update_descriptor_sets)(device, descriptorWriteCount, pDescriptorWrites, descriptorCopyCount, pDescriptorCopies))))
 	}
 	fn vkCreateFramebuffer(&self, device: VkDevice, pCreateInfo: *const VkFramebufferCreateInfo, pAllocator: *const VkAllocationCallbacks, pFramebuffer: *mut VkFramebuffer) -> Result<()> {
 		convert_result("vkCreateFramebuffer", catch_unwind(||((self.vk_version_1_0.vk_create_framebuffer)(device, pCreateInfo, pAllocator, pFramebuffer))))
 	}
 	fn vkDestroyFramebuffer(&self, device: VkDevice, framebuffer: VkFramebuffer, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch("vkDestroyFramebuffer", catch_unwind(||((self.vk_version_1_0.vk_destroy_framebuffer)(device, framebuffer, pAllocator))))
+		process_catch(catch_unwind(||((self.vk_version_1_0.vk_destroy_framebuffer)(device, framebuffer, pAllocator))))
 	}
 	fn vkCreateRenderPass(&self, device: VkDevice, pCreateInfo: *const VkRenderPassCreateInfo, pAllocator: *const VkAllocationCallbacks, pRenderPass: *mut VkRenderPass) -> Result<()> {
 		convert_result("vkCreateRenderPass", catch_unwind(||((self.vk_version_1_0.vk_create_render_pass)(device, pCreateInfo, pAllocator, pRenderPass))))
 	}
 	fn vkDestroyRenderPass(&self, device: VkDevice, renderPass: VkRenderPass, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch("vkDestroyRenderPass", catch_unwind(||((self.vk_version_1_0.vk_destroy_render_pass)(device, renderPass, pAllocator))))
+		process_catch(catch_unwind(||((self.vk_version_1_0.vk_destroy_render_pass)(device, renderPass, pAllocator))))
 	}
 	fn vkGetRenderAreaGranularity(&self, device: VkDevice, renderPass: VkRenderPass, pGranularity: *mut VkExtent2D) -> Result<()> {
-		process_catch("vkGetRenderAreaGranularity", catch_unwind(||((self.vk_version_1_0.vk_get_render_area_granularity)(device, renderPass, pGranularity))))
+		process_catch(catch_unwind(||((self.vk_version_1_0.vk_get_render_area_granularity)(device, renderPass, pGranularity))))
 	}
 	fn vkCreateCommandPool(&self, device: VkDevice, pCreateInfo: *const VkCommandPoolCreateInfo, pAllocator: *const VkAllocationCallbacks, pCommandPool: *mut VkCommandPool) -> Result<()> {
 		convert_result("vkCreateCommandPool", catch_unwind(||((self.vk_version_1_0.vk_create_command_pool)(device, pCreateInfo, pAllocator, pCommandPool))))
 	}
 	fn vkDestroyCommandPool(&self, device: VkDevice, commandPool: VkCommandPool, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch("vkDestroyCommandPool", catch_unwind(||((self.vk_version_1_0.vk_destroy_command_pool)(device, commandPool, pAllocator))))
+		process_catch(catch_unwind(||((self.vk_version_1_0.vk_destroy_command_pool)(device, commandPool, pAllocator))))
 	}
 	fn vkResetCommandPool(&self, device: VkDevice, commandPool: VkCommandPool, flags: VkCommandPoolResetFlags) -> Result<()> {
 		convert_result("vkResetCommandPool", catch_unwind(||((self.vk_version_1_0.vk_reset_command_pool)(device, commandPool, flags))))
@@ -41011,7 +41015,7 @@ impl VK_VERSION_1_0 for VkCore {
 		convert_result("vkAllocateCommandBuffers", catch_unwind(||((self.vk_version_1_0.vk_allocate_command_buffers)(device, pAllocateInfo, pCommandBuffers))))
 	}
 	fn vkFreeCommandBuffers(&self, device: VkDevice, commandPool: VkCommandPool, commandBufferCount: u32, pCommandBuffers: *const VkCommandBuffer) -> Result<()> {
-		process_catch("vkFreeCommandBuffers", catch_unwind(||((self.vk_version_1_0.vk_free_command_buffers)(device, commandPool, commandBufferCount, pCommandBuffers))))
+		process_catch(catch_unwind(||((self.vk_version_1_0.vk_free_command_buffers)(device, commandPool, commandBufferCount, pCommandBuffers))))
 	}
 	fn vkBeginCommandBuffer(&self, commandBuffer: VkCommandBuffer, pBeginInfo: *const VkCommandBufferBeginInfo) -> Result<()> {
 		convert_result("vkBeginCommandBuffer", catch_unwind(||((self.vk_version_1_0.vk_begin_command_buffer)(commandBuffer, pBeginInfo))))
@@ -41023,136 +41027,136 @@ impl VK_VERSION_1_0 for VkCore {
 		convert_result("vkResetCommandBuffer", catch_unwind(||((self.vk_version_1_0.vk_reset_command_buffer)(commandBuffer, flags))))
 	}
 	fn vkCmdBindPipeline(&self, commandBuffer: VkCommandBuffer, pipelineBindPoint: VkPipelineBindPoint, pipeline: VkPipeline) -> Result<()> {
-		process_catch("vkCmdBindPipeline", catch_unwind(||((self.vk_version_1_0.vk_cmd_bind_pipeline)(commandBuffer, pipelineBindPoint, pipeline))))
+		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_bind_pipeline)(commandBuffer, pipelineBindPoint, pipeline))))
 	}
 	fn vkCmdSetViewport(&self, commandBuffer: VkCommandBuffer, firstViewport: u32, viewportCount: u32, pViewports: *const VkViewport) -> Result<()> {
-		process_catch("vkCmdSetViewport", catch_unwind(||((self.vk_version_1_0.vk_cmd_set_viewport)(commandBuffer, firstViewport, viewportCount, pViewports))))
+		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_set_viewport)(commandBuffer, firstViewport, viewportCount, pViewports))))
 	}
 	fn vkCmdSetScissor(&self, commandBuffer: VkCommandBuffer, firstScissor: u32, scissorCount: u32, pScissors: *const VkRect2D) -> Result<()> {
-		process_catch("vkCmdSetScissor", catch_unwind(||((self.vk_version_1_0.vk_cmd_set_scissor)(commandBuffer, firstScissor, scissorCount, pScissors))))
+		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_set_scissor)(commandBuffer, firstScissor, scissorCount, pScissors))))
 	}
 	fn vkCmdSetLineWidth(&self, commandBuffer: VkCommandBuffer, lineWidth: f32) -> Result<()> {
-		process_catch("vkCmdSetLineWidth", catch_unwind(||((self.vk_version_1_0.vk_cmd_set_line_width)(commandBuffer, lineWidth))))
+		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_set_line_width)(commandBuffer, lineWidth))))
 	}
 	fn vkCmdSetDepthBias(&self, commandBuffer: VkCommandBuffer, depthBiasConstantFactor: f32, depthBiasClamp: f32, depthBiasSlopeFactor: f32) -> Result<()> {
-		process_catch("vkCmdSetDepthBias", catch_unwind(||((self.vk_version_1_0.vk_cmd_set_depth_bias)(commandBuffer, depthBiasConstantFactor, depthBiasClamp, depthBiasSlopeFactor))))
+		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_set_depth_bias)(commandBuffer, depthBiasConstantFactor, depthBiasClamp, depthBiasSlopeFactor))))
 	}
 	fn vkCmdSetBlendConstants(&self, commandBuffer: VkCommandBuffer, blendConstants: &[float; 4 as usize]) -> Result<()> {
-		process_catch("vkCmdSetBlendConstants", catch_unwind(||((self.vk_version_1_0.vk_cmd_set_blend_constants)(commandBuffer, blendConstants))))
+		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_set_blend_constants)(commandBuffer, blendConstants))))
 	}
 	fn vkCmdSetDepthBounds(&self, commandBuffer: VkCommandBuffer, minDepthBounds: f32, maxDepthBounds: f32) -> Result<()> {
-		process_catch("vkCmdSetDepthBounds", catch_unwind(||((self.vk_version_1_0.vk_cmd_set_depth_bounds)(commandBuffer, minDepthBounds, maxDepthBounds))))
+		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_set_depth_bounds)(commandBuffer, minDepthBounds, maxDepthBounds))))
 	}
 	fn vkCmdSetStencilCompareMask(&self, commandBuffer: VkCommandBuffer, faceMask: VkStencilFaceFlags, compareMask: u32) -> Result<()> {
-		process_catch("vkCmdSetStencilCompareMask", catch_unwind(||((self.vk_version_1_0.vk_cmd_set_stencil_compare_mask)(commandBuffer, faceMask, compareMask))))
+		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_set_stencil_compare_mask)(commandBuffer, faceMask, compareMask))))
 	}
 	fn vkCmdSetStencilWriteMask(&self, commandBuffer: VkCommandBuffer, faceMask: VkStencilFaceFlags, writeMask: u32) -> Result<()> {
-		process_catch("vkCmdSetStencilWriteMask", catch_unwind(||((self.vk_version_1_0.vk_cmd_set_stencil_write_mask)(commandBuffer, faceMask, writeMask))))
+		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_set_stencil_write_mask)(commandBuffer, faceMask, writeMask))))
 	}
 	fn vkCmdSetStencilReference(&self, commandBuffer: VkCommandBuffer, faceMask: VkStencilFaceFlags, reference: u32) -> Result<()> {
-		process_catch("vkCmdSetStencilReference", catch_unwind(||((self.vk_version_1_0.vk_cmd_set_stencil_reference)(commandBuffer, faceMask, reference))))
+		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_set_stencil_reference)(commandBuffer, faceMask, reference))))
 	}
 	fn vkCmdBindDescriptorSets(&self, commandBuffer: VkCommandBuffer, pipelineBindPoint: VkPipelineBindPoint, layout: VkPipelineLayout, firstSet: u32, descriptorSetCount: u32, pDescriptorSets: *const VkDescriptorSet, dynamicOffsetCount: u32, pDynamicOffsets: *const uint32_t) -> Result<()> {
-		process_catch("vkCmdBindDescriptorSets", catch_unwind(||((self.vk_version_1_0.vk_cmd_bind_descriptor_sets)(commandBuffer, pipelineBindPoint, layout, firstSet, descriptorSetCount, pDescriptorSets, dynamicOffsetCount, pDynamicOffsets))))
+		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_bind_descriptor_sets)(commandBuffer, pipelineBindPoint, layout, firstSet, descriptorSetCount, pDescriptorSets, dynamicOffsetCount, pDynamicOffsets))))
 	}
 	fn vkCmdBindIndexBuffer(&self, commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize, indexType: VkIndexType) -> Result<()> {
-		process_catch("vkCmdBindIndexBuffer", catch_unwind(||((self.vk_version_1_0.vk_cmd_bind_index_buffer)(commandBuffer, buffer, offset, indexType))))
+		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_bind_index_buffer)(commandBuffer, buffer, offset, indexType))))
 	}
 	fn vkCmdBindVertexBuffers(&self, commandBuffer: VkCommandBuffer, firstBinding: u32, bindingCount: u32, pBuffers: *const VkBuffer, pOffsets: *const VkDeviceSize) -> Result<()> {
-		process_catch("vkCmdBindVertexBuffers", catch_unwind(||((self.vk_version_1_0.vk_cmd_bind_vertex_buffers)(commandBuffer, firstBinding, bindingCount, pBuffers, pOffsets))))
+		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_bind_vertex_buffers)(commandBuffer, firstBinding, bindingCount, pBuffers, pOffsets))))
 	}
 	fn vkCmdDraw(&self, commandBuffer: VkCommandBuffer, vertexCount: u32, instanceCount: u32, firstVertex: u32, firstInstance: u32) -> Result<()> {
-		process_catch("vkCmdDraw", catch_unwind(||((self.vk_version_1_0.vk_cmd_draw)(commandBuffer, vertexCount, instanceCount, firstVertex, firstInstance))))
+		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_draw)(commandBuffer, vertexCount, instanceCount, firstVertex, firstInstance))))
 	}
 	fn vkCmdDrawIndexed(&self, commandBuffer: VkCommandBuffer, indexCount: u32, instanceCount: u32, firstIndex: u32, vertexOffset: i32, firstInstance: u32) -> Result<()> {
-		process_catch("vkCmdDrawIndexed", catch_unwind(||((self.vk_version_1_0.vk_cmd_draw_indexed)(commandBuffer, indexCount, instanceCount, firstIndex, vertexOffset, firstInstance))))
+		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_draw_indexed)(commandBuffer, indexCount, instanceCount, firstIndex, vertexOffset, firstInstance))))
 	}
 	fn vkCmdDrawIndirect(&self, commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize, drawCount: u32, stride: u32) -> Result<()> {
-		process_catch("vkCmdDrawIndirect", catch_unwind(||((self.vk_version_1_0.vk_cmd_draw_indirect)(commandBuffer, buffer, offset, drawCount, stride))))
+		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_draw_indirect)(commandBuffer, buffer, offset, drawCount, stride))))
 	}
 	fn vkCmdDrawIndexedIndirect(&self, commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize, drawCount: u32, stride: u32) -> Result<()> {
-		process_catch("vkCmdDrawIndexedIndirect", catch_unwind(||((self.vk_version_1_0.vk_cmd_draw_indexed_indirect)(commandBuffer, buffer, offset, drawCount, stride))))
+		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_draw_indexed_indirect)(commandBuffer, buffer, offset, drawCount, stride))))
 	}
 	fn vkCmdDispatch(&self, commandBuffer: VkCommandBuffer, groupCountX: u32, groupCountY: u32, groupCountZ: u32) -> Result<()> {
-		process_catch("vkCmdDispatch", catch_unwind(||((self.vk_version_1_0.vk_cmd_dispatch)(commandBuffer, groupCountX, groupCountY, groupCountZ))))
+		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_dispatch)(commandBuffer, groupCountX, groupCountY, groupCountZ))))
 	}
 	fn vkCmdDispatchIndirect(&self, commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize) -> Result<()> {
-		process_catch("vkCmdDispatchIndirect", catch_unwind(||((self.vk_version_1_0.vk_cmd_dispatch_indirect)(commandBuffer, buffer, offset))))
+		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_dispatch_indirect)(commandBuffer, buffer, offset))))
 	}
 	fn vkCmdCopyBuffer(&self, commandBuffer: VkCommandBuffer, srcBuffer: VkBuffer, dstBuffer: VkBuffer, regionCount: u32, pRegions: *const VkBufferCopy) -> Result<()> {
-		process_catch("vkCmdCopyBuffer", catch_unwind(||((self.vk_version_1_0.vk_cmd_copy_buffer)(commandBuffer, srcBuffer, dstBuffer, regionCount, pRegions))))
+		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_copy_buffer)(commandBuffer, srcBuffer, dstBuffer, regionCount, pRegions))))
 	}
 	fn vkCmdCopyImage(&self, commandBuffer: VkCommandBuffer, srcImage: VkImage, srcImageLayout: VkImageLayout, dstImage: VkImage, dstImageLayout: VkImageLayout, regionCount: u32, pRegions: *const VkImageCopy) -> Result<()> {
-		process_catch("vkCmdCopyImage", catch_unwind(||((self.vk_version_1_0.vk_cmd_copy_image)(commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, regionCount, pRegions))))
+		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_copy_image)(commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, regionCount, pRegions))))
 	}
 	fn vkCmdBlitImage(&self, commandBuffer: VkCommandBuffer, srcImage: VkImage, srcImageLayout: VkImageLayout, dstImage: VkImage, dstImageLayout: VkImageLayout, regionCount: u32, pRegions: *const VkImageBlit, filter: VkFilter) -> Result<()> {
-		process_catch("vkCmdBlitImage", catch_unwind(||((self.vk_version_1_0.vk_cmd_blit_image)(commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, regionCount, pRegions, filter))))
+		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_blit_image)(commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, regionCount, pRegions, filter))))
 	}
 	fn vkCmdCopyBufferToImage(&self, commandBuffer: VkCommandBuffer, srcBuffer: VkBuffer, dstImage: VkImage, dstImageLayout: VkImageLayout, regionCount: u32, pRegions: *const VkBufferImageCopy) -> Result<()> {
-		process_catch("vkCmdCopyBufferToImage", catch_unwind(||((self.vk_version_1_0.vk_cmd_copy_buffer_to_image)(commandBuffer, srcBuffer, dstImage, dstImageLayout, regionCount, pRegions))))
+		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_copy_buffer_to_image)(commandBuffer, srcBuffer, dstImage, dstImageLayout, regionCount, pRegions))))
 	}
 	fn vkCmdCopyImageToBuffer(&self, commandBuffer: VkCommandBuffer, srcImage: VkImage, srcImageLayout: VkImageLayout, dstBuffer: VkBuffer, regionCount: u32, pRegions: *const VkBufferImageCopy) -> Result<()> {
-		process_catch("vkCmdCopyImageToBuffer", catch_unwind(||((self.vk_version_1_0.vk_cmd_copy_image_to_buffer)(commandBuffer, srcImage, srcImageLayout, dstBuffer, regionCount, pRegions))))
+		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_copy_image_to_buffer)(commandBuffer, srcImage, srcImageLayout, dstBuffer, regionCount, pRegions))))
 	}
 	fn vkCmdUpdateBuffer(&self, commandBuffer: VkCommandBuffer, dstBuffer: VkBuffer, dstOffset: VkDeviceSize, dataSize: VkDeviceSize, pData: *const c_void) -> Result<()> {
-		process_catch("vkCmdUpdateBuffer", catch_unwind(||((self.vk_version_1_0.vk_cmd_update_buffer)(commandBuffer, dstBuffer, dstOffset, dataSize, pData))))
+		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_update_buffer)(commandBuffer, dstBuffer, dstOffset, dataSize, pData))))
 	}
 	fn vkCmdFillBuffer(&self, commandBuffer: VkCommandBuffer, dstBuffer: VkBuffer, dstOffset: VkDeviceSize, size: VkDeviceSize, data: u32) -> Result<()> {
-		process_catch("vkCmdFillBuffer", catch_unwind(||((self.vk_version_1_0.vk_cmd_fill_buffer)(commandBuffer, dstBuffer, dstOffset, size, data))))
+		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_fill_buffer)(commandBuffer, dstBuffer, dstOffset, size, data))))
 	}
 	fn vkCmdClearColorImage(&self, commandBuffer: VkCommandBuffer, image: VkImage, imageLayout: VkImageLayout, pColor: *const VkClearColorValue, rangeCount: u32, pRanges: *const VkImageSubresourceRange) -> Result<()> {
-		process_catch("vkCmdClearColorImage", catch_unwind(||((self.vk_version_1_0.vk_cmd_clear_color_image)(commandBuffer, image, imageLayout, pColor, rangeCount, pRanges))))
+		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_clear_color_image)(commandBuffer, image, imageLayout, pColor, rangeCount, pRanges))))
 	}
 	fn vkCmdClearDepthStencilImage(&self, commandBuffer: VkCommandBuffer, image: VkImage, imageLayout: VkImageLayout, pDepthStencil: *const VkClearDepthStencilValue, rangeCount: u32, pRanges: *const VkImageSubresourceRange) -> Result<()> {
-		process_catch("vkCmdClearDepthStencilImage", catch_unwind(||((self.vk_version_1_0.vk_cmd_clear_depth_stencil_image)(commandBuffer, image, imageLayout, pDepthStencil, rangeCount, pRanges))))
+		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_clear_depth_stencil_image)(commandBuffer, image, imageLayout, pDepthStencil, rangeCount, pRanges))))
 	}
 	fn vkCmdClearAttachments(&self, commandBuffer: VkCommandBuffer, attachmentCount: u32, pAttachments: *const VkClearAttachment, rectCount: u32, pRects: *const VkClearRect) -> Result<()> {
-		process_catch("vkCmdClearAttachments", catch_unwind(||((self.vk_version_1_0.vk_cmd_clear_attachments)(commandBuffer, attachmentCount, pAttachments, rectCount, pRects))))
+		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_clear_attachments)(commandBuffer, attachmentCount, pAttachments, rectCount, pRects))))
 	}
 	fn vkCmdResolveImage(&self, commandBuffer: VkCommandBuffer, srcImage: VkImage, srcImageLayout: VkImageLayout, dstImage: VkImage, dstImageLayout: VkImageLayout, regionCount: u32, pRegions: *const VkImageResolve) -> Result<()> {
-		process_catch("vkCmdResolveImage", catch_unwind(||((self.vk_version_1_0.vk_cmd_resolve_image)(commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, regionCount, pRegions))))
+		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_resolve_image)(commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, regionCount, pRegions))))
 	}
 	fn vkCmdSetEvent(&self, commandBuffer: VkCommandBuffer, event: VkEvent, stageMask: VkPipelineStageFlags) -> Result<()> {
-		process_catch("vkCmdSetEvent", catch_unwind(||((self.vk_version_1_0.vk_cmd_set_event)(commandBuffer, event, stageMask))))
+		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_set_event)(commandBuffer, event, stageMask))))
 	}
 	fn vkCmdResetEvent(&self, commandBuffer: VkCommandBuffer, event: VkEvent, stageMask: VkPipelineStageFlags) -> Result<()> {
-		process_catch("vkCmdResetEvent", catch_unwind(||((self.vk_version_1_0.vk_cmd_reset_event)(commandBuffer, event, stageMask))))
+		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_reset_event)(commandBuffer, event, stageMask))))
 	}
 	fn vkCmdWaitEvents(&self, commandBuffer: VkCommandBuffer, eventCount: u32, pEvents: *const VkEvent, srcStageMask: VkPipelineStageFlags, dstStageMask: VkPipelineStageFlags, memoryBarrierCount: u32, pMemoryBarriers: *const VkMemoryBarrier, bufferMemoryBarrierCount: u32, pBufferMemoryBarriers: *const VkBufferMemoryBarrier, imageMemoryBarrierCount: u32, pImageMemoryBarriers: *const VkImageMemoryBarrier) -> Result<()> {
-		process_catch("vkCmdWaitEvents", catch_unwind(||((self.vk_version_1_0.vk_cmd_wait_events)(commandBuffer, eventCount, pEvents, srcStageMask, dstStageMask, memoryBarrierCount, pMemoryBarriers, bufferMemoryBarrierCount, pBufferMemoryBarriers, imageMemoryBarrierCount, pImageMemoryBarriers))))
+		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_wait_events)(commandBuffer, eventCount, pEvents, srcStageMask, dstStageMask, memoryBarrierCount, pMemoryBarriers, bufferMemoryBarrierCount, pBufferMemoryBarriers, imageMemoryBarrierCount, pImageMemoryBarriers))))
 	}
 	fn vkCmdPipelineBarrier(&self, commandBuffer: VkCommandBuffer, srcStageMask: VkPipelineStageFlags, dstStageMask: VkPipelineStageFlags, dependencyFlags: VkDependencyFlags, memoryBarrierCount: u32, pMemoryBarriers: *const VkMemoryBarrier, bufferMemoryBarrierCount: u32, pBufferMemoryBarriers: *const VkBufferMemoryBarrier, imageMemoryBarrierCount: u32, pImageMemoryBarriers: *const VkImageMemoryBarrier) -> Result<()> {
-		process_catch("vkCmdPipelineBarrier", catch_unwind(||((self.vk_version_1_0.vk_cmd_pipeline_barrier)(commandBuffer, srcStageMask, dstStageMask, dependencyFlags, memoryBarrierCount, pMemoryBarriers, bufferMemoryBarrierCount, pBufferMemoryBarriers, imageMemoryBarrierCount, pImageMemoryBarriers))))
+		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_pipeline_barrier)(commandBuffer, srcStageMask, dstStageMask, dependencyFlags, memoryBarrierCount, pMemoryBarriers, bufferMemoryBarrierCount, pBufferMemoryBarriers, imageMemoryBarrierCount, pImageMemoryBarriers))))
 	}
 	fn vkCmdBeginQuery(&self, commandBuffer: VkCommandBuffer, queryPool: VkQueryPool, query: u32, flags: VkQueryControlFlags) -> Result<()> {
-		process_catch("vkCmdBeginQuery", catch_unwind(||((self.vk_version_1_0.vk_cmd_begin_query)(commandBuffer, queryPool, query, flags))))
+		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_begin_query)(commandBuffer, queryPool, query, flags))))
 	}
 	fn vkCmdEndQuery(&self, commandBuffer: VkCommandBuffer, queryPool: VkQueryPool, query: u32) -> Result<()> {
-		process_catch("vkCmdEndQuery", catch_unwind(||((self.vk_version_1_0.vk_cmd_end_query)(commandBuffer, queryPool, query))))
+		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_end_query)(commandBuffer, queryPool, query))))
 	}
 	fn vkCmdResetQueryPool(&self, commandBuffer: VkCommandBuffer, queryPool: VkQueryPool, firstQuery: u32, queryCount: u32) -> Result<()> {
-		process_catch("vkCmdResetQueryPool", catch_unwind(||((self.vk_version_1_0.vk_cmd_reset_query_pool)(commandBuffer, queryPool, firstQuery, queryCount))))
+		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_reset_query_pool)(commandBuffer, queryPool, firstQuery, queryCount))))
 	}
 	fn vkCmdWriteTimestamp(&self, commandBuffer: VkCommandBuffer, pipelineStage: VkPipelineStageFlagBits, queryPool: VkQueryPool, query: u32) -> Result<()> {
-		process_catch("vkCmdWriteTimestamp", catch_unwind(||((self.vk_version_1_0.vk_cmd_write_timestamp)(commandBuffer, pipelineStage, queryPool, query))))
+		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_write_timestamp)(commandBuffer, pipelineStage, queryPool, query))))
 	}
 	fn vkCmdCopyQueryPoolResults(&self, commandBuffer: VkCommandBuffer, queryPool: VkQueryPool, firstQuery: u32, queryCount: u32, dstBuffer: VkBuffer, dstOffset: VkDeviceSize, stride: VkDeviceSize, flags: VkQueryResultFlags) -> Result<()> {
-		process_catch("vkCmdCopyQueryPoolResults", catch_unwind(||((self.vk_version_1_0.vk_cmd_copy_query_pool_results)(commandBuffer, queryPool, firstQuery, queryCount, dstBuffer, dstOffset, stride, flags))))
+		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_copy_query_pool_results)(commandBuffer, queryPool, firstQuery, queryCount, dstBuffer, dstOffset, stride, flags))))
 	}
 	fn vkCmdPushConstants(&self, commandBuffer: VkCommandBuffer, layout: VkPipelineLayout, stageFlags: VkShaderStageFlags, offset: u32, size: u32, pValues: *const c_void) -> Result<()> {
-		process_catch("vkCmdPushConstants", catch_unwind(||((self.vk_version_1_0.vk_cmd_push_constants)(commandBuffer, layout, stageFlags, offset, size, pValues))))
+		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_push_constants)(commandBuffer, layout, stageFlags, offset, size, pValues))))
 	}
 	fn vkCmdBeginRenderPass(&self, commandBuffer: VkCommandBuffer, pRenderPassBegin: *const VkRenderPassBeginInfo, contents: VkSubpassContents) -> Result<()> {
-		process_catch("vkCmdBeginRenderPass", catch_unwind(||((self.vk_version_1_0.vk_cmd_begin_render_pass)(commandBuffer, pRenderPassBegin, contents))))
+		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_begin_render_pass)(commandBuffer, pRenderPassBegin, contents))))
 	}
 	fn vkCmdNextSubpass(&self, commandBuffer: VkCommandBuffer, contents: VkSubpassContents) -> Result<()> {
-		process_catch("vkCmdNextSubpass", catch_unwind(||((self.vk_version_1_0.vk_cmd_next_subpass)(commandBuffer, contents))))
+		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_next_subpass)(commandBuffer, contents))))
 	}
 	fn vkCmdEndRenderPass(&self, commandBuffer: VkCommandBuffer) -> Result<()> {
-		process_catch("vkCmdEndRenderPass", catch_unwind(||((self.vk_version_1_0.vk_cmd_end_render_pass)(commandBuffer))))
+		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_end_render_pass)(commandBuffer))))
 	}
 	fn vkCmdExecuteCommands(&self, commandBuffer: VkCommandBuffer, commandBufferCount: u32, pCommandBuffers: *const VkCommandBuffer) -> Result<()> {
-		process_catch("vkCmdExecuteCommands", catch_unwind(||((self.vk_version_1_0.vk_cmd_execute_commands)(commandBuffer, commandBufferCount, pCommandBuffers))))
+		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_execute_commands)(commandBuffer, commandBufferCount, pCommandBuffers))))
 	}
 }
 impl VK_VERSION_1_1 for VkCore {
@@ -41166,102 +41170,102 @@ impl VK_VERSION_1_1 for VkCore {
 		convert_result("vkBindImageMemory2", catch_unwind(||((self.vk_version_1_1.vk_bind_image_memory2)(device, bindInfoCount, pBindInfos))))
 	}
 	fn vkGetDeviceGroupPeerMemoryFeatures(&self, device: VkDevice, heapIndex: u32, localDeviceIndex: u32, remoteDeviceIndex: u32, pPeerMemoryFeatures: *mut VkPeerMemoryFeatureFlags) -> Result<()> {
-		process_catch("vkGetDeviceGroupPeerMemoryFeatures", catch_unwind(||((self.vk_version_1_1.vk_get_device_group_peer_memory_features)(device, heapIndex, localDeviceIndex, remoteDeviceIndex, pPeerMemoryFeatures))))
+		process_catch(catch_unwind(||((self.vk_version_1_1.vk_get_device_group_peer_memory_features)(device, heapIndex, localDeviceIndex, remoteDeviceIndex, pPeerMemoryFeatures))))
 	}
 	fn vkCmdSetDeviceMask(&self, commandBuffer: VkCommandBuffer, deviceMask: u32) -> Result<()> {
-		process_catch("vkCmdSetDeviceMask", catch_unwind(||((self.vk_version_1_1.vk_cmd_set_device_mask)(commandBuffer, deviceMask))))
+		process_catch(catch_unwind(||((self.vk_version_1_1.vk_cmd_set_device_mask)(commandBuffer, deviceMask))))
 	}
 	fn vkCmdDispatchBase(&self, commandBuffer: VkCommandBuffer, baseGroupX: u32, baseGroupY: u32, baseGroupZ: u32, groupCountX: u32, groupCountY: u32, groupCountZ: u32) -> Result<()> {
-		process_catch("vkCmdDispatchBase", catch_unwind(||((self.vk_version_1_1.vk_cmd_dispatch_base)(commandBuffer, baseGroupX, baseGroupY, baseGroupZ, groupCountX, groupCountY, groupCountZ))))
+		process_catch(catch_unwind(||((self.vk_version_1_1.vk_cmd_dispatch_base)(commandBuffer, baseGroupX, baseGroupY, baseGroupZ, groupCountX, groupCountY, groupCountZ))))
 	}
 	fn vkEnumeratePhysicalDeviceGroups(&self, instance: VkInstance, pPhysicalDeviceGroupCount: *mut uint32_t, pPhysicalDeviceGroupProperties: *mut VkPhysicalDeviceGroupProperties) -> Result<()> {
 		convert_result("vkEnumeratePhysicalDeviceGroups", catch_unwind(||((self.vk_version_1_1.vk_enumerate_physical_device_groups)(instance, pPhysicalDeviceGroupCount, pPhysicalDeviceGroupProperties))))
 	}
 	fn vkGetImageMemoryRequirements2(&self, device: VkDevice, pInfo: *const VkImageMemoryRequirementsInfo2, pMemoryRequirements: *mut VkMemoryRequirements2) -> Result<()> {
-		process_catch("vkGetImageMemoryRequirements2", catch_unwind(||((self.vk_version_1_1.vk_get_image_memory_requirements2)(device, pInfo, pMemoryRequirements))))
+		process_catch(catch_unwind(||((self.vk_version_1_1.vk_get_image_memory_requirements2)(device, pInfo, pMemoryRequirements))))
 	}
 	fn vkGetBufferMemoryRequirements2(&self, device: VkDevice, pInfo: *const VkBufferMemoryRequirementsInfo2, pMemoryRequirements: *mut VkMemoryRequirements2) -> Result<()> {
-		process_catch("vkGetBufferMemoryRequirements2", catch_unwind(||((self.vk_version_1_1.vk_get_buffer_memory_requirements2)(device, pInfo, pMemoryRequirements))))
+		process_catch(catch_unwind(||((self.vk_version_1_1.vk_get_buffer_memory_requirements2)(device, pInfo, pMemoryRequirements))))
 	}
 	fn vkGetImageSparseMemoryRequirements2(&self, device: VkDevice, pInfo: *const VkImageSparseMemoryRequirementsInfo2, pSparseMemoryRequirementCount: *mut uint32_t, pSparseMemoryRequirements: *mut VkSparseImageMemoryRequirements2) -> Result<()> {
-		process_catch("vkGetImageSparseMemoryRequirements2", catch_unwind(||((self.vk_version_1_1.vk_get_image_sparse_memory_requirements2)(device, pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements))))
+		process_catch(catch_unwind(||((self.vk_version_1_1.vk_get_image_sparse_memory_requirements2)(device, pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements))))
 	}
 	fn vkGetPhysicalDeviceFeatures2(&self, physicalDevice: VkPhysicalDevice, pFeatures: *mut VkPhysicalDeviceFeatures2) -> Result<()> {
-		process_catch("vkGetPhysicalDeviceFeatures2", catch_unwind(||((self.vk_version_1_1.vk_get_physical_device_features2)(physicalDevice, pFeatures))))
+		process_catch(catch_unwind(||((self.vk_version_1_1.vk_get_physical_device_features2)(physicalDevice, pFeatures))))
 	}
 	fn vkGetPhysicalDeviceProperties2(&self, physicalDevice: VkPhysicalDevice, pProperties: *mut VkPhysicalDeviceProperties2) -> Result<()> {
-		process_catch("vkGetPhysicalDeviceProperties2", catch_unwind(||((self.vk_version_1_1.vk_get_physical_device_properties2)(physicalDevice, pProperties))))
+		process_catch(catch_unwind(||((self.vk_version_1_1.vk_get_physical_device_properties2)(physicalDevice, pProperties))))
 	}
 	fn vkGetPhysicalDeviceFormatProperties2(&self, physicalDevice: VkPhysicalDevice, format: VkFormat, pFormatProperties: *mut VkFormatProperties2) -> Result<()> {
-		process_catch("vkGetPhysicalDeviceFormatProperties2", catch_unwind(||((self.vk_version_1_1.vk_get_physical_device_format_properties2)(physicalDevice, format, pFormatProperties))))
+		process_catch(catch_unwind(||((self.vk_version_1_1.vk_get_physical_device_format_properties2)(physicalDevice, format, pFormatProperties))))
 	}
 	fn vkGetPhysicalDeviceImageFormatProperties2(&self, physicalDevice: VkPhysicalDevice, pImageFormatInfo: *const VkPhysicalDeviceImageFormatInfo2, pImageFormatProperties: *mut VkImageFormatProperties2) -> Result<()> {
 		convert_result("vkGetPhysicalDeviceImageFormatProperties2", catch_unwind(||((self.vk_version_1_1.vk_get_physical_device_image_format_properties2)(physicalDevice, pImageFormatInfo, pImageFormatProperties))))
 	}
 	fn vkGetPhysicalDeviceQueueFamilyProperties2(&self, physicalDevice: VkPhysicalDevice, pQueueFamilyPropertyCount: *mut uint32_t, pQueueFamilyProperties: *mut VkQueueFamilyProperties2) -> Result<()> {
-		process_catch("vkGetPhysicalDeviceQueueFamilyProperties2", catch_unwind(||((self.vk_version_1_1.vk_get_physical_device_queue_family_properties2)(physicalDevice, pQueueFamilyPropertyCount, pQueueFamilyProperties))))
+		process_catch(catch_unwind(||((self.vk_version_1_1.vk_get_physical_device_queue_family_properties2)(physicalDevice, pQueueFamilyPropertyCount, pQueueFamilyProperties))))
 	}
 	fn vkGetPhysicalDeviceMemoryProperties2(&self, physicalDevice: VkPhysicalDevice, pMemoryProperties: *mut VkPhysicalDeviceMemoryProperties2) -> Result<()> {
-		process_catch("vkGetPhysicalDeviceMemoryProperties2", catch_unwind(||((self.vk_version_1_1.vk_get_physical_device_memory_properties2)(physicalDevice, pMemoryProperties))))
+		process_catch(catch_unwind(||((self.vk_version_1_1.vk_get_physical_device_memory_properties2)(physicalDevice, pMemoryProperties))))
 	}
 	fn vkGetPhysicalDeviceSparseImageFormatProperties2(&self, physicalDevice: VkPhysicalDevice, pFormatInfo: *const VkPhysicalDeviceSparseImageFormatInfo2, pPropertyCount: *mut uint32_t, pProperties: *mut VkSparseImageFormatProperties2) -> Result<()> {
-		process_catch("vkGetPhysicalDeviceSparseImageFormatProperties2", catch_unwind(||((self.vk_version_1_1.vk_get_physical_device_sparse_image_format_properties2)(physicalDevice, pFormatInfo, pPropertyCount, pProperties))))
+		process_catch(catch_unwind(||((self.vk_version_1_1.vk_get_physical_device_sparse_image_format_properties2)(physicalDevice, pFormatInfo, pPropertyCount, pProperties))))
 	}
 	fn vkTrimCommandPool(&self, device: VkDevice, commandPool: VkCommandPool, flags: VkCommandPoolTrimFlags) -> Result<()> {
-		process_catch("vkTrimCommandPool", catch_unwind(||((self.vk_version_1_1.vk_trim_command_pool)(device, commandPool, flags))))
+		process_catch(catch_unwind(||((self.vk_version_1_1.vk_trim_command_pool)(device, commandPool, flags))))
 	}
 	fn vkGetDeviceQueue2(&self, device: VkDevice, pQueueInfo: *const VkDeviceQueueInfo2, pQueue: *mut VkQueue) -> Result<()> {
-		process_catch("vkGetDeviceQueue2", catch_unwind(||((self.vk_version_1_1.vk_get_device_queue2)(device, pQueueInfo, pQueue))))
+		process_catch(catch_unwind(||((self.vk_version_1_1.vk_get_device_queue2)(device, pQueueInfo, pQueue))))
 	}
 	fn vkCreateSamplerYcbcrConversion(&self, device: VkDevice, pCreateInfo: *const VkSamplerYcbcrConversionCreateInfo, pAllocator: *const VkAllocationCallbacks, pYcbcrConversion: *mut VkSamplerYcbcrConversion) -> Result<()> {
 		convert_result("vkCreateSamplerYcbcrConversion", catch_unwind(||((self.vk_version_1_1.vk_create_sampler_ycbcr_conversion)(device, pCreateInfo, pAllocator, pYcbcrConversion))))
 	}
 	fn vkDestroySamplerYcbcrConversion(&self, device: VkDevice, ycbcrConversion: VkSamplerYcbcrConversion, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch("vkDestroySamplerYcbcrConversion", catch_unwind(||((self.vk_version_1_1.vk_destroy_sampler_ycbcr_conversion)(device, ycbcrConversion, pAllocator))))
+		process_catch(catch_unwind(||((self.vk_version_1_1.vk_destroy_sampler_ycbcr_conversion)(device, ycbcrConversion, pAllocator))))
 	}
 	fn vkCreateDescriptorUpdateTemplate(&self, device: VkDevice, pCreateInfo: *const VkDescriptorUpdateTemplateCreateInfo, pAllocator: *const VkAllocationCallbacks, pDescriptorUpdateTemplate: *mut VkDescriptorUpdateTemplate) -> Result<()> {
 		convert_result("vkCreateDescriptorUpdateTemplate", catch_unwind(||((self.vk_version_1_1.vk_create_descriptor_update_template)(device, pCreateInfo, pAllocator, pDescriptorUpdateTemplate))))
 	}
 	fn vkDestroyDescriptorUpdateTemplate(&self, device: VkDevice, descriptorUpdateTemplate: VkDescriptorUpdateTemplate, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch("vkDestroyDescriptorUpdateTemplate", catch_unwind(||((self.vk_version_1_1.vk_destroy_descriptor_update_template)(device, descriptorUpdateTemplate, pAllocator))))
+		process_catch(catch_unwind(||((self.vk_version_1_1.vk_destroy_descriptor_update_template)(device, descriptorUpdateTemplate, pAllocator))))
 	}
 	fn vkUpdateDescriptorSetWithTemplate(&self, device: VkDevice, descriptorSet: VkDescriptorSet, descriptorUpdateTemplate: VkDescriptorUpdateTemplate, pData: *const c_void) -> Result<()> {
-		process_catch("vkUpdateDescriptorSetWithTemplate", catch_unwind(||((self.vk_version_1_1.vk_update_descriptor_set_with_template)(device, descriptorSet, descriptorUpdateTemplate, pData))))
+		process_catch(catch_unwind(||((self.vk_version_1_1.vk_update_descriptor_set_with_template)(device, descriptorSet, descriptorUpdateTemplate, pData))))
 	}
 	fn vkGetPhysicalDeviceExternalBufferProperties(&self, physicalDevice: VkPhysicalDevice, pExternalBufferInfo: *const VkPhysicalDeviceExternalBufferInfo, pExternalBufferProperties: *mut VkExternalBufferProperties) -> Result<()> {
-		process_catch("vkGetPhysicalDeviceExternalBufferProperties", catch_unwind(||((self.vk_version_1_1.vk_get_physical_device_external_buffer_properties)(physicalDevice, pExternalBufferInfo, pExternalBufferProperties))))
+		process_catch(catch_unwind(||((self.vk_version_1_1.vk_get_physical_device_external_buffer_properties)(physicalDevice, pExternalBufferInfo, pExternalBufferProperties))))
 	}
 	fn vkGetPhysicalDeviceExternalFenceProperties(&self, physicalDevice: VkPhysicalDevice, pExternalFenceInfo: *const VkPhysicalDeviceExternalFenceInfo, pExternalFenceProperties: *mut VkExternalFenceProperties) -> Result<()> {
-		process_catch("vkGetPhysicalDeviceExternalFenceProperties", catch_unwind(||((self.vk_version_1_1.vk_get_physical_device_external_fence_properties)(physicalDevice, pExternalFenceInfo, pExternalFenceProperties))))
+		process_catch(catch_unwind(||((self.vk_version_1_1.vk_get_physical_device_external_fence_properties)(physicalDevice, pExternalFenceInfo, pExternalFenceProperties))))
 	}
 	fn vkGetPhysicalDeviceExternalSemaphoreProperties(&self, physicalDevice: VkPhysicalDevice, pExternalSemaphoreInfo: *const VkPhysicalDeviceExternalSemaphoreInfo, pExternalSemaphoreProperties: *mut VkExternalSemaphoreProperties) -> Result<()> {
-		process_catch("vkGetPhysicalDeviceExternalSemaphoreProperties", catch_unwind(||((self.vk_version_1_1.vk_get_physical_device_external_semaphore_properties)(physicalDevice, pExternalSemaphoreInfo, pExternalSemaphoreProperties))))
+		process_catch(catch_unwind(||((self.vk_version_1_1.vk_get_physical_device_external_semaphore_properties)(physicalDevice, pExternalSemaphoreInfo, pExternalSemaphoreProperties))))
 	}
 	fn vkGetDescriptorSetLayoutSupport(&self, device: VkDevice, pCreateInfo: *const VkDescriptorSetLayoutCreateInfo, pSupport: *mut VkDescriptorSetLayoutSupport) -> Result<()> {
-		process_catch("vkGetDescriptorSetLayoutSupport", catch_unwind(||((self.vk_version_1_1.vk_get_descriptor_set_layout_support)(device, pCreateInfo, pSupport))))
+		process_catch(catch_unwind(||((self.vk_version_1_1.vk_get_descriptor_set_layout_support)(device, pCreateInfo, pSupport))))
 	}
 }
 impl VK_VERSION_1_2 for VkCore {
 	fn vkCmdDrawIndirectCount(&self, commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize, countBuffer: VkBuffer, countBufferOffset: VkDeviceSize, maxDrawCount: u32, stride: u32) -> Result<()> {
-		process_catch("vkCmdDrawIndirectCount", catch_unwind(||((self.vk_version_1_2.vk_cmd_draw_indirect_count)(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride))))
+		process_catch(catch_unwind(||((self.vk_version_1_2.vk_cmd_draw_indirect_count)(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride))))
 	}
 	fn vkCmdDrawIndexedIndirectCount(&self, commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize, countBuffer: VkBuffer, countBufferOffset: VkDeviceSize, maxDrawCount: u32, stride: u32) -> Result<()> {
-		process_catch("vkCmdDrawIndexedIndirectCount", catch_unwind(||((self.vk_version_1_2.vk_cmd_draw_indexed_indirect_count)(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride))))
+		process_catch(catch_unwind(||((self.vk_version_1_2.vk_cmd_draw_indexed_indirect_count)(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride))))
 	}
 	fn vkCreateRenderPass2(&self, device: VkDevice, pCreateInfo: *const VkRenderPassCreateInfo2, pAllocator: *const VkAllocationCallbacks, pRenderPass: *mut VkRenderPass) -> Result<()> {
 		convert_result("vkCreateRenderPass2", catch_unwind(||((self.vk_version_1_2.vk_create_render_pass2)(device, pCreateInfo, pAllocator, pRenderPass))))
 	}
 	fn vkCmdBeginRenderPass2(&self, commandBuffer: VkCommandBuffer, pRenderPassBegin: *const VkRenderPassBeginInfo, pSubpassBeginInfo: *const VkSubpassBeginInfo) -> Result<()> {
-		process_catch("vkCmdBeginRenderPass2", catch_unwind(||((self.vk_version_1_2.vk_cmd_begin_render_pass2)(commandBuffer, pRenderPassBegin, pSubpassBeginInfo))))
+		process_catch(catch_unwind(||((self.vk_version_1_2.vk_cmd_begin_render_pass2)(commandBuffer, pRenderPassBegin, pSubpassBeginInfo))))
 	}
 	fn vkCmdNextSubpass2(&self, commandBuffer: VkCommandBuffer, pSubpassBeginInfo: *const VkSubpassBeginInfo, pSubpassEndInfo: *const VkSubpassEndInfo) -> Result<()> {
-		process_catch("vkCmdNextSubpass2", catch_unwind(||((self.vk_version_1_2.vk_cmd_next_subpass2)(commandBuffer, pSubpassBeginInfo, pSubpassEndInfo))))
+		process_catch(catch_unwind(||((self.vk_version_1_2.vk_cmd_next_subpass2)(commandBuffer, pSubpassBeginInfo, pSubpassEndInfo))))
 	}
 	fn vkCmdEndRenderPass2(&self, commandBuffer: VkCommandBuffer, pSubpassEndInfo: *const VkSubpassEndInfo) -> Result<()> {
-		process_catch("vkCmdEndRenderPass2", catch_unwind(||((self.vk_version_1_2.vk_cmd_end_render_pass2)(commandBuffer, pSubpassEndInfo))))
+		process_catch(catch_unwind(||((self.vk_version_1_2.vk_cmd_end_render_pass2)(commandBuffer, pSubpassEndInfo))))
 	}
 	fn vkResetQueryPool(&self, device: VkDevice, queryPool: VkQueryPool, firstQuery: u32, queryCount: u32) -> Result<()> {
-		process_catch("vkResetQueryPool", catch_unwind(||((self.vk_version_1_2.vk_reset_query_pool)(device, queryPool, firstQuery, queryCount))))
+		process_catch(catch_unwind(||((self.vk_version_1_2.vk_reset_query_pool)(device, queryPool, firstQuery, queryCount))))
 	}
 	fn vkGetSemaphoreCounterValue(&self, device: VkDevice, semaphore: VkSemaphore, pValue: *mut uint64_t) -> Result<()> {
 		convert_result("vkGetSemaphoreCounterValue", catch_unwind(||((self.vk_version_1_2.vk_get_semaphore_counter_value)(device, semaphore, pValue))))
@@ -41273,13 +41277,13 @@ impl VK_VERSION_1_2 for VkCore {
 		convert_result("vkSignalSemaphore", catch_unwind(||((self.vk_version_1_2.vk_signal_semaphore)(device, pSignalInfo))))
 	}
 	fn vkGetBufferDeviceAddress(&self, device: VkDevice, pInfo: *const VkBufferDeviceAddressInfo) -> Result<VkDeviceAddress> {
-		process_catch("vkGetBufferDeviceAddress", catch_unwind(||((self.vk_version_1_2.vk_get_buffer_device_address)(device, pInfo))))
+		process_catch(catch_unwind(||((self.vk_version_1_2.vk_get_buffer_device_address)(device, pInfo))))
 	}
 	fn vkGetBufferOpaqueCaptureAddress(&self, device: VkDevice, pInfo: *const VkBufferDeviceAddressInfo) -> Result<u64> {
-		process_catch("vkGetBufferOpaqueCaptureAddress", catch_unwind(||((self.vk_version_1_2.vk_get_buffer_opaque_capture_address)(device, pInfo))))
+		process_catch(catch_unwind(||((self.vk_version_1_2.vk_get_buffer_opaque_capture_address)(device, pInfo))))
 	}
 	fn vkGetDeviceMemoryOpaqueCaptureAddress(&self, device: VkDevice, pInfo: *const VkDeviceMemoryOpaqueCaptureAddressInfo) -> Result<u64> {
-		process_catch("vkGetDeviceMemoryOpaqueCaptureAddress", catch_unwind(||((self.vk_version_1_2.vk_get_device_memory_opaque_capture_address)(device, pInfo))))
+		process_catch(catch_unwind(||((self.vk_version_1_2.vk_get_device_memory_opaque_capture_address)(device, pInfo))))
 	}
 }
 impl VK_VERSION_1_3 for VkCore {
@@ -41290,114 +41294,114 @@ impl VK_VERSION_1_3 for VkCore {
 		convert_result("vkCreatePrivateDataSlot", catch_unwind(||((self.vk_version_1_3.vk_create_private_data_slot)(device, pCreateInfo, pAllocator, pPrivateDataSlot))))
 	}
 	fn vkDestroyPrivateDataSlot(&self, device: VkDevice, privateDataSlot: VkPrivateDataSlot, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch("vkDestroyPrivateDataSlot", catch_unwind(||((self.vk_version_1_3.vk_destroy_private_data_slot)(device, privateDataSlot, pAllocator))))
+		process_catch(catch_unwind(||((self.vk_version_1_3.vk_destroy_private_data_slot)(device, privateDataSlot, pAllocator))))
 	}
 	fn vkSetPrivateData(&self, device: VkDevice, objectType: VkObjectType, objectHandle: u64, privateDataSlot: VkPrivateDataSlot, data: u64) -> Result<()> {
 		convert_result("vkSetPrivateData", catch_unwind(||((self.vk_version_1_3.vk_set_private_data)(device, objectType, objectHandle, privateDataSlot, data))))
 	}
 	fn vkGetPrivateData(&self, device: VkDevice, objectType: VkObjectType, objectHandle: u64, privateDataSlot: VkPrivateDataSlot, pData: *mut uint64_t) -> Result<()> {
-		process_catch("vkGetPrivateData", catch_unwind(||((self.vk_version_1_3.vk_get_private_data)(device, objectType, objectHandle, privateDataSlot, pData))))
+		process_catch(catch_unwind(||((self.vk_version_1_3.vk_get_private_data)(device, objectType, objectHandle, privateDataSlot, pData))))
 	}
 	fn vkCmdSetEvent2(&self, commandBuffer: VkCommandBuffer, event: VkEvent, pDependencyInfo: *const VkDependencyInfo) -> Result<()> {
-		process_catch("vkCmdSetEvent2", catch_unwind(||((self.vk_version_1_3.vk_cmd_set_event2)(commandBuffer, event, pDependencyInfo))))
+		process_catch(catch_unwind(||((self.vk_version_1_3.vk_cmd_set_event2)(commandBuffer, event, pDependencyInfo))))
 	}
 	fn vkCmdResetEvent2(&self, commandBuffer: VkCommandBuffer, event: VkEvent, stageMask: VkPipelineStageFlags2) -> Result<()> {
-		process_catch("vkCmdResetEvent2", catch_unwind(||((self.vk_version_1_3.vk_cmd_reset_event2)(commandBuffer, event, stageMask))))
+		process_catch(catch_unwind(||((self.vk_version_1_3.vk_cmd_reset_event2)(commandBuffer, event, stageMask))))
 	}
 	fn vkCmdWaitEvents2(&self, commandBuffer: VkCommandBuffer, eventCount: u32, pEvents: *const VkEvent, pDependencyInfos: *const VkDependencyInfo) -> Result<()> {
-		process_catch("vkCmdWaitEvents2", catch_unwind(||((self.vk_version_1_3.vk_cmd_wait_events2)(commandBuffer, eventCount, pEvents, pDependencyInfos))))
+		process_catch(catch_unwind(||((self.vk_version_1_3.vk_cmd_wait_events2)(commandBuffer, eventCount, pEvents, pDependencyInfos))))
 	}
 	fn vkCmdPipelineBarrier2(&self, commandBuffer: VkCommandBuffer, pDependencyInfo: *const VkDependencyInfo) -> Result<()> {
-		process_catch("vkCmdPipelineBarrier2", catch_unwind(||((self.vk_version_1_3.vk_cmd_pipeline_barrier2)(commandBuffer, pDependencyInfo))))
+		process_catch(catch_unwind(||((self.vk_version_1_3.vk_cmd_pipeline_barrier2)(commandBuffer, pDependencyInfo))))
 	}
 	fn vkCmdWriteTimestamp2(&self, commandBuffer: VkCommandBuffer, stage: VkPipelineStageFlags2, queryPool: VkQueryPool, query: u32) -> Result<()> {
-		process_catch("vkCmdWriteTimestamp2", catch_unwind(||((self.vk_version_1_3.vk_cmd_write_timestamp2)(commandBuffer, stage, queryPool, query))))
+		process_catch(catch_unwind(||((self.vk_version_1_3.vk_cmd_write_timestamp2)(commandBuffer, stage, queryPool, query))))
 	}
 	fn vkQueueSubmit2(&self, queue: VkQueue, submitCount: u32, pSubmits: *const VkSubmitInfo2, fence: VkFence) -> Result<()> {
 		convert_result("vkQueueSubmit2", catch_unwind(||((self.vk_version_1_3.vk_queue_submit2)(queue, submitCount, pSubmits, fence))))
 	}
 	fn vkCmdCopyBuffer2(&self, commandBuffer: VkCommandBuffer, pCopyBufferInfo: *const VkCopyBufferInfo2) -> Result<()> {
-		process_catch("vkCmdCopyBuffer2", catch_unwind(||((self.vk_version_1_3.vk_cmd_copy_buffer2)(commandBuffer, pCopyBufferInfo))))
+		process_catch(catch_unwind(||((self.vk_version_1_3.vk_cmd_copy_buffer2)(commandBuffer, pCopyBufferInfo))))
 	}
 	fn vkCmdCopyImage2(&self, commandBuffer: VkCommandBuffer, pCopyImageInfo: *const VkCopyImageInfo2) -> Result<()> {
-		process_catch("vkCmdCopyImage2", catch_unwind(||((self.vk_version_1_3.vk_cmd_copy_image2)(commandBuffer, pCopyImageInfo))))
+		process_catch(catch_unwind(||((self.vk_version_1_3.vk_cmd_copy_image2)(commandBuffer, pCopyImageInfo))))
 	}
 	fn vkCmdCopyBufferToImage2(&self, commandBuffer: VkCommandBuffer, pCopyBufferToImageInfo: *const VkCopyBufferToImageInfo2) -> Result<()> {
-		process_catch("vkCmdCopyBufferToImage2", catch_unwind(||((self.vk_version_1_3.vk_cmd_copy_buffer_to_image2)(commandBuffer, pCopyBufferToImageInfo))))
+		process_catch(catch_unwind(||((self.vk_version_1_3.vk_cmd_copy_buffer_to_image2)(commandBuffer, pCopyBufferToImageInfo))))
 	}
 	fn vkCmdCopyImageToBuffer2(&self, commandBuffer: VkCommandBuffer, pCopyImageToBufferInfo: *const VkCopyImageToBufferInfo2) -> Result<()> {
-		process_catch("vkCmdCopyImageToBuffer2", catch_unwind(||((self.vk_version_1_3.vk_cmd_copy_image_to_buffer2)(commandBuffer, pCopyImageToBufferInfo))))
+		process_catch(catch_unwind(||((self.vk_version_1_3.vk_cmd_copy_image_to_buffer2)(commandBuffer, pCopyImageToBufferInfo))))
 	}
 	fn vkCmdBlitImage2(&self, commandBuffer: VkCommandBuffer, pBlitImageInfo: *const VkBlitImageInfo2) -> Result<()> {
-		process_catch("vkCmdBlitImage2", catch_unwind(||((self.vk_version_1_3.vk_cmd_blit_image2)(commandBuffer, pBlitImageInfo))))
+		process_catch(catch_unwind(||((self.vk_version_1_3.vk_cmd_blit_image2)(commandBuffer, pBlitImageInfo))))
 	}
 	fn vkCmdResolveImage2(&self, commandBuffer: VkCommandBuffer, pResolveImageInfo: *const VkResolveImageInfo2) -> Result<()> {
-		process_catch("vkCmdResolveImage2", catch_unwind(||((self.vk_version_1_3.vk_cmd_resolve_image2)(commandBuffer, pResolveImageInfo))))
+		process_catch(catch_unwind(||((self.vk_version_1_3.vk_cmd_resolve_image2)(commandBuffer, pResolveImageInfo))))
 	}
 	fn vkCmdBeginRendering(&self, commandBuffer: VkCommandBuffer, pRenderingInfo: *const VkRenderingInfo) -> Result<()> {
-		process_catch("vkCmdBeginRendering", catch_unwind(||((self.vk_version_1_3.vk_cmd_begin_rendering)(commandBuffer, pRenderingInfo))))
+		process_catch(catch_unwind(||((self.vk_version_1_3.vk_cmd_begin_rendering)(commandBuffer, pRenderingInfo))))
 	}
 	fn vkCmdEndRendering(&self, commandBuffer: VkCommandBuffer) -> Result<()> {
-		process_catch("vkCmdEndRendering", catch_unwind(||((self.vk_version_1_3.vk_cmd_end_rendering)(commandBuffer))))
+		process_catch(catch_unwind(||((self.vk_version_1_3.vk_cmd_end_rendering)(commandBuffer))))
 	}
 	fn vkCmdSetCullMode(&self, commandBuffer: VkCommandBuffer, cullMode: VkCullModeFlags) -> Result<()> {
-		process_catch("vkCmdSetCullMode", catch_unwind(||((self.vk_version_1_3.vk_cmd_set_cull_mode)(commandBuffer, cullMode))))
+		process_catch(catch_unwind(||((self.vk_version_1_3.vk_cmd_set_cull_mode)(commandBuffer, cullMode))))
 	}
 	fn vkCmdSetFrontFace(&self, commandBuffer: VkCommandBuffer, frontFace: VkFrontFace) -> Result<()> {
-		process_catch("vkCmdSetFrontFace", catch_unwind(||((self.vk_version_1_3.vk_cmd_set_front_face)(commandBuffer, frontFace))))
+		process_catch(catch_unwind(||((self.vk_version_1_3.vk_cmd_set_front_face)(commandBuffer, frontFace))))
 	}
 	fn vkCmdSetPrimitiveTopology(&self, commandBuffer: VkCommandBuffer, primitiveTopology: VkPrimitiveTopology) -> Result<()> {
-		process_catch("vkCmdSetPrimitiveTopology", catch_unwind(||((self.vk_version_1_3.vk_cmd_set_primitive_topology)(commandBuffer, primitiveTopology))))
+		process_catch(catch_unwind(||((self.vk_version_1_3.vk_cmd_set_primitive_topology)(commandBuffer, primitiveTopology))))
 	}
 	fn vkCmdSetViewportWithCount(&self, commandBuffer: VkCommandBuffer, viewportCount: u32, pViewports: *const VkViewport) -> Result<()> {
-		process_catch("vkCmdSetViewportWithCount", catch_unwind(||((self.vk_version_1_3.vk_cmd_set_viewport_with_count)(commandBuffer, viewportCount, pViewports))))
+		process_catch(catch_unwind(||((self.vk_version_1_3.vk_cmd_set_viewport_with_count)(commandBuffer, viewportCount, pViewports))))
 	}
 	fn vkCmdSetScissorWithCount(&self, commandBuffer: VkCommandBuffer, scissorCount: u32, pScissors: *const VkRect2D) -> Result<()> {
-		process_catch("vkCmdSetScissorWithCount", catch_unwind(||((self.vk_version_1_3.vk_cmd_set_scissor_with_count)(commandBuffer, scissorCount, pScissors))))
+		process_catch(catch_unwind(||((self.vk_version_1_3.vk_cmd_set_scissor_with_count)(commandBuffer, scissorCount, pScissors))))
 	}
 	fn vkCmdBindVertexBuffers2(&self, commandBuffer: VkCommandBuffer, firstBinding: u32, bindingCount: u32, pBuffers: *const VkBuffer, pOffsets: *const VkDeviceSize, pSizes: *const VkDeviceSize, pStrides: *const VkDeviceSize) -> Result<()> {
-		process_catch("vkCmdBindVertexBuffers2", catch_unwind(||((self.vk_version_1_3.vk_cmd_bind_vertex_buffers2)(commandBuffer, firstBinding, bindingCount, pBuffers, pOffsets, pSizes, pStrides))))
+		process_catch(catch_unwind(||((self.vk_version_1_3.vk_cmd_bind_vertex_buffers2)(commandBuffer, firstBinding, bindingCount, pBuffers, pOffsets, pSizes, pStrides))))
 	}
 	fn vkCmdSetDepthTestEnable(&self, commandBuffer: VkCommandBuffer, depthTestEnable: VkBool32) -> Result<()> {
-		process_catch("vkCmdSetDepthTestEnable", catch_unwind(||((self.vk_version_1_3.vk_cmd_set_depth_test_enable)(commandBuffer, depthTestEnable))))
+		process_catch(catch_unwind(||((self.vk_version_1_3.vk_cmd_set_depth_test_enable)(commandBuffer, depthTestEnable))))
 	}
 	fn vkCmdSetDepthWriteEnable(&self, commandBuffer: VkCommandBuffer, depthWriteEnable: VkBool32) -> Result<()> {
-		process_catch("vkCmdSetDepthWriteEnable", catch_unwind(||((self.vk_version_1_3.vk_cmd_set_depth_write_enable)(commandBuffer, depthWriteEnable))))
+		process_catch(catch_unwind(||((self.vk_version_1_3.vk_cmd_set_depth_write_enable)(commandBuffer, depthWriteEnable))))
 	}
 	fn vkCmdSetDepthCompareOp(&self, commandBuffer: VkCommandBuffer, depthCompareOp: VkCompareOp) -> Result<()> {
-		process_catch("vkCmdSetDepthCompareOp", catch_unwind(||((self.vk_version_1_3.vk_cmd_set_depth_compare_op)(commandBuffer, depthCompareOp))))
+		process_catch(catch_unwind(||((self.vk_version_1_3.vk_cmd_set_depth_compare_op)(commandBuffer, depthCompareOp))))
 	}
 	fn vkCmdSetDepthBoundsTestEnable(&self, commandBuffer: VkCommandBuffer, depthBoundsTestEnable: VkBool32) -> Result<()> {
-		process_catch("vkCmdSetDepthBoundsTestEnable", catch_unwind(||((self.vk_version_1_3.vk_cmd_set_depth_bounds_test_enable)(commandBuffer, depthBoundsTestEnable))))
+		process_catch(catch_unwind(||((self.vk_version_1_3.vk_cmd_set_depth_bounds_test_enable)(commandBuffer, depthBoundsTestEnable))))
 	}
 	fn vkCmdSetStencilTestEnable(&self, commandBuffer: VkCommandBuffer, stencilTestEnable: VkBool32) -> Result<()> {
-		process_catch("vkCmdSetStencilTestEnable", catch_unwind(||((self.vk_version_1_3.vk_cmd_set_stencil_test_enable)(commandBuffer, stencilTestEnable))))
+		process_catch(catch_unwind(||((self.vk_version_1_3.vk_cmd_set_stencil_test_enable)(commandBuffer, stencilTestEnable))))
 	}
 	fn vkCmdSetStencilOp(&self, commandBuffer: VkCommandBuffer, faceMask: VkStencilFaceFlags, failOp: VkStencilOp, passOp: VkStencilOp, depthFailOp: VkStencilOp, compareOp: VkCompareOp) -> Result<()> {
-		process_catch("vkCmdSetStencilOp", catch_unwind(||((self.vk_version_1_3.vk_cmd_set_stencil_op)(commandBuffer, faceMask, failOp, passOp, depthFailOp, compareOp))))
+		process_catch(catch_unwind(||((self.vk_version_1_3.vk_cmd_set_stencil_op)(commandBuffer, faceMask, failOp, passOp, depthFailOp, compareOp))))
 	}
 	fn vkCmdSetRasterizerDiscardEnable(&self, commandBuffer: VkCommandBuffer, rasterizerDiscardEnable: VkBool32) -> Result<()> {
-		process_catch("vkCmdSetRasterizerDiscardEnable", catch_unwind(||((self.vk_version_1_3.vk_cmd_set_rasterizer_discard_enable)(commandBuffer, rasterizerDiscardEnable))))
+		process_catch(catch_unwind(||((self.vk_version_1_3.vk_cmd_set_rasterizer_discard_enable)(commandBuffer, rasterizerDiscardEnable))))
 	}
 	fn vkCmdSetDepthBiasEnable(&self, commandBuffer: VkCommandBuffer, depthBiasEnable: VkBool32) -> Result<()> {
-		process_catch("vkCmdSetDepthBiasEnable", catch_unwind(||((self.vk_version_1_3.vk_cmd_set_depth_bias_enable)(commandBuffer, depthBiasEnable))))
+		process_catch(catch_unwind(||((self.vk_version_1_3.vk_cmd_set_depth_bias_enable)(commandBuffer, depthBiasEnable))))
 	}
 	fn vkCmdSetPrimitiveRestartEnable(&self, commandBuffer: VkCommandBuffer, primitiveRestartEnable: VkBool32) -> Result<()> {
-		process_catch("vkCmdSetPrimitiveRestartEnable", catch_unwind(||((self.vk_version_1_3.vk_cmd_set_primitive_restart_enable)(commandBuffer, primitiveRestartEnable))))
+		process_catch(catch_unwind(||((self.vk_version_1_3.vk_cmd_set_primitive_restart_enable)(commandBuffer, primitiveRestartEnable))))
 	}
 	fn vkGetDeviceBufferMemoryRequirements(&self, device: VkDevice, pInfo: *const VkDeviceBufferMemoryRequirements, pMemoryRequirements: *mut VkMemoryRequirements2) -> Result<()> {
-		process_catch("vkGetDeviceBufferMemoryRequirements", catch_unwind(||((self.vk_version_1_3.vk_get_device_buffer_memory_requirements)(device, pInfo, pMemoryRequirements))))
+		process_catch(catch_unwind(||((self.vk_version_1_3.vk_get_device_buffer_memory_requirements)(device, pInfo, pMemoryRequirements))))
 	}
 	fn vkGetDeviceImageMemoryRequirements(&self, device: VkDevice, pInfo: *const VkDeviceImageMemoryRequirements, pMemoryRequirements: *mut VkMemoryRequirements2) -> Result<()> {
-		process_catch("vkGetDeviceImageMemoryRequirements", catch_unwind(||((self.vk_version_1_3.vk_get_device_image_memory_requirements)(device, pInfo, pMemoryRequirements))))
+		process_catch(catch_unwind(||((self.vk_version_1_3.vk_get_device_image_memory_requirements)(device, pInfo, pMemoryRequirements))))
 	}
 	fn vkGetDeviceImageSparseMemoryRequirements(&self, device: VkDevice, pInfo: *const VkDeviceImageMemoryRequirements, pSparseMemoryRequirementCount: *mut uint32_t, pSparseMemoryRequirements: *mut VkSparseImageMemoryRequirements2) -> Result<()> {
-		process_catch("vkGetDeviceImageSparseMemoryRequirements", catch_unwind(||((self.vk_version_1_3.vk_get_device_image_sparse_memory_requirements)(device, pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements))))
+		process_catch(catch_unwind(||((self.vk_version_1_3.vk_get_device_image_sparse_memory_requirements)(device, pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements))))
 	}
 }
 impl VK_VERSION_1_4 for VkCore {
 	fn vkCmdSetLineStipple(&self, commandBuffer: VkCommandBuffer, lineStippleFactor: u32, lineStipplePattern: u16) -> Result<()> {
-		process_catch("vkCmdSetLineStipple", catch_unwind(||((self.vk_version_1_4.vk_cmd_set_line_stipple)(commandBuffer, lineStippleFactor, lineStipplePattern))))
+		process_catch(catch_unwind(||((self.vk_version_1_4.vk_cmd_set_line_stipple)(commandBuffer, lineStippleFactor, lineStipplePattern))))
 	}
 	fn vkMapMemory2(&self, device: VkDevice, pMemoryMapInfo: *const VkMemoryMapInfo, ppData: *mut *mut c_void) -> Result<()> {
 		convert_result("vkMapMemory2", catch_unwind(||((self.vk_version_1_4.vk_map_memory2)(device, pMemoryMapInfo, ppData))))
@@ -41406,40 +41410,40 @@ impl VK_VERSION_1_4 for VkCore {
 		convert_result("vkUnmapMemory2", catch_unwind(||((self.vk_version_1_4.vk_unmap_memory2)(device, pMemoryUnmapInfo))))
 	}
 	fn vkCmdBindIndexBuffer2(&self, commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize, size: VkDeviceSize, indexType: VkIndexType) -> Result<()> {
-		process_catch("vkCmdBindIndexBuffer2", catch_unwind(||((self.vk_version_1_4.vk_cmd_bind_index_buffer2)(commandBuffer, buffer, offset, size, indexType))))
+		process_catch(catch_unwind(||((self.vk_version_1_4.vk_cmd_bind_index_buffer2)(commandBuffer, buffer, offset, size, indexType))))
 	}
 	fn vkGetRenderingAreaGranularity(&self, device: VkDevice, pRenderingAreaInfo: *const VkRenderingAreaInfo, pGranularity: *mut VkExtent2D) -> Result<()> {
-		process_catch("vkGetRenderingAreaGranularity", catch_unwind(||((self.vk_version_1_4.vk_get_rendering_area_granularity)(device, pRenderingAreaInfo, pGranularity))))
+		process_catch(catch_unwind(||((self.vk_version_1_4.vk_get_rendering_area_granularity)(device, pRenderingAreaInfo, pGranularity))))
 	}
 	fn vkGetDeviceImageSubresourceLayout(&self, device: VkDevice, pInfo: *const VkDeviceImageSubresourceInfo, pLayout: *mut VkSubresourceLayout2) -> Result<()> {
-		process_catch("vkGetDeviceImageSubresourceLayout", catch_unwind(||((self.vk_version_1_4.vk_get_device_image_subresource_layout)(device, pInfo, pLayout))))
+		process_catch(catch_unwind(||((self.vk_version_1_4.vk_get_device_image_subresource_layout)(device, pInfo, pLayout))))
 	}
 	fn vkGetImageSubresourceLayout2(&self, device: VkDevice, image: VkImage, pSubresource: *const VkImageSubresource2, pLayout: *mut VkSubresourceLayout2) -> Result<()> {
-		process_catch("vkGetImageSubresourceLayout2", catch_unwind(||((self.vk_version_1_4.vk_get_image_subresource_layout2)(device, image, pSubresource, pLayout))))
+		process_catch(catch_unwind(||((self.vk_version_1_4.vk_get_image_subresource_layout2)(device, image, pSubresource, pLayout))))
 	}
 	fn vkCmdPushDescriptorSet(&self, commandBuffer: VkCommandBuffer, pipelineBindPoint: VkPipelineBindPoint, layout: VkPipelineLayout, set: u32, descriptorWriteCount: u32, pDescriptorWrites: *const VkWriteDescriptorSet) -> Result<()> {
-		process_catch("vkCmdPushDescriptorSet", catch_unwind(||((self.vk_version_1_4.vk_cmd_push_descriptor_set)(commandBuffer, pipelineBindPoint, layout, set, descriptorWriteCount, pDescriptorWrites))))
+		process_catch(catch_unwind(||((self.vk_version_1_4.vk_cmd_push_descriptor_set)(commandBuffer, pipelineBindPoint, layout, set, descriptorWriteCount, pDescriptorWrites))))
 	}
 	fn vkCmdPushDescriptorSetWithTemplate(&self, commandBuffer: VkCommandBuffer, descriptorUpdateTemplate: VkDescriptorUpdateTemplate, layout: VkPipelineLayout, set: u32, pData: *const c_void) -> Result<()> {
-		process_catch("vkCmdPushDescriptorSetWithTemplate", catch_unwind(||((self.vk_version_1_4.vk_cmd_push_descriptor_set_with_template)(commandBuffer, descriptorUpdateTemplate, layout, set, pData))))
+		process_catch(catch_unwind(||((self.vk_version_1_4.vk_cmd_push_descriptor_set_with_template)(commandBuffer, descriptorUpdateTemplate, layout, set, pData))))
 	}
 	fn vkCmdSetRenderingAttachmentLocations(&self, commandBuffer: VkCommandBuffer, pLocationInfo: *const VkRenderingAttachmentLocationInfo) -> Result<()> {
-		process_catch("vkCmdSetRenderingAttachmentLocations", catch_unwind(||((self.vk_version_1_4.vk_cmd_set_rendering_attachment_locations)(commandBuffer, pLocationInfo))))
+		process_catch(catch_unwind(||((self.vk_version_1_4.vk_cmd_set_rendering_attachment_locations)(commandBuffer, pLocationInfo))))
 	}
 	fn vkCmdSetRenderingInputAttachmentIndices(&self, commandBuffer: VkCommandBuffer, pInputAttachmentIndexInfo: *const VkRenderingInputAttachmentIndexInfo) -> Result<()> {
-		process_catch("vkCmdSetRenderingInputAttachmentIndices", catch_unwind(||((self.vk_version_1_4.vk_cmd_set_rendering_input_attachment_indices)(commandBuffer, pInputAttachmentIndexInfo))))
+		process_catch(catch_unwind(||((self.vk_version_1_4.vk_cmd_set_rendering_input_attachment_indices)(commandBuffer, pInputAttachmentIndexInfo))))
 	}
 	fn vkCmdBindDescriptorSets2(&self, commandBuffer: VkCommandBuffer, pBindDescriptorSetsInfo: *const VkBindDescriptorSetsInfo) -> Result<()> {
-		process_catch("vkCmdBindDescriptorSets2", catch_unwind(||((self.vk_version_1_4.vk_cmd_bind_descriptor_sets2)(commandBuffer, pBindDescriptorSetsInfo))))
+		process_catch(catch_unwind(||((self.vk_version_1_4.vk_cmd_bind_descriptor_sets2)(commandBuffer, pBindDescriptorSetsInfo))))
 	}
 	fn vkCmdPushConstants2(&self, commandBuffer: VkCommandBuffer, pPushConstantsInfo: *const VkPushConstantsInfo) -> Result<()> {
-		process_catch("vkCmdPushConstants2", catch_unwind(||((self.vk_version_1_4.vk_cmd_push_constants2)(commandBuffer, pPushConstantsInfo))))
+		process_catch(catch_unwind(||((self.vk_version_1_4.vk_cmd_push_constants2)(commandBuffer, pPushConstantsInfo))))
 	}
 	fn vkCmdPushDescriptorSet2(&self, commandBuffer: VkCommandBuffer, pPushDescriptorSetInfo: *const VkPushDescriptorSetInfo) -> Result<()> {
-		process_catch("vkCmdPushDescriptorSet2", catch_unwind(||((self.vk_version_1_4.vk_cmd_push_descriptor_set2)(commandBuffer, pPushDescriptorSetInfo))))
+		process_catch(catch_unwind(||((self.vk_version_1_4.vk_cmd_push_descriptor_set2)(commandBuffer, pPushDescriptorSetInfo))))
 	}
 	fn vkCmdPushDescriptorSetWithTemplate2(&self, commandBuffer: VkCommandBuffer, pPushDescriptorSetWithTemplateInfo: *const VkPushDescriptorSetWithTemplateInfo) -> Result<()> {
-		process_catch("vkCmdPushDescriptorSetWithTemplate2", catch_unwind(||((self.vk_version_1_4.vk_cmd_push_descriptor_set_with_template2)(commandBuffer, pPushDescriptorSetWithTemplateInfo))))
+		process_catch(catch_unwind(||((self.vk_version_1_4.vk_cmd_push_descriptor_set_with_template2)(commandBuffer, pPushDescriptorSetWithTemplateInfo))))
 	}
 	fn vkCopyMemoryToImage(&self, device: VkDevice, pCopyMemoryToImageInfo: *const VkCopyMemoryToImageInfo) -> Result<()> {
 		convert_result("vkCopyMemoryToImage", catch_unwind(||((self.vk_version_1_4.vk_copy_memory_to_image)(device, pCopyMemoryToImageInfo))))
@@ -41456,7 +41460,7 @@ impl VK_VERSION_1_4 for VkCore {
 }
 impl VK_KHR_surface for VkCore {
 	fn vkDestroySurfaceKHR(&self, instance: VkInstance, surface: VkSurfaceKHR, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch("vkDestroySurfaceKHR", catch_unwind(||((self.vk_khr_surface.vk_destroy_surface_khr)(instance, surface, pAllocator))))
+		process_catch(catch_unwind(||((self.vk_khr_surface.vk_destroy_surface_khr)(instance, surface, pAllocator))))
 	}
 }
 impl VK_KHR_swapchain for VkCore {
@@ -41482,7 +41486,7 @@ impl VK_KHR_video_queue for VkCore {
 }
 impl VK_KHR_video_decode_queue for VkCore {
 	fn vkCmdDecodeVideoKHR(&self, commandBuffer: VkCommandBuffer, pDecodeInfo: *const VkVideoDecodeInfoKHR) -> Result<()> {
-		process_catch("vkCmdDecodeVideoKHR", catch_unwind(||((self.vk_khr_video_decode_queue.vk_cmd_decode_video_khr)(commandBuffer, pDecodeInfo))))
+		process_catch(catch_unwind(||((self.vk_khr_video_decode_queue.vk_cmd_decode_video_khr)(commandBuffer, pDecodeInfo))))
 	}
 }
 impl VK_KHR_video_encode_h264 for VkCore {}
@@ -41496,24 +41500,24 @@ impl VK_KHR_video_decode_h264 for VkCore {}
 impl vulkan_video_codec_h264std_decode for VkCore {}
 impl VK_KHR_dynamic_rendering for VkCore {
 	fn vkCmdBeginRenderingKHR(&self, commandBuffer: VkCommandBuffer, pRenderingInfo: *const VkRenderingInfo) -> Result<()> {
-		process_catch("vkCmdBeginRenderingKHR", catch_unwind(||((self.vk_khr_dynamic_rendering.vk_cmd_begin_rendering_khr)(commandBuffer, pRenderingInfo))))
+		process_catch(catch_unwind(||((self.vk_khr_dynamic_rendering.vk_cmd_begin_rendering_khr)(commandBuffer, pRenderingInfo))))
 	}
 }
 impl VK_KHR_multiview for VkCore {}
 impl VK_KHR_get_physical_device_properties2 for VkCore {
 	fn vkGetPhysicalDeviceFeatures2KHR(&self, physicalDevice: VkPhysicalDevice, pFeatures: *mut VkPhysicalDeviceFeatures2) -> Result<()> {
-		process_catch("vkGetPhysicalDeviceFeatures2KHR", catch_unwind(||((self.vk_khr_get_physical_device_properties2.vk_get_physical_device_features2_khr)(physicalDevice, pFeatures))))
+		process_catch(catch_unwind(||((self.vk_khr_get_physical_device_properties2.vk_get_physical_device_features2_khr)(physicalDevice, pFeatures))))
 	}
 }
 impl VK_KHR_device_group for VkCore {
 	fn vkGetDeviceGroupPeerMemoryFeaturesKHR(&self, device: VkDevice, heapIndex: u32, localDeviceIndex: u32, remoteDeviceIndex: u32, pPeerMemoryFeatures: *mut VkPeerMemoryFeatureFlags) -> Result<()> {
-		process_catch("vkGetDeviceGroupPeerMemoryFeaturesKHR", catch_unwind(||((self.vk_khr_device_group.vk_get_device_group_peer_memory_features_khr)(device, heapIndex, localDeviceIndex, remoteDeviceIndex, pPeerMemoryFeatures))))
+		process_catch(catch_unwind(||((self.vk_khr_device_group.vk_get_device_group_peer_memory_features_khr)(device, heapIndex, localDeviceIndex, remoteDeviceIndex, pPeerMemoryFeatures))))
 	}
 }
 impl VK_KHR_shader_draw_parameters for VkCore {}
 impl VK_KHR_maintenance1 for VkCore {
 	fn vkTrimCommandPoolKHR(&self, device: VkDevice, commandPool: VkCommandPool, flags: VkCommandPoolTrimFlags) -> Result<()> {
-		process_catch("vkTrimCommandPoolKHR", catch_unwind(||((self.vk_khr_maintenance1.vk_trim_command_pool_khr)(device, commandPool, flags))))
+		process_catch(catch_unwind(||((self.vk_khr_maintenance1.vk_trim_command_pool_khr)(device, commandPool, flags))))
 	}
 }
 impl VK_KHR_device_group_creation for VkCore {
@@ -41523,7 +41527,7 @@ impl VK_KHR_device_group_creation for VkCore {
 }
 impl VK_KHR_external_memory_capabilities for VkCore {
 	fn vkGetPhysicalDeviceExternalBufferPropertiesKHR(&self, physicalDevice: VkPhysicalDevice, pExternalBufferInfo: *const VkPhysicalDeviceExternalBufferInfo, pExternalBufferProperties: *mut VkExternalBufferProperties) -> Result<()> {
-		process_catch("vkGetPhysicalDeviceExternalBufferPropertiesKHR", catch_unwind(||((self.vk_khr_external_memory_capabilities.vk_get_physical_device_external_buffer_properties_khr)(physicalDevice, pExternalBufferInfo, pExternalBufferProperties))))
+		process_catch(catch_unwind(||((self.vk_khr_external_memory_capabilities.vk_get_physical_device_external_buffer_properties_khr)(physicalDevice, pExternalBufferInfo, pExternalBufferProperties))))
 	}
 }
 impl VK_KHR_external_memory for VkCore {}
@@ -41534,7 +41538,7 @@ impl VK_KHR_external_memory_fd for VkCore {
 }
 impl VK_KHR_external_semaphore_capabilities for VkCore {
 	fn vkGetPhysicalDeviceExternalSemaphorePropertiesKHR(&self, physicalDevice: VkPhysicalDevice, pExternalSemaphoreInfo: *const VkPhysicalDeviceExternalSemaphoreInfo, pExternalSemaphoreProperties: *mut VkExternalSemaphoreProperties) -> Result<()> {
-		process_catch("vkGetPhysicalDeviceExternalSemaphorePropertiesKHR", catch_unwind(||((self.vk_khr_external_semaphore_capabilities.vk_get_physical_device_external_semaphore_properties_khr)(physicalDevice, pExternalSemaphoreInfo, pExternalSemaphoreProperties))))
+		process_catch(catch_unwind(||((self.vk_khr_external_semaphore_capabilities.vk_get_physical_device_external_semaphore_properties_khr)(physicalDevice, pExternalSemaphoreInfo, pExternalSemaphoreProperties))))
 	}
 }
 impl VK_KHR_external_semaphore for VkCore {}
@@ -41545,7 +41549,7 @@ impl VK_KHR_external_semaphore_fd for VkCore {
 }
 impl VK_KHR_push_descriptor for VkCore {
 	fn vkCmdPushDescriptorSetKHR(&self, commandBuffer: VkCommandBuffer, pipelineBindPoint: VkPipelineBindPoint, layout: VkPipelineLayout, set: u32, descriptorWriteCount: u32, pDescriptorWrites: *const VkWriteDescriptorSet) -> Result<()> {
-		process_catch("vkCmdPushDescriptorSetKHR", catch_unwind(||((self.vk_khr_push_descriptor.vk_cmd_push_descriptor_set_khr)(commandBuffer, pipelineBindPoint, layout, set, descriptorWriteCount, pDescriptorWrites))))
+		process_catch(catch_unwind(||((self.vk_khr_push_descriptor.vk_cmd_push_descriptor_set_khr)(commandBuffer, pipelineBindPoint, layout, set, descriptorWriteCount, pDescriptorWrites))))
 	}
 }
 impl VK_KHR_shader_float16_int8 for VkCore {}
@@ -41569,7 +41573,7 @@ impl VK_KHR_shared_presentable_image for VkCore {
 }
 impl VK_KHR_external_fence_capabilities for VkCore {
 	fn vkGetPhysicalDeviceExternalFencePropertiesKHR(&self, physicalDevice: VkPhysicalDevice, pExternalFenceInfo: *const VkPhysicalDeviceExternalFenceInfo, pExternalFenceProperties: *mut VkExternalFenceProperties) -> Result<()> {
-		process_catch("vkGetPhysicalDeviceExternalFencePropertiesKHR", catch_unwind(||((self.vk_khr_external_fence_capabilities.vk_get_physical_device_external_fence_properties_khr)(physicalDevice, pExternalFenceInfo, pExternalFenceProperties))))
+		process_catch(catch_unwind(||((self.vk_khr_external_fence_capabilities.vk_get_physical_device_external_fence_properties_khr)(physicalDevice, pExternalFenceInfo, pExternalFenceProperties))))
 	}
 }
 impl VK_KHR_external_fence for VkCore {}
@@ -41601,7 +41605,7 @@ impl VK_KHR_shader_bfloat16 for VkCore {}
 impl VK_KHR_relaxed_block_layout for VkCore {}
 impl VK_KHR_get_memory_requirements2 for VkCore {
 	fn vkGetImageMemoryRequirements2KHR(&self, device: VkDevice, pInfo: *const VkImageMemoryRequirementsInfo2, pMemoryRequirements: *mut VkMemoryRequirements2) -> Result<()> {
-		process_catch("vkGetImageMemoryRequirements2KHR", catch_unwind(||((self.vk_khr_get_memory_requirements2.vk_get_image_memory_requirements2_khr)(device, pInfo, pMemoryRequirements))))
+		process_catch(catch_unwind(||((self.vk_khr_get_memory_requirements2.vk_get_image_memory_requirements2_khr)(device, pInfo, pMemoryRequirements))))
 	}
 }
 impl VK_KHR_image_format_list for VkCore {}
@@ -41617,12 +41621,12 @@ impl VK_KHR_bind_memory2 for VkCore {
 }
 impl VK_KHR_maintenance3 for VkCore {
 	fn vkGetDescriptorSetLayoutSupportKHR(&self, device: VkDevice, pCreateInfo: *const VkDescriptorSetLayoutCreateInfo, pSupport: *mut VkDescriptorSetLayoutSupport) -> Result<()> {
-		process_catch("vkGetDescriptorSetLayoutSupportKHR", catch_unwind(||((self.vk_khr_maintenance3.vk_get_descriptor_set_layout_support_khr)(device, pCreateInfo, pSupport))))
+		process_catch(catch_unwind(||((self.vk_khr_maintenance3.vk_get_descriptor_set_layout_support_khr)(device, pCreateInfo, pSupport))))
 	}
 }
 impl VK_KHR_draw_indirect_count for VkCore {
 	fn vkCmdDrawIndirectCountKHR(&self, commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize, countBuffer: VkBuffer, countBufferOffset: VkDeviceSize, maxDrawCount: u32, stride: u32) -> Result<()> {
-		process_catch("vkCmdDrawIndirectCountKHR", catch_unwind(||((self.vk_khr_draw_indirect_count.vk_cmd_draw_indirect_count_khr)(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride))))
+		process_catch(catch_unwind(||((self.vk_khr_draw_indirect_count.vk_cmd_draw_indirect_count_khr)(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride))))
 	}
 }
 impl VK_KHR_shader_subgroup_extended_types for VkCore {}
@@ -41650,7 +41654,7 @@ impl VK_KHR_fragment_shading_rate for VkCore {
 }
 impl VK_KHR_dynamic_rendering_local_read for VkCore {
 	fn vkCmdSetRenderingAttachmentLocationsKHR(&self, commandBuffer: VkCommandBuffer, pLocationInfo: *const VkRenderingAttachmentLocationInfo) -> Result<()> {
-		process_catch("vkCmdSetRenderingAttachmentLocationsKHR", catch_unwind(||((self.vk_khr_dynamic_rendering_local_read.vk_cmd_set_rendering_attachment_locations_khr)(commandBuffer, pLocationInfo))))
+		process_catch(catch_unwind(||((self.vk_khr_dynamic_rendering_local_read.vk_cmd_set_rendering_attachment_locations_khr)(commandBuffer, pLocationInfo))))
 	}
 }
 impl VK_KHR_shader_quad_control for VkCore {}
@@ -41665,7 +41669,7 @@ impl VK_KHR_present_wait for VkCore {
 impl VK_KHR_uniform_buffer_standard_layout for VkCore {}
 impl VK_KHR_buffer_device_address for VkCore {
 	fn vkGetBufferDeviceAddressKHR(&self, device: VkDevice, pInfo: *const VkBufferDeviceAddressInfo) -> Result<VkDeviceAddress> {
-		process_catch("vkGetBufferDeviceAddressKHR", catch_unwind(||((self.vk_khr_buffer_device_address.vk_get_buffer_device_address_khr)(device, pInfo))))
+		process_catch(catch_unwind(||((self.vk_khr_buffer_device_address.vk_get_buffer_device_address_khr)(device, pInfo))))
 	}
 }
 impl VK_KHR_deferred_host_operations for VkCore {
@@ -41694,7 +41698,7 @@ impl VK_KHR_video_encode_queue for VkCore {
 }
 impl VK_KHR_synchronization2 for VkCore {
 	fn vkCmdSetEvent2KHR(&self, commandBuffer: VkCommandBuffer, event: VkEvent, pDependencyInfo: *const VkDependencyInfo) -> Result<()> {
-		process_catch("vkCmdSetEvent2KHR", catch_unwind(||((self.vk_khr_synchronization2.vk_cmd_set_event2_khr)(commandBuffer, event, pDependencyInfo))))
+		process_catch(catch_unwind(||((self.vk_khr_synchronization2.vk_cmd_set_event2_khr)(commandBuffer, event, pDependencyInfo))))
 	}
 }
 impl VK_KHR_fragment_shader_barycentric for VkCore {}
@@ -41703,26 +41707,26 @@ impl VK_KHR_zero_initialize_workgroup_memory for VkCore {}
 impl VK_KHR_workgroup_memory_explicit_layout for VkCore {}
 impl VK_KHR_copy_commands2 for VkCore {
 	fn vkCmdCopyBuffer2KHR(&self, commandBuffer: VkCommandBuffer, pCopyBufferInfo: *const VkCopyBufferInfo2) -> Result<()> {
-		process_catch("vkCmdCopyBuffer2KHR", catch_unwind(||((self.vk_khr_copy_commands2.vk_cmd_copy_buffer2_khr)(commandBuffer, pCopyBufferInfo))))
+		process_catch(catch_unwind(||((self.vk_khr_copy_commands2.vk_cmd_copy_buffer2_khr)(commandBuffer, pCopyBufferInfo))))
 	}
 }
 impl VK_KHR_format_feature_flags2 for VkCore {}
 impl VK_KHR_ray_tracing_maintenance1 for VkCore {
 	fn vkCmdTraceRaysIndirect2KHR(&self, commandBuffer: VkCommandBuffer, indirectDeviceAddress: VkDeviceAddress) -> Result<()> {
-		process_catch("vkCmdTraceRaysIndirect2KHR", catch_unwind(||((self.vk_khr_ray_tracing_maintenance1.vk_cmd_trace_rays_indirect2_khr)(commandBuffer, indirectDeviceAddress))))
+		process_catch(catch_unwind(||((self.vk_khr_ray_tracing_maintenance1.vk_cmd_trace_rays_indirect2_khr)(commandBuffer, indirectDeviceAddress))))
 	}
 }
 impl VK_KHR_portability_enumeration for VkCore {}
 impl VK_KHR_maintenance4 for VkCore {
 	fn vkGetDeviceBufferMemoryRequirementsKHR(&self, device: VkDevice, pInfo: *const VkDeviceBufferMemoryRequirements, pMemoryRequirements: *mut VkMemoryRequirements2) -> Result<()> {
-		process_catch("vkGetDeviceBufferMemoryRequirementsKHR", catch_unwind(||((self.vk_khr_maintenance4.vk_get_device_buffer_memory_requirements_khr)(device, pInfo, pMemoryRequirements))))
+		process_catch(catch_unwind(||((self.vk_khr_maintenance4.vk_get_device_buffer_memory_requirements_khr)(device, pInfo, pMemoryRequirements))))
 	}
 }
 impl VK_KHR_shader_subgroup_rotate for VkCore {}
 impl VK_KHR_shader_maximal_reconvergence for VkCore {}
 impl VK_KHR_maintenance5 for VkCore {
 	fn vkCmdBindIndexBuffer2KHR(&self, commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize, size: VkDeviceSize, indexType: VkIndexType) -> Result<()> {
-		process_catch("vkCmdBindIndexBuffer2KHR", catch_unwind(||((self.vk_khr_maintenance5.vk_cmd_bind_index_buffer2_khr)(commandBuffer, buffer, offset, size, indexType))))
+		process_catch(catch_unwind(||((self.vk_khr_maintenance5.vk_cmd_bind_index_buffer2_khr)(commandBuffer, buffer, offset, size, indexType))))
 	}
 }
 impl VK_KHR_present_id2 for VkCore {}
@@ -41765,7 +41769,7 @@ impl VK_KHR_shader_float_controls2 for VkCore {}
 impl VK_KHR_index_type_uint8 for VkCore {}
 impl VK_KHR_line_rasterization for VkCore {
 	fn vkCmdSetLineStippleKHR(&self, commandBuffer: VkCommandBuffer, lineStippleFactor: u32, lineStipplePattern: u16) -> Result<()> {
-		process_catch("vkCmdSetLineStippleKHR", catch_unwind(||((self.vk_khr_line_rasterization.vk_cmd_set_line_stipple_khr)(commandBuffer, lineStippleFactor, lineStipplePattern))))
+		process_catch(catch_unwind(||((self.vk_khr_line_rasterization.vk_cmd_set_line_stipple_khr)(commandBuffer, lineStippleFactor, lineStipplePattern))))
 	}
 }
 impl VK_KHR_calibrated_timestamps for VkCore {
@@ -41776,7 +41780,7 @@ impl VK_KHR_calibrated_timestamps for VkCore {
 impl VK_KHR_shader_expect_assume for VkCore {}
 impl VK_KHR_maintenance6 for VkCore {
 	fn vkCmdBindDescriptorSets2KHR(&self, commandBuffer: VkCommandBuffer, pBindDescriptorSetsInfo: *const VkBindDescriptorSetsInfo) -> Result<()> {
-		process_catch("vkCmdBindDescriptorSets2KHR", catch_unwind(||((self.vk_khr_maintenance6.vk_cmd_bind_descriptor_sets2_khr)(commandBuffer, pBindDescriptorSetsInfo))))
+		process_catch(catch_unwind(||((self.vk_khr_maintenance6.vk_cmd_bind_descriptor_sets2_khr)(commandBuffer, pBindDescriptorSetsInfo))))
 	}
 }
 impl VK_KHR_video_encode_intra_refresh for VkCore {}
@@ -41809,7 +41813,7 @@ impl VK_AMD_gcn_shader for VkCore {}
 impl VK_NV_dedicated_allocation for VkCore {}
 impl VK_EXT_transform_feedback for VkCore {
 	fn vkCmdBindTransformFeedbackBuffersEXT(&self, commandBuffer: VkCommandBuffer, firstBinding: u32, bindingCount: u32, pBuffers: *const VkBuffer, pOffsets: *const VkDeviceSize, pSizes: *const VkDeviceSize) -> Result<()> {
-		process_catch("vkCmdBindTransformFeedbackBuffersEXT", catch_unwind(||((self.vk_ext_transform_feedback.vk_cmd_bind_transform_feedback_buffers_ext)(commandBuffer, firstBinding, bindingCount, pBuffers, pOffsets, pSizes))))
+		process_catch(catch_unwind(||((self.vk_ext_transform_feedback.vk_cmd_bind_transform_feedback_buffers_ext)(commandBuffer, firstBinding, bindingCount, pBuffers, pOffsets, pSizes))))
 	}
 }
 impl VK_NVX_binary_import for VkCore {
@@ -41819,12 +41823,12 @@ impl VK_NVX_binary_import for VkCore {
 }
 impl VK_NVX_image_view_handle for VkCore {
 	fn vkGetImageViewHandleNVX(&self, device: VkDevice, pInfo: *const VkImageViewHandleInfoNVX) -> Result<u32> {
-		process_catch("vkGetImageViewHandleNVX", catch_unwind(||((self.vk_nvx_image_view_handle.vk_get_image_view_handle_nvx)(device, pInfo))))
+		process_catch(catch_unwind(||((self.vk_nvx_image_view_handle.vk_get_image_view_handle_nvx)(device, pInfo))))
 	}
 }
 impl VK_AMD_draw_indirect_count for VkCore {
 	fn vkCmdDrawIndirectCountAMD(&self, commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize, countBuffer: VkBuffer, countBufferOffset: VkDeviceSize, maxDrawCount: u32, stride: u32) -> Result<()> {
-		process_catch("vkCmdDrawIndirectCountAMD", catch_unwind(||((self.vk_amd_draw_indirect_count.vk_cmd_draw_indirect_count_amd)(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride))))
+		process_catch(catch_unwind(||((self.vk_amd_draw_indirect_count.vk_cmd_draw_indirect_count_amd)(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride))))
 	}
 }
 impl VK_AMD_negative_viewport_height for VkCore {}
@@ -41853,12 +41857,12 @@ impl VK_EXT_astc_decode_mode for VkCore {}
 impl VK_EXT_pipeline_robustness for VkCore {}
 impl VK_EXT_conditional_rendering for VkCore {
 	fn vkCmdBeginConditionalRenderingEXT(&self, commandBuffer: VkCommandBuffer, pConditionalRenderingBegin: *const VkConditionalRenderingBeginInfoEXT) -> Result<()> {
-		process_catch("vkCmdBeginConditionalRenderingEXT", catch_unwind(||((self.vk_ext_conditional_rendering.vk_cmd_begin_conditional_rendering_ext)(commandBuffer, pConditionalRenderingBegin))))
+		process_catch(catch_unwind(||((self.vk_ext_conditional_rendering.vk_cmd_begin_conditional_rendering_ext)(commandBuffer, pConditionalRenderingBegin))))
 	}
 }
 impl VK_NV_clip_space_w_scaling for VkCore {
 	fn vkCmdSetViewportWScalingNV(&self, commandBuffer: VkCommandBuffer, firstViewport: u32, viewportCount: u32, pViewportWScalings: *const VkViewportWScalingNV) -> Result<()> {
-		process_catch("vkCmdSetViewportWScalingNV", catch_unwind(||((self.vk_nv_clip_space_w_scaling.vk_cmd_set_viewport_wscaling_nv)(commandBuffer, firstViewport, viewportCount, pViewportWScalings))))
+		process_catch(catch_unwind(||((self.vk_nv_clip_space_w_scaling.vk_cmd_set_viewport_wscaling_nv)(commandBuffer, firstViewport, viewportCount, pViewportWScalings))))
 	}
 }
 impl VK_EXT_direct_mode_display for VkCore {
@@ -41888,7 +41892,7 @@ impl VK_NVX_multiview_per_view_attributes for VkCore {}
 impl VK_NV_viewport_swizzle for VkCore {}
 impl VK_EXT_discard_rectangles for VkCore {
 	fn vkCmdSetDiscardRectangleEXT(&self, commandBuffer: VkCommandBuffer, firstDiscardRectangle: u32, discardRectangleCount: u32, pDiscardRectangles: *const VkRect2D) -> Result<()> {
-		process_catch("vkCmdSetDiscardRectangleEXT", catch_unwind(||((self.vk_ext_discard_rectangles.vk_cmd_set_discard_rectangle_ext)(commandBuffer, firstDiscardRectangle, discardRectangleCount, pDiscardRectangles))))
+		process_catch(catch_unwind(||((self.vk_ext_discard_rectangles.vk_cmd_set_discard_rectangle_ext)(commandBuffer, firstDiscardRectangle, discardRectangleCount, pDiscardRectangles))))
 	}
 }
 impl VK_EXT_conservative_rasterization for VkCore {}
@@ -41896,7 +41900,7 @@ impl VK_EXT_depth_clip_enable for VkCore {}
 impl VK_EXT_swapchain_colorspace for VkCore {}
 impl VK_EXT_hdr_metadata for VkCore {
 	fn vkSetHdrMetadataEXT(&self, device: VkDevice, swapchainCount: u32, pSwapchains: *const VkSwapchainKHR, pMetadata: *const VkHdrMetadataEXT) -> Result<()> {
-		process_catch("vkSetHdrMetadataEXT", catch_unwind(||((self.vk_ext_hdr_metadata.vk_set_hdr_metadata_ext)(device, swapchainCount, pSwapchains, pMetadata))))
+		process_catch(catch_unwind(||((self.vk_ext_hdr_metadata.vk_set_hdr_metadata_ext)(device, swapchainCount, pSwapchains, pMetadata))))
 	}
 }
 impl VK_IMG_relaxed_line_rasterization for VkCore {}
@@ -41915,7 +41919,7 @@ impl VK_EXT_inline_uniform_block for VkCore {}
 impl VK_EXT_shader_stencil_export for VkCore {}
 impl VK_EXT_sample_locations for VkCore {
 	fn vkCmdSetSampleLocationsEXT(&self, commandBuffer: VkCommandBuffer, pSampleLocationsInfo: *const VkSampleLocationsInfoEXT) -> Result<()> {
-		process_catch("vkCmdSetSampleLocationsEXT", catch_unwind(||((self.vk_ext_sample_locations.vk_cmd_set_sample_locations_ext)(commandBuffer, pSampleLocationsInfo))))
+		process_catch(catch_unwind(||((self.vk_ext_sample_locations.vk_cmd_set_sample_locations_ext)(commandBuffer, pSampleLocationsInfo))))
 	}
 }
 impl VK_EXT_blend_operation_advanced for VkCore {}
@@ -41938,7 +41942,7 @@ impl VK_EXT_descriptor_indexing for VkCore {}
 impl VK_EXT_shader_viewport_index_layer for VkCore {}
 impl VK_NV_shading_rate_image for VkCore {
 	fn vkCmdBindShadingRateImageNV(&self, commandBuffer: VkCommandBuffer, imageView: VkImageView, imageLayout: VkImageLayout) -> Result<()> {
-		process_catch("vkCmdBindShadingRateImageNV", catch_unwind(||((self.vk_nv_shading_rate_image.vk_cmd_bind_shading_rate_image_nv)(commandBuffer, imageView, imageLayout))))
+		process_catch(catch_unwind(||((self.vk_nv_shading_rate_image.vk_cmd_bind_shading_rate_image_nv)(commandBuffer, imageView, imageLayout))))
 	}
 }
 impl VK_NV_ray_tracing for VkCore {
@@ -41957,7 +41961,7 @@ impl VK_EXT_external_memory_host for VkCore {
 }
 impl VK_AMD_buffer_marker for VkCore {
 	fn vkCmdWriteBufferMarkerAMD(&self, commandBuffer: VkCommandBuffer, pipelineStage: VkPipelineStageFlagBits, dstBuffer: VkBuffer, dstOffset: VkDeviceSize, marker: u32) -> Result<()> {
-		process_catch("vkCmdWriteBufferMarkerAMD", catch_unwind(||((self.vk_amd_buffer_marker.vk_cmd_write_buffer_marker_amd)(commandBuffer, pipelineStage, dstBuffer, dstOffset, marker))))
+		process_catch(catch_unwind(||((self.vk_amd_buffer_marker.vk_cmd_write_buffer_marker_amd)(commandBuffer, pipelineStage, dstBuffer, dstOffset, marker))))
 	}
 }
 impl VK_AMD_pipeline_compiler_control for VkCore {}
@@ -41974,19 +41978,19 @@ impl VK_NV_shader_subgroup_partitioned for VkCore {}
 impl VK_NV_compute_shader_derivatives for VkCore {}
 impl VK_NV_mesh_shader for VkCore {
 	fn vkCmdDrawMeshTasksNV(&self, commandBuffer: VkCommandBuffer, taskCount: u32, firstTask: u32) -> Result<()> {
-		process_catch("vkCmdDrawMeshTasksNV", catch_unwind(||((self.vk_nv_mesh_shader.vk_cmd_draw_mesh_tasks_nv)(commandBuffer, taskCount, firstTask))))
+		process_catch(catch_unwind(||((self.vk_nv_mesh_shader.vk_cmd_draw_mesh_tasks_nv)(commandBuffer, taskCount, firstTask))))
 	}
 }
 impl VK_NV_fragment_shader_barycentric for VkCore {}
 impl VK_NV_shader_image_footprint for VkCore {}
 impl VK_NV_scissor_exclusive for VkCore {
 	fn vkCmdSetExclusiveScissorEnableNV(&self, commandBuffer: VkCommandBuffer, firstExclusiveScissor: u32, exclusiveScissorCount: u32, pExclusiveScissorEnables: *const VkBool32) -> Result<()> {
-		process_catch("vkCmdSetExclusiveScissorEnableNV", catch_unwind(||((self.vk_nv_scissor_exclusive.vk_cmd_set_exclusive_scissor_enable_nv)(commandBuffer, firstExclusiveScissor, exclusiveScissorCount, pExclusiveScissorEnables))))
+		process_catch(catch_unwind(||((self.vk_nv_scissor_exclusive.vk_cmd_set_exclusive_scissor_enable_nv)(commandBuffer, firstExclusiveScissor, exclusiveScissorCount, pExclusiveScissorEnables))))
 	}
 }
 impl VK_NV_device_diagnostic_checkpoints for VkCore {
 	fn vkCmdSetCheckpointNV(&self, commandBuffer: VkCommandBuffer, pCheckpointMarker: *const c_void) -> Result<()> {
-		process_catch("vkCmdSetCheckpointNV", catch_unwind(||((self.vk_nv_device_diagnostic_checkpoints.vk_cmd_set_checkpoint_nv)(commandBuffer, pCheckpointMarker))))
+		process_catch(catch_unwind(||((self.vk_nv_device_diagnostic_checkpoints.vk_cmd_set_checkpoint_nv)(commandBuffer, pCheckpointMarker))))
 	}
 }
 impl VK_INTEL_shader_integer_functions2 for VkCore {}
@@ -41998,7 +42002,7 @@ impl VK_INTEL_performance_query for VkCore {
 impl VK_EXT_pci_bus_info for VkCore {}
 impl VK_AMD_display_native_hdr for VkCore {
 	fn vkSetLocalDimmingAMD(&self, device: VkDevice, swapChain: VkSwapchainKHR, localDimmingEnable: VkBool32) -> Result<()> {
-		process_catch("vkSetLocalDimmingAMD", catch_unwind(||((self.vk_amd_display_native_hdr.vk_set_local_dimming_amd)(device, swapChain, localDimmingEnable))))
+		process_catch(catch_unwind(||((self.vk_amd_display_native_hdr.vk_set_local_dimming_amd)(device, swapChain, localDimmingEnable))))
 	}
 }
 impl VK_EXT_fragment_density_map for VkCore {}
@@ -42014,7 +42018,7 @@ impl VK_EXT_memory_priority for VkCore {}
 impl VK_NV_dedicated_allocation_image_aliasing for VkCore {}
 impl VK_EXT_buffer_device_address for VkCore {
 	fn vkGetBufferDeviceAddressEXT(&self, device: VkDevice, pInfo: *const VkBufferDeviceAddressInfo) -> Result<VkDeviceAddress> {
-		process_catch("vkGetBufferDeviceAddressEXT", catch_unwind(||((self.vk_ext_buffer_device_address.vk_get_buffer_device_address_ext)(device, pInfo))))
+		process_catch(catch_unwind(||((self.vk_ext_buffer_device_address.vk_get_buffer_device_address_ext)(device, pInfo))))
 	}
 }
 impl VK_EXT_tooling_info for VkCore {
@@ -42044,19 +42048,19 @@ impl VK_EXT_headless_surface for VkCore {
 }
 impl VK_EXT_line_rasterization for VkCore {
 	fn vkCmdSetLineStippleEXT(&self, commandBuffer: VkCommandBuffer, lineStippleFactor: u32, lineStipplePattern: u16) -> Result<()> {
-		process_catch("vkCmdSetLineStippleEXT", catch_unwind(||((self.vk_ext_line_rasterization.vk_cmd_set_line_stipple_ext)(commandBuffer, lineStippleFactor, lineStipplePattern))))
+		process_catch(catch_unwind(||((self.vk_ext_line_rasterization.vk_cmd_set_line_stipple_ext)(commandBuffer, lineStippleFactor, lineStipplePattern))))
 	}
 }
 impl VK_EXT_shader_atomic_float for VkCore {}
 impl VK_EXT_host_query_reset for VkCore {
 	fn vkResetQueryPoolEXT(&self, device: VkDevice, queryPool: VkQueryPool, firstQuery: u32, queryCount: u32) -> Result<()> {
-		process_catch("vkResetQueryPoolEXT", catch_unwind(||((self.vk_ext_host_query_reset.vk_reset_query_pool_ext)(device, queryPool, firstQuery, queryCount))))
+		process_catch(catch_unwind(||((self.vk_ext_host_query_reset.vk_reset_query_pool_ext)(device, queryPool, firstQuery, queryCount))))
 	}
 }
 impl VK_EXT_index_type_uint8 for VkCore {}
 impl VK_EXT_extended_dynamic_state for VkCore {
 	fn vkCmdSetCullModeEXT(&self, commandBuffer: VkCommandBuffer, cullMode: VkCullModeFlags) -> Result<()> {
-		process_catch("vkCmdSetCullModeEXT", catch_unwind(||((self.vk_ext_extended_dynamic_state.vk_cmd_set_cull_mode_ext)(commandBuffer, cullMode))))
+		process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state.vk_cmd_set_cull_mode_ext)(commandBuffer, cullMode))))
 	}
 }
 impl VK_EXT_host_image_copy for VkCore {
@@ -42075,7 +42079,7 @@ impl VK_EXT_swapchain_maintenance1 for VkCore {
 impl VK_EXT_shader_demote_to_helper_invocation for VkCore {}
 impl VK_NV_device_generated_commands for VkCore {
 	fn vkGetGeneratedCommandsMemoryRequirementsNV(&self, device: VkDevice, pInfo: *const VkGeneratedCommandsMemoryRequirementsInfoNV, pMemoryRequirements: *mut VkMemoryRequirements2) -> Result<()> {
-		process_catch("vkGetGeneratedCommandsMemoryRequirementsNV", catch_unwind(||((self.vk_nv_device_generated_commands.vk_get_generated_commands_memory_requirements_nv)(device, pInfo, pMemoryRequirements))))
+		process_catch(catch_unwind(||((self.vk_nv_device_generated_commands.vk_get_generated_commands_memory_requirements_nv)(device, pInfo, pMemoryRequirements))))
 	}
 }
 impl VK_NV_inherited_viewport_scissor for VkCore {}
@@ -42083,7 +42087,7 @@ impl VK_EXT_texel_buffer_alignment for VkCore {}
 impl VK_QCOM_render_pass_transform for VkCore {}
 impl VK_EXT_depth_bias_control for VkCore {
 	fn vkCmdSetDepthBias2EXT(&self, commandBuffer: VkCommandBuffer, pDepthBiasInfo: *const VkDepthBiasInfoEXT) -> Result<()> {
-		process_catch("vkCmdSetDepthBias2EXT", catch_unwind(||((self.vk_ext_depth_bias_control.vk_cmd_set_depth_bias2_ext)(commandBuffer, pDepthBiasInfo))))
+		process_catch(catch_unwind(||((self.vk_ext_depth_bias_control.vk_cmd_set_depth_bias2_ext)(commandBuffer, pDepthBiasInfo))))
 	}
 }
 impl VK_EXT_device_memory_report for VkCore {}
@@ -42106,20 +42110,20 @@ impl VK_NV_device_diagnostics_config for VkCore {}
 impl VK_QCOM_render_pass_store_ops for VkCore {}
 impl VK_QCOM_tile_shading for VkCore {
 	fn vkCmdDispatchTileQCOM(&self, commandBuffer: VkCommandBuffer, pDispatchTileInfo: *const VkDispatchTileInfoQCOM) -> Result<()> {
-		process_catch("vkCmdDispatchTileQCOM", catch_unwind(||((self.vk_qcom_tile_shading.vk_cmd_dispatch_tile_qcom)(commandBuffer, pDispatchTileInfo))))
+		process_catch(catch_unwind(||((self.vk_qcom_tile_shading.vk_cmd_dispatch_tile_qcom)(commandBuffer, pDispatchTileInfo))))
 	}
 }
 impl VK_NV_low_latency for VkCore {}
 impl VK_EXT_descriptor_buffer for VkCore {
 	fn vkGetDescriptorSetLayoutSizeEXT(&self, device: VkDevice, layout: VkDescriptorSetLayout, pLayoutSizeInBytes: *mut VkDeviceSize) -> Result<()> {
-		process_catch("vkGetDescriptorSetLayoutSizeEXT", catch_unwind(||((self.vk_ext_descriptor_buffer.vk_get_descriptor_set_layout_size_ext)(device, layout, pLayoutSizeInBytes))))
+		process_catch(catch_unwind(||((self.vk_ext_descriptor_buffer.vk_get_descriptor_set_layout_size_ext)(device, layout, pLayoutSizeInBytes))))
 	}
 }
 impl VK_EXT_graphics_pipeline_library for VkCore {}
 impl VK_AMD_shader_early_and_late_fragment_tests for VkCore {}
 impl VK_NV_fragment_shading_rate_enums for VkCore {
 	fn vkCmdSetFragmentShadingRateEnumNV(&self, commandBuffer: VkCommandBuffer, shadingRate: VkFragmentShadingRateNV, combinerOps: &[VkFragmentShadingRateCombinerOpKHR; 2 as usize]) -> Result<()> {
-		process_catch("vkCmdSetFragmentShadingRateEnumNV", catch_unwind(||((self.vk_nv_fragment_shading_rate_enums.vk_cmd_set_fragment_shading_rate_enum_nv)(commandBuffer, shadingRate, combinerOps))))
+		process_catch(catch_unwind(||((self.vk_nv_fragment_shading_rate_enums.vk_cmd_set_fragment_shading_rate_enum_nv)(commandBuffer, shadingRate, combinerOps))))
 	}
 }
 impl VK_NV_ray_tracing_motion_blur for VkCore {}
@@ -42140,7 +42144,7 @@ impl VK_EXT_rgba10x6_formats for VkCore {}
 impl VK_VALVE_mutable_descriptor_type for VkCore {}
 impl VK_EXT_vertex_input_dynamic_state for VkCore {
 	fn vkCmdSetVertexInputEXT(&self, commandBuffer: VkCommandBuffer, vertexBindingDescriptionCount: u32, pVertexBindingDescriptions: *const VkVertexInputBindingDescription2EXT, vertexAttributeDescriptionCount: u32, pVertexAttributeDescriptions: *const VkVertexInputAttributeDescription2EXT) -> Result<()> {
-		process_catch("vkCmdSetVertexInputEXT", catch_unwind(||((self.vk_ext_vertex_input_dynamic_state.vk_cmd_set_vertex_input_ext)(commandBuffer, vertexBindingDescriptionCount, pVertexBindingDescriptions, vertexAttributeDescriptionCount, pVertexAttributeDescriptions))))
+		process_catch(catch_unwind(||((self.vk_ext_vertex_input_dynamic_state.vk_cmd_set_vertex_input_ext)(commandBuffer, vertexBindingDescriptionCount, pVertexBindingDescriptions, vertexAttributeDescriptionCount, pVertexAttributeDescriptions))))
 	}
 }
 impl VK_EXT_physical_device_drm for VkCore {}
@@ -42155,7 +42159,7 @@ impl VK_HUAWEI_subpass_shading for VkCore {
 }
 impl VK_HUAWEI_invocation_mask for VkCore {
 	fn vkCmdBindInvocationMaskHUAWEI(&self, commandBuffer: VkCommandBuffer, imageView: VkImageView, imageLayout: VkImageLayout) -> Result<()> {
-		process_catch("vkCmdBindInvocationMaskHUAWEI", catch_unwind(||((self.vk_huawei_invocation_mask.vk_cmd_bind_invocation_mask_huawei)(commandBuffer, imageView, imageLayout))))
+		process_catch(catch_unwind(||((self.vk_huawei_invocation_mask.vk_cmd_bind_invocation_mask_huawei)(commandBuffer, imageView, imageLayout))))
 	}
 }
 impl VK_NV_external_memory_rdma for VkCore {
@@ -42172,12 +42176,12 @@ impl VK_EXT_frame_boundary for VkCore {}
 impl VK_EXT_multisampled_render_to_single_sampled for VkCore {}
 impl VK_EXT_extended_dynamic_state2 for VkCore {
 	fn vkCmdSetPatchControlPointsEXT(&self, commandBuffer: VkCommandBuffer, patchControlPoints: u32) -> Result<()> {
-		process_catch("vkCmdSetPatchControlPointsEXT", catch_unwind(||((self.vk_ext_extended_dynamic_state2.vk_cmd_set_patch_control_points_ext)(commandBuffer, patchControlPoints))))
+		process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state2.vk_cmd_set_patch_control_points_ext)(commandBuffer, patchControlPoints))))
 	}
 }
 impl VK_EXT_color_write_enable for VkCore {
 	fn vkCmdSetColorWriteEnableEXT(&self, commandBuffer: VkCommandBuffer, attachmentCount: u32, pColorWriteEnables: *const VkBool32) -> Result<()> {
-		process_catch("vkCmdSetColorWriteEnableEXT", catch_unwind(||((self.vk_ext_color_write_enable.vk_cmd_set_color_write_enable_ext)(commandBuffer, attachmentCount, pColorWriteEnables))))
+		process_catch(catch_unwind(||((self.vk_ext_color_write_enable.vk_cmd_set_color_write_enable_ext)(commandBuffer, attachmentCount, pColorWriteEnables))))
 	}
 }
 impl VK_EXT_primitives_generated_query for VkCore {}
@@ -42185,7 +42189,7 @@ impl VK_EXT_global_priority_query for VkCore {}
 impl VK_EXT_image_view_min_lod for VkCore {}
 impl VK_EXT_multi_draw for VkCore {
 	fn vkCmdDrawMultiEXT(&self, commandBuffer: VkCommandBuffer, drawCount: u32, pVertexInfo: *const VkMultiDrawInfoEXT, instanceCount: u32, firstInstance: u32, stride: u32) -> Result<()> {
-		process_catch("vkCmdDrawMultiEXT", catch_unwind(||((self.vk_ext_multi_draw.vk_cmd_draw_multi_ext)(commandBuffer, drawCount, pVertexInfo, instanceCount, firstInstance, stride))))
+		process_catch(catch_unwind(||((self.vk_ext_multi_draw.vk_cmd_draw_multi_ext)(commandBuffer, drawCount, pVertexInfo, instanceCount, firstInstance, stride))))
 	}
 }
 impl VK_EXT_image_2d_view_of_3d for VkCore {}
@@ -42198,13 +42202,13 @@ impl VK_EXT_opacity_micromap for VkCore {
 impl VK_EXT_load_store_op_none for VkCore {}
 impl VK_HUAWEI_cluster_culling_shader for VkCore {
 	fn vkCmdDrawClusterHUAWEI(&self, commandBuffer: VkCommandBuffer, groupCountX: u32, groupCountY: u32, groupCountZ: u32) -> Result<()> {
-		process_catch("vkCmdDrawClusterHUAWEI", catch_unwind(||((self.vk_huawei_cluster_culling_shader.vk_cmd_draw_cluster_huawei)(commandBuffer, groupCountX, groupCountY, groupCountZ))))
+		process_catch(catch_unwind(||((self.vk_huawei_cluster_culling_shader.vk_cmd_draw_cluster_huawei)(commandBuffer, groupCountX, groupCountY, groupCountZ))))
 	}
 }
 impl VK_EXT_border_color_swizzle for VkCore {}
 impl VK_EXT_pageable_device_local_memory for VkCore {
 	fn vkSetDeviceMemoryPriorityEXT(&self, device: VkDevice, memory: VkDeviceMemory, priority: f32) -> Result<()> {
-		process_catch("vkSetDeviceMemoryPriorityEXT", catch_unwind(||((self.vk_ext_pageable_device_local_memory.vk_set_device_memory_priority_ext)(device, memory, priority))))
+		process_catch(catch_unwind(||((self.vk_ext_pageable_device_local_memory.vk_set_device_memory_priority_ext)(device, memory, priority))))
 	}
 }
 impl VK_ARM_shader_core_properties for VkCore {}
@@ -42212,7 +42216,7 @@ impl VK_ARM_scheduling_controls for VkCore {}
 impl VK_EXT_image_sliced_view_of_3d for VkCore {}
 impl VK_VALVE_descriptor_set_host_mapping for VkCore {
 	fn vkGetDescriptorSetLayoutHostMappingInfoVALVE(&self, device: VkDevice, pBindingReference: *const VkDescriptorSetBindingReferenceVALVE, pHostMapping: *mut VkDescriptorSetLayoutHostMappingInfoVALVE) -> Result<()> {
-		process_catch("vkGetDescriptorSetLayoutHostMappingInfoVALVE", catch_unwind(||((self.vk_valve_descriptor_set_host_mapping.vk_get_descriptor_set_layout_host_mapping_info_valve)(device, pBindingReference, pHostMapping))))
+		process_catch(catch_unwind(||((self.vk_valve_descriptor_set_host_mapping.vk_get_descriptor_set_layout_host_mapping_info_valve)(device, pBindingReference, pHostMapping))))
 	}
 }
 impl VK_EXT_depth_clamp_zero_one for VkCore {}
@@ -42221,17 +42225,17 @@ impl VK_ARM_render_pass_striped for VkCore {}
 impl VK_QCOM_fragment_density_map_offset for VkCore {}
 impl VK_NV_copy_memory_indirect for VkCore {
 	fn vkCmdCopyMemoryIndirectNV(&self, commandBuffer: VkCommandBuffer, copyBufferAddress: VkDeviceAddress, copyCount: u32, stride: u32) -> Result<()> {
-		process_catch("vkCmdCopyMemoryIndirectNV", catch_unwind(||((self.vk_nv_copy_memory_indirect.vk_cmd_copy_memory_indirect_nv)(commandBuffer, copyBufferAddress, copyCount, stride))))
+		process_catch(catch_unwind(||((self.vk_nv_copy_memory_indirect.vk_cmd_copy_memory_indirect_nv)(commandBuffer, copyBufferAddress, copyCount, stride))))
 	}
 }
 impl VK_NV_memory_decompression for VkCore {
 	fn vkCmdDecompressMemoryNV(&self, commandBuffer: VkCommandBuffer, decompressRegionCount: u32, pDecompressMemoryRegions: *const VkDecompressMemoryRegionNV) -> Result<()> {
-		process_catch("vkCmdDecompressMemoryNV", catch_unwind(||((self.vk_nv_memory_decompression.vk_cmd_decompress_memory_nv)(commandBuffer, decompressRegionCount, pDecompressMemoryRegions))))
+		process_catch(catch_unwind(||((self.vk_nv_memory_decompression.vk_cmd_decompress_memory_nv)(commandBuffer, decompressRegionCount, pDecompressMemoryRegions))))
 	}
 }
 impl VK_NV_device_generated_commands_compute for VkCore {
 	fn vkGetPipelineIndirectMemoryRequirementsNV(&self, device: VkDevice, pCreateInfo: *const VkComputePipelineCreateInfo, pMemoryRequirements: *mut VkMemoryRequirements2) -> Result<()> {
-		process_catch("vkGetPipelineIndirectMemoryRequirementsNV", catch_unwind(||((self.vk_nv_device_generated_commands_compute.vk_get_pipeline_indirect_memory_requirements_nv)(device, pCreateInfo, pMemoryRequirements))))
+		process_catch(catch_unwind(||((self.vk_nv_device_generated_commands_compute.vk_get_pipeline_indirect_memory_requirements_nv)(device, pCreateInfo, pMemoryRequirements))))
 	}
 }
 impl VK_NV_ray_tracing_linear_swept_spheres for VkCore {}
@@ -42243,7 +42247,7 @@ impl VK_EXT_nested_command_buffer for VkCore {}
 impl VK_EXT_external_memory_acquire_unmodified for VkCore {}
 impl VK_EXT_extended_dynamic_state3 for VkCore {
 	fn vkCmdSetDepthClampEnableEXT(&self, commandBuffer: VkCommandBuffer, depthClampEnable: VkBool32) -> Result<()> {
-		process_catch("vkCmdSetDepthClampEnableEXT", catch_unwind(||((self.vk_ext_extended_dynamic_state3.vk_cmd_set_depth_clamp_enable_ext)(commandBuffer, depthClampEnable))))
+		process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state3.vk_cmd_set_depth_clamp_enable_ext)(commandBuffer, depthClampEnable))))
 	}
 }
 impl VK_EXT_subpass_merge_feedback for VkCore {}
@@ -42255,7 +42259,7 @@ impl VK_ARM_tensors for VkCore {
 }
 impl VK_EXT_shader_module_identifier for VkCore {
 	fn vkGetShaderModuleIdentifierEXT(&self, device: VkDevice, shaderModule: VkShaderModule, pIdentifier: *mut VkShaderModuleIdentifierEXT) -> Result<()> {
-		process_catch("vkGetShaderModuleIdentifierEXT", catch_unwind(||((self.vk_ext_shader_module_identifier.vk_get_shader_module_identifier_ext)(device, shaderModule, pIdentifier))))
+		process_catch(catch_unwind(||((self.vk_ext_shader_module_identifier.vk_get_shader_module_identifier_ext)(device, shaderModule, pIdentifier))))
 	}
 }
 impl VK_EXT_rasterization_order_attachment_access for VkCore {}
@@ -42268,7 +42272,7 @@ impl VK_EXT_legacy_dithering for VkCore {}
 impl VK_EXT_pipeline_protected_access for VkCore {}
 impl VK_AMD_anti_lag for VkCore {
 	fn vkAntiLagUpdateAMD(&self, device: VkDevice, pData: *const VkAntiLagDataAMD) -> Result<()> {
-		process_catch("vkAntiLagUpdateAMD", catch_unwind(||((self.vk_amd_anti_lag.vk_anti_lag_update_amd)(device, pData))))
+		process_catch(catch_unwind(||((self.vk_amd_anti_lag.vk_anti_lag_update_amd)(device, pData))))
 	}
 }
 impl VK_EXT_shader_object for VkCore {
@@ -42314,14 +42318,14 @@ impl VK_QCOM_ycbcr_degamma for VkCore {}
 impl VK_QCOM_filter_cubic_clamp for VkCore {}
 impl VK_EXT_attachment_feedback_loop_dynamic_state for VkCore {
 	fn vkCmdSetAttachmentFeedbackLoopEnableEXT(&self, commandBuffer: VkCommandBuffer, aspectMask: VkImageAspectFlags) -> Result<()> {
-		process_catch("vkCmdSetAttachmentFeedbackLoopEnableEXT", catch_unwind(||((self.vk_ext_attachment_feedback_loop_dynamic_state.vk_cmd_set_attachment_feedback_loop_enable_ext)(commandBuffer, aspectMask))))
+		process_catch(catch_unwind(||((self.vk_ext_attachment_feedback_loop_dynamic_state.vk_cmd_set_attachment_feedback_loop_enable_ext)(commandBuffer, aspectMask))))
 	}
 }
 impl VK_MSFT_layered_driver for VkCore {}
 impl VK_NV_descriptor_pool_overallocation for VkCore {}
 impl VK_QCOM_tile_memory_heap for VkCore {
 	fn vkCmdBindTileMemoryQCOM(&self, commandBuffer: VkCommandBuffer, pTileMemoryBindInfo: *const VkTileMemoryBindInfoQCOM) -> Result<()> {
-		process_catch("vkCmdBindTileMemoryQCOM", catch_unwind(||((self.vk_qcom_tile_memory_heap.vk_cmd_bind_tile_memory_qcom)(commandBuffer, pTileMemoryBindInfo))))
+		process_catch(catch_unwind(||((self.vk_qcom_tile_memory_heap.vk_cmd_bind_tile_memory_qcom)(commandBuffer, pTileMemoryBindInfo))))
 	}
 }
 impl VK_NV_display_stereo for VkCore {}
@@ -42338,17 +42342,17 @@ impl VK_EXT_shader_float8 for VkCore {}
 impl VK_NV_ray_tracing_validation for VkCore {}
 impl VK_NV_cluster_acceleration_structure for VkCore {
 	fn vkGetClusterAccelerationStructureBuildSizesNV(&self, device: VkDevice, pInfo: *const VkClusterAccelerationStructureInputInfoNV, pSizeInfo: *mut VkAccelerationStructureBuildSizesInfoKHR) -> Result<()> {
-		process_catch("vkGetClusterAccelerationStructureBuildSizesNV", catch_unwind(||((self.vk_nv_cluster_acceleration_structure.vk_get_cluster_acceleration_structure_build_sizes_nv)(device, pInfo, pSizeInfo))))
+		process_catch(catch_unwind(||((self.vk_nv_cluster_acceleration_structure.vk_get_cluster_acceleration_structure_build_sizes_nv)(device, pInfo, pSizeInfo))))
 	}
 }
 impl VK_NV_partitioned_acceleration_structure for VkCore {
 	fn vkGetPartitionedAccelerationStructuresBuildSizesNV(&self, device: VkDevice, pInfo: *const VkPartitionedAccelerationStructureInstancesInputNV, pSizeInfo: *mut VkAccelerationStructureBuildSizesInfoKHR) -> Result<()> {
-		process_catch("vkGetPartitionedAccelerationStructuresBuildSizesNV", catch_unwind(||((self.vk_nv_partitioned_acceleration_structure.vk_get_partitioned_acceleration_structures_build_sizes_nv)(device, pInfo, pSizeInfo))))
+		process_catch(catch_unwind(||((self.vk_nv_partitioned_acceleration_structure.vk_get_partitioned_acceleration_structures_build_sizes_nv)(device, pInfo, pSizeInfo))))
 	}
 }
 impl VK_EXT_device_generated_commands for VkCore {
 	fn vkGetGeneratedCommandsMemoryRequirementsEXT(&self, device: VkDevice, pInfo: *const VkGeneratedCommandsMemoryRequirementsInfoEXT, pMemoryRequirements: *mut VkMemoryRequirements2) -> Result<()> {
-		process_catch("vkGetGeneratedCommandsMemoryRequirementsEXT", catch_unwind(||((self.vk_ext_device_generated_commands.vk_get_generated_commands_memory_requirements_ext)(device, pInfo, pMemoryRequirements))))
+		process_catch(catch_unwind(||((self.vk_ext_device_generated_commands.vk_get_generated_commands_memory_requirements_ext)(device, pInfo, pMemoryRequirements))))
 	}
 }
 impl VK_MESA_image_alignment_control for VkCore {}
@@ -42366,7 +42370,7 @@ impl VK_VALVE_fragment_density_map_layered for VkCore {}
 impl VK_NV_present_metering for VkCore {}
 impl VK_EXT_fragment_density_map_offset for VkCore {
 	fn vkCmdEndRendering2EXT(&self, commandBuffer: VkCommandBuffer, pRenderingEndInfo: *const VkRenderingEndInfoEXT) -> Result<()> {
-		process_catch("vkCmdEndRendering2EXT", catch_unwind(||((self.vk_ext_fragment_density_map_offset.vk_cmd_end_rendering2_ext)(commandBuffer, pRenderingEndInfo))))
+		process_catch(catch_unwind(||((self.vk_ext_fragment_density_map_offset.vk_cmd_end_rendering2_ext)(commandBuffer, pRenderingEndInfo))))
 	}
 }
 impl VK_EXT_zero_initialize_device_memory for VkCore {}
@@ -42378,20 +42382,20 @@ impl VK_KHR_acceleration_structure for VkCore {
 }
 impl VK_KHR_ray_tracing_pipeline for VkCore {
 	fn vkCmdTraceRaysKHR(&self, commandBuffer: VkCommandBuffer, pRaygenShaderBindingTable: *const VkStridedDeviceAddressRegionKHR, pMissShaderBindingTable: *const VkStridedDeviceAddressRegionKHR, pHitShaderBindingTable: *const VkStridedDeviceAddressRegionKHR, pCallableShaderBindingTable: *const VkStridedDeviceAddressRegionKHR, width: u32, height: u32, depth: u32) -> Result<()> {
-		process_catch("vkCmdTraceRaysKHR", catch_unwind(||((self.vk_khr_ray_tracing_pipeline.vk_cmd_trace_rays_khr)(commandBuffer, pRaygenShaderBindingTable, pMissShaderBindingTable, pHitShaderBindingTable, pCallableShaderBindingTable, width, height, depth))))
+		process_catch(catch_unwind(||((self.vk_khr_ray_tracing_pipeline.vk_cmd_trace_rays_khr)(commandBuffer, pRaygenShaderBindingTable, pMissShaderBindingTable, pHitShaderBindingTable, pCallableShaderBindingTable, width, height, depth))))
 	}
 }
 impl VK_KHR_ray_query for VkCore {}
 impl VK_EXT_mesh_shader for VkCore {
 	fn vkCmdDrawMeshTasksEXT(&self, commandBuffer: VkCommandBuffer, groupCountX: u32, groupCountY: u32, groupCountZ: u32) -> Result<()> {
-		process_catch("vkCmdDrawMeshTasksEXT", catch_unwind(||((self.vk_ext_mesh_shader.vk_cmd_draw_mesh_tasks_ext)(commandBuffer, groupCountX, groupCountY, groupCountZ))))
+		process_catch(catch_unwind(||((self.vk_ext_mesh_shader.vk_cmd_draw_mesh_tasks_ext)(commandBuffer, groupCountX, groupCountY, groupCountZ))))
 	}
 }
 impl VkCore {
 	pub fn new(app_info: VkApplicationInfo, mut get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		let vkEnumerateInstanceExtensionProperties = get_instance_proc_address(null(), "vkEnumerateInstanceExtensionProperties");
 		if vkEnumerateInstanceExtensionProperties == null() {
-			panic!("Initialize Vulkan failed: couldn't get the address of `vkEnumerateInstanceExtensionProperties()`");
+			panic_any(VkError::NullFunctionPointer("vkEnumerateInstanceExtensionProperties"));
 		}
 		let vkEnumerateInstanceExtensionProperties: PFN_vkEnumerateInstanceExtensionProperties = unsafe{transmute(vkEnumerateInstanceExtensionProperties)};
 		let mut count: u32 = 0;
@@ -42426,7 +42430,7 @@ impl VkCore {
 		};
 		let vkCreateInstance = get_instance_proc_address(null(), "vkCreateInstance");
 		if vkCreateInstance == null() {
-			panic!("Initialize Vulkan failed: couldn't get a valid `vkCreateInstance()` function pointer.")
+			panic_any(VkError::NullFunctionPointer("vkCreateInstance"))
 		}
 		let vkCreateInstance: PFN_vkCreateInstance = unsafe{transmute(vkCreateInstance)};
 		let mut instance: VkInstance = null();
