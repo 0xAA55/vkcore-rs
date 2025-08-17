@@ -20,7 +20,7 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get upgrade -y
-        sudo apt-get install -y libglfw3-dev libgl-dev libxrandr-dev libxi-dev libxcursor-dev libxinerama-dev nasm
+        sudo apt-get install -y libglfw3-dev libgl-dev libxrandr-dev libxi-dev libxcursor-dev libxinerama-dev mesa-vulkan-drivers
     - name: Install turbojpeg dependencies
       run: |
         sudo apt-get update
