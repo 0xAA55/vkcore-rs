@@ -26,6 +26,14 @@ pub fn vk_make_video_std_version(major: u32, minor: u32, patch: u32) -> u32 {
 	(major << 22) | (minor << 12) | patch
 }
 
+/// Convert a fixed-length `i8` array to a Rust string if it is a UTF-8 string; otherwise, return the hexadecimal sequences of the byte array
+fn maybe_string<const N: usize>(input: &[i8; N]) -> String {
+	match unsafe{CStr::from_ptr(input.as_ptr())}.to_str() {
+		Ok(s) => s.to_owned(),
+		Err(_) => format!("[{}]", input.iter().map(|b|format!("0x{:02X}", *b as u8)).collect::<Vec<String>>().join(", ")),
+	}
+}
+
 /// The `Result` type for the Vulkan APIs
 #[derive(Debug, Clone)]
 pub enum VkError {
@@ -82,6 +90,7 @@ pub enum VkError {
 	UnknownError((VkResult, &'static str)),
 }
 
+/// Our result type for all of the Vulkan function wrappers
 type Result<T> = std::result::Result<T, VkError>;
 
 /// Translate the returned `Result<T>` from `std::panic::catch_unwind()` to our `Result<T>`
@@ -98,6 +107,7 @@ fn process_catch<T>(ret: std::thread::Result<T>) -> Result<T> {
 	}
 }
 
+/// Convert a result returned from `std::panic::catch_unwind()` with `VkResult` to our `Result<()>` 
 fn convert_result(function_name: &'static str, result: std::thread::Result<VkResult>) -> Result<()> {
 	if let Ok(result) = result {
 		match result {
@@ -6397,7 +6407,7 @@ impl Debug for VkPhysicalDeviceProperties {
 		.field("vendorID", &self.vendorID)
 		.field("deviceID", &self.deviceID)
 		.field("deviceType", &self.deviceType)
-		.field("deviceName", &self.deviceName)
+		.field("deviceName", &format_args!("{}", maybe_string(&self.deviceName)))
 		.field("pipelineCacheUUID", &self.pipelineCacheUUID)
 		.field("limits", &self.limits)
 		.field("sparseProperties", &self.sparseProperties)
@@ -6491,7 +6501,7 @@ pub struct VkExtensionProperties {
 impl Debug for VkExtensionProperties {
 	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
 		f.debug_struct("VkExtensionProperties")
-		.field("extensionName", &self.extensionName)
+		.field("extensionName", &format_args!("{}", maybe_string(&self.extensionName)))
 		.field("specVersion", &self.specVersion)
 		.finish()
 	}
@@ -6509,10 +6519,10 @@ pub struct VkLayerProperties {
 impl Debug for VkLayerProperties {
 	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
 		f.debug_struct("VkLayerProperties")
-		.field("layerName", &self.layerName)
+		.field("layerName", &format_args!("{}", maybe_string(&self.layerName)))
 		.field("specVersion", &self.specVersion)
 		.field("implementationVersion", &self.implementationVersion)
-		.field("description", &self.description)
+		.field("description", &format_args!("{}", maybe_string(&self.description)))
 		.finish()
 	}
 }
@@ -13474,8 +13484,8 @@ impl Debug for VkPhysicalDeviceVulkan12Properties {
 		.field("sType", &self.sType)
 		.field("pNext", &self.pNext)
 		.field("driverID", &self.driverID)
-		.field("driverName", &self.driverName)
-		.field("driverInfo", &self.driverInfo)
+		.field("driverName", &format_args!("{}", maybe_string(&self.driverName)))
+		.field("driverInfo", &format_args!("{}", maybe_string(&self.driverInfo)))
 		.field("conformanceVersion", &self.conformanceVersion)
 		.field("denormBehaviorIndependence", &self.denormBehaviorIndependence)
 		.field("roundingModeIndependence", &self.roundingModeIndependence)
@@ -13782,8 +13792,8 @@ impl Debug for VkPhysicalDeviceDriverProperties {
 		.field("sType", &self.sType)
 		.field("pNext", &self.pNext)
 		.field("driverID", &self.driverID)
-		.field("driverName", &self.driverName)
-		.field("driverInfo", &self.driverInfo)
+		.field("driverName", &format_args!("{}", maybe_string(&self.driverName)))
+		.field("driverInfo", &format_args!("{}", maybe_string(&self.driverInfo)))
 		.field("conformanceVersion", &self.conformanceVersion)
 		.finish()
 	}
@@ -15283,11 +15293,11 @@ impl Debug for VkPhysicalDeviceToolProperties {
 		f.debug_struct("VkPhysicalDeviceToolProperties")
 		.field("sType", &self.sType)
 		.field("pNext", &self.pNext)
-		.field("name", &self.name)
-		.field("version", &self.version)
+		.field("name", &format_args!("{}", maybe_string(&self.name)))
+		.field("version", &format_args!("{}", maybe_string(&self.version)))
 		.field("purposes", &format_args!("{}", vk_tool_purpose_flags_to_string(self.purposes)))
-		.field("description", &self.description)
-		.field("layer", &self.layer)
+		.field("description", &format_args!("{}", maybe_string(&self.description)))
+		.field("layer", &format_args!("{}", maybe_string(&self.layer)))
 		.finish()
 	}
 }
@@ -21445,12 +21455,12 @@ impl Debug for StdVideoEncodeH264WeightTable {
 		.field("flags", &self.flags)
 		.field("luma_log2_weight_denom", &self.luma_log2_weight_denom)
 		.field("chroma_log2_weight_denom", &self.chroma_log2_weight_denom)
-		.field("luma_weight_l0", &self.luma_weight_l0)
-		.field("luma_offset_l0", &self.luma_offset_l0)
+		.field("luma_weight_l0", &format_args!("{}", maybe_string(&self.luma_weight_l0)))
+		.field("luma_offset_l0", &format_args!("{}", maybe_string(&self.luma_offset_l0)))
 		.field("chroma_weight_l0", &self.chroma_weight_l0)
 		.field("chroma_offset_l0", &self.chroma_offset_l0)
-		.field("luma_weight_l1", &self.luma_weight_l1)
-		.field("luma_offset_l1", &self.luma_offset_l1)
+		.field("luma_weight_l1", &format_args!("{}", maybe_string(&self.luma_weight_l1)))
+		.field("luma_offset_l1", &format_args!("{}", maybe_string(&self.luma_offset_l1)))
 		.field("chroma_weight_l1", &self.chroma_weight_l1)
 		.field("chroma_offset_l1", &self.chroma_offset_l1)
 		.finish()
@@ -23785,8 +23795,8 @@ impl Debug for StdVideoH265PictureParameterSet {
 		.field("log2_max_transform_skip_block_size_minus2", &self.log2_max_transform_skip_block_size_minus2)
 		.field("diff_cu_chroma_qp_offset_depth", &self.diff_cu_chroma_qp_offset_depth)
 		.field("chroma_qp_offset_list_len_minus1", &self.chroma_qp_offset_list_len_minus1)
-		.field("cb_qp_offset_list", &self.cb_qp_offset_list)
-		.field("cr_qp_offset_list", &self.cr_qp_offset_list)
+		.field("cb_qp_offset_list", &format_args!("{}", maybe_string(&self.cb_qp_offset_list)))
+		.field("cr_qp_offset_list", &format_args!("{}", maybe_string(&self.cr_qp_offset_list)))
 		.field("log2_sao_offset_scale_luma", &self.log2_sao_offset_scale_luma)
 		.field("log2_sao_offset_scale_chroma", &self.log2_sao_offset_scale_chroma)
 		.field("pps_act_y_qp_offset_plus5", &self.pps_act_y_qp_offset_plus5)
@@ -23868,12 +23878,12 @@ impl Debug for StdVideoEncodeH265WeightTable {
 		.field("flags", &self.flags)
 		.field("luma_log2_weight_denom", &self.luma_log2_weight_denom)
 		.field("delta_chroma_log2_weight_denom", &self.delta_chroma_log2_weight_denom)
-		.field("delta_luma_weight_l0", &self.delta_luma_weight_l0)
-		.field("luma_offset_l0", &self.luma_offset_l0)
+		.field("delta_luma_weight_l0", &format_args!("{}", maybe_string(&self.delta_luma_weight_l0)))
+		.field("luma_offset_l0", &format_args!("{}", maybe_string(&self.luma_offset_l0)))
 		.field("delta_chroma_weight_l0", &self.delta_chroma_weight_l0)
 		.field("delta_chroma_offset_l0", &self.delta_chroma_offset_l0)
-		.field("delta_luma_weight_l1", &self.delta_luma_weight_l1)
-		.field("luma_offset_l1", &self.luma_offset_l1)
+		.field("delta_luma_weight_l1", &format_args!("{}", maybe_string(&self.delta_luma_weight_l1)))
+		.field("luma_offset_l1", &format_args!("{}", maybe_string(&self.luma_offset_l1)))
 		.field("delta_chroma_weight_l1", &self.delta_chroma_weight_l1)
 		.field("delta_chroma_offset_l1", &self.delta_chroma_offset_l1)
 		.finish()
@@ -26090,9 +26100,9 @@ impl Debug for VkPerformanceCounterDescriptionKHR {
 		.field("sType", &self.sType)
 		.field("pNext", &self.pNext)
 		.field("flags", &self.flags)
-		.field("name", &self.name)
-		.field("category", &self.category)
-		.field("description", &self.description)
+		.field("name", &format_args!("{}", maybe_string(&self.name)))
+		.field("category", &format_args!("{}", maybe_string(&self.category)))
+		.field("description", &format_args!("{}", maybe_string(&self.description)))
 		.finish()
 	}
 }
@@ -28140,8 +28150,8 @@ impl Debug for VkPipelineExecutablePropertiesKHR {
 		.field("sType", &self.sType)
 		.field("pNext", &self.pNext)
 		.field("stages", &self.stages)
-		.field("name", &self.name)
-		.field("description", &self.description)
+		.field("name", &format_args!("{}", maybe_string(&self.name)))
+		.field("description", &format_args!("{}", maybe_string(&self.description)))
 		.field("subgroupSize", &self.subgroupSize)
 		.finish()
 	}
@@ -28183,8 +28193,8 @@ impl Debug for VkPipelineExecutableStatisticKHR {
 		f.debug_struct("VkPipelineExecutableStatisticKHR")
 		.field("sType", &self.sType)
 		.field("pNext", &self.pNext)
-		.field("name", &self.name)
-		.field("description", &self.description)
+		.field("name", &format_args!("{}", maybe_string(&self.name)))
+		.field("description", &format_args!("{}", maybe_string(&self.description)))
 		.field("format", &self.format)
 		.field("value", &self.value)
 		.finish()
@@ -28208,8 +28218,8 @@ impl Debug for VkPipelineExecutableInternalRepresentationKHR {
 		f.debug_struct("VkPipelineExecutableInternalRepresentationKHR")
 		.field("sType", &self.sType)
 		.field("pNext", &self.pNext)
-		.field("name", &self.name)
-		.field("description", &self.description)
+		.field("name", &format_args!("{}", maybe_string(&self.name)))
+		.field("description", &format_args!("{}", maybe_string(&self.description)))
 		.field("isText", &self.isText)
 		.field("dataSize", &self.dataSize)
 		.field("pData", &self.pData)
@@ -31052,9 +31062,9 @@ impl Debug for StdVideoAV1LoopFilter {
 		.field("loop_filter_level", &self.loop_filter_level)
 		.field("loop_filter_sharpness", &self.loop_filter_sharpness)
 		.field("update_ref_delta", &self.update_ref_delta)
-		.field("loop_filter_ref_deltas", &self.loop_filter_ref_deltas)
+		.field("loop_filter_ref_deltas", &format_args!("{}", maybe_string(&self.loop_filter_ref_deltas)))
 		.field("update_mode_delta", &self.update_mode_delta)
-		.field("loop_filter_mode_deltas", &self.loop_filter_mode_deltas)
+		.field("loop_filter_mode_deltas", &format_args!("{}", maybe_string(&self.loop_filter_mode_deltas)))
 		.finish()
 	}
 }
@@ -31359,9 +31369,9 @@ impl Debug for StdVideoAV1FilmGrain {
 		.field("num_cr_points", &self.num_cr_points)
 		.field("point_cr_value", &self.point_cr_value)
 		.field("point_cr_scaling", &self.point_cr_scaling)
-		.field("ar_coeffs_y_plus_128", &self.ar_coeffs_y_plus_128)
-		.field("ar_coeffs_cb_plus_128", &self.ar_coeffs_cb_plus_128)
-		.field("ar_coeffs_cr_plus_128", &self.ar_coeffs_cr_plus_128)
+		.field("ar_coeffs_y_plus_128", &format_args!("{}", maybe_string(&self.ar_coeffs_y_plus_128)))
+		.field("ar_coeffs_cb_plus_128", &format_args!("{}", maybe_string(&self.ar_coeffs_cb_plus_128)))
+		.field("ar_coeffs_cr_plus_128", &format_args!("{}", maybe_string(&self.ar_coeffs_cr_plus_128)))
 		.field("cb_mult", &self.cb_mult)
 		.field("cb_luma_mult", &self.cb_luma_mult)
 		.field("cb_offset", &self.cb_offset)
@@ -32853,7 +32863,7 @@ impl Debug for StdVideoEncodeAV1PictureInfo {
 		.field("delta_q_res", &self.delta_q_res)
 		.field("delta_lf_res", &self.delta_lf_res)
 		.field("ref_order_hint", &self.ref_order_hint)
-		.field("ref_frame_idx", &self.ref_frame_idx)
+		.field("ref_frame_idx", &format_args!("{}", maybe_string(&self.ref_frame_idx)))
 		.field("reserved1", &self.reserved1)
 		.field("delta_frame_id_minus_1", &self.delta_frame_id_minus_1)
 		.field("pTileInfo", &self.pTileInfo)
@@ -33271,9 +33281,9 @@ impl Debug for StdVideoVP9LoopFilter {
 		.field("loop_filter_level", &self.loop_filter_level)
 		.field("loop_filter_sharpness", &self.loop_filter_sharpness)
 		.field("update_ref_delta", &self.update_ref_delta)
-		.field("loop_filter_ref_deltas", &self.loop_filter_ref_deltas)
+		.field("loop_filter_ref_deltas", &format_args!("{}", maybe_string(&self.loop_filter_ref_deltas)))
 		.field("update_mode_delta", &self.update_mode_delta)
-		.field("loop_filter_mode_deltas", &self.loop_filter_mode_deltas)
+		.field("loop_filter_mode_deltas", &format_args!("{}", maybe_string(&self.loop_filter_mode_deltas)))
 		.finish()
 	}
 }
@@ -34441,7 +34451,7 @@ impl Debug for VkPhysicalDeviceLayeredApiPropertiesKHR {
 		.field("vendorID", &self.vendorID)
 		.field("deviceID", &self.deviceID)
 		.field("layeredAPI", &self.layeredAPI)
-		.field("deviceName", &self.deviceName)
+		.field("deviceName", &format_args!("{}", maybe_string(&self.deviceName)))
 		.finish()
 	}
 }
@@ -45444,7 +45454,7 @@ pub struct VkDeviceFaultVendorInfoEXT {
 impl Debug for VkDeviceFaultVendorInfoEXT {
 	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
 		f.debug_struct("VkDeviceFaultVendorInfoEXT")
-		.field("description", &self.description)
+		.field("description", &format_args!("{}", maybe_string(&self.description)))
 		.field("vendorFaultCode", &self.vendorFaultCode)
 		.field("vendorFaultData", &self.vendorFaultData)
 		.finish()
@@ -45467,7 +45477,7 @@ impl Debug for VkDeviceFaultInfoEXT {
 		f.debug_struct("VkDeviceFaultInfoEXT")
 		.field("sType", &self.sType)
 		.field("pNext", &self.pNext)
-		.field("description", &self.description)
+		.field("description", &format_args!("{}", maybe_string(&self.description)))
 		.field("pAddressInfos", &self.pAddressInfos)
 		.field("pVendorInfos", &self.pVendorInfos)
 		.field("pVendorBinaryData", &self.pVendorBinaryData)
@@ -49300,7 +49310,7 @@ impl Debug for VkRenderPassSubpassFeedbackInfoEXT {
 	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
 		f.debug_struct("VkRenderPassSubpassFeedbackInfoEXT")
 		.field("subpassMergeStatus", &self.subpassMergeStatus)
-		.field("description", &self.description)
+		.field("description", &format_args!("{}", maybe_string(&self.description)))
 		.field("postMergeIndex", &self.postMergeIndex)
 		.finish()
 	}
@@ -52269,7 +52279,7 @@ impl Debug for VkPhysicalDeviceDataGraphOperationSupportARM {
 	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
 		f.debug_struct("VkPhysicalDeviceDataGraphOperationSupportARM")
 		.field("operationType", &self.operationType)
-		.field("name", &self.name)
+		.field("name", &format_args!("{}", maybe_string(&self.name)))
 		.field("version", &self.version)
 		.finish()
 	}
