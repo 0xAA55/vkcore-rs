@@ -33,7 +33,7 @@ fn to_byte_array_string<const N: usize>(input: &[u8; N]) -> String {
 /// Convert a fixed-length `i8` array to a Rust string if it is a UTF-8 string; otherwise, return the hexadecimal sequences of the byte array
 fn maybe_string<const N: usize>(input: &[i8; N]) -> String {
 	match unsafe{CStr::from_ptr(input.as_ptr())}.to_str() {
-		Ok(s) => s.to_owned(),
+		Ok(s) => format!("\"{s}\""),
 		Err(_) => to_byte_array_string::<N>(unsafe{transmute(input)}),
 	}
 }
