@@ -1,4 +1,5 @@
 pub mod vkcore;
+pub use vkcore::*;
 
 #[cfg(test)]
 mod tests {
