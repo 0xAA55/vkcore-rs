@@ -14,3 +14,12 @@ glfw = { version = "0.59.0", features = ["vulkan", "image"] }
 
 [profile.release]
 lto = "fat"
+
+[features]
+win32_khr = []
+android_khr = []
+ios_mvk = []
+macos_mvk = []
+metal_ext = []
+wayland_khr = []
+xcb_khr = []
