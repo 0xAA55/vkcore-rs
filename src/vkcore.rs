@@ -352,6 +352,7 @@ pub type VkSampleMask = u32;
 /// type definition `VkAccessFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkAccessFlags.html>
 pub type VkAccessFlags = VkFlags;
+/// Convert `VkAccessFlags` to `String`, showing the composition of the bits from the member of `VkAccessFlagBits`
 pub fn vk_access_flags_to_string(value: VkAccessFlags) -> String {
 	let mut flags = Vec::<&str>::with_capacity(36);
 	if (value & VkAccessFlagBits::VK_ACCESS_INDIRECT_COMMAND_READ_BIT as VkAccessFlags) == VkAccessFlagBits::VK_ACCESS_INDIRECT_COMMAND_READ_BIT as VkAccessFlags {
@@ -467,6 +468,7 @@ pub fn vk_access_flags_to_string(value: VkAccessFlags) -> String {
 /// type definition `VkImageAspectFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkImageAspectFlags.html>
 pub type VkImageAspectFlags = VkFlags;
+/// Convert `VkImageAspectFlags` to `String`, showing the composition of the bits from the member of `VkImageAspectFlagBits`
 pub fn vk_image_aspect_flags_to_string(value: VkImageAspectFlags) -> String {
 	let mut flags = Vec::<&str>::with_capacity(17);
 	if (value & VkImageAspectFlagBits::VK_IMAGE_ASPECT_COLOR_BIT as VkImageAspectFlags) == VkImageAspectFlagBits::VK_IMAGE_ASPECT_COLOR_BIT as VkImageAspectFlags {
@@ -525,6 +527,7 @@ pub fn vk_image_aspect_flags_to_string(value: VkImageAspectFlags) -> String {
 /// type definition `VkFormatFeatureFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkFormatFeatureFlags.html>
 pub type VkFormatFeatureFlags = VkFlags;
+/// Convert `VkFormatFeatureFlags` to `String`, showing the composition of the bits from the member of `VkFormatFeatureFlagBits`
 pub fn vk_format_feature_flags_to_string(value: VkFormatFeatureFlags) -> String {
 	let mut flags = Vec::<&str>::with_capacity(43);
 	if (value & VkFormatFeatureFlagBits::VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT as VkFormatFeatureFlags) == VkFormatFeatureFlagBits::VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT as VkFormatFeatureFlags {
@@ -661,6 +664,7 @@ pub fn vk_format_feature_flags_to_string(value: VkFormatFeatureFlags) -> String 
 /// type definition `VkImageCreateFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkImageCreateFlags.html>
 pub type VkImageCreateFlags = VkFlags;
+/// Convert `VkImageCreateFlags` to `String`, showing the composition of the bits from the member of `VkImageCreateFlagBits`
 pub fn vk_image_create_flags_to_string(value: VkImageCreateFlags) -> String {
 	let mut flags = Vec::<&str>::with_capacity(28);
 	if (value & VkImageCreateFlagBits::VK_IMAGE_CREATE_SPARSE_BINDING_BIT as VkImageCreateFlags) == VkImageCreateFlagBits::VK_IMAGE_CREATE_SPARSE_BINDING_BIT as VkImageCreateFlags {
@@ -752,6 +756,7 @@ pub fn vk_image_create_flags_to_string(value: VkImageCreateFlags) -> String {
 /// type definition `VkSampleCountFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkSampleCountFlags.html>
 pub type VkSampleCountFlags = VkFlags;
+/// Convert `VkSampleCountFlags` to `String`, showing the composition of the bits from the member of `VkSampleCountFlagBits`
 pub fn vk_sample_count_flags_to_string(value: VkSampleCountFlags) -> String {
 	let mut flags = Vec::<&str>::with_capacity(8);
 	if (value & VkSampleCountFlagBits::VK_SAMPLE_COUNT_1_BIT as VkSampleCountFlags) == VkSampleCountFlagBits::VK_SAMPLE_COUNT_1_BIT as VkSampleCountFlags {
@@ -783,6 +788,7 @@ pub fn vk_sample_count_flags_to_string(value: VkSampleCountFlags) -> String {
 /// type definition `VkImageUsageFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkImageUsageFlags.html>
 pub type VkImageUsageFlags = VkFlags;
+/// Convert `VkImageUsageFlags` to `String`, showing the composition of the bits from the member of `VkImageUsageFlagBits`
 pub fn vk_image_usage_flags_to_string(value: VkImageUsageFlags) -> String {
 	let mut flags = Vec::<&str>::with_capacity(28);
 	if (value & VkImageUsageFlagBits::VK_IMAGE_USAGE_TRANSFER_SRC_BIT as VkImageUsageFlags) == VkImageUsageFlagBits::VK_IMAGE_USAGE_TRANSFER_SRC_BIT as VkImageUsageFlags {
@@ -874,6 +880,7 @@ pub fn vk_image_usage_flags_to_string(value: VkImageUsageFlags) -> String {
 /// type definition `VkInstanceCreateFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkInstanceCreateFlags.html>
 pub type VkInstanceCreateFlags = VkFlags;
+/// Convert `VkInstanceCreateFlags` to `String`, showing the composition of the bits from the member of `VkInstanceCreateFlagBits`
 pub fn vk_instance_create_flags_to_string(value: VkInstanceCreateFlags) -> String {
 	let mut flags = Vec::<&str>::with_capacity(2);
 	if (value & VkInstanceCreateFlagBits::VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR as VkInstanceCreateFlags) == VkInstanceCreateFlagBits::VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR as VkInstanceCreateFlags {
@@ -887,6 +894,7 @@ pub fn vk_instance_create_flags_to_string(value: VkInstanceCreateFlags) -> Strin
 /// type definition `VkMemoryHeapFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkMemoryHeapFlags.html>
 pub type VkMemoryHeapFlags = VkFlags;
+/// Convert `VkMemoryHeapFlags` to `String`, showing the composition of the bits from the member of `VkMemoryHeapFlagBits`
 pub fn vk_memory_heap_flags_to_string(value: VkMemoryHeapFlags) -> String {
 	let mut flags = Vec::<&str>::with_capacity(5);
 	if (value & VkMemoryHeapFlagBits::VK_MEMORY_HEAP_DEVICE_LOCAL_BIT as VkMemoryHeapFlags) == VkMemoryHeapFlagBits::VK_MEMORY_HEAP_DEVICE_LOCAL_BIT as VkMemoryHeapFlags {
@@ -909,6 +917,7 @@ pub fn vk_memory_heap_flags_to_string(value: VkMemoryHeapFlags) -> String {
 /// type definition `VkMemoryPropertyFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkMemoryPropertyFlags.html>
 pub type VkMemoryPropertyFlags = VkFlags;
+/// Convert `VkMemoryPropertyFlags` to `String`, showing the composition of the bits from the member of `VkMemoryPropertyFlagBits`
 pub fn vk_memory_property_flags_to_string(value: VkMemoryPropertyFlags) -> String {
 	let mut flags = Vec::<&str>::with_capacity(10);
 	if (value & VkMemoryPropertyFlagBits::VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT as VkMemoryPropertyFlags) == VkMemoryPropertyFlagBits::VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT as VkMemoryPropertyFlags {
@@ -946,6 +955,7 @@ pub fn vk_memory_property_flags_to_string(value: VkMemoryPropertyFlags) -> Strin
 /// type definition `VkQueueFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkQueueFlags.html>
 pub type VkQueueFlags = VkFlags;
+/// Convert `VkQueueFlags` to `String`, showing the composition of the bits from the member of `VkQueueFlagBits`
 pub fn vk_queue_flags_to_string(value: VkQueueFlags) -> String {
 	let mut flags = Vec::<&str>::with_capacity(10);
 	if (value & VkQueueFlagBits::VK_QUEUE_GRAPHICS_BIT as VkQueueFlags) == VkQueueFlagBits::VK_QUEUE_GRAPHICS_BIT as VkQueueFlags {
@@ -986,6 +996,7 @@ pub type VkDeviceCreateFlags = VkFlags;
 /// type definition `VkDeviceQueueCreateFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkDeviceQueueCreateFlags.html>
 pub type VkDeviceQueueCreateFlags = VkFlags;
+/// Convert `VkDeviceQueueCreateFlags` to `String`, showing the composition of the bits from the member of `VkDeviceQueueCreateFlagBits`
 pub fn vk_device_queue_create_flags_to_string(value: VkDeviceQueueCreateFlags) -> String {
 	let mut flags = Vec::<&str>::with_capacity(2);
 	if (value & VkDeviceQueueCreateFlagBits::VK_DEVICE_QUEUE_CREATE_PROTECTED_BIT as VkDeviceQueueCreateFlags) == VkDeviceQueueCreateFlagBits::VK_DEVICE_QUEUE_CREATE_PROTECTED_BIT as VkDeviceQueueCreateFlags {
@@ -999,6 +1010,7 @@ pub fn vk_device_queue_create_flags_to_string(value: VkDeviceQueueCreateFlags) -
 /// type definition `VkPipelineStageFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPipelineStageFlags.html>
 pub type VkPipelineStageFlags = VkFlags;
+/// Convert `VkPipelineStageFlags` to `String`, showing the composition of the bits from the member of `VkPipelineStageFlagBits`
 pub fn vk_pipeline_stage_flags_to_string(value: VkPipelineStageFlags) -> String {
 	let mut flags = Vec::<&str>::with_capacity(35);
 	if (value & VkPipelineStageFlagBits::VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT as VkPipelineStageFlags) == VkPipelineStageFlagBits::VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT as VkPipelineStageFlags {
@@ -1111,6 +1123,7 @@ pub fn vk_pipeline_stage_flags_to_string(value: VkPipelineStageFlags) -> String 
 /// type definition `VkMemoryMapFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkMemoryMapFlags.html>
 pub type VkMemoryMapFlags = VkFlags;
+/// Convert `VkMemoryMapFlags` to `String`, showing the composition of the bits from the member of `VkMemoryMapFlagBits`
 pub fn vk_memory_map_flags_to_string(value: VkMemoryMapFlags) -> String {
 	let mut flags = Vec::<&str>::with_capacity(2);
 	if (value & VkMemoryMapFlagBits::VK_MEMORY_MAP_PLACED_BIT_EXT as VkMemoryMapFlags) == VkMemoryMapFlagBits::VK_MEMORY_MAP_PLACED_BIT_EXT as VkMemoryMapFlags {
@@ -1124,6 +1137,7 @@ pub fn vk_memory_map_flags_to_string(value: VkMemoryMapFlags) -> String {
 /// type definition `VkSparseMemoryBindFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkSparseMemoryBindFlags.html>
 pub type VkSparseMemoryBindFlags = VkFlags;
+/// Convert `VkSparseMemoryBindFlags` to `String`, showing the composition of the bits from the member of `VkSparseMemoryBindFlagBits`
 pub fn vk_sparse_memory_bind_flags_to_string(value: VkSparseMemoryBindFlags) -> String {
 	let mut flags = Vec::<&str>::with_capacity(2);
 	if (value & VkSparseMemoryBindFlagBits::VK_SPARSE_MEMORY_BIND_METADATA_BIT as VkSparseMemoryBindFlags) == VkSparseMemoryBindFlagBits::VK_SPARSE_MEMORY_BIND_METADATA_BIT as VkSparseMemoryBindFlags {
@@ -1137,6 +1151,7 @@ pub fn vk_sparse_memory_bind_flags_to_string(value: VkSparseMemoryBindFlags) -> 
 /// type definition `VkSparseImageFormatFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkSparseImageFormatFlags.html>
 pub type VkSparseImageFormatFlags = VkFlags;
+/// Convert `VkSparseImageFormatFlags` to `String`, showing the composition of the bits from the member of `VkSparseImageFormatFlagBits`
 pub fn vk_sparse_image_format_flags_to_string(value: VkSparseImageFormatFlags) -> String {
 	let mut flags = Vec::<&str>::with_capacity(4);
 	if (value & VkSparseImageFormatFlagBits::VK_SPARSE_IMAGE_FORMAT_SINGLE_MIPTAIL_BIT as VkSparseImageFormatFlags) == VkSparseImageFormatFlagBits::VK_SPARSE_IMAGE_FORMAT_SINGLE_MIPTAIL_BIT as VkSparseImageFormatFlags {
@@ -1156,6 +1171,7 @@ pub fn vk_sparse_image_format_flags_to_string(value: VkSparseImageFormatFlags) -
 /// type definition `VkFenceCreateFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkFenceCreateFlags.html>
 pub type VkFenceCreateFlags = VkFlags;
+/// Convert `VkFenceCreateFlags` to `String`, showing the composition of the bits from the member of `VkFenceCreateFlagBits`
 pub fn vk_fence_create_flags_to_string(value: VkFenceCreateFlags) -> String {
 	let mut flags = Vec::<&str>::with_capacity(2);
 	if (value & VkFenceCreateFlagBits::VK_FENCE_CREATE_SIGNALED_BIT as VkFenceCreateFlags) == VkFenceCreateFlagBits::VK_FENCE_CREATE_SIGNALED_BIT as VkFenceCreateFlags {
@@ -1172,6 +1188,7 @@ pub type VkSemaphoreCreateFlags = VkFlags;
 /// type definition `VkEventCreateFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkEventCreateFlags.html>
 pub type VkEventCreateFlags = VkFlags;
+/// Convert `VkEventCreateFlags` to `String`, showing the composition of the bits from the member of `VkEventCreateFlagBits`
 pub fn vk_event_create_flags_to_string(value: VkEventCreateFlags) -> String {
 	let mut flags = Vec::<&str>::with_capacity(3);
 	if (value & VkEventCreateFlagBits::VK_EVENT_CREATE_DEVICE_ONLY_BIT as VkEventCreateFlags) == VkEventCreateFlagBits::VK_EVENT_CREATE_DEVICE_ONLY_BIT as VkEventCreateFlags {
@@ -1188,6 +1205,7 @@ pub fn vk_event_create_flags_to_string(value: VkEventCreateFlags) -> String {
 /// type definition `VkQueryPipelineStatisticFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkQueryPipelineStatisticFlags.html>
 pub type VkQueryPipelineStatisticFlags = VkFlags;
+/// Convert `VkQueryPipelineStatisticFlags` to `String`, showing the composition of the bits from the member of `VkQueryPipelineStatisticFlagBits`
 pub fn vk_query_pipeline_statistic_flags_to_string(value: VkQueryPipelineStatisticFlags) -> String {
 	let mut flags = Vec::<&str>::with_capacity(15);
 	if (value & VkQueryPipelineStatisticFlagBits::VK_QUERY_PIPELINE_STATISTIC_INPUT_ASSEMBLY_VERTICES_BIT as VkQueryPipelineStatisticFlags) == VkQueryPipelineStatisticFlagBits::VK_QUERY_PIPELINE_STATISTIC_INPUT_ASSEMBLY_VERTICES_BIT as VkQueryPipelineStatisticFlags {
@@ -1240,6 +1258,7 @@ pub fn vk_query_pipeline_statistic_flags_to_string(value: VkQueryPipelineStatist
 /// type definition `VkQueryPoolCreateFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkQueryPoolCreateFlags.html>
 pub type VkQueryPoolCreateFlags = VkFlags;
+/// Convert `VkQueryPoolCreateFlags` to `String`, showing the composition of the bits from the member of `VkQueryPoolCreateFlagBits`
 pub fn vk_query_pool_create_flags_to_string(value: VkQueryPoolCreateFlags) -> String {
 	let mut flags = Vec::<&str>::with_capacity(2);
 	if (value & VkQueryPoolCreateFlagBits::VK_QUERY_POOL_CREATE_RESET_BIT_KHR as VkQueryPoolCreateFlags) == VkQueryPoolCreateFlagBits::VK_QUERY_POOL_CREATE_RESET_BIT_KHR as VkQueryPoolCreateFlags {
@@ -1253,6 +1272,7 @@ pub fn vk_query_pool_create_flags_to_string(value: VkQueryPoolCreateFlags) -> St
 /// type definition `VkQueryResultFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkQueryResultFlags.html>
 pub type VkQueryResultFlags = VkFlags;
+/// Convert `VkQueryResultFlags` to `String`, showing the composition of the bits from the member of `VkQueryResultFlagBits`
 pub fn vk_query_result_flags_to_string(value: VkQueryResultFlags) -> String {
 	let mut flags = Vec::<&str>::with_capacity(6);
 	if (value & VkQueryResultFlagBits::VK_QUERY_RESULT_64_BIT as VkQueryResultFlags) == VkQueryResultFlagBits::VK_QUERY_RESULT_64_BIT as VkQueryResultFlags {
@@ -1278,6 +1298,7 @@ pub fn vk_query_result_flags_to_string(value: VkQueryResultFlags) -> String {
 /// type definition `VkBufferCreateFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkBufferCreateFlags.html>
 pub type VkBufferCreateFlags = VkFlags;
+/// Convert `VkBufferCreateFlags` to `String`, showing the composition of the bits from the member of `VkBufferCreateFlagBits`
 pub fn vk_buffer_create_flags_to_string(value: VkBufferCreateFlags) -> String {
 	let mut flags = Vec::<&str>::with_capacity(10);
 	if (value & VkBufferCreateFlagBits::VK_BUFFER_CREATE_SPARSE_BINDING_BIT as VkBufferCreateFlags) == VkBufferCreateFlagBits::VK_BUFFER_CREATE_SPARSE_BINDING_BIT as VkBufferCreateFlags {
@@ -1315,6 +1336,7 @@ pub fn vk_buffer_create_flags_to_string(value: VkBufferCreateFlags) -> String {
 /// type definition `VkBufferUsageFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkBufferUsageFlags.html>
 pub type VkBufferUsageFlags = VkFlags;
+/// Convert `VkBufferUsageFlags` to `String`, showing the composition of the bits from the member of `VkBufferUsageFlagBits`
 pub fn vk_buffer_usage_flags_to_string(value: VkBufferUsageFlags) -> String {
 	let mut flags = Vec::<&str>::with_capacity(31);
 	if (value & VkBufferUsageFlagBits::VK_BUFFER_USAGE_TRANSFER_SRC_BIT as VkBufferUsageFlags) == VkBufferUsageFlagBits::VK_BUFFER_USAGE_TRANSFER_SRC_BIT as VkBufferUsageFlags {
@@ -1418,6 +1440,7 @@ pub type VkBufferViewCreateFlags = VkFlags;
 /// type definition `VkImageViewCreateFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkImageViewCreateFlags.html>
 pub type VkImageViewCreateFlags = VkFlags;
+/// Convert `VkImageViewCreateFlags` to `String`, showing the composition of the bits from the member of `VkImageViewCreateFlagBits`
 pub fn vk_image_view_create_flags_to_string(value: VkImageViewCreateFlags) -> String {
 	let mut flags = Vec::<&str>::with_capacity(4);
 	if (value & VkImageViewCreateFlagBits::VK_IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DYNAMIC_BIT_EXT as VkImageViewCreateFlags) == VkImageViewCreateFlagBits::VK_IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DYNAMIC_BIT_EXT as VkImageViewCreateFlags {
@@ -1440,6 +1463,7 @@ pub type VkShaderModuleCreateFlags = VkFlags;
 /// type definition `VkPipelineCacheCreateFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPipelineCacheCreateFlags.html>
 pub type VkPipelineCacheCreateFlags = VkFlags;
+/// Convert `VkPipelineCacheCreateFlags` to `String`, showing the composition of the bits from the member of `VkPipelineCacheCreateFlagBits`
 pub fn vk_pipeline_cache_create_flags_to_string(value: VkPipelineCacheCreateFlags) -> String {
 	let mut flags = Vec::<&str>::with_capacity(4);
 	if (value & VkPipelineCacheCreateFlagBits::VK_PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT as VkPipelineCacheCreateFlags) == VkPipelineCacheCreateFlagBits::VK_PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT as VkPipelineCacheCreateFlags {
@@ -1459,6 +1483,7 @@ pub fn vk_pipeline_cache_create_flags_to_string(value: VkPipelineCacheCreateFlag
 /// type definition `VkColorComponentFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkColorComponentFlags.html>
 pub type VkColorComponentFlags = VkFlags;
+/// Convert `VkColorComponentFlags` to `String`, showing the composition of the bits from the member of `VkColorComponentFlagBits`
 pub fn vk_color_component_flags_to_string(value: VkColorComponentFlags) -> String {
 	let mut flags = Vec::<&str>::with_capacity(5);
 	if (value & VkColorComponentFlagBits::VK_COLOR_COMPONENT_R_BIT as VkColorComponentFlags) == VkColorComponentFlagBits::VK_COLOR_COMPONENT_R_BIT as VkColorComponentFlags {
@@ -1481,6 +1506,7 @@ pub fn vk_color_component_flags_to_string(value: VkColorComponentFlags) -> Strin
 /// type definition `VkPipelineCreateFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPipelineCreateFlags.html>
 pub type VkPipelineCreateFlags = VkFlags;
+/// Convert `VkPipelineCreateFlags` to `String`, showing the composition of the bits from the member of `VkPipelineCreateFlagBits`
 pub fn vk_pipeline_create_flags_to_string(value: VkPipelineCreateFlags) -> String {
 	let mut flags = Vec::<&str>::with_capacity(42);
 	if (value & VkPipelineCreateFlagBits::VK_PIPELINE_CREATE_DISABLE_OPTIMIZATION_BIT as VkPipelineCreateFlags) == VkPipelineCreateFlagBits::VK_PIPELINE_CREATE_DISABLE_OPTIMIZATION_BIT as VkPipelineCreateFlags {
@@ -1614,6 +1640,7 @@ pub fn vk_pipeline_create_flags_to_string(value: VkPipelineCreateFlags) -> Strin
 /// type definition `VkPipelineShaderStageCreateFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPipelineShaderStageCreateFlags.html>
 pub type VkPipelineShaderStageCreateFlags = VkFlags;
+/// Convert `VkPipelineShaderStageCreateFlags` to `String`, showing the composition of the bits from the member of `VkPipelineShaderStageCreateFlagBits`
 pub fn vk_pipeline_shader_stage_create_flags_to_string(value: VkPipelineShaderStageCreateFlags) -> String {
 	let mut flags = Vec::<&str>::with_capacity(5);
 	if (value & VkPipelineShaderStageCreateFlagBits::VK_PIPELINE_SHADER_STAGE_CREATE_ALLOW_VARYING_SUBGROUP_SIZE_BIT as VkPipelineShaderStageCreateFlags) == VkPipelineShaderStageCreateFlagBits::VK_PIPELINE_SHADER_STAGE_CREATE_ALLOW_VARYING_SUBGROUP_SIZE_BIT as VkPipelineShaderStageCreateFlags {
@@ -1636,6 +1663,7 @@ pub fn vk_pipeline_shader_stage_create_flags_to_string(value: VkPipelineShaderSt
 /// type definition `VkCullModeFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkCullModeFlags.html>
 pub type VkCullModeFlags = VkFlags;
+/// Convert `VkCullModeFlags` to `String`, showing the composition of the bits from the member of `VkCullModeFlagBits`
 pub fn vk_cull_mode_flags_to_string(value: VkCullModeFlags) -> String {
 	let mut flags = Vec::<&str>::with_capacity(5);
 	if (value & VkCullModeFlagBits::VK_CULL_MODE_NONE as VkCullModeFlags) == VkCullModeFlagBits::VK_CULL_MODE_NONE as VkCullModeFlags {
@@ -1676,6 +1704,7 @@ pub type VkPipelineMultisampleStateCreateFlags = VkFlags;
 /// type definition `VkPipelineDepthStencilStateCreateFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPipelineDepthStencilStateCreateFlags.html>
 pub type VkPipelineDepthStencilStateCreateFlags = VkFlags;
+/// Convert `VkPipelineDepthStencilStateCreateFlags` to `String`, showing the composition of the bits from the member of `VkPipelineDepthStencilStateCreateFlagBits`
 pub fn vk_pipeline_depth_stencil_state_create_flags_to_string(value: VkPipelineDepthStencilStateCreateFlags) -> String {
 	let mut flags = Vec::<&str>::with_capacity(5);
 	if (value & VkPipelineDepthStencilStateCreateFlagBits::VK_PIPELINE_DEPTH_STENCIL_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_DEPTH_ACCESS_BIT_EXT as VkPipelineDepthStencilStateCreateFlags) == VkPipelineDepthStencilStateCreateFlagBits::VK_PIPELINE_DEPTH_STENCIL_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_DEPTH_ACCESS_BIT_EXT as VkPipelineDepthStencilStateCreateFlags {
@@ -1698,6 +1727,7 @@ pub fn vk_pipeline_depth_stencil_state_create_flags_to_string(value: VkPipelineD
 /// type definition `VkPipelineColorBlendStateCreateFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPipelineColorBlendStateCreateFlags.html>
 pub type VkPipelineColorBlendStateCreateFlags = VkFlags;
+/// Convert `VkPipelineColorBlendStateCreateFlags` to `String`, showing the composition of the bits from the member of `VkPipelineColorBlendStateCreateFlagBits`
 pub fn vk_pipeline_color_blend_state_create_flags_to_string(value: VkPipelineColorBlendStateCreateFlags) -> String {
 	let mut flags = Vec::<&str>::with_capacity(3);
 	if (value & VkPipelineColorBlendStateCreateFlagBits::VK_PIPELINE_COLOR_BLEND_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_ACCESS_BIT_EXT as VkPipelineColorBlendStateCreateFlags) == VkPipelineColorBlendStateCreateFlagBits::VK_PIPELINE_COLOR_BLEND_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_ACCESS_BIT_EXT as VkPipelineColorBlendStateCreateFlags {
@@ -1717,6 +1747,7 @@ pub type VkPipelineDynamicStateCreateFlags = VkFlags;
 /// type definition `VkPipelineLayoutCreateFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPipelineLayoutCreateFlags.html>
 pub type VkPipelineLayoutCreateFlags = VkFlags;
+/// Convert `VkPipelineLayoutCreateFlags` to `String`, showing the composition of the bits from the member of `VkPipelineLayoutCreateFlagBits`
 pub fn vk_pipeline_layout_create_flags_to_string(value: VkPipelineLayoutCreateFlags) -> String {
 	let mut flags = Vec::<&str>::with_capacity(2);
 	if (value & VkPipelineLayoutCreateFlagBits::VK_PIPELINE_LAYOUT_CREATE_INDEPENDENT_SETS_BIT_EXT as VkPipelineLayoutCreateFlags) == VkPipelineLayoutCreateFlagBits::VK_PIPELINE_LAYOUT_CREATE_INDEPENDENT_SETS_BIT_EXT as VkPipelineLayoutCreateFlags {
@@ -1730,6 +1761,7 @@ pub fn vk_pipeline_layout_create_flags_to_string(value: VkPipelineLayoutCreateFl
 /// type definition `VkShaderStageFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkShaderStageFlags.html>
 pub type VkShaderStageFlags = VkFlags;
+/// Convert `VkShaderStageFlags` to `String`, showing the composition of the bits from the member of `VkShaderStageFlagBits`
 pub fn vk_shader_stage_flags_to_string(value: VkShaderStageFlags) -> String {
 	let mut flags = Vec::<&str>::with_capacity(27);
 	if (value & VkShaderStageFlagBits::VK_SHADER_STAGE_VERTEX_BIT as VkShaderStageFlags) == VkShaderStageFlagBits::VK_SHADER_STAGE_VERTEX_BIT as VkShaderStageFlags {
@@ -1818,6 +1850,7 @@ pub fn vk_shader_stage_flags_to_string(value: VkShaderStageFlags) -> String {
 /// type definition `VkSamplerCreateFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkSamplerCreateFlags.html>
 pub type VkSamplerCreateFlags = VkFlags;
+/// Convert `VkSamplerCreateFlags` to `String`, showing the composition of the bits from the member of `VkSamplerCreateFlagBits`
 pub fn vk_sampler_create_flags_to_string(value: VkSamplerCreateFlags) -> String {
 	let mut flags = Vec::<&str>::with_capacity(6);
 	if (value & VkSamplerCreateFlagBits::VK_SAMPLER_CREATE_SUBSAMPLED_BIT_EXT as VkSamplerCreateFlags) == VkSamplerCreateFlagBits::VK_SAMPLER_CREATE_SUBSAMPLED_BIT_EXT as VkSamplerCreateFlags {
@@ -1843,6 +1876,7 @@ pub fn vk_sampler_create_flags_to_string(value: VkSamplerCreateFlags) -> String 
 /// type definition `VkDescriptorPoolCreateFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkDescriptorPoolCreateFlags.html>
 pub type VkDescriptorPoolCreateFlags = VkFlags;
+/// Convert `VkDescriptorPoolCreateFlags` to `String`, showing the composition of the bits from the member of `VkDescriptorPoolCreateFlagBits`
 pub fn vk_descriptor_pool_create_flags_to_string(value: VkDescriptorPoolCreateFlags) -> String {
 	let mut flags = Vec::<&str>::with_capacity(8);
 	if (value & VkDescriptorPoolCreateFlagBits::VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT as VkDescriptorPoolCreateFlags) == VkDescriptorPoolCreateFlagBits::VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT as VkDescriptorPoolCreateFlags {
@@ -1877,6 +1911,7 @@ pub type VkDescriptorPoolResetFlags = VkFlags;
 /// type definition `VkDescriptorSetLayoutCreateFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkDescriptorSetLayoutCreateFlags.html>
 pub type VkDescriptorSetLayoutCreateFlags = VkFlags;
+/// Convert `VkDescriptorSetLayoutCreateFlags` to `String`, showing the composition of the bits from the member of `VkDescriptorSetLayoutCreateFlagBits`
 pub fn vk_descriptor_set_layout_create_flags_to_string(value: VkDescriptorSetLayoutCreateFlags) -> String {
 	let mut flags = Vec::<&str>::with_capacity(11);
 	if (value & VkDescriptorSetLayoutCreateFlagBits::VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT as VkDescriptorSetLayoutCreateFlags) == VkDescriptorSetLayoutCreateFlagBits::VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT as VkDescriptorSetLayoutCreateFlags {
@@ -1917,6 +1952,7 @@ pub fn vk_descriptor_set_layout_create_flags_to_string(value: VkDescriptorSetLay
 /// type definition `VkAttachmentDescriptionFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkAttachmentDescriptionFlags.html>
 pub type VkAttachmentDescriptionFlags = VkFlags;
+/// Convert `VkAttachmentDescriptionFlags` to `String`, showing the composition of the bits from the member of `VkAttachmentDescriptionFlagBits`
 pub fn vk_attachment_description_flags_to_string(value: VkAttachmentDescriptionFlags) -> String {
 	let mut flags = Vec::<&str>::with_capacity(2);
 	if (value & VkAttachmentDescriptionFlagBits::VK_ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT as VkAttachmentDescriptionFlags) == VkAttachmentDescriptionFlagBits::VK_ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT as VkAttachmentDescriptionFlags {
@@ -1930,6 +1966,7 @@ pub fn vk_attachment_description_flags_to_string(value: VkAttachmentDescriptionF
 /// type definition `VkDependencyFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkDependencyFlags.html>
 pub type VkDependencyFlags = VkFlags;
+/// Convert `VkDependencyFlags` to `String`, showing the composition of the bits from the member of `VkDependencyFlagBits`
 pub fn vk_dependency_flags_to_string(value: VkDependencyFlags) -> String {
 	let mut flags = Vec::<&str>::with_capacity(9);
 	if (value & VkDependencyFlagBits::VK_DEPENDENCY_BY_REGION_BIT as VkDependencyFlags) == VkDependencyFlagBits::VK_DEPENDENCY_BY_REGION_BIT as VkDependencyFlags {
@@ -1964,6 +2001,7 @@ pub fn vk_dependency_flags_to_string(value: VkDependencyFlags) -> String {
 /// type definition `VkFramebufferCreateFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkFramebufferCreateFlags.html>
 pub type VkFramebufferCreateFlags = VkFlags;
+/// Convert `VkFramebufferCreateFlags` to `String`, showing the composition of the bits from the member of `VkFramebufferCreateFlagBits`
 pub fn vk_framebuffer_create_flags_to_string(value: VkFramebufferCreateFlags) -> String {
 	let mut flags = Vec::<&str>::with_capacity(3);
 	if (value & VkFramebufferCreateFlagBits::VK_FRAMEBUFFER_CREATE_IMAGELESS_BIT as VkFramebufferCreateFlags) == VkFramebufferCreateFlagBits::VK_FRAMEBUFFER_CREATE_IMAGELESS_BIT as VkFramebufferCreateFlags {
@@ -1980,6 +2018,7 @@ pub fn vk_framebuffer_create_flags_to_string(value: VkFramebufferCreateFlags) ->
 /// type definition `VkRenderPassCreateFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkRenderPassCreateFlags.html>
 pub type VkRenderPassCreateFlags = VkFlags;
+/// Convert `VkRenderPassCreateFlags` to `String`, showing the composition of the bits from the member of `VkRenderPassCreateFlagBits`
 pub fn vk_render_pass_create_flags_to_string(value: VkRenderPassCreateFlags) -> String {
 	let mut flags = Vec::<&str>::with_capacity(3);
 	if (value & VkRenderPassCreateFlagBits::VK_RENDER_PASS_CREATE_TRANSFORM_BIT_QCOM as VkRenderPassCreateFlags) == VkRenderPassCreateFlagBits::VK_RENDER_PASS_CREATE_TRANSFORM_BIT_QCOM as VkRenderPassCreateFlags {
@@ -1996,6 +2035,7 @@ pub fn vk_render_pass_create_flags_to_string(value: VkRenderPassCreateFlags) -> 
 /// type definition `VkSubpassDescriptionFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkSubpassDescriptionFlags.html>
 pub type VkSubpassDescriptionFlags = VkFlags;
+/// Convert `VkSubpassDescriptionFlags` to `String`, showing the composition of the bits from the member of `VkSubpassDescriptionFlagBits`
 pub fn vk_subpass_description_flags_to_string(value: VkSubpassDescriptionFlags) -> String {
 	let mut flags = Vec::<&str>::with_capacity(13);
 	if (value & VkSubpassDescriptionFlagBits::VK_SUBPASS_DESCRIPTION_PER_VIEW_ATTRIBUTES_BIT_NVX as VkSubpassDescriptionFlags) == VkSubpassDescriptionFlagBits::VK_SUBPASS_DESCRIPTION_PER_VIEW_ATTRIBUTES_BIT_NVX as VkSubpassDescriptionFlags {
@@ -2042,6 +2082,7 @@ pub fn vk_subpass_description_flags_to_string(value: VkSubpassDescriptionFlags) 
 /// type definition `VkCommandPoolCreateFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkCommandPoolCreateFlags.html>
 pub type VkCommandPoolCreateFlags = VkFlags;
+/// Convert `VkCommandPoolCreateFlags` to `String`, showing the composition of the bits from the member of `VkCommandPoolCreateFlagBits`
 pub fn vk_command_pool_create_flags_to_string(value: VkCommandPoolCreateFlags) -> String {
 	let mut flags = Vec::<&str>::with_capacity(4);
 	if (value & VkCommandPoolCreateFlagBits::VK_COMMAND_POOL_CREATE_TRANSIENT_BIT as VkCommandPoolCreateFlags) == VkCommandPoolCreateFlagBits::VK_COMMAND_POOL_CREATE_TRANSIENT_BIT as VkCommandPoolCreateFlags {
@@ -2061,6 +2102,7 @@ pub fn vk_command_pool_create_flags_to_string(value: VkCommandPoolCreateFlags) -
 /// type definition `VkCommandPoolResetFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkCommandPoolResetFlags.html>
 pub type VkCommandPoolResetFlags = VkFlags;
+/// Convert `VkCommandPoolResetFlags` to `String`, showing the composition of the bits from the member of `VkCommandPoolResetFlagBits`
 pub fn vk_command_pool_reset_flags_to_string(value: VkCommandPoolResetFlags) -> String {
 	let mut flags = Vec::<&str>::with_capacity(2);
 	if (value & VkCommandPoolResetFlagBits::VK_COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT as VkCommandPoolResetFlags) == VkCommandPoolResetFlagBits::VK_COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT as VkCommandPoolResetFlags {
@@ -2074,6 +2116,7 @@ pub fn vk_command_pool_reset_flags_to_string(value: VkCommandPoolResetFlags) -> 
 /// type definition `VkCommandBufferUsageFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkCommandBufferUsageFlags.html>
 pub type VkCommandBufferUsageFlags = VkFlags;
+/// Convert `VkCommandBufferUsageFlags` to `String`, showing the composition of the bits from the member of `VkCommandBufferUsageFlagBits`
 pub fn vk_command_buffer_usage_flags_to_string(value: VkCommandBufferUsageFlags) -> String {
 	let mut flags = Vec::<&str>::with_capacity(4);
 	if (value & VkCommandBufferUsageFlagBits::VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT as VkCommandBufferUsageFlags) == VkCommandBufferUsageFlagBits::VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT as VkCommandBufferUsageFlags {
@@ -2093,6 +2136,7 @@ pub fn vk_command_buffer_usage_flags_to_string(value: VkCommandBufferUsageFlags)
 /// type definition `VkQueryControlFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkQueryControlFlags.html>
 pub type VkQueryControlFlags = VkFlags;
+/// Convert `VkQueryControlFlags` to `String`, showing the composition of the bits from the member of `VkQueryControlFlagBits`
 pub fn vk_query_control_flags_to_string(value: VkQueryControlFlags) -> String {
 	let mut flags = Vec::<&str>::with_capacity(2);
 	if (value & VkQueryControlFlagBits::VK_QUERY_CONTROL_PRECISE_BIT as VkQueryControlFlags) == VkQueryControlFlagBits::VK_QUERY_CONTROL_PRECISE_BIT as VkQueryControlFlags {
@@ -2106,6 +2150,7 @@ pub fn vk_query_control_flags_to_string(value: VkQueryControlFlags) -> String {
 /// type definition `VkCommandBufferResetFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkCommandBufferResetFlags.html>
 pub type VkCommandBufferResetFlags = VkFlags;
+/// Convert `VkCommandBufferResetFlags` to `String`, showing the composition of the bits from the member of `VkCommandBufferResetFlagBits`
 pub fn vk_command_buffer_reset_flags_to_string(value: VkCommandBufferResetFlags) -> String {
 	let mut flags = Vec::<&str>::with_capacity(2);
 	if (value & VkCommandBufferResetFlagBits::VK_COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT as VkCommandBufferResetFlags) == VkCommandBufferResetFlagBits::VK_COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT as VkCommandBufferResetFlags {
@@ -2119,6 +2164,7 @@ pub fn vk_command_buffer_reset_flags_to_string(value: VkCommandBufferResetFlags)
 /// type definition `VkStencilFaceFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkStencilFaceFlags.html>
 pub type VkStencilFaceFlags = VkFlags;
+/// Convert `VkStencilFaceFlags` to `String`, showing the composition of the bits from the member of `VkStencilFaceFlagBits`
 pub fn vk_stencil_face_flags_to_string(value: VkStencilFaceFlags) -> String {
 	let mut flags = Vec::<&str>::with_capacity(5);
 	if (value & VkStencilFaceFlagBits::VK_STENCIL_FACE_FRONT_BIT as VkStencilFaceFlags) == VkStencilFaceFlagBits::VK_STENCIL_FACE_FRONT_BIT as VkStencilFaceFlags {
@@ -9796,6 +9842,7 @@ pub const VK_QUEUE_FAMILY_EXTERNAL: u32 = !1u32;
 /// type definition `VkSubgroupFeatureFlags` from VK_VERSION_1_1
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkSubgroupFeatureFlags.html>
 pub type VkSubgroupFeatureFlags = VkFlags;
+/// Convert `VkSubgroupFeatureFlags` to `String`, showing the composition of the bits from the member of `VkSubgroupFeatureFlagBits`
 pub fn vk_subgroup_feature_flags_to_string(value: VkSubgroupFeatureFlags) -> String {
 	let mut flags = Vec::<&str>::with_capacity(14);
 	if (value & VkSubgroupFeatureFlagBits::VK_SUBGROUP_FEATURE_BASIC_BIT as VkSubgroupFeatureFlags) == VkSubgroupFeatureFlagBits::VK_SUBGROUP_FEATURE_BASIC_BIT as VkSubgroupFeatureFlags {
@@ -9845,6 +9892,7 @@ pub fn vk_subgroup_feature_flags_to_string(value: VkSubgroupFeatureFlags) -> Str
 /// type definition `VkPeerMemoryFeatureFlags` from VK_VERSION_1_1
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPeerMemoryFeatureFlags.html>
 pub type VkPeerMemoryFeatureFlags = VkFlags;
+/// Convert `VkPeerMemoryFeatureFlags` to `String`, showing the composition of the bits from the member of `VkPeerMemoryFeatureFlagBits`
 pub fn vk_peer_memory_feature_flags_to_string(value: VkPeerMemoryFeatureFlags) -> String {
 	let mut flags = Vec::<&str>::with_capacity(9);
 	if (value & VkPeerMemoryFeatureFlagBits::VK_PEER_MEMORY_FEATURE_COPY_SRC_BIT as VkPeerMemoryFeatureFlags) == VkPeerMemoryFeatureFlagBits::VK_PEER_MEMORY_FEATURE_COPY_SRC_BIT as VkPeerMemoryFeatureFlags {
@@ -9879,6 +9927,7 @@ pub fn vk_peer_memory_feature_flags_to_string(value: VkPeerMemoryFeatureFlags) -
 /// type definition `VkMemoryAllocateFlags` from VK_VERSION_1_1
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkMemoryAllocateFlags.html>
 pub type VkMemoryAllocateFlags = VkFlags;
+/// Convert `VkMemoryAllocateFlags` to `String`, showing the composition of the bits from the member of `VkMemoryAllocateFlagBits`
 pub fn vk_memory_allocate_flags_to_string(value: VkMemoryAllocateFlags) -> String {
 	let mut flags = Vec::<&str>::with_capacity(8);
 	if (value & VkMemoryAllocateFlagBits::VK_MEMORY_ALLOCATE_DEVICE_MASK_BIT as VkMemoryAllocateFlags) == VkMemoryAllocateFlagBits::VK_MEMORY_ALLOCATE_DEVICE_MASK_BIT as VkMemoryAllocateFlags {
@@ -9916,6 +9965,7 @@ pub type VkDescriptorUpdateTemplateCreateFlags = VkFlags;
 /// type definition `VkExternalMemoryHandleTypeFlags` from VK_VERSION_1_1
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkExternalMemoryHandleTypeFlags.html>
 pub type VkExternalMemoryHandleTypeFlags = VkFlags;
+/// Convert `VkExternalMemoryHandleTypeFlags` to `String`, showing the composition of the bits from the member of `VkExternalMemoryHandleTypeFlagBits`
 pub fn vk_external_memory_handle_type_flags_to_string(value: VkExternalMemoryHandleTypeFlags) -> String {
 	let mut flags = Vec::<&str>::with_capacity(25);
 	if (value & VkExternalMemoryHandleTypeFlagBits::VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT as VkExternalMemoryHandleTypeFlags) == VkExternalMemoryHandleTypeFlagBits::VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT as VkExternalMemoryHandleTypeFlags {
@@ -9998,6 +10048,7 @@ pub fn vk_external_memory_handle_type_flags_to_string(value: VkExternalMemoryHan
 /// type definition `VkExternalMemoryFeatureFlags` from VK_VERSION_1_1
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkExternalMemoryFeatureFlags.html>
 pub type VkExternalMemoryFeatureFlags = VkFlags;
+/// Convert `VkExternalMemoryFeatureFlags` to `String`, showing the composition of the bits from the member of `VkExternalMemoryFeatureFlagBits`
 pub fn vk_external_memory_feature_flags_to_string(value: VkExternalMemoryFeatureFlags) -> String {
 	let mut flags = Vec::<&str>::with_capacity(7);
 	if (value & VkExternalMemoryFeatureFlagBits::VK_EXTERNAL_MEMORY_FEATURE_DEDICATED_ONLY_BIT as VkExternalMemoryFeatureFlags) == VkExternalMemoryFeatureFlagBits::VK_EXTERNAL_MEMORY_FEATURE_DEDICATED_ONLY_BIT as VkExternalMemoryFeatureFlags {
@@ -10026,6 +10077,7 @@ pub fn vk_external_memory_feature_flags_to_string(value: VkExternalMemoryFeature
 /// type definition `VkExternalFenceHandleTypeFlags` from VK_VERSION_1_1
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkExternalFenceHandleTypeFlags.html>
 pub type VkExternalFenceHandleTypeFlags = VkFlags;
+/// Convert `VkExternalFenceHandleTypeFlags` to `String`, showing the composition of the bits from the member of `VkExternalFenceHandleTypeFlagBits`
 pub fn vk_external_fence_handle_type_flags_to_string(value: VkExternalFenceHandleTypeFlags) -> String {
 	let mut flags = Vec::<&str>::with_capacity(9);
 	if (value & VkExternalFenceHandleTypeFlagBits::VK_EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_FD_BIT as VkExternalFenceHandleTypeFlags) == VkExternalFenceHandleTypeFlagBits::VK_EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_FD_BIT as VkExternalFenceHandleTypeFlags {
@@ -10060,6 +10112,7 @@ pub fn vk_external_fence_handle_type_flags_to_string(value: VkExternalFenceHandl
 /// type definition `VkExternalFenceFeatureFlags` from VK_VERSION_1_1
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkExternalFenceFeatureFlags.html>
 pub type VkExternalFenceFeatureFlags = VkFlags;
+/// Convert `VkExternalFenceFeatureFlags` to `String`, showing the composition of the bits from the member of `VkExternalFenceFeatureFlagBits`
 pub fn vk_external_fence_feature_flags_to_string(value: VkExternalFenceFeatureFlags) -> String {
 	let mut flags = Vec::<&str>::with_capacity(5);
 	if (value & VkExternalFenceFeatureFlagBits::VK_EXTERNAL_FENCE_FEATURE_EXPORTABLE_BIT as VkExternalFenceFeatureFlags) == VkExternalFenceFeatureFlagBits::VK_EXTERNAL_FENCE_FEATURE_EXPORTABLE_BIT as VkExternalFenceFeatureFlags {
@@ -10082,6 +10135,7 @@ pub fn vk_external_fence_feature_flags_to_string(value: VkExternalFenceFeatureFl
 /// type definition `VkFenceImportFlags` from VK_VERSION_1_1
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkFenceImportFlags.html>
 pub type VkFenceImportFlags = VkFlags;
+/// Convert `VkFenceImportFlags` to `String`, showing the composition of the bits from the member of `VkFenceImportFlagBits`
 pub fn vk_fence_import_flags_to_string(value: VkFenceImportFlags) -> String {
 	let mut flags = Vec::<&str>::with_capacity(3);
 	if (value & VkFenceImportFlagBits::VK_FENCE_IMPORT_TEMPORARY_BIT as VkFenceImportFlags) == VkFenceImportFlagBits::VK_FENCE_IMPORT_TEMPORARY_BIT as VkFenceImportFlags {
@@ -10098,6 +10152,7 @@ pub fn vk_fence_import_flags_to_string(value: VkFenceImportFlags) -> String {
 /// type definition `VkSemaphoreImportFlags` from VK_VERSION_1_1
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkSemaphoreImportFlags.html>
 pub type VkSemaphoreImportFlags = VkFlags;
+/// Convert `VkSemaphoreImportFlags` to `String`, showing the composition of the bits from the member of `VkSemaphoreImportFlagBits`
 pub fn vk_semaphore_import_flags_to_string(value: VkSemaphoreImportFlags) -> String {
 	let mut flags = Vec::<&str>::with_capacity(3);
 	if (value & VkSemaphoreImportFlagBits::VK_SEMAPHORE_IMPORT_TEMPORARY_BIT as VkSemaphoreImportFlags) == VkSemaphoreImportFlagBits::VK_SEMAPHORE_IMPORT_TEMPORARY_BIT as VkSemaphoreImportFlags {
@@ -10114,6 +10169,7 @@ pub fn vk_semaphore_import_flags_to_string(value: VkSemaphoreImportFlags) -> Str
 /// type definition `VkExternalSemaphoreHandleTypeFlags` from VK_VERSION_1_1
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkExternalSemaphoreHandleTypeFlags.html>
 pub type VkExternalSemaphoreHandleTypeFlags = VkFlags;
+/// Convert `VkExternalSemaphoreHandleTypeFlags` to `String`, showing the composition of the bits from the member of `VkExternalSemaphoreHandleTypeFlagBits`
 pub fn vk_external_semaphore_handle_type_flags_to_string(value: VkExternalSemaphoreHandleTypeFlags) -> String {
 	let mut flags = Vec::<&str>::with_capacity(13);
 	if (value & VkExternalSemaphoreHandleTypeFlagBits::VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD_BIT as VkExternalSemaphoreHandleTypeFlags) == VkExternalSemaphoreHandleTypeFlagBits::VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD_BIT as VkExternalSemaphoreHandleTypeFlags {
@@ -10160,6 +10216,7 @@ pub fn vk_external_semaphore_handle_type_flags_to_string(value: VkExternalSemaph
 /// type definition `VkExternalSemaphoreFeatureFlags` from VK_VERSION_1_1
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkExternalSemaphoreFeatureFlags.html>
 pub type VkExternalSemaphoreFeatureFlags = VkFlags;
+/// Convert `VkExternalSemaphoreFeatureFlags` to `String`, showing the composition of the bits from the member of `VkExternalSemaphoreFeatureFlagBits`
 pub fn vk_external_semaphore_feature_flags_to_string(value: VkExternalSemaphoreFeatureFlags) -> String {
 	let mut flags = Vec::<&str>::with_capacity(5);
 	if (value & VkExternalSemaphoreFeatureFlagBits::VK_EXTERNAL_SEMAPHORE_FEATURE_EXPORTABLE_BIT as VkExternalSemaphoreFeatureFlags) == VkExternalSemaphoreFeatureFlagBits::VK_EXTERNAL_SEMAPHORE_FEATURE_EXPORTABLE_BIT as VkExternalSemaphoreFeatureFlags {
@@ -11721,6 +11778,7 @@ pub const VK_MAX_DRIVER_INFO_SIZE: u32 = 256u32;
 /// type definition `VkResolveModeFlags` from VK_VERSION_1_2
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkResolveModeFlags.html>
 pub type VkResolveModeFlags = VkFlags;
+/// Convert `VkResolveModeFlags` to `String`, showing the composition of the bits from the member of `VkResolveModeFlagBits`
 pub fn vk_resolve_mode_flags_to_string(value: VkResolveModeFlags) -> String {
 	let mut flags = Vec::<&str>::with_capacity(13);
 	if (value & VkResolveModeFlagBits::VK_RESOLVE_MODE_NONE as VkResolveModeFlags) == VkResolveModeFlagBits::VK_RESOLVE_MODE_NONE as VkResolveModeFlags {
@@ -11767,6 +11825,7 @@ pub fn vk_resolve_mode_flags_to_string(value: VkResolveModeFlags) -> String {
 /// type definition `VkDescriptorBindingFlags` from VK_VERSION_1_2
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkDescriptorBindingFlags.html>
 pub type VkDescriptorBindingFlags = VkFlags;
+/// Convert `VkDescriptorBindingFlags` to `String`, showing the composition of the bits from the member of `VkDescriptorBindingFlagBits`
 pub fn vk_descriptor_binding_flags_to_string(value: VkDescriptorBindingFlags) -> String {
 	let mut flags = Vec::<&str>::with_capacity(9);
 	if (value & VkDescriptorBindingFlagBits::VK_DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT as VkDescriptorBindingFlags) == VkDescriptorBindingFlagBits::VK_DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT as VkDescriptorBindingFlags {
@@ -11801,6 +11860,7 @@ pub fn vk_descriptor_binding_flags_to_string(value: VkDescriptorBindingFlags) ->
 /// type definition `VkSemaphoreWaitFlags` from VK_VERSION_1_2
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkSemaphoreWaitFlags.html>
 pub type VkSemaphoreWaitFlags = VkFlags;
+/// Convert `VkSemaphoreWaitFlags` to `String`, showing the composition of the bits from the member of `VkSemaphoreWaitFlagBits`
 pub fn vk_semaphore_wait_flags_to_string(value: VkSemaphoreWaitFlags) -> String {
 	let mut flags = Vec::<&str>::with_capacity(3);
 	if (value & VkSemaphoreWaitFlagBits::VK_SEMAPHORE_WAIT_ANY_BIT as VkSemaphoreWaitFlags) == VkSemaphoreWaitFlagBits::VK_SEMAPHORE_WAIT_ANY_BIT as VkSemaphoreWaitFlags {
@@ -13694,6 +13754,7 @@ pub type VkFlags64 = u64;
 /// type definition `VkPipelineCreationFeedbackFlags` from VK_VERSION_1_3
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPipelineCreationFeedbackFlags.html>
 pub type VkPipelineCreationFeedbackFlags = VkFlags;
+/// Convert `VkPipelineCreationFeedbackFlags` to `String`, showing the composition of the bits from the member of `VkPipelineCreationFeedbackFlagBits`
 pub fn vk_pipeline_creation_feedback_flags_to_string(value: VkPipelineCreationFeedbackFlags) -> String {
 	let mut flags = Vec::<&str>::with_capacity(7);
 	if (value & VkPipelineCreationFeedbackFlagBits::VK_PIPELINE_CREATION_FEEDBACK_VALID_BIT as VkPipelineCreationFeedbackFlags) == VkPipelineCreationFeedbackFlagBits::VK_PIPELINE_CREATION_FEEDBACK_VALID_BIT as VkPipelineCreationFeedbackFlags {
@@ -13722,6 +13783,7 @@ pub fn vk_pipeline_creation_feedback_flags_to_string(value: VkPipelineCreationFe
 /// type definition `VkToolPurposeFlags` from VK_VERSION_1_3
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkToolPurposeFlags.html>
 pub type VkToolPurposeFlags = VkFlags;
+/// Convert `VkToolPurposeFlags` to `String`, showing the composition of the bits from the member of `VkToolPurposeFlagBits`
 pub fn vk_tool_purpose_flags_to_string(value: VkToolPurposeFlags) -> String {
 	let mut flags = Vec::<&str>::with_capacity(13);
 	if (value & VkToolPurposeFlagBits::VK_TOOL_PURPOSE_VALIDATION_BIT as VkToolPurposeFlags) == VkToolPurposeFlagBits::VK_TOOL_PURPOSE_VALIDATION_BIT as VkToolPurposeFlags {
@@ -13783,6 +13845,7 @@ pub type VkAccessFlagBits2 = VkFlags64;
 /// type definition `VkSubmitFlags` from VK_VERSION_1_3
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkSubmitFlags.html>
 pub type VkSubmitFlags = VkFlags;
+/// Convert `VkSubmitFlags` to `String`, showing the composition of the bits from the member of `VkSubmitFlagBits`
 pub fn vk_submit_flags_to_string(value: VkSubmitFlags) -> String {
 	let mut flags = Vec::<&str>::with_capacity(3);
 	if (value & VkSubmitFlagBits::VK_SUBMIT_PROTECTED_BIT as VkSubmitFlags) == VkSubmitFlagBits::VK_SUBMIT_PROTECTED_BIT as VkSubmitFlags {
@@ -13799,6 +13862,7 @@ pub fn vk_submit_flags_to_string(value: VkSubmitFlags) -> String {
 /// type definition `VkRenderingFlags` from VK_VERSION_1_3
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkRenderingFlags.html>
 pub type VkRenderingFlags = VkFlags;
+/// Convert `VkRenderingFlags` to `String`, showing the composition of the bits from the member of `VkRenderingFlagBits`
 pub fn vk_rendering_flags_to_string(value: VkRenderingFlags) -> String {
 	let mut flags = Vec::<&str>::with_capacity(11);
 	if (value & VkRenderingFlagBits::VK_RENDERING_CONTENTS_SECONDARY_COMMAND_BUFFERS_BIT as VkRenderingFlags) == VkRenderingFlagBits::VK_RENDERING_CONTENTS_SECONDARY_COMMAND_BUFFERS_BIT as VkRenderingFlags {
@@ -15523,6 +15587,7 @@ pub const VK_BUFFER_USAGE_2_PREPROCESS_BUFFER_BIT_EXT: VkBufferUsageFlagBits2 = 
 /// type definition `VkMemoryUnmapFlags` from VK_VERSION_1_4
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkMemoryUnmapFlags.html>
 pub type VkMemoryUnmapFlags = VkFlags;
+/// Convert `VkMemoryUnmapFlags` to `String`, showing the composition of the bits from the member of `VkMemoryUnmapFlagBits`
 pub fn vk_memory_unmap_flags_to_string(value: VkMemoryUnmapFlags) -> String {
 	let mut flags = Vec::<&str>::with_capacity(2);
 	if (value & VkMemoryUnmapFlagBits::VK_MEMORY_UNMAP_RESERVE_BIT_EXT as VkMemoryUnmapFlags) == VkMemoryUnmapFlagBits::VK_MEMORY_UNMAP_RESERVE_BIT_EXT as VkMemoryUnmapFlags {
@@ -15548,6 +15613,7 @@ pub type VkBufferUsageFlagBits2 = VkFlags64;
 /// type definition `VkHostImageCopyFlags` from VK_VERSION_1_4
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkHostImageCopyFlags.html>
 pub type VkHostImageCopyFlags = VkFlags;
+/// Convert `VkHostImageCopyFlags` to `String`, showing the composition of the bits from the member of `VkHostImageCopyFlagBits`
 pub fn vk_host_image_copy_flags_to_string(value: VkHostImageCopyFlags) -> String {
 	let mut flags = Vec::<&str>::with_capacity(5);
 	if (value & VkHostImageCopyFlagBits::VK_HOST_IMAGE_COPY_MEMCPY_BIT as VkHostImageCopyFlags) == VkHostImageCopyFlagBits::VK_HOST_IMAGE_COPY_MEMCPY_BIT as VkHostImageCopyFlags {
@@ -16663,6 +16729,7 @@ impl Vulkan_VERSION_1_4 {
 /// type definition `VkCompositeAlphaFlagsKHR` from VK_KHR_surface
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkCompositeAlphaFlagsKHR.html>
 pub type VkCompositeAlphaFlagsKHR = VkFlags;
+/// Convert `VkCompositeAlphaFlagsKHR` to `String`, showing the composition of the bits from the member of `VkCompositeAlphaFlagBitsKHR`
 pub fn vk_composite_alpha_flags_khr_to_string(value: VkCompositeAlphaFlagsKHR) -> String {
 	let mut flags = Vec::<&str>::with_capacity(5);
 	if (value & VkCompositeAlphaFlagBitsKHR::VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR as VkCompositeAlphaFlagsKHR) == VkCompositeAlphaFlagBitsKHR::VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR as VkCompositeAlphaFlagsKHR {
@@ -16685,6 +16752,7 @@ pub fn vk_composite_alpha_flags_khr_to_string(value: VkCompositeAlphaFlagsKHR) -
 /// type definition `VkSurfaceTransformFlagsKHR` from VK_KHR_surface
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkSurfaceTransformFlagsKHR.html>
 pub type VkSurfaceTransformFlagsKHR = VkFlags;
+/// Convert `VkSurfaceTransformFlagsKHR` to `String`, showing the composition of the bits from the member of `VkSurfaceTransformFlagBitsKHR`
 pub fn vk_surface_transform_flags_khr_to_string(value: VkSurfaceTransformFlagsKHR) -> String {
 	let mut flags = Vec::<&str>::with_capacity(10);
 	if (value & VkSurfaceTransformFlagBitsKHR::VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR as VkSurfaceTransformFlagsKHR) == VkSurfaceTransformFlagBitsKHR::VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR as VkSurfaceTransformFlagsKHR {
@@ -16935,6 +17003,7 @@ impl Vulkan_KHR_surface {
 /// type definition `VkSwapchainCreateFlagsKHR` from VK_KHR_swapchain
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkSwapchainCreateFlagsKHR.html>
 pub type VkSwapchainCreateFlagsKHR = VkFlags;
+/// Convert `VkSwapchainCreateFlagsKHR` to `String`, showing the composition of the bits from the member of `VkSwapchainCreateFlagBitsKHR`
 pub fn vk_swapchain_create_flags_khr_to_string(value: VkSwapchainCreateFlagsKHR) -> String {
 	let mut flags = Vec::<&str>::with_capacity(8);
 	if (value & VkSwapchainCreateFlagBitsKHR::VK_SWAPCHAIN_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT_KHR as VkSwapchainCreateFlagsKHR) == VkSwapchainCreateFlagBitsKHR::VK_SWAPCHAIN_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT_KHR as VkSwapchainCreateFlagsKHR {
@@ -16966,6 +17035,7 @@ pub fn vk_swapchain_create_flags_khr_to_string(value: VkSwapchainCreateFlagsKHR)
 /// type definition `VkDeviceGroupPresentModeFlagsKHR` from VK_KHR_swapchain
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkDeviceGroupPresentModeFlagsKHR.html>
 pub type VkDeviceGroupPresentModeFlagsKHR = VkFlags;
+/// Convert `VkDeviceGroupPresentModeFlagsKHR` to `String`, showing the composition of the bits from the member of `VkDeviceGroupPresentModeFlagBitsKHR`
 pub fn vk_device_group_present_mode_flags_khr_to_string(value: VkDeviceGroupPresentModeFlagsKHR) -> String {
 	let mut flags = Vec::<&str>::with_capacity(5);
 	if (value & VkDeviceGroupPresentModeFlagBitsKHR::VK_DEVICE_GROUP_PRESENT_MODE_LOCAL_BIT_KHR as VkDeviceGroupPresentModeFlagsKHR) == VkDeviceGroupPresentModeFlagBitsKHR::VK_DEVICE_GROUP_PRESENT_MODE_LOCAL_BIT_KHR as VkDeviceGroupPresentModeFlagsKHR {
@@ -17323,6 +17393,7 @@ pub type VkDisplayModeCreateFlagsKHR = VkFlags;
 /// type definition `VkDisplayPlaneAlphaFlagsKHR` from VK_KHR_display
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkDisplayPlaneAlphaFlagsKHR.html>
 pub type VkDisplayPlaneAlphaFlagsKHR = VkFlags;
+/// Convert `VkDisplayPlaneAlphaFlagsKHR` to `String`, showing the composition of the bits from the member of `VkDisplayPlaneAlphaFlagBitsKHR`
 pub fn vk_display_plane_alpha_flags_khr_to_string(value: VkDisplayPlaneAlphaFlagsKHR) -> String {
 	let mut flags = Vec::<&str>::with_capacity(5);
 	if (value & VkDisplayPlaneAlphaFlagBitsKHR::VK_DISPLAY_PLANE_ALPHA_OPAQUE_BIT_KHR as VkDisplayPlaneAlphaFlagsKHR) == VkDisplayPlaneAlphaFlagBitsKHR::VK_DISPLAY_PLANE_ALPHA_OPAQUE_BIT_KHR as VkDisplayPlaneAlphaFlagsKHR {
@@ -17654,6 +17725,7 @@ impl Vulkan_KHR_sampler_mirror_clamp_to_edge {
 /// type definition `VkVideoCodecOperationFlagsKHR` from VK_KHR_video_queue
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkVideoCodecOperationFlagsKHR.html>
 pub type VkVideoCodecOperationFlagsKHR = VkFlags;
+/// Convert `VkVideoCodecOperationFlagsKHR` to `String`, showing the composition of the bits from the member of `VkVideoCodecOperationFlagBitsKHR`
 pub fn vk_video_codec_operation_flags_khr_to_string(value: VkVideoCodecOperationFlagsKHR) -> String {
 	let mut flags = Vec::<&str>::with_capacity(9);
 	if (value & VkVideoCodecOperationFlagBitsKHR::VK_VIDEO_CODEC_OPERATION_NONE_KHR as VkVideoCodecOperationFlagsKHR) == VkVideoCodecOperationFlagBitsKHR::VK_VIDEO_CODEC_OPERATION_NONE_KHR as VkVideoCodecOperationFlagsKHR {
@@ -17688,6 +17760,7 @@ pub fn vk_video_codec_operation_flags_khr_to_string(value: VkVideoCodecOperation
 /// type definition `VkVideoChromaSubsamplingFlagsKHR` from VK_KHR_video_queue
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkVideoChromaSubsamplingFlagsKHR.html>
 pub type VkVideoChromaSubsamplingFlagsKHR = VkFlags;
+/// Convert `VkVideoChromaSubsamplingFlagsKHR` to `String`, showing the composition of the bits from the member of `VkVideoChromaSubsamplingFlagBitsKHR`
 pub fn vk_video_chroma_subsampling_flags_khr_to_string(value: VkVideoChromaSubsamplingFlagsKHR) -> String {
 	let mut flags = Vec::<&str>::with_capacity(6);
 	if (value & VkVideoChromaSubsamplingFlagBitsKHR::VK_VIDEO_CHROMA_SUBSAMPLING_INVALID_KHR as VkVideoChromaSubsamplingFlagsKHR) == VkVideoChromaSubsamplingFlagBitsKHR::VK_VIDEO_CHROMA_SUBSAMPLING_INVALID_KHR as VkVideoChromaSubsamplingFlagsKHR {
@@ -17713,6 +17786,7 @@ pub fn vk_video_chroma_subsampling_flags_khr_to_string(value: VkVideoChromaSubsa
 /// type definition `VkVideoComponentBitDepthFlagsKHR` from VK_KHR_video_queue
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkVideoComponentBitDepthFlagsKHR.html>
 pub type VkVideoComponentBitDepthFlagsKHR = VkFlags;
+/// Convert `VkVideoComponentBitDepthFlagsKHR` to `String`, showing the composition of the bits from the member of `VkVideoComponentBitDepthFlagBitsKHR`
 pub fn vk_video_component_bit_depth_flags_khr_to_string(value: VkVideoComponentBitDepthFlagsKHR) -> String {
 	let mut flags = Vec::<&str>::with_capacity(5);
 	if (value & VkVideoComponentBitDepthFlagBitsKHR::VK_VIDEO_COMPONENT_BIT_DEPTH_INVALID_KHR as VkVideoComponentBitDepthFlagsKHR) == VkVideoComponentBitDepthFlagBitsKHR::VK_VIDEO_COMPONENT_BIT_DEPTH_INVALID_KHR as VkVideoComponentBitDepthFlagsKHR {
@@ -17735,6 +17809,7 @@ pub fn vk_video_component_bit_depth_flags_khr_to_string(value: VkVideoComponentB
 /// type definition `VkVideoCapabilityFlagsKHR` from VK_KHR_video_queue
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkVideoCapabilityFlagsKHR.html>
 pub type VkVideoCapabilityFlagsKHR = VkFlags;
+/// Convert `VkVideoCapabilityFlagsKHR` to `String`, showing the composition of the bits from the member of `VkVideoCapabilityFlagBitsKHR`
 pub fn vk_video_capability_flags_khr_to_string(value: VkVideoCapabilityFlagsKHR) -> String {
 	let mut flags = Vec::<&str>::with_capacity(3);
 	if (value & VkVideoCapabilityFlagBitsKHR::VK_VIDEO_CAPABILITY_PROTECTED_CONTENT_BIT_KHR as VkVideoCapabilityFlagsKHR) == VkVideoCapabilityFlagBitsKHR::VK_VIDEO_CAPABILITY_PROTECTED_CONTENT_BIT_KHR as VkVideoCapabilityFlagsKHR {
@@ -17751,6 +17826,7 @@ pub fn vk_video_capability_flags_khr_to_string(value: VkVideoCapabilityFlagsKHR)
 /// type definition `VkVideoSessionCreateFlagsKHR` from VK_KHR_video_queue
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkVideoSessionCreateFlagsKHR.html>
 pub type VkVideoSessionCreateFlagsKHR = VkFlags;
+/// Convert `VkVideoSessionCreateFlagsKHR` to `String`, showing the composition of the bits from the member of `VkVideoSessionCreateFlagBitsKHR`
 pub fn vk_video_session_create_flags_khr_to_string(value: VkVideoSessionCreateFlagsKHR) -> String {
 	let mut flags = Vec::<&str>::with_capacity(7);
 	if (value & VkVideoSessionCreateFlagBitsKHR::VK_VIDEO_SESSION_CREATE_PROTECTED_CONTENT_BIT_KHR as VkVideoSessionCreateFlagsKHR) == VkVideoSessionCreateFlagBitsKHR::VK_VIDEO_SESSION_CREATE_PROTECTED_CONTENT_BIT_KHR as VkVideoSessionCreateFlagsKHR {
@@ -17779,6 +17855,7 @@ pub fn vk_video_session_create_flags_khr_to_string(value: VkVideoSessionCreateFl
 /// type definition `VkVideoSessionParametersCreateFlagsKHR` from VK_KHR_video_queue
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkVideoSessionParametersCreateFlagsKHR.html>
 pub type VkVideoSessionParametersCreateFlagsKHR = VkFlags;
+/// Convert `VkVideoSessionParametersCreateFlagsKHR` to `String`, showing the composition of the bits from the member of `VkVideoSessionParametersCreateFlagBitsKHR`
 pub fn vk_video_session_parameters_create_flags_khr_to_string(value: VkVideoSessionParametersCreateFlagsKHR) -> String {
 	let mut flags = Vec::<&str>::with_capacity(2);
 	if (value & VkVideoSessionParametersCreateFlagBitsKHR::VK_VIDEO_SESSION_PARAMETERS_CREATE_QUANTIZATION_MAP_COMPATIBLE_BIT_KHR as VkVideoSessionParametersCreateFlagsKHR) == VkVideoSessionParametersCreateFlagBitsKHR::VK_VIDEO_SESSION_PARAMETERS_CREATE_QUANTIZATION_MAP_COMPATIBLE_BIT_KHR as VkVideoSessionParametersCreateFlagsKHR {
@@ -17798,6 +17875,7 @@ pub type VkVideoEndCodingFlagsKHR = VkFlags;
 /// type definition `VkVideoCodingControlFlagsKHR` from VK_KHR_video_queue
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkVideoCodingControlFlagsKHR.html>
 pub type VkVideoCodingControlFlagsKHR = VkFlags;
+/// Convert `VkVideoCodingControlFlagsKHR` to `String`, showing the composition of the bits from the member of `VkVideoCodingControlFlagBitsKHR`
 pub fn vk_video_coding_control_flags_khr_to_string(value: VkVideoCodingControlFlagsKHR) -> String {
 	let mut flags = Vec::<&str>::with_capacity(4);
 	if (value & VkVideoCodingControlFlagBitsKHR::VK_VIDEO_CODING_CONTROL_RESET_BIT_KHR as VkVideoCodingControlFlagsKHR) == VkVideoCodingControlFlagBitsKHR::VK_VIDEO_CODING_CONTROL_RESET_BIT_KHR as VkVideoCodingControlFlagsKHR {
@@ -18385,6 +18463,7 @@ impl Vulkan_KHR_video_queue {
 /// type definition `VkVideoDecodeCapabilityFlagsKHR` from VK_KHR_video_decode_queue
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkVideoDecodeCapabilityFlagsKHR.html>
 pub type VkVideoDecodeCapabilityFlagsKHR = VkFlags;
+/// Convert `VkVideoDecodeCapabilityFlagsKHR` to `String`, showing the composition of the bits from the member of `VkVideoDecodeCapabilityFlagBitsKHR`
 pub fn vk_video_decode_capability_flags_khr_to_string(value: VkVideoDecodeCapabilityFlagsKHR) -> String {
 	let mut flags = Vec::<&str>::with_capacity(3);
 	if (value & VkVideoDecodeCapabilityFlagBitsKHR::VK_VIDEO_DECODE_CAPABILITY_DPB_AND_OUTPUT_COINCIDE_BIT_KHR as VkVideoDecodeCapabilityFlagsKHR) == VkVideoDecodeCapabilityFlagBitsKHR::VK_VIDEO_DECODE_CAPABILITY_DPB_AND_OUTPUT_COINCIDE_BIT_KHR as VkVideoDecodeCapabilityFlagsKHR {
@@ -18401,6 +18480,7 @@ pub fn vk_video_decode_capability_flags_khr_to_string(value: VkVideoDecodeCapabi
 /// type definition `VkVideoDecodeUsageFlagsKHR` from VK_KHR_video_decode_queue
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkVideoDecodeUsageFlagsKHR.html>
 pub type VkVideoDecodeUsageFlagsKHR = VkFlags;
+/// Convert `VkVideoDecodeUsageFlagsKHR` to `String`, showing the composition of the bits from the member of `VkVideoDecodeUsageFlagBitsKHR`
 pub fn vk_video_decode_usage_flags_khr_to_string(value: VkVideoDecodeUsageFlagsKHR) -> String {
 	let mut flags = Vec::<&str>::with_capacity(5);
 	if (value & VkVideoDecodeUsageFlagBitsKHR::VK_VIDEO_DECODE_USAGE_DEFAULT_KHR as VkVideoDecodeUsageFlagsKHR) == VkVideoDecodeUsageFlagBitsKHR::VK_VIDEO_DECODE_USAGE_DEFAULT_KHR as VkVideoDecodeUsageFlagsKHR {
@@ -18535,6 +18615,7 @@ impl Vulkan_KHR_video_decode_queue {
 /// type definition `VkVideoEncodeH264CapabilityFlagsKHR` from VK_KHR_video_encode_h264
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkVideoEncodeH264CapabilityFlagsKHR.html>
 pub type VkVideoEncodeH264CapabilityFlagsKHR = VkFlags;
+/// Convert `VkVideoEncodeH264CapabilityFlagsKHR` to `String`, showing the composition of the bits from the member of `VkVideoEncodeH264CapabilityFlagBitsKHR`
 pub fn vk_video_encode_h264_capability_flags_khr_to_string(value: VkVideoEncodeH264CapabilityFlagsKHR) -> String {
 	let mut flags = Vec::<&str>::with_capacity(12);
 	if (value & VkVideoEncodeH264CapabilityFlagBitsKHR::VK_VIDEO_ENCODE_H264_CAPABILITY_HRD_COMPLIANCE_BIT_KHR as VkVideoEncodeH264CapabilityFlagsKHR) == VkVideoEncodeH264CapabilityFlagBitsKHR::VK_VIDEO_ENCODE_H264_CAPABILITY_HRD_COMPLIANCE_BIT_KHR as VkVideoEncodeH264CapabilityFlagsKHR {
@@ -18578,6 +18659,7 @@ pub fn vk_video_encode_h264_capability_flags_khr_to_string(value: VkVideoEncodeH
 /// type definition `VkVideoEncodeH264StdFlagsKHR` from VK_KHR_video_encode_h264
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkVideoEncodeH264StdFlagsKHR.html>
 pub type VkVideoEncodeH264StdFlagsKHR = VkFlags;
+/// Convert `VkVideoEncodeH264StdFlagsKHR` to `String`, showing the composition of the bits from the member of `VkVideoEncodeH264StdFlagBitsKHR`
 pub fn vk_video_encode_h264_std_flags_khr_to_string(value: VkVideoEncodeH264StdFlagsKHR) -> String {
 	let mut flags = Vec::<&str>::with_capacity(21);
 	if (value & VkVideoEncodeH264StdFlagBitsKHR::VK_VIDEO_ENCODE_H264_STD_SEPARATE_COLOR_PLANE_FLAG_SET_BIT_KHR as VkVideoEncodeH264StdFlagsKHR) == VkVideoEncodeH264StdFlagBitsKHR::VK_VIDEO_ENCODE_H264_STD_SEPARATE_COLOR_PLANE_FLAG_SET_BIT_KHR as VkVideoEncodeH264StdFlagsKHR {
@@ -18648,6 +18730,7 @@ pub fn vk_video_encode_h264_std_flags_khr_to_string(value: VkVideoEncodeH264StdF
 /// type definition `VkVideoEncodeH264RateControlFlagsKHR` from VK_KHR_video_encode_h264
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkVideoEncodeH264RateControlFlagsKHR.html>
 pub type VkVideoEncodeH264RateControlFlagsKHR = VkFlags;
+/// Convert `VkVideoEncodeH264RateControlFlagsKHR` to `String`, showing the composition of the bits from the member of `VkVideoEncodeH264RateControlFlagBitsKHR`
 pub fn vk_video_encode_h264_rate_control_flags_khr_to_string(value: VkVideoEncodeH264RateControlFlagsKHR) -> String {
 	let mut flags = Vec::<&str>::with_capacity(6);
 	if (value & VkVideoEncodeH264RateControlFlagBitsKHR::VK_VIDEO_ENCODE_H264_RATE_CONTROL_ATTEMPT_HRD_COMPLIANCE_BIT_KHR as VkVideoEncodeH264RateControlFlagsKHR) == VkVideoEncodeH264RateControlFlagBitsKHR::VK_VIDEO_ENCODE_H264_RATE_CONTROL_ATTEMPT_HRD_COMPLIANCE_BIT_KHR as VkVideoEncodeH264RateControlFlagsKHR {
@@ -19933,6 +20016,7 @@ impl Vulkan_video_codec_h264std_encode {
 /// type definition `VkVideoEncodeH265CapabilityFlagsKHR` from VK_KHR_video_encode_h265
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkVideoEncodeH265CapabilityFlagsKHR.html>
 pub type VkVideoEncodeH265CapabilityFlagsKHR = VkFlags;
+/// Convert `VkVideoEncodeH265CapabilityFlagsKHR` to `String`, showing the composition of the bits from the member of `VkVideoEncodeH265CapabilityFlagBitsKHR`
 pub fn vk_video_encode_h265_capability_flags_khr_to_string(value: VkVideoEncodeH265CapabilityFlagsKHR) -> String {
 	let mut flags = Vec::<&str>::with_capacity(13);
 	if (value & VkVideoEncodeH265CapabilityFlagBitsKHR::VK_VIDEO_ENCODE_H265_CAPABILITY_HRD_COMPLIANCE_BIT_KHR as VkVideoEncodeH265CapabilityFlagsKHR) == VkVideoEncodeH265CapabilityFlagBitsKHR::VK_VIDEO_ENCODE_H265_CAPABILITY_HRD_COMPLIANCE_BIT_KHR as VkVideoEncodeH265CapabilityFlagsKHR {
@@ -19979,6 +20063,7 @@ pub fn vk_video_encode_h265_capability_flags_khr_to_string(value: VkVideoEncodeH
 /// type definition `VkVideoEncodeH265StdFlagsKHR` from VK_KHR_video_encode_h265
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkVideoEncodeH265StdFlagsKHR.html>
 pub type VkVideoEncodeH265StdFlagsKHR = VkFlags;
+/// Convert `VkVideoEncodeH265StdFlagsKHR` to `String`, showing the composition of the bits from the member of `VkVideoEncodeH265StdFlagBitsKHR`
 pub fn vk_video_encode_h265_std_flags_khr_to_string(value: VkVideoEncodeH265StdFlagsKHR) -> String {
 	let mut flags = Vec::<&str>::with_capacity(22);
 	if (value & VkVideoEncodeH265StdFlagBitsKHR::VK_VIDEO_ENCODE_H265_STD_SEPARATE_COLOR_PLANE_FLAG_SET_BIT_KHR as VkVideoEncodeH265StdFlagsKHR) == VkVideoEncodeH265StdFlagBitsKHR::VK_VIDEO_ENCODE_H265_STD_SEPARATE_COLOR_PLANE_FLAG_SET_BIT_KHR as VkVideoEncodeH265StdFlagsKHR {
@@ -20052,6 +20137,7 @@ pub fn vk_video_encode_h265_std_flags_khr_to_string(value: VkVideoEncodeH265StdF
 /// type definition `VkVideoEncodeH265CtbSizeFlagsKHR` from VK_KHR_video_encode_h265
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkVideoEncodeH265CtbSizeFlagsKHR.html>
 pub type VkVideoEncodeH265CtbSizeFlagsKHR = VkFlags;
+/// Convert `VkVideoEncodeH265CtbSizeFlagsKHR` to `String`, showing the composition of the bits from the member of `VkVideoEncodeH265CtbSizeFlagBitsKHR`
 pub fn vk_video_encode_h265_ctb_size_flags_khr_to_string(value: VkVideoEncodeH265CtbSizeFlagsKHR) -> String {
 	let mut flags = Vec::<&str>::with_capacity(4);
 	if (value & VkVideoEncodeH265CtbSizeFlagBitsKHR::VK_VIDEO_ENCODE_H265_CTB_SIZE_16_BIT_KHR as VkVideoEncodeH265CtbSizeFlagsKHR) == VkVideoEncodeH265CtbSizeFlagBitsKHR::VK_VIDEO_ENCODE_H265_CTB_SIZE_16_BIT_KHR as VkVideoEncodeH265CtbSizeFlagsKHR {
@@ -20071,6 +20157,7 @@ pub fn vk_video_encode_h265_ctb_size_flags_khr_to_string(value: VkVideoEncodeH26
 /// type definition `VkVideoEncodeH265TransformBlockSizeFlagsKHR` from VK_KHR_video_encode_h265
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkVideoEncodeH265TransformBlockSizeFlagsKHR.html>
 pub type VkVideoEncodeH265TransformBlockSizeFlagsKHR = VkFlags;
+/// Convert `VkVideoEncodeH265TransformBlockSizeFlagsKHR` to `String`, showing the composition of the bits from the member of `VkVideoEncodeH265TransformBlockSizeFlagBitsKHR`
 pub fn vk_video_encode_h265_transform_block_size_flags_khr_to_string(value: VkVideoEncodeH265TransformBlockSizeFlagsKHR) -> String {
 	let mut flags = Vec::<&str>::with_capacity(5);
 	if (value & VkVideoEncodeH265TransformBlockSizeFlagBitsKHR::VK_VIDEO_ENCODE_H265_TRANSFORM_BLOCK_SIZE_4_BIT_KHR as VkVideoEncodeH265TransformBlockSizeFlagsKHR) == VkVideoEncodeH265TransformBlockSizeFlagBitsKHR::VK_VIDEO_ENCODE_H265_TRANSFORM_BLOCK_SIZE_4_BIT_KHR as VkVideoEncodeH265TransformBlockSizeFlagsKHR {
@@ -20093,6 +20180,7 @@ pub fn vk_video_encode_h265_transform_block_size_flags_khr_to_string(value: VkVi
 /// type definition `VkVideoEncodeH265RateControlFlagsKHR` from VK_KHR_video_encode_h265
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkVideoEncodeH265RateControlFlagsKHR.html>
 pub type VkVideoEncodeH265RateControlFlagsKHR = VkFlags;
+/// Convert `VkVideoEncodeH265RateControlFlagsKHR` to `String`, showing the composition of the bits from the member of `VkVideoEncodeH265RateControlFlagBitsKHR`
 pub fn vk_video_encode_h265_rate_control_flags_khr_to_string(value: VkVideoEncodeH265RateControlFlagsKHR) -> String {
 	let mut flags = Vec::<&str>::with_capacity(6);
 	if (value & VkVideoEncodeH265RateControlFlagBitsKHR::VK_VIDEO_ENCODE_H265_RATE_CONTROL_ATTEMPT_HRD_COMPLIANCE_BIT_KHR as VkVideoEncodeH265RateControlFlagsKHR) == VkVideoEncodeH265RateControlFlagBitsKHR::VK_VIDEO_ENCODE_H265_RATE_CONTROL_ATTEMPT_HRD_COMPLIANCE_BIT_KHR as VkVideoEncodeH265RateControlFlagsKHR {
@@ -22104,6 +22192,7 @@ impl Vulkan_video_codec_h265std_encode {
 /// type definition `VkVideoDecodeH264PictureLayoutFlagsKHR` from VK_KHR_video_decode_h264
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkVideoDecodeH264PictureLayoutFlagsKHR.html>
 pub type VkVideoDecodeH264PictureLayoutFlagsKHR = VkFlags;
+/// Convert `VkVideoDecodeH264PictureLayoutFlagsKHR` to `String`, showing the composition of the bits from the member of `VkVideoDecodeH264PictureLayoutFlagBitsKHR`
 pub fn vk_video_decode_h264_picture_layout_flags_khr_to_string(value: VkVideoDecodeH264PictureLayoutFlagsKHR) -> String {
 	let mut flags = Vec::<&str>::with_capacity(4);
 	if (value & VkVideoDecodeH264PictureLayoutFlagBitsKHR::VK_VIDEO_DECODE_H264_PICTURE_LAYOUT_PROGRESSIVE_KHR as VkVideoDecodeH264PictureLayoutFlagsKHR) == VkVideoDecodeH264PictureLayoutFlagBitsKHR::VK_VIDEO_DECODE_H264_PICTURE_LAYOUT_PROGRESSIVE_KHR as VkVideoDecodeH264PictureLayoutFlagsKHR {
@@ -23703,6 +23792,7 @@ impl Vulkan_KHR_external_fence_fd {
 /// type definition `VkPerformanceCounterDescriptionFlagsKHR` from VK_KHR_performance_query
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPerformanceCounterDescriptionFlagsKHR.html>
 pub type VkPerformanceCounterDescriptionFlagsKHR = VkFlags;
+/// Convert `VkPerformanceCounterDescriptionFlagsKHR` to `String`, showing the composition of the bits from the member of `VkPerformanceCounterDescriptionFlagBitsKHR`
 pub fn vk_performance_counter_description_flags_khr_to_string(value: VkPerformanceCounterDescriptionFlagsKHR) -> String {
 	let mut flags = Vec::<&str>::with_capacity(5);
 	if (value & VkPerformanceCounterDescriptionFlagBitsKHR::VK_PERFORMANCE_COUNTER_DESCRIPTION_PERFORMANCE_IMPACTING_BIT_KHR as VkPerformanceCounterDescriptionFlagsKHR) == VkPerformanceCounterDescriptionFlagBitsKHR::VK_PERFORMANCE_COUNTER_DESCRIPTION_PERFORMANCE_IMPACTING_BIT_KHR as VkPerformanceCounterDescriptionFlagsKHR {
@@ -23725,6 +23815,7 @@ pub fn vk_performance_counter_description_flags_khr_to_string(value: VkPerforman
 /// type definition `VkAcquireProfilingLockFlagsKHR` from VK_KHR_performance_query
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkAcquireProfilingLockFlagsKHR.html>
 pub type VkAcquireProfilingLockFlagsKHR = VkFlags;
+/// Convert `VkAcquireProfilingLockFlagsKHR` to `String`, showing the composition of the bits from the member of `VkAcquireProfilingLockFlagBitsKHR`
 pub fn vk_acquire_profiling_lock_flags_khr_to_string(value: VkAcquireProfilingLockFlagsKHR) -> String {
 	let mut flags = Vec::<&str>::with_capacity(1);
 	if (value & VkAcquireProfilingLockFlagBitsKHR::VK_ACQUIRE_PROFILING_LOCK_FLAG_BITS_MAX_ENUM_KHR as VkAcquireProfilingLockFlagsKHR) == VkAcquireProfilingLockFlagBitsKHR::VK_ACQUIRE_PROFILING_LOCK_FLAG_BITS_MAX_ENUM_KHR as VkAcquireProfilingLockFlagsKHR {
@@ -26174,6 +26265,7 @@ impl Vulkan_KHR_present_id {
 /// type definition `VkVideoEncodeFlagsKHR` from VK_KHR_video_encode_queue
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkVideoEncodeFlagsKHR.html>
 pub type VkVideoEncodeFlagsKHR = VkFlags;
+/// Convert `VkVideoEncodeFlagsKHR` to `String`, showing the composition of the bits from the member of `VkVideoEncodeFlagBitsKHR`
 pub fn vk_video_encode_flags_khr_to_string(value: VkVideoEncodeFlagsKHR) -> String {
 	let mut flags = Vec::<&str>::with_capacity(4);
 	if (value & VkVideoEncodeFlagBitsKHR::VK_VIDEO_ENCODE_INTRA_REFRESH_BIT_KHR as VkVideoEncodeFlagsKHR) == VkVideoEncodeFlagBitsKHR::VK_VIDEO_ENCODE_INTRA_REFRESH_BIT_KHR as VkVideoEncodeFlagsKHR {
@@ -26193,6 +26285,7 @@ pub fn vk_video_encode_flags_khr_to_string(value: VkVideoEncodeFlagsKHR) -> Stri
 /// type definition `VkVideoEncodeCapabilityFlagsKHR` from VK_KHR_video_encode_queue
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkVideoEncodeCapabilityFlagsKHR.html>
 pub type VkVideoEncodeCapabilityFlagsKHR = VkFlags;
+/// Convert `VkVideoEncodeCapabilityFlagsKHR` to `String`, showing the composition of the bits from the member of `VkVideoEncodeCapabilityFlagBitsKHR`
 pub fn vk_video_encode_capability_flags_khr_to_string(value: VkVideoEncodeCapabilityFlagsKHR) -> String {
 	let mut flags = Vec::<&str>::with_capacity(5);
 	if (value & VkVideoEncodeCapabilityFlagBitsKHR::VK_VIDEO_ENCODE_CAPABILITY_PRECEDING_EXTERNALLY_ENCODED_BYTES_BIT_KHR as VkVideoEncodeCapabilityFlagsKHR) == VkVideoEncodeCapabilityFlagBitsKHR::VK_VIDEO_ENCODE_CAPABILITY_PRECEDING_EXTERNALLY_ENCODED_BYTES_BIT_KHR as VkVideoEncodeCapabilityFlagsKHR {
@@ -26215,6 +26308,7 @@ pub fn vk_video_encode_capability_flags_khr_to_string(value: VkVideoEncodeCapabi
 /// type definition `VkVideoEncodeRateControlModeFlagsKHR` from VK_KHR_video_encode_queue
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkVideoEncodeRateControlModeFlagsKHR.html>
 pub type VkVideoEncodeRateControlModeFlagsKHR = VkFlags;
+/// Convert `VkVideoEncodeRateControlModeFlagsKHR` to `String`, showing the composition of the bits from the member of `VkVideoEncodeRateControlModeFlagBitsKHR`
 pub fn vk_video_encode_rate_control_mode_flags_khr_to_string(value: VkVideoEncodeRateControlModeFlagsKHR) -> String {
 	let mut flags = Vec::<&str>::with_capacity(5);
 	if (value & VkVideoEncodeRateControlModeFlagBitsKHR::VK_VIDEO_ENCODE_RATE_CONTROL_MODE_DEFAULT_KHR as VkVideoEncodeRateControlModeFlagsKHR) == VkVideoEncodeRateControlModeFlagBitsKHR::VK_VIDEO_ENCODE_RATE_CONTROL_MODE_DEFAULT_KHR as VkVideoEncodeRateControlModeFlagsKHR {
@@ -26237,6 +26331,7 @@ pub fn vk_video_encode_rate_control_mode_flags_khr_to_string(value: VkVideoEncod
 /// type definition `VkVideoEncodeFeedbackFlagsKHR` from VK_KHR_video_encode_queue
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkVideoEncodeFeedbackFlagsKHR.html>
 pub type VkVideoEncodeFeedbackFlagsKHR = VkFlags;
+/// Convert `VkVideoEncodeFeedbackFlagsKHR` to `String`, showing the composition of the bits from the member of `VkVideoEncodeFeedbackFlagBitsKHR`
 pub fn vk_video_encode_feedback_flags_khr_to_string(value: VkVideoEncodeFeedbackFlagsKHR) -> String {
 	let mut flags = Vec::<&str>::with_capacity(4);
 	if (value & VkVideoEncodeFeedbackFlagBitsKHR::VK_VIDEO_ENCODE_FEEDBACK_BITSTREAM_BUFFER_OFFSET_BIT_KHR as VkVideoEncodeFeedbackFlagsKHR) == VkVideoEncodeFeedbackFlagBitsKHR::VK_VIDEO_ENCODE_FEEDBACK_BITSTREAM_BUFFER_OFFSET_BIT_KHR as VkVideoEncodeFeedbackFlagsKHR {
@@ -26256,6 +26351,7 @@ pub fn vk_video_encode_feedback_flags_khr_to_string(value: VkVideoEncodeFeedback
 /// type definition `VkVideoEncodeUsageFlagsKHR` from VK_KHR_video_encode_queue
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkVideoEncodeUsageFlagsKHR.html>
 pub type VkVideoEncodeUsageFlagsKHR = VkFlags;
+/// Convert `VkVideoEncodeUsageFlagsKHR` to `String`, showing the composition of the bits from the member of `VkVideoEncodeUsageFlagBitsKHR`
 pub fn vk_video_encode_usage_flags_khr_to_string(value: VkVideoEncodeUsageFlagsKHR) -> String {
 	let mut flags = Vec::<&str>::with_capacity(6);
 	if (value & VkVideoEncodeUsageFlagBitsKHR::VK_VIDEO_ENCODE_USAGE_DEFAULT_KHR as VkVideoEncodeUsageFlagsKHR) == VkVideoEncodeUsageFlagBitsKHR::VK_VIDEO_ENCODE_USAGE_DEFAULT_KHR as VkVideoEncodeUsageFlagsKHR {
@@ -26281,6 +26377,7 @@ pub fn vk_video_encode_usage_flags_khr_to_string(value: VkVideoEncodeUsageFlagsK
 /// type definition `VkVideoEncodeContentFlagsKHR` from VK_KHR_video_encode_queue
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkVideoEncodeContentFlagsKHR.html>
 pub type VkVideoEncodeContentFlagsKHR = VkFlags;
+/// Convert `VkVideoEncodeContentFlagsKHR` to `String`, showing the composition of the bits from the member of `VkVideoEncodeContentFlagBitsKHR`
 pub fn vk_video_encode_content_flags_khr_to_string(value: VkVideoEncodeContentFlagsKHR) -> String {
 	let mut flags = Vec::<&str>::with_capacity(5);
 	if (value & VkVideoEncodeContentFlagBitsKHR::VK_VIDEO_ENCODE_CONTENT_DEFAULT_KHR as VkVideoEncodeContentFlagsKHR) == VkVideoEncodeContentFlagBitsKHR::VK_VIDEO_ENCODE_CONTENT_DEFAULT_KHR as VkVideoEncodeContentFlagsKHR {
@@ -27755,6 +27852,7 @@ impl Vulkan_KHR_pipeline_binary {
 /// type definition `VkPresentScalingFlagsKHR` from VK_KHR_surface_maintenance1
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPresentScalingFlagsKHR.html>
 pub type VkPresentScalingFlagsKHR = VkFlags;
+/// Convert `VkPresentScalingFlagsKHR` to `String`, showing the composition of the bits from the member of `VkPresentScalingFlagBitsKHR`
 pub fn vk_present_scaling_flags_khr_to_string(value: VkPresentScalingFlagsKHR) -> String {
 	let mut flags = Vec::<&str>::with_capacity(7);
 	if (value & VkPresentScalingFlagBitsKHR::VK_PRESENT_SCALING_ONE_TO_ONE_BIT_KHR as VkPresentScalingFlagsKHR) == VkPresentScalingFlagBitsKHR::VK_PRESENT_SCALING_ONE_TO_ONE_BIT_KHR as VkPresentScalingFlagsKHR {
@@ -27783,6 +27881,7 @@ pub fn vk_present_scaling_flags_khr_to_string(value: VkPresentScalingFlagsKHR) -
 /// type definition `VkPresentGravityFlagsKHR` from VK_KHR_surface_maintenance1
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPresentGravityFlagsKHR.html>
 pub type VkPresentGravityFlagsKHR = VkFlags;
+/// Convert `VkPresentGravityFlagsKHR` to `String`, showing the composition of the bits from the member of `VkPresentGravityFlagBitsKHR`
 pub fn vk_present_gravity_flags_khr_to_string(value: VkPresentGravityFlagsKHR) -> String {
 	let mut flags = Vec::<&str>::with_capacity(7);
 	if (value & VkPresentGravityFlagBitsKHR::VK_PRESENT_GRAVITY_MIN_BIT_KHR as VkPresentGravityFlagsKHR) == VkPresentGravityFlagBitsKHR::VK_PRESENT_GRAVITY_MIN_BIT_KHR as VkPresentGravityFlagsKHR {
@@ -29454,6 +29553,7 @@ impl Vulkan_video_codec_av1std_decode {
 /// type definition `VkVideoEncodeAV1CapabilityFlagsKHR` from VK_KHR_video_encode_av1
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkVideoEncodeAV1CapabilityFlagsKHR.html>
 pub type VkVideoEncodeAV1CapabilityFlagsKHR = VkFlags;
+/// Convert `VkVideoEncodeAV1CapabilityFlagsKHR` to `String`, showing the composition of the bits from the member of `VkVideoEncodeAV1CapabilityFlagBitsKHR`
 pub fn vk_video_encode_av1_capability_flags_khr_to_string(value: VkVideoEncodeAV1CapabilityFlagsKHR) -> String {
 	let mut flags = Vec::<&str>::with_capacity(7);
 	if (value & VkVideoEncodeAV1CapabilityFlagBitsKHR::VK_VIDEO_ENCODE_AV1_CAPABILITY_PER_RATE_CONTROL_GROUP_MIN_MAX_Q_INDEX_BIT_KHR as VkVideoEncodeAV1CapabilityFlagsKHR) == VkVideoEncodeAV1CapabilityFlagBitsKHR::VK_VIDEO_ENCODE_AV1_CAPABILITY_PER_RATE_CONTROL_GROUP_MIN_MAX_Q_INDEX_BIT_KHR as VkVideoEncodeAV1CapabilityFlagsKHR {
@@ -29482,6 +29582,7 @@ pub fn vk_video_encode_av1_capability_flags_khr_to_string(value: VkVideoEncodeAV
 /// type definition `VkVideoEncodeAV1StdFlagsKHR` from VK_KHR_video_encode_av1
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkVideoEncodeAV1StdFlagsKHR.html>
 pub type VkVideoEncodeAV1StdFlagsKHR = VkFlags;
+/// Convert `VkVideoEncodeAV1StdFlagsKHR` to `String`, showing the composition of the bits from the member of `VkVideoEncodeAV1StdFlagBitsKHR`
 pub fn vk_video_encode_av1_std_flags_khr_to_string(value: VkVideoEncodeAV1StdFlagsKHR) -> String {
 	let mut flags = Vec::<&str>::with_capacity(5);
 	if (value & VkVideoEncodeAV1StdFlagBitsKHR::VK_VIDEO_ENCODE_AV1_STD_UNIFORM_TILE_SPACING_FLAG_SET_BIT_KHR as VkVideoEncodeAV1StdFlagsKHR) == VkVideoEncodeAV1StdFlagBitsKHR::VK_VIDEO_ENCODE_AV1_STD_UNIFORM_TILE_SPACING_FLAG_SET_BIT_KHR as VkVideoEncodeAV1StdFlagsKHR {
@@ -29504,6 +29605,7 @@ pub fn vk_video_encode_av1_std_flags_khr_to_string(value: VkVideoEncodeAV1StdFla
 /// type definition `VkVideoEncodeAV1SuperblockSizeFlagsKHR` from VK_KHR_video_encode_av1
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkVideoEncodeAV1SuperblockSizeFlagsKHR.html>
 pub type VkVideoEncodeAV1SuperblockSizeFlagsKHR = VkFlags;
+/// Convert `VkVideoEncodeAV1SuperblockSizeFlagsKHR` to `String`, showing the composition of the bits from the member of `VkVideoEncodeAV1SuperblockSizeFlagBitsKHR`
 pub fn vk_video_encode_av1_superblock_size_flags_khr_to_string(value: VkVideoEncodeAV1SuperblockSizeFlagsKHR) -> String {
 	let mut flags = Vec::<&str>::with_capacity(3);
 	if (value & VkVideoEncodeAV1SuperblockSizeFlagBitsKHR::VK_VIDEO_ENCODE_AV1_SUPERBLOCK_SIZE_64_BIT_KHR as VkVideoEncodeAV1SuperblockSizeFlagsKHR) == VkVideoEncodeAV1SuperblockSizeFlagBitsKHR::VK_VIDEO_ENCODE_AV1_SUPERBLOCK_SIZE_64_BIT_KHR as VkVideoEncodeAV1SuperblockSizeFlagsKHR {
@@ -29520,6 +29622,7 @@ pub fn vk_video_encode_av1_superblock_size_flags_khr_to_string(value: VkVideoEnc
 /// type definition `VkVideoEncodeAV1RateControlFlagsKHR` from VK_KHR_video_encode_av1
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkVideoEncodeAV1RateControlFlagsKHR.html>
 pub type VkVideoEncodeAV1RateControlFlagsKHR = VkFlags;
+/// Convert `VkVideoEncodeAV1RateControlFlagsKHR` to `String`, showing the composition of the bits from the member of `VkVideoEncodeAV1RateControlFlagBitsKHR`
 pub fn vk_video_encode_av1_rate_control_flags_khr_to_string(value: VkVideoEncodeAV1RateControlFlagsKHR) -> String {
 	let mut flags = Vec::<&str>::with_capacity(5);
 	if (value & VkVideoEncodeAV1RateControlFlagBitsKHR::VK_VIDEO_ENCODE_AV1_RATE_CONTROL_REGULAR_GOP_BIT_KHR as VkVideoEncodeAV1RateControlFlagsKHR) == VkVideoEncodeAV1RateControlFlagBitsKHR::VK_VIDEO_ENCODE_AV1_RATE_CONTROL_REGULAR_GOP_BIT_KHR as VkVideoEncodeAV1RateControlFlagsKHR {
@@ -31209,6 +31312,7 @@ impl Vulkan_KHR_maintenance6 {
 /// type definition `VkVideoEncodeIntraRefreshModeFlagsKHR` from VK_KHR_video_encode_intra_refresh
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkVideoEncodeIntraRefreshModeFlagsKHR.html>
 pub type VkVideoEncodeIntraRefreshModeFlagsKHR = VkFlags;
+/// Convert `VkVideoEncodeIntraRefreshModeFlagsKHR` to `String`, showing the composition of the bits from the member of `VkVideoEncodeIntraRefreshModeFlagBitsKHR`
 pub fn vk_video_encode_intra_refresh_mode_flags_khr_to_string(value: VkVideoEncodeIntraRefreshModeFlagsKHR) -> String {
 	let mut flags = Vec::<&str>::with_capacity(6);
 	if (value & VkVideoEncodeIntraRefreshModeFlagBitsKHR::VK_VIDEO_ENCODE_INTRA_REFRESH_MODE_NONE_KHR as VkVideoEncodeIntraRefreshModeFlagsKHR) == VkVideoEncodeIntraRefreshModeFlagBitsKHR::VK_VIDEO_ENCODE_INTRA_REFRESH_MODE_NONE_KHR as VkVideoEncodeIntraRefreshModeFlagsKHR {
@@ -31805,6 +31909,7 @@ impl Vulkan_KHR_present_mode_fifo_latest_ready {
 /// type definition `VkDebugReportFlagsEXT` from VK_EXT_debug_report
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkDebugReportFlagsEXT.html>
 pub type VkDebugReportFlagsEXT = VkFlags;
+/// Convert `VkDebugReportFlagsEXT` to `String`, showing the composition of the bits from the member of `VkDebugReportFlagBitsEXT`
 pub fn vk_debug_report_flags_ext_to_string(value: VkDebugReportFlagsEXT) -> String {
 	let mut flags = Vec::<&str>::with_capacity(6);
 	if (value & VkDebugReportFlagBitsEXT::VK_DEBUG_REPORT_INFORMATION_BIT_EXT as VkDebugReportFlagsEXT) == VkDebugReportFlagBitsEXT::VK_DEBUG_REPORT_INFORMATION_BIT_EXT as VkDebugReportFlagsEXT {
@@ -32963,6 +33068,7 @@ impl Vulkan_IMG_format_pvrtc {
 /// type definition `VkExternalMemoryHandleTypeFlagsNV` from VK_NV_external_memory_capabilities
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkExternalMemoryHandleTypeFlagsNV.html>
 pub type VkExternalMemoryHandleTypeFlagsNV = VkFlags;
+/// Convert `VkExternalMemoryHandleTypeFlagsNV` to `String`, showing the composition of the bits from the member of `VkExternalMemoryHandleTypeFlagBitsNV`
 pub fn vk_external_memory_handle_type_flags_nv_to_string(value: VkExternalMemoryHandleTypeFlagsNV) -> String {
 	let mut flags = Vec::<&str>::with_capacity(5);
 	if (value & VkExternalMemoryHandleTypeFlagBitsNV::VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT_NV as VkExternalMemoryHandleTypeFlagsNV) == VkExternalMemoryHandleTypeFlagBitsNV::VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT_NV as VkExternalMemoryHandleTypeFlagsNV {
@@ -32985,6 +33091,7 @@ pub fn vk_external_memory_handle_type_flags_nv_to_string(value: VkExternalMemory
 /// type definition `VkExternalMemoryFeatureFlagsNV` from VK_NV_external_memory_capabilities
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkExternalMemoryFeatureFlagsNV.html>
 pub type VkExternalMemoryFeatureFlagsNV = VkFlags;
+/// Convert `VkExternalMemoryFeatureFlagsNV` to `String`, showing the composition of the bits from the member of `VkExternalMemoryFeatureFlagBitsNV`
 pub fn vk_external_memory_feature_flags_nv_to_string(value: VkExternalMemoryFeatureFlagsNV) -> String {
 	let mut flags = Vec::<&str>::with_capacity(4);
 	if (value & VkExternalMemoryFeatureFlagBitsNV::VK_EXTERNAL_MEMORY_FEATURE_DEDICATED_ONLY_BIT_NV as VkExternalMemoryFeatureFlagsNV) == VkExternalMemoryFeatureFlagBitsNV::VK_EXTERNAL_MEMORY_FEATURE_DEDICATED_ONLY_BIT_NV as VkExternalMemoryFeatureFlagsNV {
@@ -33274,6 +33381,7 @@ impl Vulkan_EXT_pipeline_robustness {
 /// type definition `VkConditionalRenderingFlagsEXT` from VK_EXT_conditional_rendering
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkConditionalRenderingFlagsEXT.html>
 pub type VkConditionalRenderingFlagsEXT = VkFlags;
+/// Convert `VkConditionalRenderingFlagsEXT` to `String`, showing the composition of the bits from the member of `VkConditionalRenderingFlagBitsEXT`
 pub fn vk_conditional_rendering_flags_ext_to_string(value: VkConditionalRenderingFlagsEXT) -> String {
 	let mut flags = Vec::<&str>::with_capacity(2);
 	if (value & VkConditionalRenderingFlagBitsEXT::VK_CONDITIONAL_RENDERING_INVERTED_BIT_EXT as VkConditionalRenderingFlagsEXT) == VkConditionalRenderingFlagBitsEXT::VK_CONDITIONAL_RENDERING_INVERTED_BIT_EXT as VkConditionalRenderingFlagsEXT {
@@ -33481,6 +33589,7 @@ impl Vulkan_EXT_direct_mode_display {
 /// type definition `VkSurfaceCounterFlagsEXT` from VK_EXT_display_surface_counter
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkSurfaceCounterFlagsEXT.html>
 pub type VkSurfaceCounterFlagsEXT = VkFlags;
+/// Convert `VkSurfaceCounterFlagsEXT` to `String`, showing the composition of the bits from the member of `VkSurfaceCounterFlagBitsEXT`
 pub fn vk_surface_counter_flags_ext_to_string(value: VkSurfaceCounterFlagsEXT) -> String {
 	let mut flags = Vec::<&str>::with_capacity(3);
 	if (value & VkSurfaceCounterFlagBitsEXT::VK_SURFACE_COUNTER_VBLANK_BIT_EXT as VkSurfaceCounterFlagsEXT) == VkSurfaceCounterFlagBitsEXT::VK_SURFACE_COUNTER_VBLANK_BIT_EXT as VkSurfaceCounterFlagsEXT {
@@ -34299,6 +34408,7 @@ pub type VkDebugUtilsMessengerCallbackDataFlagsEXT = VkFlags;
 /// type definition `VkDebugUtilsMessageTypeFlagsEXT` from VK_EXT_debug_utils
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkDebugUtilsMessageTypeFlagsEXT.html>
 pub type VkDebugUtilsMessageTypeFlagsEXT = VkFlags;
+/// Convert `VkDebugUtilsMessageTypeFlagsEXT` to `String`, showing the composition of the bits from the member of `VkDebugUtilsMessageTypeFlagBitsEXT`
 pub fn vk_debug_utils_message_type_flags_ext_to_string(value: VkDebugUtilsMessageTypeFlagsEXT) -> String {
 	let mut flags = Vec::<&str>::with_capacity(5);
 	if (value & VkDebugUtilsMessageTypeFlagBitsEXT::VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT as VkDebugUtilsMessageTypeFlagsEXT) == VkDebugUtilsMessageTypeFlagBitsEXT::VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT as VkDebugUtilsMessageTypeFlagsEXT {
@@ -34321,6 +34431,7 @@ pub fn vk_debug_utils_message_type_flags_ext_to_string(value: VkDebugUtilsMessag
 /// type definition `VkDebugUtilsMessageSeverityFlagsEXT` from VK_EXT_debug_utils
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkDebugUtilsMessageSeverityFlagsEXT.html>
 pub type VkDebugUtilsMessageSeverityFlagsEXT = VkFlags;
+/// Convert `VkDebugUtilsMessageSeverityFlagsEXT` to `String`, showing the composition of the bits from the member of `VkDebugUtilsMessageSeverityFlagBitsEXT`
 pub fn vk_debug_utils_message_severity_flags_ext_to_string(value: VkDebugUtilsMessageSeverityFlagsEXT) -> String {
 	let mut flags = Vec::<&str>::with_capacity(5);
 	if (value & VkDebugUtilsMessageSeverityFlagBitsEXT::VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT as VkDebugUtilsMessageSeverityFlagsEXT) == VkDebugUtilsMessageSeverityFlagBitsEXT::VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT as VkDebugUtilsMessageSeverityFlagsEXT {
@@ -35591,6 +35702,7 @@ pub type VkCopyAccelerationStructureModeNV = VkCopyAccelerationStructureModeKHR;
 /// type definition `VkGeometryFlagsKHR` from VK_NV_ray_tracing
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkGeometryFlagsKHR.html>
 pub type VkGeometryFlagsKHR = VkFlags;
+/// Convert `VkGeometryFlagsKHR` to `String`, showing the composition of the bits from the member of `VkGeometryFlagBitsKHR`
 pub fn vk_geometry_flags_khr_to_string(value: VkGeometryFlagsKHR) -> String {
 	let mut flags = Vec::<&str>::with_capacity(5);
 	if (value & VkGeometryFlagBitsKHR::VK_GEOMETRY_OPAQUE_BIT_KHR as VkGeometryFlagsKHR) == VkGeometryFlagBitsKHR::VK_GEOMETRY_OPAQUE_BIT_KHR as VkGeometryFlagsKHR {
@@ -35619,6 +35731,7 @@ pub type VkGeometryFlagBitsNV = VkGeometryFlagBitsKHR;
 /// type definition `VkGeometryInstanceFlagsKHR` from VK_NV_ray_tracing
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkGeometryInstanceFlagsKHR.html>
 pub type VkGeometryInstanceFlagsKHR = VkFlags;
+/// Convert `VkGeometryInstanceFlagsKHR` to `String`, showing the composition of the bits from the member of `VkGeometryInstanceFlagBitsKHR`
 pub fn vk_geometry_instance_flags_khr_to_string(value: VkGeometryInstanceFlagsKHR) -> String {
 	let mut flags = Vec::<&str>::with_capacity(14);
 	if (value & VkGeometryInstanceFlagBitsKHR::VK_GEOMETRY_INSTANCE_TRIANGLE_FACING_CULL_DISABLE_BIT_KHR as VkGeometryInstanceFlagsKHR) == VkGeometryInstanceFlagBitsKHR::VK_GEOMETRY_INSTANCE_TRIANGLE_FACING_CULL_DISABLE_BIT_KHR as VkGeometryInstanceFlagsKHR {
@@ -35674,6 +35787,7 @@ pub type VkGeometryInstanceFlagBitsNV = VkGeometryInstanceFlagBitsKHR;
 /// type definition `VkBuildAccelerationStructureFlagsKHR` from VK_NV_ray_tracing
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkBuildAccelerationStructureFlagsKHR.html>
 pub type VkBuildAccelerationStructureFlagsKHR = VkFlags;
+/// Convert `VkBuildAccelerationStructureFlagsKHR` to `String`, showing the composition of the bits from the member of `VkBuildAccelerationStructureFlagBitsKHR`
 pub fn vk_build_acceleration_structure_flags_khr_to_string(value: VkBuildAccelerationStructureFlagsKHR) -> String {
 	let mut flags = Vec::<&str>::with_capacity(23);
 	if (value & VkBuildAccelerationStructureFlagBitsKHR::VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_UPDATE_BIT_KHR as VkBuildAccelerationStructureFlagsKHR) == VkBuildAccelerationStructureFlagBitsKHR::VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_UPDATE_BIT_KHR as VkBuildAccelerationStructureFlagsKHR {
@@ -36586,6 +36700,7 @@ impl Vulkan_AMD_buffer_marker {
 /// type definition `VkPipelineCompilerControlFlagsAMD` from VK_AMD_pipeline_compiler_control
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPipelineCompilerControlFlagsAMD.html>
 pub type VkPipelineCompilerControlFlagsAMD = VkFlags;
+/// Convert `VkPipelineCompilerControlFlagsAMD` to `String`, showing the composition of the bits from the member of `VkPipelineCompilerControlFlagBitsAMD`
 pub fn vk_pipeline_compiler_control_flags_amd_to_string(value: VkPipelineCompilerControlFlagsAMD) -> String {
 	let mut flags = Vec::<&str>::with_capacity(1);
 	if (value & VkPipelineCompilerControlFlagBitsAMD::VK_PIPELINE_COMPILER_CONTROL_FLAG_BITS_MAX_ENUM_AMD as VkPipelineCompilerControlFlagsAMD) == VkPipelineCompilerControlFlagBitsAMD::VK_PIPELINE_COMPILER_CONTROL_FLAG_BITS_MAX_ENUM_AMD as VkPipelineCompilerControlFlagsAMD {
@@ -37745,6 +37860,7 @@ impl Vulkan_EXT_subgroup_size_control {
 /// type definition `VkShaderCorePropertiesFlagsAMD` from VK_AMD_shader_core_properties2
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkShaderCorePropertiesFlagsAMD.html>
 pub type VkShaderCorePropertiesFlagsAMD = VkFlags;
+/// Convert `VkShaderCorePropertiesFlagsAMD` to `String`, showing the composition of the bits from the member of `VkShaderCorePropertiesFlagBitsAMD`
 pub fn vk_shader_core_properties_flags_amd_to_string(value: VkShaderCorePropertiesFlagsAMD) -> String {
 	let mut flags = Vec::<&str>::with_capacity(1);
 	if (value & VkShaderCorePropertiesFlagBitsAMD::VK_SHADER_CORE_PROPERTIES_FLAG_BITS_MAX_ENUM_AMD as VkShaderCorePropertiesFlagsAMD) == VkShaderCorePropertiesFlagBitsAMD::VK_SHADER_CORE_PROPERTIES_FLAG_BITS_MAX_ENUM_AMD as VkShaderCorePropertiesFlagsAMD {
@@ -39133,6 +39249,7 @@ impl Vulkan_EXT_shader_demote_to_helper_invocation {
 /// type definition `VkIndirectStateFlagsNV` from VK_NV_device_generated_commands
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkIndirectStateFlagsNV.html>
 pub type VkIndirectStateFlagsNV = VkFlags;
+/// Convert `VkIndirectStateFlagsNV` to `String`, showing the composition of the bits from the member of `VkIndirectStateFlagBitsNV`
 pub fn vk_indirect_state_flags_nv_to_string(value: VkIndirectStateFlagsNV) -> String {
 	let mut flags = Vec::<&str>::with_capacity(2);
 	if (value & VkIndirectStateFlagBitsNV::VK_INDIRECT_STATE_FLAG_FRONTFACE_BIT_NV as VkIndirectStateFlagsNV) == VkIndirectStateFlagBitsNV::VK_INDIRECT_STATE_FLAG_FRONTFACE_BIT_NV as VkIndirectStateFlagsNV {
@@ -39146,6 +39263,7 @@ pub fn vk_indirect_state_flags_nv_to_string(value: VkIndirectStateFlagsNV) -> St
 /// type definition `VkIndirectCommandsLayoutUsageFlagsNV` from VK_NV_device_generated_commands
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkIndirectCommandsLayoutUsageFlagsNV.html>
 pub type VkIndirectCommandsLayoutUsageFlagsNV = VkFlags;
+/// Convert `VkIndirectCommandsLayoutUsageFlagsNV` to `String`, showing the composition of the bits from the member of `VkIndirectCommandsLayoutUsageFlagBitsNV`
 pub fn vk_indirect_commands_layout_usage_flags_nv_to_string(value: VkIndirectCommandsLayoutUsageFlagsNV) -> String {
 	let mut flags = Vec::<&str>::with_capacity(4);
 	if (value & VkIndirectCommandsLayoutUsageFlagBitsNV::VK_INDIRECT_COMMANDS_LAYOUT_USAGE_EXPLICIT_PREPROCESS_BIT_NV as VkIndirectCommandsLayoutUsageFlagsNV) == VkIndirectCommandsLayoutUsageFlagBitsNV::VK_INDIRECT_COMMANDS_LAYOUT_USAGE_EXPLICIT_PREPROCESS_BIT_NV as VkIndirectCommandsLayoutUsageFlagsNV {
@@ -40062,6 +40180,7 @@ impl Vulkan_EXT_pipeline_creation_cache_control {
 /// type definition `VkDeviceDiagnosticsConfigFlagsNV` from VK_NV_device_diagnostics_config
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkDeviceDiagnosticsConfigFlagsNV.html>
 pub type VkDeviceDiagnosticsConfigFlagsNV = VkFlags;
+/// Convert `VkDeviceDiagnosticsConfigFlagsNV` to `String`, showing the composition of the bits from the member of `VkDeviceDiagnosticsConfigFlagBitsNV`
 pub fn vk_device_diagnostics_config_flags_nv_to_string(value: VkDeviceDiagnosticsConfigFlagsNV) -> String {
 	let mut flags = Vec::<&str>::with_capacity(5);
 	if (value & VkDeviceDiagnosticsConfigFlagBitsNV::VK_DEVICE_DIAGNOSTICS_CONFIG_ENABLE_SHADER_DEBUG_INFO_BIT_NV as VkDeviceDiagnosticsConfigFlagsNV) == VkDeviceDiagnosticsConfigFlagBitsNV::VK_DEVICE_DIAGNOSTICS_CONFIG_ENABLE_SHADER_DEBUG_INFO_BIT_NV as VkDeviceDiagnosticsConfigFlagsNV {
@@ -40156,6 +40275,7 @@ impl Vulkan_QCOM_render_pass_store_ops {
 /// type definition `VkTileShadingRenderPassFlagsQCOM` from VK_QCOM_tile_shading
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkTileShadingRenderPassFlagsQCOM.html>
 pub type VkTileShadingRenderPassFlagsQCOM = VkFlags;
+/// Convert `VkTileShadingRenderPassFlagsQCOM` to `String`, showing the composition of the bits from the member of `VkTileShadingRenderPassFlagBitsQCOM`
 pub fn vk_tile_shading_render_pass_flags_qcom_to_string(value: VkTileShadingRenderPassFlagsQCOM) -> String {
 	let mut flags = Vec::<&str>::with_capacity(3);
 	if (value & VkTileShadingRenderPassFlagBitsQCOM::VK_TILE_SHADING_RENDER_PASS_ENABLE_BIT_QCOM as VkTileShadingRenderPassFlagsQCOM) == VkTileShadingRenderPassFlagBitsQCOM::VK_TILE_SHADING_RENDER_PASS_ENABLE_BIT_QCOM as VkTileShadingRenderPassFlagsQCOM {
@@ -40733,6 +40853,7 @@ impl Vulkan_EXT_descriptor_buffer {
 /// type definition `VkGraphicsPipelineLibraryFlagsEXT` from VK_EXT_graphics_pipeline_library
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkGraphicsPipelineLibraryFlagsEXT.html>
 pub type VkGraphicsPipelineLibraryFlagsEXT = VkFlags;
+/// Convert `VkGraphicsPipelineLibraryFlagsEXT` to `String`, showing the composition of the bits from the member of `VkGraphicsPipelineLibraryFlagBitsEXT`
 pub fn vk_graphics_pipeline_library_flags_ext_to_string(value: VkGraphicsPipelineLibraryFlagsEXT) -> String {
 	let mut flags = Vec::<&str>::with_capacity(5);
 	if (value & VkGraphicsPipelineLibraryFlagBitsEXT::VK_GRAPHICS_PIPELINE_LIBRARY_VERTEX_INPUT_INTERFACE_BIT_EXT as VkGraphicsPipelineLibraryFlagsEXT) == VkGraphicsPipelineLibraryFlagBitsEXT::VK_GRAPHICS_PIPELINE_LIBRARY_VERTEX_INPUT_INTERFACE_BIT_EXT as VkGraphicsPipelineLibraryFlagsEXT {
@@ -41261,6 +41382,7 @@ impl Vulkan_EXT_image_robustness {
 /// type definition `VkImageCompressionFlagsEXT` from VK_EXT_image_compression_control
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkImageCompressionFlagsEXT.html>
 pub type VkImageCompressionFlagsEXT = VkFlags;
+/// Convert `VkImageCompressionFlagsEXT` to `String`, showing the composition of the bits from the member of `VkImageCompressionFlagBitsEXT`
 pub fn vk_image_compression_flags_ext_to_string(value: VkImageCompressionFlagsEXT) -> String {
 	let mut flags = Vec::<&str>::with_capacity(5);
 	if (value & VkImageCompressionFlagBitsEXT::VK_IMAGE_COMPRESSION_DEFAULT_EXT as VkImageCompressionFlagsEXT) == VkImageCompressionFlagBitsEXT::VK_IMAGE_COMPRESSION_DEFAULT_EXT as VkImageCompressionFlagsEXT {
@@ -41283,6 +41405,7 @@ pub fn vk_image_compression_flags_ext_to_string(value: VkImageCompressionFlagsEX
 /// type definition `VkImageCompressionFixedRateFlagsEXT` from VK_EXT_image_compression_control
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkImageCompressionFixedRateFlagsEXT.html>
 pub type VkImageCompressionFixedRateFlagsEXT = VkFlags;
+/// Convert `VkImageCompressionFixedRateFlagsEXT` to `String`, showing the composition of the bits from the member of `VkImageCompressionFixedRateFlagBitsEXT`
 pub fn vk_image_compression_fixed_rate_flags_ext_to_string(value: VkImageCompressionFixedRateFlagsEXT) -> String {
 	let mut flags = Vec::<&str>::with_capacity(26);
 	if (value & VkImageCompressionFixedRateFlagBitsEXT::VK_IMAGE_COMPRESSION_FIXED_RATE_NONE_EXT as VkImageCompressionFixedRateFlagsEXT) == VkImageCompressionFixedRateFlagBitsEXT::VK_IMAGE_COMPRESSION_FIXED_RATE_NONE_EXT as VkImageCompressionFixedRateFlagsEXT {
@@ -41908,6 +42031,7 @@ impl Vulkan_EXT_physical_device_drm {
 /// type definition `VkDeviceAddressBindingFlagsEXT` from VK_EXT_device_address_binding_report
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkDeviceAddressBindingFlagsEXT.html>
 pub type VkDeviceAddressBindingFlagsEXT = VkFlags;
+/// Convert `VkDeviceAddressBindingFlagsEXT` to `String`, showing the composition of the bits from the member of `VkDeviceAddressBindingFlagBitsEXT`
 pub fn vk_device_address_binding_flags_ext_to_string(value: VkDeviceAddressBindingFlagsEXT) -> String {
 	let mut flags = Vec::<&str>::with_capacity(2);
 	if (value & VkDeviceAddressBindingFlagBitsEXT::VK_DEVICE_ADDRESS_BINDING_INTERNAL_OBJECT_BIT_EXT as VkDeviceAddressBindingFlagsEXT) == VkDeviceAddressBindingFlagBitsEXT::VK_DEVICE_ADDRESS_BINDING_INTERNAL_OBJECT_BIT_EXT as VkDeviceAddressBindingFlagsEXT {
@@ -42322,6 +42446,7 @@ impl Vulkan_EXT_pipeline_properties {
 /// type definition `VkFrameBoundaryFlagsEXT` from VK_EXT_frame_boundary
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkFrameBoundaryFlagsEXT.html>
 pub type VkFrameBoundaryFlagsEXT = VkFlags;
+/// Convert `VkFrameBoundaryFlagsEXT` to `String`, showing the composition of the bits from the member of `VkFrameBoundaryFlagBitsEXT`
 pub fn vk_frame_boundary_flags_ext_to_string(value: VkFrameBoundaryFlagsEXT) -> String {
 	let mut flags = Vec::<&str>::with_capacity(2);
 	if (value & VkFrameBoundaryFlagBitsEXT::VK_FRAME_BOUNDARY_FRAME_END_BIT_EXT as VkFrameBoundaryFlagsEXT) == VkFrameBoundaryFlagBitsEXT::VK_FRAME_BOUNDARY_FRAME_END_BIT_EXT as VkFrameBoundaryFlagsEXT {
@@ -42854,6 +42979,7 @@ impl Vulkan_EXT_shader_tile_image {
 /// type definition `VkBuildMicromapFlagsEXT` from VK_EXT_opacity_micromap
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkBuildMicromapFlagsEXT.html>
 pub type VkBuildMicromapFlagsEXT = VkFlags;
+/// Convert `VkBuildMicromapFlagsEXT` to `String`, showing the composition of the bits from the member of `VkBuildMicromapFlagBitsEXT`
 pub fn vk_build_micromap_flags_ext_to_string(value: VkBuildMicromapFlagsEXT) -> String {
 	let mut flags = Vec::<&str>::with_capacity(4);
 	if (value & VkBuildMicromapFlagBitsEXT::VK_BUILD_MICROMAP_PREFER_FAST_TRACE_BIT_EXT as VkBuildMicromapFlagsEXT) == VkBuildMicromapFlagBitsEXT::VK_BUILD_MICROMAP_PREFER_FAST_TRACE_BIT_EXT as VkBuildMicromapFlagsEXT {
@@ -42873,6 +42999,7 @@ pub fn vk_build_micromap_flags_ext_to_string(value: VkBuildMicromapFlagsEXT) -> 
 /// type definition `VkMicromapCreateFlagsEXT` from VK_EXT_opacity_micromap
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkMicromapCreateFlagsEXT.html>
 pub type VkMicromapCreateFlagsEXT = VkFlags;
+/// Convert `VkMicromapCreateFlagsEXT` to `String`, showing the composition of the bits from the member of `VkMicromapCreateFlagBitsEXT`
 pub fn vk_micromap_create_flags_ext_to_string(value: VkMicromapCreateFlagsEXT) -> String {
 	let mut flags = Vec::<&str>::with_capacity(2);
 	if (value & VkMicromapCreateFlagBitsEXT::VK_MICROMAP_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT_EXT as VkMicromapCreateFlagsEXT) == VkMicromapCreateFlagBitsEXT::VK_MICROMAP_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT_EXT as VkMicromapCreateFlagsEXT {
@@ -45856,6 +45983,7 @@ impl Vulkan_EXT_rasterization_order_attachment_access {
 /// type definition `VkOpticalFlowGridSizeFlagsNV` from VK_NV_optical_flow
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkOpticalFlowGridSizeFlagsNV.html>
 pub type VkOpticalFlowGridSizeFlagsNV = VkFlags;
+/// Convert `VkOpticalFlowGridSizeFlagsNV` to `String`, showing the composition of the bits from the member of `VkOpticalFlowGridSizeFlagBitsNV`
 pub fn vk_optical_flow_grid_size_flags_nv_to_string(value: VkOpticalFlowGridSizeFlagsNV) -> String {
 	let mut flags = Vec::<&str>::with_capacity(6);
 	if (value & VkOpticalFlowGridSizeFlagBitsNV::VK_OPTICAL_FLOW_GRID_SIZE_UNKNOWN_NV as VkOpticalFlowGridSizeFlagsNV) == VkOpticalFlowGridSizeFlagBitsNV::VK_OPTICAL_FLOW_GRID_SIZE_UNKNOWN_NV as VkOpticalFlowGridSizeFlagsNV {
@@ -45881,6 +46009,7 @@ pub fn vk_optical_flow_grid_size_flags_nv_to_string(value: VkOpticalFlowGridSize
 /// type definition `VkOpticalFlowUsageFlagsNV` from VK_NV_optical_flow
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkOpticalFlowUsageFlagsNV.html>
 pub type VkOpticalFlowUsageFlagsNV = VkFlags;
+/// Convert `VkOpticalFlowUsageFlagsNV` to `String`, showing the composition of the bits from the member of `VkOpticalFlowUsageFlagBitsNV`
 pub fn vk_optical_flow_usage_flags_nv_to_string(value: VkOpticalFlowUsageFlagsNV) -> String {
 	let mut flags = Vec::<&str>::with_capacity(7);
 	if (value & VkOpticalFlowUsageFlagBitsNV::VK_OPTICAL_FLOW_USAGE_UNKNOWN_NV as VkOpticalFlowUsageFlagsNV) == VkOpticalFlowUsageFlagBitsNV::VK_OPTICAL_FLOW_USAGE_UNKNOWN_NV as VkOpticalFlowUsageFlagsNV {
@@ -45909,6 +46038,7 @@ pub fn vk_optical_flow_usage_flags_nv_to_string(value: VkOpticalFlowUsageFlagsNV
 /// type definition `VkOpticalFlowSessionCreateFlagsNV` from VK_NV_optical_flow
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkOpticalFlowSessionCreateFlagsNV.html>
 pub type VkOpticalFlowSessionCreateFlagsNV = VkFlags;
+/// Convert `VkOpticalFlowSessionCreateFlagsNV` to `String`, showing the composition of the bits from the member of `VkOpticalFlowSessionCreateFlagBitsNV`
 pub fn vk_optical_flow_session_create_flags_nv_to_string(value: VkOpticalFlowSessionCreateFlagsNV) -> String {
 	let mut flags = Vec::<&str>::with_capacity(6);
 	if (value & VkOpticalFlowSessionCreateFlagBitsNV::VK_OPTICAL_FLOW_SESSION_CREATE_ENABLE_HINT_BIT_NV as VkOpticalFlowSessionCreateFlagsNV) == VkOpticalFlowSessionCreateFlagBitsNV::VK_OPTICAL_FLOW_SESSION_CREATE_ENABLE_HINT_BIT_NV as VkOpticalFlowSessionCreateFlagsNV {
@@ -45934,6 +46064,7 @@ pub fn vk_optical_flow_session_create_flags_nv_to_string(value: VkOpticalFlowSes
 /// type definition `VkOpticalFlowExecuteFlagsNV` from VK_NV_optical_flow
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkOpticalFlowExecuteFlagsNV.html>
 pub type VkOpticalFlowExecuteFlagsNV = VkFlags;
+/// Convert `VkOpticalFlowExecuteFlagsNV` to `String`, showing the composition of the bits from the member of `VkOpticalFlowExecuteFlagBitsNV`
 pub fn vk_optical_flow_execute_flags_nv_to_string(value: VkOpticalFlowExecuteFlagsNV) -> String {
 	let mut flags = Vec::<&str>::with_capacity(2);
 	if (value & VkOpticalFlowExecuteFlagBitsNV::VK_OPTICAL_FLOW_EXECUTE_DISABLE_TEMPORAL_HINTS_BIT_NV as VkOpticalFlowExecuteFlagsNV) == VkOpticalFlowExecuteFlagBitsNV::VK_OPTICAL_FLOW_EXECUTE_DISABLE_TEMPORAL_HINTS_BIT_NV as VkOpticalFlowExecuteFlagsNV {
@@ -46394,6 +46525,7 @@ impl Vulkan_AMD_anti_lag {
 /// type definition `VkShaderCreateFlagsEXT` from VK_EXT_shader_object
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkShaderCreateFlagsEXT.html>
 pub type VkShaderCreateFlagsEXT = VkFlags;
+/// Convert `VkShaderCreateFlagsEXT` to `String`, showing the composition of the bits from the member of `VkShaderCreateFlagBitsEXT`
 pub fn vk_shader_create_flags_ext_to_string(value: VkShaderCreateFlagsEXT) -> String {
 	let mut flags = Vec::<&str>::with_capacity(9);
 	if (value & VkShaderCreateFlagBitsEXT::VK_SHADER_CREATE_LINK_STAGE_BIT_EXT as VkShaderCreateFlagsEXT) == VkShaderCreateFlagBitsEXT::VK_SHADER_CREATE_LINK_STAGE_BIT_EXT as VkShaderCreateFlagsEXT {
@@ -48637,6 +48769,7 @@ impl Vulkan_NV_ray_tracing_validation {
 /// type definition `VkClusterAccelerationStructureAddressResolutionFlagsNV` from VK_NV_cluster_acceleration_structure
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkClusterAccelerationStructureAddressResolutionFlagsNV.html>
 pub type VkClusterAccelerationStructureAddressResolutionFlagsNV = VkFlags;
+/// Convert `VkClusterAccelerationStructureAddressResolutionFlagsNV` to `String`, showing the composition of the bits from the member of `VkClusterAccelerationStructureAddressResolutionFlagBitsNV`
 pub fn vk_cluster_acceleration_structure_address_resolution_flags_nv_to_string(value: VkClusterAccelerationStructureAddressResolutionFlagsNV) -> String {
 	let mut flags = Vec::<&str>::with_capacity(8);
 	if (value & VkClusterAccelerationStructureAddressResolutionFlagBitsNV::VK_CLUSTER_ACCELERATION_STRUCTURE_ADDRESS_RESOLUTION_NONE_NV as VkClusterAccelerationStructureAddressResolutionFlagsNV) == VkClusterAccelerationStructureAddressResolutionFlagBitsNV::VK_CLUSTER_ACCELERATION_STRUCTURE_ADDRESS_RESOLUTION_NONE_NV as VkClusterAccelerationStructureAddressResolutionFlagsNV {
@@ -48668,6 +48801,7 @@ pub fn vk_cluster_acceleration_structure_address_resolution_flags_nv_to_string(v
 /// type definition `VkClusterAccelerationStructureClusterFlagsNV` from VK_NV_cluster_acceleration_structure
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkClusterAccelerationStructureClusterFlagsNV.html>
 pub type VkClusterAccelerationStructureClusterFlagsNV = VkFlags;
+/// Convert `VkClusterAccelerationStructureClusterFlagsNV` to `String`, showing the composition of the bits from the member of `VkClusterAccelerationStructureClusterFlagBitsNV`
 pub fn vk_cluster_acceleration_structure_cluster_flags_nv_to_string(value: VkClusterAccelerationStructureClusterFlagsNV) -> String {
 	let mut flags = Vec::<&str>::with_capacity(2);
 	if (value & VkClusterAccelerationStructureClusterFlagBitsNV::VK_CLUSTER_ACCELERATION_STRUCTURE_CLUSTER_ALLOW_DISABLE_OPACITY_MICROMAPS_NV as VkClusterAccelerationStructureClusterFlagsNV) == VkClusterAccelerationStructureClusterFlagBitsNV::VK_CLUSTER_ACCELERATION_STRUCTURE_CLUSTER_ALLOW_DISABLE_OPACITY_MICROMAPS_NV as VkClusterAccelerationStructureClusterFlagsNV {
@@ -48681,6 +48815,7 @@ pub fn vk_cluster_acceleration_structure_cluster_flags_nv_to_string(value: VkClu
 /// type definition `VkClusterAccelerationStructureGeometryFlagsNV` from VK_NV_cluster_acceleration_structure
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkClusterAccelerationStructureGeometryFlagsNV.html>
 pub type VkClusterAccelerationStructureGeometryFlagsNV = VkFlags;
+/// Convert `VkClusterAccelerationStructureGeometryFlagsNV` to `String`, showing the composition of the bits from the member of `VkClusterAccelerationStructureGeometryFlagBitsNV`
 pub fn vk_cluster_acceleration_structure_geometry_flags_nv_to_string(value: VkClusterAccelerationStructureGeometryFlagsNV) -> String {
 	let mut flags = Vec::<&str>::with_capacity(4);
 	if (value & VkClusterAccelerationStructureGeometryFlagBitsNV::VK_CLUSTER_ACCELERATION_STRUCTURE_GEOMETRY_CULL_DISABLE_BIT_NV as VkClusterAccelerationStructureGeometryFlagsNV) == VkClusterAccelerationStructureGeometryFlagBitsNV::VK_CLUSTER_ACCELERATION_STRUCTURE_GEOMETRY_CULL_DISABLE_BIT_NV as VkClusterAccelerationStructureGeometryFlagsNV {
@@ -48700,6 +48835,7 @@ pub fn vk_cluster_acceleration_structure_geometry_flags_nv_to_string(value: VkCl
 /// type definition `VkClusterAccelerationStructureIndexFormatFlagsNV` from VK_NV_cluster_acceleration_structure
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkClusterAccelerationStructureIndexFormatFlagsNV.html>
 pub type VkClusterAccelerationStructureIndexFormatFlagsNV = VkFlags;
+/// Convert `VkClusterAccelerationStructureIndexFormatFlagsNV` to `String`, showing the composition of the bits from the member of `VkClusterAccelerationStructureIndexFormatFlagBitsNV`
 pub fn vk_cluster_acceleration_structure_index_format_flags_nv_to_string(value: VkClusterAccelerationStructureIndexFormatFlagsNV) -> String {
 	let mut flags = Vec::<&str>::with_capacity(4);
 	if (value & VkClusterAccelerationStructureIndexFormatFlagBitsNV::VK_CLUSTER_ACCELERATION_STRUCTURE_INDEX_FORMAT_8BIT_NV as VkClusterAccelerationStructureIndexFormatFlagsNV) == VkClusterAccelerationStructureIndexFormatFlagBitsNV::VK_CLUSTER_ACCELERATION_STRUCTURE_INDEX_FORMAT_8BIT_NV as VkClusterAccelerationStructureIndexFormatFlagsNV {
@@ -49250,6 +49386,7 @@ pub const VK_PARTITIONED_ACCELERATION_STRUCTURE_PARTITION_INDEX_GLOBAL_NV: u32 =
 /// type definition `VkPartitionedAccelerationStructureInstanceFlagsNV` from VK_NV_partitioned_acceleration_structure
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPartitionedAccelerationStructureInstanceFlagsNV.html>
 pub type VkPartitionedAccelerationStructureInstanceFlagsNV = VkFlags;
+/// Convert `VkPartitionedAccelerationStructureInstanceFlagsNV` to `String`, showing the composition of the bits from the member of `VkPartitionedAccelerationStructureInstanceFlagBitsNV`
 pub fn vk_partitioned_acceleration_structure_instance_flags_nv_to_string(value: VkPartitionedAccelerationStructureInstanceFlagsNV) -> String {
 	let mut flags = Vec::<&str>::with_capacity(6);
 	if (value & VkPartitionedAccelerationStructureInstanceFlagBitsNV::VK_PARTITIONED_ACCELERATION_STRUCTURE_INSTANCE_FLAG_TRIANGLE_FACING_CULL_DISABLE_BIT_NV as VkPartitionedAccelerationStructureInstanceFlagsNV) == VkPartitionedAccelerationStructureInstanceFlagBitsNV::VK_PARTITIONED_ACCELERATION_STRUCTURE_INSTANCE_FLAG_TRIANGLE_FACING_CULL_DISABLE_BIT_NV as VkPartitionedAccelerationStructureInstanceFlagsNV {
@@ -49469,6 +49606,7 @@ impl Vulkan_NV_partitioned_acceleration_structure {
 /// type definition `VkIndirectCommandsInputModeFlagsEXT` from VK_EXT_device_generated_commands
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkIndirectCommandsInputModeFlagsEXT.html>
 pub type VkIndirectCommandsInputModeFlagsEXT = VkFlags;
+/// Convert `VkIndirectCommandsInputModeFlagsEXT` to `String`, showing the composition of the bits from the member of `VkIndirectCommandsInputModeFlagBitsEXT`
 pub fn vk_indirect_commands_input_mode_flags_ext_to_string(value: VkIndirectCommandsInputModeFlagsEXT) -> String {
 	let mut flags = Vec::<&str>::with_capacity(3);
 	if (value & VkIndirectCommandsInputModeFlagBitsEXT::VK_INDIRECT_COMMANDS_INPUT_MODE_VULKAN_INDEX_BUFFER_EXT as VkIndirectCommandsInputModeFlagsEXT) == VkIndirectCommandsInputModeFlagBitsEXT::VK_INDIRECT_COMMANDS_INPUT_MODE_VULKAN_INDEX_BUFFER_EXT as VkIndirectCommandsInputModeFlagsEXT {
@@ -49485,6 +49623,7 @@ pub fn vk_indirect_commands_input_mode_flags_ext_to_string(value: VkIndirectComm
 /// type definition `VkIndirectCommandsLayoutUsageFlagsEXT` from VK_EXT_device_generated_commands
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkIndirectCommandsLayoutUsageFlagsEXT.html>
 pub type VkIndirectCommandsLayoutUsageFlagsEXT = VkFlags;
+/// Convert `VkIndirectCommandsLayoutUsageFlagsEXT` to `String`, showing the composition of the bits from the member of `VkIndirectCommandsLayoutUsageFlagBitsEXT`
 pub fn vk_indirect_commands_layout_usage_flags_ext_to_string(value: VkIndirectCommandsLayoutUsageFlagsEXT) -> String {
 	let mut flags = Vec::<&str>::with_capacity(3);
 	if (value & VkIndirectCommandsLayoutUsageFlagBitsEXT::VK_INDIRECT_COMMANDS_LAYOUT_USAGE_EXPLICIT_PREPROCESS_BIT_EXT as VkIndirectCommandsLayoutUsageFlagsEXT) == VkIndirectCommandsLayoutUsageFlagBitsEXT::VK_INDIRECT_COMMANDS_LAYOUT_USAGE_EXPLICIT_PREPROCESS_BIT_EXT as VkIndirectCommandsLayoutUsageFlagsEXT {
@@ -50463,6 +50602,7 @@ impl Vulkan_SEC_pipeline_cache_incremental_mode {
 /// type definition `VkAccelerationStructureCreateFlagsKHR` from VK_KHR_acceleration_structure
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkAccelerationStructureCreateFlagsKHR.html>
 pub type VkAccelerationStructureCreateFlagsKHR = VkFlags;
+/// Convert `VkAccelerationStructureCreateFlagsKHR` to `String`, showing the composition of the bits from the member of `VkAccelerationStructureCreateFlagBitsKHR`
 pub fn vk_acceleration_structure_create_flags_khr_to_string(value: VkAccelerationStructureCreateFlagsKHR) -> String {
 	let mut flags = Vec::<&str>::with_capacity(4);
 	if (value & VkAccelerationStructureCreateFlagBitsKHR::VK_ACCELERATION_STRUCTURE_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT_KHR as VkAccelerationStructureCreateFlagsKHR) == VkAccelerationStructureCreateFlagBitsKHR::VK_ACCELERATION_STRUCTURE_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT_KHR as VkAccelerationStructureCreateFlagsKHR {
@@ -51797,6 +51937,7 @@ pub type MTLSharedEvent_id = *mut c_void;
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkExportMetalObjectTypeFlagsEXT.html>
 #[cfg(feature = "metal_ext")]
 pub type VkExportMetalObjectTypeFlagsEXT = VkFlags;
+/// Convert `VkExportMetalObjectTypeFlagsEXT` to `String`, showing the composition of the bits from the member of `VkExportMetalObjectTypeFlagBitsEXT`
 #[cfg(feature = "metal_ext")]
 pub fn vk_export_metal_object_type_flags_ext_to_string(value: VkExportMetalObjectTypeFlagsEXT) -> String {
 	let mut flags = Vec::<&str>::with_capacity(7);
@@ -52208,6 +52349,14 @@ pub type BOOL = u32;
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkWin32SurfaceCreateFlagsKHR.html>
 #[cfg(feature = "win32_khr")]
 pub type VkWin32SurfaceCreateFlagsKHR = VkFlags;
+/// Normal handle `HANDLE` from VK_KHR_win32_surface
+/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/HANDLE.html>
+#[cfg(feature = "win32_khr")] #[repr(C)] #[derive(Debug, Clone, Copy)] pub struct HANDLE_T {_unused: u32,}
+#[cfg(feature = "win32_khr")] pub type HANDLE = *const HANDLE_T;
+/// Normal handle `HINSTANCE` from VK_KHR_win32_surface
+/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/HINSTANCE.html>
+#[cfg(feature = "win32_khr")] #[repr(C)] #[derive(Debug, Clone, Copy)] pub struct HINSTANCE_T {_unused: u32,}
+#[cfg(feature = "win32_khr")] pub type HINSTANCE = *const HINSTANCE_T;
 /// Normal handle `HMONITOR` from VK_KHR_win32_surface
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/HMONITOR.html>
 #[cfg(feature = "win32_khr")] #[repr(C)] #[derive(Debug, Clone, Copy)] pub struct HMONITOR_T {_unused: u32,}
@@ -52216,14 +52365,6 @@ pub type VkWin32SurfaceCreateFlagsKHR = VkFlags;
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/HWND.html>
 #[cfg(feature = "win32_khr")] #[repr(C)] #[derive(Debug, Clone, Copy)] pub struct HWND_T {_unused: u32,}
 #[cfg(feature = "win32_khr")] pub type HWND = *const HWND_T;
-/// Normal handle `HINSTANCE` from VK_KHR_win32_surface
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/HINSTANCE.html>
-#[cfg(feature = "win32_khr")] #[repr(C)] #[derive(Debug, Clone, Copy)] pub struct HINSTANCE_T {_unused: u32,}
-#[cfg(feature = "win32_khr")] pub type HINSTANCE = *const HINSTANCE_T;
-/// Normal handle `HANDLE` from VK_KHR_win32_surface
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/HANDLE.html>
-#[cfg(feature = "win32_khr")] #[repr(C)] #[derive(Debug, Clone, Copy)] pub struct HANDLE_T {_unused: u32,}
-#[cfg(feature = "win32_khr")] pub type HANDLE = *const HANDLE_T;
 /// struct `SECURITY_ATTRIBUTES` from VK_KHR_win32_surface
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/SECURITY_ATTRIBUTES.html>
 #[cfg(feature = "win32_khr")]
@@ -57194,14 +57335,15 @@ impl Drop for VkCore {
 
 #[cfg(any(feature = "glfw", test))]
 mod glfw_create_surface {
-	use vkcore_rs::*;
+	use crate::*;
 	use glfw::*;
+	use glfw::ffi::*;
 	unsafe extern "C" {
 		fn glfwCreateWindowSurface(instance: VkInstance, window: *const GLFWwindow, allocator: *const VkAllocationCallbacks, surface: *mut VkSurfaceKHR) -> VkResult;
 	}
 	/// The function for you to create a `VkSurfaceKHR` when the feature "glfw" is enabled
 	pub fn vkCreateWindowSurfaceGLFW(instance: VkInstance, window: &PWindow, allocator: *const VkAllocationCallbacks, surface: *mut VkSurfaceKHR) -> VkResult {
-		glfwCreateWindowSurface(instance, window.window_ptr(), allocator, &mut surface)
+		unsafe {glfwCreateWindowSurface(instance, window.window_ptr(), allocator, surface)}
 	}
 }
 
