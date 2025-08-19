@@ -98,7 +98,7 @@ pub enum VkError {
 type Result<T> = std::result::Result<T, VkError>;
 
 /// Translate the returned `Result<T>` from `std::panic::catch_unwind()` to our `Result<T>`
-fn process_catch<T>(ret: std::thread::Result<T>) -> Result<T> {
+pub fn vk_process_catch<T>(ret: std::thread::Result<T>) -> Result<T> {
 	match ret {
 		Ok(ret) => Ok(ret),
 		Err(e) => {
@@ -112,7 +112,7 @@ fn process_catch<T>(ret: std::thread::Result<T>) -> Result<T> {
 }
 
 /// Convert a result returned from `std::panic::catch_unwind()` with `VkResult` to our `Result<()>` 
-fn convert_result(function_name: &'static str, result: std::thread::Result<VkResult>) -> Result<()> {
+pub fn vk_convert_result(function_name: &'static str, result: std::thread::Result<VkResult>) -> Result<()> {
 	if let Ok(result) = result {
 		match result {
 			VkResult::VK_SUCCESS => Ok(()),
@@ -9083,415 +9083,415 @@ pub struct Vulkan_VERSION_1_0 {
 }
 impl VK_VERSION_1_0 for Vulkan_VERSION_1_0 {
 	fn vkCreateInstance(&self, pCreateInfo: *const VkInstanceCreateInfo, pAllocator: *const VkAllocationCallbacks, pInstance: *mut VkInstance) -> Result<()> {
-		convert_result("vkCreateInstance", catch_unwind(||((self.vk_create_instance)(pCreateInfo, pAllocator, pInstance))))
+		vk_convert_result("vkCreateInstance", catch_unwind(||((self.vk_create_instance)(pCreateInfo, pAllocator, pInstance))))
 	}
 	fn vkDestroyInstance(&self, instance: VkInstance, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_destroy_instance)(instance, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_destroy_instance)(instance, pAllocator))))
 	}
 	fn vkEnumeratePhysicalDevices(&self, instance: VkInstance, pPhysicalDeviceCount: *mut uint32_t, pPhysicalDevices: *mut VkPhysicalDevice) -> Result<()> {
-		convert_result("vkEnumeratePhysicalDevices", catch_unwind(||((self.vk_enumerate_physical_devices)(instance, pPhysicalDeviceCount, pPhysicalDevices))))
+		vk_convert_result("vkEnumeratePhysicalDevices", catch_unwind(||((self.vk_enumerate_physical_devices)(instance, pPhysicalDeviceCount, pPhysicalDevices))))
 	}
 	fn vkGetPhysicalDeviceFeatures(&self, physicalDevice: VkPhysicalDevice, pFeatures: *mut VkPhysicalDeviceFeatures) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_get_physical_device_features)(physicalDevice, pFeatures))))
+		vk_process_catch(catch_unwind(||((self.vk_get_physical_device_features)(physicalDevice, pFeatures))))
 	}
 	fn vkGetPhysicalDeviceFormatProperties(&self, physicalDevice: VkPhysicalDevice, format: VkFormat, pFormatProperties: *mut VkFormatProperties) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_get_physical_device_format_properties)(physicalDevice, format, pFormatProperties))))
+		vk_process_catch(catch_unwind(||((self.vk_get_physical_device_format_properties)(physicalDevice, format, pFormatProperties))))
 	}
 	fn vkGetPhysicalDeviceImageFormatProperties(&self, physicalDevice: VkPhysicalDevice, format: VkFormat, type_: VkImageType, tiling: VkImageTiling, usage: VkImageUsageFlags, flags: VkImageCreateFlags, pImageFormatProperties: *mut VkImageFormatProperties) -> Result<()> {
-		convert_result("vkGetPhysicalDeviceImageFormatProperties", catch_unwind(||((self.vk_get_physical_device_image_format_properties)(physicalDevice, format, type_, tiling, usage, flags, pImageFormatProperties))))
+		vk_convert_result("vkGetPhysicalDeviceImageFormatProperties", catch_unwind(||((self.vk_get_physical_device_image_format_properties)(physicalDevice, format, type_, tiling, usage, flags, pImageFormatProperties))))
 	}
 	fn vkGetPhysicalDeviceProperties(&self, physicalDevice: VkPhysicalDevice, pProperties: *mut VkPhysicalDeviceProperties) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_get_physical_device_properties)(physicalDevice, pProperties))))
+		vk_process_catch(catch_unwind(||((self.vk_get_physical_device_properties)(physicalDevice, pProperties))))
 	}
 	fn vkGetPhysicalDeviceQueueFamilyProperties(&self, physicalDevice: VkPhysicalDevice, pQueueFamilyPropertyCount: *mut uint32_t, pQueueFamilyProperties: *mut VkQueueFamilyProperties) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_get_physical_device_queue_family_properties)(physicalDevice, pQueueFamilyPropertyCount, pQueueFamilyProperties))))
+		vk_process_catch(catch_unwind(||((self.vk_get_physical_device_queue_family_properties)(physicalDevice, pQueueFamilyPropertyCount, pQueueFamilyProperties))))
 	}
 	fn vkGetPhysicalDeviceMemoryProperties(&self, physicalDevice: VkPhysicalDevice, pMemoryProperties: *mut VkPhysicalDeviceMemoryProperties) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_get_physical_device_memory_properties)(physicalDevice, pMemoryProperties))))
+		vk_process_catch(catch_unwind(||((self.vk_get_physical_device_memory_properties)(physicalDevice, pMemoryProperties))))
 	}
 	fn vkGetInstanceProcAddr(&self, instance: VkInstance, pName: *const i8) -> Result<PFN_vkVoidFunction> {
-		process_catch(catch_unwind(||((self.vk_get_instance_proc_addr)(instance, pName))))
+		vk_process_catch(catch_unwind(||((self.vk_get_instance_proc_addr)(instance, pName))))
 	}
 	fn vkGetDeviceProcAddr(&self, device: VkDevice, pName: *const i8) -> Result<PFN_vkVoidFunction> {
-		process_catch(catch_unwind(||((self.vk_get_device_proc_addr)(device, pName))))
+		vk_process_catch(catch_unwind(||((self.vk_get_device_proc_addr)(device, pName))))
 	}
 	fn vkCreateDevice(&self, physicalDevice: VkPhysicalDevice, pCreateInfo: *const VkDeviceCreateInfo, pAllocator: *const VkAllocationCallbacks, pDevice: *mut VkDevice) -> Result<()> {
-		convert_result("vkCreateDevice", catch_unwind(||((self.vk_create_device)(physicalDevice, pCreateInfo, pAllocator, pDevice))))
+		vk_convert_result("vkCreateDevice", catch_unwind(||((self.vk_create_device)(physicalDevice, pCreateInfo, pAllocator, pDevice))))
 	}
 	fn vkDestroyDevice(&self, device: VkDevice, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_destroy_device)(device, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_destroy_device)(device, pAllocator))))
 	}
 	fn vkEnumerateInstanceExtensionProperties(&self, pLayerName: *const i8, pPropertyCount: *mut uint32_t, pProperties: *mut VkExtensionProperties) -> Result<()> {
-		convert_result("vkEnumerateInstanceExtensionProperties", catch_unwind(||((self.vk_enumerate_instance_extension_properties)(pLayerName, pPropertyCount, pProperties))))
+		vk_convert_result("vkEnumerateInstanceExtensionProperties", catch_unwind(||((self.vk_enumerate_instance_extension_properties)(pLayerName, pPropertyCount, pProperties))))
 	}
 	fn vkEnumerateDeviceExtensionProperties(&self, physicalDevice: VkPhysicalDevice, pLayerName: *const i8, pPropertyCount: *mut uint32_t, pProperties: *mut VkExtensionProperties) -> Result<()> {
-		convert_result("vkEnumerateDeviceExtensionProperties", catch_unwind(||((self.vk_enumerate_device_extension_properties)(physicalDevice, pLayerName, pPropertyCount, pProperties))))
+		vk_convert_result("vkEnumerateDeviceExtensionProperties", catch_unwind(||((self.vk_enumerate_device_extension_properties)(physicalDevice, pLayerName, pPropertyCount, pProperties))))
 	}
 	fn vkEnumerateInstanceLayerProperties(&self, pPropertyCount: *mut uint32_t, pProperties: *mut VkLayerProperties) -> Result<()> {
-		convert_result("vkEnumerateInstanceLayerProperties", catch_unwind(||((self.vk_enumerate_instance_layer_properties)(pPropertyCount, pProperties))))
+		vk_convert_result("vkEnumerateInstanceLayerProperties", catch_unwind(||((self.vk_enumerate_instance_layer_properties)(pPropertyCount, pProperties))))
 	}
 	fn vkEnumerateDeviceLayerProperties(&self, physicalDevice: VkPhysicalDevice, pPropertyCount: *mut uint32_t, pProperties: *mut VkLayerProperties) -> Result<()> {
-		convert_result("vkEnumerateDeviceLayerProperties", catch_unwind(||((self.vk_enumerate_device_layer_properties)(physicalDevice, pPropertyCount, pProperties))))
+		vk_convert_result("vkEnumerateDeviceLayerProperties", catch_unwind(||((self.vk_enumerate_device_layer_properties)(physicalDevice, pPropertyCount, pProperties))))
 	}
 	fn vkGetDeviceQueue(&self, device: VkDevice, queueFamilyIndex: u32, queueIndex: u32, pQueue: *mut VkQueue) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_get_device_queue)(device, queueFamilyIndex, queueIndex, pQueue))))
+		vk_process_catch(catch_unwind(||((self.vk_get_device_queue)(device, queueFamilyIndex, queueIndex, pQueue))))
 	}
 	fn vkQueueSubmit(&self, queue: VkQueue, submitCount: u32, pSubmits: *const VkSubmitInfo, fence: VkFence) -> Result<()> {
-		convert_result("vkQueueSubmit", catch_unwind(||((self.vk_queue_submit)(queue, submitCount, pSubmits, fence))))
+		vk_convert_result("vkQueueSubmit", catch_unwind(||((self.vk_queue_submit)(queue, submitCount, pSubmits, fence))))
 	}
 	fn vkQueueWaitIdle(&self, queue: VkQueue) -> Result<()> {
-		convert_result("vkQueueWaitIdle", catch_unwind(||((self.vk_queue_wait_idle)(queue))))
+		vk_convert_result("vkQueueWaitIdle", catch_unwind(||((self.vk_queue_wait_idle)(queue))))
 	}
 	fn vkDeviceWaitIdle(&self, device: VkDevice) -> Result<()> {
-		convert_result("vkDeviceWaitIdle", catch_unwind(||((self.vk_device_wait_idle)(device))))
+		vk_convert_result("vkDeviceWaitIdle", catch_unwind(||((self.vk_device_wait_idle)(device))))
 	}
 	fn vkAllocateMemory(&self, device: VkDevice, pAllocateInfo: *const VkMemoryAllocateInfo, pAllocator: *const VkAllocationCallbacks, pMemory: *mut VkDeviceMemory) -> Result<()> {
-		convert_result("vkAllocateMemory", catch_unwind(||((self.vk_allocate_memory)(device, pAllocateInfo, pAllocator, pMemory))))
+		vk_convert_result("vkAllocateMemory", catch_unwind(||((self.vk_allocate_memory)(device, pAllocateInfo, pAllocator, pMemory))))
 	}
 	fn vkFreeMemory(&self, device: VkDevice, memory: VkDeviceMemory, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_free_memory)(device, memory, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_free_memory)(device, memory, pAllocator))))
 	}
 	fn vkMapMemory(&self, device: VkDevice, memory: VkDeviceMemory, offset: VkDeviceSize, size: VkDeviceSize, flags: VkMemoryMapFlags, ppData: *mut *mut c_void) -> Result<()> {
-		convert_result("vkMapMemory", catch_unwind(||((self.vk_map_memory)(device, memory, offset, size, flags, ppData))))
+		vk_convert_result("vkMapMemory", catch_unwind(||((self.vk_map_memory)(device, memory, offset, size, flags, ppData))))
 	}
 	fn vkUnmapMemory(&self, device: VkDevice, memory: VkDeviceMemory) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_unmap_memory)(device, memory))))
+		vk_process_catch(catch_unwind(||((self.vk_unmap_memory)(device, memory))))
 	}
 	fn vkFlushMappedMemoryRanges(&self, device: VkDevice, memoryRangeCount: u32, pMemoryRanges: *const VkMappedMemoryRange) -> Result<()> {
-		convert_result("vkFlushMappedMemoryRanges", catch_unwind(||((self.vk_flush_mapped_memory_ranges)(device, memoryRangeCount, pMemoryRanges))))
+		vk_convert_result("vkFlushMappedMemoryRanges", catch_unwind(||((self.vk_flush_mapped_memory_ranges)(device, memoryRangeCount, pMemoryRanges))))
 	}
 	fn vkInvalidateMappedMemoryRanges(&self, device: VkDevice, memoryRangeCount: u32, pMemoryRanges: *const VkMappedMemoryRange) -> Result<()> {
-		convert_result("vkInvalidateMappedMemoryRanges", catch_unwind(||((self.vk_invalidate_mapped_memory_ranges)(device, memoryRangeCount, pMemoryRanges))))
+		vk_convert_result("vkInvalidateMappedMemoryRanges", catch_unwind(||((self.vk_invalidate_mapped_memory_ranges)(device, memoryRangeCount, pMemoryRanges))))
 	}
 	fn vkGetDeviceMemoryCommitment(&self, device: VkDevice, memory: VkDeviceMemory, pCommittedMemoryInBytes: *mut VkDeviceSize) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_get_device_memory_commitment)(device, memory, pCommittedMemoryInBytes))))
+		vk_process_catch(catch_unwind(||((self.vk_get_device_memory_commitment)(device, memory, pCommittedMemoryInBytes))))
 	}
 	fn vkBindBufferMemory(&self, device: VkDevice, buffer: VkBuffer, memory: VkDeviceMemory, memoryOffset: VkDeviceSize) -> Result<()> {
-		convert_result("vkBindBufferMemory", catch_unwind(||((self.vk_bind_buffer_memory)(device, buffer, memory, memoryOffset))))
+		vk_convert_result("vkBindBufferMemory", catch_unwind(||((self.vk_bind_buffer_memory)(device, buffer, memory, memoryOffset))))
 	}
 	fn vkBindImageMemory(&self, device: VkDevice, image: VkImage, memory: VkDeviceMemory, memoryOffset: VkDeviceSize) -> Result<()> {
-		convert_result("vkBindImageMemory", catch_unwind(||((self.vk_bind_image_memory)(device, image, memory, memoryOffset))))
+		vk_convert_result("vkBindImageMemory", catch_unwind(||((self.vk_bind_image_memory)(device, image, memory, memoryOffset))))
 	}
 	fn vkGetBufferMemoryRequirements(&self, device: VkDevice, buffer: VkBuffer, pMemoryRequirements: *mut VkMemoryRequirements) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_get_buffer_memory_requirements)(device, buffer, pMemoryRequirements))))
+		vk_process_catch(catch_unwind(||((self.vk_get_buffer_memory_requirements)(device, buffer, pMemoryRequirements))))
 	}
 	fn vkGetImageMemoryRequirements(&self, device: VkDevice, image: VkImage, pMemoryRequirements: *mut VkMemoryRequirements) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_get_image_memory_requirements)(device, image, pMemoryRequirements))))
+		vk_process_catch(catch_unwind(||((self.vk_get_image_memory_requirements)(device, image, pMemoryRequirements))))
 	}
 	fn vkGetImageSparseMemoryRequirements(&self, device: VkDevice, image: VkImage, pSparseMemoryRequirementCount: *mut uint32_t, pSparseMemoryRequirements: *mut VkSparseImageMemoryRequirements) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_get_image_sparse_memory_requirements)(device, image, pSparseMemoryRequirementCount, pSparseMemoryRequirements))))
+		vk_process_catch(catch_unwind(||((self.vk_get_image_sparse_memory_requirements)(device, image, pSparseMemoryRequirementCount, pSparseMemoryRequirements))))
 	}
 	fn vkGetPhysicalDeviceSparseImageFormatProperties(&self, physicalDevice: VkPhysicalDevice, format: VkFormat, type_: VkImageType, samples: VkSampleCountFlagBits, usage: VkImageUsageFlags, tiling: VkImageTiling, pPropertyCount: *mut uint32_t, pProperties: *mut VkSparseImageFormatProperties) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_get_physical_device_sparse_image_format_properties)(physicalDevice, format, type_, samples, usage, tiling, pPropertyCount, pProperties))))
+		vk_process_catch(catch_unwind(||((self.vk_get_physical_device_sparse_image_format_properties)(physicalDevice, format, type_, samples, usage, tiling, pPropertyCount, pProperties))))
 	}
 	fn vkQueueBindSparse(&self, queue: VkQueue, bindInfoCount: u32, pBindInfo: *const VkBindSparseInfo, fence: VkFence) -> Result<()> {
-		convert_result("vkQueueBindSparse", catch_unwind(||((self.vk_queue_bind_sparse)(queue, bindInfoCount, pBindInfo, fence))))
+		vk_convert_result("vkQueueBindSparse", catch_unwind(||((self.vk_queue_bind_sparse)(queue, bindInfoCount, pBindInfo, fence))))
 	}
 	fn vkCreateFence(&self, device: VkDevice, pCreateInfo: *const VkFenceCreateInfo, pAllocator: *const VkAllocationCallbacks, pFence: *mut VkFence) -> Result<()> {
-		convert_result("vkCreateFence", catch_unwind(||((self.vk_create_fence)(device, pCreateInfo, pAllocator, pFence))))
+		vk_convert_result("vkCreateFence", catch_unwind(||((self.vk_create_fence)(device, pCreateInfo, pAllocator, pFence))))
 	}
 	fn vkDestroyFence(&self, device: VkDevice, fence: VkFence, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_destroy_fence)(device, fence, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_destroy_fence)(device, fence, pAllocator))))
 	}
 	fn vkResetFences(&self, device: VkDevice, fenceCount: u32, pFences: *const VkFence) -> Result<()> {
-		convert_result("vkResetFences", catch_unwind(||((self.vk_reset_fences)(device, fenceCount, pFences))))
+		vk_convert_result("vkResetFences", catch_unwind(||((self.vk_reset_fences)(device, fenceCount, pFences))))
 	}
 	fn vkGetFenceStatus(&self, device: VkDevice, fence: VkFence) -> Result<()> {
-		convert_result("vkGetFenceStatus", catch_unwind(||((self.vk_get_fence_status)(device, fence))))
+		vk_convert_result("vkGetFenceStatus", catch_unwind(||((self.vk_get_fence_status)(device, fence))))
 	}
 	fn vkWaitForFences(&self, device: VkDevice, fenceCount: u32, pFences: *const VkFence, waitAll: VkBool32, timeout: u64) -> Result<()> {
-		convert_result("vkWaitForFences", catch_unwind(||((self.vk_wait_for_fences)(device, fenceCount, pFences, waitAll, timeout))))
+		vk_convert_result("vkWaitForFences", catch_unwind(||((self.vk_wait_for_fences)(device, fenceCount, pFences, waitAll, timeout))))
 	}
 	fn vkCreateSemaphore(&self, device: VkDevice, pCreateInfo: *const VkSemaphoreCreateInfo, pAllocator: *const VkAllocationCallbacks, pSemaphore: *mut VkSemaphore) -> Result<()> {
-		convert_result("vkCreateSemaphore", catch_unwind(||((self.vk_create_semaphore)(device, pCreateInfo, pAllocator, pSemaphore))))
+		vk_convert_result("vkCreateSemaphore", catch_unwind(||((self.vk_create_semaphore)(device, pCreateInfo, pAllocator, pSemaphore))))
 	}
 	fn vkDestroySemaphore(&self, device: VkDevice, semaphore: VkSemaphore, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_destroy_semaphore)(device, semaphore, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_destroy_semaphore)(device, semaphore, pAllocator))))
 	}
 	fn vkCreateEvent(&self, device: VkDevice, pCreateInfo: *const VkEventCreateInfo, pAllocator: *const VkAllocationCallbacks, pEvent: *mut VkEvent) -> Result<()> {
-		convert_result("vkCreateEvent", catch_unwind(||((self.vk_create_event)(device, pCreateInfo, pAllocator, pEvent))))
+		vk_convert_result("vkCreateEvent", catch_unwind(||((self.vk_create_event)(device, pCreateInfo, pAllocator, pEvent))))
 	}
 	fn vkDestroyEvent(&self, device: VkDevice, event: VkEvent, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_destroy_event)(device, event, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_destroy_event)(device, event, pAllocator))))
 	}
 	fn vkGetEventStatus(&self, device: VkDevice, event: VkEvent) -> Result<()> {
-		convert_result("vkGetEventStatus", catch_unwind(||((self.vk_get_event_status)(device, event))))
+		vk_convert_result("vkGetEventStatus", catch_unwind(||((self.vk_get_event_status)(device, event))))
 	}
 	fn vkSetEvent(&self, device: VkDevice, event: VkEvent) -> Result<()> {
-		convert_result("vkSetEvent", catch_unwind(||((self.vk_set_event)(device, event))))
+		vk_convert_result("vkSetEvent", catch_unwind(||((self.vk_set_event)(device, event))))
 	}
 	fn vkResetEvent(&self, device: VkDevice, event: VkEvent) -> Result<()> {
-		convert_result("vkResetEvent", catch_unwind(||((self.vk_reset_event)(device, event))))
+		vk_convert_result("vkResetEvent", catch_unwind(||((self.vk_reset_event)(device, event))))
 	}
 	fn vkCreateQueryPool(&self, device: VkDevice, pCreateInfo: *const VkQueryPoolCreateInfo, pAllocator: *const VkAllocationCallbacks, pQueryPool: *mut VkQueryPool) -> Result<()> {
-		convert_result("vkCreateQueryPool", catch_unwind(||((self.vk_create_query_pool)(device, pCreateInfo, pAllocator, pQueryPool))))
+		vk_convert_result("vkCreateQueryPool", catch_unwind(||((self.vk_create_query_pool)(device, pCreateInfo, pAllocator, pQueryPool))))
 	}
 	fn vkDestroyQueryPool(&self, device: VkDevice, queryPool: VkQueryPool, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_destroy_query_pool)(device, queryPool, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_destroy_query_pool)(device, queryPool, pAllocator))))
 	}
 	fn vkGetQueryPoolResults(&self, device: VkDevice, queryPool: VkQueryPool, firstQuery: u32, queryCount: u32, dataSize: usize, pData: *mut c_void, stride: VkDeviceSize, flags: VkQueryResultFlags) -> Result<()> {
-		convert_result("vkGetQueryPoolResults", catch_unwind(||((self.vk_get_query_pool_results)(device, queryPool, firstQuery, queryCount, dataSize, pData, stride, flags))))
+		vk_convert_result("vkGetQueryPoolResults", catch_unwind(||((self.vk_get_query_pool_results)(device, queryPool, firstQuery, queryCount, dataSize, pData, stride, flags))))
 	}
 	fn vkCreateBuffer(&self, device: VkDevice, pCreateInfo: *const VkBufferCreateInfo, pAllocator: *const VkAllocationCallbacks, pBuffer: *mut VkBuffer) -> Result<()> {
-		convert_result("vkCreateBuffer", catch_unwind(||((self.vk_create_buffer)(device, pCreateInfo, pAllocator, pBuffer))))
+		vk_convert_result("vkCreateBuffer", catch_unwind(||((self.vk_create_buffer)(device, pCreateInfo, pAllocator, pBuffer))))
 	}
 	fn vkDestroyBuffer(&self, device: VkDevice, buffer: VkBuffer, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_destroy_buffer)(device, buffer, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_destroy_buffer)(device, buffer, pAllocator))))
 	}
 	fn vkCreateBufferView(&self, device: VkDevice, pCreateInfo: *const VkBufferViewCreateInfo, pAllocator: *const VkAllocationCallbacks, pView: *mut VkBufferView) -> Result<()> {
-		convert_result("vkCreateBufferView", catch_unwind(||((self.vk_create_buffer_view)(device, pCreateInfo, pAllocator, pView))))
+		vk_convert_result("vkCreateBufferView", catch_unwind(||((self.vk_create_buffer_view)(device, pCreateInfo, pAllocator, pView))))
 	}
 	fn vkDestroyBufferView(&self, device: VkDevice, bufferView: VkBufferView, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_destroy_buffer_view)(device, bufferView, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_destroy_buffer_view)(device, bufferView, pAllocator))))
 	}
 	fn vkCreateImage(&self, device: VkDevice, pCreateInfo: *const VkImageCreateInfo, pAllocator: *const VkAllocationCallbacks, pImage: *mut VkImage) -> Result<()> {
-		convert_result("vkCreateImage", catch_unwind(||((self.vk_create_image)(device, pCreateInfo, pAllocator, pImage))))
+		vk_convert_result("vkCreateImage", catch_unwind(||((self.vk_create_image)(device, pCreateInfo, pAllocator, pImage))))
 	}
 	fn vkDestroyImage(&self, device: VkDevice, image: VkImage, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_destroy_image)(device, image, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_destroy_image)(device, image, pAllocator))))
 	}
 	fn vkGetImageSubresourceLayout(&self, device: VkDevice, image: VkImage, pSubresource: *const VkImageSubresource, pLayout: *mut VkSubresourceLayout) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_get_image_subresource_layout)(device, image, pSubresource, pLayout))))
+		vk_process_catch(catch_unwind(||((self.vk_get_image_subresource_layout)(device, image, pSubresource, pLayout))))
 	}
 	fn vkCreateImageView(&self, device: VkDevice, pCreateInfo: *const VkImageViewCreateInfo, pAllocator: *const VkAllocationCallbacks, pView: *mut VkImageView) -> Result<()> {
-		convert_result("vkCreateImageView", catch_unwind(||((self.vk_create_image_view)(device, pCreateInfo, pAllocator, pView))))
+		vk_convert_result("vkCreateImageView", catch_unwind(||((self.vk_create_image_view)(device, pCreateInfo, pAllocator, pView))))
 	}
 	fn vkDestroyImageView(&self, device: VkDevice, imageView: VkImageView, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_destroy_image_view)(device, imageView, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_destroy_image_view)(device, imageView, pAllocator))))
 	}
 	fn vkCreateShaderModule(&self, device: VkDevice, pCreateInfo: *const VkShaderModuleCreateInfo, pAllocator: *const VkAllocationCallbacks, pShaderModule: *mut VkShaderModule) -> Result<()> {
-		convert_result("vkCreateShaderModule", catch_unwind(||((self.vk_create_shader_module)(device, pCreateInfo, pAllocator, pShaderModule))))
+		vk_convert_result("vkCreateShaderModule", catch_unwind(||((self.vk_create_shader_module)(device, pCreateInfo, pAllocator, pShaderModule))))
 	}
 	fn vkDestroyShaderModule(&self, device: VkDevice, shaderModule: VkShaderModule, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_destroy_shader_module)(device, shaderModule, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_destroy_shader_module)(device, shaderModule, pAllocator))))
 	}
 	fn vkCreatePipelineCache(&self, device: VkDevice, pCreateInfo: *const VkPipelineCacheCreateInfo, pAllocator: *const VkAllocationCallbacks, pPipelineCache: *mut VkPipelineCache) -> Result<()> {
-		convert_result("vkCreatePipelineCache", catch_unwind(||((self.vk_create_pipeline_cache)(device, pCreateInfo, pAllocator, pPipelineCache))))
+		vk_convert_result("vkCreatePipelineCache", catch_unwind(||((self.vk_create_pipeline_cache)(device, pCreateInfo, pAllocator, pPipelineCache))))
 	}
 	fn vkDestroyPipelineCache(&self, device: VkDevice, pipelineCache: VkPipelineCache, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_destroy_pipeline_cache)(device, pipelineCache, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_destroy_pipeline_cache)(device, pipelineCache, pAllocator))))
 	}
 	fn vkGetPipelineCacheData(&self, device: VkDevice, pipelineCache: VkPipelineCache, pDataSize: *mut size_t, pData: *mut c_void) -> Result<()> {
-		convert_result("vkGetPipelineCacheData", catch_unwind(||((self.vk_get_pipeline_cache_data)(device, pipelineCache, pDataSize, pData))))
+		vk_convert_result("vkGetPipelineCacheData", catch_unwind(||((self.vk_get_pipeline_cache_data)(device, pipelineCache, pDataSize, pData))))
 	}
 	fn vkMergePipelineCaches(&self, device: VkDevice, dstCache: VkPipelineCache, srcCacheCount: u32, pSrcCaches: *const VkPipelineCache) -> Result<()> {
-		convert_result("vkMergePipelineCaches", catch_unwind(||((self.vk_merge_pipeline_caches)(device, dstCache, srcCacheCount, pSrcCaches))))
+		vk_convert_result("vkMergePipelineCaches", catch_unwind(||((self.vk_merge_pipeline_caches)(device, dstCache, srcCacheCount, pSrcCaches))))
 	}
 	fn vkCreateGraphicsPipelines(&self, device: VkDevice, pipelineCache: VkPipelineCache, createInfoCount: u32, pCreateInfos: *const VkGraphicsPipelineCreateInfo, pAllocator: *const VkAllocationCallbacks, pPipelines: *mut VkPipeline) -> Result<()> {
-		convert_result("vkCreateGraphicsPipelines", catch_unwind(||((self.vk_create_graphics_pipelines)(device, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines))))
+		vk_convert_result("vkCreateGraphicsPipelines", catch_unwind(||((self.vk_create_graphics_pipelines)(device, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines))))
 	}
 	fn vkCreateComputePipelines(&self, device: VkDevice, pipelineCache: VkPipelineCache, createInfoCount: u32, pCreateInfos: *const VkComputePipelineCreateInfo, pAllocator: *const VkAllocationCallbacks, pPipelines: *mut VkPipeline) -> Result<()> {
-		convert_result("vkCreateComputePipelines", catch_unwind(||((self.vk_create_compute_pipelines)(device, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines))))
+		vk_convert_result("vkCreateComputePipelines", catch_unwind(||((self.vk_create_compute_pipelines)(device, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines))))
 	}
 	fn vkDestroyPipeline(&self, device: VkDevice, pipeline: VkPipeline, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_destroy_pipeline)(device, pipeline, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_destroy_pipeline)(device, pipeline, pAllocator))))
 	}
 	fn vkCreatePipelineLayout(&self, device: VkDevice, pCreateInfo: *const VkPipelineLayoutCreateInfo, pAllocator: *const VkAllocationCallbacks, pPipelineLayout: *mut VkPipelineLayout) -> Result<()> {
-		convert_result("vkCreatePipelineLayout", catch_unwind(||((self.vk_create_pipeline_layout)(device, pCreateInfo, pAllocator, pPipelineLayout))))
+		vk_convert_result("vkCreatePipelineLayout", catch_unwind(||((self.vk_create_pipeline_layout)(device, pCreateInfo, pAllocator, pPipelineLayout))))
 	}
 	fn vkDestroyPipelineLayout(&self, device: VkDevice, pipelineLayout: VkPipelineLayout, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_destroy_pipeline_layout)(device, pipelineLayout, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_destroy_pipeline_layout)(device, pipelineLayout, pAllocator))))
 	}
 	fn vkCreateSampler(&self, device: VkDevice, pCreateInfo: *const VkSamplerCreateInfo, pAllocator: *const VkAllocationCallbacks, pSampler: *mut VkSampler) -> Result<()> {
-		convert_result("vkCreateSampler", catch_unwind(||((self.vk_create_sampler)(device, pCreateInfo, pAllocator, pSampler))))
+		vk_convert_result("vkCreateSampler", catch_unwind(||((self.vk_create_sampler)(device, pCreateInfo, pAllocator, pSampler))))
 	}
 	fn vkDestroySampler(&self, device: VkDevice, sampler: VkSampler, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_destroy_sampler)(device, sampler, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_destroy_sampler)(device, sampler, pAllocator))))
 	}
 	fn vkCreateDescriptorSetLayout(&self, device: VkDevice, pCreateInfo: *const VkDescriptorSetLayoutCreateInfo, pAllocator: *const VkAllocationCallbacks, pSetLayout: *mut VkDescriptorSetLayout) -> Result<()> {
-		convert_result("vkCreateDescriptorSetLayout", catch_unwind(||((self.vk_create_descriptor_set_layout)(device, pCreateInfo, pAllocator, pSetLayout))))
+		vk_convert_result("vkCreateDescriptorSetLayout", catch_unwind(||((self.vk_create_descriptor_set_layout)(device, pCreateInfo, pAllocator, pSetLayout))))
 	}
 	fn vkDestroyDescriptorSetLayout(&self, device: VkDevice, descriptorSetLayout: VkDescriptorSetLayout, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_destroy_descriptor_set_layout)(device, descriptorSetLayout, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_destroy_descriptor_set_layout)(device, descriptorSetLayout, pAllocator))))
 	}
 	fn vkCreateDescriptorPool(&self, device: VkDevice, pCreateInfo: *const VkDescriptorPoolCreateInfo, pAllocator: *const VkAllocationCallbacks, pDescriptorPool: *mut VkDescriptorPool) -> Result<()> {
-		convert_result("vkCreateDescriptorPool", catch_unwind(||((self.vk_create_descriptor_pool)(device, pCreateInfo, pAllocator, pDescriptorPool))))
+		vk_convert_result("vkCreateDescriptorPool", catch_unwind(||((self.vk_create_descriptor_pool)(device, pCreateInfo, pAllocator, pDescriptorPool))))
 	}
 	fn vkDestroyDescriptorPool(&self, device: VkDevice, descriptorPool: VkDescriptorPool, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_destroy_descriptor_pool)(device, descriptorPool, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_destroy_descriptor_pool)(device, descriptorPool, pAllocator))))
 	}
 	fn vkResetDescriptorPool(&self, device: VkDevice, descriptorPool: VkDescriptorPool, flags: VkDescriptorPoolResetFlags) -> Result<()> {
-		convert_result("vkResetDescriptorPool", catch_unwind(||((self.vk_reset_descriptor_pool)(device, descriptorPool, flags))))
+		vk_convert_result("vkResetDescriptorPool", catch_unwind(||((self.vk_reset_descriptor_pool)(device, descriptorPool, flags))))
 	}
 	fn vkAllocateDescriptorSets(&self, device: VkDevice, pAllocateInfo: *const VkDescriptorSetAllocateInfo, pDescriptorSets: *mut VkDescriptorSet) -> Result<()> {
-		convert_result("vkAllocateDescriptorSets", catch_unwind(||((self.vk_allocate_descriptor_sets)(device, pAllocateInfo, pDescriptorSets))))
+		vk_convert_result("vkAllocateDescriptorSets", catch_unwind(||((self.vk_allocate_descriptor_sets)(device, pAllocateInfo, pDescriptorSets))))
 	}
 	fn vkFreeDescriptorSets(&self, device: VkDevice, descriptorPool: VkDescriptorPool, descriptorSetCount: u32, pDescriptorSets: *const VkDescriptorSet) -> Result<()> {
-		convert_result("vkFreeDescriptorSets", catch_unwind(||((self.vk_free_descriptor_sets)(device, descriptorPool, descriptorSetCount, pDescriptorSets))))
+		vk_convert_result("vkFreeDescriptorSets", catch_unwind(||((self.vk_free_descriptor_sets)(device, descriptorPool, descriptorSetCount, pDescriptorSets))))
 	}
 	fn vkUpdateDescriptorSets(&self, device: VkDevice, descriptorWriteCount: u32, pDescriptorWrites: *const VkWriteDescriptorSet, descriptorCopyCount: u32, pDescriptorCopies: *const VkCopyDescriptorSet) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_update_descriptor_sets)(device, descriptorWriteCount, pDescriptorWrites, descriptorCopyCount, pDescriptorCopies))))
+		vk_process_catch(catch_unwind(||((self.vk_update_descriptor_sets)(device, descriptorWriteCount, pDescriptorWrites, descriptorCopyCount, pDescriptorCopies))))
 	}
 	fn vkCreateFramebuffer(&self, device: VkDevice, pCreateInfo: *const VkFramebufferCreateInfo, pAllocator: *const VkAllocationCallbacks, pFramebuffer: *mut VkFramebuffer) -> Result<()> {
-		convert_result("vkCreateFramebuffer", catch_unwind(||((self.vk_create_framebuffer)(device, pCreateInfo, pAllocator, pFramebuffer))))
+		vk_convert_result("vkCreateFramebuffer", catch_unwind(||((self.vk_create_framebuffer)(device, pCreateInfo, pAllocator, pFramebuffer))))
 	}
 	fn vkDestroyFramebuffer(&self, device: VkDevice, framebuffer: VkFramebuffer, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_destroy_framebuffer)(device, framebuffer, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_destroy_framebuffer)(device, framebuffer, pAllocator))))
 	}
 	fn vkCreateRenderPass(&self, device: VkDevice, pCreateInfo: *const VkRenderPassCreateInfo, pAllocator: *const VkAllocationCallbacks, pRenderPass: *mut VkRenderPass) -> Result<()> {
-		convert_result("vkCreateRenderPass", catch_unwind(||((self.vk_create_render_pass)(device, pCreateInfo, pAllocator, pRenderPass))))
+		vk_convert_result("vkCreateRenderPass", catch_unwind(||((self.vk_create_render_pass)(device, pCreateInfo, pAllocator, pRenderPass))))
 	}
 	fn vkDestroyRenderPass(&self, device: VkDevice, renderPass: VkRenderPass, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_destroy_render_pass)(device, renderPass, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_destroy_render_pass)(device, renderPass, pAllocator))))
 	}
 	fn vkGetRenderAreaGranularity(&self, device: VkDevice, renderPass: VkRenderPass, pGranularity: *mut VkExtent2D) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_get_render_area_granularity)(device, renderPass, pGranularity))))
+		vk_process_catch(catch_unwind(||((self.vk_get_render_area_granularity)(device, renderPass, pGranularity))))
 	}
 	fn vkCreateCommandPool(&self, device: VkDevice, pCreateInfo: *const VkCommandPoolCreateInfo, pAllocator: *const VkAllocationCallbacks, pCommandPool: *mut VkCommandPool) -> Result<()> {
-		convert_result("vkCreateCommandPool", catch_unwind(||((self.vk_create_command_pool)(device, pCreateInfo, pAllocator, pCommandPool))))
+		vk_convert_result("vkCreateCommandPool", catch_unwind(||((self.vk_create_command_pool)(device, pCreateInfo, pAllocator, pCommandPool))))
 	}
 	fn vkDestroyCommandPool(&self, device: VkDevice, commandPool: VkCommandPool, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_destroy_command_pool)(device, commandPool, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_destroy_command_pool)(device, commandPool, pAllocator))))
 	}
 	fn vkResetCommandPool(&self, device: VkDevice, commandPool: VkCommandPool, flags: VkCommandPoolResetFlags) -> Result<()> {
-		convert_result("vkResetCommandPool", catch_unwind(||((self.vk_reset_command_pool)(device, commandPool, flags))))
+		vk_convert_result("vkResetCommandPool", catch_unwind(||((self.vk_reset_command_pool)(device, commandPool, flags))))
 	}
 	fn vkAllocateCommandBuffers(&self, device: VkDevice, pAllocateInfo: *const VkCommandBufferAllocateInfo, pCommandBuffers: *mut VkCommandBuffer) -> Result<()> {
-		convert_result("vkAllocateCommandBuffers", catch_unwind(||((self.vk_allocate_command_buffers)(device, pAllocateInfo, pCommandBuffers))))
+		vk_convert_result("vkAllocateCommandBuffers", catch_unwind(||((self.vk_allocate_command_buffers)(device, pAllocateInfo, pCommandBuffers))))
 	}
 	fn vkFreeCommandBuffers(&self, device: VkDevice, commandPool: VkCommandPool, commandBufferCount: u32, pCommandBuffers: *const VkCommandBuffer) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_free_command_buffers)(device, commandPool, commandBufferCount, pCommandBuffers))))
+		vk_process_catch(catch_unwind(||((self.vk_free_command_buffers)(device, commandPool, commandBufferCount, pCommandBuffers))))
 	}
 	fn vkBeginCommandBuffer(&self, commandBuffer: VkCommandBuffer, pBeginInfo: *const VkCommandBufferBeginInfo) -> Result<()> {
-		convert_result("vkBeginCommandBuffer", catch_unwind(||((self.vk_begin_command_buffer)(commandBuffer, pBeginInfo))))
+		vk_convert_result("vkBeginCommandBuffer", catch_unwind(||((self.vk_begin_command_buffer)(commandBuffer, pBeginInfo))))
 	}
 	fn vkEndCommandBuffer(&self, commandBuffer: VkCommandBuffer) -> Result<()> {
-		convert_result("vkEndCommandBuffer", catch_unwind(||((self.vk_end_command_buffer)(commandBuffer))))
+		vk_convert_result("vkEndCommandBuffer", catch_unwind(||((self.vk_end_command_buffer)(commandBuffer))))
 	}
 	fn vkResetCommandBuffer(&self, commandBuffer: VkCommandBuffer, flags: VkCommandBufferResetFlags) -> Result<()> {
-		convert_result("vkResetCommandBuffer", catch_unwind(||((self.vk_reset_command_buffer)(commandBuffer, flags))))
+		vk_convert_result("vkResetCommandBuffer", catch_unwind(||((self.vk_reset_command_buffer)(commandBuffer, flags))))
 	}
 	fn vkCmdBindPipeline(&self, commandBuffer: VkCommandBuffer, pipelineBindPoint: VkPipelineBindPoint, pipeline: VkPipeline) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_bind_pipeline)(commandBuffer, pipelineBindPoint, pipeline))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_bind_pipeline)(commandBuffer, pipelineBindPoint, pipeline))))
 	}
 	fn vkCmdSetViewport(&self, commandBuffer: VkCommandBuffer, firstViewport: u32, viewportCount: u32, pViewports: *const VkViewport) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_viewport)(commandBuffer, firstViewport, viewportCount, pViewports))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_viewport)(commandBuffer, firstViewport, viewportCount, pViewports))))
 	}
 	fn vkCmdSetScissor(&self, commandBuffer: VkCommandBuffer, firstScissor: u32, scissorCount: u32, pScissors: *const VkRect2D) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_scissor)(commandBuffer, firstScissor, scissorCount, pScissors))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_scissor)(commandBuffer, firstScissor, scissorCount, pScissors))))
 	}
 	fn vkCmdSetLineWidth(&self, commandBuffer: VkCommandBuffer, lineWidth: f32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_line_width)(commandBuffer, lineWidth))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_line_width)(commandBuffer, lineWidth))))
 	}
 	fn vkCmdSetDepthBias(&self, commandBuffer: VkCommandBuffer, depthBiasConstantFactor: f32, depthBiasClamp: f32, depthBiasSlopeFactor: f32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_depth_bias)(commandBuffer, depthBiasConstantFactor, depthBiasClamp, depthBiasSlopeFactor))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_depth_bias)(commandBuffer, depthBiasConstantFactor, depthBiasClamp, depthBiasSlopeFactor))))
 	}
 	fn vkCmdSetBlendConstants(&self, commandBuffer: VkCommandBuffer, blendConstants: &[float; 4 as usize]) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_blend_constants)(commandBuffer, blendConstants))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_blend_constants)(commandBuffer, blendConstants))))
 	}
 	fn vkCmdSetDepthBounds(&self, commandBuffer: VkCommandBuffer, minDepthBounds: f32, maxDepthBounds: f32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_depth_bounds)(commandBuffer, minDepthBounds, maxDepthBounds))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_depth_bounds)(commandBuffer, minDepthBounds, maxDepthBounds))))
 	}
 	fn vkCmdSetStencilCompareMask(&self, commandBuffer: VkCommandBuffer, faceMask: VkStencilFaceFlags, compareMask: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_stencil_compare_mask)(commandBuffer, faceMask, compareMask))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_stencil_compare_mask)(commandBuffer, faceMask, compareMask))))
 	}
 	fn vkCmdSetStencilWriteMask(&self, commandBuffer: VkCommandBuffer, faceMask: VkStencilFaceFlags, writeMask: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_stencil_write_mask)(commandBuffer, faceMask, writeMask))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_stencil_write_mask)(commandBuffer, faceMask, writeMask))))
 	}
 	fn vkCmdSetStencilReference(&self, commandBuffer: VkCommandBuffer, faceMask: VkStencilFaceFlags, reference: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_stencil_reference)(commandBuffer, faceMask, reference))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_stencil_reference)(commandBuffer, faceMask, reference))))
 	}
 	fn vkCmdBindDescriptorSets(&self, commandBuffer: VkCommandBuffer, pipelineBindPoint: VkPipelineBindPoint, layout: VkPipelineLayout, firstSet: u32, descriptorSetCount: u32, pDescriptorSets: *const VkDescriptorSet, dynamicOffsetCount: u32, pDynamicOffsets: *const uint32_t) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_bind_descriptor_sets)(commandBuffer, pipelineBindPoint, layout, firstSet, descriptorSetCount, pDescriptorSets, dynamicOffsetCount, pDynamicOffsets))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_bind_descriptor_sets)(commandBuffer, pipelineBindPoint, layout, firstSet, descriptorSetCount, pDescriptorSets, dynamicOffsetCount, pDynamicOffsets))))
 	}
 	fn vkCmdBindIndexBuffer(&self, commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize, indexType: VkIndexType) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_bind_index_buffer)(commandBuffer, buffer, offset, indexType))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_bind_index_buffer)(commandBuffer, buffer, offset, indexType))))
 	}
 	fn vkCmdBindVertexBuffers(&self, commandBuffer: VkCommandBuffer, firstBinding: u32, bindingCount: u32, pBuffers: *const VkBuffer, pOffsets: *const VkDeviceSize) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_bind_vertex_buffers)(commandBuffer, firstBinding, bindingCount, pBuffers, pOffsets))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_bind_vertex_buffers)(commandBuffer, firstBinding, bindingCount, pBuffers, pOffsets))))
 	}
 	fn vkCmdDraw(&self, commandBuffer: VkCommandBuffer, vertexCount: u32, instanceCount: u32, firstVertex: u32, firstInstance: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_draw)(commandBuffer, vertexCount, instanceCount, firstVertex, firstInstance))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_draw)(commandBuffer, vertexCount, instanceCount, firstVertex, firstInstance))))
 	}
 	fn vkCmdDrawIndexed(&self, commandBuffer: VkCommandBuffer, indexCount: u32, instanceCount: u32, firstIndex: u32, vertexOffset: i32, firstInstance: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_draw_indexed)(commandBuffer, indexCount, instanceCount, firstIndex, vertexOffset, firstInstance))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_draw_indexed)(commandBuffer, indexCount, instanceCount, firstIndex, vertexOffset, firstInstance))))
 	}
 	fn vkCmdDrawIndirect(&self, commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize, drawCount: u32, stride: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_draw_indirect)(commandBuffer, buffer, offset, drawCount, stride))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_draw_indirect)(commandBuffer, buffer, offset, drawCount, stride))))
 	}
 	fn vkCmdDrawIndexedIndirect(&self, commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize, drawCount: u32, stride: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_draw_indexed_indirect)(commandBuffer, buffer, offset, drawCount, stride))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_draw_indexed_indirect)(commandBuffer, buffer, offset, drawCount, stride))))
 	}
 	fn vkCmdDispatch(&self, commandBuffer: VkCommandBuffer, groupCountX: u32, groupCountY: u32, groupCountZ: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_dispatch)(commandBuffer, groupCountX, groupCountY, groupCountZ))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_dispatch)(commandBuffer, groupCountX, groupCountY, groupCountZ))))
 	}
 	fn vkCmdDispatchIndirect(&self, commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_dispatch_indirect)(commandBuffer, buffer, offset))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_dispatch_indirect)(commandBuffer, buffer, offset))))
 	}
 	fn vkCmdCopyBuffer(&self, commandBuffer: VkCommandBuffer, srcBuffer: VkBuffer, dstBuffer: VkBuffer, regionCount: u32, pRegions: *const VkBufferCopy) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_copy_buffer)(commandBuffer, srcBuffer, dstBuffer, regionCount, pRegions))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_copy_buffer)(commandBuffer, srcBuffer, dstBuffer, regionCount, pRegions))))
 	}
 	fn vkCmdCopyImage(&self, commandBuffer: VkCommandBuffer, srcImage: VkImage, srcImageLayout: VkImageLayout, dstImage: VkImage, dstImageLayout: VkImageLayout, regionCount: u32, pRegions: *const VkImageCopy) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_copy_image)(commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, regionCount, pRegions))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_copy_image)(commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, regionCount, pRegions))))
 	}
 	fn vkCmdBlitImage(&self, commandBuffer: VkCommandBuffer, srcImage: VkImage, srcImageLayout: VkImageLayout, dstImage: VkImage, dstImageLayout: VkImageLayout, regionCount: u32, pRegions: *const VkImageBlit, filter: VkFilter) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_blit_image)(commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, regionCount, pRegions, filter))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_blit_image)(commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, regionCount, pRegions, filter))))
 	}
 	fn vkCmdCopyBufferToImage(&self, commandBuffer: VkCommandBuffer, srcBuffer: VkBuffer, dstImage: VkImage, dstImageLayout: VkImageLayout, regionCount: u32, pRegions: *const VkBufferImageCopy) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_copy_buffer_to_image)(commandBuffer, srcBuffer, dstImage, dstImageLayout, regionCount, pRegions))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_copy_buffer_to_image)(commandBuffer, srcBuffer, dstImage, dstImageLayout, regionCount, pRegions))))
 	}
 	fn vkCmdCopyImageToBuffer(&self, commandBuffer: VkCommandBuffer, srcImage: VkImage, srcImageLayout: VkImageLayout, dstBuffer: VkBuffer, regionCount: u32, pRegions: *const VkBufferImageCopy) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_copy_image_to_buffer)(commandBuffer, srcImage, srcImageLayout, dstBuffer, regionCount, pRegions))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_copy_image_to_buffer)(commandBuffer, srcImage, srcImageLayout, dstBuffer, regionCount, pRegions))))
 	}
 	fn vkCmdUpdateBuffer(&self, commandBuffer: VkCommandBuffer, dstBuffer: VkBuffer, dstOffset: VkDeviceSize, dataSize: VkDeviceSize, pData: *const c_void) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_update_buffer)(commandBuffer, dstBuffer, dstOffset, dataSize, pData))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_update_buffer)(commandBuffer, dstBuffer, dstOffset, dataSize, pData))))
 	}
 	fn vkCmdFillBuffer(&self, commandBuffer: VkCommandBuffer, dstBuffer: VkBuffer, dstOffset: VkDeviceSize, size: VkDeviceSize, data: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_fill_buffer)(commandBuffer, dstBuffer, dstOffset, size, data))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_fill_buffer)(commandBuffer, dstBuffer, dstOffset, size, data))))
 	}
 	fn vkCmdClearColorImage(&self, commandBuffer: VkCommandBuffer, image: VkImage, imageLayout: VkImageLayout, pColor: *const VkClearColorValue, rangeCount: u32, pRanges: *const VkImageSubresourceRange) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_clear_color_image)(commandBuffer, image, imageLayout, pColor, rangeCount, pRanges))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_clear_color_image)(commandBuffer, image, imageLayout, pColor, rangeCount, pRanges))))
 	}
 	fn vkCmdClearDepthStencilImage(&self, commandBuffer: VkCommandBuffer, image: VkImage, imageLayout: VkImageLayout, pDepthStencil: *const VkClearDepthStencilValue, rangeCount: u32, pRanges: *const VkImageSubresourceRange) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_clear_depth_stencil_image)(commandBuffer, image, imageLayout, pDepthStencil, rangeCount, pRanges))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_clear_depth_stencil_image)(commandBuffer, image, imageLayout, pDepthStencil, rangeCount, pRanges))))
 	}
 	fn vkCmdClearAttachments(&self, commandBuffer: VkCommandBuffer, attachmentCount: u32, pAttachments: *const VkClearAttachment, rectCount: u32, pRects: *const VkClearRect) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_clear_attachments)(commandBuffer, attachmentCount, pAttachments, rectCount, pRects))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_clear_attachments)(commandBuffer, attachmentCount, pAttachments, rectCount, pRects))))
 	}
 	fn vkCmdResolveImage(&self, commandBuffer: VkCommandBuffer, srcImage: VkImage, srcImageLayout: VkImageLayout, dstImage: VkImage, dstImageLayout: VkImageLayout, regionCount: u32, pRegions: *const VkImageResolve) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_resolve_image)(commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, regionCount, pRegions))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_resolve_image)(commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, regionCount, pRegions))))
 	}
 	fn vkCmdSetEvent(&self, commandBuffer: VkCommandBuffer, event: VkEvent, stageMask: VkPipelineStageFlags) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_event)(commandBuffer, event, stageMask))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_event)(commandBuffer, event, stageMask))))
 	}
 	fn vkCmdResetEvent(&self, commandBuffer: VkCommandBuffer, event: VkEvent, stageMask: VkPipelineStageFlags) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_reset_event)(commandBuffer, event, stageMask))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_reset_event)(commandBuffer, event, stageMask))))
 	}
 	fn vkCmdWaitEvents(&self, commandBuffer: VkCommandBuffer, eventCount: u32, pEvents: *const VkEvent, srcStageMask: VkPipelineStageFlags, dstStageMask: VkPipelineStageFlags, memoryBarrierCount: u32, pMemoryBarriers: *const VkMemoryBarrier, bufferMemoryBarrierCount: u32, pBufferMemoryBarriers: *const VkBufferMemoryBarrier, imageMemoryBarrierCount: u32, pImageMemoryBarriers: *const VkImageMemoryBarrier) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_wait_events)(commandBuffer, eventCount, pEvents, srcStageMask, dstStageMask, memoryBarrierCount, pMemoryBarriers, bufferMemoryBarrierCount, pBufferMemoryBarriers, imageMemoryBarrierCount, pImageMemoryBarriers))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_wait_events)(commandBuffer, eventCount, pEvents, srcStageMask, dstStageMask, memoryBarrierCount, pMemoryBarriers, bufferMemoryBarrierCount, pBufferMemoryBarriers, imageMemoryBarrierCount, pImageMemoryBarriers))))
 	}
 	fn vkCmdPipelineBarrier(&self, commandBuffer: VkCommandBuffer, srcStageMask: VkPipelineStageFlags, dstStageMask: VkPipelineStageFlags, dependencyFlags: VkDependencyFlags, memoryBarrierCount: u32, pMemoryBarriers: *const VkMemoryBarrier, bufferMemoryBarrierCount: u32, pBufferMemoryBarriers: *const VkBufferMemoryBarrier, imageMemoryBarrierCount: u32, pImageMemoryBarriers: *const VkImageMemoryBarrier) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_pipeline_barrier)(commandBuffer, srcStageMask, dstStageMask, dependencyFlags, memoryBarrierCount, pMemoryBarriers, bufferMemoryBarrierCount, pBufferMemoryBarriers, imageMemoryBarrierCount, pImageMemoryBarriers))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_pipeline_barrier)(commandBuffer, srcStageMask, dstStageMask, dependencyFlags, memoryBarrierCount, pMemoryBarriers, bufferMemoryBarrierCount, pBufferMemoryBarriers, imageMemoryBarrierCount, pImageMemoryBarriers))))
 	}
 	fn vkCmdBeginQuery(&self, commandBuffer: VkCommandBuffer, queryPool: VkQueryPool, query: u32, flags: VkQueryControlFlags) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_begin_query)(commandBuffer, queryPool, query, flags))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_begin_query)(commandBuffer, queryPool, query, flags))))
 	}
 	fn vkCmdEndQuery(&self, commandBuffer: VkCommandBuffer, queryPool: VkQueryPool, query: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_end_query)(commandBuffer, queryPool, query))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_end_query)(commandBuffer, queryPool, query))))
 	}
 	fn vkCmdResetQueryPool(&self, commandBuffer: VkCommandBuffer, queryPool: VkQueryPool, firstQuery: u32, queryCount: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_reset_query_pool)(commandBuffer, queryPool, firstQuery, queryCount))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_reset_query_pool)(commandBuffer, queryPool, firstQuery, queryCount))))
 	}
 	fn vkCmdWriteTimestamp(&self, commandBuffer: VkCommandBuffer, pipelineStage: VkPipelineStageFlagBits, queryPool: VkQueryPool, query: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_write_timestamp)(commandBuffer, pipelineStage, queryPool, query))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_write_timestamp)(commandBuffer, pipelineStage, queryPool, query))))
 	}
 	fn vkCmdCopyQueryPoolResults(&self, commandBuffer: VkCommandBuffer, queryPool: VkQueryPool, firstQuery: u32, queryCount: u32, dstBuffer: VkBuffer, dstOffset: VkDeviceSize, stride: VkDeviceSize, flags: VkQueryResultFlags) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_copy_query_pool_results)(commandBuffer, queryPool, firstQuery, queryCount, dstBuffer, dstOffset, stride, flags))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_copy_query_pool_results)(commandBuffer, queryPool, firstQuery, queryCount, dstBuffer, dstOffset, stride, flags))))
 	}
 	fn vkCmdPushConstants(&self, commandBuffer: VkCommandBuffer, layout: VkPipelineLayout, stageFlags: VkShaderStageFlags, offset: u32, size: u32, pValues: *const c_void) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_push_constants)(commandBuffer, layout, stageFlags, offset, size, pValues))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_push_constants)(commandBuffer, layout, stageFlags, offset, size, pValues))))
 	}
 	fn vkCmdBeginRenderPass(&self, commandBuffer: VkCommandBuffer, pRenderPassBegin: *const VkRenderPassBeginInfo, contents: VkSubpassContents) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_begin_render_pass)(commandBuffer, pRenderPassBegin, contents))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_begin_render_pass)(commandBuffer, pRenderPassBegin, contents))))
 	}
 	fn vkCmdNextSubpass(&self, commandBuffer: VkCommandBuffer, contents: VkSubpassContents) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_next_subpass)(commandBuffer, contents))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_next_subpass)(commandBuffer, contents))))
 	}
 	fn vkCmdEndRenderPass(&self, commandBuffer: VkCommandBuffer) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_end_render_pass)(commandBuffer))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_end_render_pass)(commandBuffer))))
 	}
 	fn vkCmdExecuteCommands(&self, commandBuffer: VkCommandBuffer, commandBufferCount: u32, pCommandBuffers: *const VkCommandBuffer) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_execute_commands)(commandBuffer, commandBufferCount, pCommandBuffers))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_execute_commands)(commandBuffer, commandBufferCount, pCommandBuffers))))
 	}
 }
 impl Default for Vulkan_VERSION_1_0 {
@@ -11556,88 +11556,88 @@ pub struct Vulkan_VERSION_1_1 {
 }
 impl VK_VERSION_1_1 for Vulkan_VERSION_1_1 {
 	fn vkEnumerateInstanceVersion(&self, pApiVersion: *mut uint32_t) -> Result<()> {
-		convert_result("vkEnumerateInstanceVersion", catch_unwind(||((self.vk_enumerate_instance_version)(pApiVersion))))
+		vk_convert_result("vkEnumerateInstanceVersion", catch_unwind(||((self.vk_enumerate_instance_version)(pApiVersion))))
 	}
 	fn vkBindBufferMemory2(&self, device: VkDevice, bindInfoCount: u32, pBindInfos: *const VkBindBufferMemoryInfo) -> Result<()> {
-		convert_result("vkBindBufferMemory2", catch_unwind(||((self.vk_bind_buffer_memory2)(device, bindInfoCount, pBindInfos))))
+		vk_convert_result("vkBindBufferMemory2", catch_unwind(||((self.vk_bind_buffer_memory2)(device, bindInfoCount, pBindInfos))))
 	}
 	fn vkBindImageMemory2(&self, device: VkDevice, bindInfoCount: u32, pBindInfos: *const VkBindImageMemoryInfo) -> Result<()> {
-		convert_result("vkBindImageMemory2", catch_unwind(||((self.vk_bind_image_memory2)(device, bindInfoCount, pBindInfos))))
+		vk_convert_result("vkBindImageMemory2", catch_unwind(||((self.vk_bind_image_memory2)(device, bindInfoCount, pBindInfos))))
 	}
 	fn vkGetDeviceGroupPeerMemoryFeatures(&self, device: VkDevice, heapIndex: u32, localDeviceIndex: u32, remoteDeviceIndex: u32, pPeerMemoryFeatures: *mut VkPeerMemoryFeatureFlags) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_get_device_group_peer_memory_features)(device, heapIndex, localDeviceIndex, remoteDeviceIndex, pPeerMemoryFeatures))))
+		vk_process_catch(catch_unwind(||((self.vk_get_device_group_peer_memory_features)(device, heapIndex, localDeviceIndex, remoteDeviceIndex, pPeerMemoryFeatures))))
 	}
 	fn vkCmdSetDeviceMask(&self, commandBuffer: VkCommandBuffer, deviceMask: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_device_mask)(commandBuffer, deviceMask))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_device_mask)(commandBuffer, deviceMask))))
 	}
 	fn vkCmdDispatchBase(&self, commandBuffer: VkCommandBuffer, baseGroupX: u32, baseGroupY: u32, baseGroupZ: u32, groupCountX: u32, groupCountY: u32, groupCountZ: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_dispatch_base)(commandBuffer, baseGroupX, baseGroupY, baseGroupZ, groupCountX, groupCountY, groupCountZ))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_dispatch_base)(commandBuffer, baseGroupX, baseGroupY, baseGroupZ, groupCountX, groupCountY, groupCountZ))))
 	}
 	fn vkEnumeratePhysicalDeviceGroups(&self, instance: VkInstance, pPhysicalDeviceGroupCount: *mut uint32_t, pPhysicalDeviceGroupProperties: *mut VkPhysicalDeviceGroupProperties) -> Result<()> {
-		convert_result("vkEnumeratePhysicalDeviceGroups", catch_unwind(||((self.vk_enumerate_physical_device_groups)(instance, pPhysicalDeviceGroupCount, pPhysicalDeviceGroupProperties))))
+		vk_convert_result("vkEnumeratePhysicalDeviceGroups", catch_unwind(||((self.vk_enumerate_physical_device_groups)(instance, pPhysicalDeviceGroupCount, pPhysicalDeviceGroupProperties))))
 	}
 	fn vkGetImageMemoryRequirements2(&self, device: VkDevice, pInfo: *const VkImageMemoryRequirementsInfo2, pMemoryRequirements: *mut VkMemoryRequirements2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_get_image_memory_requirements2)(device, pInfo, pMemoryRequirements))))
+		vk_process_catch(catch_unwind(||((self.vk_get_image_memory_requirements2)(device, pInfo, pMemoryRequirements))))
 	}
 	fn vkGetBufferMemoryRequirements2(&self, device: VkDevice, pInfo: *const VkBufferMemoryRequirementsInfo2, pMemoryRequirements: *mut VkMemoryRequirements2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_get_buffer_memory_requirements2)(device, pInfo, pMemoryRequirements))))
+		vk_process_catch(catch_unwind(||((self.vk_get_buffer_memory_requirements2)(device, pInfo, pMemoryRequirements))))
 	}
 	fn vkGetImageSparseMemoryRequirements2(&self, device: VkDevice, pInfo: *const VkImageSparseMemoryRequirementsInfo2, pSparseMemoryRequirementCount: *mut uint32_t, pSparseMemoryRequirements: *mut VkSparseImageMemoryRequirements2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_get_image_sparse_memory_requirements2)(device, pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements))))
+		vk_process_catch(catch_unwind(||((self.vk_get_image_sparse_memory_requirements2)(device, pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements))))
 	}
 	fn vkGetPhysicalDeviceFeatures2(&self, physicalDevice: VkPhysicalDevice, pFeatures: *mut VkPhysicalDeviceFeatures2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_get_physical_device_features2)(physicalDevice, pFeatures))))
+		vk_process_catch(catch_unwind(||((self.vk_get_physical_device_features2)(physicalDevice, pFeatures))))
 	}
 	fn vkGetPhysicalDeviceProperties2(&self, physicalDevice: VkPhysicalDevice, pProperties: *mut VkPhysicalDeviceProperties2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_get_physical_device_properties2)(physicalDevice, pProperties))))
+		vk_process_catch(catch_unwind(||((self.vk_get_physical_device_properties2)(physicalDevice, pProperties))))
 	}
 	fn vkGetPhysicalDeviceFormatProperties2(&self, physicalDevice: VkPhysicalDevice, format: VkFormat, pFormatProperties: *mut VkFormatProperties2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_get_physical_device_format_properties2)(physicalDevice, format, pFormatProperties))))
+		vk_process_catch(catch_unwind(||((self.vk_get_physical_device_format_properties2)(physicalDevice, format, pFormatProperties))))
 	}
 	fn vkGetPhysicalDeviceImageFormatProperties2(&self, physicalDevice: VkPhysicalDevice, pImageFormatInfo: *const VkPhysicalDeviceImageFormatInfo2, pImageFormatProperties: *mut VkImageFormatProperties2) -> Result<()> {
-		convert_result("vkGetPhysicalDeviceImageFormatProperties2", catch_unwind(||((self.vk_get_physical_device_image_format_properties2)(physicalDevice, pImageFormatInfo, pImageFormatProperties))))
+		vk_convert_result("vkGetPhysicalDeviceImageFormatProperties2", catch_unwind(||((self.vk_get_physical_device_image_format_properties2)(physicalDevice, pImageFormatInfo, pImageFormatProperties))))
 	}
 	fn vkGetPhysicalDeviceQueueFamilyProperties2(&self, physicalDevice: VkPhysicalDevice, pQueueFamilyPropertyCount: *mut uint32_t, pQueueFamilyProperties: *mut VkQueueFamilyProperties2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_get_physical_device_queue_family_properties2)(physicalDevice, pQueueFamilyPropertyCount, pQueueFamilyProperties))))
+		vk_process_catch(catch_unwind(||((self.vk_get_physical_device_queue_family_properties2)(physicalDevice, pQueueFamilyPropertyCount, pQueueFamilyProperties))))
 	}
 	fn vkGetPhysicalDeviceMemoryProperties2(&self, physicalDevice: VkPhysicalDevice, pMemoryProperties: *mut VkPhysicalDeviceMemoryProperties2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_get_physical_device_memory_properties2)(physicalDevice, pMemoryProperties))))
+		vk_process_catch(catch_unwind(||((self.vk_get_physical_device_memory_properties2)(physicalDevice, pMemoryProperties))))
 	}
 	fn vkGetPhysicalDeviceSparseImageFormatProperties2(&self, physicalDevice: VkPhysicalDevice, pFormatInfo: *const VkPhysicalDeviceSparseImageFormatInfo2, pPropertyCount: *mut uint32_t, pProperties: *mut VkSparseImageFormatProperties2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_get_physical_device_sparse_image_format_properties2)(physicalDevice, pFormatInfo, pPropertyCount, pProperties))))
+		vk_process_catch(catch_unwind(||((self.vk_get_physical_device_sparse_image_format_properties2)(physicalDevice, pFormatInfo, pPropertyCount, pProperties))))
 	}
 	fn vkTrimCommandPool(&self, device: VkDevice, commandPool: VkCommandPool, flags: VkCommandPoolTrimFlags) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_trim_command_pool)(device, commandPool, flags))))
+		vk_process_catch(catch_unwind(||((self.vk_trim_command_pool)(device, commandPool, flags))))
 	}
 	fn vkGetDeviceQueue2(&self, device: VkDevice, pQueueInfo: *const VkDeviceQueueInfo2, pQueue: *mut VkQueue) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_get_device_queue2)(device, pQueueInfo, pQueue))))
+		vk_process_catch(catch_unwind(||((self.vk_get_device_queue2)(device, pQueueInfo, pQueue))))
 	}
 	fn vkCreateSamplerYcbcrConversion(&self, device: VkDevice, pCreateInfo: *const VkSamplerYcbcrConversionCreateInfo, pAllocator: *const VkAllocationCallbacks, pYcbcrConversion: *mut VkSamplerYcbcrConversion) -> Result<()> {
-		convert_result("vkCreateSamplerYcbcrConversion", catch_unwind(||((self.vk_create_sampler_ycbcr_conversion)(device, pCreateInfo, pAllocator, pYcbcrConversion))))
+		vk_convert_result("vkCreateSamplerYcbcrConversion", catch_unwind(||((self.vk_create_sampler_ycbcr_conversion)(device, pCreateInfo, pAllocator, pYcbcrConversion))))
 	}
 	fn vkDestroySamplerYcbcrConversion(&self, device: VkDevice, ycbcrConversion: VkSamplerYcbcrConversion, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_destroy_sampler_ycbcr_conversion)(device, ycbcrConversion, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_destroy_sampler_ycbcr_conversion)(device, ycbcrConversion, pAllocator))))
 	}
 	fn vkCreateDescriptorUpdateTemplate(&self, device: VkDevice, pCreateInfo: *const VkDescriptorUpdateTemplateCreateInfo, pAllocator: *const VkAllocationCallbacks, pDescriptorUpdateTemplate: *mut VkDescriptorUpdateTemplate) -> Result<()> {
-		convert_result("vkCreateDescriptorUpdateTemplate", catch_unwind(||((self.vk_create_descriptor_update_template)(device, pCreateInfo, pAllocator, pDescriptorUpdateTemplate))))
+		vk_convert_result("vkCreateDescriptorUpdateTemplate", catch_unwind(||((self.vk_create_descriptor_update_template)(device, pCreateInfo, pAllocator, pDescriptorUpdateTemplate))))
 	}
 	fn vkDestroyDescriptorUpdateTemplate(&self, device: VkDevice, descriptorUpdateTemplate: VkDescriptorUpdateTemplate, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_destroy_descriptor_update_template)(device, descriptorUpdateTemplate, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_destroy_descriptor_update_template)(device, descriptorUpdateTemplate, pAllocator))))
 	}
 	fn vkUpdateDescriptorSetWithTemplate(&self, device: VkDevice, descriptorSet: VkDescriptorSet, descriptorUpdateTemplate: VkDescriptorUpdateTemplate, pData: *const c_void) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_update_descriptor_set_with_template)(device, descriptorSet, descriptorUpdateTemplate, pData))))
+		vk_process_catch(catch_unwind(||((self.vk_update_descriptor_set_with_template)(device, descriptorSet, descriptorUpdateTemplate, pData))))
 	}
 	fn vkGetPhysicalDeviceExternalBufferProperties(&self, physicalDevice: VkPhysicalDevice, pExternalBufferInfo: *const VkPhysicalDeviceExternalBufferInfo, pExternalBufferProperties: *mut VkExternalBufferProperties) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_get_physical_device_external_buffer_properties)(physicalDevice, pExternalBufferInfo, pExternalBufferProperties))))
+		vk_process_catch(catch_unwind(||((self.vk_get_physical_device_external_buffer_properties)(physicalDevice, pExternalBufferInfo, pExternalBufferProperties))))
 	}
 	fn vkGetPhysicalDeviceExternalFenceProperties(&self, physicalDevice: VkPhysicalDevice, pExternalFenceInfo: *const VkPhysicalDeviceExternalFenceInfo, pExternalFenceProperties: *mut VkExternalFenceProperties) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_get_physical_device_external_fence_properties)(physicalDevice, pExternalFenceInfo, pExternalFenceProperties))))
+		vk_process_catch(catch_unwind(||((self.vk_get_physical_device_external_fence_properties)(physicalDevice, pExternalFenceInfo, pExternalFenceProperties))))
 	}
 	fn vkGetPhysicalDeviceExternalSemaphoreProperties(&self, physicalDevice: VkPhysicalDevice, pExternalSemaphoreInfo: *const VkPhysicalDeviceExternalSemaphoreInfo, pExternalSemaphoreProperties: *mut VkExternalSemaphoreProperties) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_get_physical_device_external_semaphore_properties)(physicalDevice, pExternalSemaphoreInfo, pExternalSemaphoreProperties))))
+		vk_process_catch(catch_unwind(||((self.vk_get_physical_device_external_semaphore_properties)(physicalDevice, pExternalSemaphoreInfo, pExternalSemaphoreProperties))))
 	}
 	fn vkGetDescriptorSetLayoutSupport(&self, device: VkDevice, pCreateInfo: *const VkDescriptorSetLayoutCreateInfo, pSupport: *mut VkDescriptorSetLayoutSupport) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_get_descriptor_set_layout_support)(device, pCreateInfo, pSupport))))
+		vk_process_catch(catch_unwind(||((self.vk_get_descriptor_set_layout_support)(device, pCreateInfo, pSupport))))
 	}
 }
 impl Default for Vulkan_VERSION_1_1 {
@@ -12923,43 +12923,43 @@ pub struct Vulkan_VERSION_1_2 {
 }
 impl VK_VERSION_1_2 for Vulkan_VERSION_1_2 {
 	fn vkCmdDrawIndirectCount(&self, commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize, countBuffer: VkBuffer, countBufferOffset: VkDeviceSize, maxDrawCount: u32, stride: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_draw_indirect_count)(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_draw_indirect_count)(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride))))
 	}
 	fn vkCmdDrawIndexedIndirectCount(&self, commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize, countBuffer: VkBuffer, countBufferOffset: VkDeviceSize, maxDrawCount: u32, stride: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_draw_indexed_indirect_count)(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_draw_indexed_indirect_count)(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride))))
 	}
 	fn vkCreateRenderPass2(&self, device: VkDevice, pCreateInfo: *const VkRenderPassCreateInfo2, pAllocator: *const VkAllocationCallbacks, pRenderPass: *mut VkRenderPass) -> Result<()> {
-		convert_result("vkCreateRenderPass2", catch_unwind(||((self.vk_create_render_pass2)(device, pCreateInfo, pAllocator, pRenderPass))))
+		vk_convert_result("vkCreateRenderPass2", catch_unwind(||((self.vk_create_render_pass2)(device, pCreateInfo, pAllocator, pRenderPass))))
 	}
 	fn vkCmdBeginRenderPass2(&self, commandBuffer: VkCommandBuffer, pRenderPassBegin: *const VkRenderPassBeginInfo, pSubpassBeginInfo: *const VkSubpassBeginInfo) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_begin_render_pass2)(commandBuffer, pRenderPassBegin, pSubpassBeginInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_begin_render_pass2)(commandBuffer, pRenderPassBegin, pSubpassBeginInfo))))
 	}
 	fn vkCmdNextSubpass2(&self, commandBuffer: VkCommandBuffer, pSubpassBeginInfo: *const VkSubpassBeginInfo, pSubpassEndInfo: *const VkSubpassEndInfo) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_next_subpass2)(commandBuffer, pSubpassBeginInfo, pSubpassEndInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_next_subpass2)(commandBuffer, pSubpassBeginInfo, pSubpassEndInfo))))
 	}
 	fn vkCmdEndRenderPass2(&self, commandBuffer: VkCommandBuffer, pSubpassEndInfo: *const VkSubpassEndInfo) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_end_render_pass2)(commandBuffer, pSubpassEndInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_end_render_pass2)(commandBuffer, pSubpassEndInfo))))
 	}
 	fn vkResetQueryPool(&self, device: VkDevice, queryPool: VkQueryPool, firstQuery: u32, queryCount: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_reset_query_pool)(device, queryPool, firstQuery, queryCount))))
+		vk_process_catch(catch_unwind(||((self.vk_reset_query_pool)(device, queryPool, firstQuery, queryCount))))
 	}
 	fn vkGetSemaphoreCounterValue(&self, device: VkDevice, semaphore: VkSemaphore, pValue: *mut uint64_t) -> Result<()> {
-		convert_result("vkGetSemaphoreCounterValue", catch_unwind(||((self.vk_get_semaphore_counter_value)(device, semaphore, pValue))))
+		vk_convert_result("vkGetSemaphoreCounterValue", catch_unwind(||((self.vk_get_semaphore_counter_value)(device, semaphore, pValue))))
 	}
 	fn vkWaitSemaphores(&self, device: VkDevice, pWaitInfo: *const VkSemaphoreWaitInfo, timeout: u64) -> Result<()> {
-		convert_result("vkWaitSemaphores", catch_unwind(||((self.vk_wait_semaphores)(device, pWaitInfo, timeout))))
+		vk_convert_result("vkWaitSemaphores", catch_unwind(||((self.vk_wait_semaphores)(device, pWaitInfo, timeout))))
 	}
 	fn vkSignalSemaphore(&self, device: VkDevice, pSignalInfo: *const VkSemaphoreSignalInfo) -> Result<()> {
-		convert_result("vkSignalSemaphore", catch_unwind(||((self.vk_signal_semaphore)(device, pSignalInfo))))
+		vk_convert_result("vkSignalSemaphore", catch_unwind(||((self.vk_signal_semaphore)(device, pSignalInfo))))
 	}
 	fn vkGetBufferDeviceAddress(&self, device: VkDevice, pInfo: *const VkBufferDeviceAddressInfo) -> Result<VkDeviceAddress> {
-		process_catch(catch_unwind(||((self.vk_get_buffer_device_address)(device, pInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_get_buffer_device_address)(device, pInfo))))
 	}
 	fn vkGetBufferOpaqueCaptureAddress(&self, device: VkDevice, pInfo: *const VkBufferDeviceAddressInfo) -> Result<u64> {
-		process_catch(catch_unwind(||((self.vk_get_buffer_opaque_capture_address)(device, pInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_get_buffer_opaque_capture_address)(device, pInfo))))
 	}
 	fn vkGetDeviceMemoryOpaqueCaptureAddress(&self, device: VkDevice, pInfo: *const VkDeviceMemoryOpaqueCaptureAddressInfo) -> Result<u64> {
-		process_catch(catch_unwind(||((self.vk_get_device_memory_opaque_capture_address)(device, pInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_get_device_memory_opaque_capture_address)(device, pInfo))))
 	}
 }
 impl Default for Vulkan_VERSION_1_2 {
@@ -15049,115 +15049,115 @@ pub struct Vulkan_VERSION_1_3 {
 }
 impl VK_VERSION_1_3 for Vulkan_VERSION_1_3 {
 	fn vkGetPhysicalDeviceToolProperties(&self, physicalDevice: VkPhysicalDevice, pToolCount: *mut uint32_t, pToolProperties: *mut VkPhysicalDeviceToolProperties) -> Result<()> {
-		convert_result("vkGetPhysicalDeviceToolProperties", catch_unwind(||((self.vk_get_physical_device_tool_properties)(physicalDevice, pToolCount, pToolProperties))))
+		vk_convert_result("vkGetPhysicalDeviceToolProperties", catch_unwind(||((self.vk_get_physical_device_tool_properties)(physicalDevice, pToolCount, pToolProperties))))
 	}
 	fn vkCreatePrivateDataSlot(&self, device: VkDevice, pCreateInfo: *const VkPrivateDataSlotCreateInfo, pAllocator: *const VkAllocationCallbacks, pPrivateDataSlot: *mut VkPrivateDataSlot) -> Result<()> {
-		convert_result("vkCreatePrivateDataSlot", catch_unwind(||((self.vk_create_private_data_slot)(device, pCreateInfo, pAllocator, pPrivateDataSlot))))
+		vk_convert_result("vkCreatePrivateDataSlot", catch_unwind(||((self.vk_create_private_data_slot)(device, pCreateInfo, pAllocator, pPrivateDataSlot))))
 	}
 	fn vkDestroyPrivateDataSlot(&self, device: VkDevice, privateDataSlot: VkPrivateDataSlot, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_destroy_private_data_slot)(device, privateDataSlot, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_destroy_private_data_slot)(device, privateDataSlot, pAllocator))))
 	}
 	fn vkSetPrivateData(&self, device: VkDevice, objectType: VkObjectType, objectHandle: u64, privateDataSlot: VkPrivateDataSlot, data: u64) -> Result<()> {
-		convert_result("vkSetPrivateData", catch_unwind(||((self.vk_set_private_data)(device, objectType, objectHandle, privateDataSlot, data))))
+		vk_convert_result("vkSetPrivateData", catch_unwind(||((self.vk_set_private_data)(device, objectType, objectHandle, privateDataSlot, data))))
 	}
 	fn vkGetPrivateData(&self, device: VkDevice, objectType: VkObjectType, objectHandle: u64, privateDataSlot: VkPrivateDataSlot, pData: *mut uint64_t) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_get_private_data)(device, objectType, objectHandle, privateDataSlot, pData))))
+		vk_process_catch(catch_unwind(||((self.vk_get_private_data)(device, objectType, objectHandle, privateDataSlot, pData))))
 	}
 	fn vkCmdSetEvent2(&self, commandBuffer: VkCommandBuffer, event: VkEvent, pDependencyInfo: *const VkDependencyInfo) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_event2)(commandBuffer, event, pDependencyInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_event2)(commandBuffer, event, pDependencyInfo))))
 	}
 	fn vkCmdResetEvent2(&self, commandBuffer: VkCommandBuffer, event: VkEvent, stageMask: VkPipelineStageFlags2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_reset_event2)(commandBuffer, event, stageMask))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_reset_event2)(commandBuffer, event, stageMask))))
 	}
 	fn vkCmdWaitEvents2(&self, commandBuffer: VkCommandBuffer, eventCount: u32, pEvents: *const VkEvent, pDependencyInfos: *const VkDependencyInfo) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_wait_events2)(commandBuffer, eventCount, pEvents, pDependencyInfos))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_wait_events2)(commandBuffer, eventCount, pEvents, pDependencyInfos))))
 	}
 	fn vkCmdPipelineBarrier2(&self, commandBuffer: VkCommandBuffer, pDependencyInfo: *const VkDependencyInfo) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_pipeline_barrier2)(commandBuffer, pDependencyInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_pipeline_barrier2)(commandBuffer, pDependencyInfo))))
 	}
 	fn vkCmdWriteTimestamp2(&self, commandBuffer: VkCommandBuffer, stage: VkPipelineStageFlags2, queryPool: VkQueryPool, query: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_write_timestamp2)(commandBuffer, stage, queryPool, query))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_write_timestamp2)(commandBuffer, stage, queryPool, query))))
 	}
 	fn vkQueueSubmit2(&self, queue: VkQueue, submitCount: u32, pSubmits: *const VkSubmitInfo2, fence: VkFence) -> Result<()> {
-		convert_result("vkQueueSubmit2", catch_unwind(||((self.vk_queue_submit2)(queue, submitCount, pSubmits, fence))))
+		vk_convert_result("vkQueueSubmit2", catch_unwind(||((self.vk_queue_submit2)(queue, submitCount, pSubmits, fence))))
 	}
 	fn vkCmdCopyBuffer2(&self, commandBuffer: VkCommandBuffer, pCopyBufferInfo: *const VkCopyBufferInfo2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_copy_buffer2)(commandBuffer, pCopyBufferInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_copy_buffer2)(commandBuffer, pCopyBufferInfo))))
 	}
 	fn vkCmdCopyImage2(&self, commandBuffer: VkCommandBuffer, pCopyImageInfo: *const VkCopyImageInfo2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_copy_image2)(commandBuffer, pCopyImageInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_copy_image2)(commandBuffer, pCopyImageInfo))))
 	}
 	fn vkCmdCopyBufferToImage2(&self, commandBuffer: VkCommandBuffer, pCopyBufferToImageInfo: *const VkCopyBufferToImageInfo2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_copy_buffer_to_image2)(commandBuffer, pCopyBufferToImageInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_copy_buffer_to_image2)(commandBuffer, pCopyBufferToImageInfo))))
 	}
 	fn vkCmdCopyImageToBuffer2(&self, commandBuffer: VkCommandBuffer, pCopyImageToBufferInfo: *const VkCopyImageToBufferInfo2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_copy_image_to_buffer2)(commandBuffer, pCopyImageToBufferInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_copy_image_to_buffer2)(commandBuffer, pCopyImageToBufferInfo))))
 	}
 	fn vkCmdBlitImage2(&self, commandBuffer: VkCommandBuffer, pBlitImageInfo: *const VkBlitImageInfo2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_blit_image2)(commandBuffer, pBlitImageInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_blit_image2)(commandBuffer, pBlitImageInfo))))
 	}
 	fn vkCmdResolveImage2(&self, commandBuffer: VkCommandBuffer, pResolveImageInfo: *const VkResolveImageInfo2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_resolve_image2)(commandBuffer, pResolveImageInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_resolve_image2)(commandBuffer, pResolveImageInfo))))
 	}
 	fn vkCmdBeginRendering(&self, commandBuffer: VkCommandBuffer, pRenderingInfo: *const VkRenderingInfo) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_begin_rendering)(commandBuffer, pRenderingInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_begin_rendering)(commandBuffer, pRenderingInfo))))
 	}
 	fn vkCmdEndRendering(&self, commandBuffer: VkCommandBuffer) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_end_rendering)(commandBuffer))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_end_rendering)(commandBuffer))))
 	}
 	fn vkCmdSetCullMode(&self, commandBuffer: VkCommandBuffer, cullMode: VkCullModeFlags) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_cull_mode)(commandBuffer, cullMode))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_cull_mode)(commandBuffer, cullMode))))
 	}
 	fn vkCmdSetFrontFace(&self, commandBuffer: VkCommandBuffer, frontFace: VkFrontFace) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_front_face)(commandBuffer, frontFace))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_front_face)(commandBuffer, frontFace))))
 	}
 	fn vkCmdSetPrimitiveTopology(&self, commandBuffer: VkCommandBuffer, primitiveTopology: VkPrimitiveTopology) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_primitive_topology)(commandBuffer, primitiveTopology))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_primitive_topology)(commandBuffer, primitiveTopology))))
 	}
 	fn vkCmdSetViewportWithCount(&self, commandBuffer: VkCommandBuffer, viewportCount: u32, pViewports: *const VkViewport) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_viewport_with_count)(commandBuffer, viewportCount, pViewports))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_viewport_with_count)(commandBuffer, viewportCount, pViewports))))
 	}
 	fn vkCmdSetScissorWithCount(&self, commandBuffer: VkCommandBuffer, scissorCount: u32, pScissors: *const VkRect2D) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_scissor_with_count)(commandBuffer, scissorCount, pScissors))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_scissor_with_count)(commandBuffer, scissorCount, pScissors))))
 	}
 	fn vkCmdBindVertexBuffers2(&self, commandBuffer: VkCommandBuffer, firstBinding: u32, bindingCount: u32, pBuffers: *const VkBuffer, pOffsets: *const VkDeviceSize, pSizes: *const VkDeviceSize, pStrides: *const VkDeviceSize) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_bind_vertex_buffers2)(commandBuffer, firstBinding, bindingCount, pBuffers, pOffsets, pSizes, pStrides))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_bind_vertex_buffers2)(commandBuffer, firstBinding, bindingCount, pBuffers, pOffsets, pSizes, pStrides))))
 	}
 	fn vkCmdSetDepthTestEnable(&self, commandBuffer: VkCommandBuffer, depthTestEnable: VkBool32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_depth_test_enable)(commandBuffer, depthTestEnable))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_depth_test_enable)(commandBuffer, depthTestEnable))))
 	}
 	fn vkCmdSetDepthWriteEnable(&self, commandBuffer: VkCommandBuffer, depthWriteEnable: VkBool32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_depth_write_enable)(commandBuffer, depthWriteEnable))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_depth_write_enable)(commandBuffer, depthWriteEnable))))
 	}
 	fn vkCmdSetDepthCompareOp(&self, commandBuffer: VkCommandBuffer, depthCompareOp: VkCompareOp) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_depth_compare_op)(commandBuffer, depthCompareOp))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_depth_compare_op)(commandBuffer, depthCompareOp))))
 	}
 	fn vkCmdSetDepthBoundsTestEnable(&self, commandBuffer: VkCommandBuffer, depthBoundsTestEnable: VkBool32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_depth_bounds_test_enable)(commandBuffer, depthBoundsTestEnable))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_depth_bounds_test_enable)(commandBuffer, depthBoundsTestEnable))))
 	}
 	fn vkCmdSetStencilTestEnable(&self, commandBuffer: VkCommandBuffer, stencilTestEnable: VkBool32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_stencil_test_enable)(commandBuffer, stencilTestEnable))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_stencil_test_enable)(commandBuffer, stencilTestEnable))))
 	}
 	fn vkCmdSetStencilOp(&self, commandBuffer: VkCommandBuffer, faceMask: VkStencilFaceFlags, failOp: VkStencilOp, passOp: VkStencilOp, depthFailOp: VkStencilOp, compareOp: VkCompareOp) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_stencil_op)(commandBuffer, faceMask, failOp, passOp, depthFailOp, compareOp))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_stencil_op)(commandBuffer, faceMask, failOp, passOp, depthFailOp, compareOp))))
 	}
 	fn vkCmdSetRasterizerDiscardEnable(&self, commandBuffer: VkCommandBuffer, rasterizerDiscardEnable: VkBool32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_rasterizer_discard_enable)(commandBuffer, rasterizerDiscardEnable))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_rasterizer_discard_enable)(commandBuffer, rasterizerDiscardEnable))))
 	}
 	fn vkCmdSetDepthBiasEnable(&self, commandBuffer: VkCommandBuffer, depthBiasEnable: VkBool32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_depth_bias_enable)(commandBuffer, depthBiasEnable))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_depth_bias_enable)(commandBuffer, depthBiasEnable))))
 	}
 	fn vkCmdSetPrimitiveRestartEnable(&self, commandBuffer: VkCommandBuffer, primitiveRestartEnable: VkBool32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_primitive_restart_enable)(commandBuffer, primitiveRestartEnable))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_primitive_restart_enable)(commandBuffer, primitiveRestartEnable))))
 	}
 	fn vkGetDeviceBufferMemoryRequirements(&self, device: VkDevice, pInfo: *const VkDeviceBufferMemoryRequirements, pMemoryRequirements: *mut VkMemoryRequirements2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_get_device_buffer_memory_requirements)(device, pInfo, pMemoryRequirements))))
+		vk_process_catch(catch_unwind(||((self.vk_get_device_buffer_memory_requirements)(device, pInfo, pMemoryRequirements))))
 	}
 	fn vkGetDeviceImageMemoryRequirements(&self, device: VkDevice, pInfo: *const VkDeviceImageMemoryRequirements, pMemoryRequirements: *mut VkMemoryRequirements2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_get_device_image_memory_requirements)(device, pInfo, pMemoryRequirements))))
+		vk_process_catch(catch_unwind(||((self.vk_get_device_image_memory_requirements)(device, pInfo, pMemoryRequirements))))
 	}
 	fn vkGetDeviceImageSparseMemoryRequirements(&self, device: VkDevice, pInfo: *const VkDeviceImageMemoryRequirements, pSparseMemoryRequirementCount: *mut uint32_t, pSparseMemoryRequirements: *mut VkSparseImageMemoryRequirements2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_get_device_image_sparse_memory_requirements)(device, pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements))))
+		vk_process_catch(catch_unwind(||((self.vk_get_device_image_sparse_memory_requirements)(device, pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements))))
 	}
 }
 impl Default for Vulkan_VERSION_1_3 {
@@ -16552,61 +16552,61 @@ pub struct Vulkan_VERSION_1_4 {
 }
 impl VK_VERSION_1_4 for Vulkan_VERSION_1_4 {
 	fn vkCmdSetLineStipple(&self, commandBuffer: VkCommandBuffer, lineStippleFactor: u32, lineStipplePattern: u16) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_line_stipple)(commandBuffer, lineStippleFactor, lineStipplePattern))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_line_stipple)(commandBuffer, lineStippleFactor, lineStipplePattern))))
 	}
 	fn vkMapMemory2(&self, device: VkDevice, pMemoryMapInfo: *const VkMemoryMapInfo, ppData: *mut *mut c_void) -> Result<()> {
-		convert_result("vkMapMemory2", catch_unwind(||((self.vk_map_memory2)(device, pMemoryMapInfo, ppData))))
+		vk_convert_result("vkMapMemory2", catch_unwind(||((self.vk_map_memory2)(device, pMemoryMapInfo, ppData))))
 	}
 	fn vkUnmapMemory2(&self, device: VkDevice, pMemoryUnmapInfo: *const VkMemoryUnmapInfo) -> Result<()> {
-		convert_result("vkUnmapMemory2", catch_unwind(||((self.vk_unmap_memory2)(device, pMemoryUnmapInfo))))
+		vk_convert_result("vkUnmapMemory2", catch_unwind(||((self.vk_unmap_memory2)(device, pMemoryUnmapInfo))))
 	}
 	fn vkCmdBindIndexBuffer2(&self, commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize, size: VkDeviceSize, indexType: VkIndexType) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_bind_index_buffer2)(commandBuffer, buffer, offset, size, indexType))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_bind_index_buffer2)(commandBuffer, buffer, offset, size, indexType))))
 	}
 	fn vkGetRenderingAreaGranularity(&self, device: VkDevice, pRenderingAreaInfo: *const VkRenderingAreaInfo, pGranularity: *mut VkExtent2D) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_get_rendering_area_granularity)(device, pRenderingAreaInfo, pGranularity))))
+		vk_process_catch(catch_unwind(||((self.vk_get_rendering_area_granularity)(device, pRenderingAreaInfo, pGranularity))))
 	}
 	fn vkGetDeviceImageSubresourceLayout(&self, device: VkDevice, pInfo: *const VkDeviceImageSubresourceInfo, pLayout: *mut VkSubresourceLayout2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_get_device_image_subresource_layout)(device, pInfo, pLayout))))
+		vk_process_catch(catch_unwind(||((self.vk_get_device_image_subresource_layout)(device, pInfo, pLayout))))
 	}
 	fn vkGetImageSubresourceLayout2(&self, device: VkDevice, image: VkImage, pSubresource: *const VkImageSubresource2, pLayout: *mut VkSubresourceLayout2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_get_image_subresource_layout2)(device, image, pSubresource, pLayout))))
+		vk_process_catch(catch_unwind(||((self.vk_get_image_subresource_layout2)(device, image, pSubresource, pLayout))))
 	}
 	fn vkCmdPushDescriptorSet(&self, commandBuffer: VkCommandBuffer, pipelineBindPoint: VkPipelineBindPoint, layout: VkPipelineLayout, set: u32, descriptorWriteCount: u32, pDescriptorWrites: *const VkWriteDescriptorSet) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_push_descriptor_set)(commandBuffer, pipelineBindPoint, layout, set, descriptorWriteCount, pDescriptorWrites))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_push_descriptor_set)(commandBuffer, pipelineBindPoint, layout, set, descriptorWriteCount, pDescriptorWrites))))
 	}
 	fn vkCmdPushDescriptorSetWithTemplate(&self, commandBuffer: VkCommandBuffer, descriptorUpdateTemplate: VkDescriptorUpdateTemplate, layout: VkPipelineLayout, set: u32, pData: *const c_void) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_push_descriptor_set_with_template)(commandBuffer, descriptorUpdateTemplate, layout, set, pData))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_push_descriptor_set_with_template)(commandBuffer, descriptorUpdateTemplate, layout, set, pData))))
 	}
 	fn vkCmdSetRenderingAttachmentLocations(&self, commandBuffer: VkCommandBuffer, pLocationInfo: *const VkRenderingAttachmentLocationInfo) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_rendering_attachment_locations)(commandBuffer, pLocationInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_rendering_attachment_locations)(commandBuffer, pLocationInfo))))
 	}
 	fn vkCmdSetRenderingInputAttachmentIndices(&self, commandBuffer: VkCommandBuffer, pInputAttachmentIndexInfo: *const VkRenderingInputAttachmentIndexInfo) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_rendering_input_attachment_indices)(commandBuffer, pInputAttachmentIndexInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_rendering_input_attachment_indices)(commandBuffer, pInputAttachmentIndexInfo))))
 	}
 	fn vkCmdBindDescriptorSets2(&self, commandBuffer: VkCommandBuffer, pBindDescriptorSetsInfo: *const VkBindDescriptorSetsInfo) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_bind_descriptor_sets2)(commandBuffer, pBindDescriptorSetsInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_bind_descriptor_sets2)(commandBuffer, pBindDescriptorSetsInfo))))
 	}
 	fn vkCmdPushConstants2(&self, commandBuffer: VkCommandBuffer, pPushConstantsInfo: *const VkPushConstantsInfo) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_push_constants2)(commandBuffer, pPushConstantsInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_push_constants2)(commandBuffer, pPushConstantsInfo))))
 	}
 	fn vkCmdPushDescriptorSet2(&self, commandBuffer: VkCommandBuffer, pPushDescriptorSetInfo: *const VkPushDescriptorSetInfo) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_push_descriptor_set2)(commandBuffer, pPushDescriptorSetInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_push_descriptor_set2)(commandBuffer, pPushDescriptorSetInfo))))
 	}
 	fn vkCmdPushDescriptorSetWithTemplate2(&self, commandBuffer: VkCommandBuffer, pPushDescriptorSetWithTemplateInfo: *const VkPushDescriptorSetWithTemplateInfo) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_push_descriptor_set_with_template2)(commandBuffer, pPushDescriptorSetWithTemplateInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_push_descriptor_set_with_template2)(commandBuffer, pPushDescriptorSetWithTemplateInfo))))
 	}
 	fn vkCopyMemoryToImage(&self, device: VkDevice, pCopyMemoryToImageInfo: *const VkCopyMemoryToImageInfo) -> Result<()> {
-		convert_result("vkCopyMemoryToImage", catch_unwind(||((self.vk_copy_memory_to_image)(device, pCopyMemoryToImageInfo))))
+		vk_convert_result("vkCopyMemoryToImage", catch_unwind(||((self.vk_copy_memory_to_image)(device, pCopyMemoryToImageInfo))))
 	}
 	fn vkCopyImageToMemory(&self, device: VkDevice, pCopyImageToMemoryInfo: *const VkCopyImageToMemoryInfo) -> Result<()> {
-		convert_result("vkCopyImageToMemory", catch_unwind(||((self.vk_copy_image_to_memory)(device, pCopyImageToMemoryInfo))))
+		vk_convert_result("vkCopyImageToMemory", catch_unwind(||((self.vk_copy_image_to_memory)(device, pCopyImageToMemoryInfo))))
 	}
 	fn vkCopyImageToImage(&self, device: VkDevice, pCopyImageToImageInfo: *const VkCopyImageToImageInfo) -> Result<()> {
-		convert_result("vkCopyImageToImage", catch_unwind(||((self.vk_copy_image_to_image)(device, pCopyImageToImageInfo))))
+		vk_convert_result("vkCopyImageToImage", catch_unwind(||((self.vk_copy_image_to_image)(device, pCopyImageToImageInfo))))
 	}
 	fn vkTransitionImageLayout(&self, device: VkDevice, transitionCount: u32, pTransitions: *const VkHostImageLayoutTransitionInfo) -> Result<()> {
-		convert_result("vkTransitionImageLayout", catch_unwind(||((self.vk_transition_image_layout)(device, transitionCount, pTransitions))))
+		vk_convert_result("vkTransitionImageLayout", catch_unwind(||((self.vk_transition_image_layout)(device, transitionCount, pTransitions))))
 	}
 }
 impl Default for Vulkan_VERSION_1_4 {
@@ -16894,19 +16894,19 @@ pub struct Vulkan_KHR_surface {
 }
 impl VK_KHR_surface for Vulkan_KHR_surface {
 	fn vkDestroySurfaceKHR(&self, instance: VkInstance, surface: VkSurfaceKHR, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_destroy_surface_khr)(instance, surface, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_destroy_surface_khr)(instance, surface, pAllocator))))
 	}
 	fn vkGetPhysicalDeviceSurfaceSupportKHR(&self, physicalDevice: VkPhysicalDevice, queueFamilyIndex: u32, surface: VkSurfaceKHR, pSupported: *mut VkBool32) -> Result<()> {
-		convert_result("vkGetPhysicalDeviceSurfaceSupportKHR", catch_unwind(||((self.vk_get_physical_device_surface_support_khr)(physicalDevice, queueFamilyIndex, surface, pSupported))))
+		vk_convert_result("vkGetPhysicalDeviceSurfaceSupportKHR", catch_unwind(||((self.vk_get_physical_device_surface_support_khr)(physicalDevice, queueFamilyIndex, surface, pSupported))))
 	}
 	fn vkGetPhysicalDeviceSurfaceCapabilitiesKHR(&self, physicalDevice: VkPhysicalDevice, surface: VkSurfaceKHR, pSurfaceCapabilities: *mut VkSurfaceCapabilitiesKHR) -> Result<()> {
-		convert_result("vkGetPhysicalDeviceSurfaceCapabilitiesKHR", catch_unwind(||((self.vk_get_physical_device_surface_capabilities_khr)(physicalDevice, surface, pSurfaceCapabilities))))
+		vk_convert_result("vkGetPhysicalDeviceSurfaceCapabilitiesKHR", catch_unwind(||((self.vk_get_physical_device_surface_capabilities_khr)(physicalDevice, surface, pSurfaceCapabilities))))
 	}
 	fn vkGetPhysicalDeviceSurfaceFormatsKHR(&self, physicalDevice: VkPhysicalDevice, surface: VkSurfaceKHR, pSurfaceFormatCount: *mut uint32_t, pSurfaceFormats: *mut VkSurfaceFormatKHR) -> Result<()> {
-		convert_result("vkGetPhysicalDeviceSurfaceFormatsKHR", catch_unwind(||((self.vk_get_physical_device_surface_formats_khr)(physicalDevice, surface, pSurfaceFormatCount, pSurfaceFormats))))
+		vk_convert_result("vkGetPhysicalDeviceSurfaceFormatsKHR", catch_unwind(||((self.vk_get_physical_device_surface_formats_khr)(physicalDevice, surface, pSurfaceFormatCount, pSurfaceFormats))))
 	}
 	fn vkGetPhysicalDeviceSurfacePresentModesKHR(&self, physicalDevice: VkPhysicalDevice, surface: VkSurfaceKHR, pPresentModeCount: *mut uint32_t, pPresentModes: *mut VkPresentModeKHR) -> Result<()> {
-		convert_result("vkGetPhysicalDeviceSurfacePresentModesKHR", catch_unwind(||((self.vk_get_physical_device_surface_present_modes_khr)(physicalDevice, surface, pPresentModeCount, pPresentModes))))
+		vk_convert_result("vkGetPhysicalDeviceSurfacePresentModesKHR", catch_unwind(||((self.vk_get_physical_device_surface_present_modes_khr)(physicalDevice, surface, pPresentModeCount, pPresentModes))))
 	}
 }
 impl Default for Vulkan_KHR_surface {
@@ -17259,31 +17259,31 @@ pub struct Vulkan_KHR_swapchain {
 }
 impl VK_KHR_swapchain for Vulkan_KHR_swapchain {
 	fn vkCreateSwapchainKHR(&self, device: VkDevice, pCreateInfo: *const VkSwapchainCreateInfoKHR, pAllocator: *const VkAllocationCallbacks, pSwapchain: *mut VkSwapchainKHR) -> Result<()> {
-		convert_result("vkCreateSwapchainKHR", catch_unwind(||((self.vk_create_swapchain_khr)(device, pCreateInfo, pAllocator, pSwapchain))))
+		vk_convert_result("vkCreateSwapchainKHR", catch_unwind(||((self.vk_create_swapchain_khr)(device, pCreateInfo, pAllocator, pSwapchain))))
 	}
 	fn vkDestroySwapchainKHR(&self, device: VkDevice, swapchain: VkSwapchainKHR, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_destroy_swapchain_khr)(device, swapchain, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_destroy_swapchain_khr)(device, swapchain, pAllocator))))
 	}
 	fn vkGetSwapchainImagesKHR(&self, device: VkDevice, swapchain: VkSwapchainKHR, pSwapchainImageCount: *mut uint32_t, pSwapchainImages: *mut VkImage) -> Result<()> {
-		convert_result("vkGetSwapchainImagesKHR", catch_unwind(||((self.vk_get_swapchain_images_khr)(device, swapchain, pSwapchainImageCount, pSwapchainImages))))
+		vk_convert_result("vkGetSwapchainImagesKHR", catch_unwind(||((self.vk_get_swapchain_images_khr)(device, swapchain, pSwapchainImageCount, pSwapchainImages))))
 	}
 	fn vkAcquireNextImageKHR(&self, device: VkDevice, swapchain: VkSwapchainKHR, timeout: u64, semaphore: VkSemaphore, fence: VkFence, pImageIndex: *mut uint32_t) -> Result<()> {
-		convert_result("vkAcquireNextImageKHR", catch_unwind(||((self.vk_acquire_next_image_khr)(device, swapchain, timeout, semaphore, fence, pImageIndex))))
+		vk_convert_result("vkAcquireNextImageKHR", catch_unwind(||((self.vk_acquire_next_image_khr)(device, swapchain, timeout, semaphore, fence, pImageIndex))))
 	}
 	fn vkQueuePresentKHR(&self, queue: VkQueue, pPresentInfo: *const VkPresentInfoKHR) -> Result<()> {
-		convert_result("vkQueuePresentKHR", catch_unwind(||((self.vk_queue_present_khr)(queue, pPresentInfo))))
+		vk_convert_result("vkQueuePresentKHR", catch_unwind(||((self.vk_queue_present_khr)(queue, pPresentInfo))))
 	}
 	fn vkGetDeviceGroupPresentCapabilitiesKHR(&self, device: VkDevice, pDeviceGroupPresentCapabilities: *mut VkDeviceGroupPresentCapabilitiesKHR) -> Result<()> {
-		convert_result("vkGetDeviceGroupPresentCapabilitiesKHR", catch_unwind(||((self.vk_get_device_group_present_capabilities_khr)(device, pDeviceGroupPresentCapabilities))))
+		vk_convert_result("vkGetDeviceGroupPresentCapabilitiesKHR", catch_unwind(||((self.vk_get_device_group_present_capabilities_khr)(device, pDeviceGroupPresentCapabilities))))
 	}
 	fn vkGetDeviceGroupSurfacePresentModesKHR(&self, device: VkDevice, surface: VkSurfaceKHR, pModes: *mut VkDeviceGroupPresentModeFlagsKHR) -> Result<()> {
-		convert_result("vkGetDeviceGroupSurfacePresentModesKHR", catch_unwind(||((self.vk_get_device_group_surface_present_modes_khr)(device, surface, pModes))))
+		vk_convert_result("vkGetDeviceGroupSurfacePresentModesKHR", catch_unwind(||((self.vk_get_device_group_surface_present_modes_khr)(device, surface, pModes))))
 	}
 	fn vkGetPhysicalDevicePresentRectanglesKHR(&self, physicalDevice: VkPhysicalDevice, surface: VkSurfaceKHR, pRectCount: *mut uint32_t, pRects: *mut VkRect2D) -> Result<()> {
-		convert_result("vkGetPhysicalDevicePresentRectanglesKHR", catch_unwind(||((self.vk_get_physical_device_present_rectangles_khr)(physicalDevice, surface, pRectCount, pRects))))
+		vk_convert_result("vkGetPhysicalDevicePresentRectanglesKHR", catch_unwind(||((self.vk_get_physical_device_present_rectangles_khr)(physicalDevice, surface, pRectCount, pRects))))
 	}
 	fn vkAcquireNextImage2KHR(&self, device: VkDevice, pAcquireInfo: *const VkAcquireNextImageInfoKHR, pImageIndex: *mut uint32_t) -> Result<()> {
-		convert_result("vkAcquireNextImage2KHR", catch_unwind(||((self.vk_acquire_next_image2_khr)(device, pAcquireInfo, pImageIndex))))
+		vk_convert_result("vkAcquireNextImage2KHR", catch_unwind(||((self.vk_acquire_next_image2_khr)(device, pAcquireInfo, pImageIndex))))
 	}
 }
 impl Default for Vulkan_KHR_swapchain {
@@ -17538,25 +17538,25 @@ pub struct Vulkan_KHR_display {
 }
 impl VK_KHR_display for Vulkan_KHR_display {
 	fn vkGetPhysicalDeviceDisplayPropertiesKHR(&self, physicalDevice: VkPhysicalDevice, pPropertyCount: *mut uint32_t, pProperties: *mut VkDisplayPropertiesKHR) -> Result<()> {
-		convert_result("vkGetPhysicalDeviceDisplayPropertiesKHR", catch_unwind(||((self.vk_get_physical_device_display_properties_khr)(physicalDevice, pPropertyCount, pProperties))))
+		vk_convert_result("vkGetPhysicalDeviceDisplayPropertiesKHR", catch_unwind(||((self.vk_get_physical_device_display_properties_khr)(physicalDevice, pPropertyCount, pProperties))))
 	}
 	fn vkGetPhysicalDeviceDisplayPlanePropertiesKHR(&self, physicalDevice: VkPhysicalDevice, pPropertyCount: *mut uint32_t, pProperties: *mut VkDisplayPlanePropertiesKHR) -> Result<()> {
-		convert_result("vkGetPhysicalDeviceDisplayPlanePropertiesKHR", catch_unwind(||((self.vk_get_physical_device_display_plane_properties_khr)(physicalDevice, pPropertyCount, pProperties))))
+		vk_convert_result("vkGetPhysicalDeviceDisplayPlanePropertiesKHR", catch_unwind(||((self.vk_get_physical_device_display_plane_properties_khr)(physicalDevice, pPropertyCount, pProperties))))
 	}
 	fn vkGetDisplayPlaneSupportedDisplaysKHR(&self, physicalDevice: VkPhysicalDevice, planeIndex: u32, pDisplayCount: *mut uint32_t, pDisplays: *mut VkDisplayKHR) -> Result<()> {
-		convert_result("vkGetDisplayPlaneSupportedDisplaysKHR", catch_unwind(||((self.vk_get_display_plane_supported_displays_khr)(physicalDevice, planeIndex, pDisplayCount, pDisplays))))
+		vk_convert_result("vkGetDisplayPlaneSupportedDisplaysKHR", catch_unwind(||((self.vk_get_display_plane_supported_displays_khr)(physicalDevice, planeIndex, pDisplayCount, pDisplays))))
 	}
 	fn vkGetDisplayModePropertiesKHR(&self, physicalDevice: VkPhysicalDevice, display: VkDisplayKHR, pPropertyCount: *mut uint32_t, pProperties: *mut VkDisplayModePropertiesKHR) -> Result<()> {
-		convert_result("vkGetDisplayModePropertiesKHR", catch_unwind(||((self.vk_get_display_mode_properties_khr)(physicalDevice, display, pPropertyCount, pProperties))))
+		vk_convert_result("vkGetDisplayModePropertiesKHR", catch_unwind(||((self.vk_get_display_mode_properties_khr)(physicalDevice, display, pPropertyCount, pProperties))))
 	}
 	fn vkCreateDisplayModeKHR(&self, physicalDevice: VkPhysicalDevice, display: VkDisplayKHR, pCreateInfo: *const VkDisplayModeCreateInfoKHR, pAllocator: *const VkAllocationCallbacks, pMode: *mut VkDisplayModeKHR) -> Result<()> {
-		convert_result("vkCreateDisplayModeKHR", catch_unwind(||((self.vk_create_display_mode_khr)(physicalDevice, display, pCreateInfo, pAllocator, pMode))))
+		vk_convert_result("vkCreateDisplayModeKHR", catch_unwind(||((self.vk_create_display_mode_khr)(physicalDevice, display, pCreateInfo, pAllocator, pMode))))
 	}
 	fn vkGetDisplayPlaneCapabilitiesKHR(&self, physicalDevice: VkPhysicalDevice, mode: VkDisplayModeKHR, planeIndex: u32, pCapabilities: *mut VkDisplayPlaneCapabilitiesKHR) -> Result<()> {
-		convert_result("vkGetDisplayPlaneCapabilitiesKHR", catch_unwind(||((self.vk_get_display_plane_capabilities_khr)(physicalDevice, mode, planeIndex, pCapabilities))))
+		vk_convert_result("vkGetDisplayPlaneCapabilitiesKHR", catch_unwind(||((self.vk_get_display_plane_capabilities_khr)(physicalDevice, mode, planeIndex, pCapabilities))))
 	}
 	fn vkCreateDisplayPlaneSurfaceKHR(&self, instance: VkInstance, pCreateInfo: *const VkDisplaySurfaceCreateInfoKHR, pAllocator: *const VkAllocationCallbacks, pSurface: *mut VkSurfaceKHR) -> Result<()> {
-		convert_result("vkCreateDisplayPlaneSurfaceKHR", catch_unwind(||((self.vk_create_display_plane_surface_khr)(instance, pCreateInfo, pAllocator, pSurface))))
+		vk_convert_result("vkCreateDisplayPlaneSurfaceKHR", catch_unwind(||((self.vk_create_display_plane_surface_khr)(instance, pCreateInfo, pAllocator, pSurface))))
 	}
 }
 impl Default for Vulkan_KHR_display {
@@ -17616,7 +17616,7 @@ pub struct Vulkan_KHR_display_swapchain {
 }
 impl VK_KHR_display_swapchain for Vulkan_KHR_display_swapchain {
 	fn vkCreateSharedSwapchainsKHR(&self, device: VkDevice, swapchainCount: u32, pCreateInfos: *const VkSwapchainCreateInfoKHR, pAllocator: *const VkAllocationCallbacks, pSwapchains: *mut VkSwapchainKHR) -> Result<()> {
-		convert_result("vkCreateSharedSwapchainsKHR", catch_unwind(||((self.vk_create_shared_swapchains_khr)(device, swapchainCount, pCreateInfos, pAllocator, pSwapchains))))
+		vk_convert_result("vkCreateSharedSwapchainsKHR", catch_unwind(||((self.vk_create_shared_swapchains_khr)(device, swapchainCount, pCreateInfos, pAllocator, pSwapchains))))
 	}
 }
 impl Default for Vulkan_KHR_display_swapchain {
@@ -18309,40 +18309,40 @@ pub struct Vulkan_KHR_video_queue {
 }
 impl VK_KHR_video_queue for Vulkan_KHR_video_queue {
 	fn vkGetPhysicalDeviceVideoCapabilitiesKHR(&self, physicalDevice: VkPhysicalDevice, pVideoProfile: *const VkVideoProfileInfoKHR, pCapabilities: *mut VkVideoCapabilitiesKHR) -> Result<()> {
-		convert_result("vkGetPhysicalDeviceVideoCapabilitiesKHR", catch_unwind(||((self.vk_get_physical_device_video_capabilities_khr)(physicalDevice, pVideoProfile, pCapabilities))))
+		vk_convert_result("vkGetPhysicalDeviceVideoCapabilitiesKHR", catch_unwind(||((self.vk_get_physical_device_video_capabilities_khr)(physicalDevice, pVideoProfile, pCapabilities))))
 	}
 	fn vkGetPhysicalDeviceVideoFormatPropertiesKHR(&self, physicalDevice: VkPhysicalDevice, pVideoFormatInfo: *const VkPhysicalDeviceVideoFormatInfoKHR, pVideoFormatPropertyCount: *mut uint32_t, pVideoFormatProperties: *mut VkVideoFormatPropertiesKHR) -> Result<()> {
-		convert_result("vkGetPhysicalDeviceVideoFormatPropertiesKHR", catch_unwind(||((self.vk_get_physical_device_video_format_properties_khr)(physicalDevice, pVideoFormatInfo, pVideoFormatPropertyCount, pVideoFormatProperties))))
+		vk_convert_result("vkGetPhysicalDeviceVideoFormatPropertiesKHR", catch_unwind(||((self.vk_get_physical_device_video_format_properties_khr)(physicalDevice, pVideoFormatInfo, pVideoFormatPropertyCount, pVideoFormatProperties))))
 	}
 	fn vkCreateVideoSessionKHR(&self, device: VkDevice, pCreateInfo: *const VkVideoSessionCreateInfoKHR, pAllocator: *const VkAllocationCallbacks, pVideoSession: *mut VkVideoSessionKHR) -> Result<()> {
-		convert_result("vkCreateVideoSessionKHR", catch_unwind(||((self.vk_create_video_session_khr)(device, pCreateInfo, pAllocator, pVideoSession))))
+		vk_convert_result("vkCreateVideoSessionKHR", catch_unwind(||((self.vk_create_video_session_khr)(device, pCreateInfo, pAllocator, pVideoSession))))
 	}
 	fn vkDestroyVideoSessionKHR(&self, device: VkDevice, videoSession: VkVideoSessionKHR, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_destroy_video_session_khr)(device, videoSession, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_destroy_video_session_khr)(device, videoSession, pAllocator))))
 	}
 	fn vkGetVideoSessionMemoryRequirementsKHR(&self, device: VkDevice, videoSession: VkVideoSessionKHR, pMemoryRequirementsCount: *mut uint32_t, pMemoryRequirements: *mut VkVideoSessionMemoryRequirementsKHR) -> Result<()> {
-		convert_result("vkGetVideoSessionMemoryRequirementsKHR", catch_unwind(||((self.vk_get_video_session_memory_requirements_khr)(device, videoSession, pMemoryRequirementsCount, pMemoryRequirements))))
+		vk_convert_result("vkGetVideoSessionMemoryRequirementsKHR", catch_unwind(||((self.vk_get_video_session_memory_requirements_khr)(device, videoSession, pMemoryRequirementsCount, pMemoryRequirements))))
 	}
 	fn vkBindVideoSessionMemoryKHR(&self, device: VkDevice, videoSession: VkVideoSessionKHR, bindSessionMemoryInfoCount: u32, pBindSessionMemoryInfos: *const VkBindVideoSessionMemoryInfoKHR) -> Result<()> {
-		convert_result("vkBindVideoSessionMemoryKHR", catch_unwind(||((self.vk_bind_video_session_memory_khr)(device, videoSession, bindSessionMemoryInfoCount, pBindSessionMemoryInfos))))
+		vk_convert_result("vkBindVideoSessionMemoryKHR", catch_unwind(||((self.vk_bind_video_session_memory_khr)(device, videoSession, bindSessionMemoryInfoCount, pBindSessionMemoryInfos))))
 	}
 	fn vkCreateVideoSessionParametersKHR(&self, device: VkDevice, pCreateInfo: *const VkVideoSessionParametersCreateInfoKHR, pAllocator: *const VkAllocationCallbacks, pVideoSessionParameters: *mut VkVideoSessionParametersKHR) -> Result<()> {
-		convert_result("vkCreateVideoSessionParametersKHR", catch_unwind(||((self.vk_create_video_session_parameters_khr)(device, pCreateInfo, pAllocator, pVideoSessionParameters))))
+		vk_convert_result("vkCreateVideoSessionParametersKHR", catch_unwind(||((self.vk_create_video_session_parameters_khr)(device, pCreateInfo, pAllocator, pVideoSessionParameters))))
 	}
 	fn vkUpdateVideoSessionParametersKHR(&self, device: VkDevice, videoSessionParameters: VkVideoSessionParametersKHR, pUpdateInfo: *const VkVideoSessionParametersUpdateInfoKHR) -> Result<()> {
-		convert_result("vkUpdateVideoSessionParametersKHR", catch_unwind(||((self.vk_update_video_session_parameters_khr)(device, videoSessionParameters, pUpdateInfo))))
+		vk_convert_result("vkUpdateVideoSessionParametersKHR", catch_unwind(||((self.vk_update_video_session_parameters_khr)(device, videoSessionParameters, pUpdateInfo))))
 	}
 	fn vkDestroyVideoSessionParametersKHR(&self, device: VkDevice, videoSessionParameters: VkVideoSessionParametersKHR, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_destroy_video_session_parameters_khr)(device, videoSessionParameters, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_destroy_video_session_parameters_khr)(device, videoSessionParameters, pAllocator))))
 	}
 	fn vkCmdBeginVideoCodingKHR(&self, commandBuffer: VkCommandBuffer, pBeginInfo: *const VkVideoBeginCodingInfoKHR) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_begin_video_coding_khr)(commandBuffer, pBeginInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_begin_video_coding_khr)(commandBuffer, pBeginInfo))))
 	}
 	fn vkCmdEndVideoCodingKHR(&self, commandBuffer: VkCommandBuffer, pEndCodingInfo: *const VkVideoEndCodingInfoKHR) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_end_video_coding_khr)(commandBuffer, pEndCodingInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_end_video_coding_khr)(commandBuffer, pEndCodingInfo))))
 	}
 	fn vkCmdControlVideoCodingKHR(&self, commandBuffer: VkCommandBuffer, pCodingControlInfo: *const VkVideoCodingControlInfoKHR) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_control_video_coding_khr)(commandBuffer, pCodingControlInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_control_video_coding_khr)(commandBuffer, pCodingControlInfo))))
 	}
 }
 impl Default for Vulkan_KHR_video_queue {
@@ -18514,7 +18514,7 @@ pub struct Vulkan_KHR_video_decode_queue {
 }
 impl VK_KHR_video_decode_queue for Vulkan_KHR_video_decode_queue {
 	fn vkCmdDecodeVideoKHR(&self, commandBuffer: VkCommandBuffer, pDecodeInfo: *const VkVideoDecodeInfoKHR) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_decode_video_khr)(commandBuffer, pDecodeInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_decode_video_khr)(commandBuffer, pDecodeInfo))))
 	}
 }
 impl Default for Vulkan_KHR_video_decode_queue {
@@ -22402,10 +22402,10 @@ pub struct Vulkan_KHR_dynamic_rendering {
 }
 impl VK_KHR_dynamic_rendering for Vulkan_KHR_dynamic_rendering {
 	fn vkCmdBeginRenderingKHR(&self, commandBuffer: VkCommandBuffer, pRenderingInfo: *const VkRenderingInfo) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_begin_rendering_khr)(commandBuffer, pRenderingInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_begin_rendering_khr)(commandBuffer, pRenderingInfo))))
 	}
 	fn vkCmdEndRenderingKHR(&self, commandBuffer: VkCommandBuffer) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_end_rendering_khr)(commandBuffer))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_end_rendering_khr)(commandBuffer))))
 	}
 }
 impl Default for Vulkan_KHR_dynamic_rendering {
@@ -22557,25 +22557,25 @@ pub struct Vulkan_KHR_get_physical_device_properties2 {
 }
 impl VK_KHR_get_physical_device_properties2 for Vulkan_KHR_get_physical_device_properties2 {
 	fn vkGetPhysicalDeviceFeatures2KHR(&self, physicalDevice: VkPhysicalDevice, pFeatures: *mut VkPhysicalDeviceFeatures2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_get_physical_device_features2_khr)(physicalDevice, pFeatures))))
+		vk_process_catch(catch_unwind(||((self.vk_get_physical_device_features2_khr)(physicalDevice, pFeatures))))
 	}
 	fn vkGetPhysicalDeviceProperties2KHR(&self, physicalDevice: VkPhysicalDevice, pProperties: *mut VkPhysicalDeviceProperties2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_get_physical_device_properties2_khr)(physicalDevice, pProperties))))
+		vk_process_catch(catch_unwind(||((self.vk_get_physical_device_properties2_khr)(physicalDevice, pProperties))))
 	}
 	fn vkGetPhysicalDeviceFormatProperties2KHR(&self, physicalDevice: VkPhysicalDevice, format: VkFormat, pFormatProperties: *mut VkFormatProperties2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_get_physical_device_format_properties2_khr)(physicalDevice, format, pFormatProperties))))
+		vk_process_catch(catch_unwind(||((self.vk_get_physical_device_format_properties2_khr)(physicalDevice, format, pFormatProperties))))
 	}
 	fn vkGetPhysicalDeviceImageFormatProperties2KHR(&self, physicalDevice: VkPhysicalDevice, pImageFormatInfo: *const VkPhysicalDeviceImageFormatInfo2, pImageFormatProperties: *mut VkImageFormatProperties2) -> Result<()> {
-		convert_result("vkGetPhysicalDeviceImageFormatProperties2KHR", catch_unwind(||((self.vk_get_physical_device_image_format_properties2_khr)(physicalDevice, pImageFormatInfo, pImageFormatProperties))))
+		vk_convert_result("vkGetPhysicalDeviceImageFormatProperties2KHR", catch_unwind(||((self.vk_get_physical_device_image_format_properties2_khr)(physicalDevice, pImageFormatInfo, pImageFormatProperties))))
 	}
 	fn vkGetPhysicalDeviceQueueFamilyProperties2KHR(&self, physicalDevice: VkPhysicalDevice, pQueueFamilyPropertyCount: *mut uint32_t, pQueueFamilyProperties: *mut VkQueueFamilyProperties2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_get_physical_device_queue_family_properties2_khr)(physicalDevice, pQueueFamilyPropertyCount, pQueueFamilyProperties))))
+		vk_process_catch(catch_unwind(||((self.vk_get_physical_device_queue_family_properties2_khr)(physicalDevice, pQueueFamilyPropertyCount, pQueueFamilyProperties))))
 	}
 	fn vkGetPhysicalDeviceMemoryProperties2KHR(&self, physicalDevice: VkPhysicalDevice, pMemoryProperties: *mut VkPhysicalDeviceMemoryProperties2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_get_physical_device_memory_properties2_khr)(physicalDevice, pMemoryProperties))))
+		vk_process_catch(catch_unwind(||((self.vk_get_physical_device_memory_properties2_khr)(physicalDevice, pMemoryProperties))))
 	}
 	fn vkGetPhysicalDeviceSparseImageFormatProperties2KHR(&self, physicalDevice: VkPhysicalDevice, pFormatInfo: *const VkPhysicalDeviceSparseImageFormatInfo2, pPropertyCount: *mut uint32_t, pProperties: *mut VkSparseImageFormatProperties2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_get_physical_device_sparse_image_format_properties2_khr)(physicalDevice, pFormatInfo, pPropertyCount, pProperties))))
+		vk_process_catch(catch_unwind(||((self.vk_get_physical_device_sparse_image_format_properties2_khr)(physicalDevice, pFormatInfo, pPropertyCount, pProperties))))
 	}
 }
 impl Default for Vulkan_KHR_get_physical_device_properties2 {
@@ -22677,13 +22677,13 @@ pub struct Vulkan_KHR_device_group {
 }
 impl VK_KHR_device_group for Vulkan_KHR_device_group {
 	fn vkGetDeviceGroupPeerMemoryFeaturesKHR(&self, device: VkDevice, heapIndex: u32, localDeviceIndex: u32, remoteDeviceIndex: u32, pPeerMemoryFeatures: *mut VkPeerMemoryFeatureFlags) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_get_device_group_peer_memory_features_khr)(device, heapIndex, localDeviceIndex, remoteDeviceIndex, pPeerMemoryFeatures))))
+		vk_process_catch(catch_unwind(||((self.vk_get_device_group_peer_memory_features_khr)(device, heapIndex, localDeviceIndex, remoteDeviceIndex, pPeerMemoryFeatures))))
 	}
 	fn vkCmdSetDeviceMaskKHR(&self, commandBuffer: VkCommandBuffer, deviceMask: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_device_mask_khr)(commandBuffer, deviceMask))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_device_mask_khr)(commandBuffer, deviceMask))))
 	}
 	fn vkCmdDispatchBaseKHR(&self, commandBuffer: VkCommandBuffer, baseGroupX: u32, baseGroupY: u32, baseGroupZ: u32, groupCountX: u32, groupCountY: u32, groupCountZ: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_dispatch_base_khr)(commandBuffer, baseGroupX, baseGroupY, baseGroupZ, groupCountX, groupCountY, groupCountZ))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_dispatch_base_khr)(commandBuffer, baseGroupX, baseGroupY, baseGroupZ, groupCountX, groupCountY, groupCountZ))))
 	}
 }
 impl Default for Vulkan_KHR_device_group {
@@ -22744,7 +22744,7 @@ pub struct Vulkan_KHR_maintenance1 {
 }
 impl VK_KHR_maintenance1 for Vulkan_KHR_maintenance1 {
 	fn vkTrimCommandPoolKHR(&self, device: VkDevice, commandPool: VkCommandPool, flags: VkCommandPoolTrimFlags) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_trim_command_pool_khr)(device, commandPool, flags))))
+		vk_process_catch(catch_unwind(||((self.vk_trim_command_pool_khr)(device, commandPool, flags))))
 	}
 }
 impl Default for Vulkan_KHR_maintenance1 {
@@ -22790,7 +22790,7 @@ pub struct Vulkan_KHR_device_group_creation {
 }
 impl VK_KHR_device_group_creation for Vulkan_KHR_device_group_creation {
 	fn vkEnumeratePhysicalDeviceGroupsKHR(&self, instance: VkInstance, pPhysicalDeviceGroupCount: *mut uint32_t, pPhysicalDeviceGroupProperties: *mut VkPhysicalDeviceGroupProperties) -> Result<()> {
-		convert_result("vkEnumeratePhysicalDeviceGroupsKHR", catch_unwind(||((self.vk_enumerate_physical_device_groups_khr)(instance, pPhysicalDeviceGroupCount, pPhysicalDeviceGroupProperties))))
+		vk_convert_result("vkEnumeratePhysicalDeviceGroupsKHR", catch_unwind(||((self.vk_enumerate_physical_device_groups_khr)(instance, pPhysicalDeviceGroupCount, pPhysicalDeviceGroupProperties))))
 	}
 }
 impl Default for Vulkan_KHR_device_group_creation {
@@ -22860,7 +22860,7 @@ pub struct Vulkan_KHR_external_memory_capabilities {
 }
 impl VK_KHR_external_memory_capabilities for Vulkan_KHR_external_memory_capabilities {
 	fn vkGetPhysicalDeviceExternalBufferPropertiesKHR(&self, physicalDevice: VkPhysicalDevice, pExternalBufferInfo: *const VkPhysicalDeviceExternalBufferInfo, pExternalBufferProperties: *mut VkExternalBufferProperties) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_get_physical_device_external_buffer_properties_khr)(physicalDevice, pExternalBufferInfo, pExternalBufferProperties))))
+		vk_process_catch(catch_unwind(||((self.vk_get_physical_device_external_buffer_properties_khr)(physicalDevice, pExternalBufferInfo, pExternalBufferProperties))))
 	}
 }
 impl Default for Vulkan_KHR_external_memory_capabilities {
@@ -22965,10 +22965,10 @@ pub struct Vulkan_KHR_external_memory_fd {
 }
 impl VK_KHR_external_memory_fd for Vulkan_KHR_external_memory_fd {
 	fn vkGetMemoryFdKHR(&self, device: VkDevice, pGetFdInfo: *const VkMemoryGetFdInfoKHR, pFd: *mut int) -> Result<()> {
-		convert_result("vkGetMemoryFdKHR", catch_unwind(||((self.vk_get_memory_fd_khr)(device, pGetFdInfo, pFd))))
+		vk_convert_result("vkGetMemoryFdKHR", catch_unwind(||((self.vk_get_memory_fd_khr)(device, pGetFdInfo, pFd))))
 	}
 	fn vkGetMemoryFdPropertiesKHR(&self, device: VkDevice, handleType: VkExternalMemoryHandleTypeFlagBits, fd: i32, pMemoryFdProperties: *mut VkMemoryFdPropertiesKHR) -> Result<()> {
-		convert_result("vkGetMemoryFdPropertiesKHR", catch_unwind(||((self.vk_get_memory_fd_properties_khr)(device, handleType, fd, pMemoryFdProperties))))
+		vk_convert_result("vkGetMemoryFdPropertiesKHR", catch_unwind(||((self.vk_get_memory_fd_properties_khr)(device, handleType, fd, pMemoryFdProperties))))
 	}
 }
 impl Default for Vulkan_KHR_external_memory_fd {
@@ -23025,7 +23025,7 @@ pub struct Vulkan_KHR_external_semaphore_capabilities {
 }
 impl VK_KHR_external_semaphore_capabilities for Vulkan_KHR_external_semaphore_capabilities {
 	fn vkGetPhysicalDeviceExternalSemaphorePropertiesKHR(&self, physicalDevice: VkPhysicalDevice, pExternalSemaphoreInfo: *const VkPhysicalDeviceExternalSemaphoreInfo, pExternalSemaphoreProperties: *mut VkExternalSemaphoreProperties) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_get_physical_device_external_semaphore_properties_khr)(physicalDevice, pExternalSemaphoreInfo, pExternalSemaphoreProperties))))
+		vk_process_catch(catch_unwind(||((self.vk_get_physical_device_external_semaphore_properties_khr)(physicalDevice, pExternalSemaphoreInfo, pExternalSemaphoreProperties))))
 	}
 }
 impl Default for Vulkan_KHR_external_semaphore_capabilities {
@@ -23120,10 +23120,10 @@ pub struct Vulkan_KHR_external_semaphore_fd {
 }
 impl VK_KHR_external_semaphore_fd for Vulkan_KHR_external_semaphore_fd {
 	fn vkImportSemaphoreFdKHR(&self, device: VkDevice, pImportSemaphoreFdInfo: *const VkImportSemaphoreFdInfoKHR) -> Result<()> {
-		convert_result("vkImportSemaphoreFdKHR", catch_unwind(||((self.vk_import_semaphore_fd_khr)(device, pImportSemaphoreFdInfo))))
+		vk_convert_result("vkImportSemaphoreFdKHR", catch_unwind(||((self.vk_import_semaphore_fd_khr)(device, pImportSemaphoreFdInfo))))
 	}
 	fn vkGetSemaphoreFdKHR(&self, device: VkDevice, pGetFdInfo: *const VkSemaphoreGetFdInfoKHR, pFd: *mut int) -> Result<()> {
-		convert_result("vkGetSemaphoreFdKHR", catch_unwind(||((self.vk_get_semaphore_fd_khr)(device, pGetFdInfo, pFd))))
+		vk_convert_result("vkGetSemaphoreFdKHR", catch_unwind(||((self.vk_get_semaphore_fd_khr)(device, pGetFdInfo, pFd))))
 	}
 }
 impl Default for Vulkan_KHR_external_semaphore_fd {
@@ -23175,10 +23175,10 @@ pub struct Vulkan_KHR_push_descriptor {
 }
 impl VK_KHR_push_descriptor for Vulkan_KHR_push_descriptor {
 	fn vkCmdPushDescriptorSetKHR(&self, commandBuffer: VkCommandBuffer, pipelineBindPoint: VkPipelineBindPoint, layout: VkPipelineLayout, set: u32, descriptorWriteCount: u32, pDescriptorWrites: *const VkWriteDescriptorSet) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_push_descriptor_set_khr)(commandBuffer, pipelineBindPoint, layout, set, descriptorWriteCount, pDescriptorWrites))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_push_descriptor_set_khr)(commandBuffer, pipelineBindPoint, layout, set, descriptorWriteCount, pDescriptorWrites))))
 	}
 	fn vkCmdPushDescriptorSetWithTemplateKHR(&self, commandBuffer: VkCommandBuffer, descriptorUpdateTemplate: VkDescriptorUpdateTemplate, layout: VkPipelineLayout, set: u32, pData: *const c_void) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_push_descriptor_set_with_template_khr)(commandBuffer, descriptorUpdateTemplate, layout, set, pData))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_push_descriptor_set_with_template_khr)(commandBuffer, descriptorUpdateTemplate, layout, set, pData))))
 	}
 }
 impl Default for Vulkan_KHR_push_descriptor {
@@ -23339,13 +23339,13 @@ pub struct Vulkan_KHR_descriptor_update_template {
 }
 impl VK_KHR_descriptor_update_template for Vulkan_KHR_descriptor_update_template {
 	fn vkCreateDescriptorUpdateTemplateKHR(&self, device: VkDevice, pCreateInfo: *const VkDescriptorUpdateTemplateCreateInfo, pAllocator: *const VkAllocationCallbacks, pDescriptorUpdateTemplate: *mut VkDescriptorUpdateTemplate) -> Result<()> {
-		convert_result("vkCreateDescriptorUpdateTemplateKHR", catch_unwind(||((self.vk_create_descriptor_update_template_khr)(device, pCreateInfo, pAllocator, pDescriptorUpdateTemplate))))
+		vk_convert_result("vkCreateDescriptorUpdateTemplateKHR", catch_unwind(||((self.vk_create_descriptor_update_template_khr)(device, pCreateInfo, pAllocator, pDescriptorUpdateTemplate))))
 	}
 	fn vkDestroyDescriptorUpdateTemplateKHR(&self, device: VkDevice, descriptorUpdateTemplate: VkDescriptorUpdateTemplate, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_destroy_descriptor_update_template_khr)(device, descriptorUpdateTemplate, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_destroy_descriptor_update_template_khr)(device, descriptorUpdateTemplate, pAllocator))))
 	}
 	fn vkUpdateDescriptorSetWithTemplateKHR(&self, device: VkDevice, descriptorSet: VkDescriptorSet, descriptorUpdateTemplate: VkDescriptorUpdateTemplate, pData: *const c_void) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_update_descriptor_set_with_template_khr)(device, descriptorSet, descriptorUpdateTemplate, pData))))
+		vk_process_catch(catch_unwind(||((self.vk_update_descriptor_set_with_template_khr)(device, descriptorSet, descriptorUpdateTemplate, pData))))
 	}
 }
 impl Default for Vulkan_KHR_descriptor_update_template {
@@ -23466,16 +23466,16 @@ pub struct Vulkan_KHR_create_renderpass2 {
 }
 impl VK_KHR_create_renderpass2 for Vulkan_KHR_create_renderpass2 {
 	fn vkCreateRenderPass2KHR(&self, device: VkDevice, pCreateInfo: *const VkRenderPassCreateInfo2, pAllocator: *const VkAllocationCallbacks, pRenderPass: *mut VkRenderPass) -> Result<()> {
-		convert_result("vkCreateRenderPass2KHR", catch_unwind(||((self.vk_create_render_pass2_khr)(device, pCreateInfo, pAllocator, pRenderPass))))
+		vk_convert_result("vkCreateRenderPass2KHR", catch_unwind(||((self.vk_create_render_pass2_khr)(device, pCreateInfo, pAllocator, pRenderPass))))
 	}
 	fn vkCmdBeginRenderPass2KHR(&self, commandBuffer: VkCommandBuffer, pRenderPassBegin: *const VkRenderPassBeginInfo, pSubpassBeginInfo: *const VkSubpassBeginInfo) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_begin_render_pass2_khr)(commandBuffer, pRenderPassBegin, pSubpassBeginInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_begin_render_pass2_khr)(commandBuffer, pRenderPassBegin, pSubpassBeginInfo))))
 	}
 	fn vkCmdNextSubpass2KHR(&self, commandBuffer: VkCommandBuffer, pSubpassBeginInfo: *const VkSubpassBeginInfo, pSubpassEndInfo: *const VkSubpassEndInfo) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_next_subpass2_khr)(commandBuffer, pSubpassBeginInfo, pSubpassEndInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_next_subpass2_khr)(commandBuffer, pSubpassBeginInfo, pSubpassEndInfo))))
 	}
 	fn vkCmdEndRenderPass2KHR(&self, commandBuffer: VkCommandBuffer, pSubpassEndInfo: *const VkSubpassEndInfo) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_end_render_pass2_khr)(commandBuffer, pSubpassEndInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_end_render_pass2_khr)(commandBuffer, pSubpassEndInfo))))
 	}
 }
 impl Default for Vulkan_KHR_create_renderpass2 {
@@ -23527,7 +23527,7 @@ pub struct Vulkan_KHR_shared_presentable_image {
 }
 impl VK_KHR_shared_presentable_image for Vulkan_KHR_shared_presentable_image {
 	fn vkGetSwapchainStatusKHR(&self, device: VkDevice, swapchain: VkSwapchainKHR) -> Result<()> {
-		convert_result("vkGetSwapchainStatusKHR", catch_unwind(||((self.vk_get_swapchain_status_khr)(device, swapchain))))
+		vk_convert_result("vkGetSwapchainStatusKHR", catch_unwind(||((self.vk_get_swapchain_status_khr)(device, swapchain))))
 	}
 }
 impl Default for Vulkan_KHR_shared_presentable_image {
@@ -23582,7 +23582,7 @@ pub struct Vulkan_KHR_external_fence_capabilities {
 }
 impl VK_KHR_external_fence_capabilities for Vulkan_KHR_external_fence_capabilities {
 	fn vkGetPhysicalDeviceExternalFencePropertiesKHR(&self, physicalDevice: VkPhysicalDevice, pExternalFenceInfo: *const VkPhysicalDeviceExternalFenceInfo, pExternalFenceProperties: *mut VkExternalFenceProperties) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_get_physical_device_external_fence_properties_khr)(physicalDevice, pExternalFenceInfo, pExternalFenceProperties))))
+		vk_process_catch(catch_unwind(||((self.vk_get_physical_device_external_fence_properties_khr)(physicalDevice, pExternalFenceInfo, pExternalFenceProperties))))
 	}
 }
 impl Default for Vulkan_KHR_external_fence_capabilities {
@@ -23677,10 +23677,10 @@ pub struct Vulkan_KHR_external_fence_fd {
 }
 impl VK_KHR_external_fence_fd for Vulkan_KHR_external_fence_fd {
 	fn vkImportFenceFdKHR(&self, device: VkDevice, pImportFenceFdInfo: *const VkImportFenceFdInfoKHR) -> Result<()> {
-		convert_result("vkImportFenceFdKHR", catch_unwind(||((self.vk_import_fence_fd_khr)(device, pImportFenceFdInfo))))
+		vk_convert_result("vkImportFenceFdKHR", catch_unwind(||((self.vk_import_fence_fd_khr)(device, pImportFenceFdInfo))))
 	}
 	fn vkGetFenceFdKHR(&self, device: VkDevice, pGetFdInfo: *const VkFenceGetFdInfoKHR, pFd: *mut int) -> Result<()> {
-		convert_result("vkGetFenceFdKHR", catch_unwind(||((self.vk_get_fence_fd_khr)(device, pGetFdInfo, pFd))))
+		vk_convert_result("vkGetFenceFdKHR", catch_unwind(||((self.vk_get_fence_fd_khr)(device, pGetFdInfo, pFd))))
 	}
 }
 impl Default for Vulkan_KHR_external_fence_fd {
@@ -23978,16 +23978,16 @@ pub struct Vulkan_KHR_performance_query {
 }
 impl VK_KHR_performance_query for Vulkan_KHR_performance_query {
 	fn vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR(&self, physicalDevice: VkPhysicalDevice, queueFamilyIndex: u32, pCounterCount: *mut uint32_t, pCounters: *mut VkPerformanceCounterKHR, pCounterDescriptions: *mut VkPerformanceCounterDescriptionKHR) -> Result<()> {
-		convert_result("vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR", catch_unwind(||((self.vk_enumerate_physical_device_queue_family_performance_query_counters_khr)(physicalDevice, queueFamilyIndex, pCounterCount, pCounters, pCounterDescriptions))))
+		vk_convert_result("vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR", catch_unwind(||((self.vk_enumerate_physical_device_queue_family_performance_query_counters_khr)(physicalDevice, queueFamilyIndex, pCounterCount, pCounters, pCounterDescriptions))))
 	}
 	fn vkGetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR(&self, physicalDevice: VkPhysicalDevice, pPerformanceQueryCreateInfo: *const VkQueryPoolPerformanceCreateInfoKHR, pNumPasses: *mut uint32_t) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_get_physical_device_queue_family_performance_query_passes_khr)(physicalDevice, pPerformanceQueryCreateInfo, pNumPasses))))
+		vk_process_catch(catch_unwind(||((self.vk_get_physical_device_queue_family_performance_query_passes_khr)(physicalDevice, pPerformanceQueryCreateInfo, pNumPasses))))
 	}
 	fn vkAcquireProfilingLockKHR(&self, device: VkDevice, pInfo: *const VkAcquireProfilingLockInfoKHR) -> Result<()> {
-		convert_result("vkAcquireProfilingLockKHR", catch_unwind(||((self.vk_acquire_profiling_lock_khr)(device, pInfo))))
+		vk_convert_result("vkAcquireProfilingLockKHR", catch_unwind(||((self.vk_acquire_profiling_lock_khr)(device, pInfo))))
 	}
 	fn vkReleaseProfilingLockKHR(&self, device: VkDevice) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_release_profiling_lock_khr)(device))))
+		vk_process_catch(catch_unwind(||((self.vk_release_profiling_lock_khr)(device))))
 	}
 }
 impl Default for Vulkan_KHR_performance_query {
@@ -24105,10 +24105,10 @@ pub struct Vulkan_KHR_get_surface_capabilities2 {
 }
 impl VK_KHR_get_surface_capabilities2 for Vulkan_KHR_get_surface_capabilities2 {
 	fn vkGetPhysicalDeviceSurfaceCapabilities2KHR(&self, physicalDevice: VkPhysicalDevice, pSurfaceInfo: *const VkPhysicalDeviceSurfaceInfo2KHR, pSurfaceCapabilities: *mut VkSurfaceCapabilities2KHR) -> Result<()> {
-		convert_result("vkGetPhysicalDeviceSurfaceCapabilities2KHR", catch_unwind(||((self.vk_get_physical_device_surface_capabilities2_khr)(physicalDevice, pSurfaceInfo, pSurfaceCapabilities))))
+		vk_convert_result("vkGetPhysicalDeviceSurfaceCapabilities2KHR", catch_unwind(||((self.vk_get_physical_device_surface_capabilities2_khr)(physicalDevice, pSurfaceInfo, pSurfaceCapabilities))))
 	}
 	fn vkGetPhysicalDeviceSurfaceFormats2KHR(&self, physicalDevice: VkPhysicalDevice, pSurfaceInfo: *const VkPhysicalDeviceSurfaceInfo2KHR, pSurfaceFormatCount: *mut uint32_t, pSurfaceFormats: *mut VkSurfaceFormat2KHR) -> Result<()> {
-		convert_result("vkGetPhysicalDeviceSurfaceFormats2KHR", catch_unwind(||((self.vk_get_physical_device_surface_formats2_khr)(physicalDevice, pSurfaceInfo, pSurfaceFormatCount, pSurfaceFormats))))
+		vk_convert_result("vkGetPhysicalDeviceSurfaceFormats2KHR", catch_unwind(||((self.vk_get_physical_device_surface_formats2_khr)(physicalDevice, pSurfaceInfo, pSurfaceFormatCount, pSurfaceFormats))))
 	}
 }
 impl Default for Vulkan_KHR_get_surface_capabilities2 {
@@ -24246,16 +24246,16 @@ pub struct Vulkan_KHR_get_display_properties2 {
 }
 impl VK_KHR_get_display_properties2 for Vulkan_KHR_get_display_properties2 {
 	fn vkGetPhysicalDeviceDisplayProperties2KHR(&self, physicalDevice: VkPhysicalDevice, pPropertyCount: *mut uint32_t, pProperties: *mut VkDisplayProperties2KHR) -> Result<()> {
-		convert_result("vkGetPhysicalDeviceDisplayProperties2KHR", catch_unwind(||((self.vk_get_physical_device_display_properties2_khr)(physicalDevice, pPropertyCount, pProperties))))
+		vk_convert_result("vkGetPhysicalDeviceDisplayProperties2KHR", catch_unwind(||((self.vk_get_physical_device_display_properties2_khr)(physicalDevice, pPropertyCount, pProperties))))
 	}
 	fn vkGetPhysicalDeviceDisplayPlaneProperties2KHR(&self, physicalDevice: VkPhysicalDevice, pPropertyCount: *mut uint32_t, pProperties: *mut VkDisplayPlaneProperties2KHR) -> Result<()> {
-		convert_result("vkGetPhysicalDeviceDisplayPlaneProperties2KHR", catch_unwind(||((self.vk_get_physical_device_display_plane_properties2_khr)(physicalDevice, pPropertyCount, pProperties))))
+		vk_convert_result("vkGetPhysicalDeviceDisplayPlaneProperties2KHR", catch_unwind(||((self.vk_get_physical_device_display_plane_properties2_khr)(physicalDevice, pPropertyCount, pProperties))))
 	}
 	fn vkGetDisplayModeProperties2KHR(&self, physicalDevice: VkPhysicalDevice, display: VkDisplayKHR, pPropertyCount: *mut uint32_t, pProperties: *mut VkDisplayModeProperties2KHR) -> Result<()> {
-		convert_result("vkGetDisplayModeProperties2KHR", catch_unwind(||((self.vk_get_display_mode_properties2_khr)(physicalDevice, display, pPropertyCount, pProperties))))
+		vk_convert_result("vkGetDisplayModeProperties2KHR", catch_unwind(||((self.vk_get_display_mode_properties2_khr)(physicalDevice, display, pPropertyCount, pProperties))))
 	}
 	fn vkGetDisplayPlaneCapabilities2KHR(&self, physicalDevice: VkPhysicalDevice, pDisplayPlaneInfo: *const VkDisplayPlaneInfo2KHR, pCapabilities: *mut VkDisplayPlaneCapabilities2KHR) -> Result<()> {
-		convert_result("vkGetDisplayPlaneCapabilities2KHR", catch_unwind(||((self.vk_get_display_plane_capabilities2_khr)(physicalDevice, pDisplayPlaneInfo, pCapabilities))))
+		vk_convert_result("vkGetDisplayPlaneCapabilities2KHR", catch_unwind(||((self.vk_get_display_plane_capabilities2_khr)(physicalDevice, pDisplayPlaneInfo, pCapabilities))))
 	}
 }
 impl Default for Vulkan_KHR_get_display_properties2 {
@@ -24418,13 +24418,13 @@ pub struct Vulkan_KHR_get_memory_requirements2 {
 }
 impl VK_KHR_get_memory_requirements2 for Vulkan_KHR_get_memory_requirements2 {
 	fn vkGetImageMemoryRequirements2KHR(&self, device: VkDevice, pInfo: *const VkImageMemoryRequirementsInfo2, pMemoryRequirements: *mut VkMemoryRequirements2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_get_image_memory_requirements2_khr)(device, pInfo, pMemoryRequirements))))
+		vk_process_catch(catch_unwind(||((self.vk_get_image_memory_requirements2_khr)(device, pInfo, pMemoryRequirements))))
 	}
 	fn vkGetBufferMemoryRequirements2KHR(&self, device: VkDevice, pInfo: *const VkBufferMemoryRequirementsInfo2, pMemoryRequirements: *mut VkMemoryRequirements2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_get_buffer_memory_requirements2_khr)(device, pInfo, pMemoryRequirements))))
+		vk_process_catch(catch_unwind(||((self.vk_get_buffer_memory_requirements2_khr)(device, pInfo, pMemoryRequirements))))
 	}
 	fn vkGetImageSparseMemoryRequirements2KHR(&self, device: VkDevice, pInfo: *const VkImageSparseMemoryRequirementsInfo2, pSparseMemoryRequirementCount: *mut uint32_t, pSparseMemoryRequirements: *mut VkSparseImageMemoryRequirements2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_get_image_sparse_memory_requirements2_khr)(device, pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements))))
+		vk_process_catch(catch_unwind(||((self.vk_get_image_sparse_memory_requirements2_khr)(device, pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements))))
 	}
 }
 impl Default for Vulkan_KHR_get_memory_requirements2 {
@@ -24525,10 +24525,10 @@ pub struct Vulkan_KHR_sampler_ycbcr_conversion {
 }
 impl VK_KHR_sampler_ycbcr_conversion for Vulkan_KHR_sampler_ycbcr_conversion {
 	fn vkCreateSamplerYcbcrConversionKHR(&self, device: VkDevice, pCreateInfo: *const VkSamplerYcbcrConversionCreateInfo, pAllocator: *const VkAllocationCallbacks, pYcbcrConversion: *mut VkSamplerYcbcrConversion) -> Result<()> {
-		convert_result("vkCreateSamplerYcbcrConversionKHR", catch_unwind(||((self.vk_create_sampler_ycbcr_conversion_khr)(device, pCreateInfo, pAllocator, pYcbcrConversion))))
+		vk_convert_result("vkCreateSamplerYcbcrConversionKHR", catch_unwind(||((self.vk_create_sampler_ycbcr_conversion_khr)(device, pCreateInfo, pAllocator, pYcbcrConversion))))
 	}
 	fn vkDestroySamplerYcbcrConversionKHR(&self, device: VkDevice, ycbcrConversion: VkSamplerYcbcrConversion, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_destroy_sampler_ycbcr_conversion_khr)(device, ycbcrConversion, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_destroy_sampler_ycbcr_conversion_khr)(device, ycbcrConversion, pAllocator))))
 	}
 }
 impl Default for Vulkan_KHR_sampler_ycbcr_conversion {
@@ -24583,10 +24583,10 @@ pub struct Vulkan_KHR_bind_memory2 {
 }
 impl VK_KHR_bind_memory2 for Vulkan_KHR_bind_memory2 {
 	fn vkBindBufferMemory2KHR(&self, device: VkDevice, bindInfoCount: u32, pBindInfos: *const VkBindBufferMemoryInfo) -> Result<()> {
-		convert_result("vkBindBufferMemory2KHR", catch_unwind(||((self.vk_bind_buffer_memory2_khr)(device, bindInfoCount, pBindInfos))))
+		vk_convert_result("vkBindBufferMemory2KHR", catch_unwind(||((self.vk_bind_buffer_memory2_khr)(device, bindInfoCount, pBindInfos))))
 	}
 	fn vkBindImageMemory2KHR(&self, device: VkDevice, bindInfoCount: u32, pBindInfos: *const VkBindImageMemoryInfo) -> Result<()> {
-		convert_result("vkBindImageMemory2KHR", catch_unwind(||((self.vk_bind_image_memory2_khr)(device, bindInfoCount, pBindInfos))))
+		vk_convert_result("vkBindImageMemory2KHR", catch_unwind(||((self.vk_bind_image_memory2_khr)(device, bindInfoCount, pBindInfos))))
 	}
 }
 impl Default for Vulkan_KHR_bind_memory2 {
@@ -24631,7 +24631,7 @@ pub struct Vulkan_KHR_maintenance3 {
 }
 impl VK_KHR_maintenance3 for Vulkan_KHR_maintenance3 {
 	fn vkGetDescriptorSetLayoutSupportKHR(&self, device: VkDevice, pCreateInfo: *const VkDescriptorSetLayoutCreateInfo, pSupport: *mut VkDescriptorSetLayoutSupport) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_get_descriptor_set_layout_support_khr)(device, pCreateInfo, pSupport))))
+		vk_process_catch(catch_unwind(||((self.vk_get_descriptor_set_layout_support_khr)(device, pCreateInfo, pSupport))))
 	}
 }
 impl Default for Vulkan_KHR_maintenance3 {
@@ -24678,10 +24678,10 @@ pub struct Vulkan_KHR_draw_indirect_count {
 }
 impl VK_KHR_draw_indirect_count for Vulkan_KHR_draw_indirect_count {
 	fn vkCmdDrawIndirectCountKHR(&self, commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize, countBuffer: VkBuffer, countBufferOffset: VkDeviceSize, maxDrawCount: u32, stride: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_draw_indirect_count_khr)(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_draw_indirect_count_khr)(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride))))
 	}
 	fn vkCmdDrawIndexedIndirectCountKHR(&self, commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize, countBuffer: VkBuffer, countBufferOffset: VkDeviceSize, maxDrawCount: u32, stride: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_draw_indexed_indirect_count_khr)(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_draw_indexed_indirect_count_khr)(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride))))
 	}
 }
 impl Default for Vulkan_KHR_draw_indirect_count {
@@ -25189,13 +25189,13 @@ pub struct Vulkan_KHR_timeline_semaphore {
 }
 impl VK_KHR_timeline_semaphore for Vulkan_KHR_timeline_semaphore {
 	fn vkGetSemaphoreCounterValueKHR(&self, device: VkDevice, semaphore: VkSemaphore, pValue: *mut uint64_t) -> Result<()> {
-		convert_result("vkGetSemaphoreCounterValueKHR", catch_unwind(||((self.vk_get_semaphore_counter_value_khr)(device, semaphore, pValue))))
+		vk_convert_result("vkGetSemaphoreCounterValueKHR", catch_unwind(||((self.vk_get_semaphore_counter_value_khr)(device, semaphore, pValue))))
 	}
 	fn vkWaitSemaphoresKHR(&self, device: VkDevice, pWaitInfo: *const VkSemaphoreWaitInfo, timeout: u64) -> Result<()> {
-		convert_result("vkWaitSemaphoresKHR", catch_unwind(||((self.vk_wait_semaphores_khr)(device, pWaitInfo, timeout))))
+		vk_convert_result("vkWaitSemaphoresKHR", catch_unwind(||((self.vk_wait_semaphores_khr)(device, pWaitInfo, timeout))))
 	}
 	fn vkSignalSemaphoreKHR(&self, device: VkDevice, pSignalInfo: *const VkSemaphoreSignalInfo) -> Result<()> {
-		convert_result("vkSignalSemaphoreKHR", catch_unwind(||((self.vk_signal_semaphore_khr)(device, pSignalInfo))))
+		vk_convert_result("vkSignalSemaphoreKHR", catch_unwind(||((self.vk_signal_semaphore_khr)(device, pSignalInfo))))
 	}
 }
 impl Default for Vulkan_KHR_timeline_semaphore {
@@ -25375,10 +25375,10 @@ pub struct Vulkan_KHR_fragment_shading_rate {
 }
 impl VK_KHR_fragment_shading_rate for Vulkan_KHR_fragment_shading_rate {
 	fn vkGetPhysicalDeviceFragmentShadingRatesKHR(&self, physicalDevice: VkPhysicalDevice, pFragmentShadingRateCount: *mut uint32_t, pFragmentShadingRates: *mut VkPhysicalDeviceFragmentShadingRateKHR) -> Result<()> {
-		convert_result("vkGetPhysicalDeviceFragmentShadingRatesKHR", catch_unwind(||((self.vk_get_physical_device_fragment_shading_rates_khr)(physicalDevice, pFragmentShadingRateCount, pFragmentShadingRates))))
+		vk_convert_result("vkGetPhysicalDeviceFragmentShadingRatesKHR", catch_unwind(||((self.vk_get_physical_device_fragment_shading_rates_khr)(physicalDevice, pFragmentShadingRateCount, pFragmentShadingRates))))
 	}
 	fn vkCmdSetFragmentShadingRateKHR(&self, commandBuffer: VkCommandBuffer, pFragmentSize: *const VkExtent2D, combinerOps: &[VkFragmentShadingRateCombinerOpKHR; 2 as usize]) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_fragment_shading_rate_khr)(commandBuffer, pFragmentSize, combinerOps))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_fragment_shading_rate_khr)(commandBuffer, pFragmentSize, combinerOps))))
 	}
 }
 impl Default for Vulkan_KHR_fragment_shading_rate {
@@ -25436,10 +25436,10 @@ pub struct Vulkan_KHR_dynamic_rendering_local_read {
 }
 impl VK_KHR_dynamic_rendering_local_read for Vulkan_KHR_dynamic_rendering_local_read {
 	fn vkCmdSetRenderingAttachmentLocationsKHR(&self, commandBuffer: VkCommandBuffer, pLocationInfo: *const VkRenderingAttachmentLocationInfo) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_rendering_attachment_locations_khr)(commandBuffer, pLocationInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_rendering_attachment_locations_khr)(commandBuffer, pLocationInfo))))
 	}
 	fn vkCmdSetRenderingInputAttachmentIndicesKHR(&self, commandBuffer: VkCommandBuffer, pInputAttachmentIndexInfo: *const VkRenderingInputAttachmentIndexInfo) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_rendering_input_attachment_indices_khr)(commandBuffer, pInputAttachmentIndexInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_rendering_input_attachment_indices_khr)(commandBuffer, pInputAttachmentIndexInfo))))
 	}
 }
 impl Default for Vulkan_KHR_dynamic_rendering_local_read {
@@ -25582,7 +25582,7 @@ pub struct Vulkan_KHR_present_wait {
 }
 impl VK_KHR_present_wait for Vulkan_KHR_present_wait {
 	fn vkWaitForPresentKHR(&self, device: VkDevice, swapchain: VkSwapchainKHR, presentId: u64, timeout: u64) -> Result<()> {
-		convert_result("vkWaitForPresentKHR", catch_unwind(||((self.vk_wait_for_present_khr)(device, swapchain, presentId, timeout))))
+		vk_convert_result("vkWaitForPresentKHR", catch_unwind(||((self.vk_wait_for_present_khr)(device, swapchain, presentId, timeout))))
 	}
 }
 impl Default for Vulkan_KHR_present_wait {
@@ -25674,13 +25674,13 @@ pub struct Vulkan_KHR_buffer_device_address {
 }
 impl VK_KHR_buffer_device_address for Vulkan_KHR_buffer_device_address {
 	fn vkGetBufferDeviceAddressKHR(&self, device: VkDevice, pInfo: *const VkBufferDeviceAddressInfo) -> Result<VkDeviceAddress> {
-		process_catch(catch_unwind(||((self.vk_get_buffer_device_address_khr)(device, pInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_get_buffer_device_address_khr)(device, pInfo))))
 	}
 	fn vkGetBufferOpaqueCaptureAddressKHR(&self, device: VkDevice, pInfo: *const VkBufferDeviceAddressInfo) -> Result<u64> {
-		process_catch(catch_unwind(||((self.vk_get_buffer_opaque_capture_address_khr)(device, pInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_get_buffer_opaque_capture_address_khr)(device, pInfo))))
 	}
 	fn vkGetDeviceMemoryOpaqueCaptureAddressKHR(&self, device: VkDevice, pInfo: *const VkDeviceMemoryOpaqueCaptureAddressInfo) -> Result<u64> {
-		process_catch(catch_unwind(||((self.vk_get_device_memory_opaque_capture_address_khr)(device, pInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_get_device_memory_opaque_capture_address_khr)(device, pInfo))))
 	}
 }
 impl Default for Vulkan_KHR_buffer_device_address {
@@ -25766,19 +25766,19 @@ pub struct Vulkan_KHR_deferred_host_operations {
 }
 impl VK_KHR_deferred_host_operations for Vulkan_KHR_deferred_host_operations {
 	fn vkCreateDeferredOperationKHR(&self, device: VkDevice, pAllocator: *const VkAllocationCallbacks, pDeferredOperation: *mut VkDeferredOperationKHR) -> Result<()> {
-		convert_result("vkCreateDeferredOperationKHR", catch_unwind(||((self.vk_create_deferred_operation_khr)(device, pAllocator, pDeferredOperation))))
+		vk_convert_result("vkCreateDeferredOperationKHR", catch_unwind(||((self.vk_create_deferred_operation_khr)(device, pAllocator, pDeferredOperation))))
 	}
 	fn vkDestroyDeferredOperationKHR(&self, device: VkDevice, operation: VkDeferredOperationKHR, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_destroy_deferred_operation_khr)(device, operation, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_destroy_deferred_operation_khr)(device, operation, pAllocator))))
 	}
 	fn vkGetDeferredOperationMaxConcurrencyKHR(&self, device: VkDevice, operation: VkDeferredOperationKHR) -> Result<u32> {
-		process_catch(catch_unwind(||((self.vk_get_deferred_operation_max_concurrency_khr)(device, operation))))
+		vk_process_catch(catch_unwind(||((self.vk_get_deferred_operation_max_concurrency_khr)(device, operation))))
 	}
 	fn vkGetDeferredOperationResultKHR(&self, device: VkDevice, operation: VkDeferredOperationKHR) -> Result<()> {
-		convert_result("vkGetDeferredOperationResultKHR", catch_unwind(||((self.vk_get_deferred_operation_result_khr)(device, operation))))
+		vk_convert_result("vkGetDeferredOperationResultKHR", catch_unwind(||((self.vk_get_deferred_operation_result_khr)(device, operation))))
 	}
 	fn vkDeferredOperationJoinKHR(&self, device: VkDevice, operation: VkDeferredOperationKHR) -> Result<()> {
-		convert_result("vkDeferredOperationJoinKHR", catch_unwind(||((self.vk_deferred_operation_join_khr)(device, operation))))
+		vk_convert_result("vkDeferredOperationJoinKHR", catch_unwind(||((self.vk_deferred_operation_join_khr)(device, operation))))
 	}
 }
 impl Default for Vulkan_KHR_deferred_host_operations {
@@ -25976,13 +25976,13 @@ pub struct Vulkan_KHR_pipeline_executable_properties {
 }
 impl VK_KHR_pipeline_executable_properties for Vulkan_KHR_pipeline_executable_properties {
 	fn vkGetPipelineExecutablePropertiesKHR(&self, device: VkDevice, pPipelineInfo: *const VkPipelineInfoKHR, pExecutableCount: *mut uint32_t, pProperties: *mut VkPipelineExecutablePropertiesKHR) -> Result<()> {
-		convert_result("vkGetPipelineExecutablePropertiesKHR", catch_unwind(||((self.vk_get_pipeline_executable_properties_khr)(device, pPipelineInfo, pExecutableCount, pProperties))))
+		vk_convert_result("vkGetPipelineExecutablePropertiesKHR", catch_unwind(||((self.vk_get_pipeline_executable_properties_khr)(device, pPipelineInfo, pExecutableCount, pProperties))))
 	}
 	fn vkGetPipelineExecutableStatisticsKHR(&self, device: VkDevice, pExecutableInfo: *const VkPipelineExecutableInfoKHR, pStatisticCount: *mut uint32_t, pStatistics: *mut VkPipelineExecutableStatisticKHR) -> Result<()> {
-		convert_result("vkGetPipelineExecutableStatisticsKHR", catch_unwind(||((self.vk_get_pipeline_executable_statistics_khr)(device, pExecutableInfo, pStatisticCount, pStatistics))))
+		vk_convert_result("vkGetPipelineExecutableStatisticsKHR", catch_unwind(||((self.vk_get_pipeline_executable_statistics_khr)(device, pExecutableInfo, pStatisticCount, pStatistics))))
 	}
 	fn vkGetPipelineExecutableInternalRepresentationsKHR(&self, device: VkDevice, pExecutableInfo: *const VkPipelineExecutableInfoKHR, pInternalRepresentationCount: *mut uint32_t, pInternalRepresentations: *mut VkPipelineExecutableInternalRepresentationKHR) -> Result<()> {
-		convert_result("vkGetPipelineExecutableInternalRepresentationsKHR", catch_unwind(||((self.vk_get_pipeline_executable_internal_representations_khr)(device, pExecutableInfo, pInternalRepresentationCount, pInternalRepresentations))))
+		vk_convert_result("vkGetPipelineExecutableInternalRepresentationsKHR", catch_unwind(||((self.vk_get_pipeline_executable_internal_representations_khr)(device, pExecutableInfo, pInternalRepresentationCount, pInternalRepresentations))))
 	}
 }
 impl Default for Vulkan_KHR_pipeline_executable_properties {
@@ -26045,10 +26045,10 @@ pub struct Vulkan_KHR_map_memory2 {
 }
 impl VK_KHR_map_memory2 for Vulkan_KHR_map_memory2 {
 	fn vkMapMemory2KHR(&self, device: VkDevice, pMemoryMapInfo: *const VkMemoryMapInfo, ppData: *mut *mut c_void) -> Result<()> {
-		convert_result("vkMapMemory2KHR", catch_unwind(||((self.vk_map_memory2_khr)(device, pMemoryMapInfo, ppData))))
+		vk_convert_result("vkMapMemory2KHR", catch_unwind(||((self.vk_map_memory2_khr)(device, pMemoryMapInfo, ppData))))
 	}
 	fn vkUnmapMemory2KHR(&self, device: VkDevice, pMemoryUnmapInfo: *const VkMemoryUnmapInfo) -> Result<()> {
-		convert_result("vkUnmapMemory2KHR", catch_unwind(||((self.vk_unmap_memory2_khr)(device, pMemoryUnmapInfo))))
+		vk_convert_result("vkUnmapMemory2KHR", catch_unwind(||((self.vk_unmap_memory2_khr)(device, pMemoryUnmapInfo))))
 	}
 }
 impl Default for Vulkan_KHR_map_memory2 {
@@ -26596,13 +26596,13 @@ pub struct Vulkan_KHR_video_encode_queue {
 }
 impl VK_KHR_video_encode_queue for Vulkan_KHR_video_encode_queue {
 	fn vkGetPhysicalDeviceVideoEncodeQualityLevelPropertiesKHR(&self, physicalDevice: VkPhysicalDevice, pQualityLevelInfo: *const VkPhysicalDeviceVideoEncodeQualityLevelInfoKHR, pQualityLevelProperties: *mut VkVideoEncodeQualityLevelPropertiesKHR) -> Result<()> {
-		convert_result("vkGetPhysicalDeviceVideoEncodeQualityLevelPropertiesKHR", catch_unwind(||((self.vk_get_physical_device_video_encode_quality_level_properties_khr)(physicalDevice, pQualityLevelInfo, pQualityLevelProperties))))
+		vk_convert_result("vkGetPhysicalDeviceVideoEncodeQualityLevelPropertiesKHR", catch_unwind(||((self.vk_get_physical_device_video_encode_quality_level_properties_khr)(physicalDevice, pQualityLevelInfo, pQualityLevelProperties))))
 	}
 	fn vkGetEncodedVideoSessionParametersKHR(&self, device: VkDevice, pVideoSessionParametersInfo: *const VkVideoEncodeSessionParametersGetInfoKHR, pFeedbackInfo: *mut VkVideoEncodeSessionParametersFeedbackInfoKHR, pDataSize: *mut size_t, pData: *mut c_void) -> Result<()> {
-		convert_result("vkGetEncodedVideoSessionParametersKHR", catch_unwind(||((self.vk_get_encoded_video_session_parameters_khr)(device, pVideoSessionParametersInfo, pFeedbackInfo, pDataSize, pData))))
+		vk_convert_result("vkGetEncodedVideoSessionParametersKHR", catch_unwind(||((self.vk_get_encoded_video_session_parameters_khr)(device, pVideoSessionParametersInfo, pFeedbackInfo, pDataSize, pData))))
 	}
 	fn vkCmdEncodeVideoKHR(&self, commandBuffer: VkCommandBuffer, pEncodeInfo: *const VkVideoEncodeInfoKHR) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_encode_video_khr)(commandBuffer, pEncodeInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_encode_video_khr)(commandBuffer, pEncodeInfo))))
 	}
 }
 impl Default for Vulkan_KHR_video_encode_queue {
@@ -26735,22 +26735,22 @@ pub struct Vulkan_KHR_synchronization2 {
 }
 impl VK_KHR_synchronization2 for Vulkan_KHR_synchronization2 {
 	fn vkCmdSetEvent2KHR(&self, commandBuffer: VkCommandBuffer, event: VkEvent, pDependencyInfo: *const VkDependencyInfo) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_event2_khr)(commandBuffer, event, pDependencyInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_event2_khr)(commandBuffer, event, pDependencyInfo))))
 	}
 	fn vkCmdResetEvent2KHR(&self, commandBuffer: VkCommandBuffer, event: VkEvent, stageMask: VkPipelineStageFlags2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_reset_event2_khr)(commandBuffer, event, stageMask))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_reset_event2_khr)(commandBuffer, event, stageMask))))
 	}
 	fn vkCmdWaitEvents2KHR(&self, commandBuffer: VkCommandBuffer, eventCount: u32, pEvents: *const VkEvent, pDependencyInfos: *const VkDependencyInfo) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_wait_events2_khr)(commandBuffer, eventCount, pEvents, pDependencyInfos))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_wait_events2_khr)(commandBuffer, eventCount, pEvents, pDependencyInfos))))
 	}
 	fn vkCmdPipelineBarrier2KHR(&self, commandBuffer: VkCommandBuffer, pDependencyInfo: *const VkDependencyInfo) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_pipeline_barrier2_khr)(commandBuffer, pDependencyInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_pipeline_barrier2_khr)(commandBuffer, pDependencyInfo))))
 	}
 	fn vkCmdWriteTimestamp2KHR(&self, commandBuffer: VkCommandBuffer, stage: VkPipelineStageFlags2, queryPool: VkQueryPool, query: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_write_timestamp2_khr)(commandBuffer, stage, queryPool, query))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_write_timestamp2_khr)(commandBuffer, stage, queryPool, query))))
 	}
 	fn vkQueueSubmit2KHR(&self, queue: VkQueue, submitCount: u32, pSubmits: *const VkSubmitInfo2, fence: VkFence) -> Result<()> {
-		convert_result("vkQueueSubmit2KHR", catch_unwind(||((self.vk_queue_submit2_khr)(queue, submitCount, pSubmits, fence))))
+		vk_convert_result("vkQueueSubmit2KHR", catch_unwind(||((self.vk_queue_submit2_khr)(queue, submitCount, pSubmits, fence))))
 	}
 }
 impl Default for Vulkan_KHR_synchronization2 {
@@ -26990,22 +26990,22 @@ pub struct Vulkan_KHR_copy_commands2 {
 }
 impl VK_KHR_copy_commands2 for Vulkan_KHR_copy_commands2 {
 	fn vkCmdCopyBuffer2KHR(&self, commandBuffer: VkCommandBuffer, pCopyBufferInfo: *const VkCopyBufferInfo2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_copy_buffer2_khr)(commandBuffer, pCopyBufferInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_copy_buffer2_khr)(commandBuffer, pCopyBufferInfo))))
 	}
 	fn vkCmdCopyImage2KHR(&self, commandBuffer: VkCommandBuffer, pCopyImageInfo: *const VkCopyImageInfo2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_copy_image2_khr)(commandBuffer, pCopyImageInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_copy_image2_khr)(commandBuffer, pCopyImageInfo))))
 	}
 	fn vkCmdCopyBufferToImage2KHR(&self, commandBuffer: VkCommandBuffer, pCopyBufferToImageInfo: *const VkCopyBufferToImageInfo2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_copy_buffer_to_image2_khr)(commandBuffer, pCopyBufferToImageInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_copy_buffer_to_image2_khr)(commandBuffer, pCopyBufferToImageInfo))))
 	}
 	fn vkCmdCopyImageToBuffer2KHR(&self, commandBuffer: VkCommandBuffer, pCopyImageToBufferInfo: *const VkCopyImageToBufferInfo2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_copy_image_to_buffer2_khr)(commandBuffer, pCopyImageToBufferInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_copy_image_to_buffer2_khr)(commandBuffer, pCopyImageToBufferInfo))))
 	}
 	fn vkCmdBlitImage2KHR(&self, commandBuffer: VkCommandBuffer, pBlitImageInfo: *const VkBlitImageInfo2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_blit_image2_khr)(commandBuffer, pBlitImageInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_blit_image2_khr)(commandBuffer, pBlitImageInfo))))
 	}
 	fn vkCmdResolveImage2KHR(&self, commandBuffer: VkCommandBuffer, pResolveImageInfo: *const VkResolveImageInfo2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_resolve_image2_khr)(commandBuffer, pResolveImageInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_resolve_image2_khr)(commandBuffer, pResolveImageInfo))))
 	}
 }
 impl Default for Vulkan_KHR_copy_commands2 {
@@ -27108,7 +27108,7 @@ pub struct Vulkan_KHR_ray_tracing_maintenance1 {
 }
 impl VK_KHR_ray_tracing_maintenance1 for Vulkan_KHR_ray_tracing_maintenance1 {
 	fn vkCmdTraceRaysIndirect2KHR(&self, commandBuffer: VkCommandBuffer, indirectDeviceAddress: VkDeviceAddress) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_trace_rays_indirect2_khr)(commandBuffer, indirectDeviceAddress))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_trace_rays_indirect2_khr)(commandBuffer, indirectDeviceAddress))))
 	}
 }
 impl Default for Vulkan_KHR_ray_tracing_maintenance1 {
@@ -27194,13 +27194,13 @@ pub struct Vulkan_KHR_maintenance4 {
 }
 impl VK_KHR_maintenance4 for Vulkan_KHR_maintenance4 {
 	fn vkGetDeviceBufferMemoryRequirementsKHR(&self, device: VkDevice, pInfo: *const VkDeviceBufferMemoryRequirements, pMemoryRequirements: *mut VkMemoryRequirements2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_get_device_buffer_memory_requirements_khr)(device, pInfo, pMemoryRequirements))))
+		vk_process_catch(catch_unwind(||((self.vk_get_device_buffer_memory_requirements_khr)(device, pInfo, pMemoryRequirements))))
 	}
 	fn vkGetDeviceImageMemoryRequirementsKHR(&self, device: VkDevice, pInfo: *const VkDeviceImageMemoryRequirements, pMemoryRequirements: *mut VkMemoryRequirements2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_get_device_image_memory_requirements_khr)(device, pInfo, pMemoryRequirements))))
+		vk_process_catch(catch_unwind(||((self.vk_get_device_image_memory_requirements_khr)(device, pInfo, pMemoryRequirements))))
 	}
 	fn vkGetDeviceImageSparseMemoryRequirementsKHR(&self, device: VkDevice, pInfo: *const VkDeviceImageMemoryRequirements, pSparseMemoryRequirementCount: *mut uint32_t, pSparseMemoryRequirements: *mut VkSparseImageMemoryRequirements2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_get_device_image_sparse_memory_requirements_khr)(device, pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements))))
+		vk_process_catch(catch_unwind(||((self.vk_get_device_image_sparse_memory_requirements_khr)(device, pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements))))
 	}
 }
 impl Default for Vulkan_KHR_maintenance4 {
@@ -27353,16 +27353,16 @@ pub struct Vulkan_KHR_maintenance5 {
 }
 impl VK_KHR_maintenance5 for Vulkan_KHR_maintenance5 {
 	fn vkCmdBindIndexBuffer2KHR(&self, commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize, size: VkDeviceSize, indexType: VkIndexType) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_bind_index_buffer2_khr)(commandBuffer, buffer, offset, size, indexType))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_bind_index_buffer2_khr)(commandBuffer, buffer, offset, size, indexType))))
 	}
 	fn vkGetRenderingAreaGranularityKHR(&self, device: VkDevice, pRenderingAreaInfo: *const VkRenderingAreaInfo, pGranularity: *mut VkExtent2D) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_get_rendering_area_granularity_khr)(device, pRenderingAreaInfo, pGranularity))))
+		vk_process_catch(catch_unwind(||((self.vk_get_rendering_area_granularity_khr)(device, pRenderingAreaInfo, pGranularity))))
 	}
 	fn vkGetDeviceImageSubresourceLayoutKHR(&self, device: VkDevice, pInfo: *const VkDeviceImageSubresourceInfo, pLayout: *mut VkSubresourceLayout2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_get_device_image_subresource_layout_khr)(device, pInfo, pLayout))))
+		vk_process_catch(catch_unwind(||((self.vk_get_device_image_subresource_layout_khr)(device, pInfo, pLayout))))
 	}
 	fn vkGetImageSubresourceLayout2KHR(&self, device: VkDevice, image: VkImage, pSubresource: *const VkImageSubresource2, pLayout: *mut VkSubresourceLayout2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_get_image_subresource_layout2_khr)(device, image, pSubresource, pLayout))))
+		vk_process_catch(catch_unwind(||((self.vk_get_image_subresource_layout2_khr)(device, image, pSubresource, pLayout))))
 	}
 }
 impl Default for Vulkan_KHR_maintenance5 {
@@ -27478,7 +27478,7 @@ pub struct Vulkan_KHR_present_wait2 {
 }
 impl VK_KHR_present_wait2 for Vulkan_KHR_present_wait2 {
 	fn vkWaitForPresent2KHR(&self, device: VkDevice, swapchain: VkSwapchainKHR, pPresentWait2Info: *const VkPresentWait2InfoKHR) -> Result<()> {
-		convert_result("vkWaitForPresent2KHR", catch_unwind(||((self.vk_wait_for_present2_khr)(device, swapchain, pPresentWait2Info))))
+		vk_convert_result("vkWaitForPresent2KHR", catch_unwind(||((self.vk_wait_for_present2_khr)(device, swapchain, pPresentWait2Info))))
 	}
 }
 impl Default for Vulkan_KHR_present_wait2 {
@@ -27714,19 +27714,19 @@ pub struct Vulkan_KHR_pipeline_binary {
 }
 impl VK_KHR_pipeline_binary for Vulkan_KHR_pipeline_binary {
 	fn vkCreatePipelineBinariesKHR(&self, device: VkDevice, pCreateInfo: *const VkPipelineBinaryCreateInfoKHR, pAllocator: *const VkAllocationCallbacks, pBinaries: *mut VkPipelineBinaryHandlesInfoKHR) -> Result<()> {
-		convert_result("vkCreatePipelineBinariesKHR", catch_unwind(||((self.vk_create_pipeline_binaries_khr)(device, pCreateInfo, pAllocator, pBinaries))))
+		vk_convert_result("vkCreatePipelineBinariesKHR", catch_unwind(||((self.vk_create_pipeline_binaries_khr)(device, pCreateInfo, pAllocator, pBinaries))))
 	}
 	fn vkDestroyPipelineBinaryKHR(&self, device: VkDevice, pipelineBinary: VkPipelineBinaryKHR, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_destroy_pipeline_binary_khr)(device, pipelineBinary, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_destroy_pipeline_binary_khr)(device, pipelineBinary, pAllocator))))
 	}
 	fn vkGetPipelineKeyKHR(&self, device: VkDevice, pPipelineCreateInfo: *const VkPipelineCreateInfoKHR, pPipelineKey: *mut VkPipelineBinaryKeyKHR) -> Result<()> {
-		convert_result("vkGetPipelineKeyKHR", catch_unwind(||((self.vk_get_pipeline_key_khr)(device, pPipelineCreateInfo, pPipelineKey))))
+		vk_convert_result("vkGetPipelineKeyKHR", catch_unwind(||((self.vk_get_pipeline_key_khr)(device, pPipelineCreateInfo, pPipelineKey))))
 	}
 	fn vkGetPipelineBinaryDataKHR(&self, device: VkDevice, pInfo: *const VkPipelineBinaryDataInfoKHR, pPipelineBinaryKey: *mut VkPipelineBinaryKeyKHR, pPipelineBinaryDataSize: *mut size_t, pPipelineBinaryData: *mut c_void) -> Result<()> {
-		convert_result("vkGetPipelineBinaryDataKHR", catch_unwind(||((self.vk_get_pipeline_binary_data_khr)(device, pInfo, pPipelineBinaryKey, pPipelineBinaryDataSize, pPipelineBinaryData))))
+		vk_convert_result("vkGetPipelineBinaryDataKHR", catch_unwind(||((self.vk_get_pipeline_binary_data_khr)(device, pInfo, pPipelineBinaryKey, pPipelineBinaryDataSize, pPipelineBinaryData))))
 	}
 	fn vkReleaseCapturedPipelineDataKHR(&self, device: VkDevice, pInfo: *const VkReleaseCapturedPipelineDataInfoKHR, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		convert_result("vkReleaseCapturedPipelineDataKHR", catch_unwind(||((self.vk_release_captured_pipeline_data_khr)(device, pInfo, pAllocator))))
+		vk_convert_result("vkReleaseCapturedPipelineDataKHR", catch_unwind(||((self.vk_release_captured_pipeline_data_khr)(device, pInfo, pAllocator))))
 	}
 }
 impl Default for Vulkan_KHR_pipeline_binary {
@@ -27980,7 +27980,7 @@ pub struct Vulkan_KHR_swapchain_maintenance1 {
 }
 impl VK_KHR_swapchain_maintenance1 for Vulkan_KHR_swapchain_maintenance1 {
 	fn vkReleaseSwapchainImagesKHR(&self, device: VkDevice, pReleaseInfo: *const VkReleaseSwapchainImagesInfoKHR) -> Result<()> {
-		convert_result("vkReleaseSwapchainImagesKHR", catch_unwind(||((self.vk_release_swapchain_images_khr)(device, pReleaseInfo))))
+		vk_convert_result("vkReleaseSwapchainImagesKHR", catch_unwind(||((self.vk_release_swapchain_images_khr)(device, pReleaseInfo))))
 	}
 }
 impl Default for Vulkan_KHR_swapchain_maintenance1 {
@@ -28108,7 +28108,7 @@ pub struct Vulkan_KHR_cooperative_matrix {
 }
 impl VK_KHR_cooperative_matrix for Vulkan_KHR_cooperative_matrix {
 	fn vkGetPhysicalDeviceCooperativeMatrixPropertiesKHR(&self, physicalDevice: VkPhysicalDevice, pPropertyCount: *mut uint32_t, pProperties: *mut VkCooperativeMatrixPropertiesKHR) -> Result<()> {
-		convert_result("vkGetPhysicalDeviceCooperativeMatrixPropertiesKHR", catch_unwind(||((self.vk_get_physical_device_cooperative_matrix_properties_khr)(physicalDevice, pPropertyCount, pProperties))))
+		vk_convert_result("vkGetPhysicalDeviceCooperativeMatrixPropertiesKHR", catch_unwind(||((self.vk_get_physical_device_cooperative_matrix_properties_khr)(physicalDevice, pPropertyCount, pProperties))))
 	}
 }
 impl Default for Vulkan_KHR_cooperative_matrix {
@@ -30932,7 +30932,7 @@ pub struct Vulkan_KHR_line_rasterization {
 }
 impl VK_KHR_line_rasterization for Vulkan_KHR_line_rasterization {
 	fn vkCmdSetLineStippleKHR(&self, commandBuffer: VkCommandBuffer, lineStippleFactor: u32, lineStipplePattern: u16) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_line_stipple_khr)(commandBuffer, lineStippleFactor, lineStipplePattern))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_line_stipple_khr)(commandBuffer, lineStippleFactor, lineStipplePattern))))
 	}
 }
 impl Default for Vulkan_KHR_line_rasterization {
@@ -31005,10 +31005,10 @@ pub struct Vulkan_KHR_calibrated_timestamps {
 }
 impl VK_KHR_calibrated_timestamps for Vulkan_KHR_calibrated_timestamps {
 	fn vkGetPhysicalDeviceCalibrateableTimeDomainsKHR(&self, physicalDevice: VkPhysicalDevice, pTimeDomainCount: *mut uint32_t, pTimeDomains: *mut VkTimeDomainKHR) -> Result<()> {
-		convert_result("vkGetPhysicalDeviceCalibrateableTimeDomainsKHR", catch_unwind(||((self.vk_get_physical_device_calibrateable_time_domains_khr)(physicalDevice, pTimeDomainCount, pTimeDomains))))
+		vk_convert_result("vkGetPhysicalDeviceCalibrateableTimeDomainsKHR", catch_unwind(||((self.vk_get_physical_device_calibrateable_time_domains_khr)(physicalDevice, pTimeDomainCount, pTimeDomains))))
 	}
 	fn vkGetCalibratedTimestampsKHR(&self, device: VkDevice, timestampCount: u32, pTimestampInfos: *const VkCalibratedTimestampInfoKHR, pTimestamps: *mut uint64_t, pMaxDeviation: *mut uint64_t) -> Result<()> {
-		convert_result("vkGetCalibratedTimestampsKHR", catch_unwind(||((self.vk_get_calibrated_timestamps_khr)(device, timestampCount, pTimestampInfos, pTimestamps, pMaxDeviation))))
+		vk_convert_result("vkGetCalibratedTimestampsKHR", catch_unwind(||((self.vk_get_calibrated_timestamps_khr)(device, timestampCount, pTimestampInfos, pTimestamps, pMaxDeviation))))
 	}
 }
 impl Default for Vulkan_KHR_calibrated_timestamps {
@@ -31163,22 +31163,22 @@ pub struct Vulkan_KHR_maintenance6 {
 }
 impl VK_KHR_maintenance6 for Vulkan_KHR_maintenance6 {
 	fn vkCmdBindDescriptorSets2KHR(&self, commandBuffer: VkCommandBuffer, pBindDescriptorSetsInfo: *const VkBindDescriptorSetsInfo) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_bind_descriptor_sets2_khr)(commandBuffer, pBindDescriptorSetsInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_bind_descriptor_sets2_khr)(commandBuffer, pBindDescriptorSetsInfo))))
 	}
 	fn vkCmdPushConstants2KHR(&self, commandBuffer: VkCommandBuffer, pPushConstantsInfo: *const VkPushConstantsInfo) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_push_constants2_khr)(commandBuffer, pPushConstantsInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_push_constants2_khr)(commandBuffer, pPushConstantsInfo))))
 	}
 	fn vkCmdPushDescriptorSet2KHR(&self, commandBuffer: VkCommandBuffer, pPushDescriptorSetInfo: *const VkPushDescriptorSetInfo) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_push_descriptor_set2_khr)(commandBuffer, pPushDescriptorSetInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_push_descriptor_set2_khr)(commandBuffer, pPushDescriptorSetInfo))))
 	}
 	fn vkCmdPushDescriptorSetWithTemplate2KHR(&self, commandBuffer: VkCommandBuffer, pPushDescriptorSetWithTemplateInfo: *const VkPushDescriptorSetWithTemplateInfo) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_push_descriptor_set_with_template2_khr)(commandBuffer, pPushDescriptorSetWithTemplateInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_push_descriptor_set_with_template2_khr)(commandBuffer, pPushDescriptorSetWithTemplateInfo))))
 	}
 	fn vkCmdSetDescriptorBufferOffsets2EXT(&self, commandBuffer: VkCommandBuffer, pSetDescriptorBufferOffsetsInfo: *const VkSetDescriptorBufferOffsetsInfoEXT) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_descriptor_buffer_offsets2_ext)(commandBuffer, pSetDescriptorBufferOffsetsInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_descriptor_buffer_offsets2_ext)(commandBuffer, pSetDescriptorBufferOffsetsInfo))))
 	}
 	fn vkCmdBindDescriptorBufferEmbeddedSamplers2EXT(&self, commandBuffer: VkCommandBuffer, pBindDescriptorBufferEmbeddedSamplersInfo: *const VkBindDescriptorBufferEmbeddedSamplersInfoEXT) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_bind_descriptor_buffer_embedded_samplers2_ext)(commandBuffer, pBindDescriptorBufferEmbeddedSamplersInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_bind_descriptor_buffer_embedded_samplers2_ext)(commandBuffer, pBindDescriptorBufferEmbeddedSamplersInfo))))
 	}
 }
 impl Default for Vulkan_KHR_maintenance6 {
@@ -31962,13 +31962,13 @@ pub struct Vulkan_EXT_debug_report {
 }
 impl VK_EXT_debug_report for Vulkan_EXT_debug_report {
 	fn vkCreateDebugReportCallbackEXT(&self, instance: VkInstance, pCreateInfo: *const VkDebugReportCallbackCreateInfoEXT, pAllocator: *const VkAllocationCallbacks, pCallback: *mut VkDebugReportCallbackEXT) -> Result<()> {
-		convert_result("vkCreateDebugReportCallbackEXT", catch_unwind(||((self.vk_create_debug_report_callback_ext)(instance, pCreateInfo, pAllocator, pCallback))))
+		vk_convert_result("vkCreateDebugReportCallbackEXT", catch_unwind(||((self.vk_create_debug_report_callback_ext)(instance, pCreateInfo, pAllocator, pCallback))))
 	}
 	fn vkDestroyDebugReportCallbackEXT(&self, instance: VkInstance, callback: VkDebugReportCallbackEXT, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_destroy_debug_report_callback_ext)(instance, callback, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_destroy_debug_report_callback_ext)(instance, callback, pAllocator))))
 	}
 	fn vkDebugReportMessageEXT(&self, instance: VkInstance, flags: VkDebugReportFlagsEXT, objectType: VkDebugReportObjectTypeEXT, object: u64, location: usize, messageCode: i32, pLayerPrefix: *const i8, pMessage: *const i8) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_debug_report_message_ext)(instance, flags, objectType, object, location, messageCode, pLayerPrefix, pMessage))))
+		vk_process_catch(catch_unwind(||((self.vk_debug_report_message_ext)(instance, flags, objectType, object, location, messageCode, pLayerPrefix, pMessage))))
 	}
 }
 impl Default for Vulkan_EXT_debug_report {
@@ -32203,19 +32203,19 @@ pub struct Vulkan_EXT_debug_marker {
 }
 impl VK_EXT_debug_marker for Vulkan_EXT_debug_marker {
 	fn vkDebugMarkerSetObjectTagEXT(&self, device: VkDevice, pTagInfo: *const VkDebugMarkerObjectTagInfoEXT) -> Result<()> {
-		convert_result("vkDebugMarkerSetObjectTagEXT", catch_unwind(||((self.vk_debug_marker_set_object_tag_ext)(device, pTagInfo))))
+		vk_convert_result("vkDebugMarkerSetObjectTagEXT", catch_unwind(||((self.vk_debug_marker_set_object_tag_ext)(device, pTagInfo))))
 	}
 	fn vkDebugMarkerSetObjectNameEXT(&self, device: VkDevice, pNameInfo: *const VkDebugMarkerObjectNameInfoEXT) -> Result<()> {
-		convert_result("vkDebugMarkerSetObjectNameEXT", catch_unwind(||((self.vk_debug_marker_set_object_name_ext)(device, pNameInfo))))
+		vk_convert_result("vkDebugMarkerSetObjectNameEXT", catch_unwind(||((self.vk_debug_marker_set_object_name_ext)(device, pNameInfo))))
 	}
 	fn vkCmdDebugMarkerBeginEXT(&self, commandBuffer: VkCommandBuffer, pMarkerInfo: *const VkDebugMarkerMarkerInfoEXT) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_debug_marker_begin_ext)(commandBuffer, pMarkerInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_debug_marker_begin_ext)(commandBuffer, pMarkerInfo))))
 	}
 	fn vkCmdDebugMarkerEndEXT(&self, commandBuffer: VkCommandBuffer) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_debug_marker_end_ext)(commandBuffer))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_debug_marker_end_ext)(commandBuffer))))
 	}
 	fn vkCmdDebugMarkerInsertEXT(&self, commandBuffer: VkCommandBuffer, pMarkerInfo: *const VkDebugMarkerMarkerInfoEXT) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_debug_marker_insert_ext)(commandBuffer, pMarkerInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_debug_marker_insert_ext)(commandBuffer, pMarkerInfo))))
 	}
 }
 impl Default for Vulkan_EXT_debug_marker {
@@ -32413,22 +32413,22 @@ pub struct Vulkan_EXT_transform_feedback {
 }
 impl VK_EXT_transform_feedback for Vulkan_EXT_transform_feedback {
 	fn vkCmdBindTransformFeedbackBuffersEXT(&self, commandBuffer: VkCommandBuffer, firstBinding: u32, bindingCount: u32, pBuffers: *const VkBuffer, pOffsets: *const VkDeviceSize, pSizes: *const VkDeviceSize) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_bind_transform_feedback_buffers_ext)(commandBuffer, firstBinding, bindingCount, pBuffers, pOffsets, pSizes))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_bind_transform_feedback_buffers_ext)(commandBuffer, firstBinding, bindingCount, pBuffers, pOffsets, pSizes))))
 	}
 	fn vkCmdBeginTransformFeedbackEXT(&self, commandBuffer: VkCommandBuffer, firstCounterBuffer: u32, counterBufferCount: u32, pCounterBuffers: *const VkBuffer, pCounterBufferOffsets: *const VkDeviceSize) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_begin_transform_feedback_ext)(commandBuffer, firstCounterBuffer, counterBufferCount, pCounterBuffers, pCounterBufferOffsets))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_begin_transform_feedback_ext)(commandBuffer, firstCounterBuffer, counterBufferCount, pCounterBuffers, pCounterBufferOffsets))))
 	}
 	fn vkCmdEndTransformFeedbackEXT(&self, commandBuffer: VkCommandBuffer, firstCounterBuffer: u32, counterBufferCount: u32, pCounterBuffers: *const VkBuffer, pCounterBufferOffsets: *const VkDeviceSize) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_end_transform_feedback_ext)(commandBuffer, firstCounterBuffer, counterBufferCount, pCounterBuffers, pCounterBufferOffsets))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_end_transform_feedback_ext)(commandBuffer, firstCounterBuffer, counterBufferCount, pCounterBuffers, pCounterBufferOffsets))))
 	}
 	fn vkCmdBeginQueryIndexedEXT(&self, commandBuffer: VkCommandBuffer, queryPool: VkQueryPool, query: u32, flags: VkQueryControlFlags, index: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_begin_query_indexed_ext)(commandBuffer, queryPool, query, flags, index))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_begin_query_indexed_ext)(commandBuffer, queryPool, query, flags, index))))
 	}
 	fn vkCmdEndQueryIndexedEXT(&self, commandBuffer: VkCommandBuffer, queryPool: VkQueryPool, query: u32, index: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_end_query_indexed_ext)(commandBuffer, queryPool, query, index))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_end_query_indexed_ext)(commandBuffer, queryPool, query, index))))
 	}
 	fn vkCmdDrawIndirectByteCountEXT(&self, commandBuffer: VkCommandBuffer, instanceCount: u32, firstInstance: u32, counterBuffer: VkBuffer, counterBufferOffset: VkDeviceSize, counterOffset: u32, vertexStride: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_draw_indirect_byte_count_ext)(commandBuffer, instanceCount, firstInstance, counterBuffer, counterBufferOffset, counterOffset, vertexStride))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_draw_indirect_byte_count_ext)(commandBuffer, instanceCount, firstInstance, counterBuffer, counterBufferOffset, counterOffset, vertexStride))))
 	}
 }
 impl Default for Vulkan_EXT_transform_feedback {
@@ -32574,19 +32574,19 @@ pub struct Vulkan_NVX_binary_import {
 }
 impl VK_NVX_binary_import for Vulkan_NVX_binary_import {
 	fn vkCreateCuModuleNVX(&self, device: VkDevice, pCreateInfo: *const VkCuModuleCreateInfoNVX, pAllocator: *const VkAllocationCallbacks, pModule: *mut VkCuModuleNVX) -> Result<()> {
-		convert_result("vkCreateCuModuleNVX", catch_unwind(||((self.vk_create_cu_module_nvx)(device, pCreateInfo, pAllocator, pModule))))
+		vk_convert_result("vkCreateCuModuleNVX", catch_unwind(||((self.vk_create_cu_module_nvx)(device, pCreateInfo, pAllocator, pModule))))
 	}
 	fn vkCreateCuFunctionNVX(&self, device: VkDevice, pCreateInfo: *const VkCuFunctionCreateInfoNVX, pAllocator: *const VkAllocationCallbacks, pFunction: *mut VkCuFunctionNVX) -> Result<()> {
-		convert_result("vkCreateCuFunctionNVX", catch_unwind(||((self.vk_create_cu_function_nvx)(device, pCreateInfo, pAllocator, pFunction))))
+		vk_convert_result("vkCreateCuFunctionNVX", catch_unwind(||((self.vk_create_cu_function_nvx)(device, pCreateInfo, pAllocator, pFunction))))
 	}
 	fn vkDestroyCuModuleNVX(&self, device: VkDevice, module: VkCuModuleNVX, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_destroy_cu_module_nvx)(device, module, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_destroy_cu_module_nvx)(device, module, pAllocator))))
 	}
 	fn vkDestroyCuFunctionNVX(&self, device: VkDevice, function: VkCuFunctionNVX, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_destroy_cu_function_nvx)(device, function, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_destroy_cu_function_nvx)(device, function, pAllocator))))
 	}
 	fn vkCmdCuLaunchKernelNVX(&self, commandBuffer: VkCommandBuffer, pLaunchInfo: *const VkCuLaunchInfoNVX) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_cu_launch_kernel_nvx)(commandBuffer, pLaunchInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_cu_launch_kernel_nvx)(commandBuffer, pLaunchInfo))))
 	}
 }
 impl Default for Vulkan_NVX_binary_import {
@@ -32672,13 +32672,13 @@ pub struct Vulkan_NVX_image_view_handle {
 }
 impl VK_NVX_image_view_handle for Vulkan_NVX_image_view_handle {
 	fn vkGetImageViewHandleNVX(&self, device: VkDevice, pInfo: *const VkImageViewHandleInfoNVX) -> Result<u32> {
-		process_catch(catch_unwind(||((self.vk_get_image_view_handle_nvx)(device, pInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_get_image_view_handle_nvx)(device, pInfo))))
 	}
 	fn vkGetImageViewHandle64NVX(&self, device: VkDevice, pInfo: *const VkImageViewHandleInfoNVX) -> Result<u64> {
-		process_catch(catch_unwind(||((self.vk_get_image_view_handle64_nvx)(device, pInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_get_image_view_handle64_nvx)(device, pInfo))))
 	}
 	fn vkGetImageViewAddressNVX(&self, device: VkDevice, imageView: VkImageView, pProperties: *mut VkImageViewAddressPropertiesNVX) -> Result<()> {
-		convert_result("vkGetImageViewAddressNVX", catch_unwind(||((self.vk_get_image_view_address_nvx)(device, imageView, pProperties))))
+		vk_convert_result("vkGetImageViewAddressNVX", catch_unwind(||((self.vk_get_image_view_address_nvx)(device, imageView, pProperties))))
 	}
 }
 impl Default for Vulkan_NVX_image_view_handle {
@@ -32729,10 +32729,10 @@ pub struct Vulkan_AMD_draw_indirect_count {
 }
 impl VK_AMD_draw_indirect_count for Vulkan_AMD_draw_indirect_count {
 	fn vkCmdDrawIndirectCountAMD(&self, commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize, countBuffer: VkBuffer, countBufferOffset: VkDeviceSize, maxDrawCount: u32, stride: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_draw_indirect_count_amd)(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_draw_indirect_count_amd)(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride))))
 	}
 	fn vkCmdDrawIndexedIndirectCountAMD(&self, commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize, countBuffer: VkBuffer, countBufferOffset: VkDeviceSize, maxDrawCount: u32, stride: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_draw_indexed_indirect_count_amd)(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_draw_indexed_indirect_count_amd)(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride))))
 	}
 }
 impl Default for Vulkan_AMD_draw_indirect_count {
@@ -32882,7 +32882,7 @@ pub struct Vulkan_AMD_shader_info {
 }
 impl VK_AMD_shader_info for Vulkan_AMD_shader_info {
 	fn vkGetShaderInfoAMD(&self, device: VkDevice, pipeline: VkPipeline, shaderStage: VkShaderStageFlagBits, infoType: VkShaderInfoTypeAMD, pInfoSize: *mut size_t, pInfo: *mut c_void) -> Result<()> {
-		convert_result("vkGetShaderInfoAMD", catch_unwind(||((self.vk_get_shader_info_amd)(device, pipeline, shaderStage, infoType, pInfoSize, pInfo))))
+		vk_convert_result("vkGetShaderInfoAMD", catch_unwind(||((self.vk_get_shader_info_amd)(device, pipeline, shaderStage, infoType, pInfoSize, pInfo))))
 	}
 }
 impl Default for Vulkan_AMD_shader_info {
@@ -33061,7 +33061,7 @@ pub struct Vulkan_NV_external_memory_capabilities {
 }
 impl VK_NV_external_memory_capabilities for Vulkan_NV_external_memory_capabilities {
 	fn vkGetPhysicalDeviceExternalImageFormatPropertiesNV(&self, physicalDevice: VkPhysicalDevice, format: VkFormat, type_: VkImageType, tiling: VkImageTiling, usage: VkImageUsageFlags, flags: VkImageCreateFlags, externalHandleType: VkExternalMemoryHandleTypeFlagsNV, pExternalImageFormatProperties: *mut VkExternalImageFormatPropertiesNV) -> Result<()> {
-		convert_result("vkGetPhysicalDeviceExternalImageFormatPropertiesNV", catch_unwind(||((self.vk_get_physical_device_external_image_format_properties_nv)(physicalDevice, format, type_, tiling, usage, flags, externalHandleType, pExternalImageFormatProperties))))
+		vk_convert_result("vkGetPhysicalDeviceExternalImageFormatPropertiesNV", catch_unwind(||((self.vk_get_physical_device_external_image_format_properties_nv)(physicalDevice, format, type_, tiling, usage, flags, externalHandleType, pExternalImageFormatProperties))))
 	}
 }
 impl Default for Vulkan_NV_external_memory_capabilities {
@@ -33362,10 +33362,10 @@ pub struct Vulkan_EXT_conditional_rendering {
 }
 impl VK_EXT_conditional_rendering for Vulkan_EXT_conditional_rendering {
 	fn vkCmdBeginConditionalRenderingEXT(&self, commandBuffer: VkCommandBuffer, pConditionalRenderingBegin: *const VkConditionalRenderingBeginInfoEXT) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_begin_conditional_rendering_ext)(commandBuffer, pConditionalRenderingBegin))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_begin_conditional_rendering_ext)(commandBuffer, pConditionalRenderingBegin))))
 	}
 	fn vkCmdEndConditionalRenderingEXT(&self, commandBuffer: VkCommandBuffer) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_end_conditional_rendering_ext)(commandBuffer))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_end_conditional_rendering_ext)(commandBuffer))))
 	}
 }
 impl Default for Vulkan_EXT_conditional_rendering {
@@ -33423,7 +33423,7 @@ pub struct Vulkan_NV_clip_space_w_scaling {
 }
 impl VK_NV_clip_space_w_scaling for Vulkan_NV_clip_space_w_scaling {
 	fn vkCmdSetViewportWScalingNV(&self, commandBuffer: VkCommandBuffer, firstViewport: u32, viewportCount: u32, pViewportWScalings: *const VkViewportWScalingNV) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_viewport_wscaling_nv)(commandBuffer, firstViewport, viewportCount, pViewportWScalings))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_viewport_wscaling_nv)(commandBuffer, firstViewport, viewportCount, pViewportWScalings))))
 	}
 }
 impl Default for Vulkan_NV_clip_space_w_scaling {
@@ -33460,7 +33460,7 @@ pub struct Vulkan_EXT_direct_mode_display {
 }
 impl VK_EXT_direct_mode_display for Vulkan_EXT_direct_mode_display {
 	fn vkReleaseDisplayEXT(&self, physicalDevice: VkPhysicalDevice, display: VkDisplayKHR) -> Result<()> {
-		convert_result("vkReleaseDisplayEXT", catch_unwind(||((self.vk_release_display_ext)(physicalDevice, display))))
+		vk_convert_result("vkReleaseDisplayEXT", catch_unwind(||((self.vk_release_display_ext)(physicalDevice, display))))
 	}
 }
 impl Default for Vulkan_EXT_direct_mode_display {
@@ -33562,7 +33562,7 @@ pub struct Vulkan_EXT_display_surface_counter {
 }
 impl VK_EXT_display_surface_counter for Vulkan_EXT_display_surface_counter {
 	fn vkGetPhysicalDeviceSurfaceCapabilities2EXT(&self, physicalDevice: VkPhysicalDevice, surface: VkSurfaceKHR, pSurfaceCapabilities: *mut VkSurfaceCapabilities2EXT) -> Result<()> {
-		convert_result("vkGetPhysicalDeviceSurfaceCapabilities2EXT", catch_unwind(||((self.vk_get_physical_device_surface_capabilities2_ext)(physicalDevice, surface, pSurfaceCapabilities))))
+		vk_convert_result("vkGetPhysicalDeviceSurfaceCapabilities2EXT", catch_unwind(||((self.vk_get_physical_device_surface_capabilities2_ext)(physicalDevice, surface, pSurfaceCapabilities))))
 	}
 }
 impl Default for Vulkan_EXT_display_surface_counter {
@@ -33691,16 +33691,16 @@ pub struct Vulkan_EXT_display_control {
 }
 impl VK_EXT_display_control for Vulkan_EXT_display_control {
 	fn vkDisplayPowerControlEXT(&self, device: VkDevice, display: VkDisplayKHR, pDisplayPowerInfo: *const VkDisplayPowerInfoEXT) -> Result<()> {
-		convert_result("vkDisplayPowerControlEXT", catch_unwind(||((self.vk_display_power_control_ext)(device, display, pDisplayPowerInfo))))
+		vk_convert_result("vkDisplayPowerControlEXT", catch_unwind(||((self.vk_display_power_control_ext)(device, display, pDisplayPowerInfo))))
 	}
 	fn vkRegisterDeviceEventEXT(&self, device: VkDevice, pDeviceEventInfo: *const VkDeviceEventInfoEXT, pAllocator: *const VkAllocationCallbacks, pFence: *mut VkFence) -> Result<()> {
-		convert_result("vkRegisterDeviceEventEXT", catch_unwind(||((self.vk_register_device_event_ext)(device, pDeviceEventInfo, pAllocator, pFence))))
+		vk_convert_result("vkRegisterDeviceEventEXT", catch_unwind(||((self.vk_register_device_event_ext)(device, pDeviceEventInfo, pAllocator, pFence))))
 	}
 	fn vkRegisterDisplayEventEXT(&self, device: VkDevice, display: VkDisplayKHR, pDisplayEventInfo: *const VkDisplayEventInfoEXT, pAllocator: *const VkAllocationCallbacks, pFence: *mut VkFence) -> Result<()> {
-		convert_result("vkRegisterDisplayEventEXT", catch_unwind(||((self.vk_register_display_event_ext)(device, display, pDisplayEventInfo, pAllocator, pFence))))
+		vk_convert_result("vkRegisterDisplayEventEXT", catch_unwind(||((self.vk_register_display_event_ext)(device, display, pDisplayEventInfo, pAllocator, pFence))))
 	}
 	fn vkGetSwapchainCounterEXT(&self, device: VkDevice, swapchain: VkSwapchainKHR, counter: VkSurfaceCounterFlagBitsEXT, pCounterValue: *mut uint64_t) -> Result<()> {
-		convert_result("vkGetSwapchainCounterEXT", catch_unwind(||((self.vk_get_swapchain_counter_ext)(device, swapchain, counter, pCounterValue))))
+		vk_convert_result("vkGetSwapchainCounterEXT", catch_unwind(||((self.vk_get_swapchain_counter_ext)(device, swapchain, counter, pCounterValue))))
 	}
 }
 impl Default for Vulkan_EXT_display_control {
@@ -33789,10 +33789,10 @@ pub struct Vulkan_GOOGLE_display_timing {
 }
 impl VK_GOOGLE_display_timing for Vulkan_GOOGLE_display_timing {
 	fn vkGetRefreshCycleDurationGOOGLE(&self, device: VkDevice, swapchain: VkSwapchainKHR, pDisplayTimingProperties: *mut VkRefreshCycleDurationGOOGLE) -> Result<()> {
-		convert_result("vkGetRefreshCycleDurationGOOGLE", catch_unwind(||((self.vk_get_refresh_cycle_duration_google)(device, swapchain, pDisplayTimingProperties))))
+		vk_convert_result("vkGetRefreshCycleDurationGOOGLE", catch_unwind(||((self.vk_get_refresh_cycle_duration_google)(device, swapchain, pDisplayTimingProperties))))
 	}
 	fn vkGetPastPresentationTimingGOOGLE(&self, device: VkDevice, swapchain: VkSwapchainKHR, pPresentationTimingCount: *mut uint32_t, pPresentationTimings: *mut VkPastPresentationTimingGOOGLE) -> Result<()> {
-		convert_result("vkGetPastPresentationTimingGOOGLE", catch_unwind(||((self.vk_get_past_presentation_timing_google)(device, swapchain, pPresentationTimingCount, pPresentationTimings))))
+		vk_convert_result("vkGetPastPresentationTimingGOOGLE", catch_unwind(||((self.vk_get_past_presentation_timing_google)(device, swapchain, pPresentationTimingCount, pPresentationTimings))))
 	}
 }
 impl Default for Vulkan_GOOGLE_display_timing {
@@ -34027,13 +34027,13 @@ pub struct Vulkan_EXT_discard_rectangles {
 }
 impl VK_EXT_discard_rectangles for Vulkan_EXT_discard_rectangles {
 	fn vkCmdSetDiscardRectangleEXT(&self, commandBuffer: VkCommandBuffer, firstDiscardRectangle: u32, discardRectangleCount: u32, pDiscardRectangles: *const VkRect2D) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_discard_rectangle_ext)(commandBuffer, firstDiscardRectangle, discardRectangleCount, pDiscardRectangles))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_discard_rectangle_ext)(commandBuffer, firstDiscardRectangle, discardRectangleCount, pDiscardRectangles))))
 	}
 	fn vkCmdSetDiscardRectangleEnableEXT(&self, commandBuffer: VkCommandBuffer, discardRectangleEnable: VkBool32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_discard_rectangle_enable_ext)(commandBuffer, discardRectangleEnable))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_discard_rectangle_enable_ext)(commandBuffer, discardRectangleEnable))))
 	}
 	fn vkCmdSetDiscardRectangleModeEXT(&self, commandBuffer: VkCommandBuffer, discardRectangleMode: VkDiscardRectangleModeEXT) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_discard_rectangle_mode_ext)(commandBuffer, discardRectangleMode))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_discard_rectangle_mode_ext)(commandBuffer, discardRectangleMode))))
 	}
 }
 impl Default for Vulkan_EXT_discard_rectangles {
@@ -34212,7 +34212,7 @@ pub struct Vulkan_EXT_hdr_metadata {
 }
 impl VK_EXT_hdr_metadata for Vulkan_EXT_hdr_metadata {
 	fn vkSetHdrMetadataEXT(&self, device: VkDevice, swapchainCount: u32, pSwapchains: *const VkSwapchainKHR, pMetadata: *const VkHdrMetadataEXT) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_set_hdr_metadata_ext)(device, swapchainCount, pSwapchains, pMetadata))))
+		vk_process_catch(catch_unwind(||((self.vk_set_hdr_metadata_ext)(device, swapchainCount, pSwapchains, pMetadata))))
 	}
 }
 impl Default for Vulkan_EXT_hdr_metadata {
@@ -34570,37 +34570,37 @@ pub struct Vulkan_EXT_debug_utils {
 }
 impl VK_EXT_debug_utils for Vulkan_EXT_debug_utils {
 	fn vkSetDebugUtilsObjectNameEXT(&self, device: VkDevice, pNameInfo: *const VkDebugUtilsObjectNameInfoEXT) -> Result<()> {
-		convert_result("vkSetDebugUtilsObjectNameEXT", catch_unwind(||((self.vk_set_debug_utils_object_name_ext)(device, pNameInfo))))
+		vk_convert_result("vkSetDebugUtilsObjectNameEXT", catch_unwind(||((self.vk_set_debug_utils_object_name_ext)(device, pNameInfo))))
 	}
 	fn vkSetDebugUtilsObjectTagEXT(&self, device: VkDevice, pTagInfo: *const VkDebugUtilsObjectTagInfoEXT) -> Result<()> {
-		convert_result("vkSetDebugUtilsObjectTagEXT", catch_unwind(||((self.vk_set_debug_utils_object_tag_ext)(device, pTagInfo))))
+		vk_convert_result("vkSetDebugUtilsObjectTagEXT", catch_unwind(||((self.vk_set_debug_utils_object_tag_ext)(device, pTagInfo))))
 	}
 	fn vkQueueBeginDebugUtilsLabelEXT(&self, queue: VkQueue, pLabelInfo: *const VkDebugUtilsLabelEXT) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_queue_begin_debug_utils_label_ext)(queue, pLabelInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_queue_begin_debug_utils_label_ext)(queue, pLabelInfo))))
 	}
 	fn vkQueueEndDebugUtilsLabelEXT(&self, queue: VkQueue) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_queue_end_debug_utils_label_ext)(queue))))
+		vk_process_catch(catch_unwind(||((self.vk_queue_end_debug_utils_label_ext)(queue))))
 	}
 	fn vkQueueInsertDebugUtilsLabelEXT(&self, queue: VkQueue, pLabelInfo: *const VkDebugUtilsLabelEXT) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_queue_insert_debug_utils_label_ext)(queue, pLabelInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_queue_insert_debug_utils_label_ext)(queue, pLabelInfo))))
 	}
 	fn vkCmdBeginDebugUtilsLabelEXT(&self, commandBuffer: VkCommandBuffer, pLabelInfo: *const VkDebugUtilsLabelEXT) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_begin_debug_utils_label_ext)(commandBuffer, pLabelInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_begin_debug_utils_label_ext)(commandBuffer, pLabelInfo))))
 	}
 	fn vkCmdEndDebugUtilsLabelEXT(&self, commandBuffer: VkCommandBuffer) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_end_debug_utils_label_ext)(commandBuffer))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_end_debug_utils_label_ext)(commandBuffer))))
 	}
 	fn vkCmdInsertDebugUtilsLabelEXT(&self, commandBuffer: VkCommandBuffer, pLabelInfo: *const VkDebugUtilsLabelEXT) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_insert_debug_utils_label_ext)(commandBuffer, pLabelInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_insert_debug_utils_label_ext)(commandBuffer, pLabelInfo))))
 	}
 	fn vkCreateDebugUtilsMessengerEXT(&self, instance: VkInstance, pCreateInfo: *const VkDebugUtilsMessengerCreateInfoEXT, pAllocator: *const VkAllocationCallbacks, pMessenger: *mut VkDebugUtilsMessengerEXT) -> Result<()> {
-		convert_result("vkCreateDebugUtilsMessengerEXT", catch_unwind(||((self.vk_create_debug_utils_messenger_ext)(instance, pCreateInfo, pAllocator, pMessenger))))
+		vk_convert_result("vkCreateDebugUtilsMessengerEXT", catch_unwind(||((self.vk_create_debug_utils_messenger_ext)(instance, pCreateInfo, pAllocator, pMessenger))))
 	}
 	fn vkDestroyDebugUtilsMessengerEXT(&self, instance: VkInstance, messenger: VkDebugUtilsMessengerEXT, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_destroy_debug_utils_messenger_ext)(instance, messenger, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_destroy_debug_utils_messenger_ext)(instance, messenger, pAllocator))))
 	}
 	fn vkSubmitDebugUtilsMessageEXT(&self, instance: VkInstance, messageSeverity: VkDebugUtilsMessageSeverityFlagBitsEXT, messageTypes: VkDebugUtilsMessageTypeFlagsEXT, pCallbackData: *const VkDebugUtilsMessengerCallbackDataEXT) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_submit_debug_utils_message_ext)(instance, messageSeverity, messageTypes, pCallbackData))))
+		vk_process_catch(catch_unwind(||((self.vk_submit_debug_utils_message_ext)(instance, messageSeverity, messageTypes, pCallbackData))))
 	}
 }
 impl Default for Vulkan_EXT_debug_utils {
@@ -34881,10 +34881,10 @@ pub struct Vulkan_EXT_sample_locations {
 }
 impl VK_EXT_sample_locations for Vulkan_EXT_sample_locations {
 	fn vkCmdSetSampleLocationsEXT(&self, commandBuffer: VkCommandBuffer, pSampleLocationsInfo: *const VkSampleLocationsInfoEXT) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_sample_locations_ext)(commandBuffer, pSampleLocationsInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_sample_locations_ext)(commandBuffer, pSampleLocationsInfo))))
 	}
 	fn vkGetPhysicalDeviceMultisamplePropertiesEXT(&self, physicalDevice: VkPhysicalDevice, samples: VkSampleCountFlagBits, pMultisampleProperties: *mut VkMultisamplePropertiesEXT) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_get_physical_device_multisample_properties_ext)(physicalDevice, samples, pMultisampleProperties))))
+		vk_process_catch(catch_unwind(||((self.vk_get_physical_device_multisample_properties_ext)(physicalDevice, samples, pMultisampleProperties))))
 	}
 }
 impl Default for Vulkan_EXT_sample_locations {
@@ -35212,7 +35212,7 @@ pub struct Vulkan_EXT_image_drm_format_modifier {
 }
 impl VK_EXT_image_drm_format_modifier for Vulkan_EXT_image_drm_format_modifier {
 	fn vkGetImageDrmFormatModifierPropertiesEXT(&self, device: VkDevice, image: VkImage, pProperties: *mut VkImageDrmFormatModifierPropertiesEXT) -> Result<()> {
-		convert_result("vkGetImageDrmFormatModifierPropertiesEXT", catch_unwind(||((self.vk_get_image_drm_format_modifier_properties_ext)(device, image, pProperties))))
+		vk_convert_result("vkGetImageDrmFormatModifierPropertiesEXT", catch_unwind(||((self.vk_get_image_drm_format_modifier_properties_ext)(device, image, pProperties))))
 	}
 }
 impl Default for Vulkan_EXT_image_drm_format_modifier {
@@ -35315,16 +35315,16 @@ pub struct Vulkan_EXT_validation_cache {
 }
 impl VK_EXT_validation_cache for Vulkan_EXT_validation_cache {
 	fn vkCreateValidationCacheEXT(&self, device: VkDevice, pCreateInfo: *const VkValidationCacheCreateInfoEXT, pAllocator: *const VkAllocationCallbacks, pValidationCache: *mut VkValidationCacheEXT) -> Result<()> {
-		convert_result("vkCreateValidationCacheEXT", catch_unwind(||((self.vk_create_validation_cache_ext)(device, pCreateInfo, pAllocator, pValidationCache))))
+		vk_convert_result("vkCreateValidationCacheEXT", catch_unwind(||((self.vk_create_validation_cache_ext)(device, pCreateInfo, pAllocator, pValidationCache))))
 	}
 	fn vkDestroyValidationCacheEXT(&self, device: VkDevice, validationCache: VkValidationCacheEXT, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_destroy_validation_cache_ext)(device, validationCache, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_destroy_validation_cache_ext)(device, validationCache, pAllocator))))
 	}
 	fn vkMergeValidationCachesEXT(&self, device: VkDevice, dstCache: VkValidationCacheEXT, srcCacheCount: u32, pSrcCaches: *const VkValidationCacheEXT) -> Result<()> {
-		convert_result("vkMergeValidationCachesEXT", catch_unwind(||((self.vk_merge_validation_caches_ext)(device, dstCache, srcCacheCount, pSrcCaches))))
+		vk_convert_result("vkMergeValidationCachesEXT", catch_unwind(||((self.vk_merge_validation_caches_ext)(device, dstCache, srcCacheCount, pSrcCaches))))
 	}
 	fn vkGetValidationCacheDataEXT(&self, device: VkDevice, validationCache: VkValidationCacheEXT, pDataSize: *mut size_t, pData: *mut c_void) -> Result<()> {
-		convert_result("vkGetValidationCacheDataEXT", catch_unwind(||((self.vk_get_validation_cache_data_ext)(device, validationCache, pDataSize, pData))))
+		vk_convert_result("vkGetValidationCacheDataEXT", catch_unwind(||((self.vk_get_validation_cache_data_ext)(device, validationCache, pDataSize, pData))))
 	}
 }
 impl Default for Vulkan_EXT_validation_cache {
@@ -35542,13 +35542,13 @@ pub struct Vulkan_NV_shading_rate_image {
 }
 impl VK_NV_shading_rate_image for Vulkan_NV_shading_rate_image {
 	fn vkCmdBindShadingRateImageNV(&self, commandBuffer: VkCommandBuffer, imageView: VkImageView, imageLayout: VkImageLayout) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_bind_shading_rate_image_nv)(commandBuffer, imageView, imageLayout))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_bind_shading_rate_image_nv)(commandBuffer, imageView, imageLayout))))
 	}
 	fn vkCmdSetViewportShadingRatePaletteNV(&self, commandBuffer: VkCommandBuffer, firstViewport: u32, viewportCount: u32, pShadingRatePalettes: *const VkShadingRatePaletteNV) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_viewport_shading_rate_palette_nv)(commandBuffer, firstViewport, viewportCount, pShadingRatePalettes))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_viewport_shading_rate_palette_nv)(commandBuffer, firstViewport, viewportCount, pShadingRatePalettes))))
 	}
 	fn vkCmdSetCoarseSampleOrderNV(&self, commandBuffer: VkCommandBuffer, sampleOrderType: VkCoarseSampleOrderTypeNV, customSampleOrderCount: u32, pCustomSampleOrders: *const VkCoarseSampleOrderCustomNV) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_coarse_sample_order_nv)(commandBuffer, sampleOrderType, customSampleOrderCount, pCustomSampleOrders))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_coarse_sample_order_nv)(commandBuffer, sampleOrderType, customSampleOrderCount, pCustomSampleOrders))))
 	}
 }
 impl Default for Vulkan_NV_shading_rate_image {
@@ -36277,43 +36277,43 @@ pub struct Vulkan_NV_ray_tracing {
 }
 impl VK_NV_ray_tracing for Vulkan_NV_ray_tracing {
 	fn vkCreateAccelerationStructureNV(&self, device: VkDevice, pCreateInfo: *const VkAccelerationStructureCreateInfoNV, pAllocator: *const VkAllocationCallbacks, pAccelerationStructure: *mut VkAccelerationStructureNV) -> Result<()> {
-		convert_result("vkCreateAccelerationStructureNV", catch_unwind(||((self.vk_create_acceleration_structure_nv)(device, pCreateInfo, pAllocator, pAccelerationStructure))))
+		vk_convert_result("vkCreateAccelerationStructureNV", catch_unwind(||((self.vk_create_acceleration_structure_nv)(device, pCreateInfo, pAllocator, pAccelerationStructure))))
 	}
 	fn vkDestroyAccelerationStructureNV(&self, device: VkDevice, accelerationStructure: VkAccelerationStructureNV, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_destroy_acceleration_structure_nv)(device, accelerationStructure, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_destroy_acceleration_structure_nv)(device, accelerationStructure, pAllocator))))
 	}
 	fn vkGetAccelerationStructureMemoryRequirementsNV(&self, device: VkDevice, pInfo: *const VkAccelerationStructureMemoryRequirementsInfoNV, pMemoryRequirements: *mut VkMemoryRequirements2KHR) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_get_acceleration_structure_memory_requirements_nv)(device, pInfo, pMemoryRequirements))))
+		vk_process_catch(catch_unwind(||((self.vk_get_acceleration_structure_memory_requirements_nv)(device, pInfo, pMemoryRequirements))))
 	}
 	fn vkBindAccelerationStructureMemoryNV(&self, device: VkDevice, bindInfoCount: u32, pBindInfos: *const VkBindAccelerationStructureMemoryInfoNV) -> Result<()> {
-		convert_result("vkBindAccelerationStructureMemoryNV", catch_unwind(||((self.vk_bind_acceleration_structure_memory_nv)(device, bindInfoCount, pBindInfos))))
+		vk_convert_result("vkBindAccelerationStructureMemoryNV", catch_unwind(||((self.vk_bind_acceleration_structure_memory_nv)(device, bindInfoCount, pBindInfos))))
 	}
 	fn vkCmdBuildAccelerationStructureNV(&self, commandBuffer: VkCommandBuffer, pInfo: *const VkAccelerationStructureInfoNV, instanceData: VkBuffer, instanceOffset: VkDeviceSize, update: VkBool32, dst: VkAccelerationStructureNV, src: VkAccelerationStructureNV, scratch: VkBuffer, scratchOffset: VkDeviceSize) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_build_acceleration_structure_nv)(commandBuffer, pInfo, instanceData, instanceOffset, update, dst, src, scratch, scratchOffset))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_build_acceleration_structure_nv)(commandBuffer, pInfo, instanceData, instanceOffset, update, dst, src, scratch, scratchOffset))))
 	}
 	fn vkCmdCopyAccelerationStructureNV(&self, commandBuffer: VkCommandBuffer, dst: VkAccelerationStructureNV, src: VkAccelerationStructureNV, mode: VkCopyAccelerationStructureModeKHR) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_copy_acceleration_structure_nv)(commandBuffer, dst, src, mode))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_copy_acceleration_structure_nv)(commandBuffer, dst, src, mode))))
 	}
 	fn vkCmdTraceRaysNV(&self, commandBuffer: VkCommandBuffer, raygenShaderBindingTableBuffer: VkBuffer, raygenShaderBindingOffset: VkDeviceSize, missShaderBindingTableBuffer: VkBuffer, missShaderBindingOffset: VkDeviceSize, missShaderBindingStride: VkDeviceSize, hitShaderBindingTableBuffer: VkBuffer, hitShaderBindingOffset: VkDeviceSize, hitShaderBindingStride: VkDeviceSize, callableShaderBindingTableBuffer: VkBuffer, callableShaderBindingOffset: VkDeviceSize, callableShaderBindingStride: VkDeviceSize, width: u32, height: u32, depth: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_trace_rays_nv)(commandBuffer, raygenShaderBindingTableBuffer, raygenShaderBindingOffset, missShaderBindingTableBuffer, missShaderBindingOffset, missShaderBindingStride, hitShaderBindingTableBuffer, hitShaderBindingOffset, hitShaderBindingStride, callableShaderBindingTableBuffer, callableShaderBindingOffset, callableShaderBindingStride, width, height, depth))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_trace_rays_nv)(commandBuffer, raygenShaderBindingTableBuffer, raygenShaderBindingOffset, missShaderBindingTableBuffer, missShaderBindingOffset, missShaderBindingStride, hitShaderBindingTableBuffer, hitShaderBindingOffset, hitShaderBindingStride, callableShaderBindingTableBuffer, callableShaderBindingOffset, callableShaderBindingStride, width, height, depth))))
 	}
 	fn vkCreateRayTracingPipelinesNV(&self, device: VkDevice, pipelineCache: VkPipelineCache, createInfoCount: u32, pCreateInfos: *const VkRayTracingPipelineCreateInfoNV, pAllocator: *const VkAllocationCallbacks, pPipelines: *mut VkPipeline) -> Result<()> {
-		convert_result("vkCreateRayTracingPipelinesNV", catch_unwind(||((self.vk_create_ray_tracing_pipelines_nv)(device, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines))))
+		vk_convert_result("vkCreateRayTracingPipelinesNV", catch_unwind(||((self.vk_create_ray_tracing_pipelines_nv)(device, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines))))
 	}
 	fn vkGetRayTracingShaderGroupHandlesKHR(&self, device: VkDevice, pipeline: VkPipeline, firstGroup: u32, groupCount: u32, dataSize: usize, pData: *mut c_void) -> Result<()> {
-		convert_result("vkGetRayTracingShaderGroupHandlesKHR", catch_unwind(||((self.vk_get_ray_tracing_shader_group_handles_khr)(device, pipeline, firstGroup, groupCount, dataSize, pData))))
+		vk_convert_result("vkGetRayTracingShaderGroupHandlesKHR", catch_unwind(||((self.vk_get_ray_tracing_shader_group_handles_khr)(device, pipeline, firstGroup, groupCount, dataSize, pData))))
 	}
 	fn vkGetRayTracingShaderGroupHandlesNV(&self, device: VkDevice, pipeline: VkPipeline, firstGroup: u32, groupCount: u32, dataSize: usize, pData: *mut c_void) -> Result<()> {
-		convert_result("vkGetRayTracingShaderGroupHandlesNV", catch_unwind(||((self.vk_get_ray_tracing_shader_group_handles_nv)(device, pipeline, firstGroup, groupCount, dataSize, pData))))
+		vk_convert_result("vkGetRayTracingShaderGroupHandlesNV", catch_unwind(||((self.vk_get_ray_tracing_shader_group_handles_nv)(device, pipeline, firstGroup, groupCount, dataSize, pData))))
 	}
 	fn vkGetAccelerationStructureHandleNV(&self, device: VkDevice, accelerationStructure: VkAccelerationStructureNV, dataSize: usize, pData: *mut c_void) -> Result<()> {
-		convert_result("vkGetAccelerationStructureHandleNV", catch_unwind(||((self.vk_get_acceleration_structure_handle_nv)(device, accelerationStructure, dataSize, pData))))
+		vk_convert_result("vkGetAccelerationStructureHandleNV", catch_unwind(||((self.vk_get_acceleration_structure_handle_nv)(device, accelerationStructure, dataSize, pData))))
 	}
 	fn vkCmdWriteAccelerationStructuresPropertiesNV(&self, commandBuffer: VkCommandBuffer, accelerationStructureCount: u32, pAccelerationStructures: *const VkAccelerationStructureNV, queryType: VkQueryType, queryPool: VkQueryPool, firstQuery: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_write_acceleration_structures_properties_nv)(commandBuffer, accelerationStructureCount, pAccelerationStructures, queryType, queryPool, firstQuery))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_write_acceleration_structures_properties_nv)(commandBuffer, accelerationStructureCount, pAccelerationStructures, queryType, queryPool, firstQuery))))
 	}
 	fn vkCompileDeferredNV(&self, device: VkDevice, pipeline: VkPipeline, shader: u32) -> Result<()> {
-		convert_result("vkCompileDeferredNV", catch_unwind(||((self.vk_compile_deferred_nv)(device, pipeline, shader))))
+		vk_convert_result("vkCompileDeferredNV", catch_unwind(||((self.vk_compile_deferred_nv)(device, pipeline, shader))))
 	}
 }
 impl Default for Vulkan_NV_ray_tracing {
@@ -36513,7 +36513,7 @@ pub struct Vulkan_EXT_external_memory_host {
 }
 impl VK_EXT_external_memory_host for Vulkan_EXT_external_memory_host {
 	fn vkGetMemoryHostPointerPropertiesEXT(&self, device: VkDevice, handleType: VkExternalMemoryHandleTypeFlagBits, pHostPointer: *const c_void, pMemoryHostPointerProperties: *mut VkMemoryHostPointerPropertiesEXT) -> Result<()> {
-		convert_result("vkGetMemoryHostPointerPropertiesEXT", catch_unwind(||((self.vk_get_memory_host_pointer_properties_ext)(device, handleType, pHostPointer, pMemoryHostPointerProperties))))
+		vk_convert_result("vkGetMemoryHostPointerPropertiesEXT", catch_unwind(||((self.vk_get_memory_host_pointer_properties_ext)(device, handleType, pHostPointer, pMemoryHostPointerProperties))))
 	}
 }
 impl Default for Vulkan_EXT_external_memory_host {
@@ -36560,10 +36560,10 @@ pub struct Vulkan_AMD_buffer_marker {
 }
 impl VK_AMD_buffer_marker for Vulkan_AMD_buffer_marker {
 	fn vkCmdWriteBufferMarkerAMD(&self, commandBuffer: VkCommandBuffer, pipelineStage: VkPipelineStageFlagBits, dstBuffer: VkBuffer, dstOffset: VkDeviceSize, marker: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_write_buffer_marker_amd)(commandBuffer, pipelineStage, dstBuffer, dstOffset, marker))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_write_buffer_marker_amd)(commandBuffer, pipelineStage, dstBuffer, dstOffset, marker))))
 	}
 	fn vkCmdWriteBufferMarker2AMD(&self, commandBuffer: VkCommandBuffer, stage: VkPipelineStageFlags2, dstBuffer: VkBuffer, dstOffset: VkDeviceSize, marker: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_write_buffer_marker2_amd)(commandBuffer, stage, dstBuffer, dstOffset, marker))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_write_buffer_marker2_amd)(commandBuffer, stage, dstBuffer, dstOffset, marker))))
 	}
 }
 impl Default for Vulkan_AMD_buffer_marker {
@@ -36670,10 +36670,10 @@ pub struct Vulkan_EXT_calibrated_timestamps {
 }
 impl VK_EXT_calibrated_timestamps for Vulkan_EXT_calibrated_timestamps {
 	fn vkGetPhysicalDeviceCalibrateableTimeDomainsEXT(&self, physicalDevice: VkPhysicalDevice, pTimeDomainCount: *mut uint32_t, pTimeDomains: *mut VkTimeDomainKHR) -> Result<()> {
-		convert_result("vkGetPhysicalDeviceCalibrateableTimeDomainsEXT", catch_unwind(||((self.vk_get_physical_device_calibrateable_time_domains_ext)(physicalDevice, pTimeDomainCount, pTimeDomains))))
+		vk_convert_result("vkGetPhysicalDeviceCalibrateableTimeDomainsEXT", catch_unwind(||((self.vk_get_physical_device_calibrateable_time_domains_ext)(physicalDevice, pTimeDomainCount, pTimeDomains))))
 	}
 	fn vkGetCalibratedTimestampsEXT(&self, device: VkDevice, timestampCount: u32, pTimestampInfos: *const VkCalibratedTimestampInfoKHR, pTimestamps: *mut uint64_t, pMaxDeviation: *mut uint64_t) -> Result<()> {
-		convert_result("vkGetCalibratedTimestampsEXT", catch_unwind(||((self.vk_get_calibrated_timestamps_ext)(device, timestampCount, pTimestampInfos, pTimestamps, pMaxDeviation))))
+		vk_convert_result("vkGetCalibratedTimestampsEXT", catch_unwind(||((self.vk_get_calibrated_timestamps_ext)(device, timestampCount, pTimestampInfos, pTimestamps, pMaxDeviation))))
 	}
 }
 impl Default for Vulkan_EXT_calibrated_timestamps {
@@ -36947,13 +36947,13 @@ pub struct Vulkan_NV_mesh_shader {
 }
 impl VK_NV_mesh_shader for Vulkan_NV_mesh_shader {
 	fn vkCmdDrawMeshTasksNV(&self, commandBuffer: VkCommandBuffer, taskCount: u32, firstTask: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_draw_mesh_tasks_nv)(commandBuffer, taskCount, firstTask))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_draw_mesh_tasks_nv)(commandBuffer, taskCount, firstTask))))
 	}
 	fn vkCmdDrawMeshTasksIndirectNV(&self, commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize, drawCount: u32, stride: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_draw_mesh_tasks_indirect_nv)(commandBuffer, buffer, offset, drawCount, stride))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_draw_mesh_tasks_indirect_nv)(commandBuffer, buffer, offset, drawCount, stride))))
 	}
 	fn vkCmdDrawMeshTasksIndirectCountNV(&self, commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize, countBuffer: VkBuffer, countBufferOffset: VkDeviceSize, maxDrawCount: u32, stride: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_draw_mesh_tasks_indirect_count_nv)(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_draw_mesh_tasks_indirect_count_nv)(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride))))
 	}
 }
 impl Default for Vulkan_NV_mesh_shader {
@@ -37069,10 +37069,10 @@ pub struct Vulkan_NV_scissor_exclusive {
 }
 impl VK_NV_scissor_exclusive for Vulkan_NV_scissor_exclusive {
 	fn vkCmdSetExclusiveScissorEnableNV(&self, commandBuffer: VkCommandBuffer, firstExclusiveScissor: u32, exclusiveScissorCount: u32, pExclusiveScissorEnables: *const VkBool32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_exclusive_scissor_enable_nv)(commandBuffer, firstExclusiveScissor, exclusiveScissorCount, pExclusiveScissorEnables))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_exclusive_scissor_enable_nv)(commandBuffer, firstExclusiveScissor, exclusiveScissorCount, pExclusiveScissorEnables))))
 	}
 	fn vkCmdSetExclusiveScissorNV(&self, commandBuffer: VkCommandBuffer, firstExclusiveScissor: u32, exclusiveScissorCount: u32, pExclusiveScissors: *const VkRect2D) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_exclusive_scissor_nv)(commandBuffer, firstExclusiveScissor, exclusiveScissorCount, pExclusiveScissors))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_exclusive_scissor_nv)(commandBuffer, firstExclusiveScissor, exclusiveScissorCount, pExclusiveScissors))))
 	}
 }
 impl Default for Vulkan_NV_scissor_exclusive {
@@ -37169,13 +37169,13 @@ pub struct Vulkan_NV_device_diagnostic_checkpoints {
 }
 impl VK_NV_device_diagnostic_checkpoints for Vulkan_NV_device_diagnostic_checkpoints {
 	fn vkCmdSetCheckpointNV(&self, commandBuffer: VkCommandBuffer, pCheckpointMarker: *const c_void) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_checkpoint_nv)(commandBuffer, pCheckpointMarker))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_checkpoint_nv)(commandBuffer, pCheckpointMarker))))
 	}
 	fn vkGetQueueCheckpointDataNV(&self, queue: VkQueue, pCheckpointDataCount: *mut uint32_t, pCheckpointData: *mut VkCheckpointDataNV) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_get_queue_checkpoint_data_nv)(queue, pCheckpointDataCount, pCheckpointData))))
+		vk_process_catch(catch_unwind(||((self.vk_get_queue_checkpoint_data_nv)(queue, pCheckpointDataCount, pCheckpointData))))
 	}
 	fn vkGetQueueCheckpointData2NV(&self, queue: VkQueue, pCheckpointDataCount: *mut uint32_t, pCheckpointData: *mut VkCheckpointData2NV) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_get_queue_checkpoint_data2_nv)(queue, pCheckpointDataCount, pCheckpointData))))
+		vk_process_catch(catch_unwind(||((self.vk_get_queue_checkpoint_data2_nv)(queue, pCheckpointDataCount, pCheckpointData))))
 	}
 }
 impl Default for Vulkan_NV_device_diagnostic_checkpoints {
@@ -37462,31 +37462,31 @@ pub struct Vulkan_INTEL_performance_query {
 }
 impl VK_INTEL_performance_query for Vulkan_INTEL_performance_query {
 	fn vkInitializePerformanceApiINTEL(&self, device: VkDevice, pInitializeInfo: *const VkInitializePerformanceApiInfoINTEL) -> Result<()> {
-		convert_result("vkInitializePerformanceApiINTEL", catch_unwind(||((self.vk_initialize_performance_api_intel)(device, pInitializeInfo))))
+		vk_convert_result("vkInitializePerformanceApiINTEL", catch_unwind(||((self.vk_initialize_performance_api_intel)(device, pInitializeInfo))))
 	}
 	fn vkUninitializePerformanceApiINTEL(&self, device: VkDevice) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_uninitialize_performance_api_intel)(device))))
+		vk_process_catch(catch_unwind(||((self.vk_uninitialize_performance_api_intel)(device))))
 	}
 	fn vkCmdSetPerformanceMarkerINTEL(&self, commandBuffer: VkCommandBuffer, pMarkerInfo: *const VkPerformanceMarkerInfoINTEL) -> Result<()> {
-		convert_result("vkCmdSetPerformanceMarkerINTEL", catch_unwind(||((self.vk_cmd_set_performance_marker_intel)(commandBuffer, pMarkerInfo))))
+		vk_convert_result("vkCmdSetPerformanceMarkerINTEL", catch_unwind(||((self.vk_cmd_set_performance_marker_intel)(commandBuffer, pMarkerInfo))))
 	}
 	fn vkCmdSetPerformanceStreamMarkerINTEL(&self, commandBuffer: VkCommandBuffer, pMarkerInfo: *const VkPerformanceStreamMarkerInfoINTEL) -> Result<()> {
-		convert_result("vkCmdSetPerformanceStreamMarkerINTEL", catch_unwind(||((self.vk_cmd_set_performance_stream_marker_intel)(commandBuffer, pMarkerInfo))))
+		vk_convert_result("vkCmdSetPerformanceStreamMarkerINTEL", catch_unwind(||((self.vk_cmd_set_performance_stream_marker_intel)(commandBuffer, pMarkerInfo))))
 	}
 	fn vkCmdSetPerformanceOverrideINTEL(&self, commandBuffer: VkCommandBuffer, pOverrideInfo: *const VkPerformanceOverrideInfoINTEL) -> Result<()> {
-		convert_result("vkCmdSetPerformanceOverrideINTEL", catch_unwind(||((self.vk_cmd_set_performance_override_intel)(commandBuffer, pOverrideInfo))))
+		vk_convert_result("vkCmdSetPerformanceOverrideINTEL", catch_unwind(||((self.vk_cmd_set_performance_override_intel)(commandBuffer, pOverrideInfo))))
 	}
 	fn vkAcquirePerformanceConfigurationINTEL(&self, device: VkDevice, pAcquireInfo: *const VkPerformanceConfigurationAcquireInfoINTEL, pConfiguration: *mut VkPerformanceConfigurationINTEL) -> Result<()> {
-		convert_result("vkAcquirePerformanceConfigurationINTEL", catch_unwind(||((self.vk_acquire_performance_configuration_intel)(device, pAcquireInfo, pConfiguration))))
+		vk_convert_result("vkAcquirePerformanceConfigurationINTEL", catch_unwind(||((self.vk_acquire_performance_configuration_intel)(device, pAcquireInfo, pConfiguration))))
 	}
 	fn vkReleasePerformanceConfigurationINTEL(&self, device: VkDevice, configuration: VkPerformanceConfigurationINTEL) -> Result<()> {
-		convert_result("vkReleasePerformanceConfigurationINTEL", catch_unwind(||((self.vk_release_performance_configuration_intel)(device, configuration))))
+		vk_convert_result("vkReleasePerformanceConfigurationINTEL", catch_unwind(||((self.vk_release_performance_configuration_intel)(device, configuration))))
 	}
 	fn vkQueueSetPerformanceConfigurationINTEL(&self, queue: VkQueue, configuration: VkPerformanceConfigurationINTEL) -> Result<()> {
-		convert_result("vkQueueSetPerformanceConfigurationINTEL", catch_unwind(||((self.vk_queue_set_performance_configuration_intel)(queue, configuration))))
+		vk_convert_result("vkQueueSetPerformanceConfigurationINTEL", catch_unwind(||((self.vk_queue_set_performance_configuration_intel)(queue, configuration))))
 	}
 	fn vkGetPerformanceParameterINTEL(&self, device: VkDevice, parameter: VkPerformanceParameterTypeINTEL, pValue: *mut VkPerformanceValueINTEL) -> Result<()> {
-		convert_result("vkGetPerformanceParameterINTEL", catch_unwind(||((self.vk_get_performance_parameter_intel)(device, parameter, pValue))))
+		vk_convert_result("vkGetPerformanceParameterINTEL", catch_unwind(||((self.vk_get_performance_parameter_intel)(device, parameter, pValue))))
 	}
 }
 impl Default for Vulkan_INTEL_performance_query {
@@ -37586,7 +37586,7 @@ pub struct Vulkan_AMD_display_native_hdr {
 }
 impl VK_AMD_display_native_hdr for Vulkan_AMD_display_native_hdr {
 	fn vkSetLocalDimmingAMD(&self, device: VkDevice, swapChain: VkSwapchainKHR, localDimmingEnable: VkBool32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_set_local_dimming_amd)(device, swapChain, localDimmingEnable))))
+		vk_process_catch(catch_unwind(||((self.vk_set_local_dimming_amd)(device, swapChain, localDimmingEnable))))
 	}
 }
 impl Default for Vulkan_AMD_display_native_hdr {
@@ -37982,7 +37982,7 @@ pub struct Vulkan_EXT_buffer_device_address {
 }
 impl VK_EXT_buffer_device_address for Vulkan_EXT_buffer_device_address {
 	fn vkGetBufferDeviceAddressEXT(&self, device: VkDevice, pInfo: *const VkBufferDeviceAddressInfo) -> Result<VkDeviceAddress> {
-		process_catch(catch_unwind(||((self.vk_get_buffer_device_address_ext)(device, pInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_get_buffer_device_address_ext)(device, pInfo))))
 	}
 }
 impl Default for Vulkan_EXT_buffer_device_address {
@@ -38028,7 +38028,7 @@ pub struct Vulkan_EXT_tooling_info {
 }
 impl VK_EXT_tooling_info for Vulkan_EXT_tooling_info {
 	fn vkGetPhysicalDeviceToolPropertiesEXT(&self, physicalDevice: VkPhysicalDevice, pToolCount: *mut uint32_t, pToolProperties: *mut VkPhysicalDeviceToolProperties) -> Result<()> {
-		convert_result("vkGetPhysicalDeviceToolPropertiesEXT", catch_unwind(||((self.vk_get_physical_device_tool_properties_ext)(physicalDevice, pToolCount, pToolProperties))))
+		vk_convert_result("vkGetPhysicalDeviceToolPropertiesEXT", catch_unwind(||((self.vk_get_physical_device_tool_properties_ext)(physicalDevice, pToolCount, pToolProperties))))
 	}
 }
 impl Default for Vulkan_EXT_tooling_info {
@@ -38182,7 +38182,7 @@ pub struct Vulkan_NV_cooperative_matrix {
 }
 impl VK_NV_cooperative_matrix for Vulkan_NV_cooperative_matrix {
 	fn vkGetPhysicalDeviceCooperativeMatrixPropertiesNV(&self, physicalDevice: VkPhysicalDevice, pPropertyCount: *mut uint32_t, pProperties: *mut VkCooperativeMatrixPropertiesNV) -> Result<()> {
-		convert_result("vkGetPhysicalDeviceCooperativeMatrixPropertiesNV", catch_unwind(||((self.vk_get_physical_device_cooperative_matrix_properties_nv)(physicalDevice, pPropertyCount, pProperties))))
+		vk_convert_result("vkGetPhysicalDeviceCooperativeMatrixPropertiesNV", catch_unwind(||((self.vk_get_physical_device_cooperative_matrix_properties_nv)(physicalDevice, pPropertyCount, pProperties))))
 	}
 }
 impl Default for Vulkan_NV_cooperative_matrix {
@@ -38262,7 +38262,7 @@ pub struct Vulkan_NV_coverage_reduction_mode {
 }
 impl VK_NV_coverage_reduction_mode for Vulkan_NV_coverage_reduction_mode {
 	fn vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV(&self, physicalDevice: VkPhysicalDevice, pCombinationCount: *mut uint32_t, pCombinations: *mut VkFramebufferMixedSamplesCombinationNV) -> Result<()> {
-		convert_result("vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV", catch_unwind(||((self.vk_get_physical_device_supported_framebuffer_mixed_samples_combinations_nv)(physicalDevice, pCombinationCount, pCombinations))))
+		vk_convert_result("vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV", catch_unwind(||((self.vk_get_physical_device_supported_framebuffer_mixed_samples_combinations_nv)(physicalDevice, pCombinationCount, pCombinations))))
 	}
 }
 impl Default for Vulkan_NV_coverage_reduction_mode {
@@ -38420,7 +38420,7 @@ pub struct Vulkan_EXT_headless_surface {
 }
 impl VK_EXT_headless_surface for Vulkan_EXT_headless_surface {
 	fn vkCreateHeadlessSurfaceEXT(&self, instance: VkInstance, pCreateInfo: *const VkHeadlessSurfaceCreateInfoEXT, pAllocator: *const VkAllocationCallbacks, pSurface: *mut VkSurfaceKHR) -> Result<()> {
-		convert_result("vkCreateHeadlessSurfaceEXT", catch_unwind(||((self.vk_create_headless_surface_ext)(instance, pCreateInfo, pAllocator, pSurface))))
+		vk_convert_result("vkCreateHeadlessSurfaceEXT", catch_unwind(||((self.vk_create_headless_surface_ext)(instance, pCreateInfo, pAllocator, pSurface))))
 	}
 }
 impl Default for Vulkan_EXT_headless_surface {
@@ -38469,7 +38469,7 @@ pub struct Vulkan_EXT_line_rasterization {
 }
 impl VK_EXT_line_rasterization for Vulkan_EXT_line_rasterization {
 	fn vkCmdSetLineStippleEXT(&self, commandBuffer: VkCommandBuffer, lineStippleFactor: u32, lineStipplePattern: u16) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_line_stipple_ext)(commandBuffer, lineStippleFactor, lineStipplePattern))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_line_stipple_ext)(commandBuffer, lineStippleFactor, lineStipplePattern))))
 	}
 }
 impl Default for Vulkan_EXT_line_rasterization {
@@ -38546,7 +38546,7 @@ pub struct Vulkan_EXT_host_query_reset {
 }
 impl VK_EXT_host_query_reset for Vulkan_EXT_host_query_reset {
 	fn vkResetQueryPoolEXT(&self, device: VkDevice, queryPool: VkQueryPool, firstQuery: u32, queryCount: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_reset_query_pool_ext)(device, queryPool, firstQuery, queryCount))))
+		vk_process_catch(catch_unwind(||((self.vk_reset_query_pool_ext)(device, queryPool, firstQuery, queryCount))))
 	}
 }
 impl Default for Vulkan_EXT_host_query_reset {
@@ -38722,40 +38722,40 @@ pub struct Vulkan_EXT_extended_dynamic_state {
 }
 impl VK_EXT_extended_dynamic_state for Vulkan_EXT_extended_dynamic_state {
 	fn vkCmdSetCullModeEXT(&self, commandBuffer: VkCommandBuffer, cullMode: VkCullModeFlags) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_cull_mode_ext)(commandBuffer, cullMode))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_cull_mode_ext)(commandBuffer, cullMode))))
 	}
 	fn vkCmdSetFrontFaceEXT(&self, commandBuffer: VkCommandBuffer, frontFace: VkFrontFace) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_front_face_ext)(commandBuffer, frontFace))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_front_face_ext)(commandBuffer, frontFace))))
 	}
 	fn vkCmdSetPrimitiveTopologyEXT(&self, commandBuffer: VkCommandBuffer, primitiveTopology: VkPrimitiveTopology) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_primitive_topology_ext)(commandBuffer, primitiveTopology))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_primitive_topology_ext)(commandBuffer, primitiveTopology))))
 	}
 	fn vkCmdSetViewportWithCountEXT(&self, commandBuffer: VkCommandBuffer, viewportCount: u32, pViewports: *const VkViewport) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_viewport_with_count_ext)(commandBuffer, viewportCount, pViewports))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_viewport_with_count_ext)(commandBuffer, viewportCount, pViewports))))
 	}
 	fn vkCmdSetScissorWithCountEXT(&self, commandBuffer: VkCommandBuffer, scissorCount: u32, pScissors: *const VkRect2D) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_scissor_with_count_ext)(commandBuffer, scissorCount, pScissors))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_scissor_with_count_ext)(commandBuffer, scissorCount, pScissors))))
 	}
 	fn vkCmdBindVertexBuffers2EXT(&self, commandBuffer: VkCommandBuffer, firstBinding: u32, bindingCount: u32, pBuffers: *const VkBuffer, pOffsets: *const VkDeviceSize, pSizes: *const VkDeviceSize, pStrides: *const VkDeviceSize) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_bind_vertex_buffers2_ext)(commandBuffer, firstBinding, bindingCount, pBuffers, pOffsets, pSizes, pStrides))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_bind_vertex_buffers2_ext)(commandBuffer, firstBinding, bindingCount, pBuffers, pOffsets, pSizes, pStrides))))
 	}
 	fn vkCmdSetDepthTestEnableEXT(&self, commandBuffer: VkCommandBuffer, depthTestEnable: VkBool32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_depth_test_enable_ext)(commandBuffer, depthTestEnable))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_depth_test_enable_ext)(commandBuffer, depthTestEnable))))
 	}
 	fn vkCmdSetDepthWriteEnableEXT(&self, commandBuffer: VkCommandBuffer, depthWriteEnable: VkBool32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_depth_write_enable_ext)(commandBuffer, depthWriteEnable))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_depth_write_enable_ext)(commandBuffer, depthWriteEnable))))
 	}
 	fn vkCmdSetDepthCompareOpEXT(&self, commandBuffer: VkCommandBuffer, depthCompareOp: VkCompareOp) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_depth_compare_op_ext)(commandBuffer, depthCompareOp))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_depth_compare_op_ext)(commandBuffer, depthCompareOp))))
 	}
 	fn vkCmdSetDepthBoundsTestEnableEXT(&self, commandBuffer: VkCommandBuffer, depthBoundsTestEnable: VkBool32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_depth_bounds_test_enable_ext)(commandBuffer, depthBoundsTestEnable))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_depth_bounds_test_enable_ext)(commandBuffer, depthBoundsTestEnable))))
 	}
 	fn vkCmdSetStencilTestEnableEXT(&self, commandBuffer: VkCommandBuffer, stencilTestEnable: VkBool32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_stencil_test_enable_ext)(commandBuffer, stencilTestEnable))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_stencil_test_enable_ext)(commandBuffer, stencilTestEnable))))
 	}
 	fn vkCmdSetStencilOpEXT(&self, commandBuffer: VkCommandBuffer, faceMask: VkStencilFaceFlags, failOp: VkStencilOp, passOp: VkStencilOp, depthFailOp: VkStencilOp, compareOp: VkCompareOp) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_stencil_op_ext)(commandBuffer, faceMask, failOp, passOp, depthFailOp, compareOp))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_stencil_op_ext)(commandBuffer, faceMask, failOp, passOp, depthFailOp, compareOp))))
 	}
 }
 impl Default for Vulkan_EXT_extended_dynamic_state {
@@ -38896,19 +38896,19 @@ pub struct Vulkan_EXT_host_image_copy {
 }
 impl VK_EXT_host_image_copy for Vulkan_EXT_host_image_copy {
 	fn vkCopyMemoryToImageEXT(&self, device: VkDevice, pCopyMemoryToImageInfo: *const VkCopyMemoryToImageInfo) -> Result<()> {
-		convert_result("vkCopyMemoryToImageEXT", catch_unwind(||((self.vk_copy_memory_to_image_ext)(device, pCopyMemoryToImageInfo))))
+		vk_convert_result("vkCopyMemoryToImageEXT", catch_unwind(||((self.vk_copy_memory_to_image_ext)(device, pCopyMemoryToImageInfo))))
 	}
 	fn vkCopyImageToMemoryEXT(&self, device: VkDevice, pCopyImageToMemoryInfo: *const VkCopyImageToMemoryInfo) -> Result<()> {
-		convert_result("vkCopyImageToMemoryEXT", catch_unwind(||((self.vk_copy_image_to_memory_ext)(device, pCopyImageToMemoryInfo))))
+		vk_convert_result("vkCopyImageToMemoryEXT", catch_unwind(||((self.vk_copy_image_to_memory_ext)(device, pCopyImageToMemoryInfo))))
 	}
 	fn vkCopyImageToImageEXT(&self, device: VkDevice, pCopyImageToImageInfo: *const VkCopyImageToImageInfo) -> Result<()> {
-		convert_result("vkCopyImageToImageEXT", catch_unwind(||((self.vk_copy_image_to_image_ext)(device, pCopyImageToImageInfo))))
+		vk_convert_result("vkCopyImageToImageEXT", catch_unwind(||((self.vk_copy_image_to_image_ext)(device, pCopyImageToImageInfo))))
 	}
 	fn vkTransitionImageLayoutEXT(&self, device: VkDevice, transitionCount: u32, pTransitions: *const VkHostImageLayoutTransitionInfo) -> Result<()> {
-		convert_result("vkTransitionImageLayoutEXT", catch_unwind(||((self.vk_transition_image_layout_ext)(device, transitionCount, pTransitions))))
+		vk_convert_result("vkTransitionImageLayoutEXT", catch_unwind(||((self.vk_transition_image_layout_ext)(device, transitionCount, pTransitions))))
 	}
 	fn vkGetImageSubresourceLayout2EXT(&self, device: VkDevice, image: VkImage, pSubresource: *const VkImageSubresource2, pLayout: *mut VkSubresourceLayout2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_get_image_subresource_layout2_ext)(device, image, pSubresource, pLayout))))
+		vk_process_catch(catch_unwind(||((self.vk_get_image_subresource_layout2_ext)(device, image, pSubresource, pLayout))))
 	}
 }
 impl Default for Vulkan_EXT_host_image_copy {
@@ -39092,7 +39092,7 @@ pub struct Vulkan_EXT_swapchain_maintenance1 {
 }
 impl VK_EXT_swapchain_maintenance1 for Vulkan_EXT_swapchain_maintenance1 {
 	fn vkReleaseSwapchainImagesEXT(&self, device: VkDevice, pReleaseInfo: *const VkReleaseSwapchainImagesInfoKHR) -> Result<()> {
-		convert_result("vkReleaseSwapchainImagesEXT", catch_unwind(||((self.vk_release_swapchain_images_ext)(device, pReleaseInfo))))
+		vk_convert_result("vkReleaseSwapchainImagesEXT", catch_unwind(||((self.vk_release_swapchain_images_ext)(device, pReleaseInfo))))
 	}
 }
 impl Default for Vulkan_EXT_swapchain_maintenance1 {
@@ -39465,22 +39465,22 @@ pub struct Vulkan_NV_device_generated_commands {
 }
 impl VK_NV_device_generated_commands for Vulkan_NV_device_generated_commands {
 	fn vkGetGeneratedCommandsMemoryRequirementsNV(&self, device: VkDevice, pInfo: *const VkGeneratedCommandsMemoryRequirementsInfoNV, pMemoryRequirements: *mut VkMemoryRequirements2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_get_generated_commands_memory_requirements_nv)(device, pInfo, pMemoryRequirements))))
+		vk_process_catch(catch_unwind(||((self.vk_get_generated_commands_memory_requirements_nv)(device, pInfo, pMemoryRequirements))))
 	}
 	fn vkCmdPreprocessGeneratedCommandsNV(&self, commandBuffer: VkCommandBuffer, pGeneratedCommandsInfo: *const VkGeneratedCommandsInfoNV) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_preprocess_generated_commands_nv)(commandBuffer, pGeneratedCommandsInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_preprocess_generated_commands_nv)(commandBuffer, pGeneratedCommandsInfo))))
 	}
 	fn vkCmdExecuteGeneratedCommandsNV(&self, commandBuffer: VkCommandBuffer, isPreprocessed: VkBool32, pGeneratedCommandsInfo: *const VkGeneratedCommandsInfoNV) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_execute_generated_commands_nv)(commandBuffer, isPreprocessed, pGeneratedCommandsInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_execute_generated_commands_nv)(commandBuffer, isPreprocessed, pGeneratedCommandsInfo))))
 	}
 	fn vkCmdBindPipelineShaderGroupNV(&self, commandBuffer: VkCommandBuffer, pipelineBindPoint: VkPipelineBindPoint, pipeline: VkPipeline, groupIndex: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_bind_pipeline_shader_group_nv)(commandBuffer, pipelineBindPoint, pipeline, groupIndex))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_bind_pipeline_shader_group_nv)(commandBuffer, pipelineBindPoint, pipeline, groupIndex))))
 	}
 	fn vkCreateIndirectCommandsLayoutNV(&self, device: VkDevice, pCreateInfo: *const VkIndirectCommandsLayoutCreateInfoNV, pAllocator: *const VkAllocationCallbacks, pIndirectCommandsLayout: *mut VkIndirectCommandsLayoutNV) -> Result<()> {
-		convert_result("vkCreateIndirectCommandsLayoutNV", catch_unwind(||((self.vk_create_indirect_commands_layout_nv)(device, pCreateInfo, pAllocator, pIndirectCommandsLayout))))
+		vk_convert_result("vkCreateIndirectCommandsLayoutNV", catch_unwind(||((self.vk_create_indirect_commands_layout_nv)(device, pCreateInfo, pAllocator, pIndirectCommandsLayout))))
 	}
 	fn vkDestroyIndirectCommandsLayoutNV(&self, device: VkDevice, indirectCommandsLayout: VkIndirectCommandsLayoutNV, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_destroy_indirect_commands_layout_nv)(device, indirectCommandsLayout, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_destroy_indirect_commands_layout_nv)(device, indirectCommandsLayout, pAllocator))))
 	}
 }
 impl Default for Vulkan_NV_device_generated_commands {
@@ -39672,7 +39672,7 @@ pub struct Vulkan_EXT_depth_bias_control {
 }
 impl VK_EXT_depth_bias_control for Vulkan_EXT_depth_bias_control {
 	fn vkCmdSetDepthBias2EXT(&self, commandBuffer: VkCommandBuffer, pDepthBiasInfo: *const VkDepthBiasInfoEXT) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_depth_bias2_ext)(commandBuffer, pDepthBiasInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_depth_bias2_ext)(commandBuffer, pDepthBiasInfo))))
 	}
 }
 impl Default for Vulkan_EXT_depth_bias_control {
@@ -39789,10 +39789,10 @@ pub struct Vulkan_EXT_acquire_drm_display {
 }
 impl VK_EXT_acquire_drm_display for Vulkan_EXT_acquire_drm_display {
 	fn vkAcquireDrmDisplayEXT(&self, physicalDevice: VkPhysicalDevice, drmFd: i32, display: VkDisplayKHR) -> Result<()> {
-		convert_result("vkAcquireDrmDisplayEXT", catch_unwind(||((self.vk_acquire_drm_display_ext)(physicalDevice, drmFd, display))))
+		vk_convert_result("vkAcquireDrmDisplayEXT", catch_unwind(||((self.vk_acquire_drm_display_ext)(physicalDevice, drmFd, display))))
 	}
 	fn vkGetDrmDisplayEXT(&self, physicalDevice: VkPhysicalDevice, drmFd: i32, connectorId: u32, display: *mut VkDisplayKHR) -> Result<()> {
-		convert_result("vkGetDrmDisplayEXT", catch_unwind(||((self.vk_get_drm_display_ext)(physicalDevice, drmFd, connectorId, display))))
+		vk_convert_result("vkGetDrmDisplayEXT", catch_unwind(||((self.vk_get_drm_display_ext)(physicalDevice, drmFd, connectorId, display))))
 	}
 }
 impl Default for Vulkan_EXT_acquire_drm_display {
@@ -40006,16 +40006,16 @@ pub struct Vulkan_EXT_private_data {
 }
 impl VK_EXT_private_data for Vulkan_EXT_private_data {
 	fn vkCreatePrivateDataSlotEXT(&self, device: VkDevice, pCreateInfo: *const VkPrivateDataSlotCreateInfo, pAllocator: *const VkAllocationCallbacks, pPrivateDataSlot: *mut VkPrivateDataSlot) -> Result<()> {
-		convert_result("vkCreatePrivateDataSlotEXT", catch_unwind(||((self.vk_create_private_data_slot_ext)(device, pCreateInfo, pAllocator, pPrivateDataSlot))))
+		vk_convert_result("vkCreatePrivateDataSlotEXT", catch_unwind(||((self.vk_create_private_data_slot_ext)(device, pCreateInfo, pAllocator, pPrivateDataSlot))))
 	}
 	fn vkDestroyPrivateDataSlotEXT(&self, device: VkDevice, privateDataSlot: VkPrivateDataSlot, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_destroy_private_data_slot_ext)(device, privateDataSlot, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_destroy_private_data_slot_ext)(device, privateDataSlot, pAllocator))))
 	}
 	fn vkSetPrivateDataEXT(&self, device: VkDevice, objectType: VkObjectType, objectHandle: u64, privateDataSlot: VkPrivateDataSlot, data: u64) -> Result<()> {
-		convert_result("vkSetPrivateDataEXT", catch_unwind(||((self.vk_set_private_data_ext)(device, objectType, objectHandle, privateDataSlot, data))))
+		vk_convert_result("vkSetPrivateDataEXT", catch_unwind(||((self.vk_set_private_data_ext)(device, objectType, objectHandle, privateDataSlot, data))))
 	}
 	fn vkGetPrivateDataEXT(&self, device: VkDevice, objectType: VkObjectType, objectHandle: u64, privateDataSlot: VkPrivateDataSlot, pData: *mut uint64_t) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_get_private_data_ext)(device, objectType, objectHandle, privateDataSlot, pData))))
+		vk_process_catch(catch_unwind(||((self.vk_get_private_data_ext)(device, objectType, objectHandle, privateDataSlot, pData))))
 	}
 }
 impl Default for Vulkan_EXT_private_data {
@@ -40295,13 +40295,13 @@ pub struct Vulkan_QCOM_tile_shading {
 }
 impl VK_QCOM_tile_shading for Vulkan_QCOM_tile_shading {
 	fn vkCmdDispatchTileQCOM(&self, commandBuffer: VkCommandBuffer, pDispatchTileInfo: *const VkDispatchTileInfoQCOM) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_dispatch_tile_qcom)(commandBuffer, pDispatchTileInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_dispatch_tile_qcom)(commandBuffer, pDispatchTileInfo))))
 	}
 	fn vkCmdBeginPerTileExecutionQCOM(&self, commandBuffer: VkCommandBuffer, pPerTileBeginInfo: *const VkPerTileBeginInfoQCOM) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_begin_per_tile_execution_qcom)(commandBuffer, pPerTileBeginInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_begin_per_tile_execution_qcom)(commandBuffer, pPerTileBeginInfo))))
 	}
 	fn vkCmdEndPerTileExecutionQCOM(&self, commandBuffer: VkCommandBuffer, pPerTileEndInfo: *const VkPerTileEndInfoQCOM) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_end_per_tile_execution_qcom)(commandBuffer, pPerTileEndInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_end_per_tile_execution_qcom)(commandBuffer, pPerTileEndInfo))))
 	}
 }
 impl Default for Vulkan_QCOM_tile_shading {
@@ -40662,37 +40662,37 @@ pub struct Vulkan_EXT_descriptor_buffer {
 }
 impl VK_EXT_descriptor_buffer for Vulkan_EXT_descriptor_buffer {
 	fn vkGetDescriptorSetLayoutSizeEXT(&self, device: VkDevice, layout: VkDescriptorSetLayout, pLayoutSizeInBytes: *mut VkDeviceSize) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_get_descriptor_set_layout_size_ext)(device, layout, pLayoutSizeInBytes))))
+		vk_process_catch(catch_unwind(||((self.vk_get_descriptor_set_layout_size_ext)(device, layout, pLayoutSizeInBytes))))
 	}
 	fn vkGetDescriptorSetLayoutBindingOffsetEXT(&self, device: VkDevice, layout: VkDescriptorSetLayout, binding: u32, pOffset: *mut VkDeviceSize) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_get_descriptor_set_layout_binding_offset_ext)(device, layout, binding, pOffset))))
+		vk_process_catch(catch_unwind(||((self.vk_get_descriptor_set_layout_binding_offset_ext)(device, layout, binding, pOffset))))
 	}
 	fn vkGetDescriptorEXT(&self, device: VkDevice, pDescriptorInfo: *const VkDescriptorGetInfoEXT, dataSize: usize, pDescriptor: *mut c_void) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_get_descriptor_ext)(device, pDescriptorInfo, dataSize, pDescriptor))))
+		vk_process_catch(catch_unwind(||((self.vk_get_descriptor_ext)(device, pDescriptorInfo, dataSize, pDescriptor))))
 	}
 	fn vkCmdBindDescriptorBuffersEXT(&self, commandBuffer: VkCommandBuffer, bufferCount: u32, pBindingInfos: *const VkDescriptorBufferBindingInfoEXT) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_bind_descriptor_buffers_ext)(commandBuffer, bufferCount, pBindingInfos))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_bind_descriptor_buffers_ext)(commandBuffer, bufferCount, pBindingInfos))))
 	}
 	fn vkCmdSetDescriptorBufferOffsetsEXT(&self, commandBuffer: VkCommandBuffer, pipelineBindPoint: VkPipelineBindPoint, layout: VkPipelineLayout, firstSet: u32, setCount: u32, pBufferIndices: *const uint32_t, pOffsets: *const VkDeviceSize) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_descriptor_buffer_offsets_ext)(commandBuffer, pipelineBindPoint, layout, firstSet, setCount, pBufferIndices, pOffsets))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_descriptor_buffer_offsets_ext)(commandBuffer, pipelineBindPoint, layout, firstSet, setCount, pBufferIndices, pOffsets))))
 	}
 	fn vkCmdBindDescriptorBufferEmbeddedSamplersEXT(&self, commandBuffer: VkCommandBuffer, pipelineBindPoint: VkPipelineBindPoint, layout: VkPipelineLayout, set: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_bind_descriptor_buffer_embedded_samplers_ext)(commandBuffer, pipelineBindPoint, layout, set))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_bind_descriptor_buffer_embedded_samplers_ext)(commandBuffer, pipelineBindPoint, layout, set))))
 	}
 	fn vkGetBufferOpaqueCaptureDescriptorDataEXT(&self, device: VkDevice, pInfo: *const VkBufferCaptureDescriptorDataInfoEXT, pData: *mut c_void) -> Result<()> {
-		convert_result("vkGetBufferOpaqueCaptureDescriptorDataEXT", catch_unwind(||((self.vk_get_buffer_opaque_capture_descriptor_data_ext)(device, pInfo, pData))))
+		vk_convert_result("vkGetBufferOpaqueCaptureDescriptorDataEXT", catch_unwind(||((self.vk_get_buffer_opaque_capture_descriptor_data_ext)(device, pInfo, pData))))
 	}
 	fn vkGetImageOpaqueCaptureDescriptorDataEXT(&self, device: VkDevice, pInfo: *const VkImageCaptureDescriptorDataInfoEXT, pData: *mut c_void) -> Result<()> {
-		convert_result("vkGetImageOpaqueCaptureDescriptorDataEXT", catch_unwind(||((self.vk_get_image_opaque_capture_descriptor_data_ext)(device, pInfo, pData))))
+		vk_convert_result("vkGetImageOpaqueCaptureDescriptorDataEXT", catch_unwind(||((self.vk_get_image_opaque_capture_descriptor_data_ext)(device, pInfo, pData))))
 	}
 	fn vkGetImageViewOpaqueCaptureDescriptorDataEXT(&self, device: VkDevice, pInfo: *const VkImageViewCaptureDescriptorDataInfoEXT, pData: *mut c_void) -> Result<()> {
-		convert_result("vkGetImageViewOpaqueCaptureDescriptorDataEXT", catch_unwind(||((self.vk_get_image_view_opaque_capture_descriptor_data_ext)(device, pInfo, pData))))
+		vk_convert_result("vkGetImageViewOpaqueCaptureDescriptorDataEXT", catch_unwind(||((self.vk_get_image_view_opaque_capture_descriptor_data_ext)(device, pInfo, pData))))
 	}
 	fn vkGetSamplerOpaqueCaptureDescriptorDataEXT(&self, device: VkDevice, pInfo: *const VkSamplerCaptureDescriptorDataInfoEXT, pData: *mut c_void) -> Result<()> {
-		convert_result("vkGetSamplerOpaqueCaptureDescriptorDataEXT", catch_unwind(||((self.vk_get_sampler_opaque_capture_descriptor_data_ext)(device, pInfo, pData))))
+		vk_convert_result("vkGetSamplerOpaqueCaptureDescriptorDataEXT", catch_unwind(||((self.vk_get_sampler_opaque_capture_descriptor_data_ext)(device, pInfo, pData))))
 	}
 	fn vkGetAccelerationStructureOpaqueCaptureDescriptorDataEXT(&self, device: VkDevice, pInfo: *const VkAccelerationStructureCaptureDescriptorDataInfoEXT, pData: *mut c_void) -> Result<()> {
-		convert_result("vkGetAccelerationStructureOpaqueCaptureDescriptorDataEXT", catch_unwind(||((self.vk_get_acceleration_structure_opaque_capture_descriptor_data_ext)(device, pInfo, pData))))
+		vk_convert_result("vkGetAccelerationStructureOpaqueCaptureDescriptorDataEXT", catch_unwind(||((self.vk_get_acceleration_structure_opaque_capture_descriptor_data_ext)(device, pInfo, pData))))
 	}
 }
 impl Default for Vulkan_EXT_descriptor_buffer {
@@ -40921,7 +40921,7 @@ pub struct Vulkan_NV_fragment_shading_rate_enums {
 }
 impl VK_NV_fragment_shading_rate_enums for Vulkan_NV_fragment_shading_rate_enums {
 	fn vkCmdSetFragmentShadingRateEnumNV(&self, commandBuffer: VkCommandBuffer, shadingRate: VkFragmentShadingRateNV, combinerOps: &[VkFragmentShadingRateCombinerOpKHR; 2 as usize]) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_fragment_shading_rate_enum_nv)(commandBuffer, shadingRate, combinerOps))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_fragment_shading_rate_enum_nv)(commandBuffer, shadingRate, combinerOps))))
 	}
 }
 impl Default for Vulkan_NV_fragment_shading_rate_enums {
@@ -41676,7 +41676,7 @@ pub struct Vulkan_EXT_device_fault {
 }
 impl VK_EXT_device_fault for Vulkan_EXT_device_fault {
 	fn vkGetDeviceFaultInfoEXT(&self, device: VkDevice, pFaultCounts: *mut VkDeviceFaultCountsEXT, pFaultInfo: *mut VkDeviceFaultInfoEXT) -> Result<()> {
-		convert_result("vkGetDeviceFaultInfoEXT", catch_unwind(||((self.vk_get_device_fault_info_ext)(device, pFaultCounts, pFaultInfo))))
+		vk_convert_result("vkGetDeviceFaultInfoEXT", catch_unwind(||((self.vk_get_device_fault_info_ext)(device, pFaultCounts, pFaultInfo))))
 	}
 }
 impl Default for Vulkan_EXT_device_fault {
@@ -41856,7 +41856,7 @@ pub struct Vulkan_EXT_vertex_input_dynamic_state {
 }
 impl VK_EXT_vertex_input_dynamic_state for Vulkan_EXT_vertex_input_dynamic_state {
 	fn vkCmdSetVertexInputEXT(&self, commandBuffer: VkCommandBuffer, vertexBindingDescriptionCount: u32, pVertexBindingDescriptions: *const VkVertexInputBindingDescription2EXT, vertexAttributeDescriptionCount: u32, pVertexAttributeDescriptions: *const VkVertexInputAttributeDescription2EXT) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_vertex_input_ext)(commandBuffer, vertexBindingDescriptionCount, pVertexBindingDescriptions, vertexAttributeDescriptionCount, pVertexAttributeDescriptions))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_vertex_input_ext)(commandBuffer, vertexBindingDescriptionCount, pVertexBindingDescriptions, vertexAttributeDescriptionCount, pVertexAttributeDescriptions))))
 	}
 }
 impl Default for Vulkan_EXT_vertex_input_dynamic_state {
@@ -42124,10 +42124,10 @@ pub struct Vulkan_HUAWEI_subpass_shading {
 }
 impl VK_HUAWEI_subpass_shading for Vulkan_HUAWEI_subpass_shading {
 	fn vkGetDeviceSubpassShadingMaxWorkgroupSizeHUAWEI(&self, device: VkDevice, renderpass: VkRenderPass, pMaxWorkgroupSize: *mut VkExtent2D) -> Result<()> {
-		convert_result("vkGetDeviceSubpassShadingMaxWorkgroupSizeHUAWEI", catch_unwind(||((self.vk_get_device_subpass_shading_max_workgroup_size_huawei)(device, renderpass, pMaxWorkgroupSize))))
+		vk_convert_result("vkGetDeviceSubpassShadingMaxWorkgroupSizeHUAWEI", catch_unwind(||((self.vk_get_device_subpass_shading_max_workgroup_size_huawei)(device, renderpass, pMaxWorkgroupSize))))
 	}
 	fn vkCmdSubpassShadingHUAWEI(&self, commandBuffer: VkCommandBuffer) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_subpass_shading_huawei)(commandBuffer))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_subpass_shading_huawei)(commandBuffer))))
 	}
 }
 impl Default for Vulkan_HUAWEI_subpass_shading {
@@ -42175,7 +42175,7 @@ pub struct Vulkan_HUAWEI_invocation_mask {
 }
 impl VK_HUAWEI_invocation_mask for Vulkan_HUAWEI_invocation_mask {
 	fn vkCmdBindInvocationMaskHUAWEI(&self, commandBuffer: VkCommandBuffer, imageView: VkImageView, imageLayout: VkImageLayout) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_bind_invocation_mask_huawei)(commandBuffer, imageView, imageLayout))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_bind_invocation_mask_huawei)(commandBuffer, imageView, imageLayout))))
 	}
 }
 impl Default for Vulkan_HUAWEI_invocation_mask {
@@ -42234,7 +42234,7 @@ pub struct Vulkan_NV_external_memory_rdma {
 }
 impl VK_NV_external_memory_rdma for Vulkan_NV_external_memory_rdma {
 	fn vkGetMemoryRemoteAddressNV(&self, device: VkDevice, pMemoryGetRemoteAddressInfo: *const VkMemoryGetRemoteAddressInfoNV, pAddress: *mut VkRemoteAddressNV) -> Result<()> {
-		convert_result("vkGetMemoryRemoteAddressNV", catch_unwind(||((self.vk_get_memory_remote_address_nv)(device, pMemoryGetRemoteAddressInfo, pAddress))))
+		vk_convert_result("vkGetMemoryRemoteAddressNV", catch_unwind(||((self.vk_get_memory_remote_address_nv)(device, pMemoryGetRemoteAddressInfo, pAddress))))
 	}
 }
 impl Default for Vulkan_NV_external_memory_rdma {
@@ -42301,7 +42301,7 @@ pub struct Vulkan_EXT_pipeline_properties {
 }
 impl VK_EXT_pipeline_properties for Vulkan_EXT_pipeline_properties {
 	fn vkGetPipelinePropertiesEXT(&self, device: VkDevice, pPipelineInfo: *const VkPipelineInfoEXT, pPipelineProperties: *mut VkBaseOutStructure) -> Result<()> {
-		convert_result("vkGetPipelinePropertiesEXT", catch_unwind(||((self.vk_get_pipeline_properties_ext)(device, pPipelineInfo, pPipelineProperties))))
+		vk_convert_result("vkGetPipelinePropertiesEXT", catch_unwind(||((self.vk_get_pipeline_properties_ext)(device, pPipelineInfo, pPipelineProperties))))
 	}
 }
 impl Default for Vulkan_EXT_pipeline_properties {
@@ -42515,19 +42515,19 @@ pub struct Vulkan_EXT_extended_dynamic_state2 {
 }
 impl VK_EXT_extended_dynamic_state2 for Vulkan_EXT_extended_dynamic_state2 {
 	fn vkCmdSetPatchControlPointsEXT(&self, commandBuffer: VkCommandBuffer, patchControlPoints: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_patch_control_points_ext)(commandBuffer, patchControlPoints))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_patch_control_points_ext)(commandBuffer, patchControlPoints))))
 	}
 	fn vkCmdSetRasterizerDiscardEnableEXT(&self, commandBuffer: VkCommandBuffer, rasterizerDiscardEnable: VkBool32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_rasterizer_discard_enable_ext)(commandBuffer, rasterizerDiscardEnable))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_rasterizer_discard_enable_ext)(commandBuffer, rasterizerDiscardEnable))))
 	}
 	fn vkCmdSetDepthBiasEnableEXT(&self, commandBuffer: VkCommandBuffer, depthBiasEnable: VkBool32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_depth_bias_enable_ext)(commandBuffer, depthBiasEnable))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_depth_bias_enable_ext)(commandBuffer, depthBiasEnable))))
 	}
 	fn vkCmdSetLogicOpEXT(&self, commandBuffer: VkCommandBuffer, logicOp: VkLogicOp) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_logic_op_ext)(commandBuffer, logicOp))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_logic_op_ext)(commandBuffer, logicOp))))
 	}
 	fn vkCmdSetPrimitiveRestartEnableEXT(&self, commandBuffer: VkCommandBuffer, primitiveRestartEnable: VkBool32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_primitive_restart_enable_ext)(commandBuffer, primitiveRestartEnable))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_primitive_restart_enable_ext)(commandBuffer, primitiveRestartEnable))))
 	}
 }
 impl Default for Vulkan_EXT_extended_dynamic_state2 {
@@ -42591,7 +42591,7 @@ pub struct Vulkan_EXT_color_write_enable {
 }
 impl VK_EXT_color_write_enable for Vulkan_EXT_color_write_enable {
 	fn vkCmdSetColorWriteEnableEXT(&self, commandBuffer: VkCommandBuffer, attachmentCount: u32, pColorWriteEnables: *const VkBool32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_color_write_enable_ext)(commandBuffer, attachmentCount, pColorWriteEnables))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_color_write_enable_ext)(commandBuffer, attachmentCount, pColorWriteEnables))))
 	}
 }
 impl Default for Vulkan_EXT_color_write_enable {
@@ -42762,10 +42762,10 @@ pub struct Vulkan_EXT_multi_draw {
 }
 impl VK_EXT_multi_draw for Vulkan_EXT_multi_draw {
 	fn vkCmdDrawMultiEXT(&self, commandBuffer: VkCommandBuffer, drawCount: u32, pVertexInfo: *const VkMultiDrawInfoEXT, instanceCount: u32, firstInstance: u32, stride: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_draw_multi_ext)(commandBuffer, drawCount, pVertexInfo, instanceCount, firstInstance, stride))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_draw_multi_ext)(commandBuffer, drawCount, pVertexInfo, instanceCount, firstInstance, stride))))
 	}
 	fn vkCmdDrawMultiIndexedEXT(&self, commandBuffer: VkCommandBuffer, drawCount: u32, pIndexInfo: *const VkMultiDrawIndexedInfoEXT, instanceCount: u32, firstInstance: u32, stride: u32, pVertexOffset: *const int32_t) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_draw_multi_indexed_ext)(commandBuffer, drawCount, pIndexInfo, instanceCount, firstInstance, stride, pVertexOffset))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_draw_multi_indexed_ext)(commandBuffer, drawCount, pIndexInfo, instanceCount, firstInstance, stride, pVertexOffset))))
 	}
 }
 impl Default for Vulkan_EXT_multi_draw {
@@ -43313,46 +43313,46 @@ pub struct Vulkan_EXT_opacity_micromap {
 }
 impl VK_EXT_opacity_micromap for Vulkan_EXT_opacity_micromap {
 	fn vkCreateMicromapEXT(&self, device: VkDevice, pCreateInfo: *const VkMicromapCreateInfoEXT, pAllocator: *const VkAllocationCallbacks, pMicromap: *mut VkMicromapEXT) -> Result<()> {
-		convert_result("vkCreateMicromapEXT", catch_unwind(||((self.vk_create_micromap_ext)(device, pCreateInfo, pAllocator, pMicromap))))
+		vk_convert_result("vkCreateMicromapEXT", catch_unwind(||((self.vk_create_micromap_ext)(device, pCreateInfo, pAllocator, pMicromap))))
 	}
 	fn vkDestroyMicromapEXT(&self, device: VkDevice, micromap: VkMicromapEXT, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_destroy_micromap_ext)(device, micromap, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_destroy_micromap_ext)(device, micromap, pAllocator))))
 	}
 	fn vkCmdBuildMicromapsEXT(&self, commandBuffer: VkCommandBuffer, infoCount: u32, pInfos: *const VkMicromapBuildInfoEXT) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_build_micromaps_ext)(commandBuffer, infoCount, pInfos))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_build_micromaps_ext)(commandBuffer, infoCount, pInfos))))
 	}
 	fn vkBuildMicromapsEXT(&self, device: VkDevice, deferredOperation: VkDeferredOperationKHR, infoCount: u32, pInfos: *const VkMicromapBuildInfoEXT) -> Result<()> {
-		convert_result("vkBuildMicromapsEXT", catch_unwind(||((self.vk_build_micromaps_ext)(device, deferredOperation, infoCount, pInfos))))
+		vk_convert_result("vkBuildMicromapsEXT", catch_unwind(||((self.vk_build_micromaps_ext)(device, deferredOperation, infoCount, pInfos))))
 	}
 	fn vkCopyMicromapEXT(&self, device: VkDevice, deferredOperation: VkDeferredOperationKHR, pInfo: *const VkCopyMicromapInfoEXT) -> Result<()> {
-		convert_result("vkCopyMicromapEXT", catch_unwind(||((self.vk_copy_micromap_ext)(device, deferredOperation, pInfo))))
+		vk_convert_result("vkCopyMicromapEXT", catch_unwind(||((self.vk_copy_micromap_ext)(device, deferredOperation, pInfo))))
 	}
 	fn vkCopyMicromapToMemoryEXT(&self, device: VkDevice, deferredOperation: VkDeferredOperationKHR, pInfo: *const VkCopyMicromapToMemoryInfoEXT) -> Result<()> {
-		convert_result("vkCopyMicromapToMemoryEXT", catch_unwind(||((self.vk_copy_micromap_to_memory_ext)(device, deferredOperation, pInfo))))
+		vk_convert_result("vkCopyMicromapToMemoryEXT", catch_unwind(||((self.vk_copy_micromap_to_memory_ext)(device, deferredOperation, pInfo))))
 	}
 	fn vkCopyMemoryToMicromapEXT(&self, device: VkDevice, deferredOperation: VkDeferredOperationKHR, pInfo: *const VkCopyMemoryToMicromapInfoEXT) -> Result<()> {
-		convert_result("vkCopyMemoryToMicromapEXT", catch_unwind(||((self.vk_copy_memory_to_micromap_ext)(device, deferredOperation, pInfo))))
+		vk_convert_result("vkCopyMemoryToMicromapEXT", catch_unwind(||((self.vk_copy_memory_to_micromap_ext)(device, deferredOperation, pInfo))))
 	}
 	fn vkWriteMicromapsPropertiesEXT(&self, device: VkDevice, micromapCount: u32, pMicromaps: *const VkMicromapEXT, queryType: VkQueryType, dataSize: usize, pData: *mut c_void, stride: usize) -> Result<()> {
-		convert_result("vkWriteMicromapsPropertiesEXT", catch_unwind(||((self.vk_write_micromaps_properties_ext)(device, micromapCount, pMicromaps, queryType, dataSize, pData, stride))))
+		vk_convert_result("vkWriteMicromapsPropertiesEXT", catch_unwind(||((self.vk_write_micromaps_properties_ext)(device, micromapCount, pMicromaps, queryType, dataSize, pData, stride))))
 	}
 	fn vkCmdCopyMicromapEXT(&self, commandBuffer: VkCommandBuffer, pInfo: *const VkCopyMicromapInfoEXT) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_copy_micromap_ext)(commandBuffer, pInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_copy_micromap_ext)(commandBuffer, pInfo))))
 	}
 	fn vkCmdCopyMicromapToMemoryEXT(&self, commandBuffer: VkCommandBuffer, pInfo: *const VkCopyMicromapToMemoryInfoEXT) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_copy_micromap_to_memory_ext)(commandBuffer, pInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_copy_micromap_to_memory_ext)(commandBuffer, pInfo))))
 	}
 	fn vkCmdCopyMemoryToMicromapEXT(&self, commandBuffer: VkCommandBuffer, pInfo: *const VkCopyMemoryToMicromapInfoEXT) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_copy_memory_to_micromap_ext)(commandBuffer, pInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_copy_memory_to_micromap_ext)(commandBuffer, pInfo))))
 	}
 	fn vkCmdWriteMicromapsPropertiesEXT(&self, commandBuffer: VkCommandBuffer, micromapCount: u32, pMicromaps: *const VkMicromapEXT, queryType: VkQueryType, queryPool: VkQueryPool, firstQuery: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_write_micromaps_properties_ext)(commandBuffer, micromapCount, pMicromaps, queryType, queryPool, firstQuery))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_write_micromaps_properties_ext)(commandBuffer, micromapCount, pMicromaps, queryType, queryPool, firstQuery))))
 	}
 	fn vkGetDeviceMicromapCompatibilityEXT(&self, device: VkDevice, pVersionInfo: *const VkMicromapVersionInfoEXT, pCompatibility: *mut VkAccelerationStructureCompatibilityKHR) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_get_device_micromap_compatibility_ext)(device, pVersionInfo, pCompatibility))))
+		vk_process_catch(catch_unwind(||((self.vk_get_device_micromap_compatibility_ext)(device, pVersionInfo, pCompatibility))))
 	}
 	fn vkGetMicromapBuildSizesEXT(&self, device: VkDevice, buildType: VkAccelerationStructureBuildTypeKHR, pBuildInfo: *const VkMicromapBuildInfoEXT, pSizeInfo: *mut VkMicromapBuildSizesInfoEXT) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_get_micromap_build_sizes_ext)(device, buildType, pBuildInfo, pSizeInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_get_micromap_build_sizes_ext)(device, buildType, pBuildInfo, pSizeInfo))))
 	}
 }
 impl Default for Vulkan_EXT_opacity_micromap {
@@ -43473,10 +43473,10 @@ pub struct Vulkan_HUAWEI_cluster_culling_shader {
 }
 impl VK_HUAWEI_cluster_culling_shader for Vulkan_HUAWEI_cluster_culling_shader {
 	fn vkCmdDrawClusterHUAWEI(&self, commandBuffer: VkCommandBuffer, groupCountX: u32, groupCountY: u32, groupCountZ: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_draw_cluster_huawei)(commandBuffer, groupCountX, groupCountY, groupCountZ))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_draw_cluster_huawei)(commandBuffer, groupCountX, groupCountY, groupCountZ))))
 	}
 	fn vkCmdDrawClusterIndirectHUAWEI(&self, commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_draw_cluster_indirect_huawei)(commandBuffer, buffer, offset))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_draw_cluster_indirect_huawei)(commandBuffer, buffer, offset))))
 	}
 }
 impl Default for Vulkan_HUAWEI_cluster_culling_shader {
@@ -43561,7 +43561,7 @@ pub struct Vulkan_EXT_pageable_device_local_memory {
 }
 impl VK_EXT_pageable_device_local_memory for Vulkan_EXT_pageable_device_local_memory {
 	fn vkSetDeviceMemoryPriorityEXT(&self, device: VkDevice, memory: VkDeviceMemory, priority: f32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_set_device_memory_priority_ext)(device, memory, priority))))
+		vk_process_catch(catch_unwind(||((self.vk_set_device_memory_priority_ext)(device, memory, priority))))
 	}
 }
 impl Default for Vulkan_EXT_pageable_device_local_memory {
@@ -43757,10 +43757,10 @@ pub struct Vulkan_VALVE_descriptor_set_host_mapping {
 }
 impl VK_VALVE_descriptor_set_host_mapping for Vulkan_VALVE_descriptor_set_host_mapping {
 	fn vkGetDescriptorSetLayoutHostMappingInfoVALVE(&self, device: VkDevice, pBindingReference: *const VkDescriptorSetBindingReferenceVALVE, pHostMapping: *mut VkDescriptorSetLayoutHostMappingInfoVALVE) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_get_descriptor_set_layout_host_mapping_info_valve)(device, pBindingReference, pHostMapping))))
+		vk_process_catch(catch_unwind(||((self.vk_get_descriptor_set_layout_host_mapping_info_valve)(device, pBindingReference, pHostMapping))))
 	}
 	fn vkGetDescriptorSetHostMappingVALVE(&self, device: VkDevice, descriptorSet: VkDescriptorSet, ppData: *mut *mut c_void) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_get_descriptor_set_host_mapping_valve)(device, descriptorSet, ppData))))
+		vk_process_catch(catch_unwind(||((self.vk_get_descriptor_set_host_mapping_valve)(device, descriptorSet, ppData))))
 	}
 }
 impl Default for Vulkan_VALVE_descriptor_set_host_mapping {
@@ -44013,10 +44013,10 @@ pub struct Vulkan_NV_copy_memory_indirect {
 }
 impl VK_NV_copy_memory_indirect for Vulkan_NV_copy_memory_indirect {
 	fn vkCmdCopyMemoryIndirectNV(&self, commandBuffer: VkCommandBuffer, copyBufferAddress: VkDeviceAddress, copyCount: u32, stride: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_copy_memory_indirect_nv)(commandBuffer, copyBufferAddress, copyCount, stride))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_copy_memory_indirect_nv)(commandBuffer, copyBufferAddress, copyCount, stride))))
 	}
 	fn vkCmdCopyMemoryToImageIndirectNV(&self, commandBuffer: VkCommandBuffer, copyBufferAddress: VkDeviceAddress, copyCount: u32, stride: u32, dstImage: VkImage, dstImageLayout: VkImageLayout, pImageSubresources: *const VkImageSubresourceLayers) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_copy_memory_to_image_indirect_nv)(commandBuffer, copyBufferAddress, copyCount, stride, dstImage, dstImageLayout, pImageSubresources))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_copy_memory_to_image_indirect_nv)(commandBuffer, copyBufferAddress, copyCount, stride, dstImage, dstImageLayout, pImageSubresources))))
 	}
 }
 impl Default for Vulkan_NV_copy_memory_indirect {
@@ -44104,10 +44104,10 @@ pub struct Vulkan_NV_memory_decompression {
 }
 impl VK_NV_memory_decompression for Vulkan_NV_memory_decompression {
 	fn vkCmdDecompressMemoryNV(&self, commandBuffer: VkCommandBuffer, decompressRegionCount: u32, pDecompressMemoryRegions: *const VkDecompressMemoryRegionNV) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_decompress_memory_nv)(commandBuffer, decompressRegionCount, pDecompressMemoryRegions))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_decompress_memory_nv)(commandBuffer, decompressRegionCount, pDecompressMemoryRegions))))
 	}
 	fn vkCmdDecompressMemoryIndirectCountNV(&self, commandBuffer: VkCommandBuffer, indirectCommandsAddress: VkDeviceAddress, indirectCommandsCountAddress: VkDeviceAddress, stride: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_decompress_memory_indirect_count_nv)(commandBuffer, indirectCommandsAddress, indirectCommandsCountAddress, stride))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_decompress_memory_indirect_count_nv)(commandBuffer, indirectCommandsAddress, indirectCommandsCountAddress, stride))))
 	}
 }
 impl Default for Vulkan_NV_memory_decompression {
@@ -44205,13 +44205,13 @@ pub struct Vulkan_NV_device_generated_commands_compute {
 }
 impl VK_NV_device_generated_commands_compute for Vulkan_NV_device_generated_commands_compute {
 	fn vkGetPipelineIndirectMemoryRequirementsNV(&self, device: VkDevice, pCreateInfo: *const VkComputePipelineCreateInfo, pMemoryRequirements: *mut VkMemoryRequirements2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_get_pipeline_indirect_memory_requirements_nv)(device, pCreateInfo, pMemoryRequirements))))
+		vk_process_catch(catch_unwind(||((self.vk_get_pipeline_indirect_memory_requirements_nv)(device, pCreateInfo, pMemoryRequirements))))
 	}
 	fn vkCmdUpdatePipelineIndirectBufferNV(&self, commandBuffer: VkCommandBuffer, pipelineBindPoint: VkPipelineBindPoint, pipeline: VkPipeline) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_update_pipeline_indirect_buffer_nv)(commandBuffer, pipelineBindPoint, pipeline))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_update_pipeline_indirect_buffer_nv)(commandBuffer, pipelineBindPoint, pipeline))))
 	}
 	fn vkGetPipelineIndirectDeviceAddressNV(&self, device: VkDevice, pInfo: *const VkPipelineIndirectDeviceAddressInfoNV) -> Result<VkDeviceAddress> {
-		process_catch(catch_unwind(||((self.vk_get_pipeline_indirect_device_address_nv)(device, pInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_get_pipeline_indirect_device_address_nv)(device, pInfo))))
 	}
 }
 impl Default for Vulkan_NV_device_generated_commands_compute {
@@ -44887,97 +44887,97 @@ pub struct Vulkan_EXT_extended_dynamic_state3 {
 }
 impl VK_EXT_extended_dynamic_state3 for Vulkan_EXT_extended_dynamic_state3 {
 	fn vkCmdSetDepthClampEnableEXT(&self, commandBuffer: VkCommandBuffer, depthClampEnable: VkBool32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_depth_clamp_enable_ext)(commandBuffer, depthClampEnable))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_depth_clamp_enable_ext)(commandBuffer, depthClampEnable))))
 	}
 	fn vkCmdSetPolygonModeEXT(&self, commandBuffer: VkCommandBuffer, polygonMode: VkPolygonMode) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_polygon_mode_ext)(commandBuffer, polygonMode))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_polygon_mode_ext)(commandBuffer, polygonMode))))
 	}
 	fn vkCmdSetRasterizationSamplesEXT(&self, commandBuffer: VkCommandBuffer, rasterizationSamples: VkSampleCountFlagBits) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_rasterization_samples_ext)(commandBuffer, rasterizationSamples))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_rasterization_samples_ext)(commandBuffer, rasterizationSamples))))
 	}
 	fn vkCmdSetSampleMaskEXT(&self, commandBuffer: VkCommandBuffer, samples: VkSampleCountFlagBits, pSampleMask: *const VkSampleMask) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_sample_mask_ext)(commandBuffer, samples, pSampleMask))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_sample_mask_ext)(commandBuffer, samples, pSampleMask))))
 	}
 	fn vkCmdSetAlphaToCoverageEnableEXT(&self, commandBuffer: VkCommandBuffer, alphaToCoverageEnable: VkBool32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_alpha_to_coverage_enable_ext)(commandBuffer, alphaToCoverageEnable))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_alpha_to_coverage_enable_ext)(commandBuffer, alphaToCoverageEnable))))
 	}
 	fn vkCmdSetAlphaToOneEnableEXT(&self, commandBuffer: VkCommandBuffer, alphaToOneEnable: VkBool32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_alpha_to_one_enable_ext)(commandBuffer, alphaToOneEnable))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_alpha_to_one_enable_ext)(commandBuffer, alphaToOneEnable))))
 	}
 	fn vkCmdSetLogicOpEnableEXT(&self, commandBuffer: VkCommandBuffer, logicOpEnable: VkBool32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_logic_op_enable_ext)(commandBuffer, logicOpEnable))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_logic_op_enable_ext)(commandBuffer, logicOpEnable))))
 	}
 	fn vkCmdSetColorBlendEnableEXT(&self, commandBuffer: VkCommandBuffer, firstAttachment: u32, attachmentCount: u32, pColorBlendEnables: *const VkBool32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_color_blend_enable_ext)(commandBuffer, firstAttachment, attachmentCount, pColorBlendEnables))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_color_blend_enable_ext)(commandBuffer, firstAttachment, attachmentCount, pColorBlendEnables))))
 	}
 	fn vkCmdSetColorBlendEquationEXT(&self, commandBuffer: VkCommandBuffer, firstAttachment: u32, attachmentCount: u32, pColorBlendEquations: *const VkColorBlendEquationEXT) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_color_blend_equation_ext)(commandBuffer, firstAttachment, attachmentCount, pColorBlendEquations))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_color_blend_equation_ext)(commandBuffer, firstAttachment, attachmentCount, pColorBlendEquations))))
 	}
 	fn vkCmdSetColorWriteMaskEXT(&self, commandBuffer: VkCommandBuffer, firstAttachment: u32, attachmentCount: u32, pColorWriteMasks: *const VkColorComponentFlags) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_color_write_mask_ext)(commandBuffer, firstAttachment, attachmentCount, pColorWriteMasks))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_color_write_mask_ext)(commandBuffer, firstAttachment, attachmentCount, pColorWriteMasks))))
 	}
 	fn vkCmdSetTessellationDomainOriginEXT(&self, commandBuffer: VkCommandBuffer, domainOrigin: VkTessellationDomainOrigin) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_tessellation_domain_origin_ext)(commandBuffer, domainOrigin))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_tessellation_domain_origin_ext)(commandBuffer, domainOrigin))))
 	}
 	fn vkCmdSetRasterizationStreamEXT(&self, commandBuffer: VkCommandBuffer, rasterizationStream: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_rasterization_stream_ext)(commandBuffer, rasterizationStream))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_rasterization_stream_ext)(commandBuffer, rasterizationStream))))
 	}
 	fn vkCmdSetConservativeRasterizationModeEXT(&self, commandBuffer: VkCommandBuffer, conservativeRasterizationMode: VkConservativeRasterizationModeEXT) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_conservative_rasterization_mode_ext)(commandBuffer, conservativeRasterizationMode))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_conservative_rasterization_mode_ext)(commandBuffer, conservativeRasterizationMode))))
 	}
 	fn vkCmdSetExtraPrimitiveOverestimationSizeEXT(&self, commandBuffer: VkCommandBuffer, extraPrimitiveOverestimationSize: f32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_extra_primitive_overestimation_size_ext)(commandBuffer, extraPrimitiveOverestimationSize))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_extra_primitive_overestimation_size_ext)(commandBuffer, extraPrimitiveOverestimationSize))))
 	}
 	fn vkCmdSetDepthClipEnableEXT(&self, commandBuffer: VkCommandBuffer, depthClipEnable: VkBool32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_depth_clip_enable_ext)(commandBuffer, depthClipEnable))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_depth_clip_enable_ext)(commandBuffer, depthClipEnable))))
 	}
 	fn vkCmdSetSampleLocationsEnableEXT(&self, commandBuffer: VkCommandBuffer, sampleLocationsEnable: VkBool32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_sample_locations_enable_ext)(commandBuffer, sampleLocationsEnable))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_sample_locations_enable_ext)(commandBuffer, sampleLocationsEnable))))
 	}
 	fn vkCmdSetColorBlendAdvancedEXT(&self, commandBuffer: VkCommandBuffer, firstAttachment: u32, attachmentCount: u32, pColorBlendAdvanced: *const VkColorBlendAdvancedEXT) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_color_blend_advanced_ext)(commandBuffer, firstAttachment, attachmentCount, pColorBlendAdvanced))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_color_blend_advanced_ext)(commandBuffer, firstAttachment, attachmentCount, pColorBlendAdvanced))))
 	}
 	fn vkCmdSetProvokingVertexModeEXT(&self, commandBuffer: VkCommandBuffer, provokingVertexMode: VkProvokingVertexModeEXT) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_provoking_vertex_mode_ext)(commandBuffer, provokingVertexMode))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_provoking_vertex_mode_ext)(commandBuffer, provokingVertexMode))))
 	}
 	fn vkCmdSetLineRasterizationModeEXT(&self, commandBuffer: VkCommandBuffer, lineRasterizationMode: VkLineRasterizationModeEXT) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_line_rasterization_mode_ext)(commandBuffer, lineRasterizationMode))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_line_rasterization_mode_ext)(commandBuffer, lineRasterizationMode))))
 	}
 	fn vkCmdSetLineStippleEnableEXT(&self, commandBuffer: VkCommandBuffer, stippledLineEnable: VkBool32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_line_stipple_enable_ext)(commandBuffer, stippledLineEnable))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_line_stipple_enable_ext)(commandBuffer, stippledLineEnable))))
 	}
 	fn vkCmdSetDepthClipNegativeOneToOneEXT(&self, commandBuffer: VkCommandBuffer, negativeOneToOne: VkBool32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_depth_clip_negative_one_to_one_ext)(commandBuffer, negativeOneToOne))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_depth_clip_negative_one_to_one_ext)(commandBuffer, negativeOneToOne))))
 	}
 	fn vkCmdSetViewportWScalingEnableNV(&self, commandBuffer: VkCommandBuffer, viewportWScalingEnable: VkBool32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_viewport_wscaling_enable_nv)(commandBuffer, viewportWScalingEnable))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_viewport_wscaling_enable_nv)(commandBuffer, viewportWScalingEnable))))
 	}
 	fn vkCmdSetViewportSwizzleNV(&self, commandBuffer: VkCommandBuffer, firstViewport: u32, viewportCount: u32, pViewportSwizzles: *const VkViewportSwizzleNV) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_viewport_swizzle_nv)(commandBuffer, firstViewport, viewportCount, pViewportSwizzles))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_viewport_swizzle_nv)(commandBuffer, firstViewport, viewportCount, pViewportSwizzles))))
 	}
 	fn vkCmdSetCoverageToColorEnableNV(&self, commandBuffer: VkCommandBuffer, coverageToColorEnable: VkBool32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_coverage_to_color_enable_nv)(commandBuffer, coverageToColorEnable))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_coverage_to_color_enable_nv)(commandBuffer, coverageToColorEnable))))
 	}
 	fn vkCmdSetCoverageToColorLocationNV(&self, commandBuffer: VkCommandBuffer, coverageToColorLocation: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_coverage_to_color_location_nv)(commandBuffer, coverageToColorLocation))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_coverage_to_color_location_nv)(commandBuffer, coverageToColorLocation))))
 	}
 	fn vkCmdSetCoverageModulationModeNV(&self, commandBuffer: VkCommandBuffer, coverageModulationMode: VkCoverageModulationModeNV) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_coverage_modulation_mode_nv)(commandBuffer, coverageModulationMode))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_coverage_modulation_mode_nv)(commandBuffer, coverageModulationMode))))
 	}
 	fn vkCmdSetCoverageModulationTableEnableNV(&self, commandBuffer: VkCommandBuffer, coverageModulationTableEnable: VkBool32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_coverage_modulation_table_enable_nv)(commandBuffer, coverageModulationTableEnable))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_coverage_modulation_table_enable_nv)(commandBuffer, coverageModulationTableEnable))))
 	}
 	fn vkCmdSetCoverageModulationTableNV(&self, commandBuffer: VkCommandBuffer, coverageModulationTableCount: u32, pCoverageModulationTable: *const float) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_coverage_modulation_table_nv)(commandBuffer, coverageModulationTableCount, pCoverageModulationTable))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_coverage_modulation_table_nv)(commandBuffer, coverageModulationTableCount, pCoverageModulationTable))))
 	}
 	fn vkCmdSetShadingRateImageEnableNV(&self, commandBuffer: VkCommandBuffer, shadingRateImageEnable: VkBool32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_shading_rate_image_enable_nv)(commandBuffer, shadingRateImageEnable))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_shading_rate_image_enable_nv)(commandBuffer, shadingRateImageEnable))))
 	}
 	fn vkCmdSetRepresentativeFragmentTestEnableNV(&self, commandBuffer: VkCommandBuffer, representativeFragmentTestEnable: VkBool32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_representative_fragment_test_enable_nv)(commandBuffer, representativeFragmentTestEnable))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_representative_fragment_test_enable_nv)(commandBuffer, representativeFragmentTestEnable))))
 	}
 	fn vkCmdSetCoverageReductionModeNV(&self, commandBuffer: VkCommandBuffer, coverageReductionMode: VkCoverageReductionModeNV) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_coverage_reduction_mode_nv)(commandBuffer, coverageReductionMode))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_coverage_reduction_mode_nv)(commandBuffer, coverageReductionMode))))
 	}
 }
 impl Default for Vulkan_EXT_extended_dynamic_state3 {
@@ -45656,37 +45656,37 @@ pub struct Vulkan_ARM_tensors {
 }
 impl VK_ARM_tensors for Vulkan_ARM_tensors {
 	fn vkCreateTensorARM(&self, device: VkDevice, pCreateInfo: *const VkTensorCreateInfoARM, pAllocator: *const VkAllocationCallbacks, pTensor: *mut VkTensorARM) -> Result<()> {
-		convert_result("vkCreateTensorARM", catch_unwind(||((self.vk_create_tensor_arm)(device, pCreateInfo, pAllocator, pTensor))))
+		vk_convert_result("vkCreateTensorARM", catch_unwind(||((self.vk_create_tensor_arm)(device, pCreateInfo, pAllocator, pTensor))))
 	}
 	fn vkDestroyTensorARM(&self, device: VkDevice, tensor: VkTensorARM, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_destroy_tensor_arm)(device, tensor, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_destroy_tensor_arm)(device, tensor, pAllocator))))
 	}
 	fn vkCreateTensorViewARM(&self, device: VkDevice, pCreateInfo: *const VkTensorViewCreateInfoARM, pAllocator: *const VkAllocationCallbacks, pView: *mut VkTensorViewARM) -> Result<()> {
-		convert_result("vkCreateTensorViewARM", catch_unwind(||((self.vk_create_tensor_view_arm)(device, pCreateInfo, pAllocator, pView))))
+		vk_convert_result("vkCreateTensorViewARM", catch_unwind(||((self.vk_create_tensor_view_arm)(device, pCreateInfo, pAllocator, pView))))
 	}
 	fn vkDestroyTensorViewARM(&self, device: VkDevice, tensorView: VkTensorViewARM, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_destroy_tensor_view_arm)(device, tensorView, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_destroy_tensor_view_arm)(device, tensorView, pAllocator))))
 	}
 	fn vkGetTensorMemoryRequirementsARM(&self, device: VkDevice, pInfo: *const VkTensorMemoryRequirementsInfoARM, pMemoryRequirements: *mut VkMemoryRequirements2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_get_tensor_memory_requirements_arm)(device, pInfo, pMemoryRequirements))))
+		vk_process_catch(catch_unwind(||((self.vk_get_tensor_memory_requirements_arm)(device, pInfo, pMemoryRequirements))))
 	}
 	fn vkBindTensorMemoryARM(&self, device: VkDevice, bindInfoCount: u32, pBindInfos: *const VkBindTensorMemoryInfoARM) -> Result<()> {
-		convert_result("vkBindTensorMemoryARM", catch_unwind(||((self.vk_bind_tensor_memory_arm)(device, bindInfoCount, pBindInfos))))
+		vk_convert_result("vkBindTensorMemoryARM", catch_unwind(||((self.vk_bind_tensor_memory_arm)(device, bindInfoCount, pBindInfos))))
 	}
 	fn vkGetDeviceTensorMemoryRequirementsARM(&self, device: VkDevice, pInfo: *const VkDeviceTensorMemoryRequirementsARM, pMemoryRequirements: *mut VkMemoryRequirements2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_get_device_tensor_memory_requirements_arm)(device, pInfo, pMemoryRequirements))))
+		vk_process_catch(catch_unwind(||((self.vk_get_device_tensor_memory_requirements_arm)(device, pInfo, pMemoryRequirements))))
 	}
 	fn vkCmdCopyTensorARM(&self, commandBuffer: VkCommandBuffer, pCopyTensorInfo: *const VkCopyTensorInfoARM) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_copy_tensor_arm)(commandBuffer, pCopyTensorInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_copy_tensor_arm)(commandBuffer, pCopyTensorInfo))))
 	}
 	fn vkGetPhysicalDeviceExternalTensorPropertiesARM(&self, physicalDevice: VkPhysicalDevice, pExternalTensorInfo: *const VkPhysicalDeviceExternalTensorInfoARM, pExternalTensorProperties: *mut VkExternalTensorPropertiesARM) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_get_physical_device_external_tensor_properties_arm)(physicalDevice, pExternalTensorInfo, pExternalTensorProperties))))
+		vk_process_catch(catch_unwind(||((self.vk_get_physical_device_external_tensor_properties_arm)(physicalDevice, pExternalTensorInfo, pExternalTensorProperties))))
 	}
 	fn vkGetTensorOpaqueCaptureDescriptorDataARM(&self, device: VkDevice, pInfo: *const VkTensorCaptureDescriptorDataInfoARM, pData: *mut c_void) -> Result<()> {
-		convert_result("vkGetTensorOpaqueCaptureDescriptorDataARM", catch_unwind(||((self.vk_get_tensor_opaque_capture_descriptor_data_arm)(device, pInfo, pData))))
+		vk_convert_result("vkGetTensorOpaqueCaptureDescriptorDataARM", catch_unwind(||((self.vk_get_tensor_opaque_capture_descriptor_data_arm)(device, pInfo, pData))))
 	}
 	fn vkGetTensorViewOpaqueCaptureDescriptorDataARM(&self, device: VkDevice, pInfo: *const VkTensorViewCaptureDescriptorDataInfoARM, pData: *mut c_void) -> Result<()> {
-		convert_result("vkGetTensorViewOpaqueCaptureDescriptorDataARM", catch_unwind(||((self.vk_get_tensor_view_opaque_capture_descriptor_data_arm)(device, pInfo, pData))))
+		vk_convert_result("vkGetTensorViewOpaqueCaptureDescriptorDataARM", catch_unwind(||((self.vk_get_tensor_view_opaque_capture_descriptor_data_arm)(device, pInfo, pData))))
 	}
 }
 impl Default for Vulkan_ARM_tensors {
@@ -45813,10 +45813,10 @@ pub struct Vulkan_EXT_shader_module_identifier {
 }
 impl VK_EXT_shader_module_identifier for Vulkan_EXT_shader_module_identifier {
 	fn vkGetShaderModuleIdentifierEXT(&self, device: VkDevice, shaderModule: VkShaderModule, pIdentifier: *mut VkShaderModuleIdentifierEXT) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_get_shader_module_identifier_ext)(device, shaderModule, pIdentifier))))
+		vk_process_catch(catch_unwind(||((self.vk_get_shader_module_identifier_ext)(device, shaderModule, pIdentifier))))
 	}
 	fn vkGetShaderModuleCreateInfoIdentifierEXT(&self, device: VkDevice, pCreateInfo: *const VkShaderModuleCreateInfo, pIdentifier: *mut VkShaderModuleIdentifierEXT) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_get_shader_module_create_info_identifier_ext)(device, pCreateInfo, pIdentifier))))
+		vk_process_catch(catch_unwind(||((self.vk_get_shader_module_create_info_identifier_ext)(device, pCreateInfo, pIdentifier))))
 	}
 }
 impl Default for Vulkan_EXT_shader_module_identifier {
@@ -46221,19 +46221,19 @@ pub struct Vulkan_NV_optical_flow {
 }
 impl VK_NV_optical_flow for Vulkan_NV_optical_flow {
 	fn vkGetPhysicalDeviceOpticalFlowImageFormatsNV(&self, physicalDevice: VkPhysicalDevice, pOpticalFlowImageFormatInfo: *const VkOpticalFlowImageFormatInfoNV, pFormatCount: *mut uint32_t, pImageFormatProperties: *mut VkOpticalFlowImageFormatPropertiesNV) -> Result<()> {
-		convert_result("vkGetPhysicalDeviceOpticalFlowImageFormatsNV", catch_unwind(||((self.vk_get_physical_device_optical_flow_image_formats_nv)(physicalDevice, pOpticalFlowImageFormatInfo, pFormatCount, pImageFormatProperties))))
+		vk_convert_result("vkGetPhysicalDeviceOpticalFlowImageFormatsNV", catch_unwind(||((self.vk_get_physical_device_optical_flow_image_formats_nv)(physicalDevice, pOpticalFlowImageFormatInfo, pFormatCount, pImageFormatProperties))))
 	}
 	fn vkCreateOpticalFlowSessionNV(&self, device: VkDevice, pCreateInfo: *const VkOpticalFlowSessionCreateInfoNV, pAllocator: *const VkAllocationCallbacks, pSession: *mut VkOpticalFlowSessionNV) -> Result<()> {
-		convert_result("vkCreateOpticalFlowSessionNV", catch_unwind(||((self.vk_create_optical_flow_session_nv)(device, pCreateInfo, pAllocator, pSession))))
+		vk_convert_result("vkCreateOpticalFlowSessionNV", catch_unwind(||((self.vk_create_optical_flow_session_nv)(device, pCreateInfo, pAllocator, pSession))))
 	}
 	fn vkDestroyOpticalFlowSessionNV(&self, device: VkDevice, session: VkOpticalFlowSessionNV, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_destroy_optical_flow_session_nv)(device, session, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_destroy_optical_flow_session_nv)(device, session, pAllocator))))
 	}
 	fn vkBindOpticalFlowSessionImageNV(&self, device: VkDevice, session: VkOpticalFlowSessionNV, bindingPoint: VkOpticalFlowSessionBindingPointNV, view: VkImageView, layout: VkImageLayout) -> Result<()> {
-		convert_result("vkBindOpticalFlowSessionImageNV", catch_unwind(||((self.vk_bind_optical_flow_session_image_nv)(device, session, bindingPoint, view, layout))))
+		vk_convert_result("vkBindOpticalFlowSessionImageNV", catch_unwind(||((self.vk_bind_optical_flow_session_image_nv)(device, session, bindingPoint, view, layout))))
 	}
 	fn vkCmdOpticalFlowExecuteNV(&self, commandBuffer: VkCommandBuffer, session: VkOpticalFlowSessionNV, pExecuteInfo: *const VkOpticalFlowExecuteInfoNV) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_optical_flow_execute_nv)(commandBuffer, session, pExecuteInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_optical_flow_execute_nv)(commandBuffer, session, pExecuteInfo))))
 	}
 }
 impl Default for Vulkan_NV_optical_flow {
@@ -46373,7 +46373,7 @@ pub struct Vulkan_AMD_anti_lag {
 }
 impl VK_AMD_anti_lag for Vulkan_AMD_anti_lag {
 	fn vkAntiLagUpdateAMD(&self, device: VkDevice, pData: *const VkAntiLagDataAMD) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_anti_lag_update_amd)(device, pData))))
+		vk_process_catch(catch_unwind(||((self.vk_anti_lag_update_amd)(device, pData))))
 	}
 }
 impl Default for Vulkan_AMD_anti_lag {
@@ -46602,19 +46602,19 @@ pub struct Vulkan_EXT_shader_object {
 }
 impl VK_EXT_shader_object for Vulkan_EXT_shader_object {
 	fn vkCreateShadersEXT(&self, device: VkDevice, createInfoCount: u32, pCreateInfos: *const VkShaderCreateInfoEXT, pAllocator: *const VkAllocationCallbacks, pShaders: *mut VkShaderEXT) -> Result<()> {
-		convert_result("vkCreateShadersEXT", catch_unwind(||((self.vk_create_shaders_ext)(device, createInfoCount, pCreateInfos, pAllocator, pShaders))))
+		vk_convert_result("vkCreateShadersEXT", catch_unwind(||((self.vk_create_shaders_ext)(device, createInfoCount, pCreateInfos, pAllocator, pShaders))))
 	}
 	fn vkDestroyShaderEXT(&self, device: VkDevice, shader: VkShaderEXT, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_destroy_shader_ext)(device, shader, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_destroy_shader_ext)(device, shader, pAllocator))))
 	}
 	fn vkGetShaderBinaryDataEXT(&self, device: VkDevice, shader: VkShaderEXT, pDataSize: *mut size_t, pData: *mut c_void) -> Result<()> {
-		convert_result("vkGetShaderBinaryDataEXT", catch_unwind(||((self.vk_get_shader_binary_data_ext)(device, shader, pDataSize, pData))))
+		vk_convert_result("vkGetShaderBinaryDataEXT", catch_unwind(||((self.vk_get_shader_binary_data_ext)(device, shader, pDataSize, pData))))
 	}
 	fn vkCmdBindShadersEXT(&self, commandBuffer: VkCommandBuffer, stageCount: u32, pStages: *const VkShaderStageFlagBits, pShaders: *const VkShaderEXT) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_bind_shaders_ext)(commandBuffer, stageCount, pStages, pShaders))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_bind_shaders_ext)(commandBuffer, stageCount, pStages, pShaders))))
 	}
 	fn vkCmdSetDepthClampRangeEXT(&self, commandBuffer: VkCommandBuffer, depthClampMode: VkDepthClampModeEXT, pDepthClampRange: *const VkDepthClampRangeEXT) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_depth_clamp_range_ext)(commandBuffer, depthClampMode, pDepthClampRange))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_depth_clamp_range_ext)(commandBuffer, depthClampMode, pDepthClampRange))))
 	}
 }
 impl Default for Vulkan_EXT_shader_object {
@@ -46689,10 +46689,10 @@ pub struct Vulkan_QCOM_tile_properties {
 }
 impl VK_QCOM_tile_properties for Vulkan_QCOM_tile_properties {
 	fn vkGetFramebufferTilePropertiesQCOM(&self, device: VkDevice, framebuffer: VkFramebuffer, pPropertiesCount: *mut uint32_t, pProperties: *mut VkTilePropertiesQCOM) -> Result<()> {
-		convert_result("vkGetFramebufferTilePropertiesQCOM", catch_unwind(||((self.vk_get_framebuffer_tile_properties_qcom)(device, framebuffer, pPropertiesCount, pProperties))))
+		vk_convert_result("vkGetFramebufferTilePropertiesQCOM", catch_unwind(||((self.vk_get_framebuffer_tile_properties_qcom)(device, framebuffer, pPropertiesCount, pProperties))))
 	}
 	fn vkGetDynamicRenderingTilePropertiesQCOM(&self, device: VkDevice, pRenderingInfo: *const VkRenderingInfo, pProperties: *mut VkTilePropertiesQCOM) -> Result<()> {
-		convert_result("vkGetDynamicRenderingTilePropertiesQCOM", catch_unwind(||((self.vk_get_dynamic_rendering_tile_properties_qcom)(device, pRenderingInfo, pProperties))))
+		vk_convert_result("vkGetDynamicRenderingTilePropertiesQCOM", catch_unwind(||((self.vk_get_dynamic_rendering_tile_properties_qcom)(device, pRenderingInfo, pProperties))))
 	}
 }
 impl Default for Vulkan_QCOM_tile_properties {
@@ -46924,13 +46924,13 @@ pub struct Vulkan_NV_cooperative_vector {
 }
 impl VK_NV_cooperative_vector for Vulkan_NV_cooperative_vector {
 	fn vkGetPhysicalDeviceCooperativeVectorPropertiesNV(&self, physicalDevice: VkPhysicalDevice, pPropertyCount: *mut uint32_t, pProperties: *mut VkCooperativeVectorPropertiesNV) -> Result<()> {
-		convert_result("vkGetPhysicalDeviceCooperativeVectorPropertiesNV", catch_unwind(||((self.vk_get_physical_device_cooperative_vector_properties_nv)(physicalDevice, pPropertyCount, pProperties))))
+		vk_convert_result("vkGetPhysicalDeviceCooperativeVectorPropertiesNV", catch_unwind(||((self.vk_get_physical_device_cooperative_vector_properties_nv)(physicalDevice, pPropertyCount, pProperties))))
 	}
 	fn vkConvertCooperativeVectorMatrixNV(&self, device: VkDevice, pInfo: *const VkConvertCooperativeVectorMatrixInfoNV) -> Result<()> {
-		convert_result("vkConvertCooperativeVectorMatrixNV", catch_unwind(||((self.vk_convert_cooperative_vector_matrix_nv)(device, pInfo))))
+		vk_convert_result("vkConvertCooperativeVectorMatrixNV", catch_unwind(||((self.vk_convert_cooperative_vector_matrix_nv)(device, pInfo))))
 	}
 	fn vkCmdConvertCooperativeVectorMatrixNV(&self, commandBuffer: VkCommandBuffer, infoCount: u32, pInfos: *const VkConvertCooperativeVectorMatrixInfoNV) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_convert_cooperative_vector_matrix_nv)(commandBuffer, infoCount, pInfos))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_convert_cooperative_vector_matrix_nv)(commandBuffer, infoCount, pInfos))))
 	}
 }
 impl Default for Vulkan_NV_cooperative_vector {
@@ -47370,19 +47370,19 @@ pub struct Vulkan_NV_low_latency2 {
 }
 impl VK_NV_low_latency2 for Vulkan_NV_low_latency2 {
 	fn vkSetLatencySleepModeNV(&self, device: VkDevice, swapchain: VkSwapchainKHR, pSleepModeInfo: *const VkLatencySleepModeInfoNV) -> Result<()> {
-		convert_result("vkSetLatencySleepModeNV", catch_unwind(||((self.vk_set_latency_sleep_mode_nv)(device, swapchain, pSleepModeInfo))))
+		vk_convert_result("vkSetLatencySleepModeNV", catch_unwind(||((self.vk_set_latency_sleep_mode_nv)(device, swapchain, pSleepModeInfo))))
 	}
 	fn vkLatencySleepNV(&self, device: VkDevice, swapchain: VkSwapchainKHR, pSleepInfo: *const VkLatencySleepInfoNV) -> Result<()> {
-		convert_result("vkLatencySleepNV", catch_unwind(||((self.vk_latency_sleep_nv)(device, swapchain, pSleepInfo))))
+		vk_convert_result("vkLatencySleepNV", catch_unwind(||((self.vk_latency_sleep_nv)(device, swapchain, pSleepInfo))))
 	}
 	fn vkSetLatencyMarkerNV(&self, device: VkDevice, swapchain: VkSwapchainKHR, pLatencyMarkerInfo: *const VkSetLatencyMarkerInfoNV) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_set_latency_marker_nv)(device, swapchain, pLatencyMarkerInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_set_latency_marker_nv)(device, swapchain, pLatencyMarkerInfo))))
 	}
 	fn vkGetLatencyTimingsNV(&self, device: VkDevice, swapchain: VkSwapchainKHR, pLatencyMarkerInfo: *mut VkGetLatencyMarkerInfoNV) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_get_latency_timings_nv)(device, swapchain, pLatencyMarkerInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_get_latency_timings_nv)(device, swapchain, pLatencyMarkerInfo))))
 	}
 	fn vkQueueNotifyOutOfBandNV(&self, queue: VkQueue, pQueueTypeInfo: *const VkOutOfBandQueueTypeInfoNV) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_queue_notify_out_of_band_nv)(queue, pQueueTypeInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_queue_notify_out_of_band_nv)(queue, pQueueTypeInfo))))
 	}
 }
 impl Default for Vulkan_NV_low_latency2 {
@@ -47830,37 +47830,37 @@ pub struct Vulkan_ARM_data_graph {
 }
 impl VK_ARM_data_graph for Vulkan_ARM_data_graph {
 	fn vkCreateDataGraphPipelinesARM(&self, device: VkDevice, deferredOperation: VkDeferredOperationKHR, pipelineCache: VkPipelineCache, createInfoCount: u32, pCreateInfos: *const VkDataGraphPipelineCreateInfoARM, pAllocator: *const VkAllocationCallbacks, pPipelines: *mut VkPipeline) -> Result<()> {
-		convert_result("vkCreateDataGraphPipelinesARM", catch_unwind(||((self.vk_create_data_graph_pipelines_arm)(device, deferredOperation, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines))))
+		vk_convert_result("vkCreateDataGraphPipelinesARM", catch_unwind(||((self.vk_create_data_graph_pipelines_arm)(device, deferredOperation, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines))))
 	}
 	fn vkCreateDataGraphPipelineSessionARM(&self, device: VkDevice, pCreateInfo: *const VkDataGraphPipelineSessionCreateInfoARM, pAllocator: *const VkAllocationCallbacks, pSession: *mut VkDataGraphPipelineSessionARM) -> Result<()> {
-		convert_result("vkCreateDataGraphPipelineSessionARM", catch_unwind(||((self.vk_create_data_graph_pipeline_session_arm)(device, pCreateInfo, pAllocator, pSession))))
+		vk_convert_result("vkCreateDataGraphPipelineSessionARM", catch_unwind(||((self.vk_create_data_graph_pipeline_session_arm)(device, pCreateInfo, pAllocator, pSession))))
 	}
 	fn vkGetDataGraphPipelineSessionBindPointRequirementsARM(&self, device: VkDevice, pInfo: *const VkDataGraphPipelineSessionBindPointRequirementsInfoARM, pBindPointRequirementCount: *mut uint32_t, pBindPointRequirements: *mut VkDataGraphPipelineSessionBindPointRequirementARM) -> Result<()> {
-		convert_result("vkGetDataGraphPipelineSessionBindPointRequirementsARM", catch_unwind(||((self.vk_get_data_graph_pipeline_session_bind_point_requirements_arm)(device, pInfo, pBindPointRequirementCount, pBindPointRequirements))))
+		vk_convert_result("vkGetDataGraphPipelineSessionBindPointRequirementsARM", catch_unwind(||((self.vk_get_data_graph_pipeline_session_bind_point_requirements_arm)(device, pInfo, pBindPointRequirementCount, pBindPointRequirements))))
 	}
 	fn vkGetDataGraphPipelineSessionMemoryRequirementsARM(&self, device: VkDevice, pInfo: *const VkDataGraphPipelineSessionMemoryRequirementsInfoARM, pMemoryRequirements: *mut VkMemoryRequirements2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_get_data_graph_pipeline_session_memory_requirements_arm)(device, pInfo, pMemoryRequirements))))
+		vk_process_catch(catch_unwind(||((self.vk_get_data_graph_pipeline_session_memory_requirements_arm)(device, pInfo, pMemoryRequirements))))
 	}
 	fn vkBindDataGraphPipelineSessionMemoryARM(&self, device: VkDevice, bindInfoCount: u32, pBindInfos: *const VkBindDataGraphPipelineSessionMemoryInfoARM) -> Result<()> {
-		convert_result("vkBindDataGraphPipelineSessionMemoryARM", catch_unwind(||((self.vk_bind_data_graph_pipeline_session_memory_arm)(device, bindInfoCount, pBindInfos))))
+		vk_convert_result("vkBindDataGraphPipelineSessionMemoryARM", catch_unwind(||((self.vk_bind_data_graph_pipeline_session_memory_arm)(device, bindInfoCount, pBindInfos))))
 	}
 	fn vkDestroyDataGraphPipelineSessionARM(&self, device: VkDevice, session: VkDataGraphPipelineSessionARM, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_destroy_data_graph_pipeline_session_arm)(device, session, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_destroy_data_graph_pipeline_session_arm)(device, session, pAllocator))))
 	}
 	fn vkCmdDispatchDataGraphARM(&self, commandBuffer: VkCommandBuffer, session: VkDataGraphPipelineSessionARM, pInfo: *const VkDataGraphPipelineDispatchInfoARM) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_dispatch_data_graph_arm)(commandBuffer, session, pInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_dispatch_data_graph_arm)(commandBuffer, session, pInfo))))
 	}
 	fn vkGetDataGraphPipelineAvailablePropertiesARM(&self, device: VkDevice, pPipelineInfo: *const VkDataGraphPipelineInfoARM, pPropertiesCount: *mut uint32_t, pProperties: *mut VkDataGraphPipelinePropertyARM) -> Result<()> {
-		convert_result("vkGetDataGraphPipelineAvailablePropertiesARM", catch_unwind(||((self.vk_get_data_graph_pipeline_available_properties_arm)(device, pPipelineInfo, pPropertiesCount, pProperties))))
+		vk_convert_result("vkGetDataGraphPipelineAvailablePropertiesARM", catch_unwind(||((self.vk_get_data_graph_pipeline_available_properties_arm)(device, pPipelineInfo, pPropertiesCount, pProperties))))
 	}
 	fn vkGetDataGraphPipelinePropertiesARM(&self, device: VkDevice, pPipelineInfo: *const VkDataGraphPipelineInfoARM, propertiesCount: u32, pProperties: *mut VkDataGraphPipelinePropertyQueryResultARM) -> Result<()> {
-		convert_result("vkGetDataGraphPipelinePropertiesARM", catch_unwind(||((self.vk_get_data_graph_pipeline_properties_arm)(device, pPipelineInfo, propertiesCount, pProperties))))
+		vk_convert_result("vkGetDataGraphPipelinePropertiesARM", catch_unwind(||((self.vk_get_data_graph_pipeline_properties_arm)(device, pPipelineInfo, propertiesCount, pProperties))))
 	}
 	fn vkGetPhysicalDeviceQueueFamilyDataGraphPropertiesARM(&self, physicalDevice: VkPhysicalDevice, queueFamilyIndex: u32, pQueueFamilyDataGraphPropertyCount: *mut uint32_t, pQueueFamilyDataGraphProperties: *mut VkQueueFamilyDataGraphPropertiesARM) -> Result<()> {
-		convert_result("vkGetPhysicalDeviceQueueFamilyDataGraphPropertiesARM", catch_unwind(||((self.vk_get_physical_device_queue_family_data_graph_properties_arm)(physicalDevice, queueFamilyIndex, pQueueFamilyDataGraphPropertyCount, pQueueFamilyDataGraphProperties))))
+		vk_convert_result("vkGetPhysicalDeviceQueueFamilyDataGraphPropertiesARM", catch_unwind(||((self.vk_get_physical_device_queue_family_data_graph_properties_arm)(physicalDevice, queueFamilyIndex, pQueueFamilyDataGraphPropertyCount, pQueueFamilyDataGraphProperties))))
 	}
 	fn vkGetPhysicalDeviceQueueFamilyDataGraphProcessingEnginePropertiesARM(&self, physicalDevice: VkPhysicalDevice, pQueueFamilyDataGraphProcessingEngineInfo: *const VkPhysicalDeviceQueueFamilyDataGraphProcessingEngineInfoARM, pQueueFamilyDataGraphProcessingEngineProperties: *mut VkQueueFamilyDataGraphProcessingEnginePropertiesARM) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_get_physical_device_queue_family_data_graph_processing_engine_properties_arm)(physicalDevice, pQueueFamilyDataGraphProcessingEngineInfo, pQueueFamilyDataGraphProcessingEngineProperties))))
+		vk_process_catch(catch_unwind(||((self.vk_get_physical_device_queue_family_data_graph_processing_engine_properties_arm)(physicalDevice, pQueueFamilyDataGraphProcessingEngineInfo, pQueueFamilyDataGraphProcessingEngineProperties))))
 	}
 }
 impl Default for Vulkan_ARM_data_graph {
@@ -48160,7 +48160,7 @@ pub struct Vulkan_EXT_attachment_feedback_loop_dynamic_state {
 }
 impl VK_EXT_attachment_feedback_loop_dynamic_state for Vulkan_EXT_attachment_feedback_loop_dynamic_state {
 	fn vkCmdSetAttachmentFeedbackLoopEnableEXT(&self, commandBuffer: VkCommandBuffer, aspectMask: VkImageAspectFlags) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_attachment_feedback_loop_enable_ext)(commandBuffer, aspectMask))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_attachment_feedback_loop_enable_ext)(commandBuffer, aspectMask))))
 	}
 }
 impl Default for Vulkan_EXT_attachment_feedback_loop_dynamic_state {
@@ -48305,7 +48305,7 @@ pub struct Vulkan_QCOM_tile_memory_heap {
 }
 impl VK_QCOM_tile_memory_heap for Vulkan_QCOM_tile_memory_heap {
 	fn vkCmdBindTileMemoryQCOM(&self, commandBuffer: VkCommandBuffer, pTileMemoryBindInfo: *const VkTileMemoryBindInfoQCOM) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_bind_tile_memory_qcom)(commandBuffer, pTileMemoryBindInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_bind_tile_memory_qcom)(commandBuffer, pTileMemoryBindInfo))))
 	}
 }
 impl Default for Vulkan_QCOM_tile_memory_heap {
@@ -48475,13 +48475,13 @@ pub struct Vulkan_NV_external_compute_queue {
 }
 impl VK_NV_external_compute_queue for Vulkan_NV_external_compute_queue {
 	fn vkCreateExternalComputeQueueNV(&self, device: VkDevice, pCreateInfo: *const VkExternalComputeQueueCreateInfoNV, pAllocator: *const VkAllocationCallbacks, pExternalQueue: *mut VkExternalComputeQueueNV) -> Result<()> {
-		convert_result("vkCreateExternalComputeQueueNV", catch_unwind(||((self.vk_create_external_compute_queue_nv)(device, pCreateInfo, pAllocator, pExternalQueue))))
+		vk_convert_result("vkCreateExternalComputeQueueNV", catch_unwind(||((self.vk_create_external_compute_queue_nv)(device, pCreateInfo, pAllocator, pExternalQueue))))
 	}
 	fn vkDestroyExternalComputeQueueNV(&self, device: VkDevice, externalQueue: VkExternalComputeQueueNV, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_destroy_external_compute_queue_nv)(device, externalQueue, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_destroy_external_compute_queue_nv)(device, externalQueue, pAllocator))))
 	}
 	fn vkGetExternalComputeQueueDataNV(&self, externalQueue: VkExternalComputeQueueNV, params: *mut VkExternalComputeQueueDataParamsNV, pData: *mut c_void) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_get_external_compute_queue_data_nv)(externalQueue, params, pData))))
+		vk_process_catch(catch_unwind(||((self.vk_get_external_compute_queue_data_nv)(externalQueue, params, pData))))
 	}
 }
 impl Default for Vulkan_NV_external_compute_queue {
@@ -49221,10 +49221,10 @@ pub struct Vulkan_NV_cluster_acceleration_structure {
 }
 impl VK_NV_cluster_acceleration_structure for Vulkan_NV_cluster_acceleration_structure {
 	fn vkGetClusterAccelerationStructureBuildSizesNV(&self, device: VkDevice, pInfo: *const VkClusterAccelerationStructureInputInfoNV, pSizeInfo: *mut VkAccelerationStructureBuildSizesInfoKHR) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_get_cluster_acceleration_structure_build_sizes_nv)(device, pInfo, pSizeInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_get_cluster_acceleration_structure_build_sizes_nv)(device, pInfo, pSizeInfo))))
 	}
 	fn vkCmdBuildClusterAccelerationStructureIndirectNV(&self, commandBuffer: VkCommandBuffer, pCommandInfos: *const VkClusterAccelerationStructureCommandsInfoNV) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_build_cluster_acceleration_structure_indirect_nv)(commandBuffer, pCommandInfos))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_build_cluster_acceleration_structure_indirect_nv)(commandBuffer, pCommandInfos))))
 	}
 }
 impl Default for Vulkan_NV_cluster_acceleration_structure {
@@ -49443,10 +49443,10 @@ pub struct Vulkan_NV_partitioned_acceleration_structure {
 }
 impl VK_NV_partitioned_acceleration_structure for Vulkan_NV_partitioned_acceleration_structure {
 	fn vkGetPartitionedAccelerationStructuresBuildSizesNV(&self, device: VkDevice, pInfo: *const VkPartitionedAccelerationStructureInstancesInputNV, pSizeInfo: *mut VkAccelerationStructureBuildSizesInfoKHR) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_get_partitioned_acceleration_structures_build_sizes_nv)(device, pInfo, pSizeInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_get_partitioned_acceleration_structures_build_sizes_nv)(device, pInfo, pSizeInfo))))
 	}
 	fn vkCmdBuildPartitionedAccelerationStructuresNV(&self, commandBuffer: VkCommandBuffer, pBuildInfo: *const VkBuildPartitionedAccelerationStructureInfoNV) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_build_partitioned_acceleration_structures_nv)(commandBuffer, pBuildInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_build_partitioned_acceleration_structures_nv)(commandBuffer, pBuildInfo))))
 	}
 }
 impl Default for Vulkan_NV_partitioned_acceleration_structure {
@@ -49950,31 +49950,31 @@ pub struct Vulkan_EXT_device_generated_commands {
 }
 impl VK_EXT_device_generated_commands for Vulkan_EXT_device_generated_commands {
 	fn vkGetGeneratedCommandsMemoryRequirementsEXT(&self, device: VkDevice, pInfo: *const VkGeneratedCommandsMemoryRequirementsInfoEXT, pMemoryRequirements: *mut VkMemoryRequirements2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_get_generated_commands_memory_requirements_ext)(device, pInfo, pMemoryRequirements))))
+		vk_process_catch(catch_unwind(||((self.vk_get_generated_commands_memory_requirements_ext)(device, pInfo, pMemoryRequirements))))
 	}
 	fn vkCmdPreprocessGeneratedCommandsEXT(&self, commandBuffer: VkCommandBuffer, pGeneratedCommandsInfo: *const VkGeneratedCommandsInfoEXT, stateCommandBuffer: VkCommandBuffer) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_preprocess_generated_commands_ext)(commandBuffer, pGeneratedCommandsInfo, stateCommandBuffer))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_preprocess_generated_commands_ext)(commandBuffer, pGeneratedCommandsInfo, stateCommandBuffer))))
 	}
 	fn vkCmdExecuteGeneratedCommandsEXT(&self, commandBuffer: VkCommandBuffer, isPreprocessed: VkBool32, pGeneratedCommandsInfo: *const VkGeneratedCommandsInfoEXT) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_execute_generated_commands_ext)(commandBuffer, isPreprocessed, pGeneratedCommandsInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_execute_generated_commands_ext)(commandBuffer, isPreprocessed, pGeneratedCommandsInfo))))
 	}
 	fn vkCreateIndirectCommandsLayoutEXT(&self, device: VkDevice, pCreateInfo: *const VkIndirectCommandsLayoutCreateInfoEXT, pAllocator: *const VkAllocationCallbacks, pIndirectCommandsLayout: *mut VkIndirectCommandsLayoutEXT) -> Result<()> {
-		convert_result("vkCreateIndirectCommandsLayoutEXT", catch_unwind(||((self.vk_create_indirect_commands_layout_ext)(device, pCreateInfo, pAllocator, pIndirectCommandsLayout))))
+		vk_convert_result("vkCreateIndirectCommandsLayoutEXT", catch_unwind(||((self.vk_create_indirect_commands_layout_ext)(device, pCreateInfo, pAllocator, pIndirectCommandsLayout))))
 	}
 	fn vkDestroyIndirectCommandsLayoutEXT(&self, device: VkDevice, indirectCommandsLayout: VkIndirectCommandsLayoutEXT, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_destroy_indirect_commands_layout_ext)(device, indirectCommandsLayout, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_destroy_indirect_commands_layout_ext)(device, indirectCommandsLayout, pAllocator))))
 	}
 	fn vkCreateIndirectExecutionSetEXT(&self, device: VkDevice, pCreateInfo: *const VkIndirectExecutionSetCreateInfoEXT, pAllocator: *const VkAllocationCallbacks, pIndirectExecutionSet: *mut VkIndirectExecutionSetEXT) -> Result<()> {
-		convert_result("vkCreateIndirectExecutionSetEXT", catch_unwind(||((self.vk_create_indirect_execution_set_ext)(device, pCreateInfo, pAllocator, pIndirectExecutionSet))))
+		vk_convert_result("vkCreateIndirectExecutionSetEXT", catch_unwind(||((self.vk_create_indirect_execution_set_ext)(device, pCreateInfo, pAllocator, pIndirectExecutionSet))))
 	}
 	fn vkDestroyIndirectExecutionSetEXT(&self, device: VkDevice, indirectExecutionSet: VkIndirectExecutionSetEXT, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_destroy_indirect_execution_set_ext)(device, indirectExecutionSet, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_destroy_indirect_execution_set_ext)(device, indirectExecutionSet, pAllocator))))
 	}
 	fn vkUpdateIndirectExecutionSetPipelineEXT(&self, device: VkDevice, indirectExecutionSet: VkIndirectExecutionSetEXT, executionSetWriteCount: u32, pExecutionSetWrites: *const VkWriteIndirectExecutionSetPipelineEXT) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_update_indirect_execution_set_pipeline_ext)(device, indirectExecutionSet, executionSetWriteCount, pExecutionSetWrites))))
+		vk_process_catch(catch_unwind(||((self.vk_update_indirect_execution_set_pipeline_ext)(device, indirectExecutionSet, executionSetWriteCount, pExecutionSetWrites))))
 	}
 	fn vkUpdateIndirectExecutionSetShaderEXT(&self, device: VkDevice, indirectExecutionSet: VkIndirectExecutionSetEXT, executionSetWriteCount: u32, pExecutionSetWrites: *const VkWriteIndirectExecutionSetShaderEXT) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_update_indirect_execution_set_shader_ext)(device, indirectExecutionSet, executionSetWriteCount, pExecutionSetWrites))))
+		vk_process_catch(catch_unwind(||((self.vk_update_indirect_execution_set_shader_ext)(device, indirectExecutionSet, executionSetWriteCount, pExecutionSetWrites))))
 	}
 }
 impl Default for Vulkan_EXT_device_generated_commands {
@@ -50187,7 +50187,7 @@ pub struct Vulkan_NV_cooperative_matrix2 {
 }
 impl VK_NV_cooperative_matrix2 for Vulkan_NV_cooperative_matrix2 {
 	fn vkGetPhysicalDeviceCooperativeMatrixFlexibleDimensionsPropertiesNV(&self, physicalDevice: VkPhysicalDevice, pPropertyCount: *mut uint32_t, pProperties: *mut VkCooperativeMatrixFlexibleDimensionsPropertiesNV) -> Result<()> {
-		convert_result("vkGetPhysicalDeviceCooperativeMatrixFlexibleDimensionsPropertiesNV", catch_unwind(||((self.vk_get_physical_device_cooperative_matrix_flexible_dimensions_properties_nv)(physicalDevice, pPropertyCount, pProperties))))
+		vk_convert_result("vkGetPhysicalDeviceCooperativeMatrixFlexibleDimensionsPropertiesNV", catch_unwind(||((self.vk_get_physical_device_cooperative_matrix_flexible_dimensions_properties_nv)(physicalDevice, pPropertyCount, pProperties))))
 	}
 }
 impl Default for Vulkan_NV_cooperative_matrix2 {
@@ -50390,7 +50390,7 @@ pub struct Vulkan_EXT_fragment_density_map_offset {
 }
 impl VK_EXT_fragment_density_map_offset for Vulkan_EXT_fragment_density_map_offset {
 	fn vkCmdEndRendering2EXT(&self, commandBuffer: VkCommandBuffer, pRenderingEndInfo: *const VkRenderingEndInfoEXT) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_end_rendering2_ext)(commandBuffer, pRenderingEndInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_end_rendering2_ext)(commandBuffer, pRenderingEndInfo))))
 	}
 }
 impl Default for Vulkan_EXT_fragment_density_map_offset {
@@ -50876,52 +50876,52 @@ pub struct Vulkan_KHR_acceleration_structure {
 }
 impl VK_KHR_acceleration_structure for Vulkan_KHR_acceleration_structure {
 	fn vkCreateAccelerationStructureKHR(&self, device: VkDevice, pCreateInfo: *const VkAccelerationStructureCreateInfoKHR, pAllocator: *const VkAllocationCallbacks, pAccelerationStructure: *mut VkAccelerationStructureKHR) -> Result<()> {
-		convert_result("vkCreateAccelerationStructureKHR", catch_unwind(||((self.vk_create_acceleration_structure_khr)(device, pCreateInfo, pAllocator, pAccelerationStructure))))
+		vk_convert_result("vkCreateAccelerationStructureKHR", catch_unwind(||((self.vk_create_acceleration_structure_khr)(device, pCreateInfo, pAllocator, pAccelerationStructure))))
 	}
 	fn vkDestroyAccelerationStructureKHR(&self, device: VkDevice, accelerationStructure: VkAccelerationStructureKHR, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_destroy_acceleration_structure_khr)(device, accelerationStructure, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_destroy_acceleration_structure_khr)(device, accelerationStructure, pAllocator))))
 	}
 	fn vkCmdBuildAccelerationStructuresKHR(&self, commandBuffer: VkCommandBuffer, infoCount: u32, pInfos: *const VkAccelerationStructureBuildGeometryInfoKHR, ppBuildRangeInfos: *const *const VkAccelerationStructureBuildRangeInfoKHR) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_build_acceleration_structures_khr)(commandBuffer, infoCount, pInfos, ppBuildRangeInfos))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_build_acceleration_structures_khr)(commandBuffer, infoCount, pInfos, ppBuildRangeInfos))))
 	}
 	fn vkCmdBuildAccelerationStructuresIndirectKHR(&self, commandBuffer: VkCommandBuffer, infoCount: u32, pInfos: *const VkAccelerationStructureBuildGeometryInfoKHR, pIndirectDeviceAddresses: *const VkDeviceAddress, pIndirectStrides: *const uint32_t, ppMaxPrimitiveCounts: *const *const uint32_t) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_build_acceleration_structures_indirect_khr)(commandBuffer, infoCount, pInfos, pIndirectDeviceAddresses, pIndirectStrides, ppMaxPrimitiveCounts))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_build_acceleration_structures_indirect_khr)(commandBuffer, infoCount, pInfos, pIndirectDeviceAddresses, pIndirectStrides, ppMaxPrimitiveCounts))))
 	}
 	fn vkBuildAccelerationStructuresKHR(&self, device: VkDevice, deferredOperation: VkDeferredOperationKHR, infoCount: u32, pInfos: *const VkAccelerationStructureBuildGeometryInfoKHR, ppBuildRangeInfos: *const *const VkAccelerationStructureBuildRangeInfoKHR) -> Result<()> {
-		convert_result("vkBuildAccelerationStructuresKHR", catch_unwind(||((self.vk_build_acceleration_structures_khr)(device, deferredOperation, infoCount, pInfos, ppBuildRangeInfos))))
+		vk_convert_result("vkBuildAccelerationStructuresKHR", catch_unwind(||((self.vk_build_acceleration_structures_khr)(device, deferredOperation, infoCount, pInfos, ppBuildRangeInfos))))
 	}
 	fn vkCopyAccelerationStructureKHR(&self, device: VkDevice, deferredOperation: VkDeferredOperationKHR, pInfo: *const VkCopyAccelerationStructureInfoKHR) -> Result<()> {
-		convert_result("vkCopyAccelerationStructureKHR", catch_unwind(||((self.vk_copy_acceleration_structure_khr)(device, deferredOperation, pInfo))))
+		vk_convert_result("vkCopyAccelerationStructureKHR", catch_unwind(||((self.vk_copy_acceleration_structure_khr)(device, deferredOperation, pInfo))))
 	}
 	fn vkCopyAccelerationStructureToMemoryKHR(&self, device: VkDevice, deferredOperation: VkDeferredOperationKHR, pInfo: *const VkCopyAccelerationStructureToMemoryInfoKHR) -> Result<()> {
-		convert_result("vkCopyAccelerationStructureToMemoryKHR", catch_unwind(||((self.vk_copy_acceleration_structure_to_memory_khr)(device, deferredOperation, pInfo))))
+		vk_convert_result("vkCopyAccelerationStructureToMemoryKHR", catch_unwind(||((self.vk_copy_acceleration_structure_to_memory_khr)(device, deferredOperation, pInfo))))
 	}
 	fn vkCopyMemoryToAccelerationStructureKHR(&self, device: VkDevice, deferredOperation: VkDeferredOperationKHR, pInfo: *const VkCopyMemoryToAccelerationStructureInfoKHR) -> Result<()> {
-		convert_result("vkCopyMemoryToAccelerationStructureKHR", catch_unwind(||((self.vk_copy_memory_to_acceleration_structure_khr)(device, deferredOperation, pInfo))))
+		vk_convert_result("vkCopyMemoryToAccelerationStructureKHR", catch_unwind(||((self.vk_copy_memory_to_acceleration_structure_khr)(device, deferredOperation, pInfo))))
 	}
 	fn vkWriteAccelerationStructuresPropertiesKHR(&self, device: VkDevice, accelerationStructureCount: u32, pAccelerationStructures: *const VkAccelerationStructureKHR, queryType: VkQueryType, dataSize: usize, pData: *mut c_void, stride: usize) -> Result<()> {
-		convert_result("vkWriteAccelerationStructuresPropertiesKHR", catch_unwind(||((self.vk_write_acceleration_structures_properties_khr)(device, accelerationStructureCount, pAccelerationStructures, queryType, dataSize, pData, stride))))
+		vk_convert_result("vkWriteAccelerationStructuresPropertiesKHR", catch_unwind(||((self.vk_write_acceleration_structures_properties_khr)(device, accelerationStructureCount, pAccelerationStructures, queryType, dataSize, pData, stride))))
 	}
 	fn vkCmdCopyAccelerationStructureKHR(&self, commandBuffer: VkCommandBuffer, pInfo: *const VkCopyAccelerationStructureInfoKHR) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_copy_acceleration_structure_khr)(commandBuffer, pInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_copy_acceleration_structure_khr)(commandBuffer, pInfo))))
 	}
 	fn vkCmdCopyAccelerationStructureToMemoryKHR(&self, commandBuffer: VkCommandBuffer, pInfo: *const VkCopyAccelerationStructureToMemoryInfoKHR) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_copy_acceleration_structure_to_memory_khr)(commandBuffer, pInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_copy_acceleration_structure_to_memory_khr)(commandBuffer, pInfo))))
 	}
 	fn vkCmdCopyMemoryToAccelerationStructureKHR(&self, commandBuffer: VkCommandBuffer, pInfo: *const VkCopyMemoryToAccelerationStructureInfoKHR) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_copy_memory_to_acceleration_structure_khr)(commandBuffer, pInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_copy_memory_to_acceleration_structure_khr)(commandBuffer, pInfo))))
 	}
 	fn vkGetAccelerationStructureDeviceAddressKHR(&self, device: VkDevice, pInfo: *const VkAccelerationStructureDeviceAddressInfoKHR) -> Result<VkDeviceAddress> {
-		process_catch(catch_unwind(||((self.vk_get_acceleration_structure_device_address_khr)(device, pInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_get_acceleration_structure_device_address_khr)(device, pInfo))))
 	}
 	fn vkCmdWriteAccelerationStructuresPropertiesKHR(&self, commandBuffer: VkCommandBuffer, accelerationStructureCount: u32, pAccelerationStructures: *const VkAccelerationStructureKHR, queryType: VkQueryType, queryPool: VkQueryPool, firstQuery: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_write_acceleration_structures_properties_khr)(commandBuffer, accelerationStructureCount, pAccelerationStructures, queryType, queryPool, firstQuery))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_write_acceleration_structures_properties_khr)(commandBuffer, accelerationStructureCount, pAccelerationStructures, queryType, queryPool, firstQuery))))
 	}
 	fn vkGetDeviceAccelerationStructureCompatibilityKHR(&self, device: VkDevice, pVersionInfo: *const VkAccelerationStructureVersionInfoKHR, pCompatibility: *mut VkAccelerationStructureCompatibilityKHR) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_get_device_acceleration_structure_compatibility_khr)(device, pVersionInfo, pCompatibility))))
+		vk_process_catch(catch_unwind(||((self.vk_get_device_acceleration_structure_compatibility_khr)(device, pVersionInfo, pCompatibility))))
 	}
 	fn vkGetAccelerationStructureBuildSizesKHR(&self, device: VkDevice, buildType: VkAccelerationStructureBuildTypeKHR, pBuildInfo: *const VkAccelerationStructureBuildGeometryInfoKHR, pMaxPrimitiveCounts: *const uint32_t, pSizeInfo: *mut VkAccelerationStructureBuildSizesInfoKHR) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_get_acceleration_structure_build_sizes_khr)(device, buildType, pBuildInfo, pMaxPrimitiveCounts, pSizeInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_get_acceleration_structure_build_sizes_khr)(device, buildType, pBuildInfo, pMaxPrimitiveCounts, pSizeInfo))))
 	}
 }
 impl Default for Vulkan_KHR_acceleration_structure {
@@ -51131,22 +51131,22 @@ pub struct Vulkan_KHR_ray_tracing_pipeline {
 }
 impl VK_KHR_ray_tracing_pipeline for Vulkan_KHR_ray_tracing_pipeline {
 	fn vkCmdTraceRaysKHR(&self, commandBuffer: VkCommandBuffer, pRaygenShaderBindingTable: *const VkStridedDeviceAddressRegionKHR, pMissShaderBindingTable: *const VkStridedDeviceAddressRegionKHR, pHitShaderBindingTable: *const VkStridedDeviceAddressRegionKHR, pCallableShaderBindingTable: *const VkStridedDeviceAddressRegionKHR, width: u32, height: u32, depth: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_trace_rays_khr)(commandBuffer, pRaygenShaderBindingTable, pMissShaderBindingTable, pHitShaderBindingTable, pCallableShaderBindingTable, width, height, depth))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_trace_rays_khr)(commandBuffer, pRaygenShaderBindingTable, pMissShaderBindingTable, pHitShaderBindingTable, pCallableShaderBindingTable, width, height, depth))))
 	}
 	fn vkCreateRayTracingPipelinesKHR(&self, device: VkDevice, deferredOperation: VkDeferredOperationKHR, pipelineCache: VkPipelineCache, createInfoCount: u32, pCreateInfos: *const VkRayTracingPipelineCreateInfoKHR, pAllocator: *const VkAllocationCallbacks, pPipelines: *mut VkPipeline) -> Result<()> {
-		convert_result("vkCreateRayTracingPipelinesKHR", catch_unwind(||((self.vk_create_ray_tracing_pipelines_khr)(device, deferredOperation, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines))))
+		vk_convert_result("vkCreateRayTracingPipelinesKHR", catch_unwind(||((self.vk_create_ray_tracing_pipelines_khr)(device, deferredOperation, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines))))
 	}
 	fn vkGetRayTracingCaptureReplayShaderGroupHandlesKHR(&self, device: VkDevice, pipeline: VkPipeline, firstGroup: u32, groupCount: u32, dataSize: usize, pData: *mut c_void) -> Result<()> {
-		convert_result("vkGetRayTracingCaptureReplayShaderGroupHandlesKHR", catch_unwind(||((self.vk_get_ray_tracing_capture_replay_shader_group_handles_khr)(device, pipeline, firstGroup, groupCount, dataSize, pData))))
+		vk_convert_result("vkGetRayTracingCaptureReplayShaderGroupHandlesKHR", catch_unwind(||((self.vk_get_ray_tracing_capture_replay_shader_group_handles_khr)(device, pipeline, firstGroup, groupCount, dataSize, pData))))
 	}
 	fn vkCmdTraceRaysIndirectKHR(&self, commandBuffer: VkCommandBuffer, pRaygenShaderBindingTable: *const VkStridedDeviceAddressRegionKHR, pMissShaderBindingTable: *const VkStridedDeviceAddressRegionKHR, pHitShaderBindingTable: *const VkStridedDeviceAddressRegionKHR, pCallableShaderBindingTable: *const VkStridedDeviceAddressRegionKHR, indirectDeviceAddress: VkDeviceAddress) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_trace_rays_indirect_khr)(commandBuffer, pRaygenShaderBindingTable, pMissShaderBindingTable, pHitShaderBindingTable, pCallableShaderBindingTable, indirectDeviceAddress))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_trace_rays_indirect_khr)(commandBuffer, pRaygenShaderBindingTable, pMissShaderBindingTable, pHitShaderBindingTable, pCallableShaderBindingTable, indirectDeviceAddress))))
 	}
 	fn vkGetRayTracingShaderGroupStackSizeKHR(&self, device: VkDevice, pipeline: VkPipeline, group: u32, groupShader: VkShaderGroupShaderKHR) -> Result<VkDeviceSize> {
-		process_catch(catch_unwind(||((self.vk_get_ray_tracing_shader_group_stack_size_khr)(device, pipeline, group, groupShader))))
+		vk_process_catch(catch_unwind(||((self.vk_get_ray_tracing_shader_group_stack_size_khr)(device, pipeline, group, groupShader))))
 	}
 	fn vkCmdSetRayTracingPipelineStackSizeKHR(&self, commandBuffer: VkCommandBuffer, pipelineStackSize: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_set_ray_tracing_pipeline_stack_size_khr)(commandBuffer, pipelineStackSize))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_set_ray_tracing_pipeline_stack_size_khr)(commandBuffer, pipelineStackSize))))
 	}
 }
 impl Default for Vulkan_KHR_ray_tracing_pipeline {
@@ -51297,13 +51297,13 @@ pub struct Vulkan_EXT_mesh_shader {
 }
 impl VK_EXT_mesh_shader for Vulkan_EXT_mesh_shader {
 	fn vkCmdDrawMeshTasksEXT(&self, commandBuffer: VkCommandBuffer, groupCountX: u32, groupCountY: u32, groupCountZ: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_draw_mesh_tasks_ext)(commandBuffer, groupCountX, groupCountY, groupCountZ))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_draw_mesh_tasks_ext)(commandBuffer, groupCountX, groupCountY, groupCountZ))))
 	}
 	fn vkCmdDrawMeshTasksIndirectEXT(&self, commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize, drawCount: u32, stride: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_draw_mesh_tasks_indirect_ext)(commandBuffer, buffer, offset, drawCount, stride))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_draw_mesh_tasks_indirect_ext)(commandBuffer, buffer, offset, drawCount, stride))))
 	}
 	fn vkCmdDrawMeshTasksIndirectCountEXT(&self, commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize, countBuffer: VkBuffer, countBufferOffset: VkDeviceSize, maxDrawCount: u32, stride: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_cmd_draw_mesh_tasks_indirect_count_ext)(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride))))
+		vk_process_catch(catch_unwind(||((self.vk_cmd_draw_mesh_tasks_indirect_count_ext)(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride))))
 	}
 }
 impl Default for Vulkan_EXT_mesh_shader {
@@ -51368,7 +51368,7 @@ pub struct Vulkan_KHR_android_surface {
 #[cfg(feature = "android_khr")]
 impl VK_KHR_android_surface for Vulkan_KHR_android_surface {
 	fn vkCreateAndroidSurfaceKHR(&self, instance: VkInstance, pCreateInfo: *const VkAndroidSurfaceCreateInfoKHR, pAllocator: *const VkAllocationCallbacks, pSurface: *mut VkSurfaceKHR) -> Result<()> {
-		convert_result("vkCreateAndroidSurfaceKHR", catch_unwind(||((self.vk_create_android_surface_khr)(instance, pCreateInfo, pAllocator, pSurface))))
+		vk_convert_result("vkCreateAndroidSurfaceKHR", catch_unwind(||((self.vk_create_android_surface_khr)(instance, pCreateInfo, pAllocator, pSurface))))
 	}
 }
 #[cfg(feature = "android_khr")]
@@ -51513,10 +51513,10 @@ pub struct Vulkan_ANDROID_external_memory_android_hardware_buffer {
 #[cfg(feature = "android_khr")]
 impl VK_ANDROID_external_memory_android_hardware_buffer for Vulkan_ANDROID_external_memory_android_hardware_buffer {
 	fn vkGetAndroidHardwareBufferPropertiesANDROID(&self, device: VkDevice, buffer: *const AHardwareBuffer, pProperties: *mut VkAndroidHardwareBufferPropertiesANDROID) -> Result<()> {
-		convert_result("vkGetAndroidHardwareBufferPropertiesANDROID", catch_unwind(||((self.vk_get_android_hardware_buffer_properties_android)(device, buffer, pProperties))))
+		vk_convert_result("vkGetAndroidHardwareBufferPropertiesANDROID", catch_unwind(||((self.vk_get_android_hardware_buffer_properties_android)(device, buffer, pProperties))))
 	}
 	fn vkGetMemoryAndroidHardwareBufferANDROID(&self, device: VkDevice, pInfo: *const VkMemoryGetAndroidHardwareBufferInfoANDROID, pBuffer: *mut *mut AHardwareBuffer) -> Result<()> {
-		convert_result("vkGetMemoryAndroidHardwareBufferANDROID", catch_unwind(||((self.vk_get_memory_android_hardware_buffer_android)(device, pInfo, pBuffer))))
+		vk_convert_result("vkGetMemoryAndroidHardwareBufferANDROID", catch_unwind(||((self.vk_get_memory_android_hardware_buffer_android)(device, pInfo, pBuffer))))
 	}
 }
 #[cfg(feature = "android_khr")]
@@ -51631,7 +51631,7 @@ pub struct Vulkan_MVK_ios_surface {
 #[cfg(feature = "ios_mvk")]
 impl VK_MVK_ios_surface for Vulkan_MVK_ios_surface {
 	fn vkCreateIOSSurfaceMVK(&self, instance: VkInstance, pCreateInfo: *const VkIOSSurfaceCreateInfoMVK, pAllocator: *const VkAllocationCallbacks, pSurface: *mut VkSurfaceKHR) -> Result<()> {
-		convert_result("vkCreateIOSSurfaceMVK", catch_unwind(||((self.vk_create_iossurface_mvk)(instance, pCreateInfo, pAllocator, pSurface))))
+		vk_convert_result("vkCreateIOSSurfaceMVK", catch_unwind(||((self.vk_create_iossurface_mvk)(instance, pCreateInfo, pAllocator, pSurface))))
 	}
 }
 #[cfg(feature = "ios_mvk")]
@@ -51690,7 +51690,7 @@ pub struct Vulkan_MVK_macos_surface {
 #[cfg(feature = "macos_mvk")]
 impl VK_MVK_macos_surface for Vulkan_MVK_macos_surface {
 	fn vkCreateMacOSSurfaceMVK(&self, instance: VkInstance, pCreateInfo: *const VkMacOSSurfaceCreateInfoMVK, pAllocator: *const VkAllocationCallbacks, pSurface: *mut VkSurfaceKHR) -> Result<()> {
-		convert_result("vkCreateMacOSSurfaceMVK", catch_unwind(||((self.vk_create_mac_ossurface_mvk)(instance, pCreateInfo, pAllocator, pSurface))))
+		vk_convert_result("vkCreateMacOSSurfaceMVK", catch_unwind(||((self.vk_create_mac_ossurface_mvk)(instance, pCreateInfo, pAllocator, pSurface))))
 	}
 }
 #[cfg(feature = "macos_mvk")]
@@ -51753,7 +51753,7 @@ pub struct Vulkan_EXT_metal_surface {
 #[cfg(feature = "metal_ext")]
 impl VK_EXT_metal_surface for Vulkan_EXT_metal_surface {
 	fn vkCreateMetalSurfaceEXT(&self, instance: VkInstance, pCreateInfo: *const VkMetalSurfaceCreateInfoEXT, pAllocator: *const VkAllocationCallbacks, pSurface: *mut VkSurfaceKHR) -> Result<()> {
-		convert_result("vkCreateMetalSurfaceEXT", catch_unwind(||((self.vk_create_metal_surface_ext)(instance, pCreateInfo, pAllocator, pSurface))))
+		vk_convert_result("vkCreateMetalSurfaceEXT", catch_unwind(||((self.vk_create_metal_surface_ext)(instance, pCreateInfo, pAllocator, pSurface))))
 	}
 }
 #[cfg(feature = "metal_ext")]
@@ -51994,7 +51994,7 @@ pub struct Vulkan_EXT_metal_objects {
 #[cfg(feature = "metal_ext")]
 impl VK_EXT_metal_objects for Vulkan_EXT_metal_objects {
 	fn vkExportMetalObjectsEXT(&self, device: VkDevice, pMetalObjectsInfo: *mut VkExportMetalObjectsInfoEXT) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_export_metal_objects_ext)(device, pMetalObjectsInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_export_metal_objects_ext)(device, pMetalObjectsInfo))))
 	}
 }
 #[cfg(feature = "metal_ext")]
@@ -52082,10 +52082,10 @@ pub struct Vulkan_EXT_external_memory_metal {
 #[cfg(feature = "metal_ext")]
 impl VK_EXT_external_memory_metal for Vulkan_EXT_external_memory_metal {
 	fn vkGetMemoryMetalHandleEXT(&self, device: VkDevice, pGetMetalHandleInfo: *const VkMemoryGetMetalHandleInfoEXT, pHandle: *mut *mut c_void) -> Result<()> {
-		convert_result("vkGetMemoryMetalHandleEXT", catch_unwind(||((self.vk_get_memory_metal_handle_ext)(device, pGetMetalHandleInfo, pHandle))))
+		vk_convert_result("vkGetMemoryMetalHandleEXT", catch_unwind(||((self.vk_get_memory_metal_handle_ext)(device, pGetMetalHandleInfo, pHandle))))
 	}
 	fn vkGetMemoryMetalHandlePropertiesEXT(&self, device: VkDevice, handleType: VkExternalMemoryHandleTypeFlagBits, pHandle: *const c_void, pMemoryMetalHandleProperties: *mut VkMemoryMetalHandlePropertiesEXT) -> Result<()> {
-		convert_result("vkGetMemoryMetalHandlePropertiesEXT", catch_unwind(||((self.vk_get_memory_metal_handle_properties_ext)(device, handleType, pHandle, pMemoryMetalHandleProperties))))
+		vk_convert_result("vkGetMemoryMetalHandlePropertiesEXT", catch_unwind(||((self.vk_get_memory_metal_handle_properties_ext)(device, handleType, pHandle, pMemoryMetalHandleProperties))))
 	}
 }
 #[cfg(feature = "metal_ext")]
@@ -52163,10 +52163,10 @@ pub struct Vulkan_KHR_wayland_surface {
 #[cfg(feature = "wayland_khr")]
 impl VK_KHR_wayland_surface for Vulkan_KHR_wayland_surface {
 	fn vkCreateWaylandSurfaceKHR(&self, instance: VkInstance, pCreateInfo: *const VkWaylandSurfaceCreateInfoKHR, pAllocator: *const VkAllocationCallbacks, pSurface: *mut VkSurfaceKHR) -> Result<()> {
-		convert_result("vkCreateWaylandSurfaceKHR", catch_unwind(||((self.vk_create_wayland_surface_khr)(instance, pCreateInfo, pAllocator, pSurface))))
+		vk_convert_result("vkCreateWaylandSurfaceKHR", catch_unwind(||((self.vk_create_wayland_surface_khr)(instance, pCreateInfo, pAllocator, pSurface))))
 	}
 	fn vkGetPhysicalDeviceWaylandPresentationSupportKHR(&self, physicalDevice: VkPhysicalDevice, queueFamilyIndex: u32, display: *const c_void) -> Result<VkBool32> {
-		process_catch(catch_unwind(||((self.vk_get_physical_device_wayland_presentation_support_khr)(physicalDevice, queueFamilyIndex, display))))
+		vk_process_catch(catch_unwind(||((self.vk_get_physical_device_wayland_presentation_support_khr)(physicalDevice, queueFamilyIndex, display))))
 	}
 }
 #[cfg(feature = "wayland_khr")]
@@ -52203,10 +52203,6 @@ pub type BOOL = u32;
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkWin32SurfaceCreateFlagsKHR.html>
 #[cfg(feature = "win32_khr")]
 pub type VkWin32SurfaceCreateFlagsKHR = VkFlags;
-/// Normal handle `HWND` from VK_KHR_win32_surface
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/HWND.html>
-#[cfg(feature = "win32_khr")] #[repr(C)] #[derive(Debug, Clone, Copy)] pub struct HWND_T {_unused: u32,}
-#[cfg(feature = "win32_khr")] pub type HWND = *const HWND_T;
 /// Normal handle `HINSTANCE` from VK_KHR_win32_surface
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/HINSTANCE.html>
 #[cfg(feature = "win32_khr")] #[repr(C)] #[derive(Debug, Clone, Copy)] pub struct HINSTANCE_T {_unused: u32,}
@@ -52215,6 +52211,10 @@ pub type VkWin32SurfaceCreateFlagsKHR = VkFlags;
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/HANDLE.html>
 #[cfg(feature = "win32_khr")] #[repr(C)] #[derive(Debug, Clone, Copy)] pub struct HANDLE_T {_unused: u32,}
 #[cfg(feature = "win32_khr")] pub type HANDLE = *const HANDLE_T;
+/// Normal handle `HWND` from VK_KHR_win32_surface
+/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/HWND.html>
+#[cfg(feature = "win32_khr")] #[repr(C)] #[derive(Debug, Clone, Copy)] pub struct HWND_T {_unused: u32,}
+#[cfg(feature = "win32_khr")] pub type HWND = *const HWND_T;
 /// Normal handle `HMONITOR` from VK_KHR_win32_surface
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/HMONITOR.html>
 #[cfg(feature = "win32_khr")] #[repr(C)] #[derive(Debug, Clone, Copy)] pub struct HMONITOR_T {_unused: u32,}
@@ -52278,10 +52278,10 @@ pub struct Vulkan_KHR_win32_surface {
 #[cfg(feature = "win32_khr")]
 impl VK_KHR_win32_surface for Vulkan_KHR_win32_surface {
 	fn vkCreateWin32SurfaceKHR(&self, instance: VkInstance, pCreateInfo: *const VkWin32SurfaceCreateInfoKHR, pAllocator: *const VkAllocationCallbacks, pSurface: *mut VkSurfaceKHR) -> Result<()> {
-		convert_result("vkCreateWin32SurfaceKHR", catch_unwind(||((self.vk_create_win32_surface_khr)(instance, pCreateInfo, pAllocator, pSurface))))
+		vk_convert_result("vkCreateWin32SurfaceKHR", catch_unwind(||((self.vk_create_win32_surface_khr)(instance, pCreateInfo, pAllocator, pSurface))))
 	}
 	fn vkGetPhysicalDeviceWin32PresentationSupportKHR(&self, physicalDevice: VkPhysicalDevice, queueFamilyIndex: u32) -> Result<VkBool32> {
-		process_catch(catch_unwind(||((self.vk_get_physical_device_win32_presentation_support_khr)(physicalDevice, queueFamilyIndex))))
+		vk_process_catch(catch_unwind(||((self.vk_get_physical_device_win32_presentation_support_khr)(physicalDevice, queueFamilyIndex))))
 	}
 }
 #[cfg(feature = "win32_khr")]
@@ -52384,10 +52384,10 @@ pub struct Vulkan_KHR_external_memory_win32 {
 #[cfg(feature = "win32_khr")]
 impl VK_KHR_external_memory_win32 for Vulkan_KHR_external_memory_win32 {
 	fn vkGetMemoryWin32HandleKHR(&self, device: VkDevice, pGetWin32HandleInfo: *const VkMemoryGetWin32HandleInfoKHR, pHandle: *mut HANDLE) -> Result<()> {
-		convert_result("vkGetMemoryWin32HandleKHR", catch_unwind(||((self.vk_get_memory_win32_handle_khr)(device, pGetWin32HandleInfo, pHandle))))
+		vk_convert_result("vkGetMemoryWin32HandleKHR", catch_unwind(||((self.vk_get_memory_win32_handle_khr)(device, pGetWin32HandleInfo, pHandle))))
 	}
 	fn vkGetMemoryWin32HandlePropertiesKHR(&self, device: VkDevice, handleType: VkExternalMemoryHandleTypeFlagBits, handle: HANDLE, pMemoryWin32HandleProperties: *mut VkMemoryWin32HandlePropertiesKHR) -> Result<()> {
-		convert_result("vkGetMemoryWin32HandlePropertiesKHR", catch_unwind(||((self.vk_get_memory_win32_handle_properties_khr)(device, handleType, handle, pMemoryWin32HandleProperties))))
+		vk_convert_result("vkGetMemoryWin32HandlePropertiesKHR", catch_unwind(||((self.vk_get_memory_win32_handle_properties_khr)(device, handleType, handle, pMemoryWin32HandleProperties))))
 	}
 }
 #[cfg(feature = "win32_khr")]
@@ -52533,10 +52533,10 @@ pub struct Vulkan_KHR_external_semaphore_win32 {
 #[cfg(feature = "win32_khr")]
 impl VK_KHR_external_semaphore_win32 for Vulkan_KHR_external_semaphore_win32 {
 	fn vkImportSemaphoreWin32HandleKHR(&self, device: VkDevice, pImportSemaphoreWin32HandleInfo: *const VkImportSemaphoreWin32HandleInfoKHR) -> Result<()> {
-		convert_result("vkImportSemaphoreWin32HandleKHR", catch_unwind(||((self.vk_import_semaphore_win32_handle_khr)(device, pImportSemaphoreWin32HandleInfo))))
+		vk_convert_result("vkImportSemaphoreWin32HandleKHR", catch_unwind(||((self.vk_import_semaphore_win32_handle_khr)(device, pImportSemaphoreWin32HandleInfo))))
 	}
 	fn vkGetSemaphoreWin32HandleKHR(&self, device: VkDevice, pGetWin32HandleInfo: *const VkSemaphoreGetWin32HandleInfoKHR, pHandle: *mut HANDLE) -> Result<()> {
-		convert_result("vkGetSemaphoreWin32HandleKHR", catch_unwind(||((self.vk_get_semaphore_win32_handle_khr)(device, pGetWin32HandleInfo, pHandle))))
+		vk_convert_result("vkGetSemaphoreWin32HandleKHR", catch_unwind(||((self.vk_get_semaphore_win32_handle_khr)(device, pGetWin32HandleInfo, pHandle))))
 	}
 }
 #[cfg(feature = "win32_khr")]
@@ -52631,10 +52631,10 @@ pub struct Vulkan_KHR_external_fence_win32 {
 #[cfg(feature = "win32_khr")]
 impl VK_KHR_external_fence_win32 for Vulkan_KHR_external_fence_win32 {
 	fn vkImportFenceWin32HandleKHR(&self, device: VkDevice, pImportFenceWin32HandleInfo: *const VkImportFenceWin32HandleInfoKHR) -> Result<()> {
-		convert_result("vkImportFenceWin32HandleKHR", catch_unwind(||((self.vk_import_fence_win32_handle_khr)(device, pImportFenceWin32HandleInfo))))
+		vk_convert_result("vkImportFenceWin32HandleKHR", catch_unwind(||((self.vk_import_fence_win32_handle_khr)(device, pImportFenceWin32HandleInfo))))
 	}
 	fn vkGetFenceWin32HandleKHR(&self, device: VkDevice, pGetWin32HandleInfo: *const VkFenceGetWin32HandleInfoKHR, pHandle: *mut HANDLE) -> Result<()> {
-		convert_result("vkGetFenceWin32HandleKHR", catch_unwind(||((self.vk_get_fence_win32_handle_khr)(device, pGetWin32HandleInfo, pHandle))))
+		vk_convert_result("vkGetFenceWin32HandleKHR", catch_unwind(||((self.vk_get_fence_win32_handle_khr)(device, pGetWin32HandleInfo, pHandle))))
 	}
 }
 #[cfg(feature = "win32_khr")]
@@ -52702,7 +52702,7 @@ pub struct Vulkan_NV_external_memory_win32 {
 #[cfg(feature = "win32_khr")]
 impl VK_NV_external_memory_win32 for Vulkan_NV_external_memory_win32 {
 	fn vkGetMemoryWin32HandleNV(&self, device: VkDevice, memory: VkDeviceMemory, handleType: VkExternalMemoryHandleTypeFlagsNV, pHandle: *mut HANDLE) -> Result<()> {
-		convert_result("vkGetMemoryWin32HandleNV", catch_unwind(||((self.vk_get_memory_win32_handle_nv)(device, memory, handleType, pHandle))))
+		vk_convert_result("vkGetMemoryWin32HandleNV", catch_unwind(||((self.vk_get_memory_win32_handle_nv)(device, memory, handleType, pHandle))))
 	}
 }
 #[cfg(feature = "win32_khr")]
@@ -52862,16 +52862,16 @@ pub struct Vulkan_EXT_full_screen_exclusive {
 #[cfg(feature = "win32_khr")]
 impl VK_EXT_full_screen_exclusive for Vulkan_EXT_full_screen_exclusive {
 	fn vkGetPhysicalDeviceSurfacePresentModes2EXT(&self, physicalDevice: VkPhysicalDevice, pSurfaceInfo: *const VkPhysicalDeviceSurfaceInfo2KHR, pPresentModeCount: *mut uint32_t, pPresentModes: *mut VkPresentModeKHR) -> Result<()> {
-		convert_result("vkGetPhysicalDeviceSurfacePresentModes2EXT", catch_unwind(||((self.vk_get_physical_device_surface_present_modes2_ext)(physicalDevice, pSurfaceInfo, pPresentModeCount, pPresentModes))))
+		vk_convert_result("vkGetPhysicalDeviceSurfacePresentModes2EXT", catch_unwind(||((self.vk_get_physical_device_surface_present_modes2_ext)(physicalDevice, pSurfaceInfo, pPresentModeCount, pPresentModes))))
 	}
 	fn vkAcquireFullScreenExclusiveModeEXT(&self, device: VkDevice, swapchain: VkSwapchainKHR) -> Result<()> {
-		convert_result("vkAcquireFullScreenExclusiveModeEXT", catch_unwind(||((self.vk_acquire_full_screen_exclusive_mode_ext)(device, swapchain))))
+		vk_convert_result("vkAcquireFullScreenExclusiveModeEXT", catch_unwind(||((self.vk_acquire_full_screen_exclusive_mode_ext)(device, swapchain))))
 	}
 	fn vkReleaseFullScreenExclusiveModeEXT(&self, device: VkDevice, swapchain: VkSwapchainKHR) -> Result<()> {
-		convert_result("vkReleaseFullScreenExclusiveModeEXT", catch_unwind(||((self.vk_release_full_screen_exclusive_mode_ext)(device, swapchain))))
+		vk_convert_result("vkReleaseFullScreenExclusiveModeEXT", catch_unwind(||((self.vk_release_full_screen_exclusive_mode_ext)(device, swapchain))))
 	}
 	fn vkGetDeviceGroupSurfacePresentModes2EXT(&self, device: VkDevice, pSurfaceInfo: *const VkPhysicalDeviceSurfaceInfo2KHR, pModes: *mut VkDeviceGroupPresentModeFlagsKHR) -> Result<()> {
-		convert_result("vkGetDeviceGroupSurfacePresentModes2EXT", catch_unwind(||((self.vk_get_device_group_surface_present_modes2_ext)(device, pSurfaceInfo, pModes))))
+		vk_convert_result("vkGetDeviceGroupSurfacePresentModes2EXT", catch_unwind(||((self.vk_get_device_group_surface_present_modes2_ext)(device, pSurfaceInfo, pModes))))
 	}
 }
 #[cfg(feature = "win32_khr")]
@@ -52933,10 +52933,10 @@ pub struct Vulkan_NV_acquire_winrt_display {
 #[cfg(feature = "win32_khr")]
 impl VK_NV_acquire_winrt_display for Vulkan_NV_acquire_winrt_display {
 	fn vkAcquireWinrtDisplayNV(&self, physicalDevice: VkPhysicalDevice, display: VkDisplayKHR) -> Result<()> {
-		convert_result("vkAcquireWinrtDisplayNV", catch_unwind(||((self.vk_acquire_winrt_display_nv)(physicalDevice, display))))
+		vk_convert_result("vkAcquireWinrtDisplayNV", catch_unwind(||((self.vk_acquire_winrt_display_nv)(physicalDevice, display))))
 	}
 	fn vkGetWinrtDisplayNV(&self, physicalDevice: VkPhysicalDevice, deviceRelativeId: u32, pDisplay: *mut VkDisplayKHR) -> Result<()> {
-		convert_result("vkGetWinrtDisplayNV", catch_unwind(||((self.vk_get_winrt_display_nv)(physicalDevice, deviceRelativeId, pDisplay))))
+		vk_convert_result("vkGetWinrtDisplayNV", catch_unwind(||((self.vk_get_winrt_display_nv)(physicalDevice, deviceRelativeId, pDisplay))))
 	}
 }
 #[cfg(feature = "win32_khr")]
@@ -53020,10 +53020,10 @@ pub struct Vulkan_KHR_xcb_surface {
 #[cfg(feature = "xcb_khr")]
 impl VK_KHR_xcb_surface for Vulkan_KHR_xcb_surface {
 	fn vkCreateXcbSurfaceKHR(&self, instance: VkInstance, pCreateInfo: *const VkXcbSurfaceCreateInfoKHR, pAllocator: *const VkAllocationCallbacks, pSurface: *mut VkSurfaceKHR) -> Result<()> {
-		convert_result("vkCreateXcbSurfaceKHR", catch_unwind(||((self.vk_create_xcb_surface_khr)(instance, pCreateInfo, pAllocator, pSurface))))
+		vk_convert_result("vkCreateXcbSurfaceKHR", catch_unwind(||((self.vk_create_xcb_surface_khr)(instance, pCreateInfo, pAllocator, pSurface))))
 	}
 	fn vkGetPhysicalDeviceXcbPresentationSupportKHR(&self, physicalDevice: VkPhysicalDevice, queueFamilyIndex: u32, connection: *const c_void, visual_id: uint32_t) -> Result<VkBool32> {
-		process_catch(catch_unwind(||((self.vk_get_physical_device_xcb_presentation_support_khr)(physicalDevice, queueFamilyIndex, connection, visual_id))))
+		vk_process_catch(catch_unwind(||((self.vk_get_physical_device_xcb_presentation_support_khr)(physicalDevice, queueFamilyIndex, connection, visual_id))))
 	}
 }
 #[cfg(feature = "xcb_khr")]
@@ -53918,832 +53918,832 @@ pub struct VkCore {
 }
 impl VK_VERSION_1_0 for VkCore {
 	fn vkCreateInstance(&self, pCreateInfo: *const VkInstanceCreateInfo, pAllocator: *const VkAllocationCallbacks, pInstance: *mut VkInstance) -> Result<()> {
-		convert_result("vkCreateInstance", catch_unwind(||((self.vk_version_1_0.vk_create_instance)(pCreateInfo, pAllocator, pInstance))))
+		vk_convert_result("vkCreateInstance", catch_unwind(||((self.vk_version_1_0.vk_create_instance)(pCreateInfo, pAllocator, pInstance))))
 	}
 	fn vkDestroyInstance(&self, instance: VkInstance, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_0.vk_destroy_instance)(instance, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_0.vk_destroy_instance)(instance, pAllocator))))
 	}
 	fn vkEnumeratePhysicalDevices(&self, instance: VkInstance, pPhysicalDeviceCount: *mut uint32_t, pPhysicalDevices: *mut VkPhysicalDevice) -> Result<()> {
-		convert_result("vkEnumeratePhysicalDevices", catch_unwind(||((self.vk_version_1_0.vk_enumerate_physical_devices)(instance, pPhysicalDeviceCount, pPhysicalDevices))))
+		vk_convert_result("vkEnumeratePhysicalDevices", catch_unwind(||((self.vk_version_1_0.vk_enumerate_physical_devices)(instance, pPhysicalDeviceCount, pPhysicalDevices))))
 	}
 	fn vkGetPhysicalDeviceFeatures(&self, physicalDevice: VkPhysicalDevice, pFeatures: *mut VkPhysicalDeviceFeatures) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_0.vk_get_physical_device_features)(physicalDevice, pFeatures))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_0.vk_get_physical_device_features)(physicalDevice, pFeatures))))
 	}
 	fn vkGetPhysicalDeviceFormatProperties(&self, physicalDevice: VkPhysicalDevice, format: VkFormat, pFormatProperties: *mut VkFormatProperties) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_0.vk_get_physical_device_format_properties)(physicalDevice, format, pFormatProperties))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_0.vk_get_physical_device_format_properties)(physicalDevice, format, pFormatProperties))))
 	}
 	fn vkGetPhysicalDeviceImageFormatProperties(&self, physicalDevice: VkPhysicalDevice, format: VkFormat, type_: VkImageType, tiling: VkImageTiling, usage: VkImageUsageFlags, flags: VkImageCreateFlags, pImageFormatProperties: *mut VkImageFormatProperties) -> Result<()> {
-		convert_result("vkGetPhysicalDeviceImageFormatProperties", catch_unwind(||((self.vk_version_1_0.vk_get_physical_device_image_format_properties)(physicalDevice, format, type_, tiling, usage, flags, pImageFormatProperties))))
+		vk_convert_result("vkGetPhysicalDeviceImageFormatProperties", catch_unwind(||((self.vk_version_1_0.vk_get_physical_device_image_format_properties)(physicalDevice, format, type_, tiling, usage, flags, pImageFormatProperties))))
 	}
 	fn vkGetPhysicalDeviceProperties(&self, physicalDevice: VkPhysicalDevice, pProperties: *mut VkPhysicalDeviceProperties) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_0.vk_get_physical_device_properties)(physicalDevice, pProperties))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_0.vk_get_physical_device_properties)(physicalDevice, pProperties))))
 	}
 	fn vkGetPhysicalDeviceQueueFamilyProperties(&self, physicalDevice: VkPhysicalDevice, pQueueFamilyPropertyCount: *mut uint32_t, pQueueFamilyProperties: *mut VkQueueFamilyProperties) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_0.vk_get_physical_device_queue_family_properties)(physicalDevice, pQueueFamilyPropertyCount, pQueueFamilyProperties))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_0.vk_get_physical_device_queue_family_properties)(physicalDevice, pQueueFamilyPropertyCount, pQueueFamilyProperties))))
 	}
 	fn vkGetPhysicalDeviceMemoryProperties(&self, physicalDevice: VkPhysicalDevice, pMemoryProperties: *mut VkPhysicalDeviceMemoryProperties) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_0.vk_get_physical_device_memory_properties)(physicalDevice, pMemoryProperties))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_0.vk_get_physical_device_memory_properties)(physicalDevice, pMemoryProperties))))
 	}
 	fn vkGetInstanceProcAddr(&self, instance: VkInstance, pName: *const i8) -> Result<PFN_vkVoidFunction> {
-		process_catch(catch_unwind(||((self.vk_version_1_0.vk_get_instance_proc_addr)(instance, pName))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_0.vk_get_instance_proc_addr)(instance, pName))))
 	}
 	fn vkGetDeviceProcAddr(&self, device: VkDevice, pName: *const i8) -> Result<PFN_vkVoidFunction> {
-		process_catch(catch_unwind(||((self.vk_version_1_0.vk_get_device_proc_addr)(device, pName))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_0.vk_get_device_proc_addr)(device, pName))))
 	}
 	fn vkCreateDevice(&self, physicalDevice: VkPhysicalDevice, pCreateInfo: *const VkDeviceCreateInfo, pAllocator: *const VkAllocationCallbacks, pDevice: *mut VkDevice) -> Result<()> {
-		convert_result("vkCreateDevice", catch_unwind(||((self.vk_version_1_0.vk_create_device)(physicalDevice, pCreateInfo, pAllocator, pDevice))))
+		vk_convert_result("vkCreateDevice", catch_unwind(||((self.vk_version_1_0.vk_create_device)(physicalDevice, pCreateInfo, pAllocator, pDevice))))
 	}
 	fn vkDestroyDevice(&self, device: VkDevice, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_0.vk_destroy_device)(device, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_0.vk_destroy_device)(device, pAllocator))))
 	}
 	fn vkEnumerateInstanceExtensionProperties(&self, pLayerName: *const i8, pPropertyCount: *mut uint32_t, pProperties: *mut VkExtensionProperties) -> Result<()> {
-		convert_result("vkEnumerateInstanceExtensionProperties", catch_unwind(||((self.vk_version_1_0.vk_enumerate_instance_extension_properties)(pLayerName, pPropertyCount, pProperties))))
+		vk_convert_result("vkEnumerateInstanceExtensionProperties", catch_unwind(||((self.vk_version_1_0.vk_enumerate_instance_extension_properties)(pLayerName, pPropertyCount, pProperties))))
 	}
 	fn vkEnumerateDeviceExtensionProperties(&self, physicalDevice: VkPhysicalDevice, pLayerName: *const i8, pPropertyCount: *mut uint32_t, pProperties: *mut VkExtensionProperties) -> Result<()> {
-		convert_result("vkEnumerateDeviceExtensionProperties", catch_unwind(||((self.vk_version_1_0.vk_enumerate_device_extension_properties)(physicalDevice, pLayerName, pPropertyCount, pProperties))))
+		vk_convert_result("vkEnumerateDeviceExtensionProperties", catch_unwind(||((self.vk_version_1_0.vk_enumerate_device_extension_properties)(physicalDevice, pLayerName, pPropertyCount, pProperties))))
 	}
 	fn vkEnumerateInstanceLayerProperties(&self, pPropertyCount: *mut uint32_t, pProperties: *mut VkLayerProperties) -> Result<()> {
-		convert_result("vkEnumerateInstanceLayerProperties", catch_unwind(||((self.vk_version_1_0.vk_enumerate_instance_layer_properties)(pPropertyCount, pProperties))))
+		vk_convert_result("vkEnumerateInstanceLayerProperties", catch_unwind(||((self.vk_version_1_0.vk_enumerate_instance_layer_properties)(pPropertyCount, pProperties))))
 	}
 	fn vkEnumerateDeviceLayerProperties(&self, physicalDevice: VkPhysicalDevice, pPropertyCount: *mut uint32_t, pProperties: *mut VkLayerProperties) -> Result<()> {
-		convert_result("vkEnumerateDeviceLayerProperties", catch_unwind(||((self.vk_version_1_0.vk_enumerate_device_layer_properties)(physicalDevice, pPropertyCount, pProperties))))
+		vk_convert_result("vkEnumerateDeviceLayerProperties", catch_unwind(||((self.vk_version_1_0.vk_enumerate_device_layer_properties)(physicalDevice, pPropertyCount, pProperties))))
 	}
 	fn vkGetDeviceQueue(&self, device: VkDevice, queueFamilyIndex: u32, queueIndex: u32, pQueue: *mut VkQueue) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_0.vk_get_device_queue)(device, queueFamilyIndex, queueIndex, pQueue))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_0.vk_get_device_queue)(device, queueFamilyIndex, queueIndex, pQueue))))
 	}
 	fn vkQueueSubmit(&self, queue: VkQueue, submitCount: u32, pSubmits: *const VkSubmitInfo, fence: VkFence) -> Result<()> {
-		convert_result("vkQueueSubmit", catch_unwind(||((self.vk_version_1_0.vk_queue_submit)(queue, submitCount, pSubmits, fence))))
+		vk_convert_result("vkQueueSubmit", catch_unwind(||((self.vk_version_1_0.vk_queue_submit)(queue, submitCount, pSubmits, fence))))
 	}
 	fn vkQueueWaitIdle(&self, queue: VkQueue) -> Result<()> {
-		convert_result("vkQueueWaitIdle", catch_unwind(||((self.vk_version_1_0.vk_queue_wait_idle)(queue))))
+		vk_convert_result("vkQueueWaitIdle", catch_unwind(||((self.vk_version_1_0.vk_queue_wait_idle)(queue))))
 	}
 	fn vkDeviceWaitIdle(&self, device: VkDevice) -> Result<()> {
-		convert_result("vkDeviceWaitIdle", catch_unwind(||((self.vk_version_1_0.vk_device_wait_idle)(device))))
+		vk_convert_result("vkDeviceWaitIdle", catch_unwind(||((self.vk_version_1_0.vk_device_wait_idle)(device))))
 	}
 	fn vkAllocateMemory(&self, device: VkDevice, pAllocateInfo: *const VkMemoryAllocateInfo, pAllocator: *const VkAllocationCallbacks, pMemory: *mut VkDeviceMemory) -> Result<()> {
-		convert_result("vkAllocateMemory", catch_unwind(||((self.vk_version_1_0.vk_allocate_memory)(device, pAllocateInfo, pAllocator, pMemory))))
+		vk_convert_result("vkAllocateMemory", catch_unwind(||((self.vk_version_1_0.vk_allocate_memory)(device, pAllocateInfo, pAllocator, pMemory))))
 	}
 	fn vkFreeMemory(&self, device: VkDevice, memory: VkDeviceMemory, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_0.vk_free_memory)(device, memory, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_0.vk_free_memory)(device, memory, pAllocator))))
 	}
 	fn vkMapMemory(&self, device: VkDevice, memory: VkDeviceMemory, offset: VkDeviceSize, size: VkDeviceSize, flags: VkMemoryMapFlags, ppData: *mut *mut c_void) -> Result<()> {
-		convert_result("vkMapMemory", catch_unwind(||((self.vk_version_1_0.vk_map_memory)(device, memory, offset, size, flags, ppData))))
+		vk_convert_result("vkMapMemory", catch_unwind(||((self.vk_version_1_0.vk_map_memory)(device, memory, offset, size, flags, ppData))))
 	}
 	fn vkUnmapMemory(&self, device: VkDevice, memory: VkDeviceMemory) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_0.vk_unmap_memory)(device, memory))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_0.vk_unmap_memory)(device, memory))))
 	}
 	fn vkFlushMappedMemoryRanges(&self, device: VkDevice, memoryRangeCount: u32, pMemoryRanges: *const VkMappedMemoryRange) -> Result<()> {
-		convert_result("vkFlushMappedMemoryRanges", catch_unwind(||((self.vk_version_1_0.vk_flush_mapped_memory_ranges)(device, memoryRangeCount, pMemoryRanges))))
+		vk_convert_result("vkFlushMappedMemoryRanges", catch_unwind(||((self.vk_version_1_0.vk_flush_mapped_memory_ranges)(device, memoryRangeCount, pMemoryRanges))))
 	}
 	fn vkInvalidateMappedMemoryRanges(&self, device: VkDevice, memoryRangeCount: u32, pMemoryRanges: *const VkMappedMemoryRange) -> Result<()> {
-		convert_result("vkInvalidateMappedMemoryRanges", catch_unwind(||((self.vk_version_1_0.vk_invalidate_mapped_memory_ranges)(device, memoryRangeCount, pMemoryRanges))))
+		vk_convert_result("vkInvalidateMappedMemoryRanges", catch_unwind(||((self.vk_version_1_0.vk_invalidate_mapped_memory_ranges)(device, memoryRangeCount, pMemoryRanges))))
 	}
 	fn vkGetDeviceMemoryCommitment(&self, device: VkDevice, memory: VkDeviceMemory, pCommittedMemoryInBytes: *mut VkDeviceSize) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_0.vk_get_device_memory_commitment)(device, memory, pCommittedMemoryInBytes))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_0.vk_get_device_memory_commitment)(device, memory, pCommittedMemoryInBytes))))
 	}
 	fn vkBindBufferMemory(&self, device: VkDevice, buffer: VkBuffer, memory: VkDeviceMemory, memoryOffset: VkDeviceSize) -> Result<()> {
-		convert_result("vkBindBufferMemory", catch_unwind(||((self.vk_version_1_0.vk_bind_buffer_memory)(device, buffer, memory, memoryOffset))))
+		vk_convert_result("vkBindBufferMemory", catch_unwind(||((self.vk_version_1_0.vk_bind_buffer_memory)(device, buffer, memory, memoryOffset))))
 	}
 	fn vkBindImageMemory(&self, device: VkDevice, image: VkImage, memory: VkDeviceMemory, memoryOffset: VkDeviceSize) -> Result<()> {
-		convert_result("vkBindImageMemory", catch_unwind(||((self.vk_version_1_0.vk_bind_image_memory)(device, image, memory, memoryOffset))))
+		vk_convert_result("vkBindImageMemory", catch_unwind(||((self.vk_version_1_0.vk_bind_image_memory)(device, image, memory, memoryOffset))))
 	}
 	fn vkGetBufferMemoryRequirements(&self, device: VkDevice, buffer: VkBuffer, pMemoryRequirements: *mut VkMemoryRequirements) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_0.vk_get_buffer_memory_requirements)(device, buffer, pMemoryRequirements))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_0.vk_get_buffer_memory_requirements)(device, buffer, pMemoryRequirements))))
 	}
 	fn vkGetImageMemoryRequirements(&self, device: VkDevice, image: VkImage, pMemoryRequirements: *mut VkMemoryRequirements) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_0.vk_get_image_memory_requirements)(device, image, pMemoryRequirements))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_0.vk_get_image_memory_requirements)(device, image, pMemoryRequirements))))
 	}
 	fn vkGetImageSparseMemoryRequirements(&self, device: VkDevice, image: VkImage, pSparseMemoryRequirementCount: *mut uint32_t, pSparseMemoryRequirements: *mut VkSparseImageMemoryRequirements) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_0.vk_get_image_sparse_memory_requirements)(device, image, pSparseMemoryRequirementCount, pSparseMemoryRequirements))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_0.vk_get_image_sparse_memory_requirements)(device, image, pSparseMemoryRequirementCount, pSparseMemoryRequirements))))
 	}
 	fn vkGetPhysicalDeviceSparseImageFormatProperties(&self, physicalDevice: VkPhysicalDevice, format: VkFormat, type_: VkImageType, samples: VkSampleCountFlagBits, usage: VkImageUsageFlags, tiling: VkImageTiling, pPropertyCount: *mut uint32_t, pProperties: *mut VkSparseImageFormatProperties) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_0.vk_get_physical_device_sparse_image_format_properties)(physicalDevice, format, type_, samples, usage, tiling, pPropertyCount, pProperties))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_0.vk_get_physical_device_sparse_image_format_properties)(physicalDevice, format, type_, samples, usage, tiling, pPropertyCount, pProperties))))
 	}
 	fn vkQueueBindSparse(&self, queue: VkQueue, bindInfoCount: u32, pBindInfo: *const VkBindSparseInfo, fence: VkFence) -> Result<()> {
-		convert_result("vkQueueBindSparse", catch_unwind(||((self.vk_version_1_0.vk_queue_bind_sparse)(queue, bindInfoCount, pBindInfo, fence))))
+		vk_convert_result("vkQueueBindSparse", catch_unwind(||((self.vk_version_1_0.vk_queue_bind_sparse)(queue, bindInfoCount, pBindInfo, fence))))
 	}
 	fn vkCreateFence(&self, device: VkDevice, pCreateInfo: *const VkFenceCreateInfo, pAllocator: *const VkAllocationCallbacks, pFence: *mut VkFence) -> Result<()> {
-		convert_result("vkCreateFence", catch_unwind(||((self.vk_version_1_0.vk_create_fence)(device, pCreateInfo, pAllocator, pFence))))
+		vk_convert_result("vkCreateFence", catch_unwind(||((self.vk_version_1_0.vk_create_fence)(device, pCreateInfo, pAllocator, pFence))))
 	}
 	fn vkDestroyFence(&self, device: VkDevice, fence: VkFence, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_0.vk_destroy_fence)(device, fence, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_0.vk_destroy_fence)(device, fence, pAllocator))))
 	}
 	fn vkResetFences(&self, device: VkDevice, fenceCount: u32, pFences: *const VkFence) -> Result<()> {
-		convert_result("vkResetFences", catch_unwind(||((self.vk_version_1_0.vk_reset_fences)(device, fenceCount, pFences))))
+		vk_convert_result("vkResetFences", catch_unwind(||((self.vk_version_1_0.vk_reset_fences)(device, fenceCount, pFences))))
 	}
 	fn vkGetFenceStatus(&self, device: VkDevice, fence: VkFence) -> Result<()> {
-		convert_result("vkGetFenceStatus", catch_unwind(||((self.vk_version_1_0.vk_get_fence_status)(device, fence))))
+		vk_convert_result("vkGetFenceStatus", catch_unwind(||((self.vk_version_1_0.vk_get_fence_status)(device, fence))))
 	}
 	fn vkWaitForFences(&self, device: VkDevice, fenceCount: u32, pFences: *const VkFence, waitAll: VkBool32, timeout: u64) -> Result<()> {
-		convert_result("vkWaitForFences", catch_unwind(||((self.vk_version_1_0.vk_wait_for_fences)(device, fenceCount, pFences, waitAll, timeout))))
+		vk_convert_result("vkWaitForFences", catch_unwind(||((self.vk_version_1_0.vk_wait_for_fences)(device, fenceCount, pFences, waitAll, timeout))))
 	}
 	fn vkCreateSemaphore(&self, device: VkDevice, pCreateInfo: *const VkSemaphoreCreateInfo, pAllocator: *const VkAllocationCallbacks, pSemaphore: *mut VkSemaphore) -> Result<()> {
-		convert_result("vkCreateSemaphore", catch_unwind(||((self.vk_version_1_0.vk_create_semaphore)(device, pCreateInfo, pAllocator, pSemaphore))))
+		vk_convert_result("vkCreateSemaphore", catch_unwind(||((self.vk_version_1_0.vk_create_semaphore)(device, pCreateInfo, pAllocator, pSemaphore))))
 	}
 	fn vkDestroySemaphore(&self, device: VkDevice, semaphore: VkSemaphore, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_0.vk_destroy_semaphore)(device, semaphore, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_0.vk_destroy_semaphore)(device, semaphore, pAllocator))))
 	}
 	fn vkCreateEvent(&self, device: VkDevice, pCreateInfo: *const VkEventCreateInfo, pAllocator: *const VkAllocationCallbacks, pEvent: *mut VkEvent) -> Result<()> {
-		convert_result("vkCreateEvent", catch_unwind(||((self.vk_version_1_0.vk_create_event)(device, pCreateInfo, pAllocator, pEvent))))
+		vk_convert_result("vkCreateEvent", catch_unwind(||((self.vk_version_1_0.vk_create_event)(device, pCreateInfo, pAllocator, pEvent))))
 	}
 	fn vkDestroyEvent(&self, device: VkDevice, event: VkEvent, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_0.vk_destroy_event)(device, event, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_0.vk_destroy_event)(device, event, pAllocator))))
 	}
 	fn vkGetEventStatus(&self, device: VkDevice, event: VkEvent) -> Result<()> {
-		convert_result("vkGetEventStatus", catch_unwind(||((self.vk_version_1_0.vk_get_event_status)(device, event))))
+		vk_convert_result("vkGetEventStatus", catch_unwind(||((self.vk_version_1_0.vk_get_event_status)(device, event))))
 	}
 	fn vkSetEvent(&self, device: VkDevice, event: VkEvent) -> Result<()> {
-		convert_result("vkSetEvent", catch_unwind(||((self.vk_version_1_0.vk_set_event)(device, event))))
+		vk_convert_result("vkSetEvent", catch_unwind(||((self.vk_version_1_0.vk_set_event)(device, event))))
 	}
 	fn vkResetEvent(&self, device: VkDevice, event: VkEvent) -> Result<()> {
-		convert_result("vkResetEvent", catch_unwind(||((self.vk_version_1_0.vk_reset_event)(device, event))))
+		vk_convert_result("vkResetEvent", catch_unwind(||((self.vk_version_1_0.vk_reset_event)(device, event))))
 	}
 	fn vkCreateQueryPool(&self, device: VkDevice, pCreateInfo: *const VkQueryPoolCreateInfo, pAllocator: *const VkAllocationCallbacks, pQueryPool: *mut VkQueryPool) -> Result<()> {
-		convert_result("vkCreateQueryPool", catch_unwind(||((self.vk_version_1_0.vk_create_query_pool)(device, pCreateInfo, pAllocator, pQueryPool))))
+		vk_convert_result("vkCreateQueryPool", catch_unwind(||((self.vk_version_1_0.vk_create_query_pool)(device, pCreateInfo, pAllocator, pQueryPool))))
 	}
 	fn vkDestroyQueryPool(&self, device: VkDevice, queryPool: VkQueryPool, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_0.vk_destroy_query_pool)(device, queryPool, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_0.vk_destroy_query_pool)(device, queryPool, pAllocator))))
 	}
 	fn vkGetQueryPoolResults(&self, device: VkDevice, queryPool: VkQueryPool, firstQuery: u32, queryCount: u32, dataSize: usize, pData: *mut c_void, stride: VkDeviceSize, flags: VkQueryResultFlags) -> Result<()> {
-		convert_result("vkGetQueryPoolResults", catch_unwind(||((self.vk_version_1_0.vk_get_query_pool_results)(device, queryPool, firstQuery, queryCount, dataSize, pData, stride, flags))))
+		vk_convert_result("vkGetQueryPoolResults", catch_unwind(||((self.vk_version_1_0.vk_get_query_pool_results)(device, queryPool, firstQuery, queryCount, dataSize, pData, stride, flags))))
 	}
 	fn vkCreateBuffer(&self, device: VkDevice, pCreateInfo: *const VkBufferCreateInfo, pAllocator: *const VkAllocationCallbacks, pBuffer: *mut VkBuffer) -> Result<()> {
-		convert_result("vkCreateBuffer", catch_unwind(||((self.vk_version_1_0.vk_create_buffer)(device, pCreateInfo, pAllocator, pBuffer))))
+		vk_convert_result("vkCreateBuffer", catch_unwind(||((self.vk_version_1_0.vk_create_buffer)(device, pCreateInfo, pAllocator, pBuffer))))
 	}
 	fn vkDestroyBuffer(&self, device: VkDevice, buffer: VkBuffer, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_0.vk_destroy_buffer)(device, buffer, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_0.vk_destroy_buffer)(device, buffer, pAllocator))))
 	}
 	fn vkCreateBufferView(&self, device: VkDevice, pCreateInfo: *const VkBufferViewCreateInfo, pAllocator: *const VkAllocationCallbacks, pView: *mut VkBufferView) -> Result<()> {
-		convert_result("vkCreateBufferView", catch_unwind(||((self.vk_version_1_0.vk_create_buffer_view)(device, pCreateInfo, pAllocator, pView))))
+		vk_convert_result("vkCreateBufferView", catch_unwind(||((self.vk_version_1_0.vk_create_buffer_view)(device, pCreateInfo, pAllocator, pView))))
 	}
 	fn vkDestroyBufferView(&self, device: VkDevice, bufferView: VkBufferView, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_0.vk_destroy_buffer_view)(device, bufferView, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_0.vk_destroy_buffer_view)(device, bufferView, pAllocator))))
 	}
 	fn vkCreateImage(&self, device: VkDevice, pCreateInfo: *const VkImageCreateInfo, pAllocator: *const VkAllocationCallbacks, pImage: *mut VkImage) -> Result<()> {
-		convert_result("vkCreateImage", catch_unwind(||((self.vk_version_1_0.vk_create_image)(device, pCreateInfo, pAllocator, pImage))))
+		vk_convert_result("vkCreateImage", catch_unwind(||((self.vk_version_1_0.vk_create_image)(device, pCreateInfo, pAllocator, pImage))))
 	}
 	fn vkDestroyImage(&self, device: VkDevice, image: VkImage, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_0.vk_destroy_image)(device, image, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_0.vk_destroy_image)(device, image, pAllocator))))
 	}
 	fn vkGetImageSubresourceLayout(&self, device: VkDevice, image: VkImage, pSubresource: *const VkImageSubresource, pLayout: *mut VkSubresourceLayout) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_0.vk_get_image_subresource_layout)(device, image, pSubresource, pLayout))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_0.vk_get_image_subresource_layout)(device, image, pSubresource, pLayout))))
 	}
 	fn vkCreateImageView(&self, device: VkDevice, pCreateInfo: *const VkImageViewCreateInfo, pAllocator: *const VkAllocationCallbacks, pView: *mut VkImageView) -> Result<()> {
-		convert_result("vkCreateImageView", catch_unwind(||((self.vk_version_1_0.vk_create_image_view)(device, pCreateInfo, pAllocator, pView))))
+		vk_convert_result("vkCreateImageView", catch_unwind(||((self.vk_version_1_0.vk_create_image_view)(device, pCreateInfo, pAllocator, pView))))
 	}
 	fn vkDestroyImageView(&self, device: VkDevice, imageView: VkImageView, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_0.vk_destroy_image_view)(device, imageView, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_0.vk_destroy_image_view)(device, imageView, pAllocator))))
 	}
 	fn vkCreateShaderModule(&self, device: VkDevice, pCreateInfo: *const VkShaderModuleCreateInfo, pAllocator: *const VkAllocationCallbacks, pShaderModule: *mut VkShaderModule) -> Result<()> {
-		convert_result("vkCreateShaderModule", catch_unwind(||((self.vk_version_1_0.vk_create_shader_module)(device, pCreateInfo, pAllocator, pShaderModule))))
+		vk_convert_result("vkCreateShaderModule", catch_unwind(||((self.vk_version_1_0.vk_create_shader_module)(device, pCreateInfo, pAllocator, pShaderModule))))
 	}
 	fn vkDestroyShaderModule(&self, device: VkDevice, shaderModule: VkShaderModule, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_0.vk_destroy_shader_module)(device, shaderModule, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_0.vk_destroy_shader_module)(device, shaderModule, pAllocator))))
 	}
 	fn vkCreatePipelineCache(&self, device: VkDevice, pCreateInfo: *const VkPipelineCacheCreateInfo, pAllocator: *const VkAllocationCallbacks, pPipelineCache: *mut VkPipelineCache) -> Result<()> {
-		convert_result("vkCreatePipelineCache", catch_unwind(||((self.vk_version_1_0.vk_create_pipeline_cache)(device, pCreateInfo, pAllocator, pPipelineCache))))
+		vk_convert_result("vkCreatePipelineCache", catch_unwind(||((self.vk_version_1_0.vk_create_pipeline_cache)(device, pCreateInfo, pAllocator, pPipelineCache))))
 	}
 	fn vkDestroyPipelineCache(&self, device: VkDevice, pipelineCache: VkPipelineCache, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_0.vk_destroy_pipeline_cache)(device, pipelineCache, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_0.vk_destroy_pipeline_cache)(device, pipelineCache, pAllocator))))
 	}
 	fn vkGetPipelineCacheData(&self, device: VkDevice, pipelineCache: VkPipelineCache, pDataSize: *mut size_t, pData: *mut c_void) -> Result<()> {
-		convert_result("vkGetPipelineCacheData", catch_unwind(||((self.vk_version_1_0.vk_get_pipeline_cache_data)(device, pipelineCache, pDataSize, pData))))
+		vk_convert_result("vkGetPipelineCacheData", catch_unwind(||((self.vk_version_1_0.vk_get_pipeline_cache_data)(device, pipelineCache, pDataSize, pData))))
 	}
 	fn vkMergePipelineCaches(&self, device: VkDevice, dstCache: VkPipelineCache, srcCacheCount: u32, pSrcCaches: *const VkPipelineCache) -> Result<()> {
-		convert_result("vkMergePipelineCaches", catch_unwind(||((self.vk_version_1_0.vk_merge_pipeline_caches)(device, dstCache, srcCacheCount, pSrcCaches))))
+		vk_convert_result("vkMergePipelineCaches", catch_unwind(||((self.vk_version_1_0.vk_merge_pipeline_caches)(device, dstCache, srcCacheCount, pSrcCaches))))
 	}
 	fn vkCreateGraphicsPipelines(&self, device: VkDevice, pipelineCache: VkPipelineCache, createInfoCount: u32, pCreateInfos: *const VkGraphicsPipelineCreateInfo, pAllocator: *const VkAllocationCallbacks, pPipelines: *mut VkPipeline) -> Result<()> {
-		convert_result("vkCreateGraphicsPipelines", catch_unwind(||((self.vk_version_1_0.vk_create_graphics_pipelines)(device, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines))))
+		vk_convert_result("vkCreateGraphicsPipelines", catch_unwind(||((self.vk_version_1_0.vk_create_graphics_pipelines)(device, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines))))
 	}
 	fn vkCreateComputePipelines(&self, device: VkDevice, pipelineCache: VkPipelineCache, createInfoCount: u32, pCreateInfos: *const VkComputePipelineCreateInfo, pAllocator: *const VkAllocationCallbacks, pPipelines: *mut VkPipeline) -> Result<()> {
-		convert_result("vkCreateComputePipelines", catch_unwind(||((self.vk_version_1_0.vk_create_compute_pipelines)(device, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines))))
+		vk_convert_result("vkCreateComputePipelines", catch_unwind(||((self.vk_version_1_0.vk_create_compute_pipelines)(device, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines))))
 	}
 	fn vkDestroyPipeline(&self, device: VkDevice, pipeline: VkPipeline, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_0.vk_destroy_pipeline)(device, pipeline, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_0.vk_destroy_pipeline)(device, pipeline, pAllocator))))
 	}
 	fn vkCreatePipelineLayout(&self, device: VkDevice, pCreateInfo: *const VkPipelineLayoutCreateInfo, pAllocator: *const VkAllocationCallbacks, pPipelineLayout: *mut VkPipelineLayout) -> Result<()> {
-		convert_result("vkCreatePipelineLayout", catch_unwind(||((self.vk_version_1_0.vk_create_pipeline_layout)(device, pCreateInfo, pAllocator, pPipelineLayout))))
+		vk_convert_result("vkCreatePipelineLayout", catch_unwind(||((self.vk_version_1_0.vk_create_pipeline_layout)(device, pCreateInfo, pAllocator, pPipelineLayout))))
 	}
 	fn vkDestroyPipelineLayout(&self, device: VkDevice, pipelineLayout: VkPipelineLayout, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_0.vk_destroy_pipeline_layout)(device, pipelineLayout, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_0.vk_destroy_pipeline_layout)(device, pipelineLayout, pAllocator))))
 	}
 	fn vkCreateSampler(&self, device: VkDevice, pCreateInfo: *const VkSamplerCreateInfo, pAllocator: *const VkAllocationCallbacks, pSampler: *mut VkSampler) -> Result<()> {
-		convert_result("vkCreateSampler", catch_unwind(||((self.vk_version_1_0.vk_create_sampler)(device, pCreateInfo, pAllocator, pSampler))))
+		vk_convert_result("vkCreateSampler", catch_unwind(||((self.vk_version_1_0.vk_create_sampler)(device, pCreateInfo, pAllocator, pSampler))))
 	}
 	fn vkDestroySampler(&self, device: VkDevice, sampler: VkSampler, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_0.vk_destroy_sampler)(device, sampler, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_0.vk_destroy_sampler)(device, sampler, pAllocator))))
 	}
 	fn vkCreateDescriptorSetLayout(&self, device: VkDevice, pCreateInfo: *const VkDescriptorSetLayoutCreateInfo, pAllocator: *const VkAllocationCallbacks, pSetLayout: *mut VkDescriptorSetLayout) -> Result<()> {
-		convert_result("vkCreateDescriptorSetLayout", catch_unwind(||((self.vk_version_1_0.vk_create_descriptor_set_layout)(device, pCreateInfo, pAllocator, pSetLayout))))
+		vk_convert_result("vkCreateDescriptorSetLayout", catch_unwind(||((self.vk_version_1_0.vk_create_descriptor_set_layout)(device, pCreateInfo, pAllocator, pSetLayout))))
 	}
 	fn vkDestroyDescriptorSetLayout(&self, device: VkDevice, descriptorSetLayout: VkDescriptorSetLayout, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_0.vk_destroy_descriptor_set_layout)(device, descriptorSetLayout, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_0.vk_destroy_descriptor_set_layout)(device, descriptorSetLayout, pAllocator))))
 	}
 	fn vkCreateDescriptorPool(&self, device: VkDevice, pCreateInfo: *const VkDescriptorPoolCreateInfo, pAllocator: *const VkAllocationCallbacks, pDescriptorPool: *mut VkDescriptorPool) -> Result<()> {
-		convert_result("vkCreateDescriptorPool", catch_unwind(||((self.vk_version_1_0.vk_create_descriptor_pool)(device, pCreateInfo, pAllocator, pDescriptorPool))))
+		vk_convert_result("vkCreateDescriptorPool", catch_unwind(||((self.vk_version_1_0.vk_create_descriptor_pool)(device, pCreateInfo, pAllocator, pDescriptorPool))))
 	}
 	fn vkDestroyDescriptorPool(&self, device: VkDevice, descriptorPool: VkDescriptorPool, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_0.vk_destroy_descriptor_pool)(device, descriptorPool, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_0.vk_destroy_descriptor_pool)(device, descriptorPool, pAllocator))))
 	}
 	fn vkResetDescriptorPool(&self, device: VkDevice, descriptorPool: VkDescriptorPool, flags: VkDescriptorPoolResetFlags) -> Result<()> {
-		convert_result("vkResetDescriptorPool", catch_unwind(||((self.vk_version_1_0.vk_reset_descriptor_pool)(device, descriptorPool, flags))))
+		vk_convert_result("vkResetDescriptorPool", catch_unwind(||((self.vk_version_1_0.vk_reset_descriptor_pool)(device, descriptorPool, flags))))
 	}
 	fn vkAllocateDescriptorSets(&self, device: VkDevice, pAllocateInfo: *const VkDescriptorSetAllocateInfo, pDescriptorSets: *mut VkDescriptorSet) -> Result<()> {
-		convert_result("vkAllocateDescriptorSets", catch_unwind(||((self.vk_version_1_0.vk_allocate_descriptor_sets)(device, pAllocateInfo, pDescriptorSets))))
+		vk_convert_result("vkAllocateDescriptorSets", catch_unwind(||((self.vk_version_1_0.vk_allocate_descriptor_sets)(device, pAllocateInfo, pDescriptorSets))))
 	}
 	fn vkFreeDescriptorSets(&self, device: VkDevice, descriptorPool: VkDescriptorPool, descriptorSetCount: u32, pDescriptorSets: *const VkDescriptorSet) -> Result<()> {
-		convert_result("vkFreeDescriptorSets", catch_unwind(||((self.vk_version_1_0.vk_free_descriptor_sets)(device, descriptorPool, descriptorSetCount, pDescriptorSets))))
+		vk_convert_result("vkFreeDescriptorSets", catch_unwind(||((self.vk_version_1_0.vk_free_descriptor_sets)(device, descriptorPool, descriptorSetCount, pDescriptorSets))))
 	}
 	fn vkUpdateDescriptorSets(&self, device: VkDevice, descriptorWriteCount: u32, pDescriptorWrites: *const VkWriteDescriptorSet, descriptorCopyCount: u32, pDescriptorCopies: *const VkCopyDescriptorSet) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_0.vk_update_descriptor_sets)(device, descriptorWriteCount, pDescriptorWrites, descriptorCopyCount, pDescriptorCopies))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_0.vk_update_descriptor_sets)(device, descriptorWriteCount, pDescriptorWrites, descriptorCopyCount, pDescriptorCopies))))
 	}
 	fn vkCreateFramebuffer(&self, device: VkDevice, pCreateInfo: *const VkFramebufferCreateInfo, pAllocator: *const VkAllocationCallbacks, pFramebuffer: *mut VkFramebuffer) -> Result<()> {
-		convert_result("vkCreateFramebuffer", catch_unwind(||((self.vk_version_1_0.vk_create_framebuffer)(device, pCreateInfo, pAllocator, pFramebuffer))))
+		vk_convert_result("vkCreateFramebuffer", catch_unwind(||((self.vk_version_1_0.vk_create_framebuffer)(device, pCreateInfo, pAllocator, pFramebuffer))))
 	}
 	fn vkDestroyFramebuffer(&self, device: VkDevice, framebuffer: VkFramebuffer, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_0.vk_destroy_framebuffer)(device, framebuffer, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_0.vk_destroy_framebuffer)(device, framebuffer, pAllocator))))
 	}
 	fn vkCreateRenderPass(&self, device: VkDevice, pCreateInfo: *const VkRenderPassCreateInfo, pAllocator: *const VkAllocationCallbacks, pRenderPass: *mut VkRenderPass) -> Result<()> {
-		convert_result("vkCreateRenderPass", catch_unwind(||((self.vk_version_1_0.vk_create_render_pass)(device, pCreateInfo, pAllocator, pRenderPass))))
+		vk_convert_result("vkCreateRenderPass", catch_unwind(||((self.vk_version_1_0.vk_create_render_pass)(device, pCreateInfo, pAllocator, pRenderPass))))
 	}
 	fn vkDestroyRenderPass(&self, device: VkDevice, renderPass: VkRenderPass, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_0.vk_destroy_render_pass)(device, renderPass, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_0.vk_destroy_render_pass)(device, renderPass, pAllocator))))
 	}
 	fn vkGetRenderAreaGranularity(&self, device: VkDevice, renderPass: VkRenderPass, pGranularity: *mut VkExtent2D) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_0.vk_get_render_area_granularity)(device, renderPass, pGranularity))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_0.vk_get_render_area_granularity)(device, renderPass, pGranularity))))
 	}
 	fn vkCreateCommandPool(&self, device: VkDevice, pCreateInfo: *const VkCommandPoolCreateInfo, pAllocator: *const VkAllocationCallbacks, pCommandPool: *mut VkCommandPool) -> Result<()> {
-		convert_result("vkCreateCommandPool", catch_unwind(||((self.vk_version_1_0.vk_create_command_pool)(device, pCreateInfo, pAllocator, pCommandPool))))
+		vk_convert_result("vkCreateCommandPool", catch_unwind(||((self.vk_version_1_0.vk_create_command_pool)(device, pCreateInfo, pAllocator, pCommandPool))))
 	}
 	fn vkDestroyCommandPool(&self, device: VkDevice, commandPool: VkCommandPool, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_0.vk_destroy_command_pool)(device, commandPool, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_0.vk_destroy_command_pool)(device, commandPool, pAllocator))))
 	}
 	fn vkResetCommandPool(&self, device: VkDevice, commandPool: VkCommandPool, flags: VkCommandPoolResetFlags) -> Result<()> {
-		convert_result("vkResetCommandPool", catch_unwind(||((self.vk_version_1_0.vk_reset_command_pool)(device, commandPool, flags))))
+		vk_convert_result("vkResetCommandPool", catch_unwind(||((self.vk_version_1_0.vk_reset_command_pool)(device, commandPool, flags))))
 	}
 	fn vkAllocateCommandBuffers(&self, device: VkDevice, pAllocateInfo: *const VkCommandBufferAllocateInfo, pCommandBuffers: *mut VkCommandBuffer) -> Result<()> {
-		convert_result("vkAllocateCommandBuffers", catch_unwind(||((self.vk_version_1_0.vk_allocate_command_buffers)(device, pAllocateInfo, pCommandBuffers))))
+		vk_convert_result("vkAllocateCommandBuffers", catch_unwind(||((self.vk_version_1_0.vk_allocate_command_buffers)(device, pAllocateInfo, pCommandBuffers))))
 	}
 	fn vkFreeCommandBuffers(&self, device: VkDevice, commandPool: VkCommandPool, commandBufferCount: u32, pCommandBuffers: *const VkCommandBuffer) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_0.vk_free_command_buffers)(device, commandPool, commandBufferCount, pCommandBuffers))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_0.vk_free_command_buffers)(device, commandPool, commandBufferCount, pCommandBuffers))))
 	}
 	fn vkBeginCommandBuffer(&self, commandBuffer: VkCommandBuffer, pBeginInfo: *const VkCommandBufferBeginInfo) -> Result<()> {
-		convert_result("vkBeginCommandBuffer", catch_unwind(||((self.vk_version_1_0.vk_begin_command_buffer)(commandBuffer, pBeginInfo))))
+		vk_convert_result("vkBeginCommandBuffer", catch_unwind(||((self.vk_version_1_0.vk_begin_command_buffer)(commandBuffer, pBeginInfo))))
 	}
 	fn vkEndCommandBuffer(&self, commandBuffer: VkCommandBuffer) -> Result<()> {
-		convert_result("vkEndCommandBuffer", catch_unwind(||((self.vk_version_1_0.vk_end_command_buffer)(commandBuffer))))
+		vk_convert_result("vkEndCommandBuffer", catch_unwind(||((self.vk_version_1_0.vk_end_command_buffer)(commandBuffer))))
 	}
 	fn vkResetCommandBuffer(&self, commandBuffer: VkCommandBuffer, flags: VkCommandBufferResetFlags) -> Result<()> {
-		convert_result("vkResetCommandBuffer", catch_unwind(||((self.vk_version_1_0.vk_reset_command_buffer)(commandBuffer, flags))))
+		vk_convert_result("vkResetCommandBuffer", catch_unwind(||((self.vk_version_1_0.vk_reset_command_buffer)(commandBuffer, flags))))
 	}
 	fn vkCmdBindPipeline(&self, commandBuffer: VkCommandBuffer, pipelineBindPoint: VkPipelineBindPoint, pipeline: VkPipeline) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_bind_pipeline)(commandBuffer, pipelineBindPoint, pipeline))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_bind_pipeline)(commandBuffer, pipelineBindPoint, pipeline))))
 	}
 	fn vkCmdSetViewport(&self, commandBuffer: VkCommandBuffer, firstViewport: u32, viewportCount: u32, pViewports: *const VkViewport) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_set_viewport)(commandBuffer, firstViewport, viewportCount, pViewports))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_set_viewport)(commandBuffer, firstViewport, viewportCount, pViewports))))
 	}
 	fn vkCmdSetScissor(&self, commandBuffer: VkCommandBuffer, firstScissor: u32, scissorCount: u32, pScissors: *const VkRect2D) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_set_scissor)(commandBuffer, firstScissor, scissorCount, pScissors))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_set_scissor)(commandBuffer, firstScissor, scissorCount, pScissors))))
 	}
 	fn vkCmdSetLineWidth(&self, commandBuffer: VkCommandBuffer, lineWidth: f32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_set_line_width)(commandBuffer, lineWidth))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_set_line_width)(commandBuffer, lineWidth))))
 	}
 	fn vkCmdSetDepthBias(&self, commandBuffer: VkCommandBuffer, depthBiasConstantFactor: f32, depthBiasClamp: f32, depthBiasSlopeFactor: f32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_set_depth_bias)(commandBuffer, depthBiasConstantFactor, depthBiasClamp, depthBiasSlopeFactor))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_set_depth_bias)(commandBuffer, depthBiasConstantFactor, depthBiasClamp, depthBiasSlopeFactor))))
 	}
 	fn vkCmdSetBlendConstants(&self, commandBuffer: VkCommandBuffer, blendConstants: &[float; 4 as usize]) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_set_blend_constants)(commandBuffer, blendConstants))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_set_blend_constants)(commandBuffer, blendConstants))))
 	}
 	fn vkCmdSetDepthBounds(&self, commandBuffer: VkCommandBuffer, minDepthBounds: f32, maxDepthBounds: f32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_set_depth_bounds)(commandBuffer, minDepthBounds, maxDepthBounds))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_set_depth_bounds)(commandBuffer, minDepthBounds, maxDepthBounds))))
 	}
 	fn vkCmdSetStencilCompareMask(&self, commandBuffer: VkCommandBuffer, faceMask: VkStencilFaceFlags, compareMask: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_set_stencil_compare_mask)(commandBuffer, faceMask, compareMask))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_set_stencil_compare_mask)(commandBuffer, faceMask, compareMask))))
 	}
 	fn vkCmdSetStencilWriteMask(&self, commandBuffer: VkCommandBuffer, faceMask: VkStencilFaceFlags, writeMask: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_set_stencil_write_mask)(commandBuffer, faceMask, writeMask))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_set_stencil_write_mask)(commandBuffer, faceMask, writeMask))))
 	}
 	fn vkCmdSetStencilReference(&self, commandBuffer: VkCommandBuffer, faceMask: VkStencilFaceFlags, reference: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_set_stencil_reference)(commandBuffer, faceMask, reference))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_set_stencil_reference)(commandBuffer, faceMask, reference))))
 	}
 	fn vkCmdBindDescriptorSets(&self, commandBuffer: VkCommandBuffer, pipelineBindPoint: VkPipelineBindPoint, layout: VkPipelineLayout, firstSet: u32, descriptorSetCount: u32, pDescriptorSets: *const VkDescriptorSet, dynamicOffsetCount: u32, pDynamicOffsets: *const uint32_t) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_bind_descriptor_sets)(commandBuffer, pipelineBindPoint, layout, firstSet, descriptorSetCount, pDescriptorSets, dynamicOffsetCount, pDynamicOffsets))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_bind_descriptor_sets)(commandBuffer, pipelineBindPoint, layout, firstSet, descriptorSetCount, pDescriptorSets, dynamicOffsetCount, pDynamicOffsets))))
 	}
 	fn vkCmdBindIndexBuffer(&self, commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize, indexType: VkIndexType) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_bind_index_buffer)(commandBuffer, buffer, offset, indexType))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_bind_index_buffer)(commandBuffer, buffer, offset, indexType))))
 	}
 	fn vkCmdBindVertexBuffers(&self, commandBuffer: VkCommandBuffer, firstBinding: u32, bindingCount: u32, pBuffers: *const VkBuffer, pOffsets: *const VkDeviceSize) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_bind_vertex_buffers)(commandBuffer, firstBinding, bindingCount, pBuffers, pOffsets))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_bind_vertex_buffers)(commandBuffer, firstBinding, bindingCount, pBuffers, pOffsets))))
 	}
 	fn vkCmdDraw(&self, commandBuffer: VkCommandBuffer, vertexCount: u32, instanceCount: u32, firstVertex: u32, firstInstance: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_draw)(commandBuffer, vertexCount, instanceCount, firstVertex, firstInstance))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_draw)(commandBuffer, vertexCount, instanceCount, firstVertex, firstInstance))))
 	}
 	fn vkCmdDrawIndexed(&self, commandBuffer: VkCommandBuffer, indexCount: u32, instanceCount: u32, firstIndex: u32, vertexOffset: i32, firstInstance: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_draw_indexed)(commandBuffer, indexCount, instanceCount, firstIndex, vertexOffset, firstInstance))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_draw_indexed)(commandBuffer, indexCount, instanceCount, firstIndex, vertexOffset, firstInstance))))
 	}
 	fn vkCmdDrawIndirect(&self, commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize, drawCount: u32, stride: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_draw_indirect)(commandBuffer, buffer, offset, drawCount, stride))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_draw_indirect)(commandBuffer, buffer, offset, drawCount, stride))))
 	}
 	fn vkCmdDrawIndexedIndirect(&self, commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize, drawCount: u32, stride: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_draw_indexed_indirect)(commandBuffer, buffer, offset, drawCount, stride))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_draw_indexed_indirect)(commandBuffer, buffer, offset, drawCount, stride))))
 	}
 	fn vkCmdDispatch(&self, commandBuffer: VkCommandBuffer, groupCountX: u32, groupCountY: u32, groupCountZ: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_dispatch)(commandBuffer, groupCountX, groupCountY, groupCountZ))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_dispatch)(commandBuffer, groupCountX, groupCountY, groupCountZ))))
 	}
 	fn vkCmdDispatchIndirect(&self, commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_dispatch_indirect)(commandBuffer, buffer, offset))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_dispatch_indirect)(commandBuffer, buffer, offset))))
 	}
 	fn vkCmdCopyBuffer(&self, commandBuffer: VkCommandBuffer, srcBuffer: VkBuffer, dstBuffer: VkBuffer, regionCount: u32, pRegions: *const VkBufferCopy) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_copy_buffer)(commandBuffer, srcBuffer, dstBuffer, regionCount, pRegions))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_copy_buffer)(commandBuffer, srcBuffer, dstBuffer, regionCount, pRegions))))
 	}
 	fn vkCmdCopyImage(&self, commandBuffer: VkCommandBuffer, srcImage: VkImage, srcImageLayout: VkImageLayout, dstImage: VkImage, dstImageLayout: VkImageLayout, regionCount: u32, pRegions: *const VkImageCopy) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_copy_image)(commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, regionCount, pRegions))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_copy_image)(commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, regionCount, pRegions))))
 	}
 	fn vkCmdBlitImage(&self, commandBuffer: VkCommandBuffer, srcImage: VkImage, srcImageLayout: VkImageLayout, dstImage: VkImage, dstImageLayout: VkImageLayout, regionCount: u32, pRegions: *const VkImageBlit, filter: VkFilter) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_blit_image)(commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, regionCount, pRegions, filter))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_blit_image)(commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, regionCount, pRegions, filter))))
 	}
 	fn vkCmdCopyBufferToImage(&self, commandBuffer: VkCommandBuffer, srcBuffer: VkBuffer, dstImage: VkImage, dstImageLayout: VkImageLayout, regionCount: u32, pRegions: *const VkBufferImageCopy) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_copy_buffer_to_image)(commandBuffer, srcBuffer, dstImage, dstImageLayout, regionCount, pRegions))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_copy_buffer_to_image)(commandBuffer, srcBuffer, dstImage, dstImageLayout, regionCount, pRegions))))
 	}
 	fn vkCmdCopyImageToBuffer(&self, commandBuffer: VkCommandBuffer, srcImage: VkImage, srcImageLayout: VkImageLayout, dstBuffer: VkBuffer, regionCount: u32, pRegions: *const VkBufferImageCopy) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_copy_image_to_buffer)(commandBuffer, srcImage, srcImageLayout, dstBuffer, regionCount, pRegions))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_copy_image_to_buffer)(commandBuffer, srcImage, srcImageLayout, dstBuffer, regionCount, pRegions))))
 	}
 	fn vkCmdUpdateBuffer(&self, commandBuffer: VkCommandBuffer, dstBuffer: VkBuffer, dstOffset: VkDeviceSize, dataSize: VkDeviceSize, pData: *const c_void) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_update_buffer)(commandBuffer, dstBuffer, dstOffset, dataSize, pData))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_update_buffer)(commandBuffer, dstBuffer, dstOffset, dataSize, pData))))
 	}
 	fn vkCmdFillBuffer(&self, commandBuffer: VkCommandBuffer, dstBuffer: VkBuffer, dstOffset: VkDeviceSize, size: VkDeviceSize, data: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_fill_buffer)(commandBuffer, dstBuffer, dstOffset, size, data))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_fill_buffer)(commandBuffer, dstBuffer, dstOffset, size, data))))
 	}
 	fn vkCmdClearColorImage(&self, commandBuffer: VkCommandBuffer, image: VkImage, imageLayout: VkImageLayout, pColor: *const VkClearColorValue, rangeCount: u32, pRanges: *const VkImageSubresourceRange) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_clear_color_image)(commandBuffer, image, imageLayout, pColor, rangeCount, pRanges))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_clear_color_image)(commandBuffer, image, imageLayout, pColor, rangeCount, pRanges))))
 	}
 	fn vkCmdClearDepthStencilImage(&self, commandBuffer: VkCommandBuffer, image: VkImage, imageLayout: VkImageLayout, pDepthStencil: *const VkClearDepthStencilValue, rangeCount: u32, pRanges: *const VkImageSubresourceRange) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_clear_depth_stencil_image)(commandBuffer, image, imageLayout, pDepthStencil, rangeCount, pRanges))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_clear_depth_stencil_image)(commandBuffer, image, imageLayout, pDepthStencil, rangeCount, pRanges))))
 	}
 	fn vkCmdClearAttachments(&self, commandBuffer: VkCommandBuffer, attachmentCount: u32, pAttachments: *const VkClearAttachment, rectCount: u32, pRects: *const VkClearRect) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_clear_attachments)(commandBuffer, attachmentCount, pAttachments, rectCount, pRects))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_clear_attachments)(commandBuffer, attachmentCount, pAttachments, rectCount, pRects))))
 	}
 	fn vkCmdResolveImage(&self, commandBuffer: VkCommandBuffer, srcImage: VkImage, srcImageLayout: VkImageLayout, dstImage: VkImage, dstImageLayout: VkImageLayout, regionCount: u32, pRegions: *const VkImageResolve) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_resolve_image)(commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, regionCount, pRegions))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_resolve_image)(commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, regionCount, pRegions))))
 	}
 	fn vkCmdSetEvent(&self, commandBuffer: VkCommandBuffer, event: VkEvent, stageMask: VkPipelineStageFlags) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_set_event)(commandBuffer, event, stageMask))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_set_event)(commandBuffer, event, stageMask))))
 	}
 	fn vkCmdResetEvent(&self, commandBuffer: VkCommandBuffer, event: VkEvent, stageMask: VkPipelineStageFlags) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_reset_event)(commandBuffer, event, stageMask))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_reset_event)(commandBuffer, event, stageMask))))
 	}
 	fn vkCmdWaitEvents(&self, commandBuffer: VkCommandBuffer, eventCount: u32, pEvents: *const VkEvent, srcStageMask: VkPipelineStageFlags, dstStageMask: VkPipelineStageFlags, memoryBarrierCount: u32, pMemoryBarriers: *const VkMemoryBarrier, bufferMemoryBarrierCount: u32, pBufferMemoryBarriers: *const VkBufferMemoryBarrier, imageMemoryBarrierCount: u32, pImageMemoryBarriers: *const VkImageMemoryBarrier) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_wait_events)(commandBuffer, eventCount, pEvents, srcStageMask, dstStageMask, memoryBarrierCount, pMemoryBarriers, bufferMemoryBarrierCount, pBufferMemoryBarriers, imageMemoryBarrierCount, pImageMemoryBarriers))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_wait_events)(commandBuffer, eventCount, pEvents, srcStageMask, dstStageMask, memoryBarrierCount, pMemoryBarriers, bufferMemoryBarrierCount, pBufferMemoryBarriers, imageMemoryBarrierCount, pImageMemoryBarriers))))
 	}
 	fn vkCmdPipelineBarrier(&self, commandBuffer: VkCommandBuffer, srcStageMask: VkPipelineStageFlags, dstStageMask: VkPipelineStageFlags, dependencyFlags: VkDependencyFlags, memoryBarrierCount: u32, pMemoryBarriers: *const VkMemoryBarrier, bufferMemoryBarrierCount: u32, pBufferMemoryBarriers: *const VkBufferMemoryBarrier, imageMemoryBarrierCount: u32, pImageMemoryBarriers: *const VkImageMemoryBarrier) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_pipeline_barrier)(commandBuffer, srcStageMask, dstStageMask, dependencyFlags, memoryBarrierCount, pMemoryBarriers, bufferMemoryBarrierCount, pBufferMemoryBarriers, imageMemoryBarrierCount, pImageMemoryBarriers))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_pipeline_barrier)(commandBuffer, srcStageMask, dstStageMask, dependencyFlags, memoryBarrierCount, pMemoryBarriers, bufferMemoryBarrierCount, pBufferMemoryBarriers, imageMemoryBarrierCount, pImageMemoryBarriers))))
 	}
 	fn vkCmdBeginQuery(&self, commandBuffer: VkCommandBuffer, queryPool: VkQueryPool, query: u32, flags: VkQueryControlFlags) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_begin_query)(commandBuffer, queryPool, query, flags))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_begin_query)(commandBuffer, queryPool, query, flags))))
 	}
 	fn vkCmdEndQuery(&self, commandBuffer: VkCommandBuffer, queryPool: VkQueryPool, query: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_end_query)(commandBuffer, queryPool, query))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_end_query)(commandBuffer, queryPool, query))))
 	}
 	fn vkCmdResetQueryPool(&self, commandBuffer: VkCommandBuffer, queryPool: VkQueryPool, firstQuery: u32, queryCount: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_reset_query_pool)(commandBuffer, queryPool, firstQuery, queryCount))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_reset_query_pool)(commandBuffer, queryPool, firstQuery, queryCount))))
 	}
 	fn vkCmdWriteTimestamp(&self, commandBuffer: VkCommandBuffer, pipelineStage: VkPipelineStageFlagBits, queryPool: VkQueryPool, query: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_write_timestamp)(commandBuffer, pipelineStage, queryPool, query))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_write_timestamp)(commandBuffer, pipelineStage, queryPool, query))))
 	}
 	fn vkCmdCopyQueryPoolResults(&self, commandBuffer: VkCommandBuffer, queryPool: VkQueryPool, firstQuery: u32, queryCount: u32, dstBuffer: VkBuffer, dstOffset: VkDeviceSize, stride: VkDeviceSize, flags: VkQueryResultFlags) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_copy_query_pool_results)(commandBuffer, queryPool, firstQuery, queryCount, dstBuffer, dstOffset, stride, flags))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_copy_query_pool_results)(commandBuffer, queryPool, firstQuery, queryCount, dstBuffer, dstOffset, stride, flags))))
 	}
 	fn vkCmdPushConstants(&self, commandBuffer: VkCommandBuffer, layout: VkPipelineLayout, stageFlags: VkShaderStageFlags, offset: u32, size: u32, pValues: *const c_void) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_push_constants)(commandBuffer, layout, stageFlags, offset, size, pValues))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_push_constants)(commandBuffer, layout, stageFlags, offset, size, pValues))))
 	}
 	fn vkCmdBeginRenderPass(&self, commandBuffer: VkCommandBuffer, pRenderPassBegin: *const VkRenderPassBeginInfo, contents: VkSubpassContents) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_begin_render_pass)(commandBuffer, pRenderPassBegin, contents))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_begin_render_pass)(commandBuffer, pRenderPassBegin, contents))))
 	}
 	fn vkCmdNextSubpass(&self, commandBuffer: VkCommandBuffer, contents: VkSubpassContents) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_next_subpass)(commandBuffer, contents))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_next_subpass)(commandBuffer, contents))))
 	}
 	fn vkCmdEndRenderPass(&self, commandBuffer: VkCommandBuffer) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_end_render_pass)(commandBuffer))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_end_render_pass)(commandBuffer))))
 	}
 	fn vkCmdExecuteCommands(&self, commandBuffer: VkCommandBuffer, commandBufferCount: u32, pCommandBuffers: *const VkCommandBuffer) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_execute_commands)(commandBuffer, commandBufferCount, pCommandBuffers))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_0.vk_cmd_execute_commands)(commandBuffer, commandBufferCount, pCommandBuffers))))
 	}
 }
 impl VK_VERSION_1_1 for VkCore {
 	fn vkEnumerateInstanceVersion(&self, pApiVersion: *mut uint32_t) -> Result<()> {
-		convert_result("vkEnumerateInstanceVersion", catch_unwind(||((self.vk_version_1_1.vk_enumerate_instance_version)(pApiVersion))))
+		vk_convert_result("vkEnumerateInstanceVersion", catch_unwind(||((self.vk_version_1_1.vk_enumerate_instance_version)(pApiVersion))))
 	}
 	fn vkBindBufferMemory2(&self, device: VkDevice, bindInfoCount: u32, pBindInfos: *const VkBindBufferMemoryInfo) -> Result<()> {
-		convert_result("vkBindBufferMemory2", catch_unwind(||((self.vk_version_1_1.vk_bind_buffer_memory2)(device, bindInfoCount, pBindInfos))))
+		vk_convert_result("vkBindBufferMemory2", catch_unwind(||((self.vk_version_1_1.vk_bind_buffer_memory2)(device, bindInfoCount, pBindInfos))))
 	}
 	fn vkBindImageMemory2(&self, device: VkDevice, bindInfoCount: u32, pBindInfos: *const VkBindImageMemoryInfo) -> Result<()> {
-		convert_result("vkBindImageMemory2", catch_unwind(||((self.vk_version_1_1.vk_bind_image_memory2)(device, bindInfoCount, pBindInfos))))
+		vk_convert_result("vkBindImageMemory2", catch_unwind(||((self.vk_version_1_1.vk_bind_image_memory2)(device, bindInfoCount, pBindInfos))))
 	}
 	fn vkGetDeviceGroupPeerMemoryFeatures(&self, device: VkDevice, heapIndex: u32, localDeviceIndex: u32, remoteDeviceIndex: u32, pPeerMemoryFeatures: *mut VkPeerMemoryFeatureFlags) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_1.vk_get_device_group_peer_memory_features)(device, heapIndex, localDeviceIndex, remoteDeviceIndex, pPeerMemoryFeatures))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_1.vk_get_device_group_peer_memory_features)(device, heapIndex, localDeviceIndex, remoteDeviceIndex, pPeerMemoryFeatures))))
 	}
 	fn vkCmdSetDeviceMask(&self, commandBuffer: VkCommandBuffer, deviceMask: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_1.vk_cmd_set_device_mask)(commandBuffer, deviceMask))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_1.vk_cmd_set_device_mask)(commandBuffer, deviceMask))))
 	}
 	fn vkCmdDispatchBase(&self, commandBuffer: VkCommandBuffer, baseGroupX: u32, baseGroupY: u32, baseGroupZ: u32, groupCountX: u32, groupCountY: u32, groupCountZ: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_1.vk_cmd_dispatch_base)(commandBuffer, baseGroupX, baseGroupY, baseGroupZ, groupCountX, groupCountY, groupCountZ))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_1.vk_cmd_dispatch_base)(commandBuffer, baseGroupX, baseGroupY, baseGroupZ, groupCountX, groupCountY, groupCountZ))))
 	}
 	fn vkEnumeratePhysicalDeviceGroups(&self, instance: VkInstance, pPhysicalDeviceGroupCount: *mut uint32_t, pPhysicalDeviceGroupProperties: *mut VkPhysicalDeviceGroupProperties) -> Result<()> {
-		convert_result("vkEnumeratePhysicalDeviceGroups", catch_unwind(||((self.vk_version_1_1.vk_enumerate_physical_device_groups)(instance, pPhysicalDeviceGroupCount, pPhysicalDeviceGroupProperties))))
+		vk_convert_result("vkEnumeratePhysicalDeviceGroups", catch_unwind(||((self.vk_version_1_1.vk_enumerate_physical_device_groups)(instance, pPhysicalDeviceGroupCount, pPhysicalDeviceGroupProperties))))
 	}
 	fn vkGetImageMemoryRequirements2(&self, device: VkDevice, pInfo: *const VkImageMemoryRequirementsInfo2, pMemoryRequirements: *mut VkMemoryRequirements2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_1.vk_get_image_memory_requirements2)(device, pInfo, pMemoryRequirements))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_1.vk_get_image_memory_requirements2)(device, pInfo, pMemoryRequirements))))
 	}
 	fn vkGetBufferMemoryRequirements2(&self, device: VkDevice, pInfo: *const VkBufferMemoryRequirementsInfo2, pMemoryRequirements: *mut VkMemoryRequirements2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_1.vk_get_buffer_memory_requirements2)(device, pInfo, pMemoryRequirements))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_1.vk_get_buffer_memory_requirements2)(device, pInfo, pMemoryRequirements))))
 	}
 	fn vkGetImageSparseMemoryRequirements2(&self, device: VkDevice, pInfo: *const VkImageSparseMemoryRequirementsInfo2, pSparseMemoryRequirementCount: *mut uint32_t, pSparseMemoryRequirements: *mut VkSparseImageMemoryRequirements2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_1.vk_get_image_sparse_memory_requirements2)(device, pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_1.vk_get_image_sparse_memory_requirements2)(device, pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements))))
 	}
 	fn vkGetPhysicalDeviceFeatures2(&self, physicalDevice: VkPhysicalDevice, pFeatures: *mut VkPhysicalDeviceFeatures2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_1.vk_get_physical_device_features2)(physicalDevice, pFeatures))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_1.vk_get_physical_device_features2)(physicalDevice, pFeatures))))
 	}
 	fn vkGetPhysicalDeviceProperties2(&self, physicalDevice: VkPhysicalDevice, pProperties: *mut VkPhysicalDeviceProperties2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_1.vk_get_physical_device_properties2)(physicalDevice, pProperties))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_1.vk_get_physical_device_properties2)(physicalDevice, pProperties))))
 	}
 	fn vkGetPhysicalDeviceFormatProperties2(&self, physicalDevice: VkPhysicalDevice, format: VkFormat, pFormatProperties: *mut VkFormatProperties2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_1.vk_get_physical_device_format_properties2)(physicalDevice, format, pFormatProperties))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_1.vk_get_physical_device_format_properties2)(physicalDevice, format, pFormatProperties))))
 	}
 	fn vkGetPhysicalDeviceImageFormatProperties2(&self, physicalDevice: VkPhysicalDevice, pImageFormatInfo: *const VkPhysicalDeviceImageFormatInfo2, pImageFormatProperties: *mut VkImageFormatProperties2) -> Result<()> {
-		convert_result("vkGetPhysicalDeviceImageFormatProperties2", catch_unwind(||((self.vk_version_1_1.vk_get_physical_device_image_format_properties2)(physicalDevice, pImageFormatInfo, pImageFormatProperties))))
+		vk_convert_result("vkGetPhysicalDeviceImageFormatProperties2", catch_unwind(||((self.vk_version_1_1.vk_get_physical_device_image_format_properties2)(physicalDevice, pImageFormatInfo, pImageFormatProperties))))
 	}
 	fn vkGetPhysicalDeviceQueueFamilyProperties2(&self, physicalDevice: VkPhysicalDevice, pQueueFamilyPropertyCount: *mut uint32_t, pQueueFamilyProperties: *mut VkQueueFamilyProperties2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_1.vk_get_physical_device_queue_family_properties2)(physicalDevice, pQueueFamilyPropertyCount, pQueueFamilyProperties))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_1.vk_get_physical_device_queue_family_properties2)(physicalDevice, pQueueFamilyPropertyCount, pQueueFamilyProperties))))
 	}
 	fn vkGetPhysicalDeviceMemoryProperties2(&self, physicalDevice: VkPhysicalDevice, pMemoryProperties: *mut VkPhysicalDeviceMemoryProperties2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_1.vk_get_physical_device_memory_properties2)(physicalDevice, pMemoryProperties))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_1.vk_get_physical_device_memory_properties2)(physicalDevice, pMemoryProperties))))
 	}
 	fn vkGetPhysicalDeviceSparseImageFormatProperties2(&self, physicalDevice: VkPhysicalDevice, pFormatInfo: *const VkPhysicalDeviceSparseImageFormatInfo2, pPropertyCount: *mut uint32_t, pProperties: *mut VkSparseImageFormatProperties2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_1.vk_get_physical_device_sparse_image_format_properties2)(physicalDevice, pFormatInfo, pPropertyCount, pProperties))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_1.vk_get_physical_device_sparse_image_format_properties2)(physicalDevice, pFormatInfo, pPropertyCount, pProperties))))
 	}
 	fn vkTrimCommandPool(&self, device: VkDevice, commandPool: VkCommandPool, flags: VkCommandPoolTrimFlags) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_1.vk_trim_command_pool)(device, commandPool, flags))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_1.vk_trim_command_pool)(device, commandPool, flags))))
 	}
 	fn vkGetDeviceQueue2(&self, device: VkDevice, pQueueInfo: *const VkDeviceQueueInfo2, pQueue: *mut VkQueue) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_1.vk_get_device_queue2)(device, pQueueInfo, pQueue))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_1.vk_get_device_queue2)(device, pQueueInfo, pQueue))))
 	}
 	fn vkCreateSamplerYcbcrConversion(&self, device: VkDevice, pCreateInfo: *const VkSamplerYcbcrConversionCreateInfo, pAllocator: *const VkAllocationCallbacks, pYcbcrConversion: *mut VkSamplerYcbcrConversion) -> Result<()> {
-		convert_result("vkCreateSamplerYcbcrConversion", catch_unwind(||((self.vk_version_1_1.vk_create_sampler_ycbcr_conversion)(device, pCreateInfo, pAllocator, pYcbcrConversion))))
+		vk_convert_result("vkCreateSamplerYcbcrConversion", catch_unwind(||((self.vk_version_1_1.vk_create_sampler_ycbcr_conversion)(device, pCreateInfo, pAllocator, pYcbcrConversion))))
 	}
 	fn vkDestroySamplerYcbcrConversion(&self, device: VkDevice, ycbcrConversion: VkSamplerYcbcrConversion, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_1.vk_destroy_sampler_ycbcr_conversion)(device, ycbcrConversion, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_1.vk_destroy_sampler_ycbcr_conversion)(device, ycbcrConversion, pAllocator))))
 	}
 	fn vkCreateDescriptorUpdateTemplate(&self, device: VkDevice, pCreateInfo: *const VkDescriptorUpdateTemplateCreateInfo, pAllocator: *const VkAllocationCallbacks, pDescriptorUpdateTemplate: *mut VkDescriptorUpdateTemplate) -> Result<()> {
-		convert_result("vkCreateDescriptorUpdateTemplate", catch_unwind(||((self.vk_version_1_1.vk_create_descriptor_update_template)(device, pCreateInfo, pAllocator, pDescriptorUpdateTemplate))))
+		vk_convert_result("vkCreateDescriptorUpdateTemplate", catch_unwind(||((self.vk_version_1_1.vk_create_descriptor_update_template)(device, pCreateInfo, pAllocator, pDescriptorUpdateTemplate))))
 	}
 	fn vkDestroyDescriptorUpdateTemplate(&self, device: VkDevice, descriptorUpdateTemplate: VkDescriptorUpdateTemplate, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_1.vk_destroy_descriptor_update_template)(device, descriptorUpdateTemplate, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_1.vk_destroy_descriptor_update_template)(device, descriptorUpdateTemplate, pAllocator))))
 	}
 	fn vkUpdateDescriptorSetWithTemplate(&self, device: VkDevice, descriptorSet: VkDescriptorSet, descriptorUpdateTemplate: VkDescriptorUpdateTemplate, pData: *const c_void) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_1.vk_update_descriptor_set_with_template)(device, descriptorSet, descriptorUpdateTemplate, pData))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_1.vk_update_descriptor_set_with_template)(device, descriptorSet, descriptorUpdateTemplate, pData))))
 	}
 	fn vkGetPhysicalDeviceExternalBufferProperties(&self, physicalDevice: VkPhysicalDevice, pExternalBufferInfo: *const VkPhysicalDeviceExternalBufferInfo, pExternalBufferProperties: *mut VkExternalBufferProperties) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_1.vk_get_physical_device_external_buffer_properties)(physicalDevice, pExternalBufferInfo, pExternalBufferProperties))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_1.vk_get_physical_device_external_buffer_properties)(physicalDevice, pExternalBufferInfo, pExternalBufferProperties))))
 	}
 	fn vkGetPhysicalDeviceExternalFenceProperties(&self, physicalDevice: VkPhysicalDevice, pExternalFenceInfo: *const VkPhysicalDeviceExternalFenceInfo, pExternalFenceProperties: *mut VkExternalFenceProperties) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_1.vk_get_physical_device_external_fence_properties)(physicalDevice, pExternalFenceInfo, pExternalFenceProperties))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_1.vk_get_physical_device_external_fence_properties)(physicalDevice, pExternalFenceInfo, pExternalFenceProperties))))
 	}
 	fn vkGetPhysicalDeviceExternalSemaphoreProperties(&self, physicalDevice: VkPhysicalDevice, pExternalSemaphoreInfo: *const VkPhysicalDeviceExternalSemaphoreInfo, pExternalSemaphoreProperties: *mut VkExternalSemaphoreProperties) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_1.vk_get_physical_device_external_semaphore_properties)(physicalDevice, pExternalSemaphoreInfo, pExternalSemaphoreProperties))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_1.vk_get_physical_device_external_semaphore_properties)(physicalDevice, pExternalSemaphoreInfo, pExternalSemaphoreProperties))))
 	}
 	fn vkGetDescriptorSetLayoutSupport(&self, device: VkDevice, pCreateInfo: *const VkDescriptorSetLayoutCreateInfo, pSupport: *mut VkDescriptorSetLayoutSupport) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_1.vk_get_descriptor_set_layout_support)(device, pCreateInfo, pSupport))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_1.vk_get_descriptor_set_layout_support)(device, pCreateInfo, pSupport))))
 	}
 }
 impl VK_VERSION_1_2 for VkCore {
 	fn vkCmdDrawIndirectCount(&self, commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize, countBuffer: VkBuffer, countBufferOffset: VkDeviceSize, maxDrawCount: u32, stride: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_2.vk_cmd_draw_indirect_count)(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_2.vk_cmd_draw_indirect_count)(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride))))
 	}
 	fn vkCmdDrawIndexedIndirectCount(&self, commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize, countBuffer: VkBuffer, countBufferOffset: VkDeviceSize, maxDrawCount: u32, stride: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_2.vk_cmd_draw_indexed_indirect_count)(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_2.vk_cmd_draw_indexed_indirect_count)(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride))))
 	}
 	fn vkCreateRenderPass2(&self, device: VkDevice, pCreateInfo: *const VkRenderPassCreateInfo2, pAllocator: *const VkAllocationCallbacks, pRenderPass: *mut VkRenderPass) -> Result<()> {
-		convert_result("vkCreateRenderPass2", catch_unwind(||((self.vk_version_1_2.vk_create_render_pass2)(device, pCreateInfo, pAllocator, pRenderPass))))
+		vk_convert_result("vkCreateRenderPass2", catch_unwind(||((self.vk_version_1_2.vk_create_render_pass2)(device, pCreateInfo, pAllocator, pRenderPass))))
 	}
 	fn vkCmdBeginRenderPass2(&self, commandBuffer: VkCommandBuffer, pRenderPassBegin: *const VkRenderPassBeginInfo, pSubpassBeginInfo: *const VkSubpassBeginInfo) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_2.vk_cmd_begin_render_pass2)(commandBuffer, pRenderPassBegin, pSubpassBeginInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_2.vk_cmd_begin_render_pass2)(commandBuffer, pRenderPassBegin, pSubpassBeginInfo))))
 	}
 	fn vkCmdNextSubpass2(&self, commandBuffer: VkCommandBuffer, pSubpassBeginInfo: *const VkSubpassBeginInfo, pSubpassEndInfo: *const VkSubpassEndInfo) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_2.vk_cmd_next_subpass2)(commandBuffer, pSubpassBeginInfo, pSubpassEndInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_2.vk_cmd_next_subpass2)(commandBuffer, pSubpassBeginInfo, pSubpassEndInfo))))
 	}
 	fn vkCmdEndRenderPass2(&self, commandBuffer: VkCommandBuffer, pSubpassEndInfo: *const VkSubpassEndInfo) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_2.vk_cmd_end_render_pass2)(commandBuffer, pSubpassEndInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_2.vk_cmd_end_render_pass2)(commandBuffer, pSubpassEndInfo))))
 	}
 	fn vkResetQueryPool(&self, device: VkDevice, queryPool: VkQueryPool, firstQuery: u32, queryCount: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_2.vk_reset_query_pool)(device, queryPool, firstQuery, queryCount))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_2.vk_reset_query_pool)(device, queryPool, firstQuery, queryCount))))
 	}
 	fn vkGetSemaphoreCounterValue(&self, device: VkDevice, semaphore: VkSemaphore, pValue: *mut uint64_t) -> Result<()> {
-		convert_result("vkGetSemaphoreCounterValue", catch_unwind(||((self.vk_version_1_2.vk_get_semaphore_counter_value)(device, semaphore, pValue))))
+		vk_convert_result("vkGetSemaphoreCounterValue", catch_unwind(||((self.vk_version_1_2.vk_get_semaphore_counter_value)(device, semaphore, pValue))))
 	}
 	fn vkWaitSemaphores(&self, device: VkDevice, pWaitInfo: *const VkSemaphoreWaitInfo, timeout: u64) -> Result<()> {
-		convert_result("vkWaitSemaphores", catch_unwind(||((self.vk_version_1_2.vk_wait_semaphores)(device, pWaitInfo, timeout))))
+		vk_convert_result("vkWaitSemaphores", catch_unwind(||((self.vk_version_1_2.vk_wait_semaphores)(device, pWaitInfo, timeout))))
 	}
 	fn vkSignalSemaphore(&self, device: VkDevice, pSignalInfo: *const VkSemaphoreSignalInfo) -> Result<()> {
-		convert_result("vkSignalSemaphore", catch_unwind(||((self.vk_version_1_2.vk_signal_semaphore)(device, pSignalInfo))))
+		vk_convert_result("vkSignalSemaphore", catch_unwind(||((self.vk_version_1_2.vk_signal_semaphore)(device, pSignalInfo))))
 	}
 	fn vkGetBufferDeviceAddress(&self, device: VkDevice, pInfo: *const VkBufferDeviceAddressInfo) -> Result<VkDeviceAddress> {
-		process_catch(catch_unwind(||((self.vk_version_1_2.vk_get_buffer_device_address)(device, pInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_2.vk_get_buffer_device_address)(device, pInfo))))
 	}
 	fn vkGetBufferOpaqueCaptureAddress(&self, device: VkDevice, pInfo: *const VkBufferDeviceAddressInfo) -> Result<u64> {
-		process_catch(catch_unwind(||((self.vk_version_1_2.vk_get_buffer_opaque_capture_address)(device, pInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_2.vk_get_buffer_opaque_capture_address)(device, pInfo))))
 	}
 	fn vkGetDeviceMemoryOpaqueCaptureAddress(&self, device: VkDevice, pInfo: *const VkDeviceMemoryOpaqueCaptureAddressInfo) -> Result<u64> {
-		process_catch(catch_unwind(||((self.vk_version_1_2.vk_get_device_memory_opaque_capture_address)(device, pInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_2.vk_get_device_memory_opaque_capture_address)(device, pInfo))))
 	}
 }
 impl VK_VERSION_1_3 for VkCore {
 	fn vkGetPhysicalDeviceToolProperties(&self, physicalDevice: VkPhysicalDevice, pToolCount: *mut uint32_t, pToolProperties: *mut VkPhysicalDeviceToolProperties) -> Result<()> {
-		convert_result("vkGetPhysicalDeviceToolProperties", catch_unwind(||((self.vk_version_1_3.vk_get_physical_device_tool_properties)(physicalDevice, pToolCount, pToolProperties))))
+		vk_convert_result("vkGetPhysicalDeviceToolProperties", catch_unwind(||((self.vk_version_1_3.vk_get_physical_device_tool_properties)(physicalDevice, pToolCount, pToolProperties))))
 	}
 	fn vkCreatePrivateDataSlot(&self, device: VkDevice, pCreateInfo: *const VkPrivateDataSlotCreateInfo, pAllocator: *const VkAllocationCallbacks, pPrivateDataSlot: *mut VkPrivateDataSlot) -> Result<()> {
-		convert_result("vkCreatePrivateDataSlot", catch_unwind(||((self.vk_version_1_3.vk_create_private_data_slot)(device, pCreateInfo, pAllocator, pPrivateDataSlot))))
+		vk_convert_result("vkCreatePrivateDataSlot", catch_unwind(||((self.vk_version_1_3.vk_create_private_data_slot)(device, pCreateInfo, pAllocator, pPrivateDataSlot))))
 	}
 	fn vkDestroyPrivateDataSlot(&self, device: VkDevice, privateDataSlot: VkPrivateDataSlot, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_3.vk_destroy_private_data_slot)(device, privateDataSlot, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_3.vk_destroy_private_data_slot)(device, privateDataSlot, pAllocator))))
 	}
 	fn vkSetPrivateData(&self, device: VkDevice, objectType: VkObjectType, objectHandle: u64, privateDataSlot: VkPrivateDataSlot, data: u64) -> Result<()> {
-		convert_result("vkSetPrivateData", catch_unwind(||((self.vk_version_1_3.vk_set_private_data)(device, objectType, objectHandle, privateDataSlot, data))))
+		vk_convert_result("vkSetPrivateData", catch_unwind(||((self.vk_version_1_3.vk_set_private_data)(device, objectType, objectHandle, privateDataSlot, data))))
 	}
 	fn vkGetPrivateData(&self, device: VkDevice, objectType: VkObjectType, objectHandle: u64, privateDataSlot: VkPrivateDataSlot, pData: *mut uint64_t) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_3.vk_get_private_data)(device, objectType, objectHandle, privateDataSlot, pData))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_3.vk_get_private_data)(device, objectType, objectHandle, privateDataSlot, pData))))
 	}
 	fn vkCmdSetEvent2(&self, commandBuffer: VkCommandBuffer, event: VkEvent, pDependencyInfo: *const VkDependencyInfo) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_3.vk_cmd_set_event2)(commandBuffer, event, pDependencyInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_3.vk_cmd_set_event2)(commandBuffer, event, pDependencyInfo))))
 	}
 	fn vkCmdResetEvent2(&self, commandBuffer: VkCommandBuffer, event: VkEvent, stageMask: VkPipelineStageFlags2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_3.vk_cmd_reset_event2)(commandBuffer, event, stageMask))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_3.vk_cmd_reset_event2)(commandBuffer, event, stageMask))))
 	}
 	fn vkCmdWaitEvents2(&self, commandBuffer: VkCommandBuffer, eventCount: u32, pEvents: *const VkEvent, pDependencyInfos: *const VkDependencyInfo) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_3.vk_cmd_wait_events2)(commandBuffer, eventCount, pEvents, pDependencyInfos))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_3.vk_cmd_wait_events2)(commandBuffer, eventCount, pEvents, pDependencyInfos))))
 	}
 	fn vkCmdPipelineBarrier2(&self, commandBuffer: VkCommandBuffer, pDependencyInfo: *const VkDependencyInfo) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_3.vk_cmd_pipeline_barrier2)(commandBuffer, pDependencyInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_3.vk_cmd_pipeline_barrier2)(commandBuffer, pDependencyInfo))))
 	}
 	fn vkCmdWriteTimestamp2(&self, commandBuffer: VkCommandBuffer, stage: VkPipelineStageFlags2, queryPool: VkQueryPool, query: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_3.vk_cmd_write_timestamp2)(commandBuffer, stage, queryPool, query))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_3.vk_cmd_write_timestamp2)(commandBuffer, stage, queryPool, query))))
 	}
 	fn vkQueueSubmit2(&self, queue: VkQueue, submitCount: u32, pSubmits: *const VkSubmitInfo2, fence: VkFence) -> Result<()> {
-		convert_result("vkQueueSubmit2", catch_unwind(||((self.vk_version_1_3.vk_queue_submit2)(queue, submitCount, pSubmits, fence))))
+		vk_convert_result("vkQueueSubmit2", catch_unwind(||((self.vk_version_1_3.vk_queue_submit2)(queue, submitCount, pSubmits, fence))))
 	}
 	fn vkCmdCopyBuffer2(&self, commandBuffer: VkCommandBuffer, pCopyBufferInfo: *const VkCopyBufferInfo2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_3.vk_cmd_copy_buffer2)(commandBuffer, pCopyBufferInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_3.vk_cmd_copy_buffer2)(commandBuffer, pCopyBufferInfo))))
 	}
 	fn vkCmdCopyImage2(&self, commandBuffer: VkCommandBuffer, pCopyImageInfo: *const VkCopyImageInfo2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_3.vk_cmd_copy_image2)(commandBuffer, pCopyImageInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_3.vk_cmd_copy_image2)(commandBuffer, pCopyImageInfo))))
 	}
 	fn vkCmdCopyBufferToImage2(&self, commandBuffer: VkCommandBuffer, pCopyBufferToImageInfo: *const VkCopyBufferToImageInfo2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_3.vk_cmd_copy_buffer_to_image2)(commandBuffer, pCopyBufferToImageInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_3.vk_cmd_copy_buffer_to_image2)(commandBuffer, pCopyBufferToImageInfo))))
 	}
 	fn vkCmdCopyImageToBuffer2(&self, commandBuffer: VkCommandBuffer, pCopyImageToBufferInfo: *const VkCopyImageToBufferInfo2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_3.vk_cmd_copy_image_to_buffer2)(commandBuffer, pCopyImageToBufferInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_3.vk_cmd_copy_image_to_buffer2)(commandBuffer, pCopyImageToBufferInfo))))
 	}
 	fn vkCmdBlitImage2(&self, commandBuffer: VkCommandBuffer, pBlitImageInfo: *const VkBlitImageInfo2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_3.vk_cmd_blit_image2)(commandBuffer, pBlitImageInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_3.vk_cmd_blit_image2)(commandBuffer, pBlitImageInfo))))
 	}
 	fn vkCmdResolveImage2(&self, commandBuffer: VkCommandBuffer, pResolveImageInfo: *const VkResolveImageInfo2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_3.vk_cmd_resolve_image2)(commandBuffer, pResolveImageInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_3.vk_cmd_resolve_image2)(commandBuffer, pResolveImageInfo))))
 	}
 	fn vkCmdBeginRendering(&self, commandBuffer: VkCommandBuffer, pRenderingInfo: *const VkRenderingInfo) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_3.vk_cmd_begin_rendering)(commandBuffer, pRenderingInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_3.vk_cmd_begin_rendering)(commandBuffer, pRenderingInfo))))
 	}
 	fn vkCmdEndRendering(&self, commandBuffer: VkCommandBuffer) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_3.vk_cmd_end_rendering)(commandBuffer))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_3.vk_cmd_end_rendering)(commandBuffer))))
 	}
 	fn vkCmdSetCullMode(&self, commandBuffer: VkCommandBuffer, cullMode: VkCullModeFlags) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_3.vk_cmd_set_cull_mode)(commandBuffer, cullMode))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_3.vk_cmd_set_cull_mode)(commandBuffer, cullMode))))
 	}
 	fn vkCmdSetFrontFace(&self, commandBuffer: VkCommandBuffer, frontFace: VkFrontFace) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_3.vk_cmd_set_front_face)(commandBuffer, frontFace))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_3.vk_cmd_set_front_face)(commandBuffer, frontFace))))
 	}
 	fn vkCmdSetPrimitiveTopology(&self, commandBuffer: VkCommandBuffer, primitiveTopology: VkPrimitiveTopology) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_3.vk_cmd_set_primitive_topology)(commandBuffer, primitiveTopology))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_3.vk_cmd_set_primitive_topology)(commandBuffer, primitiveTopology))))
 	}
 	fn vkCmdSetViewportWithCount(&self, commandBuffer: VkCommandBuffer, viewportCount: u32, pViewports: *const VkViewport) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_3.vk_cmd_set_viewport_with_count)(commandBuffer, viewportCount, pViewports))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_3.vk_cmd_set_viewport_with_count)(commandBuffer, viewportCount, pViewports))))
 	}
 	fn vkCmdSetScissorWithCount(&self, commandBuffer: VkCommandBuffer, scissorCount: u32, pScissors: *const VkRect2D) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_3.vk_cmd_set_scissor_with_count)(commandBuffer, scissorCount, pScissors))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_3.vk_cmd_set_scissor_with_count)(commandBuffer, scissorCount, pScissors))))
 	}
 	fn vkCmdBindVertexBuffers2(&self, commandBuffer: VkCommandBuffer, firstBinding: u32, bindingCount: u32, pBuffers: *const VkBuffer, pOffsets: *const VkDeviceSize, pSizes: *const VkDeviceSize, pStrides: *const VkDeviceSize) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_3.vk_cmd_bind_vertex_buffers2)(commandBuffer, firstBinding, bindingCount, pBuffers, pOffsets, pSizes, pStrides))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_3.vk_cmd_bind_vertex_buffers2)(commandBuffer, firstBinding, bindingCount, pBuffers, pOffsets, pSizes, pStrides))))
 	}
 	fn vkCmdSetDepthTestEnable(&self, commandBuffer: VkCommandBuffer, depthTestEnable: VkBool32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_3.vk_cmd_set_depth_test_enable)(commandBuffer, depthTestEnable))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_3.vk_cmd_set_depth_test_enable)(commandBuffer, depthTestEnable))))
 	}
 	fn vkCmdSetDepthWriteEnable(&self, commandBuffer: VkCommandBuffer, depthWriteEnable: VkBool32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_3.vk_cmd_set_depth_write_enable)(commandBuffer, depthWriteEnable))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_3.vk_cmd_set_depth_write_enable)(commandBuffer, depthWriteEnable))))
 	}
 	fn vkCmdSetDepthCompareOp(&self, commandBuffer: VkCommandBuffer, depthCompareOp: VkCompareOp) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_3.vk_cmd_set_depth_compare_op)(commandBuffer, depthCompareOp))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_3.vk_cmd_set_depth_compare_op)(commandBuffer, depthCompareOp))))
 	}
 	fn vkCmdSetDepthBoundsTestEnable(&self, commandBuffer: VkCommandBuffer, depthBoundsTestEnable: VkBool32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_3.vk_cmd_set_depth_bounds_test_enable)(commandBuffer, depthBoundsTestEnable))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_3.vk_cmd_set_depth_bounds_test_enable)(commandBuffer, depthBoundsTestEnable))))
 	}
 	fn vkCmdSetStencilTestEnable(&self, commandBuffer: VkCommandBuffer, stencilTestEnable: VkBool32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_3.vk_cmd_set_stencil_test_enable)(commandBuffer, stencilTestEnable))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_3.vk_cmd_set_stencil_test_enable)(commandBuffer, stencilTestEnable))))
 	}
 	fn vkCmdSetStencilOp(&self, commandBuffer: VkCommandBuffer, faceMask: VkStencilFaceFlags, failOp: VkStencilOp, passOp: VkStencilOp, depthFailOp: VkStencilOp, compareOp: VkCompareOp) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_3.vk_cmd_set_stencil_op)(commandBuffer, faceMask, failOp, passOp, depthFailOp, compareOp))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_3.vk_cmd_set_stencil_op)(commandBuffer, faceMask, failOp, passOp, depthFailOp, compareOp))))
 	}
 	fn vkCmdSetRasterizerDiscardEnable(&self, commandBuffer: VkCommandBuffer, rasterizerDiscardEnable: VkBool32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_3.vk_cmd_set_rasterizer_discard_enable)(commandBuffer, rasterizerDiscardEnable))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_3.vk_cmd_set_rasterizer_discard_enable)(commandBuffer, rasterizerDiscardEnable))))
 	}
 	fn vkCmdSetDepthBiasEnable(&self, commandBuffer: VkCommandBuffer, depthBiasEnable: VkBool32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_3.vk_cmd_set_depth_bias_enable)(commandBuffer, depthBiasEnable))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_3.vk_cmd_set_depth_bias_enable)(commandBuffer, depthBiasEnable))))
 	}
 	fn vkCmdSetPrimitiveRestartEnable(&self, commandBuffer: VkCommandBuffer, primitiveRestartEnable: VkBool32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_3.vk_cmd_set_primitive_restart_enable)(commandBuffer, primitiveRestartEnable))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_3.vk_cmd_set_primitive_restart_enable)(commandBuffer, primitiveRestartEnable))))
 	}
 	fn vkGetDeviceBufferMemoryRequirements(&self, device: VkDevice, pInfo: *const VkDeviceBufferMemoryRequirements, pMemoryRequirements: *mut VkMemoryRequirements2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_3.vk_get_device_buffer_memory_requirements)(device, pInfo, pMemoryRequirements))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_3.vk_get_device_buffer_memory_requirements)(device, pInfo, pMemoryRequirements))))
 	}
 	fn vkGetDeviceImageMemoryRequirements(&self, device: VkDevice, pInfo: *const VkDeviceImageMemoryRequirements, pMemoryRequirements: *mut VkMemoryRequirements2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_3.vk_get_device_image_memory_requirements)(device, pInfo, pMemoryRequirements))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_3.vk_get_device_image_memory_requirements)(device, pInfo, pMemoryRequirements))))
 	}
 	fn vkGetDeviceImageSparseMemoryRequirements(&self, device: VkDevice, pInfo: *const VkDeviceImageMemoryRequirements, pSparseMemoryRequirementCount: *mut uint32_t, pSparseMemoryRequirements: *mut VkSparseImageMemoryRequirements2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_3.vk_get_device_image_sparse_memory_requirements)(device, pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_3.vk_get_device_image_sparse_memory_requirements)(device, pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements))))
 	}
 }
 impl VK_VERSION_1_4 for VkCore {
 	fn vkCmdSetLineStipple(&self, commandBuffer: VkCommandBuffer, lineStippleFactor: u32, lineStipplePattern: u16) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_4.vk_cmd_set_line_stipple)(commandBuffer, lineStippleFactor, lineStipplePattern))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_4.vk_cmd_set_line_stipple)(commandBuffer, lineStippleFactor, lineStipplePattern))))
 	}
 	fn vkMapMemory2(&self, device: VkDevice, pMemoryMapInfo: *const VkMemoryMapInfo, ppData: *mut *mut c_void) -> Result<()> {
-		convert_result("vkMapMemory2", catch_unwind(||((self.vk_version_1_4.vk_map_memory2)(device, pMemoryMapInfo, ppData))))
+		vk_convert_result("vkMapMemory2", catch_unwind(||((self.vk_version_1_4.vk_map_memory2)(device, pMemoryMapInfo, ppData))))
 	}
 	fn vkUnmapMemory2(&self, device: VkDevice, pMemoryUnmapInfo: *const VkMemoryUnmapInfo) -> Result<()> {
-		convert_result("vkUnmapMemory2", catch_unwind(||((self.vk_version_1_4.vk_unmap_memory2)(device, pMemoryUnmapInfo))))
+		vk_convert_result("vkUnmapMemory2", catch_unwind(||((self.vk_version_1_4.vk_unmap_memory2)(device, pMemoryUnmapInfo))))
 	}
 	fn vkCmdBindIndexBuffer2(&self, commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize, size: VkDeviceSize, indexType: VkIndexType) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_4.vk_cmd_bind_index_buffer2)(commandBuffer, buffer, offset, size, indexType))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_4.vk_cmd_bind_index_buffer2)(commandBuffer, buffer, offset, size, indexType))))
 	}
 	fn vkGetRenderingAreaGranularity(&self, device: VkDevice, pRenderingAreaInfo: *const VkRenderingAreaInfo, pGranularity: *mut VkExtent2D) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_4.vk_get_rendering_area_granularity)(device, pRenderingAreaInfo, pGranularity))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_4.vk_get_rendering_area_granularity)(device, pRenderingAreaInfo, pGranularity))))
 	}
 	fn vkGetDeviceImageSubresourceLayout(&self, device: VkDevice, pInfo: *const VkDeviceImageSubresourceInfo, pLayout: *mut VkSubresourceLayout2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_4.vk_get_device_image_subresource_layout)(device, pInfo, pLayout))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_4.vk_get_device_image_subresource_layout)(device, pInfo, pLayout))))
 	}
 	fn vkGetImageSubresourceLayout2(&self, device: VkDevice, image: VkImage, pSubresource: *const VkImageSubresource2, pLayout: *mut VkSubresourceLayout2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_4.vk_get_image_subresource_layout2)(device, image, pSubresource, pLayout))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_4.vk_get_image_subresource_layout2)(device, image, pSubresource, pLayout))))
 	}
 	fn vkCmdPushDescriptorSet(&self, commandBuffer: VkCommandBuffer, pipelineBindPoint: VkPipelineBindPoint, layout: VkPipelineLayout, set: u32, descriptorWriteCount: u32, pDescriptorWrites: *const VkWriteDescriptorSet) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_4.vk_cmd_push_descriptor_set)(commandBuffer, pipelineBindPoint, layout, set, descriptorWriteCount, pDescriptorWrites))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_4.vk_cmd_push_descriptor_set)(commandBuffer, pipelineBindPoint, layout, set, descriptorWriteCount, pDescriptorWrites))))
 	}
 	fn vkCmdPushDescriptorSetWithTemplate(&self, commandBuffer: VkCommandBuffer, descriptorUpdateTemplate: VkDescriptorUpdateTemplate, layout: VkPipelineLayout, set: u32, pData: *const c_void) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_4.vk_cmd_push_descriptor_set_with_template)(commandBuffer, descriptorUpdateTemplate, layout, set, pData))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_4.vk_cmd_push_descriptor_set_with_template)(commandBuffer, descriptorUpdateTemplate, layout, set, pData))))
 	}
 	fn vkCmdSetRenderingAttachmentLocations(&self, commandBuffer: VkCommandBuffer, pLocationInfo: *const VkRenderingAttachmentLocationInfo) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_4.vk_cmd_set_rendering_attachment_locations)(commandBuffer, pLocationInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_4.vk_cmd_set_rendering_attachment_locations)(commandBuffer, pLocationInfo))))
 	}
 	fn vkCmdSetRenderingInputAttachmentIndices(&self, commandBuffer: VkCommandBuffer, pInputAttachmentIndexInfo: *const VkRenderingInputAttachmentIndexInfo) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_4.vk_cmd_set_rendering_input_attachment_indices)(commandBuffer, pInputAttachmentIndexInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_4.vk_cmd_set_rendering_input_attachment_indices)(commandBuffer, pInputAttachmentIndexInfo))))
 	}
 	fn vkCmdBindDescriptorSets2(&self, commandBuffer: VkCommandBuffer, pBindDescriptorSetsInfo: *const VkBindDescriptorSetsInfo) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_4.vk_cmd_bind_descriptor_sets2)(commandBuffer, pBindDescriptorSetsInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_4.vk_cmd_bind_descriptor_sets2)(commandBuffer, pBindDescriptorSetsInfo))))
 	}
 	fn vkCmdPushConstants2(&self, commandBuffer: VkCommandBuffer, pPushConstantsInfo: *const VkPushConstantsInfo) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_4.vk_cmd_push_constants2)(commandBuffer, pPushConstantsInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_4.vk_cmd_push_constants2)(commandBuffer, pPushConstantsInfo))))
 	}
 	fn vkCmdPushDescriptorSet2(&self, commandBuffer: VkCommandBuffer, pPushDescriptorSetInfo: *const VkPushDescriptorSetInfo) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_4.vk_cmd_push_descriptor_set2)(commandBuffer, pPushDescriptorSetInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_4.vk_cmd_push_descriptor_set2)(commandBuffer, pPushDescriptorSetInfo))))
 	}
 	fn vkCmdPushDescriptorSetWithTemplate2(&self, commandBuffer: VkCommandBuffer, pPushDescriptorSetWithTemplateInfo: *const VkPushDescriptorSetWithTemplateInfo) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_version_1_4.vk_cmd_push_descriptor_set_with_template2)(commandBuffer, pPushDescriptorSetWithTemplateInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_version_1_4.vk_cmd_push_descriptor_set_with_template2)(commandBuffer, pPushDescriptorSetWithTemplateInfo))))
 	}
 	fn vkCopyMemoryToImage(&self, device: VkDevice, pCopyMemoryToImageInfo: *const VkCopyMemoryToImageInfo) -> Result<()> {
-		convert_result("vkCopyMemoryToImage", catch_unwind(||((self.vk_version_1_4.vk_copy_memory_to_image)(device, pCopyMemoryToImageInfo))))
+		vk_convert_result("vkCopyMemoryToImage", catch_unwind(||((self.vk_version_1_4.vk_copy_memory_to_image)(device, pCopyMemoryToImageInfo))))
 	}
 	fn vkCopyImageToMemory(&self, device: VkDevice, pCopyImageToMemoryInfo: *const VkCopyImageToMemoryInfo) -> Result<()> {
-		convert_result("vkCopyImageToMemory", catch_unwind(||((self.vk_version_1_4.vk_copy_image_to_memory)(device, pCopyImageToMemoryInfo))))
+		vk_convert_result("vkCopyImageToMemory", catch_unwind(||((self.vk_version_1_4.vk_copy_image_to_memory)(device, pCopyImageToMemoryInfo))))
 	}
 	fn vkCopyImageToImage(&self, device: VkDevice, pCopyImageToImageInfo: *const VkCopyImageToImageInfo) -> Result<()> {
-		convert_result("vkCopyImageToImage", catch_unwind(||((self.vk_version_1_4.vk_copy_image_to_image)(device, pCopyImageToImageInfo))))
+		vk_convert_result("vkCopyImageToImage", catch_unwind(||((self.vk_version_1_4.vk_copy_image_to_image)(device, pCopyImageToImageInfo))))
 	}
 	fn vkTransitionImageLayout(&self, device: VkDevice, transitionCount: u32, pTransitions: *const VkHostImageLayoutTransitionInfo) -> Result<()> {
-		convert_result("vkTransitionImageLayout", catch_unwind(||((self.vk_version_1_4.vk_transition_image_layout)(device, transitionCount, pTransitions))))
+		vk_convert_result("vkTransitionImageLayout", catch_unwind(||((self.vk_version_1_4.vk_transition_image_layout)(device, transitionCount, pTransitions))))
 	}
 }
 impl VK_KHR_surface for VkCore {
 	fn vkDestroySurfaceKHR(&self, instance: VkInstance, surface: VkSurfaceKHR, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_khr_surface.vk_destroy_surface_khr)(instance, surface, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_surface.vk_destroy_surface_khr)(instance, surface, pAllocator))))
 	}
 	fn vkGetPhysicalDeviceSurfaceSupportKHR(&self, physicalDevice: VkPhysicalDevice, queueFamilyIndex: u32, surface: VkSurfaceKHR, pSupported: *mut VkBool32) -> Result<()> {
-		convert_result("vkGetPhysicalDeviceSurfaceSupportKHR", catch_unwind(||((self.vk_khr_surface.vk_get_physical_device_surface_support_khr)(physicalDevice, queueFamilyIndex, surface, pSupported))))
+		vk_convert_result("vkGetPhysicalDeviceSurfaceSupportKHR", catch_unwind(||((self.vk_khr_surface.vk_get_physical_device_surface_support_khr)(physicalDevice, queueFamilyIndex, surface, pSupported))))
 	}
 	fn vkGetPhysicalDeviceSurfaceCapabilitiesKHR(&self, physicalDevice: VkPhysicalDevice, surface: VkSurfaceKHR, pSurfaceCapabilities: *mut VkSurfaceCapabilitiesKHR) -> Result<()> {
-		convert_result("vkGetPhysicalDeviceSurfaceCapabilitiesKHR", catch_unwind(||((self.vk_khr_surface.vk_get_physical_device_surface_capabilities_khr)(physicalDevice, surface, pSurfaceCapabilities))))
+		vk_convert_result("vkGetPhysicalDeviceSurfaceCapabilitiesKHR", catch_unwind(||((self.vk_khr_surface.vk_get_physical_device_surface_capabilities_khr)(physicalDevice, surface, pSurfaceCapabilities))))
 	}
 	fn vkGetPhysicalDeviceSurfaceFormatsKHR(&self, physicalDevice: VkPhysicalDevice, surface: VkSurfaceKHR, pSurfaceFormatCount: *mut uint32_t, pSurfaceFormats: *mut VkSurfaceFormatKHR) -> Result<()> {
-		convert_result("vkGetPhysicalDeviceSurfaceFormatsKHR", catch_unwind(||((self.vk_khr_surface.vk_get_physical_device_surface_formats_khr)(physicalDevice, surface, pSurfaceFormatCount, pSurfaceFormats))))
+		vk_convert_result("vkGetPhysicalDeviceSurfaceFormatsKHR", catch_unwind(||((self.vk_khr_surface.vk_get_physical_device_surface_formats_khr)(physicalDevice, surface, pSurfaceFormatCount, pSurfaceFormats))))
 	}
 	fn vkGetPhysicalDeviceSurfacePresentModesKHR(&self, physicalDevice: VkPhysicalDevice, surface: VkSurfaceKHR, pPresentModeCount: *mut uint32_t, pPresentModes: *mut VkPresentModeKHR) -> Result<()> {
-		convert_result("vkGetPhysicalDeviceSurfacePresentModesKHR", catch_unwind(||((self.vk_khr_surface.vk_get_physical_device_surface_present_modes_khr)(physicalDevice, surface, pPresentModeCount, pPresentModes))))
+		vk_convert_result("vkGetPhysicalDeviceSurfacePresentModesKHR", catch_unwind(||((self.vk_khr_surface.vk_get_physical_device_surface_present_modes_khr)(physicalDevice, surface, pPresentModeCount, pPresentModes))))
 	}
 }
 impl VK_KHR_swapchain for VkCore {
 	fn vkCreateSwapchainKHR(&self, device: VkDevice, pCreateInfo: *const VkSwapchainCreateInfoKHR, pAllocator: *const VkAllocationCallbacks, pSwapchain: *mut VkSwapchainKHR) -> Result<()> {
-		convert_result("vkCreateSwapchainKHR", catch_unwind(||((self.vk_khr_swapchain.vk_create_swapchain_khr)(device, pCreateInfo, pAllocator, pSwapchain))))
+		vk_convert_result("vkCreateSwapchainKHR", catch_unwind(||((self.vk_khr_swapchain.vk_create_swapchain_khr)(device, pCreateInfo, pAllocator, pSwapchain))))
 	}
 	fn vkDestroySwapchainKHR(&self, device: VkDevice, swapchain: VkSwapchainKHR, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_khr_swapchain.vk_destroy_swapchain_khr)(device, swapchain, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_swapchain.vk_destroy_swapchain_khr)(device, swapchain, pAllocator))))
 	}
 	fn vkGetSwapchainImagesKHR(&self, device: VkDevice, swapchain: VkSwapchainKHR, pSwapchainImageCount: *mut uint32_t, pSwapchainImages: *mut VkImage) -> Result<()> {
-		convert_result("vkGetSwapchainImagesKHR", catch_unwind(||((self.vk_khr_swapchain.vk_get_swapchain_images_khr)(device, swapchain, pSwapchainImageCount, pSwapchainImages))))
+		vk_convert_result("vkGetSwapchainImagesKHR", catch_unwind(||((self.vk_khr_swapchain.vk_get_swapchain_images_khr)(device, swapchain, pSwapchainImageCount, pSwapchainImages))))
 	}
 	fn vkAcquireNextImageKHR(&self, device: VkDevice, swapchain: VkSwapchainKHR, timeout: u64, semaphore: VkSemaphore, fence: VkFence, pImageIndex: *mut uint32_t) -> Result<()> {
-		convert_result("vkAcquireNextImageKHR", catch_unwind(||((self.vk_khr_swapchain.vk_acquire_next_image_khr)(device, swapchain, timeout, semaphore, fence, pImageIndex))))
+		vk_convert_result("vkAcquireNextImageKHR", catch_unwind(||((self.vk_khr_swapchain.vk_acquire_next_image_khr)(device, swapchain, timeout, semaphore, fence, pImageIndex))))
 	}
 	fn vkQueuePresentKHR(&self, queue: VkQueue, pPresentInfo: *const VkPresentInfoKHR) -> Result<()> {
-		convert_result("vkQueuePresentKHR", catch_unwind(||((self.vk_khr_swapchain.vk_queue_present_khr)(queue, pPresentInfo))))
+		vk_convert_result("vkQueuePresentKHR", catch_unwind(||((self.vk_khr_swapchain.vk_queue_present_khr)(queue, pPresentInfo))))
 	}
 	fn vkGetDeviceGroupPresentCapabilitiesKHR(&self, device: VkDevice, pDeviceGroupPresentCapabilities: *mut VkDeviceGroupPresentCapabilitiesKHR) -> Result<()> {
-		convert_result("vkGetDeviceGroupPresentCapabilitiesKHR", catch_unwind(||((self.vk_khr_swapchain.vk_get_device_group_present_capabilities_khr)(device, pDeviceGroupPresentCapabilities))))
+		vk_convert_result("vkGetDeviceGroupPresentCapabilitiesKHR", catch_unwind(||((self.vk_khr_swapchain.vk_get_device_group_present_capabilities_khr)(device, pDeviceGroupPresentCapabilities))))
 	}
 	fn vkGetDeviceGroupSurfacePresentModesKHR(&self, device: VkDevice, surface: VkSurfaceKHR, pModes: *mut VkDeviceGroupPresentModeFlagsKHR) -> Result<()> {
-		convert_result("vkGetDeviceGroupSurfacePresentModesKHR", catch_unwind(||((self.vk_khr_swapchain.vk_get_device_group_surface_present_modes_khr)(device, surface, pModes))))
+		vk_convert_result("vkGetDeviceGroupSurfacePresentModesKHR", catch_unwind(||((self.vk_khr_swapchain.vk_get_device_group_surface_present_modes_khr)(device, surface, pModes))))
 	}
 	fn vkGetPhysicalDevicePresentRectanglesKHR(&self, physicalDevice: VkPhysicalDevice, surface: VkSurfaceKHR, pRectCount: *mut uint32_t, pRects: *mut VkRect2D) -> Result<()> {
-		convert_result("vkGetPhysicalDevicePresentRectanglesKHR", catch_unwind(||((self.vk_khr_swapchain.vk_get_physical_device_present_rectangles_khr)(physicalDevice, surface, pRectCount, pRects))))
+		vk_convert_result("vkGetPhysicalDevicePresentRectanglesKHR", catch_unwind(||((self.vk_khr_swapchain.vk_get_physical_device_present_rectangles_khr)(physicalDevice, surface, pRectCount, pRects))))
 	}
 	fn vkAcquireNextImage2KHR(&self, device: VkDevice, pAcquireInfo: *const VkAcquireNextImageInfoKHR, pImageIndex: *mut uint32_t) -> Result<()> {
-		convert_result("vkAcquireNextImage2KHR", catch_unwind(||((self.vk_khr_swapchain.vk_acquire_next_image2_khr)(device, pAcquireInfo, pImageIndex))))
+		vk_convert_result("vkAcquireNextImage2KHR", catch_unwind(||((self.vk_khr_swapchain.vk_acquire_next_image2_khr)(device, pAcquireInfo, pImageIndex))))
 	}
 }
 impl VK_KHR_display for VkCore {
 	fn vkGetPhysicalDeviceDisplayPropertiesKHR(&self, physicalDevice: VkPhysicalDevice, pPropertyCount: *mut uint32_t, pProperties: *mut VkDisplayPropertiesKHR) -> Result<()> {
-		convert_result("vkGetPhysicalDeviceDisplayPropertiesKHR", catch_unwind(||((self.vk_khr_display.vk_get_physical_device_display_properties_khr)(physicalDevice, pPropertyCount, pProperties))))
+		vk_convert_result("vkGetPhysicalDeviceDisplayPropertiesKHR", catch_unwind(||((self.vk_khr_display.vk_get_physical_device_display_properties_khr)(physicalDevice, pPropertyCount, pProperties))))
 	}
 	fn vkGetPhysicalDeviceDisplayPlanePropertiesKHR(&self, physicalDevice: VkPhysicalDevice, pPropertyCount: *mut uint32_t, pProperties: *mut VkDisplayPlanePropertiesKHR) -> Result<()> {
-		convert_result("vkGetPhysicalDeviceDisplayPlanePropertiesKHR", catch_unwind(||((self.vk_khr_display.vk_get_physical_device_display_plane_properties_khr)(physicalDevice, pPropertyCount, pProperties))))
+		vk_convert_result("vkGetPhysicalDeviceDisplayPlanePropertiesKHR", catch_unwind(||((self.vk_khr_display.vk_get_physical_device_display_plane_properties_khr)(physicalDevice, pPropertyCount, pProperties))))
 	}
 	fn vkGetDisplayPlaneSupportedDisplaysKHR(&self, physicalDevice: VkPhysicalDevice, planeIndex: u32, pDisplayCount: *mut uint32_t, pDisplays: *mut VkDisplayKHR) -> Result<()> {
-		convert_result("vkGetDisplayPlaneSupportedDisplaysKHR", catch_unwind(||((self.vk_khr_display.vk_get_display_plane_supported_displays_khr)(physicalDevice, planeIndex, pDisplayCount, pDisplays))))
+		vk_convert_result("vkGetDisplayPlaneSupportedDisplaysKHR", catch_unwind(||((self.vk_khr_display.vk_get_display_plane_supported_displays_khr)(physicalDevice, planeIndex, pDisplayCount, pDisplays))))
 	}
 	fn vkGetDisplayModePropertiesKHR(&self, physicalDevice: VkPhysicalDevice, display: VkDisplayKHR, pPropertyCount: *mut uint32_t, pProperties: *mut VkDisplayModePropertiesKHR) -> Result<()> {
-		convert_result("vkGetDisplayModePropertiesKHR", catch_unwind(||((self.vk_khr_display.vk_get_display_mode_properties_khr)(physicalDevice, display, pPropertyCount, pProperties))))
+		vk_convert_result("vkGetDisplayModePropertiesKHR", catch_unwind(||((self.vk_khr_display.vk_get_display_mode_properties_khr)(physicalDevice, display, pPropertyCount, pProperties))))
 	}
 	fn vkCreateDisplayModeKHR(&self, physicalDevice: VkPhysicalDevice, display: VkDisplayKHR, pCreateInfo: *const VkDisplayModeCreateInfoKHR, pAllocator: *const VkAllocationCallbacks, pMode: *mut VkDisplayModeKHR) -> Result<()> {
-		convert_result("vkCreateDisplayModeKHR", catch_unwind(||((self.vk_khr_display.vk_create_display_mode_khr)(physicalDevice, display, pCreateInfo, pAllocator, pMode))))
+		vk_convert_result("vkCreateDisplayModeKHR", catch_unwind(||((self.vk_khr_display.vk_create_display_mode_khr)(physicalDevice, display, pCreateInfo, pAllocator, pMode))))
 	}
 	fn vkGetDisplayPlaneCapabilitiesKHR(&self, physicalDevice: VkPhysicalDevice, mode: VkDisplayModeKHR, planeIndex: u32, pCapabilities: *mut VkDisplayPlaneCapabilitiesKHR) -> Result<()> {
-		convert_result("vkGetDisplayPlaneCapabilitiesKHR", catch_unwind(||((self.vk_khr_display.vk_get_display_plane_capabilities_khr)(physicalDevice, mode, planeIndex, pCapabilities))))
+		vk_convert_result("vkGetDisplayPlaneCapabilitiesKHR", catch_unwind(||((self.vk_khr_display.vk_get_display_plane_capabilities_khr)(physicalDevice, mode, planeIndex, pCapabilities))))
 	}
 	fn vkCreateDisplayPlaneSurfaceKHR(&self, instance: VkInstance, pCreateInfo: *const VkDisplaySurfaceCreateInfoKHR, pAllocator: *const VkAllocationCallbacks, pSurface: *mut VkSurfaceKHR) -> Result<()> {
-		convert_result("vkCreateDisplayPlaneSurfaceKHR", catch_unwind(||((self.vk_khr_display.vk_create_display_plane_surface_khr)(instance, pCreateInfo, pAllocator, pSurface))))
+		vk_convert_result("vkCreateDisplayPlaneSurfaceKHR", catch_unwind(||((self.vk_khr_display.vk_create_display_plane_surface_khr)(instance, pCreateInfo, pAllocator, pSurface))))
 	}
 }
 impl VK_KHR_display_swapchain for VkCore {
 	fn vkCreateSharedSwapchainsKHR(&self, device: VkDevice, swapchainCount: u32, pCreateInfos: *const VkSwapchainCreateInfoKHR, pAllocator: *const VkAllocationCallbacks, pSwapchains: *mut VkSwapchainKHR) -> Result<()> {
-		convert_result("vkCreateSharedSwapchainsKHR", catch_unwind(||((self.vk_khr_display_swapchain.vk_create_shared_swapchains_khr)(device, swapchainCount, pCreateInfos, pAllocator, pSwapchains))))
+		vk_convert_result("vkCreateSharedSwapchainsKHR", catch_unwind(||((self.vk_khr_display_swapchain.vk_create_shared_swapchains_khr)(device, swapchainCount, pCreateInfos, pAllocator, pSwapchains))))
 	}
 }
 impl VK_KHR_sampler_mirror_clamp_to_edge for VkCore {}
 impl VK_KHR_video_queue for VkCore {
 	fn vkGetPhysicalDeviceVideoCapabilitiesKHR(&self, physicalDevice: VkPhysicalDevice, pVideoProfile: *const VkVideoProfileInfoKHR, pCapabilities: *mut VkVideoCapabilitiesKHR) -> Result<()> {
-		convert_result("vkGetPhysicalDeviceVideoCapabilitiesKHR", catch_unwind(||((self.vk_khr_video_queue.vk_get_physical_device_video_capabilities_khr)(physicalDevice, pVideoProfile, pCapabilities))))
+		vk_convert_result("vkGetPhysicalDeviceVideoCapabilitiesKHR", catch_unwind(||((self.vk_khr_video_queue.vk_get_physical_device_video_capabilities_khr)(physicalDevice, pVideoProfile, pCapabilities))))
 	}
 	fn vkGetPhysicalDeviceVideoFormatPropertiesKHR(&self, physicalDevice: VkPhysicalDevice, pVideoFormatInfo: *const VkPhysicalDeviceVideoFormatInfoKHR, pVideoFormatPropertyCount: *mut uint32_t, pVideoFormatProperties: *mut VkVideoFormatPropertiesKHR) -> Result<()> {
-		convert_result("vkGetPhysicalDeviceVideoFormatPropertiesKHR", catch_unwind(||((self.vk_khr_video_queue.vk_get_physical_device_video_format_properties_khr)(physicalDevice, pVideoFormatInfo, pVideoFormatPropertyCount, pVideoFormatProperties))))
+		vk_convert_result("vkGetPhysicalDeviceVideoFormatPropertiesKHR", catch_unwind(||((self.vk_khr_video_queue.vk_get_physical_device_video_format_properties_khr)(physicalDevice, pVideoFormatInfo, pVideoFormatPropertyCount, pVideoFormatProperties))))
 	}
 	fn vkCreateVideoSessionKHR(&self, device: VkDevice, pCreateInfo: *const VkVideoSessionCreateInfoKHR, pAllocator: *const VkAllocationCallbacks, pVideoSession: *mut VkVideoSessionKHR) -> Result<()> {
-		convert_result("vkCreateVideoSessionKHR", catch_unwind(||((self.vk_khr_video_queue.vk_create_video_session_khr)(device, pCreateInfo, pAllocator, pVideoSession))))
+		vk_convert_result("vkCreateVideoSessionKHR", catch_unwind(||((self.vk_khr_video_queue.vk_create_video_session_khr)(device, pCreateInfo, pAllocator, pVideoSession))))
 	}
 	fn vkDestroyVideoSessionKHR(&self, device: VkDevice, videoSession: VkVideoSessionKHR, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_khr_video_queue.vk_destroy_video_session_khr)(device, videoSession, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_video_queue.vk_destroy_video_session_khr)(device, videoSession, pAllocator))))
 	}
 	fn vkGetVideoSessionMemoryRequirementsKHR(&self, device: VkDevice, videoSession: VkVideoSessionKHR, pMemoryRequirementsCount: *mut uint32_t, pMemoryRequirements: *mut VkVideoSessionMemoryRequirementsKHR) -> Result<()> {
-		convert_result("vkGetVideoSessionMemoryRequirementsKHR", catch_unwind(||((self.vk_khr_video_queue.vk_get_video_session_memory_requirements_khr)(device, videoSession, pMemoryRequirementsCount, pMemoryRequirements))))
+		vk_convert_result("vkGetVideoSessionMemoryRequirementsKHR", catch_unwind(||((self.vk_khr_video_queue.vk_get_video_session_memory_requirements_khr)(device, videoSession, pMemoryRequirementsCount, pMemoryRequirements))))
 	}
 	fn vkBindVideoSessionMemoryKHR(&self, device: VkDevice, videoSession: VkVideoSessionKHR, bindSessionMemoryInfoCount: u32, pBindSessionMemoryInfos: *const VkBindVideoSessionMemoryInfoKHR) -> Result<()> {
-		convert_result("vkBindVideoSessionMemoryKHR", catch_unwind(||((self.vk_khr_video_queue.vk_bind_video_session_memory_khr)(device, videoSession, bindSessionMemoryInfoCount, pBindSessionMemoryInfos))))
+		vk_convert_result("vkBindVideoSessionMemoryKHR", catch_unwind(||((self.vk_khr_video_queue.vk_bind_video_session_memory_khr)(device, videoSession, bindSessionMemoryInfoCount, pBindSessionMemoryInfos))))
 	}
 	fn vkCreateVideoSessionParametersKHR(&self, device: VkDevice, pCreateInfo: *const VkVideoSessionParametersCreateInfoKHR, pAllocator: *const VkAllocationCallbacks, pVideoSessionParameters: *mut VkVideoSessionParametersKHR) -> Result<()> {
-		convert_result("vkCreateVideoSessionParametersKHR", catch_unwind(||((self.vk_khr_video_queue.vk_create_video_session_parameters_khr)(device, pCreateInfo, pAllocator, pVideoSessionParameters))))
+		vk_convert_result("vkCreateVideoSessionParametersKHR", catch_unwind(||((self.vk_khr_video_queue.vk_create_video_session_parameters_khr)(device, pCreateInfo, pAllocator, pVideoSessionParameters))))
 	}
 	fn vkUpdateVideoSessionParametersKHR(&self, device: VkDevice, videoSessionParameters: VkVideoSessionParametersKHR, pUpdateInfo: *const VkVideoSessionParametersUpdateInfoKHR) -> Result<()> {
-		convert_result("vkUpdateVideoSessionParametersKHR", catch_unwind(||((self.vk_khr_video_queue.vk_update_video_session_parameters_khr)(device, videoSessionParameters, pUpdateInfo))))
+		vk_convert_result("vkUpdateVideoSessionParametersKHR", catch_unwind(||((self.vk_khr_video_queue.vk_update_video_session_parameters_khr)(device, videoSessionParameters, pUpdateInfo))))
 	}
 	fn vkDestroyVideoSessionParametersKHR(&self, device: VkDevice, videoSessionParameters: VkVideoSessionParametersKHR, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_khr_video_queue.vk_destroy_video_session_parameters_khr)(device, videoSessionParameters, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_video_queue.vk_destroy_video_session_parameters_khr)(device, videoSessionParameters, pAllocator))))
 	}
 	fn vkCmdBeginVideoCodingKHR(&self, commandBuffer: VkCommandBuffer, pBeginInfo: *const VkVideoBeginCodingInfoKHR) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_khr_video_queue.vk_cmd_begin_video_coding_khr)(commandBuffer, pBeginInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_video_queue.vk_cmd_begin_video_coding_khr)(commandBuffer, pBeginInfo))))
 	}
 	fn vkCmdEndVideoCodingKHR(&self, commandBuffer: VkCommandBuffer, pEndCodingInfo: *const VkVideoEndCodingInfoKHR) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_khr_video_queue.vk_cmd_end_video_coding_khr)(commandBuffer, pEndCodingInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_video_queue.vk_cmd_end_video_coding_khr)(commandBuffer, pEndCodingInfo))))
 	}
 	fn vkCmdControlVideoCodingKHR(&self, commandBuffer: VkCommandBuffer, pCodingControlInfo: *const VkVideoCodingControlInfoKHR) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_khr_video_queue.vk_cmd_control_video_coding_khr)(commandBuffer, pCodingControlInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_video_queue.vk_cmd_control_video_coding_khr)(commandBuffer, pCodingControlInfo))))
 	}
 }
 impl VK_KHR_video_decode_queue for VkCore {
 	fn vkCmdDecodeVideoKHR(&self, commandBuffer: VkCommandBuffer, pDecodeInfo: *const VkVideoDecodeInfoKHR) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_khr_video_decode_queue.vk_cmd_decode_video_khr)(commandBuffer, pDecodeInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_video_decode_queue.vk_cmd_decode_video_khr)(commandBuffer, pDecodeInfo))))
 	}
 }
 impl VK_KHR_video_encode_h264 for VkCore {}
@@ -54757,92 +54757,92 @@ impl VK_KHR_video_decode_h264 for VkCore {}
 impl vulkan_video_codec_h264std_decode for VkCore {}
 impl VK_KHR_dynamic_rendering for VkCore {
 	fn vkCmdBeginRenderingKHR(&self, commandBuffer: VkCommandBuffer, pRenderingInfo: *const VkRenderingInfo) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_khr_dynamic_rendering.vk_cmd_begin_rendering_khr)(commandBuffer, pRenderingInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_dynamic_rendering.vk_cmd_begin_rendering_khr)(commandBuffer, pRenderingInfo))))
 	}
 	fn vkCmdEndRenderingKHR(&self, commandBuffer: VkCommandBuffer) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_khr_dynamic_rendering.vk_cmd_end_rendering_khr)(commandBuffer))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_dynamic_rendering.vk_cmd_end_rendering_khr)(commandBuffer))))
 	}
 }
 impl VK_KHR_multiview for VkCore {}
 impl VK_KHR_get_physical_device_properties2 for VkCore {
 	fn vkGetPhysicalDeviceFeatures2KHR(&self, physicalDevice: VkPhysicalDevice, pFeatures: *mut VkPhysicalDeviceFeatures2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_khr_get_physical_device_properties2.vk_get_physical_device_features2_khr)(physicalDevice, pFeatures))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_get_physical_device_properties2.vk_get_physical_device_features2_khr)(physicalDevice, pFeatures))))
 	}
 	fn vkGetPhysicalDeviceProperties2KHR(&self, physicalDevice: VkPhysicalDevice, pProperties: *mut VkPhysicalDeviceProperties2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_khr_get_physical_device_properties2.vk_get_physical_device_properties2_khr)(physicalDevice, pProperties))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_get_physical_device_properties2.vk_get_physical_device_properties2_khr)(physicalDevice, pProperties))))
 	}
 	fn vkGetPhysicalDeviceFormatProperties2KHR(&self, physicalDevice: VkPhysicalDevice, format: VkFormat, pFormatProperties: *mut VkFormatProperties2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_khr_get_physical_device_properties2.vk_get_physical_device_format_properties2_khr)(physicalDevice, format, pFormatProperties))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_get_physical_device_properties2.vk_get_physical_device_format_properties2_khr)(physicalDevice, format, pFormatProperties))))
 	}
 	fn vkGetPhysicalDeviceImageFormatProperties2KHR(&self, physicalDevice: VkPhysicalDevice, pImageFormatInfo: *const VkPhysicalDeviceImageFormatInfo2, pImageFormatProperties: *mut VkImageFormatProperties2) -> Result<()> {
-		convert_result("vkGetPhysicalDeviceImageFormatProperties2KHR", catch_unwind(||((self.vk_khr_get_physical_device_properties2.vk_get_physical_device_image_format_properties2_khr)(physicalDevice, pImageFormatInfo, pImageFormatProperties))))
+		vk_convert_result("vkGetPhysicalDeviceImageFormatProperties2KHR", catch_unwind(||((self.vk_khr_get_physical_device_properties2.vk_get_physical_device_image_format_properties2_khr)(physicalDevice, pImageFormatInfo, pImageFormatProperties))))
 	}
 	fn vkGetPhysicalDeviceQueueFamilyProperties2KHR(&self, physicalDevice: VkPhysicalDevice, pQueueFamilyPropertyCount: *mut uint32_t, pQueueFamilyProperties: *mut VkQueueFamilyProperties2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_khr_get_physical_device_properties2.vk_get_physical_device_queue_family_properties2_khr)(physicalDevice, pQueueFamilyPropertyCount, pQueueFamilyProperties))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_get_physical_device_properties2.vk_get_physical_device_queue_family_properties2_khr)(physicalDevice, pQueueFamilyPropertyCount, pQueueFamilyProperties))))
 	}
 	fn vkGetPhysicalDeviceMemoryProperties2KHR(&self, physicalDevice: VkPhysicalDevice, pMemoryProperties: *mut VkPhysicalDeviceMemoryProperties2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_khr_get_physical_device_properties2.vk_get_physical_device_memory_properties2_khr)(physicalDevice, pMemoryProperties))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_get_physical_device_properties2.vk_get_physical_device_memory_properties2_khr)(physicalDevice, pMemoryProperties))))
 	}
 	fn vkGetPhysicalDeviceSparseImageFormatProperties2KHR(&self, physicalDevice: VkPhysicalDevice, pFormatInfo: *const VkPhysicalDeviceSparseImageFormatInfo2, pPropertyCount: *mut uint32_t, pProperties: *mut VkSparseImageFormatProperties2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_khr_get_physical_device_properties2.vk_get_physical_device_sparse_image_format_properties2_khr)(physicalDevice, pFormatInfo, pPropertyCount, pProperties))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_get_physical_device_properties2.vk_get_physical_device_sparse_image_format_properties2_khr)(physicalDevice, pFormatInfo, pPropertyCount, pProperties))))
 	}
 }
 impl VK_KHR_device_group for VkCore {
 	fn vkGetDeviceGroupPeerMemoryFeaturesKHR(&self, device: VkDevice, heapIndex: u32, localDeviceIndex: u32, remoteDeviceIndex: u32, pPeerMemoryFeatures: *mut VkPeerMemoryFeatureFlags) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_khr_device_group.vk_get_device_group_peer_memory_features_khr)(device, heapIndex, localDeviceIndex, remoteDeviceIndex, pPeerMemoryFeatures))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_device_group.vk_get_device_group_peer_memory_features_khr)(device, heapIndex, localDeviceIndex, remoteDeviceIndex, pPeerMemoryFeatures))))
 	}
 	fn vkCmdSetDeviceMaskKHR(&self, commandBuffer: VkCommandBuffer, deviceMask: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_khr_device_group.vk_cmd_set_device_mask_khr)(commandBuffer, deviceMask))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_device_group.vk_cmd_set_device_mask_khr)(commandBuffer, deviceMask))))
 	}
 	fn vkCmdDispatchBaseKHR(&self, commandBuffer: VkCommandBuffer, baseGroupX: u32, baseGroupY: u32, baseGroupZ: u32, groupCountX: u32, groupCountY: u32, groupCountZ: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_khr_device_group.vk_cmd_dispatch_base_khr)(commandBuffer, baseGroupX, baseGroupY, baseGroupZ, groupCountX, groupCountY, groupCountZ))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_device_group.vk_cmd_dispatch_base_khr)(commandBuffer, baseGroupX, baseGroupY, baseGroupZ, groupCountX, groupCountY, groupCountZ))))
 	}
 }
 impl VK_KHR_shader_draw_parameters for VkCore {}
 impl VK_KHR_maintenance1 for VkCore {
 	fn vkTrimCommandPoolKHR(&self, device: VkDevice, commandPool: VkCommandPool, flags: VkCommandPoolTrimFlags) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_khr_maintenance1.vk_trim_command_pool_khr)(device, commandPool, flags))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_maintenance1.vk_trim_command_pool_khr)(device, commandPool, flags))))
 	}
 }
 impl VK_KHR_device_group_creation for VkCore {
 	fn vkEnumeratePhysicalDeviceGroupsKHR(&self, instance: VkInstance, pPhysicalDeviceGroupCount: *mut uint32_t, pPhysicalDeviceGroupProperties: *mut VkPhysicalDeviceGroupProperties) -> Result<()> {
-		convert_result("vkEnumeratePhysicalDeviceGroupsKHR", catch_unwind(||((self.vk_khr_device_group_creation.vk_enumerate_physical_device_groups_khr)(instance, pPhysicalDeviceGroupCount, pPhysicalDeviceGroupProperties))))
+		vk_convert_result("vkEnumeratePhysicalDeviceGroupsKHR", catch_unwind(||((self.vk_khr_device_group_creation.vk_enumerate_physical_device_groups_khr)(instance, pPhysicalDeviceGroupCount, pPhysicalDeviceGroupProperties))))
 	}
 }
 impl VK_KHR_external_memory_capabilities for VkCore {
 	fn vkGetPhysicalDeviceExternalBufferPropertiesKHR(&self, physicalDevice: VkPhysicalDevice, pExternalBufferInfo: *const VkPhysicalDeviceExternalBufferInfo, pExternalBufferProperties: *mut VkExternalBufferProperties) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_khr_external_memory_capabilities.vk_get_physical_device_external_buffer_properties_khr)(physicalDevice, pExternalBufferInfo, pExternalBufferProperties))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_external_memory_capabilities.vk_get_physical_device_external_buffer_properties_khr)(physicalDevice, pExternalBufferInfo, pExternalBufferProperties))))
 	}
 }
 impl VK_KHR_external_memory for VkCore {}
 impl VK_KHR_external_memory_fd for VkCore {
 	fn vkGetMemoryFdKHR(&self, device: VkDevice, pGetFdInfo: *const VkMemoryGetFdInfoKHR, pFd: *mut int) -> Result<()> {
-		convert_result("vkGetMemoryFdKHR", catch_unwind(||((self.vk_khr_external_memory_fd.vk_get_memory_fd_khr)(device, pGetFdInfo, pFd))))
+		vk_convert_result("vkGetMemoryFdKHR", catch_unwind(||((self.vk_khr_external_memory_fd.vk_get_memory_fd_khr)(device, pGetFdInfo, pFd))))
 	}
 	fn vkGetMemoryFdPropertiesKHR(&self, device: VkDevice, handleType: VkExternalMemoryHandleTypeFlagBits, fd: i32, pMemoryFdProperties: *mut VkMemoryFdPropertiesKHR) -> Result<()> {
-		convert_result("vkGetMemoryFdPropertiesKHR", catch_unwind(||((self.vk_khr_external_memory_fd.vk_get_memory_fd_properties_khr)(device, handleType, fd, pMemoryFdProperties))))
+		vk_convert_result("vkGetMemoryFdPropertiesKHR", catch_unwind(||((self.vk_khr_external_memory_fd.vk_get_memory_fd_properties_khr)(device, handleType, fd, pMemoryFdProperties))))
 	}
 }
 impl VK_KHR_external_semaphore_capabilities for VkCore {
 	fn vkGetPhysicalDeviceExternalSemaphorePropertiesKHR(&self, physicalDevice: VkPhysicalDevice, pExternalSemaphoreInfo: *const VkPhysicalDeviceExternalSemaphoreInfo, pExternalSemaphoreProperties: *mut VkExternalSemaphoreProperties) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_khr_external_semaphore_capabilities.vk_get_physical_device_external_semaphore_properties_khr)(physicalDevice, pExternalSemaphoreInfo, pExternalSemaphoreProperties))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_external_semaphore_capabilities.vk_get_physical_device_external_semaphore_properties_khr)(physicalDevice, pExternalSemaphoreInfo, pExternalSemaphoreProperties))))
 	}
 }
 impl VK_KHR_external_semaphore for VkCore {}
 impl VK_KHR_external_semaphore_fd for VkCore {
 	fn vkImportSemaphoreFdKHR(&self, device: VkDevice, pImportSemaphoreFdInfo: *const VkImportSemaphoreFdInfoKHR) -> Result<()> {
-		convert_result("vkImportSemaphoreFdKHR", catch_unwind(||((self.vk_khr_external_semaphore_fd.vk_import_semaphore_fd_khr)(device, pImportSemaphoreFdInfo))))
+		vk_convert_result("vkImportSemaphoreFdKHR", catch_unwind(||((self.vk_khr_external_semaphore_fd.vk_import_semaphore_fd_khr)(device, pImportSemaphoreFdInfo))))
 	}
 	fn vkGetSemaphoreFdKHR(&self, device: VkDevice, pGetFdInfo: *const VkSemaphoreGetFdInfoKHR, pFd: *mut int) -> Result<()> {
-		convert_result("vkGetSemaphoreFdKHR", catch_unwind(||((self.vk_khr_external_semaphore_fd.vk_get_semaphore_fd_khr)(device, pGetFdInfo, pFd))))
+		vk_convert_result("vkGetSemaphoreFdKHR", catch_unwind(||((self.vk_khr_external_semaphore_fd.vk_get_semaphore_fd_khr)(device, pGetFdInfo, pFd))))
 	}
 }
 impl VK_KHR_push_descriptor for VkCore {
 	fn vkCmdPushDescriptorSetKHR(&self, commandBuffer: VkCommandBuffer, pipelineBindPoint: VkPipelineBindPoint, layout: VkPipelineLayout, set: u32, descriptorWriteCount: u32, pDescriptorWrites: *const VkWriteDescriptorSet) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_khr_push_descriptor.vk_cmd_push_descriptor_set_khr)(commandBuffer, pipelineBindPoint, layout, set, descriptorWriteCount, pDescriptorWrites))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_push_descriptor.vk_cmd_push_descriptor_set_khr)(commandBuffer, pipelineBindPoint, layout, set, descriptorWriteCount, pDescriptorWrites))))
 	}
 	fn vkCmdPushDescriptorSetWithTemplateKHR(&self, commandBuffer: VkCommandBuffer, descriptorUpdateTemplate: VkDescriptorUpdateTemplate, layout: VkPipelineLayout, set: u32, pData: *const c_void) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_khr_push_descriptor.vk_cmd_push_descriptor_set_with_template_khr)(commandBuffer, descriptorUpdateTemplate, layout, set, pData))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_push_descriptor.vk_cmd_push_descriptor_set_with_template_khr)(commandBuffer, descriptorUpdateTemplate, layout, set, pData))))
 	}
 }
 impl VK_KHR_shader_float16_int8 for VkCore {}
@@ -54850,85 +54850,85 @@ impl VK_KHR_16bit_storage for VkCore {}
 impl VK_KHR_incremental_present for VkCore {}
 impl VK_KHR_descriptor_update_template for VkCore {
 	fn vkCreateDescriptorUpdateTemplateKHR(&self, device: VkDevice, pCreateInfo: *const VkDescriptorUpdateTemplateCreateInfo, pAllocator: *const VkAllocationCallbacks, pDescriptorUpdateTemplate: *mut VkDescriptorUpdateTemplate) -> Result<()> {
-		convert_result("vkCreateDescriptorUpdateTemplateKHR", catch_unwind(||((self.vk_khr_descriptor_update_template.vk_create_descriptor_update_template_khr)(device, pCreateInfo, pAllocator, pDescriptorUpdateTemplate))))
+		vk_convert_result("vkCreateDescriptorUpdateTemplateKHR", catch_unwind(||((self.vk_khr_descriptor_update_template.vk_create_descriptor_update_template_khr)(device, pCreateInfo, pAllocator, pDescriptorUpdateTemplate))))
 	}
 	fn vkDestroyDescriptorUpdateTemplateKHR(&self, device: VkDevice, descriptorUpdateTemplate: VkDescriptorUpdateTemplate, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_khr_descriptor_update_template.vk_destroy_descriptor_update_template_khr)(device, descriptorUpdateTemplate, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_descriptor_update_template.vk_destroy_descriptor_update_template_khr)(device, descriptorUpdateTemplate, pAllocator))))
 	}
 	fn vkUpdateDescriptorSetWithTemplateKHR(&self, device: VkDevice, descriptorSet: VkDescriptorSet, descriptorUpdateTemplate: VkDescriptorUpdateTemplate, pData: *const c_void) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_khr_descriptor_update_template.vk_update_descriptor_set_with_template_khr)(device, descriptorSet, descriptorUpdateTemplate, pData))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_descriptor_update_template.vk_update_descriptor_set_with_template_khr)(device, descriptorSet, descriptorUpdateTemplate, pData))))
 	}
 }
 impl VK_KHR_imageless_framebuffer for VkCore {}
 impl VK_KHR_create_renderpass2 for VkCore {
 	fn vkCreateRenderPass2KHR(&self, device: VkDevice, pCreateInfo: *const VkRenderPassCreateInfo2, pAllocator: *const VkAllocationCallbacks, pRenderPass: *mut VkRenderPass) -> Result<()> {
-		convert_result("vkCreateRenderPass2KHR", catch_unwind(||((self.vk_khr_create_renderpass2.vk_create_render_pass2_khr)(device, pCreateInfo, pAllocator, pRenderPass))))
+		vk_convert_result("vkCreateRenderPass2KHR", catch_unwind(||((self.vk_khr_create_renderpass2.vk_create_render_pass2_khr)(device, pCreateInfo, pAllocator, pRenderPass))))
 	}
 	fn vkCmdBeginRenderPass2KHR(&self, commandBuffer: VkCommandBuffer, pRenderPassBegin: *const VkRenderPassBeginInfo, pSubpassBeginInfo: *const VkSubpassBeginInfo) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_khr_create_renderpass2.vk_cmd_begin_render_pass2_khr)(commandBuffer, pRenderPassBegin, pSubpassBeginInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_create_renderpass2.vk_cmd_begin_render_pass2_khr)(commandBuffer, pRenderPassBegin, pSubpassBeginInfo))))
 	}
 	fn vkCmdNextSubpass2KHR(&self, commandBuffer: VkCommandBuffer, pSubpassBeginInfo: *const VkSubpassBeginInfo, pSubpassEndInfo: *const VkSubpassEndInfo) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_khr_create_renderpass2.vk_cmd_next_subpass2_khr)(commandBuffer, pSubpassBeginInfo, pSubpassEndInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_create_renderpass2.vk_cmd_next_subpass2_khr)(commandBuffer, pSubpassBeginInfo, pSubpassEndInfo))))
 	}
 	fn vkCmdEndRenderPass2KHR(&self, commandBuffer: VkCommandBuffer, pSubpassEndInfo: *const VkSubpassEndInfo) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_khr_create_renderpass2.vk_cmd_end_render_pass2_khr)(commandBuffer, pSubpassEndInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_create_renderpass2.vk_cmd_end_render_pass2_khr)(commandBuffer, pSubpassEndInfo))))
 	}
 }
 impl VK_KHR_shared_presentable_image for VkCore {
 	fn vkGetSwapchainStatusKHR(&self, device: VkDevice, swapchain: VkSwapchainKHR) -> Result<()> {
-		convert_result("vkGetSwapchainStatusKHR", catch_unwind(||((self.vk_khr_shared_presentable_image.vk_get_swapchain_status_khr)(device, swapchain))))
+		vk_convert_result("vkGetSwapchainStatusKHR", catch_unwind(||((self.vk_khr_shared_presentable_image.vk_get_swapchain_status_khr)(device, swapchain))))
 	}
 }
 impl VK_KHR_external_fence_capabilities for VkCore {
 	fn vkGetPhysicalDeviceExternalFencePropertiesKHR(&self, physicalDevice: VkPhysicalDevice, pExternalFenceInfo: *const VkPhysicalDeviceExternalFenceInfo, pExternalFenceProperties: *mut VkExternalFenceProperties) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_khr_external_fence_capabilities.vk_get_physical_device_external_fence_properties_khr)(physicalDevice, pExternalFenceInfo, pExternalFenceProperties))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_external_fence_capabilities.vk_get_physical_device_external_fence_properties_khr)(physicalDevice, pExternalFenceInfo, pExternalFenceProperties))))
 	}
 }
 impl VK_KHR_external_fence for VkCore {}
 impl VK_KHR_external_fence_fd for VkCore {
 	fn vkImportFenceFdKHR(&self, device: VkDevice, pImportFenceFdInfo: *const VkImportFenceFdInfoKHR) -> Result<()> {
-		convert_result("vkImportFenceFdKHR", catch_unwind(||((self.vk_khr_external_fence_fd.vk_import_fence_fd_khr)(device, pImportFenceFdInfo))))
+		vk_convert_result("vkImportFenceFdKHR", catch_unwind(||((self.vk_khr_external_fence_fd.vk_import_fence_fd_khr)(device, pImportFenceFdInfo))))
 	}
 	fn vkGetFenceFdKHR(&self, device: VkDevice, pGetFdInfo: *const VkFenceGetFdInfoKHR, pFd: *mut int) -> Result<()> {
-		convert_result("vkGetFenceFdKHR", catch_unwind(||((self.vk_khr_external_fence_fd.vk_get_fence_fd_khr)(device, pGetFdInfo, pFd))))
+		vk_convert_result("vkGetFenceFdKHR", catch_unwind(||((self.vk_khr_external_fence_fd.vk_get_fence_fd_khr)(device, pGetFdInfo, pFd))))
 	}
 }
 impl VK_KHR_performance_query for VkCore {
 	fn vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR(&self, physicalDevice: VkPhysicalDevice, queueFamilyIndex: u32, pCounterCount: *mut uint32_t, pCounters: *mut VkPerformanceCounterKHR, pCounterDescriptions: *mut VkPerformanceCounterDescriptionKHR) -> Result<()> {
-		convert_result("vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR", catch_unwind(||((self.vk_khr_performance_query.vk_enumerate_physical_device_queue_family_performance_query_counters_khr)(physicalDevice, queueFamilyIndex, pCounterCount, pCounters, pCounterDescriptions))))
+		vk_convert_result("vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR", catch_unwind(||((self.vk_khr_performance_query.vk_enumerate_physical_device_queue_family_performance_query_counters_khr)(physicalDevice, queueFamilyIndex, pCounterCount, pCounters, pCounterDescriptions))))
 	}
 	fn vkGetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR(&self, physicalDevice: VkPhysicalDevice, pPerformanceQueryCreateInfo: *const VkQueryPoolPerformanceCreateInfoKHR, pNumPasses: *mut uint32_t) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_khr_performance_query.vk_get_physical_device_queue_family_performance_query_passes_khr)(physicalDevice, pPerformanceQueryCreateInfo, pNumPasses))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_performance_query.vk_get_physical_device_queue_family_performance_query_passes_khr)(physicalDevice, pPerformanceQueryCreateInfo, pNumPasses))))
 	}
 	fn vkAcquireProfilingLockKHR(&self, device: VkDevice, pInfo: *const VkAcquireProfilingLockInfoKHR) -> Result<()> {
-		convert_result("vkAcquireProfilingLockKHR", catch_unwind(||((self.vk_khr_performance_query.vk_acquire_profiling_lock_khr)(device, pInfo))))
+		vk_convert_result("vkAcquireProfilingLockKHR", catch_unwind(||((self.vk_khr_performance_query.vk_acquire_profiling_lock_khr)(device, pInfo))))
 	}
 	fn vkReleaseProfilingLockKHR(&self, device: VkDevice) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_khr_performance_query.vk_release_profiling_lock_khr)(device))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_performance_query.vk_release_profiling_lock_khr)(device))))
 	}
 }
 impl VK_KHR_maintenance2 for VkCore {}
 impl VK_KHR_get_surface_capabilities2 for VkCore {
 	fn vkGetPhysicalDeviceSurfaceCapabilities2KHR(&self, physicalDevice: VkPhysicalDevice, pSurfaceInfo: *const VkPhysicalDeviceSurfaceInfo2KHR, pSurfaceCapabilities: *mut VkSurfaceCapabilities2KHR) -> Result<()> {
-		convert_result("vkGetPhysicalDeviceSurfaceCapabilities2KHR", catch_unwind(||((self.vk_khr_get_surface_capabilities2.vk_get_physical_device_surface_capabilities2_khr)(physicalDevice, pSurfaceInfo, pSurfaceCapabilities))))
+		vk_convert_result("vkGetPhysicalDeviceSurfaceCapabilities2KHR", catch_unwind(||((self.vk_khr_get_surface_capabilities2.vk_get_physical_device_surface_capabilities2_khr)(physicalDevice, pSurfaceInfo, pSurfaceCapabilities))))
 	}
 	fn vkGetPhysicalDeviceSurfaceFormats2KHR(&self, physicalDevice: VkPhysicalDevice, pSurfaceInfo: *const VkPhysicalDeviceSurfaceInfo2KHR, pSurfaceFormatCount: *mut uint32_t, pSurfaceFormats: *mut VkSurfaceFormat2KHR) -> Result<()> {
-		convert_result("vkGetPhysicalDeviceSurfaceFormats2KHR", catch_unwind(||((self.vk_khr_get_surface_capabilities2.vk_get_physical_device_surface_formats2_khr)(physicalDevice, pSurfaceInfo, pSurfaceFormatCount, pSurfaceFormats))))
+		vk_convert_result("vkGetPhysicalDeviceSurfaceFormats2KHR", catch_unwind(||((self.vk_khr_get_surface_capabilities2.vk_get_physical_device_surface_formats2_khr)(physicalDevice, pSurfaceInfo, pSurfaceFormatCount, pSurfaceFormats))))
 	}
 }
 impl VK_KHR_variable_pointers for VkCore {}
 impl VK_KHR_get_display_properties2 for VkCore {
 	fn vkGetPhysicalDeviceDisplayProperties2KHR(&self, physicalDevice: VkPhysicalDevice, pPropertyCount: *mut uint32_t, pProperties: *mut VkDisplayProperties2KHR) -> Result<()> {
-		convert_result("vkGetPhysicalDeviceDisplayProperties2KHR", catch_unwind(||((self.vk_khr_get_display_properties2.vk_get_physical_device_display_properties2_khr)(physicalDevice, pPropertyCount, pProperties))))
+		vk_convert_result("vkGetPhysicalDeviceDisplayProperties2KHR", catch_unwind(||((self.vk_khr_get_display_properties2.vk_get_physical_device_display_properties2_khr)(physicalDevice, pPropertyCount, pProperties))))
 	}
 	fn vkGetPhysicalDeviceDisplayPlaneProperties2KHR(&self, physicalDevice: VkPhysicalDevice, pPropertyCount: *mut uint32_t, pProperties: *mut VkDisplayPlaneProperties2KHR) -> Result<()> {
-		convert_result("vkGetPhysicalDeviceDisplayPlaneProperties2KHR", catch_unwind(||((self.vk_khr_get_display_properties2.vk_get_physical_device_display_plane_properties2_khr)(physicalDevice, pPropertyCount, pProperties))))
+		vk_convert_result("vkGetPhysicalDeviceDisplayPlaneProperties2KHR", catch_unwind(||((self.vk_khr_get_display_properties2.vk_get_physical_device_display_plane_properties2_khr)(physicalDevice, pPropertyCount, pProperties))))
 	}
 	fn vkGetDisplayModeProperties2KHR(&self, physicalDevice: VkPhysicalDevice, display: VkDisplayKHR, pPropertyCount: *mut uint32_t, pProperties: *mut VkDisplayModeProperties2KHR) -> Result<()> {
-		convert_result("vkGetDisplayModeProperties2KHR", catch_unwind(||((self.vk_khr_get_display_properties2.vk_get_display_mode_properties2_khr)(physicalDevice, display, pPropertyCount, pProperties))))
+		vk_convert_result("vkGetDisplayModeProperties2KHR", catch_unwind(||((self.vk_khr_get_display_properties2.vk_get_display_mode_properties2_khr)(physicalDevice, display, pPropertyCount, pProperties))))
 	}
 	fn vkGetDisplayPlaneCapabilities2KHR(&self, physicalDevice: VkPhysicalDevice, pDisplayPlaneInfo: *const VkDisplayPlaneInfo2KHR, pCapabilities: *mut VkDisplayPlaneCapabilities2KHR) -> Result<()> {
-		convert_result("vkGetDisplayPlaneCapabilities2KHR", catch_unwind(||((self.vk_khr_get_display_properties2.vk_get_display_plane_capabilities2_khr)(physicalDevice, pDisplayPlaneInfo, pCapabilities))))
+		vk_convert_result("vkGetDisplayPlaneCapabilities2KHR", catch_unwind(||((self.vk_khr_get_display_properties2.vk_get_display_plane_capabilities2_khr)(physicalDevice, pDisplayPlaneInfo, pCapabilities))))
 	}
 }
 impl VK_KHR_dedicated_allocation for VkCore {}
@@ -54937,43 +54937,43 @@ impl VK_KHR_shader_bfloat16 for VkCore {}
 impl VK_KHR_relaxed_block_layout for VkCore {}
 impl VK_KHR_get_memory_requirements2 for VkCore {
 	fn vkGetImageMemoryRequirements2KHR(&self, device: VkDevice, pInfo: *const VkImageMemoryRequirementsInfo2, pMemoryRequirements: *mut VkMemoryRequirements2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_khr_get_memory_requirements2.vk_get_image_memory_requirements2_khr)(device, pInfo, pMemoryRequirements))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_get_memory_requirements2.vk_get_image_memory_requirements2_khr)(device, pInfo, pMemoryRequirements))))
 	}
 	fn vkGetBufferMemoryRequirements2KHR(&self, device: VkDevice, pInfo: *const VkBufferMemoryRequirementsInfo2, pMemoryRequirements: *mut VkMemoryRequirements2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_khr_get_memory_requirements2.vk_get_buffer_memory_requirements2_khr)(device, pInfo, pMemoryRequirements))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_get_memory_requirements2.vk_get_buffer_memory_requirements2_khr)(device, pInfo, pMemoryRequirements))))
 	}
 	fn vkGetImageSparseMemoryRequirements2KHR(&self, device: VkDevice, pInfo: *const VkImageSparseMemoryRequirementsInfo2, pSparseMemoryRequirementCount: *mut uint32_t, pSparseMemoryRequirements: *mut VkSparseImageMemoryRequirements2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_khr_get_memory_requirements2.vk_get_image_sparse_memory_requirements2_khr)(device, pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_get_memory_requirements2.vk_get_image_sparse_memory_requirements2_khr)(device, pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements))))
 	}
 }
 impl VK_KHR_image_format_list for VkCore {}
 impl VK_KHR_sampler_ycbcr_conversion for VkCore {
 	fn vkCreateSamplerYcbcrConversionKHR(&self, device: VkDevice, pCreateInfo: *const VkSamplerYcbcrConversionCreateInfo, pAllocator: *const VkAllocationCallbacks, pYcbcrConversion: *mut VkSamplerYcbcrConversion) -> Result<()> {
-		convert_result("vkCreateSamplerYcbcrConversionKHR", catch_unwind(||((self.vk_khr_sampler_ycbcr_conversion.vk_create_sampler_ycbcr_conversion_khr)(device, pCreateInfo, pAllocator, pYcbcrConversion))))
+		vk_convert_result("vkCreateSamplerYcbcrConversionKHR", catch_unwind(||((self.vk_khr_sampler_ycbcr_conversion.vk_create_sampler_ycbcr_conversion_khr)(device, pCreateInfo, pAllocator, pYcbcrConversion))))
 	}
 	fn vkDestroySamplerYcbcrConversionKHR(&self, device: VkDevice, ycbcrConversion: VkSamplerYcbcrConversion, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_khr_sampler_ycbcr_conversion.vk_destroy_sampler_ycbcr_conversion_khr)(device, ycbcrConversion, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_sampler_ycbcr_conversion.vk_destroy_sampler_ycbcr_conversion_khr)(device, ycbcrConversion, pAllocator))))
 	}
 }
 impl VK_KHR_bind_memory2 for VkCore {
 	fn vkBindBufferMemory2KHR(&self, device: VkDevice, bindInfoCount: u32, pBindInfos: *const VkBindBufferMemoryInfo) -> Result<()> {
-		convert_result("vkBindBufferMemory2KHR", catch_unwind(||((self.vk_khr_bind_memory2.vk_bind_buffer_memory2_khr)(device, bindInfoCount, pBindInfos))))
+		vk_convert_result("vkBindBufferMemory2KHR", catch_unwind(||((self.vk_khr_bind_memory2.vk_bind_buffer_memory2_khr)(device, bindInfoCount, pBindInfos))))
 	}
 	fn vkBindImageMemory2KHR(&self, device: VkDevice, bindInfoCount: u32, pBindInfos: *const VkBindImageMemoryInfo) -> Result<()> {
-		convert_result("vkBindImageMemory2KHR", catch_unwind(||((self.vk_khr_bind_memory2.vk_bind_image_memory2_khr)(device, bindInfoCount, pBindInfos))))
+		vk_convert_result("vkBindImageMemory2KHR", catch_unwind(||((self.vk_khr_bind_memory2.vk_bind_image_memory2_khr)(device, bindInfoCount, pBindInfos))))
 	}
 }
 impl VK_KHR_maintenance3 for VkCore {
 	fn vkGetDescriptorSetLayoutSupportKHR(&self, device: VkDevice, pCreateInfo: *const VkDescriptorSetLayoutCreateInfo, pSupport: *mut VkDescriptorSetLayoutSupport) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_khr_maintenance3.vk_get_descriptor_set_layout_support_khr)(device, pCreateInfo, pSupport))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_maintenance3.vk_get_descriptor_set_layout_support_khr)(device, pCreateInfo, pSupport))))
 	}
 }
 impl VK_KHR_draw_indirect_count for VkCore {
 	fn vkCmdDrawIndirectCountKHR(&self, commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize, countBuffer: VkBuffer, countBufferOffset: VkDeviceSize, maxDrawCount: u32, stride: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_khr_draw_indirect_count.vk_cmd_draw_indirect_count_khr)(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_draw_indirect_count.vk_cmd_draw_indirect_count_khr)(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride))))
 	}
 	fn vkCmdDrawIndexedIndirectCountKHR(&self, commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize, countBuffer: VkBuffer, countBufferOffset: VkDeviceSize, maxDrawCount: u32, stride: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_khr_draw_indirect_count.vk_cmd_draw_indexed_indirect_count_khr)(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_draw_indirect_count.vk_cmd_draw_indexed_indirect_count_khr)(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride))))
 	}
 }
 impl VK_KHR_shader_subgroup_extended_types for VkCore {}
@@ -54989,31 +54989,31 @@ impl VK_KHR_depth_stencil_resolve for VkCore {}
 impl VK_KHR_swapchain_mutable_format for VkCore {}
 impl VK_KHR_timeline_semaphore for VkCore {
 	fn vkGetSemaphoreCounterValueKHR(&self, device: VkDevice, semaphore: VkSemaphore, pValue: *mut uint64_t) -> Result<()> {
-		convert_result("vkGetSemaphoreCounterValueKHR", catch_unwind(||((self.vk_khr_timeline_semaphore.vk_get_semaphore_counter_value_khr)(device, semaphore, pValue))))
+		vk_convert_result("vkGetSemaphoreCounterValueKHR", catch_unwind(||((self.vk_khr_timeline_semaphore.vk_get_semaphore_counter_value_khr)(device, semaphore, pValue))))
 	}
 	fn vkWaitSemaphoresKHR(&self, device: VkDevice, pWaitInfo: *const VkSemaphoreWaitInfo, timeout: u64) -> Result<()> {
-		convert_result("vkWaitSemaphoresKHR", catch_unwind(||((self.vk_khr_timeline_semaphore.vk_wait_semaphores_khr)(device, pWaitInfo, timeout))))
+		vk_convert_result("vkWaitSemaphoresKHR", catch_unwind(||((self.vk_khr_timeline_semaphore.vk_wait_semaphores_khr)(device, pWaitInfo, timeout))))
 	}
 	fn vkSignalSemaphoreKHR(&self, device: VkDevice, pSignalInfo: *const VkSemaphoreSignalInfo) -> Result<()> {
-		convert_result("vkSignalSemaphoreKHR", catch_unwind(||((self.vk_khr_timeline_semaphore.vk_signal_semaphore_khr)(device, pSignalInfo))))
+		vk_convert_result("vkSignalSemaphoreKHR", catch_unwind(||((self.vk_khr_timeline_semaphore.vk_signal_semaphore_khr)(device, pSignalInfo))))
 	}
 }
 impl VK_KHR_vulkan_memory_model for VkCore {}
 impl VK_KHR_shader_terminate_invocation for VkCore {}
 impl VK_KHR_fragment_shading_rate for VkCore {
 	fn vkGetPhysicalDeviceFragmentShadingRatesKHR(&self, physicalDevice: VkPhysicalDevice, pFragmentShadingRateCount: *mut uint32_t, pFragmentShadingRates: *mut VkPhysicalDeviceFragmentShadingRateKHR) -> Result<()> {
-		convert_result("vkGetPhysicalDeviceFragmentShadingRatesKHR", catch_unwind(||((self.vk_khr_fragment_shading_rate.vk_get_physical_device_fragment_shading_rates_khr)(physicalDevice, pFragmentShadingRateCount, pFragmentShadingRates))))
+		vk_convert_result("vkGetPhysicalDeviceFragmentShadingRatesKHR", catch_unwind(||((self.vk_khr_fragment_shading_rate.vk_get_physical_device_fragment_shading_rates_khr)(physicalDevice, pFragmentShadingRateCount, pFragmentShadingRates))))
 	}
 	fn vkCmdSetFragmentShadingRateKHR(&self, commandBuffer: VkCommandBuffer, pFragmentSize: *const VkExtent2D, combinerOps: &[VkFragmentShadingRateCombinerOpKHR; 2 as usize]) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_khr_fragment_shading_rate.vk_cmd_set_fragment_shading_rate_khr)(commandBuffer, pFragmentSize, combinerOps))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_fragment_shading_rate.vk_cmd_set_fragment_shading_rate_khr)(commandBuffer, pFragmentSize, combinerOps))))
 	}
 }
 impl VK_KHR_dynamic_rendering_local_read for VkCore {
 	fn vkCmdSetRenderingAttachmentLocationsKHR(&self, commandBuffer: VkCommandBuffer, pLocationInfo: *const VkRenderingAttachmentLocationInfo) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_khr_dynamic_rendering_local_read.vk_cmd_set_rendering_attachment_locations_khr)(commandBuffer, pLocationInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_dynamic_rendering_local_read.vk_cmd_set_rendering_attachment_locations_khr)(commandBuffer, pLocationInfo))))
 	}
 	fn vkCmdSetRenderingInputAttachmentIndicesKHR(&self, commandBuffer: VkCommandBuffer, pInputAttachmentIndexInfo: *const VkRenderingInputAttachmentIndexInfo) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_khr_dynamic_rendering_local_read.vk_cmd_set_rendering_input_attachment_indices_khr)(commandBuffer, pInputAttachmentIndexInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_dynamic_rendering_local_read.vk_cmd_set_rendering_input_attachment_indices_khr)(commandBuffer, pInputAttachmentIndexInfo))))
 	}
 }
 impl VK_KHR_shader_quad_control for VkCore {}
@@ -55022,55 +55022,55 @@ impl VK_KHR_surface_protected_capabilities for VkCore {}
 impl VK_KHR_separate_depth_stencil_layouts for VkCore {}
 impl VK_KHR_present_wait for VkCore {
 	fn vkWaitForPresentKHR(&self, device: VkDevice, swapchain: VkSwapchainKHR, presentId: u64, timeout: u64) -> Result<()> {
-		convert_result("vkWaitForPresentKHR", catch_unwind(||((self.vk_khr_present_wait.vk_wait_for_present_khr)(device, swapchain, presentId, timeout))))
+		vk_convert_result("vkWaitForPresentKHR", catch_unwind(||((self.vk_khr_present_wait.vk_wait_for_present_khr)(device, swapchain, presentId, timeout))))
 	}
 }
 impl VK_KHR_uniform_buffer_standard_layout for VkCore {}
 impl VK_KHR_buffer_device_address for VkCore {
 	fn vkGetBufferDeviceAddressKHR(&self, device: VkDevice, pInfo: *const VkBufferDeviceAddressInfo) -> Result<VkDeviceAddress> {
-		process_catch(catch_unwind(||((self.vk_khr_buffer_device_address.vk_get_buffer_device_address_khr)(device, pInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_buffer_device_address.vk_get_buffer_device_address_khr)(device, pInfo))))
 	}
 	fn vkGetBufferOpaqueCaptureAddressKHR(&self, device: VkDevice, pInfo: *const VkBufferDeviceAddressInfo) -> Result<u64> {
-		process_catch(catch_unwind(||((self.vk_khr_buffer_device_address.vk_get_buffer_opaque_capture_address_khr)(device, pInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_buffer_device_address.vk_get_buffer_opaque_capture_address_khr)(device, pInfo))))
 	}
 	fn vkGetDeviceMemoryOpaqueCaptureAddressKHR(&self, device: VkDevice, pInfo: *const VkDeviceMemoryOpaqueCaptureAddressInfo) -> Result<u64> {
-		process_catch(catch_unwind(||((self.vk_khr_buffer_device_address.vk_get_device_memory_opaque_capture_address_khr)(device, pInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_buffer_device_address.vk_get_device_memory_opaque_capture_address_khr)(device, pInfo))))
 	}
 }
 impl VK_KHR_deferred_host_operations for VkCore {
 	fn vkCreateDeferredOperationKHR(&self, device: VkDevice, pAllocator: *const VkAllocationCallbacks, pDeferredOperation: *mut VkDeferredOperationKHR) -> Result<()> {
-		convert_result("vkCreateDeferredOperationKHR", catch_unwind(||((self.vk_khr_deferred_host_operations.vk_create_deferred_operation_khr)(device, pAllocator, pDeferredOperation))))
+		vk_convert_result("vkCreateDeferredOperationKHR", catch_unwind(||((self.vk_khr_deferred_host_operations.vk_create_deferred_operation_khr)(device, pAllocator, pDeferredOperation))))
 	}
 	fn vkDestroyDeferredOperationKHR(&self, device: VkDevice, operation: VkDeferredOperationKHR, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_khr_deferred_host_operations.vk_destroy_deferred_operation_khr)(device, operation, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_deferred_host_operations.vk_destroy_deferred_operation_khr)(device, operation, pAllocator))))
 	}
 	fn vkGetDeferredOperationMaxConcurrencyKHR(&self, device: VkDevice, operation: VkDeferredOperationKHR) -> Result<u32> {
-		process_catch(catch_unwind(||((self.vk_khr_deferred_host_operations.vk_get_deferred_operation_max_concurrency_khr)(device, operation))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_deferred_host_operations.vk_get_deferred_operation_max_concurrency_khr)(device, operation))))
 	}
 	fn vkGetDeferredOperationResultKHR(&self, device: VkDevice, operation: VkDeferredOperationKHR) -> Result<()> {
-		convert_result("vkGetDeferredOperationResultKHR", catch_unwind(||((self.vk_khr_deferred_host_operations.vk_get_deferred_operation_result_khr)(device, operation))))
+		vk_convert_result("vkGetDeferredOperationResultKHR", catch_unwind(||((self.vk_khr_deferred_host_operations.vk_get_deferred_operation_result_khr)(device, operation))))
 	}
 	fn vkDeferredOperationJoinKHR(&self, device: VkDevice, operation: VkDeferredOperationKHR) -> Result<()> {
-		convert_result("vkDeferredOperationJoinKHR", catch_unwind(||((self.vk_khr_deferred_host_operations.vk_deferred_operation_join_khr)(device, operation))))
+		vk_convert_result("vkDeferredOperationJoinKHR", catch_unwind(||((self.vk_khr_deferred_host_operations.vk_deferred_operation_join_khr)(device, operation))))
 	}
 }
 impl VK_KHR_pipeline_executable_properties for VkCore {
 	fn vkGetPipelineExecutablePropertiesKHR(&self, device: VkDevice, pPipelineInfo: *const VkPipelineInfoKHR, pExecutableCount: *mut uint32_t, pProperties: *mut VkPipelineExecutablePropertiesKHR) -> Result<()> {
-		convert_result("vkGetPipelineExecutablePropertiesKHR", catch_unwind(||((self.vk_khr_pipeline_executable_properties.vk_get_pipeline_executable_properties_khr)(device, pPipelineInfo, pExecutableCount, pProperties))))
+		vk_convert_result("vkGetPipelineExecutablePropertiesKHR", catch_unwind(||((self.vk_khr_pipeline_executable_properties.vk_get_pipeline_executable_properties_khr)(device, pPipelineInfo, pExecutableCount, pProperties))))
 	}
 	fn vkGetPipelineExecutableStatisticsKHR(&self, device: VkDevice, pExecutableInfo: *const VkPipelineExecutableInfoKHR, pStatisticCount: *mut uint32_t, pStatistics: *mut VkPipelineExecutableStatisticKHR) -> Result<()> {
-		convert_result("vkGetPipelineExecutableStatisticsKHR", catch_unwind(||((self.vk_khr_pipeline_executable_properties.vk_get_pipeline_executable_statistics_khr)(device, pExecutableInfo, pStatisticCount, pStatistics))))
+		vk_convert_result("vkGetPipelineExecutableStatisticsKHR", catch_unwind(||((self.vk_khr_pipeline_executable_properties.vk_get_pipeline_executable_statistics_khr)(device, pExecutableInfo, pStatisticCount, pStatistics))))
 	}
 	fn vkGetPipelineExecutableInternalRepresentationsKHR(&self, device: VkDevice, pExecutableInfo: *const VkPipelineExecutableInfoKHR, pInternalRepresentationCount: *mut uint32_t, pInternalRepresentations: *mut VkPipelineExecutableInternalRepresentationKHR) -> Result<()> {
-		convert_result("vkGetPipelineExecutableInternalRepresentationsKHR", catch_unwind(||((self.vk_khr_pipeline_executable_properties.vk_get_pipeline_executable_internal_representations_khr)(device, pExecutableInfo, pInternalRepresentationCount, pInternalRepresentations))))
+		vk_convert_result("vkGetPipelineExecutableInternalRepresentationsKHR", catch_unwind(||((self.vk_khr_pipeline_executable_properties.vk_get_pipeline_executable_internal_representations_khr)(device, pExecutableInfo, pInternalRepresentationCount, pInternalRepresentations))))
 	}
 }
 impl VK_KHR_map_memory2 for VkCore {
 	fn vkMapMemory2KHR(&self, device: VkDevice, pMemoryMapInfo: *const VkMemoryMapInfo, ppData: *mut *mut c_void) -> Result<()> {
-		convert_result("vkMapMemory2KHR", catch_unwind(||((self.vk_khr_map_memory2.vk_map_memory2_khr)(device, pMemoryMapInfo, ppData))))
+		vk_convert_result("vkMapMemory2KHR", catch_unwind(||((self.vk_khr_map_memory2.vk_map_memory2_khr)(device, pMemoryMapInfo, ppData))))
 	}
 	fn vkUnmapMemory2KHR(&self, device: VkDevice, pMemoryUnmapInfo: *const VkMemoryUnmapInfo) -> Result<()> {
-		convert_result("vkUnmapMemory2KHR", catch_unwind(||((self.vk_khr_map_memory2.vk_unmap_memory2_khr)(device, pMemoryUnmapInfo))))
+		vk_convert_result("vkUnmapMemory2KHR", catch_unwind(||((self.vk_khr_map_memory2.vk_unmap_memory2_khr)(device, pMemoryUnmapInfo))))
 	}
 }
 impl VK_KHR_shader_integer_dot_product for VkCore {}
@@ -55079,33 +55079,33 @@ impl VK_KHR_shader_non_semantic_info for VkCore {}
 impl VK_KHR_present_id for VkCore {}
 impl VK_KHR_video_encode_queue for VkCore {
 	fn vkGetPhysicalDeviceVideoEncodeQualityLevelPropertiesKHR(&self, physicalDevice: VkPhysicalDevice, pQualityLevelInfo: *const VkPhysicalDeviceVideoEncodeQualityLevelInfoKHR, pQualityLevelProperties: *mut VkVideoEncodeQualityLevelPropertiesKHR) -> Result<()> {
-		convert_result("vkGetPhysicalDeviceVideoEncodeQualityLevelPropertiesKHR", catch_unwind(||((self.vk_khr_video_encode_queue.vk_get_physical_device_video_encode_quality_level_properties_khr)(physicalDevice, pQualityLevelInfo, pQualityLevelProperties))))
+		vk_convert_result("vkGetPhysicalDeviceVideoEncodeQualityLevelPropertiesKHR", catch_unwind(||((self.vk_khr_video_encode_queue.vk_get_physical_device_video_encode_quality_level_properties_khr)(physicalDevice, pQualityLevelInfo, pQualityLevelProperties))))
 	}
 	fn vkGetEncodedVideoSessionParametersKHR(&self, device: VkDevice, pVideoSessionParametersInfo: *const VkVideoEncodeSessionParametersGetInfoKHR, pFeedbackInfo: *mut VkVideoEncodeSessionParametersFeedbackInfoKHR, pDataSize: *mut size_t, pData: *mut c_void) -> Result<()> {
-		convert_result("vkGetEncodedVideoSessionParametersKHR", catch_unwind(||((self.vk_khr_video_encode_queue.vk_get_encoded_video_session_parameters_khr)(device, pVideoSessionParametersInfo, pFeedbackInfo, pDataSize, pData))))
+		vk_convert_result("vkGetEncodedVideoSessionParametersKHR", catch_unwind(||((self.vk_khr_video_encode_queue.vk_get_encoded_video_session_parameters_khr)(device, pVideoSessionParametersInfo, pFeedbackInfo, pDataSize, pData))))
 	}
 	fn vkCmdEncodeVideoKHR(&self, commandBuffer: VkCommandBuffer, pEncodeInfo: *const VkVideoEncodeInfoKHR) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_khr_video_encode_queue.vk_cmd_encode_video_khr)(commandBuffer, pEncodeInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_video_encode_queue.vk_cmd_encode_video_khr)(commandBuffer, pEncodeInfo))))
 	}
 }
 impl VK_KHR_synchronization2 for VkCore {
 	fn vkCmdSetEvent2KHR(&self, commandBuffer: VkCommandBuffer, event: VkEvent, pDependencyInfo: *const VkDependencyInfo) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_khr_synchronization2.vk_cmd_set_event2_khr)(commandBuffer, event, pDependencyInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_synchronization2.vk_cmd_set_event2_khr)(commandBuffer, event, pDependencyInfo))))
 	}
 	fn vkCmdResetEvent2KHR(&self, commandBuffer: VkCommandBuffer, event: VkEvent, stageMask: VkPipelineStageFlags2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_khr_synchronization2.vk_cmd_reset_event2_khr)(commandBuffer, event, stageMask))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_synchronization2.vk_cmd_reset_event2_khr)(commandBuffer, event, stageMask))))
 	}
 	fn vkCmdWaitEvents2KHR(&self, commandBuffer: VkCommandBuffer, eventCount: u32, pEvents: *const VkEvent, pDependencyInfos: *const VkDependencyInfo) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_khr_synchronization2.vk_cmd_wait_events2_khr)(commandBuffer, eventCount, pEvents, pDependencyInfos))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_synchronization2.vk_cmd_wait_events2_khr)(commandBuffer, eventCount, pEvents, pDependencyInfos))))
 	}
 	fn vkCmdPipelineBarrier2KHR(&self, commandBuffer: VkCommandBuffer, pDependencyInfo: *const VkDependencyInfo) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_khr_synchronization2.vk_cmd_pipeline_barrier2_khr)(commandBuffer, pDependencyInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_synchronization2.vk_cmd_pipeline_barrier2_khr)(commandBuffer, pDependencyInfo))))
 	}
 	fn vkCmdWriteTimestamp2KHR(&self, commandBuffer: VkCommandBuffer, stage: VkPipelineStageFlags2, queryPool: VkQueryPool, query: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_khr_synchronization2.vk_cmd_write_timestamp2_khr)(commandBuffer, stage, queryPool, query))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_synchronization2.vk_cmd_write_timestamp2_khr)(commandBuffer, stage, queryPool, query))))
 	}
 	fn vkQueueSubmit2KHR(&self, queue: VkQueue, submitCount: u32, pSubmits: *const VkSubmitInfo2, fence: VkFence) -> Result<()> {
-		convert_result("vkQueueSubmit2KHR", catch_unwind(||((self.vk_khr_synchronization2.vk_queue_submit2_khr)(queue, submitCount, pSubmits, fence))))
+		vk_convert_result("vkQueueSubmit2KHR", catch_unwind(||((self.vk_khr_synchronization2.vk_queue_submit2_khr)(queue, submitCount, pSubmits, fence))))
 	}
 }
 impl VK_KHR_fragment_shader_barycentric for VkCore {}
@@ -55114,91 +55114,91 @@ impl VK_KHR_zero_initialize_workgroup_memory for VkCore {}
 impl VK_KHR_workgroup_memory_explicit_layout for VkCore {}
 impl VK_KHR_copy_commands2 for VkCore {
 	fn vkCmdCopyBuffer2KHR(&self, commandBuffer: VkCommandBuffer, pCopyBufferInfo: *const VkCopyBufferInfo2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_khr_copy_commands2.vk_cmd_copy_buffer2_khr)(commandBuffer, pCopyBufferInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_copy_commands2.vk_cmd_copy_buffer2_khr)(commandBuffer, pCopyBufferInfo))))
 	}
 	fn vkCmdCopyImage2KHR(&self, commandBuffer: VkCommandBuffer, pCopyImageInfo: *const VkCopyImageInfo2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_khr_copy_commands2.vk_cmd_copy_image2_khr)(commandBuffer, pCopyImageInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_copy_commands2.vk_cmd_copy_image2_khr)(commandBuffer, pCopyImageInfo))))
 	}
 	fn vkCmdCopyBufferToImage2KHR(&self, commandBuffer: VkCommandBuffer, pCopyBufferToImageInfo: *const VkCopyBufferToImageInfo2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_khr_copy_commands2.vk_cmd_copy_buffer_to_image2_khr)(commandBuffer, pCopyBufferToImageInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_copy_commands2.vk_cmd_copy_buffer_to_image2_khr)(commandBuffer, pCopyBufferToImageInfo))))
 	}
 	fn vkCmdCopyImageToBuffer2KHR(&self, commandBuffer: VkCommandBuffer, pCopyImageToBufferInfo: *const VkCopyImageToBufferInfo2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_khr_copy_commands2.vk_cmd_copy_image_to_buffer2_khr)(commandBuffer, pCopyImageToBufferInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_copy_commands2.vk_cmd_copy_image_to_buffer2_khr)(commandBuffer, pCopyImageToBufferInfo))))
 	}
 	fn vkCmdBlitImage2KHR(&self, commandBuffer: VkCommandBuffer, pBlitImageInfo: *const VkBlitImageInfo2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_khr_copy_commands2.vk_cmd_blit_image2_khr)(commandBuffer, pBlitImageInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_copy_commands2.vk_cmd_blit_image2_khr)(commandBuffer, pBlitImageInfo))))
 	}
 	fn vkCmdResolveImage2KHR(&self, commandBuffer: VkCommandBuffer, pResolveImageInfo: *const VkResolveImageInfo2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_khr_copy_commands2.vk_cmd_resolve_image2_khr)(commandBuffer, pResolveImageInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_copy_commands2.vk_cmd_resolve_image2_khr)(commandBuffer, pResolveImageInfo))))
 	}
 }
 impl VK_KHR_format_feature_flags2 for VkCore {}
 impl VK_KHR_ray_tracing_maintenance1 for VkCore {
 	fn vkCmdTraceRaysIndirect2KHR(&self, commandBuffer: VkCommandBuffer, indirectDeviceAddress: VkDeviceAddress) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_khr_ray_tracing_maintenance1.vk_cmd_trace_rays_indirect2_khr)(commandBuffer, indirectDeviceAddress))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_ray_tracing_maintenance1.vk_cmd_trace_rays_indirect2_khr)(commandBuffer, indirectDeviceAddress))))
 	}
 }
 impl VK_KHR_portability_enumeration for VkCore {}
 impl VK_KHR_maintenance4 for VkCore {
 	fn vkGetDeviceBufferMemoryRequirementsKHR(&self, device: VkDevice, pInfo: *const VkDeviceBufferMemoryRequirements, pMemoryRequirements: *mut VkMemoryRequirements2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_khr_maintenance4.vk_get_device_buffer_memory_requirements_khr)(device, pInfo, pMemoryRequirements))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_maintenance4.vk_get_device_buffer_memory_requirements_khr)(device, pInfo, pMemoryRequirements))))
 	}
 	fn vkGetDeviceImageMemoryRequirementsKHR(&self, device: VkDevice, pInfo: *const VkDeviceImageMemoryRequirements, pMemoryRequirements: *mut VkMemoryRequirements2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_khr_maintenance4.vk_get_device_image_memory_requirements_khr)(device, pInfo, pMemoryRequirements))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_maintenance4.vk_get_device_image_memory_requirements_khr)(device, pInfo, pMemoryRequirements))))
 	}
 	fn vkGetDeviceImageSparseMemoryRequirementsKHR(&self, device: VkDevice, pInfo: *const VkDeviceImageMemoryRequirements, pSparseMemoryRequirementCount: *mut uint32_t, pSparseMemoryRequirements: *mut VkSparseImageMemoryRequirements2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_khr_maintenance4.vk_get_device_image_sparse_memory_requirements_khr)(device, pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_maintenance4.vk_get_device_image_sparse_memory_requirements_khr)(device, pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements))))
 	}
 }
 impl VK_KHR_shader_subgroup_rotate for VkCore {}
 impl VK_KHR_shader_maximal_reconvergence for VkCore {}
 impl VK_KHR_maintenance5 for VkCore {
 	fn vkCmdBindIndexBuffer2KHR(&self, commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize, size: VkDeviceSize, indexType: VkIndexType) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_khr_maintenance5.vk_cmd_bind_index_buffer2_khr)(commandBuffer, buffer, offset, size, indexType))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_maintenance5.vk_cmd_bind_index_buffer2_khr)(commandBuffer, buffer, offset, size, indexType))))
 	}
 	fn vkGetRenderingAreaGranularityKHR(&self, device: VkDevice, pRenderingAreaInfo: *const VkRenderingAreaInfo, pGranularity: *mut VkExtent2D) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_khr_maintenance5.vk_get_rendering_area_granularity_khr)(device, pRenderingAreaInfo, pGranularity))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_maintenance5.vk_get_rendering_area_granularity_khr)(device, pRenderingAreaInfo, pGranularity))))
 	}
 	fn vkGetDeviceImageSubresourceLayoutKHR(&self, device: VkDevice, pInfo: *const VkDeviceImageSubresourceInfo, pLayout: *mut VkSubresourceLayout2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_khr_maintenance5.vk_get_device_image_subresource_layout_khr)(device, pInfo, pLayout))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_maintenance5.vk_get_device_image_subresource_layout_khr)(device, pInfo, pLayout))))
 	}
 	fn vkGetImageSubresourceLayout2KHR(&self, device: VkDevice, image: VkImage, pSubresource: *const VkImageSubresource2, pLayout: *mut VkSubresourceLayout2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_khr_maintenance5.vk_get_image_subresource_layout2_khr)(device, image, pSubresource, pLayout))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_maintenance5.vk_get_image_subresource_layout2_khr)(device, image, pSubresource, pLayout))))
 	}
 }
 impl VK_KHR_present_id2 for VkCore {}
 impl VK_KHR_present_wait2 for VkCore {
 	fn vkWaitForPresent2KHR(&self, device: VkDevice, swapchain: VkSwapchainKHR, pPresentWait2Info: *const VkPresentWait2InfoKHR) -> Result<()> {
-		convert_result("vkWaitForPresent2KHR", catch_unwind(||((self.vk_khr_present_wait2.vk_wait_for_present2_khr)(device, swapchain, pPresentWait2Info))))
+		vk_convert_result("vkWaitForPresent2KHR", catch_unwind(||((self.vk_khr_present_wait2.vk_wait_for_present2_khr)(device, swapchain, pPresentWait2Info))))
 	}
 }
 impl VK_KHR_ray_tracing_position_fetch for VkCore {}
 impl VK_KHR_pipeline_binary for VkCore {
 	fn vkCreatePipelineBinariesKHR(&self, device: VkDevice, pCreateInfo: *const VkPipelineBinaryCreateInfoKHR, pAllocator: *const VkAllocationCallbacks, pBinaries: *mut VkPipelineBinaryHandlesInfoKHR) -> Result<()> {
-		convert_result("vkCreatePipelineBinariesKHR", catch_unwind(||((self.vk_khr_pipeline_binary.vk_create_pipeline_binaries_khr)(device, pCreateInfo, pAllocator, pBinaries))))
+		vk_convert_result("vkCreatePipelineBinariesKHR", catch_unwind(||((self.vk_khr_pipeline_binary.vk_create_pipeline_binaries_khr)(device, pCreateInfo, pAllocator, pBinaries))))
 	}
 	fn vkDestroyPipelineBinaryKHR(&self, device: VkDevice, pipelineBinary: VkPipelineBinaryKHR, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_khr_pipeline_binary.vk_destroy_pipeline_binary_khr)(device, pipelineBinary, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_pipeline_binary.vk_destroy_pipeline_binary_khr)(device, pipelineBinary, pAllocator))))
 	}
 	fn vkGetPipelineKeyKHR(&self, device: VkDevice, pPipelineCreateInfo: *const VkPipelineCreateInfoKHR, pPipelineKey: *mut VkPipelineBinaryKeyKHR) -> Result<()> {
-		convert_result("vkGetPipelineKeyKHR", catch_unwind(||((self.vk_khr_pipeline_binary.vk_get_pipeline_key_khr)(device, pPipelineCreateInfo, pPipelineKey))))
+		vk_convert_result("vkGetPipelineKeyKHR", catch_unwind(||((self.vk_khr_pipeline_binary.vk_get_pipeline_key_khr)(device, pPipelineCreateInfo, pPipelineKey))))
 	}
 	fn vkGetPipelineBinaryDataKHR(&self, device: VkDevice, pInfo: *const VkPipelineBinaryDataInfoKHR, pPipelineBinaryKey: *mut VkPipelineBinaryKeyKHR, pPipelineBinaryDataSize: *mut size_t, pPipelineBinaryData: *mut c_void) -> Result<()> {
-		convert_result("vkGetPipelineBinaryDataKHR", catch_unwind(||((self.vk_khr_pipeline_binary.vk_get_pipeline_binary_data_khr)(device, pInfo, pPipelineBinaryKey, pPipelineBinaryDataSize, pPipelineBinaryData))))
+		vk_convert_result("vkGetPipelineBinaryDataKHR", catch_unwind(||((self.vk_khr_pipeline_binary.vk_get_pipeline_binary_data_khr)(device, pInfo, pPipelineBinaryKey, pPipelineBinaryDataSize, pPipelineBinaryData))))
 	}
 	fn vkReleaseCapturedPipelineDataKHR(&self, device: VkDevice, pInfo: *const VkReleaseCapturedPipelineDataInfoKHR, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		convert_result("vkReleaseCapturedPipelineDataKHR", catch_unwind(||((self.vk_khr_pipeline_binary.vk_release_captured_pipeline_data_khr)(device, pInfo, pAllocator))))
+		vk_convert_result("vkReleaseCapturedPipelineDataKHR", catch_unwind(||((self.vk_khr_pipeline_binary.vk_release_captured_pipeline_data_khr)(device, pInfo, pAllocator))))
 	}
 }
 impl VK_KHR_surface_maintenance1 for VkCore {}
 impl VK_KHR_swapchain_maintenance1 for VkCore {
 	fn vkReleaseSwapchainImagesKHR(&self, device: VkDevice, pReleaseInfo: *const VkReleaseSwapchainImagesInfoKHR) -> Result<()> {
-		convert_result("vkReleaseSwapchainImagesKHR", catch_unwind(||((self.vk_khr_swapchain_maintenance1.vk_release_swapchain_images_khr)(device, pReleaseInfo))))
+		vk_convert_result("vkReleaseSwapchainImagesKHR", catch_unwind(||((self.vk_khr_swapchain_maintenance1.vk_release_swapchain_images_khr)(device, pReleaseInfo))))
 	}
 }
 impl VK_KHR_cooperative_matrix for VkCore {
 	fn vkGetPhysicalDeviceCooperativeMatrixPropertiesKHR(&self, physicalDevice: VkPhysicalDevice, pPropertyCount: *mut uint32_t, pProperties: *mut VkCooperativeMatrixPropertiesKHR) -> Result<()> {
-		convert_result("vkGetPhysicalDeviceCooperativeMatrixPropertiesKHR", catch_unwind(||((self.vk_khr_cooperative_matrix.vk_get_physical_device_cooperative_matrix_properties_khr)(physicalDevice, pPropertyCount, pProperties))))
+		vk_convert_result("vkGetPhysicalDeviceCooperativeMatrixPropertiesKHR", catch_unwind(||((self.vk_khr_cooperative_matrix.vk_get_physical_device_cooperative_matrix_properties_khr)(physicalDevice, pPropertyCount, pProperties))))
 	}
 }
 impl VK_KHR_compute_shader_derivatives for VkCore {}
@@ -55218,36 +55218,36 @@ impl VK_KHR_shader_float_controls2 for VkCore {}
 impl VK_KHR_index_type_uint8 for VkCore {}
 impl VK_KHR_line_rasterization for VkCore {
 	fn vkCmdSetLineStippleKHR(&self, commandBuffer: VkCommandBuffer, lineStippleFactor: u32, lineStipplePattern: u16) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_khr_line_rasterization.vk_cmd_set_line_stipple_khr)(commandBuffer, lineStippleFactor, lineStipplePattern))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_line_rasterization.vk_cmd_set_line_stipple_khr)(commandBuffer, lineStippleFactor, lineStipplePattern))))
 	}
 }
 impl VK_KHR_calibrated_timestamps for VkCore {
 	fn vkGetPhysicalDeviceCalibrateableTimeDomainsKHR(&self, physicalDevice: VkPhysicalDevice, pTimeDomainCount: *mut uint32_t, pTimeDomains: *mut VkTimeDomainKHR) -> Result<()> {
-		convert_result("vkGetPhysicalDeviceCalibrateableTimeDomainsKHR", catch_unwind(||((self.vk_khr_calibrated_timestamps.vk_get_physical_device_calibrateable_time_domains_khr)(physicalDevice, pTimeDomainCount, pTimeDomains))))
+		vk_convert_result("vkGetPhysicalDeviceCalibrateableTimeDomainsKHR", catch_unwind(||((self.vk_khr_calibrated_timestamps.vk_get_physical_device_calibrateable_time_domains_khr)(physicalDevice, pTimeDomainCount, pTimeDomains))))
 	}
 	fn vkGetCalibratedTimestampsKHR(&self, device: VkDevice, timestampCount: u32, pTimestampInfos: *const VkCalibratedTimestampInfoKHR, pTimestamps: *mut uint64_t, pMaxDeviation: *mut uint64_t) -> Result<()> {
-		convert_result("vkGetCalibratedTimestampsKHR", catch_unwind(||((self.vk_khr_calibrated_timestamps.vk_get_calibrated_timestamps_khr)(device, timestampCount, pTimestampInfos, pTimestamps, pMaxDeviation))))
+		vk_convert_result("vkGetCalibratedTimestampsKHR", catch_unwind(||((self.vk_khr_calibrated_timestamps.vk_get_calibrated_timestamps_khr)(device, timestampCount, pTimestampInfos, pTimestamps, pMaxDeviation))))
 	}
 }
 impl VK_KHR_shader_expect_assume for VkCore {}
 impl VK_KHR_maintenance6 for VkCore {
 	fn vkCmdBindDescriptorSets2KHR(&self, commandBuffer: VkCommandBuffer, pBindDescriptorSetsInfo: *const VkBindDescriptorSetsInfo) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_khr_maintenance6.vk_cmd_bind_descriptor_sets2_khr)(commandBuffer, pBindDescriptorSetsInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_maintenance6.vk_cmd_bind_descriptor_sets2_khr)(commandBuffer, pBindDescriptorSetsInfo))))
 	}
 	fn vkCmdPushConstants2KHR(&self, commandBuffer: VkCommandBuffer, pPushConstantsInfo: *const VkPushConstantsInfo) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_khr_maintenance6.vk_cmd_push_constants2_khr)(commandBuffer, pPushConstantsInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_maintenance6.vk_cmd_push_constants2_khr)(commandBuffer, pPushConstantsInfo))))
 	}
 	fn vkCmdPushDescriptorSet2KHR(&self, commandBuffer: VkCommandBuffer, pPushDescriptorSetInfo: *const VkPushDescriptorSetInfo) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_khr_maintenance6.vk_cmd_push_descriptor_set2_khr)(commandBuffer, pPushDescriptorSetInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_maintenance6.vk_cmd_push_descriptor_set2_khr)(commandBuffer, pPushDescriptorSetInfo))))
 	}
 	fn vkCmdPushDescriptorSetWithTemplate2KHR(&self, commandBuffer: VkCommandBuffer, pPushDescriptorSetWithTemplateInfo: *const VkPushDescriptorSetWithTemplateInfo) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_khr_maintenance6.vk_cmd_push_descriptor_set_with_template2_khr)(commandBuffer, pPushDescriptorSetWithTemplateInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_maintenance6.vk_cmd_push_descriptor_set_with_template2_khr)(commandBuffer, pPushDescriptorSetWithTemplateInfo))))
 	}
 	fn vkCmdSetDescriptorBufferOffsets2EXT(&self, commandBuffer: VkCommandBuffer, pSetDescriptorBufferOffsetsInfo: *const VkSetDescriptorBufferOffsetsInfoEXT) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_khr_maintenance6.vk_cmd_set_descriptor_buffer_offsets2_ext)(commandBuffer, pSetDescriptorBufferOffsetsInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_maintenance6.vk_cmd_set_descriptor_buffer_offsets2_ext)(commandBuffer, pSetDescriptorBufferOffsetsInfo))))
 	}
 	fn vkCmdBindDescriptorBufferEmbeddedSamplers2EXT(&self, commandBuffer: VkCommandBuffer, pBindDescriptorBufferEmbeddedSamplersInfo: *const VkBindDescriptorBufferEmbeddedSamplersInfoEXT) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_khr_maintenance6.vk_cmd_bind_descriptor_buffer_embedded_samplers2_ext)(commandBuffer, pBindDescriptorBufferEmbeddedSamplersInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_maintenance6.vk_cmd_bind_descriptor_buffer_embedded_samplers2_ext)(commandBuffer, pBindDescriptorBufferEmbeddedSamplersInfo))))
 	}
 }
 impl VK_KHR_video_encode_intra_refresh for VkCore {}
@@ -55262,13 +55262,13 @@ impl VK_KHR_robustness2 for VkCore {}
 impl VK_KHR_present_mode_fifo_latest_ready for VkCore {}
 impl VK_EXT_debug_report for VkCore {
 	fn vkCreateDebugReportCallbackEXT(&self, instance: VkInstance, pCreateInfo: *const VkDebugReportCallbackCreateInfoEXT, pAllocator: *const VkAllocationCallbacks, pCallback: *mut VkDebugReportCallbackEXT) -> Result<()> {
-		convert_result("vkCreateDebugReportCallbackEXT", catch_unwind(||((self.vk_ext_debug_report.vk_create_debug_report_callback_ext)(instance, pCreateInfo, pAllocator, pCallback))))
+		vk_convert_result("vkCreateDebugReportCallbackEXT", catch_unwind(||((self.vk_ext_debug_report.vk_create_debug_report_callback_ext)(instance, pCreateInfo, pAllocator, pCallback))))
 	}
 	fn vkDestroyDebugReportCallbackEXT(&self, instance: VkInstance, callback: VkDebugReportCallbackEXT, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_debug_report.vk_destroy_debug_report_callback_ext)(instance, callback, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_debug_report.vk_destroy_debug_report_callback_ext)(instance, callback, pAllocator))))
 	}
 	fn vkDebugReportMessageEXT(&self, instance: VkInstance, flags: VkDebugReportFlagsEXT, objectType: VkDebugReportObjectTypeEXT, object: u64, location: usize, messageCode: i32, pLayerPrefix: *const i8, pMessage: *const i8) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_debug_report.vk_debug_report_message_ext)(instance, flags, objectType, object, location, messageCode, pLayerPrefix, pMessage))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_debug_report.vk_debug_report_message_ext)(instance, flags, objectType, object, location, messageCode, pLayerPrefix, pMessage))))
 	}
 }
 impl VK_NV_glsl_shader for VkCore {}
@@ -55279,77 +55279,77 @@ impl VK_AMD_shader_trinary_minmax for VkCore {}
 impl VK_AMD_shader_explicit_vertex_parameter for VkCore {}
 impl VK_EXT_debug_marker for VkCore {
 	fn vkDebugMarkerSetObjectTagEXT(&self, device: VkDevice, pTagInfo: *const VkDebugMarkerObjectTagInfoEXT) -> Result<()> {
-		convert_result("vkDebugMarkerSetObjectTagEXT", catch_unwind(||((self.vk_ext_debug_marker.vk_debug_marker_set_object_tag_ext)(device, pTagInfo))))
+		vk_convert_result("vkDebugMarkerSetObjectTagEXT", catch_unwind(||((self.vk_ext_debug_marker.vk_debug_marker_set_object_tag_ext)(device, pTagInfo))))
 	}
 	fn vkDebugMarkerSetObjectNameEXT(&self, device: VkDevice, pNameInfo: *const VkDebugMarkerObjectNameInfoEXT) -> Result<()> {
-		convert_result("vkDebugMarkerSetObjectNameEXT", catch_unwind(||((self.vk_ext_debug_marker.vk_debug_marker_set_object_name_ext)(device, pNameInfo))))
+		vk_convert_result("vkDebugMarkerSetObjectNameEXT", catch_unwind(||((self.vk_ext_debug_marker.vk_debug_marker_set_object_name_ext)(device, pNameInfo))))
 	}
 	fn vkCmdDebugMarkerBeginEXT(&self, commandBuffer: VkCommandBuffer, pMarkerInfo: *const VkDebugMarkerMarkerInfoEXT) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_debug_marker.vk_cmd_debug_marker_begin_ext)(commandBuffer, pMarkerInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_debug_marker.vk_cmd_debug_marker_begin_ext)(commandBuffer, pMarkerInfo))))
 	}
 	fn vkCmdDebugMarkerEndEXT(&self, commandBuffer: VkCommandBuffer) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_debug_marker.vk_cmd_debug_marker_end_ext)(commandBuffer))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_debug_marker.vk_cmd_debug_marker_end_ext)(commandBuffer))))
 	}
 	fn vkCmdDebugMarkerInsertEXT(&self, commandBuffer: VkCommandBuffer, pMarkerInfo: *const VkDebugMarkerMarkerInfoEXT) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_debug_marker.vk_cmd_debug_marker_insert_ext)(commandBuffer, pMarkerInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_debug_marker.vk_cmd_debug_marker_insert_ext)(commandBuffer, pMarkerInfo))))
 	}
 }
 impl VK_AMD_gcn_shader for VkCore {}
 impl VK_NV_dedicated_allocation for VkCore {}
 impl VK_EXT_transform_feedback for VkCore {
 	fn vkCmdBindTransformFeedbackBuffersEXT(&self, commandBuffer: VkCommandBuffer, firstBinding: u32, bindingCount: u32, pBuffers: *const VkBuffer, pOffsets: *const VkDeviceSize, pSizes: *const VkDeviceSize) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_transform_feedback.vk_cmd_bind_transform_feedback_buffers_ext)(commandBuffer, firstBinding, bindingCount, pBuffers, pOffsets, pSizes))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_transform_feedback.vk_cmd_bind_transform_feedback_buffers_ext)(commandBuffer, firstBinding, bindingCount, pBuffers, pOffsets, pSizes))))
 	}
 	fn vkCmdBeginTransformFeedbackEXT(&self, commandBuffer: VkCommandBuffer, firstCounterBuffer: u32, counterBufferCount: u32, pCounterBuffers: *const VkBuffer, pCounterBufferOffsets: *const VkDeviceSize) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_transform_feedback.vk_cmd_begin_transform_feedback_ext)(commandBuffer, firstCounterBuffer, counterBufferCount, pCounterBuffers, pCounterBufferOffsets))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_transform_feedback.vk_cmd_begin_transform_feedback_ext)(commandBuffer, firstCounterBuffer, counterBufferCount, pCounterBuffers, pCounterBufferOffsets))))
 	}
 	fn vkCmdEndTransformFeedbackEXT(&self, commandBuffer: VkCommandBuffer, firstCounterBuffer: u32, counterBufferCount: u32, pCounterBuffers: *const VkBuffer, pCounterBufferOffsets: *const VkDeviceSize) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_transform_feedback.vk_cmd_end_transform_feedback_ext)(commandBuffer, firstCounterBuffer, counterBufferCount, pCounterBuffers, pCounterBufferOffsets))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_transform_feedback.vk_cmd_end_transform_feedback_ext)(commandBuffer, firstCounterBuffer, counterBufferCount, pCounterBuffers, pCounterBufferOffsets))))
 	}
 	fn vkCmdBeginQueryIndexedEXT(&self, commandBuffer: VkCommandBuffer, queryPool: VkQueryPool, query: u32, flags: VkQueryControlFlags, index: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_transform_feedback.vk_cmd_begin_query_indexed_ext)(commandBuffer, queryPool, query, flags, index))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_transform_feedback.vk_cmd_begin_query_indexed_ext)(commandBuffer, queryPool, query, flags, index))))
 	}
 	fn vkCmdEndQueryIndexedEXT(&self, commandBuffer: VkCommandBuffer, queryPool: VkQueryPool, query: u32, index: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_transform_feedback.vk_cmd_end_query_indexed_ext)(commandBuffer, queryPool, query, index))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_transform_feedback.vk_cmd_end_query_indexed_ext)(commandBuffer, queryPool, query, index))))
 	}
 	fn vkCmdDrawIndirectByteCountEXT(&self, commandBuffer: VkCommandBuffer, instanceCount: u32, firstInstance: u32, counterBuffer: VkBuffer, counterBufferOffset: VkDeviceSize, counterOffset: u32, vertexStride: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_transform_feedback.vk_cmd_draw_indirect_byte_count_ext)(commandBuffer, instanceCount, firstInstance, counterBuffer, counterBufferOffset, counterOffset, vertexStride))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_transform_feedback.vk_cmd_draw_indirect_byte_count_ext)(commandBuffer, instanceCount, firstInstance, counterBuffer, counterBufferOffset, counterOffset, vertexStride))))
 	}
 }
 impl VK_NVX_binary_import for VkCore {
 	fn vkCreateCuModuleNVX(&self, device: VkDevice, pCreateInfo: *const VkCuModuleCreateInfoNVX, pAllocator: *const VkAllocationCallbacks, pModule: *mut VkCuModuleNVX) -> Result<()> {
-		convert_result("vkCreateCuModuleNVX", catch_unwind(||((self.vk_nvx_binary_import.vk_create_cu_module_nvx)(device, pCreateInfo, pAllocator, pModule))))
+		vk_convert_result("vkCreateCuModuleNVX", catch_unwind(||((self.vk_nvx_binary_import.vk_create_cu_module_nvx)(device, pCreateInfo, pAllocator, pModule))))
 	}
 	fn vkCreateCuFunctionNVX(&self, device: VkDevice, pCreateInfo: *const VkCuFunctionCreateInfoNVX, pAllocator: *const VkAllocationCallbacks, pFunction: *mut VkCuFunctionNVX) -> Result<()> {
-		convert_result("vkCreateCuFunctionNVX", catch_unwind(||((self.vk_nvx_binary_import.vk_create_cu_function_nvx)(device, pCreateInfo, pAllocator, pFunction))))
+		vk_convert_result("vkCreateCuFunctionNVX", catch_unwind(||((self.vk_nvx_binary_import.vk_create_cu_function_nvx)(device, pCreateInfo, pAllocator, pFunction))))
 	}
 	fn vkDestroyCuModuleNVX(&self, device: VkDevice, module: VkCuModuleNVX, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_nvx_binary_import.vk_destroy_cu_module_nvx)(device, module, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_nvx_binary_import.vk_destroy_cu_module_nvx)(device, module, pAllocator))))
 	}
 	fn vkDestroyCuFunctionNVX(&self, device: VkDevice, function: VkCuFunctionNVX, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_nvx_binary_import.vk_destroy_cu_function_nvx)(device, function, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_nvx_binary_import.vk_destroy_cu_function_nvx)(device, function, pAllocator))))
 	}
 	fn vkCmdCuLaunchKernelNVX(&self, commandBuffer: VkCommandBuffer, pLaunchInfo: *const VkCuLaunchInfoNVX) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_nvx_binary_import.vk_cmd_cu_launch_kernel_nvx)(commandBuffer, pLaunchInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_nvx_binary_import.vk_cmd_cu_launch_kernel_nvx)(commandBuffer, pLaunchInfo))))
 	}
 }
 impl VK_NVX_image_view_handle for VkCore {
 	fn vkGetImageViewHandleNVX(&self, device: VkDevice, pInfo: *const VkImageViewHandleInfoNVX) -> Result<u32> {
-		process_catch(catch_unwind(||((self.vk_nvx_image_view_handle.vk_get_image_view_handle_nvx)(device, pInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_nvx_image_view_handle.vk_get_image_view_handle_nvx)(device, pInfo))))
 	}
 	fn vkGetImageViewHandle64NVX(&self, device: VkDevice, pInfo: *const VkImageViewHandleInfoNVX) -> Result<u64> {
-		process_catch(catch_unwind(||((self.vk_nvx_image_view_handle.vk_get_image_view_handle64_nvx)(device, pInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_nvx_image_view_handle.vk_get_image_view_handle64_nvx)(device, pInfo))))
 	}
 	fn vkGetImageViewAddressNVX(&self, device: VkDevice, imageView: VkImageView, pProperties: *mut VkImageViewAddressPropertiesNVX) -> Result<()> {
-		convert_result("vkGetImageViewAddressNVX", catch_unwind(||((self.vk_nvx_image_view_handle.vk_get_image_view_address_nvx)(device, imageView, pProperties))))
+		vk_convert_result("vkGetImageViewAddressNVX", catch_unwind(||((self.vk_nvx_image_view_handle.vk_get_image_view_address_nvx)(device, imageView, pProperties))))
 	}
 }
 impl VK_AMD_draw_indirect_count for VkCore {
 	fn vkCmdDrawIndirectCountAMD(&self, commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize, countBuffer: VkBuffer, countBufferOffset: VkDeviceSize, maxDrawCount: u32, stride: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_amd_draw_indirect_count.vk_cmd_draw_indirect_count_amd)(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride))))
+		vk_process_catch(catch_unwind(||((self.vk_amd_draw_indirect_count.vk_cmd_draw_indirect_count_amd)(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride))))
 	}
 	fn vkCmdDrawIndexedIndirectCountAMD(&self, commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize, countBuffer: VkBuffer, countBufferOffset: VkDeviceSize, maxDrawCount: u32, stride: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_amd_draw_indirect_count.vk_cmd_draw_indexed_indirect_count_amd)(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride))))
+		vk_process_catch(catch_unwind(||((self.vk_amd_draw_indirect_count.vk_cmd_draw_indexed_indirect_count_amd)(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride))))
 	}
 }
 impl VK_AMD_negative_viewport_height for VkCore {}
@@ -55358,7 +55358,7 @@ impl VK_AMD_shader_ballot for VkCore {}
 impl VK_AMD_texture_gather_bias_lod for VkCore {}
 impl VK_AMD_shader_info for VkCore {
 	fn vkGetShaderInfoAMD(&self, device: VkDevice, pipeline: VkPipeline, shaderStage: VkShaderStageFlagBits, infoType: VkShaderInfoTypeAMD, pInfoSize: *mut size_t, pInfo: *mut c_void) -> Result<()> {
-		convert_result("vkGetShaderInfoAMD", catch_unwind(||((self.vk_amd_shader_info.vk_get_shader_info_amd)(device, pipeline, shaderStage, infoType, pInfoSize, pInfo))))
+		vk_convert_result("vkGetShaderInfoAMD", catch_unwind(||((self.vk_amd_shader_info.vk_get_shader_info_amd)(device, pipeline, shaderStage, infoType, pInfoSize, pInfo))))
 	}
 }
 impl VK_AMD_shader_image_load_store_lod for VkCore {}
@@ -55366,7 +55366,7 @@ impl VK_NV_corner_sampled_image for VkCore {}
 impl VK_IMG_format_pvrtc for VkCore {}
 impl VK_NV_external_memory_capabilities for VkCore {
 	fn vkGetPhysicalDeviceExternalImageFormatPropertiesNV(&self, physicalDevice: VkPhysicalDevice, format: VkFormat, type_: VkImageType, tiling: VkImageTiling, usage: VkImageUsageFlags, flags: VkImageCreateFlags, externalHandleType: VkExternalMemoryHandleTypeFlagsNV, pExternalImageFormatProperties: *mut VkExternalImageFormatPropertiesNV) -> Result<()> {
-		convert_result("vkGetPhysicalDeviceExternalImageFormatPropertiesNV", catch_unwind(||((self.vk_nv_external_memory_capabilities.vk_get_physical_device_external_image_format_properties_nv)(physicalDevice, format, type_, tiling, usage, flags, externalHandleType, pExternalImageFormatProperties))))
+		vk_convert_result("vkGetPhysicalDeviceExternalImageFormatPropertiesNV", catch_unwind(||((self.vk_nv_external_memory_capabilities.vk_get_physical_device_external_image_format_properties_nv)(physicalDevice, format, type_, tiling, usage, flags, externalHandleType, pExternalImageFormatProperties))))
 	}
 }
 impl VK_NV_external_memory for VkCore {}
@@ -55378,47 +55378,47 @@ impl VK_EXT_astc_decode_mode for VkCore {}
 impl VK_EXT_pipeline_robustness for VkCore {}
 impl VK_EXT_conditional_rendering for VkCore {
 	fn vkCmdBeginConditionalRenderingEXT(&self, commandBuffer: VkCommandBuffer, pConditionalRenderingBegin: *const VkConditionalRenderingBeginInfoEXT) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_conditional_rendering.vk_cmd_begin_conditional_rendering_ext)(commandBuffer, pConditionalRenderingBegin))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_conditional_rendering.vk_cmd_begin_conditional_rendering_ext)(commandBuffer, pConditionalRenderingBegin))))
 	}
 	fn vkCmdEndConditionalRenderingEXT(&self, commandBuffer: VkCommandBuffer) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_conditional_rendering.vk_cmd_end_conditional_rendering_ext)(commandBuffer))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_conditional_rendering.vk_cmd_end_conditional_rendering_ext)(commandBuffer))))
 	}
 }
 impl VK_NV_clip_space_w_scaling for VkCore {
 	fn vkCmdSetViewportWScalingNV(&self, commandBuffer: VkCommandBuffer, firstViewport: u32, viewportCount: u32, pViewportWScalings: *const VkViewportWScalingNV) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_nv_clip_space_w_scaling.vk_cmd_set_viewport_wscaling_nv)(commandBuffer, firstViewport, viewportCount, pViewportWScalings))))
+		vk_process_catch(catch_unwind(||((self.vk_nv_clip_space_w_scaling.vk_cmd_set_viewport_wscaling_nv)(commandBuffer, firstViewport, viewportCount, pViewportWScalings))))
 	}
 }
 impl VK_EXT_direct_mode_display for VkCore {
 	fn vkReleaseDisplayEXT(&self, physicalDevice: VkPhysicalDevice, display: VkDisplayKHR) -> Result<()> {
-		convert_result("vkReleaseDisplayEXT", catch_unwind(||((self.vk_ext_direct_mode_display.vk_release_display_ext)(physicalDevice, display))))
+		vk_convert_result("vkReleaseDisplayEXT", catch_unwind(||((self.vk_ext_direct_mode_display.vk_release_display_ext)(physicalDevice, display))))
 	}
 }
 impl VK_EXT_display_surface_counter for VkCore {
 	fn vkGetPhysicalDeviceSurfaceCapabilities2EXT(&self, physicalDevice: VkPhysicalDevice, surface: VkSurfaceKHR, pSurfaceCapabilities: *mut VkSurfaceCapabilities2EXT) -> Result<()> {
-		convert_result("vkGetPhysicalDeviceSurfaceCapabilities2EXT", catch_unwind(||((self.vk_ext_display_surface_counter.vk_get_physical_device_surface_capabilities2_ext)(physicalDevice, surface, pSurfaceCapabilities))))
+		vk_convert_result("vkGetPhysicalDeviceSurfaceCapabilities2EXT", catch_unwind(||((self.vk_ext_display_surface_counter.vk_get_physical_device_surface_capabilities2_ext)(physicalDevice, surface, pSurfaceCapabilities))))
 	}
 }
 impl VK_EXT_display_control for VkCore {
 	fn vkDisplayPowerControlEXT(&self, device: VkDevice, display: VkDisplayKHR, pDisplayPowerInfo: *const VkDisplayPowerInfoEXT) -> Result<()> {
-		convert_result("vkDisplayPowerControlEXT", catch_unwind(||((self.vk_ext_display_control.vk_display_power_control_ext)(device, display, pDisplayPowerInfo))))
+		vk_convert_result("vkDisplayPowerControlEXT", catch_unwind(||((self.vk_ext_display_control.vk_display_power_control_ext)(device, display, pDisplayPowerInfo))))
 	}
 	fn vkRegisterDeviceEventEXT(&self, device: VkDevice, pDeviceEventInfo: *const VkDeviceEventInfoEXT, pAllocator: *const VkAllocationCallbacks, pFence: *mut VkFence) -> Result<()> {
-		convert_result("vkRegisterDeviceEventEXT", catch_unwind(||((self.vk_ext_display_control.vk_register_device_event_ext)(device, pDeviceEventInfo, pAllocator, pFence))))
+		vk_convert_result("vkRegisterDeviceEventEXT", catch_unwind(||((self.vk_ext_display_control.vk_register_device_event_ext)(device, pDeviceEventInfo, pAllocator, pFence))))
 	}
 	fn vkRegisterDisplayEventEXT(&self, device: VkDevice, display: VkDisplayKHR, pDisplayEventInfo: *const VkDisplayEventInfoEXT, pAllocator: *const VkAllocationCallbacks, pFence: *mut VkFence) -> Result<()> {
-		convert_result("vkRegisterDisplayEventEXT", catch_unwind(||((self.vk_ext_display_control.vk_register_display_event_ext)(device, display, pDisplayEventInfo, pAllocator, pFence))))
+		vk_convert_result("vkRegisterDisplayEventEXT", catch_unwind(||((self.vk_ext_display_control.vk_register_display_event_ext)(device, display, pDisplayEventInfo, pAllocator, pFence))))
 	}
 	fn vkGetSwapchainCounterEXT(&self, device: VkDevice, swapchain: VkSwapchainKHR, counter: VkSurfaceCounterFlagBitsEXT, pCounterValue: *mut uint64_t) -> Result<()> {
-		convert_result("vkGetSwapchainCounterEXT", catch_unwind(||((self.vk_ext_display_control.vk_get_swapchain_counter_ext)(device, swapchain, counter, pCounterValue))))
+		vk_convert_result("vkGetSwapchainCounterEXT", catch_unwind(||((self.vk_ext_display_control.vk_get_swapchain_counter_ext)(device, swapchain, counter, pCounterValue))))
 	}
 }
 impl VK_GOOGLE_display_timing for VkCore {
 	fn vkGetRefreshCycleDurationGOOGLE(&self, device: VkDevice, swapchain: VkSwapchainKHR, pDisplayTimingProperties: *mut VkRefreshCycleDurationGOOGLE) -> Result<()> {
-		convert_result("vkGetRefreshCycleDurationGOOGLE", catch_unwind(||((self.vk_google_display_timing.vk_get_refresh_cycle_duration_google)(device, swapchain, pDisplayTimingProperties))))
+		vk_convert_result("vkGetRefreshCycleDurationGOOGLE", catch_unwind(||((self.vk_google_display_timing.vk_get_refresh_cycle_duration_google)(device, swapchain, pDisplayTimingProperties))))
 	}
 	fn vkGetPastPresentationTimingGOOGLE(&self, device: VkDevice, swapchain: VkSwapchainKHR, pPresentationTimingCount: *mut uint32_t, pPresentationTimings: *mut VkPastPresentationTimingGOOGLE) -> Result<()> {
-		convert_result("vkGetPastPresentationTimingGOOGLE", catch_unwind(||((self.vk_google_display_timing.vk_get_past_presentation_timing_google)(device, swapchain, pPresentationTimingCount, pPresentationTimings))))
+		vk_convert_result("vkGetPastPresentationTimingGOOGLE", catch_unwind(||((self.vk_google_display_timing.vk_get_past_presentation_timing_google)(device, swapchain, pPresentationTimingCount, pPresentationTimings))))
 	}
 }
 impl VK_NV_sample_mask_override_coverage for VkCore {}
@@ -55428,13 +55428,13 @@ impl VK_NVX_multiview_per_view_attributes for VkCore {}
 impl VK_NV_viewport_swizzle for VkCore {}
 impl VK_EXT_discard_rectangles for VkCore {
 	fn vkCmdSetDiscardRectangleEXT(&self, commandBuffer: VkCommandBuffer, firstDiscardRectangle: u32, discardRectangleCount: u32, pDiscardRectangles: *const VkRect2D) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_discard_rectangles.vk_cmd_set_discard_rectangle_ext)(commandBuffer, firstDiscardRectangle, discardRectangleCount, pDiscardRectangles))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_discard_rectangles.vk_cmd_set_discard_rectangle_ext)(commandBuffer, firstDiscardRectangle, discardRectangleCount, pDiscardRectangles))))
 	}
 	fn vkCmdSetDiscardRectangleEnableEXT(&self, commandBuffer: VkCommandBuffer, discardRectangleEnable: VkBool32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_discard_rectangles.vk_cmd_set_discard_rectangle_enable_ext)(commandBuffer, discardRectangleEnable))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_discard_rectangles.vk_cmd_set_discard_rectangle_enable_ext)(commandBuffer, discardRectangleEnable))))
 	}
 	fn vkCmdSetDiscardRectangleModeEXT(&self, commandBuffer: VkCommandBuffer, discardRectangleMode: VkDiscardRectangleModeEXT) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_discard_rectangles.vk_cmd_set_discard_rectangle_mode_ext)(commandBuffer, discardRectangleMode))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_discard_rectangles.vk_cmd_set_discard_rectangle_mode_ext)(commandBuffer, discardRectangleMode))))
 	}
 }
 impl VK_EXT_conservative_rasterization for VkCore {}
@@ -55442,7 +55442,7 @@ impl VK_EXT_depth_clip_enable for VkCore {}
 impl VK_EXT_swapchain_colorspace for VkCore {}
 impl VK_EXT_hdr_metadata for VkCore {
 	fn vkSetHdrMetadataEXT(&self, device: VkDevice, swapchainCount: u32, pSwapchains: *const VkSwapchainKHR, pMetadata: *const VkHdrMetadataEXT) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_hdr_metadata.vk_set_hdr_metadata_ext)(device, swapchainCount, pSwapchains, pMetadata))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_hdr_metadata.vk_set_hdr_metadata_ext)(device, swapchainCount, pSwapchains, pMetadata))))
 	}
 }
 impl VK_IMG_relaxed_line_rasterization for VkCore {}
@@ -55450,37 +55450,37 @@ impl VK_EXT_external_memory_dma_buf for VkCore {}
 impl VK_EXT_queue_family_foreign for VkCore {}
 impl VK_EXT_debug_utils for VkCore {
 	fn vkSetDebugUtilsObjectNameEXT(&self, device: VkDevice, pNameInfo: *const VkDebugUtilsObjectNameInfoEXT) -> Result<()> {
-		convert_result("vkSetDebugUtilsObjectNameEXT", catch_unwind(||((self.vk_ext_debug_utils.vk_set_debug_utils_object_name_ext)(device, pNameInfo))))
+		vk_convert_result("vkSetDebugUtilsObjectNameEXT", catch_unwind(||((self.vk_ext_debug_utils.vk_set_debug_utils_object_name_ext)(device, pNameInfo))))
 	}
 	fn vkSetDebugUtilsObjectTagEXT(&self, device: VkDevice, pTagInfo: *const VkDebugUtilsObjectTagInfoEXT) -> Result<()> {
-		convert_result("vkSetDebugUtilsObjectTagEXT", catch_unwind(||((self.vk_ext_debug_utils.vk_set_debug_utils_object_tag_ext)(device, pTagInfo))))
+		vk_convert_result("vkSetDebugUtilsObjectTagEXT", catch_unwind(||((self.vk_ext_debug_utils.vk_set_debug_utils_object_tag_ext)(device, pTagInfo))))
 	}
 	fn vkQueueBeginDebugUtilsLabelEXT(&self, queue: VkQueue, pLabelInfo: *const VkDebugUtilsLabelEXT) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_debug_utils.vk_queue_begin_debug_utils_label_ext)(queue, pLabelInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_debug_utils.vk_queue_begin_debug_utils_label_ext)(queue, pLabelInfo))))
 	}
 	fn vkQueueEndDebugUtilsLabelEXT(&self, queue: VkQueue) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_debug_utils.vk_queue_end_debug_utils_label_ext)(queue))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_debug_utils.vk_queue_end_debug_utils_label_ext)(queue))))
 	}
 	fn vkQueueInsertDebugUtilsLabelEXT(&self, queue: VkQueue, pLabelInfo: *const VkDebugUtilsLabelEXT) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_debug_utils.vk_queue_insert_debug_utils_label_ext)(queue, pLabelInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_debug_utils.vk_queue_insert_debug_utils_label_ext)(queue, pLabelInfo))))
 	}
 	fn vkCmdBeginDebugUtilsLabelEXT(&self, commandBuffer: VkCommandBuffer, pLabelInfo: *const VkDebugUtilsLabelEXT) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_debug_utils.vk_cmd_begin_debug_utils_label_ext)(commandBuffer, pLabelInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_debug_utils.vk_cmd_begin_debug_utils_label_ext)(commandBuffer, pLabelInfo))))
 	}
 	fn vkCmdEndDebugUtilsLabelEXT(&self, commandBuffer: VkCommandBuffer) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_debug_utils.vk_cmd_end_debug_utils_label_ext)(commandBuffer))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_debug_utils.vk_cmd_end_debug_utils_label_ext)(commandBuffer))))
 	}
 	fn vkCmdInsertDebugUtilsLabelEXT(&self, commandBuffer: VkCommandBuffer, pLabelInfo: *const VkDebugUtilsLabelEXT) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_debug_utils.vk_cmd_insert_debug_utils_label_ext)(commandBuffer, pLabelInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_debug_utils.vk_cmd_insert_debug_utils_label_ext)(commandBuffer, pLabelInfo))))
 	}
 	fn vkCreateDebugUtilsMessengerEXT(&self, instance: VkInstance, pCreateInfo: *const VkDebugUtilsMessengerCreateInfoEXT, pAllocator: *const VkAllocationCallbacks, pMessenger: *mut VkDebugUtilsMessengerEXT) -> Result<()> {
-		convert_result("vkCreateDebugUtilsMessengerEXT", catch_unwind(||((self.vk_ext_debug_utils.vk_create_debug_utils_messenger_ext)(instance, pCreateInfo, pAllocator, pMessenger))))
+		vk_convert_result("vkCreateDebugUtilsMessengerEXT", catch_unwind(||((self.vk_ext_debug_utils.vk_create_debug_utils_messenger_ext)(instance, pCreateInfo, pAllocator, pMessenger))))
 	}
 	fn vkDestroyDebugUtilsMessengerEXT(&self, instance: VkInstance, messenger: VkDebugUtilsMessengerEXT, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_debug_utils.vk_destroy_debug_utils_messenger_ext)(instance, messenger, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_debug_utils.vk_destroy_debug_utils_messenger_ext)(instance, messenger, pAllocator))))
 	}
 	fn vkSubmitDebugUtilsMessageEXT(&self, instance: VkInstance, messageSeverity: VkDebugUtilsMessageSeverityFlagBitsEXT, messageTypes: VkDebugUtilsMessageTypeFlagsEXT, pCallbackData: *const VkDebugUtilsMessengerCallbackDataEXT) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_debug_utils.vk_submit_debug_utils_message_ext)(instance, messageSeverity, messageTypes, pCallbackData))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_debug_utils.vk_submit_debug_utils_message_ext)(instance, messageSeverity, messageTypes, pCallbackData))))
 	}
 }
 impl VK_EXT_sampler_filter_minmax for VkCore {}
@@ -55491,10 +55491,10 @@ impl VK_EXT_inline_uniform_block for VkCore {}
 impl VK_EXT_shader_stencil_export for VkCore {}
 impl VK_EXT_sample_locations for VkCore {
 	fn vkCmdSetSampleLocationsEXT(&self, commandBuffer: VkCommandBuffer, pSampleLocationsInfo: *const VkSampleLocationsInfoEXT) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_sample_locations.vk_cmd_set_sample_locations_ext)(commandBuffer, pSampleLocationsInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_sample_locations.vk_cmd_set_sample_locations_ext)(commandBuffer, pSampleLocationsInfo))))
 	}
 	fn vkGetPhysicalDeviceMultisamplePropertiesEXT(&self, physicalDevice: VkPhysicalDevice, samples: VkSampleCountFlagBits, pMultisampleProperties: *mut VkMultisamplePropertiesEXT) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_sample_locations.vk_get_physical_device_multisample_properties_ext)(physicalDevice, samples, pMultisampleProperties))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_sample_locations.vk_get_physical_device_multisample_properties_ext)(physicalDevice, samples, pMultisampleProperties))))
 	}
 }
 impl VK_EXT_blend_operation_advanced for VkCore {}
@@ -55505,75 +55505,75 @@ impl VK_NV_shader_sm_builtins for VkCore {}
 impl VK_EXT_post_depth_coverage for VkCore {}
 impl VK_EXT_image_drm_format_modifier for VkCore {
 	fn vkGetImageDrmFormatModifierPropertiesEXT(&self, device: VkDevice, image: VkImage, pProperties: *mut VkImageDrmFormatModifierPropertiesEXT) -> Result<()> {
-		convert_result("vkGetImageDrmFormatModifierPropertiesEXT", catch_unwind(||((self.vk_ext_image_drm_format_modifier.vk_get_image_drm_format_modifier_properties_ext)(device, image, pProperties))))
+		vk_convert_result("vkGetImageDrmFormatModifierPropertiesEXT", catch_unwind(||((self.vk_ext_image_drm_format_modifier.vk_get_image_drm_format_modifier_properties_ext)(device, image, pProperties))))
 	}
 }
 impl VK_EXT_validation_cache for VkCore {
 	fn vkCreateValidationCacheEXT(&self, device: VkDevice, pCreateInfo: *const VkValidationCacheCreateInfoEXT, pAllocator: *const VkAllocationCallbacks, pValidationCache: *mut VkValidationCacheEXT) -> Result<()> {
-		convert_result("vkCreateValidationCacheEXT", catch_unwind(||((self.vk_ext_validation_cache.vk_create_validation_cache_ext)(device, pCreateInfo, pAllocator, pValidationCache))))
+		vk_convert_result("vkCreateValidationCacheEXT", catch_unwind(||((self.vk_ext_validation_cache.vk_create_validation_cache_ext)(device, pCreateInfo, pAllocator, pValidationCache))))
 	}
 	fn vkDestroyValidationCacheEXT(&self, device: VkDevice, validationCache: VkValidationCacheEXT, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_validation_cache.vk_destroy_validation_cache_ext)(device, validationCache, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_validation_cache.vk_destroy_validation_cache_ext)(device, validationCache, pAllocator))))
 	}
 	fn vkMergeValidationCachesEXT(&self, device: VkDevice, dstCache: VkValidationCacheEXT, srcCacheCount: u32, pSrcCaches: *const VkValidationCacheEXT) -> Result<()> {
-		convert_result("vkMergeValidationCachesEXT", catch_unwind(||((self.vk_ext_validation_cache.vk_merge_validation_caches_ext)(device, dstCache, srcCacheCount, pSrcCaches))))
+		vk_convert_result("vkMergeValidationCachesEXT", catch_unwind(||((self.vk_ext_validation_cache.vk_merge_validation_caches_ext)(device, dstCache, srcCacheCount, pSrcCaches))))
 	}
 	fn vkGetValidationCacheDataEXT(&self, device: VkDevice, validationCache: VkValidationCacheEXT, pDataSize: *mut size_t, pData: *mut c_void) -> Result<()> {
-		convert_result("vkGetValidationCacheDataEXT", catch_unwind(||((self.vk_ext_validation_cache.vk_get_validation_cache_data_ext)(device, validationCache, pDataSize, pData))))
+		vk_convert_result("vkGetValidationCacheDataEXT", catch_unwind(||((self.vk_ext_validation_cache.vk_get_validation_cache_data_ext)(device, validationCache, pDataSize, pData))))
 	}
 }
 impl VK_EXT_descriptor_indexing for VkCore {}
 impl VK_EXT_shader_viewport_index_layer for VkCore {}
 impl VK_NV_shading_rate_image for VkCore {
 	fn vkCmdBindShadingRateImageNV(&self, commandBuffer: VkCommandBuffer, imageView: VkImageView, imageLayout: VkImageLayout) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_nv_shading_rate_image.vk_cmd_bind_shading_rate_image_nv)(commandBuffer, imageView, imageLayout))))
+		vk_process_catch(catch_unwind(||((self.vk_nv_shading_rate_image.vk_cmd_bind_shading_rate_image_nv)(commandBuffer, imageView, imageLayout))))
 	}
 	fn vkCmdSetViewportShadingRatePaletteNV(&self, commandBuffer: VkCommandBuffer, firstViewport: u32, viewportCount: u32, pShadingRatePalettes: *const VkShadingRatePaletteNV) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_nv_shading_rate_image.vk_cmd_set_viewport_shading_rate_palette_nv)(commandBuffer, firstViewport, viewportCount, pShadingRatePalettes))))
+		vk_process_catch(catch_unwind(||((self.vk_nv_shading_rate_image.vk_cmd_set_viewport_shading_rate_palette_nv)(commandBuffer, firstViewport, viewportCount, pShadingRatePalettes))))
 	}
 	fn vkCmdSetCoarseSampleOrderNV(&self, commandBuffer: VkCommandBuffer, sampleOrderType: VkCoarseSampleOrderTypeNV, customSampleOrderCount: u32, pCustomSampleOrders: *const VkCoarseSampleOrderCustomNV) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_nv_shading_rate_image.vk_cmd_set_coarse_sample_order_nv)(commandBuffer, sampleOrderType, customSampleOrderCount, pCustomSampleOrders))))
+		vk_process_catch(catch_unwind(||((self.vk_nv_shading_rate_image.vk_cmd_set_coarse_sample_order_nv)(commandBuffer, sampleOrderType, customSampleOrderCount, pCustomSampleOrders))))
 	}
 }
 impl VK_NV_ray_tracing for VkCore {
 	fn vkCreateAccelerationStructureNV(&self, device: VkDevice, pCreateInfo: *const VkAccelerationStructureCreateInfoNV, pAllocator: *const VkAllocationCallbacks, pAccelerationStructure: *mut VkAccelerationStructureNV) -> Result<()> {
-		convert_result("vkCreateAccelerationStructureNV", catch_unwind(||((self.vk_nv_ray_tracing.vk_create_acceleration_structure_nv)(device, pCreateInfo, pAllocator, pAccelerationStructure))))
+		vk_convert_result("vkCreateAccelerationStructureNV", catch_unwind(||((self.vk_nv_ray_tracing.vk_create_acceleration_structure_nv)(device, pCreateInfo, pAllocator, pAccelerationStructure))))
 	}
 	fn vkDestroyAccelerationStructureNV(&self, device: VkDevice, accelerationStructure: VkAccelerationStructureNV, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_nv_ray_tracing.vk_destroy_acceleration_structure_nv)(device, accelerationStructure, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_nv_ray_tracing.vk_destroy_acceleration_structure_nv)(device, accelerationStructure, pAllocator))))
 	}
 	fn vkGetAccelerationStructureMemoryRequirementsNV(&self, device: VkDevice, pInfo: *const VkAccelerationStructureMemoryRequirementsInfoNV, pMemoryRequirements: *mut VkMemoryRequirements2KHR) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_nv_ray_tracing.vk_get_acceleration_structure_memory_requirements_nv)(device, pInfo, pMemoryRequirements))))
+		vk_process_catch(catch_unwind(||((self.vk_nv_ray_tracing.vk_get_acceleration_structure_memory_requirements_nv)(device, pInfo, pMemoryRequirements))))
 	}
 	fn vkBindAccelerationStructureMemoryNV(&self, device: VkDevice, bindInfoCount: u32, pBindInfos: *const VkBindAccelerationStructureMemoryInfoNV) -> Result<()> {
-		convert_result("vkBindAccelerationStructureMemoryNV", catch_unwind(||((self.vk_nv_ray_tracing.vk_bind_acceleration_structure_memory_nv)(device, bindInfoCount, pBindInfos))))
+		vk_convert_result("vkBindAccelerationStructureMemoryNV", catch_unwind(||((self.vk_nv_ray_tracing.vk_bind_acceleration_structure_memory_nv)(device, bindInfoCount, pBindInfos))))
 	}
 	fn vkCmdBuildAccelerationStructureNV(&self, commandBuffer: VkCommandBuffer, pInfo: *const VkAccelerationStructureInfoNV, instanceData: VkBuffer, instanceOffset: VkDeviceSize, update: VkBool32, dst: VkAccelerationStructureNV, src: VkAccelerationStructureNV, scratch: VkBuffer, scratchOffset: VkDeviceSize) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_nv_ray_tracing.vk_cmd_build_acceleration_structure_nv)(commandBuffer, pInfo, instanceData, instanceOffset, update, dst, src, scratch, scratchOffset))))
+		vk_process_catch(catch_unwind(||((self.vk_nv_ray_tracing.vk_cmd_build_acceleration_structure_nv)(commandBuffer, pInfo, instanceData, instanceOffset, update, dst, src, scratch, scratchOffset))))
 	}
 	fn vkCmdCopyAccelerationStructureNV(&self, commandBuffer: VkCommandBuffer, dst: VkAccelerationStructureNV, src: VkAccelerationStructureNV, mode: VkCopyAccelerationStructureModeKHR) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_nv_ray_tracing.vk_cmd_copy_acceleration_structure_nv)(commandBuffer, dst, src, mode))))
+		vk_process_catch(catch_unwind(||((self.vk_nv_ray_tracing.vk_cmd_copy_acceleration_structure_nv)(commandBuffer, dst, src, mode))))
 	}
 	fn vkCmdTraceRaysNV(&self, commandBuffer: VkCommandBuffer, raygenShaderBindingTableBuffer: VkBuffer, raygenShaderBindingOffset: VkDeviceSize, missShaderBindingTableBuffer: VkBuffer, missShaderBindingOffset: VkDeviceSize, missShaderBindingStride: VkDeviceSize, hitShaderBindingTableBuffer: VkBuffer, hitShaderBindingOffset: VkDeviceSize, hitShaderBindingStride: VkDeviceSize, callableShaderBindingTableBuffer: VkBuffer, callableShaderBindingOffset: VkDeviceSize, callableShaderBindingStride: VkDeviceSize, width: u32, height: u32, depth: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_nv_ray_tracing.vk_cmd_trace_rays_nv)(commandBuffer, raygenShaderBindingTableBuffer, raygenShaderBindingOffset, missShaderBindingTableBuffer, missShaderBindingOffset, missShaderBindingStride, hitShaderBindingTableBuffer, hitShaderBindingOffset, hitShaderBindingStride, callableShaderBindingTableBuffer, callableShaderBindingOffset, callableShaderBindingStride, width, height, depth))))
+		vk_process_catch(catch_unwind(||((self.vk_nv_ray_tracing.vk_cmd_trace_rays_nv)(commandBuffer, raygenShaderBindingTableBuffer, raygenShaderBindingOffset, missShaderBindingTableBuffer, missShaderBindingOffset, missShaderBindingStride, hitShaderBindingTableBuffer, hitShaderBindingOffset, hitShaderBindingStride, callableShaderBindingTableBuffer, callableShaderBindingOffset, callableShaderBindingStride, width, height, depth))))
 	}
 	fn vkCreateRayTracingPipelinesNV(&self, device: VkDevice, pipelineCache: VkPipelineCache, createInfoCount: u32, pCreateInfos: *const VkRayTracingPipelineCreateInfoNV, pAllocator: *const VkAllocationCallbacks, pPipelines: *mut VkPipeline) -> Result<()> {
-		convert_result("vkCreateRayTracingPipelinesNV", catch_unwind(||((self.vk_nv_ray_tracing.vk_create_ray_tracing_pipelines_nv)(device, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines))))
+		vk_convert_result("vkCreateRayTracingPipelinesNV", catch_unwind(||((self.vk_nv_ray_tracing.vk_create_ray_tracing_pipelines_nv)(device, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines))))
 	}
 	fn vkGetRayTracingShaderGroupHandlesKHR(&self, device: VkDevice, pipeline: VkPipeline, firstGroup: u32, groupCount: u32, dataSize: usize, pData: *mut c_void) -> Result<()> {
-		convert_result("vkGetRayTracingShaderGroupHandlesKHR", catch_unwind(||((self.vk_nv_ray_tracing.vk_get_ray_tracing_shader_group_handles_khr)(device, pipeline, firstGroup, groupCount, dataSize, pData))))
+		vk_convert_result("vkGetRayTracingShaderGroupHandlesKHR", catch_unwind(||((self.vk_nv_ray_tracing.vk_get_ray_tracing_shader_group_handles_khr)(device, pipeline, firstGroup, groupCount, dataSize, pData))))
 	}
 	fn vkGetRayTracingShaderGroupHandlesNV(&self, device: VkDevice, pipeline: VkPipeline, firstGroup: u32, groupCount: u32, dataSize: usize, pData: *mut c_void) -> Result<()> {
-		convert_result("vkGetRayTracingShaderGroupHandlesNV", catch_unwind(||((self.vk_nv_ray_tracing.vk_get_ray_tracing_shader_group_handles_nv)(device, pipeline, firstGroup, groupCount, dataSize, pData))))
+		vk_convert_result("vkGetRayTracingShaderGroupHandlesNV", catch_unwind(||((self.vk_nv_ray_tracing.vk_get_ray_tracing_shader_group_handles_nv)(device, pipeline, firstGroup, groupCount, dataSize, pData))))
 	}
 	fn vkGetAccelerationStructureHandleNV(&self, device: VkDevice, accelerationStructure: VkAccelerationStructureNV, dataSize: usize, pData: *mut c_void) -> Result<()> {
-		convert_result("vkGetAccelerationStructureHandleNV", catch_unwind(||((self.vk_nv_ray_tracing.vk_get_acceleration_structure_handle_nv)(device, accelerationStructure, dataSize, pData))))
+		vk_convert_result("vkGetAccelerationStructureHandleNV", catch_unwind(||((self.vk_nv_ray_tracing.vk_get_acceleration_structure_handle_nv)(device, accelerationStructure, dataSize, pData))))
 	}
 	fn vkCmdWriteAccelerationStructuresPropertiesNV(&self, commandBuffer: VkCommandBuffer, accelerationStructureCount: u32, pAccelerationStructures: *const VkAccelerationStructureNV, queryType: VkQueryType, queryPool: VkQueryPool, firstQuery: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_nv_ray_tracing.vk_cmd_write_acceleration_structures_properties_nv)(commandBuffer, accelerationStructureCount, pAccelerationStructures, queryType, queryPool, firstQuery))))
+		vk_process_catch(catch_unwind(||((self.vk_nv_ray_tracing.vk_cmd_write_acceleration_structures_properties_nv)(commandBuffer, accelerationStructureCount, pAccelerationStructures, queryType, queryPool, firstQuery))))
 	}
 	fn vkCompileDeferredNV(&self, device: VkDevice, pipeline: VkPipeline, shader: u32) -> Result<()> {
-		convert_result("vkCompileDeferredNV", catch_unwind(||((self.vk_nv_ray_tracing.vk_compile_deferred_nv)(device, pipeline, shader))))
+		vk_convert_result("vkCompileDeferredNV", catch_unwind(||((self.vk_nv_ray_tracing.vk_compile_deferred_nv)(device, pipeline, shader))))
 	}
 }
 impl VK_NV_representative_fragment_test for VkCore {}
@@ -55582,24 +55582,24 @@ impl VK_QCOM_render_pass_shader_resolve for VkCore {}
 impl VK_EXT_global_priority for VkCore {}
 impl VK_EXT_external_memory_host for VkCore {
 	fn vkGetMemoryHostPointerPropertiesEXT(&self, device: VkDevice, handleType: VkExternalMemoryHandleTypeFlagBits, pHostPointer: *const c_void, pMemoryHostPointerProperties: *mut VkMemoryHostPointerPropertiesEXT) -> Result<()> {
-		convert_result("vkGetMemoryHostPointerPropertiesEXT", catch_unwind(||((self.vk_ext_external_memory_host.vk_get_memory_host_pointer_properties_ext)(device, handleType, pHostPointer, pMemoryHostPointerProperties))))
+		vk_convert_result("vkGetMemoryHostPointerPropertiesEXT", catch_unwind(||((self.vk_ext_external_memory_host.vk_get_memory_host_pointer_properties_ext)(device, handleType, pHostPointer, pMemoryHostPointerProperties))))
 	}
 }
 impl VK_AMD_buffer_marker for VkCore {
 	fn vkCmdWriteBufferMarkerAMD(&self, commandBuffer: VkCommandBuffer, pipelineStage: VkPipelineStageFlagBits, dstBuffer: VkBuffer, dstOffset: VkDeviceSize, marker: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_amd_buffer_marker.vk_cmd_write_buffer_marker_amd)(commandBuffer, pipelineStage, dstBuffer, dstOffset, marker))))
+		vk_process_catch(catch_unwind(||((self.vk_amd_buffer_marker.vk_cmd_write_buffer_marker_amd)(commandBuffer, pipelineStage, dstBuffer, dstOffset, marker))))
 	}
 	fn vkCmdWriteBufferMarker2AMD(&self, commandBuffer: VkCommandBuffer, stage: VkPipelineStageFlags2, dstBuffer: VkBuffer, dstOffset: VkDeviceSize, marker: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_amd_buffer_marker.vk_cmd_write_buffer_marker2_amd)(commandBuffer, stage, dstBuffer, dstOffset, marker))))
+		vk_process_catch(catch_unwind(||((self.vk_amd_buffer_marker.vk_cmd_write_buffer_marker2_amd)(commandBuffer, stage, dstBuffer, dstOffset, marker))))
 	}
 }
 impl VK_AMD_pipeline_compiler_control for VkCore {}
 impl VK_EXT_calibrated_timestamps for VkCore {
 	fn vkGetPhysicalDeviceCalibrateableTimeDomainsEXT(&self, physicalDevice: VkPhysicalDevice, pTimeDomainCount: *mut uint32_t, pTimeDomains: *mut VkTimeDomainKHR) -> Result<()> {
-		convert_result("vkGetPhysicalDeviceCalibrateableTimeDomainsEXT", catch_unwind(||((self.vk_ext_calibrated_timestamps.vk_get_physical_device_calibrateable_time_domains_ext)(physicalDevice, pTimeDomainCount, pTimeDomains))))
+		vk_convert_result("vkGetPhysicalDeviceCalibrateableTimeDomainsEXT", catch_unwind(||((self.vk_ext_calibrated_timestamps.vk_get_physical_device_calibrateable_time_domains_ext)(physicalDevice, pTimeDomainCount, pTimeDomains))))
 	}
 	fn vkGetCalibratedTimestampsEXT(&self, device: VkDevice, timestampCount: u32, pTimestampInfos: *const VkCalibratedTimestampInfoKHR, pTimestamps: *mut uint64_t, pMaxDeviation: *mut uint64_t) -> Result<()> {
-		convert_result("vkGetCalibratedTimestampsEXT", catch_unwind(||((self.vk_ext_calibrated_timestamps.vk_get_calibrated_timestamps_ext)(device, timestampCount, pTimestampInfos, pTimestamps, pMaxDeviation))))
+		vk_convert_result("vkGetCalibratedTimestampsEXT", catch_unwind(||((self.vk_ext_calibrated_timestamps.vk_get_calibrated_timestamps_ext)(device, timestampCount, pTimestampInfos, pTimestamps, pMaxDeviation))))
 	}
 }
 impl VK_AMD_shader_core_properties for VkCore {}
@@ -55610,70 +55610,70 @@ impl VK_NV_shader_subgroup_partitioned for VkCore {}
 impl VK_NV_compute_shader_derivatives for VkCore {}
 impl VK_NV_mesh_shader for VkCore {
 	fn vkCmdDrawMeshTasksNV(&self, commandBuffer: VkCommandBuffer, taskCount: u32, firstTask: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_nv_mesh_shader.vk_cmd_draw_mesh_tasks_nv)(commandBuffer, taskCount, firstTask))))
+		vk_process_catch(catch_unwind(||((self.vk_nv_mesh_shader.vk_cmd_draw_mesh_tasks_nv)(commandBuffer, taskCount, firstTask))))
 	}
 	fn vkCmdDrawMeshTasksIndirectNV(&self, commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize, drawCount: u32, stride: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_nv_mesh_shader.vk_cmd_draw_mesh_tasks_indirect_nv)(commandBuffer, buffer, offset, drawCount, stride))))
+		vk_process_catch(catch_unwind(||((self.vk_nv_mesh_shader.vk_cmd_draw_mesh_tasks_indirect_nv)(commandBuffer, buffer, offset, drawCount, stride))))
 	}
 	fn vkCmdDrawMeshTasksIndirectCountNV(&self, commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize, countBuffer: VkBuffer, countBufferOffset: VkDeviceSize, maxDrawCount: u32, stride: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_nv_mesh_shader.vk_cmd_draw_mesh_tasks_indirect_count_nv)(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride))))
+		vk_process_catch(catch_unwind(||((self.vk_nv_mesh_shader.vk_cmd_draw_mesh_tasks_indirect_count_nv)(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride))))
 	}
 }
 impl VK_NV_fragment_shader_barycentric for VkCore {}
 impl VK_NV_shader_image_footprint for VkCore {}
 impl VK_NV_scissor_exclusive for VkCore {
 	fn vkCmdSetExclusiveScissorEnableNV(&self, commandBuffer: VkCommandBuffer, firstExclusiveScissor: u32, exclusiveScissorCount: u32, pExclusiveScissorEnables: *const VkBool32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_nv_scissor_exclusive.vk_cmd_set_exclusive_scissor_enable_nv)(commandBuffer, firstExclusiveScissor, exclusiveScissorCount, pExclusiveScissorEnables))))
+		vk_process_catch(catch_unwind(||((self.vk_nv_scissor_exclusive.vk_cmd_set_exclusive_scissor_enable_nv)(commandBuffer, firstExclusiveScissor, exclusiveScissorCount, pExclusiveScissorEnables))))
 	}
 	fn vkCmdSetExclusiveScissorNV(&self, commandBuffer: VkCommandBuffer, firstExclusiveScissor: u32, exclusiveScissorCount: u32, pExclusiveScissors: *const VkRect2D) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_nv_scissor_exclusive.vk_cmd_set_exclusive_scissor_nv)(commandBuffer, firstExclusiveScissor, exclusiveScissorCount, pExclusiveScissors))))
+		vk_process_catch(catch_unwind(||((self.vk_nv_scissor_exclusive.vk_cmd_set_exclusive_scissor_nv)(commandBuffer, firstExclusiveScissor, exclusiveScissorCount, pExclusiveScissors))))
 	}
 }
 impl VK_NV_device_diagnostic_checkpoints for VkCore {
 	fn vkCmdSetCheckpointNV(&self, commandBuffer: VkCommandBuffer, pCheckpointMarker: *const c_void) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_nv_device_diagnostic_checkpoints.vk_cmd_set_checkpoint_nv)(commandBuffer, pCheckpointMarker))))
+		vk_process_catch(catch_unwind(||((self.vk_nv_device_diagnostic_checkpoints.vk_cmd_set_checkpoint_nv)(commandBuffer, pCheckpointMarker))))
 	}
 	fn vkGetQueueCheckpointDataNV(&self, queue: VkQueue, pCheckpointDataCount: *mut uint32_t, pCheckpointData: *mut VkCheckpointDataNV) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_nv_device_diagnostic_checkpoints.vk_get_queue_checkpoint_data_nv)(queue, pCheckpointDataCount, pCheckpointData))))
+		vk_process_catch(catch_unwind(||((self.vk_nv_device_diagnostic_checkpoints.vk_get_queue_checkpoint_data_nv)(queue, pCheckpointDataCount, pCheckpointData))))
 	}
 	fn vkGetQueueCheckpointData2NV(&self, queue: VkQueue, pCheckpointDataCount: *mut uint32_t, pCheckpointData: *mut VkCheckpointData2NV) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_nv_device_diagnostic_checkpoints.vk_get_queue_checkpoint_data2_nv)(queue, pCheckpointDataCount, pCheckpointData))))
+		vk_process_catch(catch_unwind(||((self.vk_nv_device_diagnostic_checkpoints.vk_get_queue_checkpoint_data2_nv)(queue, pCheckpointDataCount, pCheckpointData))))
 	}
 }
 impl VK_INTEL_shader_integer_functions2 for VkCore {}
 impl VK_INTEL_performance_query for VkCore {
 	fn vkInitializePerformanceApiINTEL(&self, device: VkDevice, pInitializeInfo: *const VkInitializePerformanceApiInfoINTEL) -> Result<()> {
-		convert_result("vkInitializePerformanceApiINTEL", catch_unwind(||((self.vk_intel_performance_query.vk_initialize_performance_api_intel)(device, pInitializeInfo))))
+		vk_convert_result("vkInitializePerformanceApiINTEL", catch_unwind(||((self.vk_intel_performance_query.vk_initialize_performance_api_intel)(device, pInitializeInfo))))
 	}
 	fn vkUninitializePerformanceApiINTEL(&self, device: VkDevice) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_intel_performance_query.vk_uninitialize_performance_api_intel)(device))))
+		vk_process_catch(catch_unwind(||((self.vk_intel_performance_query.vk_uninitialize_performance_api_intel)(device))))
 	}
 	fn vkCmdSetPerformanceMarkerINTEL(&self, commandBuffer: VkCommandBuffer, pMarkerInfo: *const VkPerformanceMarkerInfoINTEL) -> Result<()> {
-		convert_result("vkCmdSetPerformanceMarkerINTEL", catch_unwind(||((self.vk_intel_performance_query.vk_cmd_set_performance_marker_intel)(commandBuffer, pMarkerInfo))))
+		vk_convert_result("vkCmdSetPerformanceMarkerINTEL", catch_unwind(||((self.vk_intel_performance_query.vk_cmd_set_performance_marker_intel)(commandBuffer, pMarkerInfo))))
 	}
 	fn vkCmdSetPerformanceStreamMarkerINTEL(&self, commandBuffer: VkCommandBuffer, pMarkerInfo: *const VkPerformanceStreamMarkerInfoINTEL) -> Result<()> {
-		convert_result("vkCmdSetPerformanceStreamMarkerINTEL", catch_unwind(||((self.vk_intel_performance_query.vk_cmd_set_performance_stream_marker_intel)(commandBuffer, pMarkerInfo))))
+		vk_convert_result("vkCmdSetPerformanceStreamMarkerINTEL", catch_unwind(||((self.vk_intel_performance_query.vk_cmd_set_performance_stream_marker_intel)(commandBuffer, pMarkerInfo))))
 	}
 	fn vkCmdSetPerformanceOverrideINTEL(&self, commandBuffer: VkCommandBuffer, pOverrideInfo: *const VkPerformanceOverrideInfoINTEL) -> Result<()> {
-		convert_result("vkCmdSetPerformanceOverrideINTEL", catch_unwind(||((self.vk_intel_performance_query.vk_cmd_set_performance_override_intel)(commandBuffer, pOverrideInfo))))
+		vk_convert_result("vkCmdSetPerformanceOverrideINTEL", catch_unwind(||((self.vk_intel_performance_query.vk_cmd_set_performance_override_intel)(commandBuffer, pOverrideInfo))))
 	}
 	fn vkAcquirePerformanceConfigurationINTEL(&self, device: VkDevice, pAcquireInfo: *const VkPerformanceConfigurationAcquireInfoINTEL, pConfiguration: *mut VkPerformanceConfigurationINTEL) -> Result<()> {
-		convert_result("vkAcquirePerformanceConfigurationINTEL", catch_unwind(||((self.vk_intel_performance_query.vk_acquire_performance_configuration_intel)(device, pAcquireInfo, pConfiguration))))
+		vk_convert_result("vkAcquirePerformanceConfigurationINTEL", catch_unwind(||((self.vk_intel_performance_query.vk_acquire_performance_configuration_intel)(device, pAcquireInfo, pConfiguration))))
 	}
 	fn vkReleasePerformanceConfigurationINTEL(&self, device: VkDevice, configuration: VkPerformanceConfigurationINTEL) -> Result<()> {
-		convert_result("vkReleasePerformanceConfigurationINTEL", catch_unwind(||((self.vk_intel_performance_query.vk_release_performance_configuration_intel)(device, configuration))))
+		vk_convert_result("vkReleasePerformanceConfigurationINTEL", catch_unwind(||((self.vk_intel_performance_query.vk_release_performance_configuration_intel)(device, configuration))))
 	}
 	fn vkQueueSetPerformanceConfigurationINTEL(&self, queue: VkQueue, configuration: VkPerformanceConfigurationINTEL) -> Result<()> {
-		convert_result("vkQueueSetPerformanceConfigurationINTEL", catch_unwind(||((self.vk_intel_performance_query.vk_queue_set_performance_configuration_intel)(queue, configuration))))
+		vk_convert_result("vkQueueSetPerformanceConfigurationINTEL", catch_unwind(||((self.vk_intel_performance_query.vk_queue_set_performance_configuration_intel)(queue, configuration))))
 	}
 	fn vkGetPerformanceParameterINTEL(&self, device: VkDevice, parameter: VkPerformanceParameterTypeINTEL, pValue: *mut VkPerformanceValueINTEL) -> Result<()> {
-		convert_result("vkGetPerformanceParameterINTEL", catch_unwind(||((self.vk_intel_performance_query.vk_get_performance_parameter_intel)(device, parameter, pValue))))
+		vk_convert_result("vkGetPerformanceParameterINTEL", catch_unwind(||((self.vk_intel_performance_query.vk_get_performance_parameter_intel)(device, parameter, pValue))))
 	}
 }
 impl VK_EXT_pci_bus_info for VkCore {}
 impl VK_AMD_display_native_hdr for VkCore {
 	fn vkSetLocalDimmingAMD(&self, device: VkDevice, swapChain: VkSwapchainKHR, localDimmingEnable: VkBool32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_amd_display_native_hdr.vk_set_local_dimming_amd)(device, swapChain, localDimmingEnable))))
+		vk_process_catch(catch_unwind(||((self.vk_amd_display_native_hdr.vk_set_local_dimming_amd)(device, swapChain, localDimmingEnable))))
 	}
 }
 impl VK_EXT_fragment_density_map for VkCore {}
@@ -55689,24 +55689,24 @@ impl VK_EXT_memory_priority for VkCore {}
 impl VK_NV_dedicated_allocation_image_aliasing for VkCore {}
 impl VK_EXT_buffer_device_address for VkCore {
 	fn vkGetBufferDeviceAddressEXT(&self, device: VkDevice, pInfo: *const VkBufferDeviceAddressInfo) -> Result<VkDeviceAddress> {
-		process_catch(catch_unwind(||((self.vk_ext_buffer_device_address.vk_get_buffer_device_address_ext)(device, pInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_buffer_device_address.vk_get_buffer_device_address_ext)(device, pInfo))))
 	}
 }
 impl VK_EXT_tooling_info for VkCore {
 	fn vkGetPhysicalDeviceToolPropertiesEXT(&self, physicalDevice: VkPhysicalDevice, pToolCount: *mut uint32_t, pToolProperties: *mut VkPhysicalDeviceToolProperties) -> Result<()> {
-		convert_result("vkGetPhysicalDeviceToolPropertiesEXT", catch_unwind(||((self.vk_ext_tooling_info.vk_get_physical_device_tool_properties_ext)(physicalDevice, pToolCount, pToolProperties))))
+		vk_convert_result("vkGetPhysicalDeviceToolPropertiesEXT", catch_unwind(||((self.vk_ext_tooling_info.vk_get_physical_device_tool_properties_ext)(physicalDevice, pToolCount, pToolProperties))))
 	}
 }
 impl VK_EXT_separate_stencil_usage for VkCore {}
 impl VK_EXT_validation_features for VkCore {}
 impl VK_NV_cooperative_matrix for VkCore {
 	fn vkGetPhysicalDeviceCooperativeMatrixPropertiesNV(&self, physicalDevice: VkPhysicalDevice, pPropertyCount: *mut uint32_t, pProperties: *mut VkCooperativeMatrixPropertiesNV) -> Result<()> {
-		convert_result("vkGetPhysicalDeviceCooperativeMatrixPropertiesNV", catch_unwind(||((self.vk_nv_cooperative_matrix.vk_get_physical_device_cooperative_matrix_properties_nv)(physicalDevice, pPropertyCount, pProperties))))
+		vk_convert_result("vkGetPhysicalDeviceCooperativeMatrixPropertiesNV", catch_unwind(||((self.vk_nv_cooperative_matrix.vk_get_physical_device_cooperative_matrix_properties_nv)(physicalDevice, pPropertyCount, pProperties))))
 	}
 }
 impl VK_NV_coverage_reduction_mode for VkCore {
 	fn vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV(&self, physicalDevice: VkPhysicalDevice, pCombinationCount: *mut uint32_t, pCombinations: *mut VkFramebufferMixedSamplesCombinationNV) -> Result<()> {
-		convert_result("vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV", catch_unwind(||((self.vk_nv_coverage_reduction_mode.vk_get_physical_device_supported_framebuffer_mixed_samples_combinations_nv)(physicalDevice, pCombinationCount, pCombinations))))
+		vk_convert_result("vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV", catch_unwind(||((self.vk_nv_coverage_reduction_mode.vk_get_physical_device_supported_framebuffer_mixed_samples_combinations_nv)(physicalDevice, pCombinationCount, pCombinations))))
 	}
 }
 impl VK_EXT_fragment_shader_interlock for VkCore {}
@@ -55714,74 +55714,74 @@ impl VK_EXT_ycbcr_image_arrays for VkCore {}
 impl VK_EXT_provoking_vertex for VkCore {}
 impl VK_EXT_headless_surface for VkCore {
 	fn vkCreateHeadlessSurfaceEXT(&self, instance: VkInstance, pCreateInfo: *const VkHeadlessSurfaceCreateInfoEXT, pAllocator: *const VkAllocationCallbacks, pSurface: *mut VkSurfaceKHR) -> Result<()> {
-		convert_result("vkCreateHeadlessSurfaceEXT", catch_unwind(||((self.vk_ext_headless_surface.vk_create_headless_surface_ext)(instance, pCreateInfo, pAllocator, pSurface))))
+		vk_convert_result("vkCreateHeadlessSurfaceEXT", catch_unwind(||((self.vk_ext_headless_surface.vk_create_headless_surface_ext)(instance, pCreateInfo, pAllocator, pSurface))))
 	}
 }
 impl VK_EXT_line_rasterization for VkCore {
 	fn vkCmdSetLineStippleEXT(&self, commandBuffer: VkCommandBuffer, lineStippleFactor: u32, lineStipplePattern: u16) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_line_rasterization.vk_cmd_set_line_stipple_ext)(commandBuffer, lineStippleFactor, lineStipplePattern))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_line_rasterization.vk_cmd_set_line_stipple_ext)(commandBuffer, lineStippleFactor, lineStipplePattern))))
 	}
 }
 impl VK_EXT_shader_atomic_float for VkCore {}
 impl VK_EXT_host_query_reset for VkCore {
 	fn vkResetQueryPoolEXT(&self, device: VkDevice, queryPool: VkQueryPool, firstQuery: u32, queryCount: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_host_query_reset.vk_reset_query_pool_ext)(device, queryPool, firstQuery, queryCount))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_host_query_reset.vk_reset_query_pool_ext)(device, queryPool, firstQuery, queryCount))))
 	}
 }
 impl VK_EXT_index_type_uint8 for VkCore {}
 impl VK_EXT_extended_dynamic_state for VkCore {
 	fn vkCmdSetCullModeEXT(&self, commandBuffer: VkCommandBuffer, cullMode: VkCullModeFlags) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state.vk_cmd_set_cull_mode_ext)(commandBuffer, cullMode))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state.vk_cmd_set_cull_mode_ext)(commandBuffer, cullMode))))
 	}
 	fn vkCmdSetFrontFaceEXT(&self, commandBuffer: VkCommandBuffer, frontFace: VkFrontFace) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state.vk_cmd_set_front_face_ext)(commandBuffer, frontFace))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state.vk_cmd_set_front_face_ext)(commandBuffer, frontFace))))
 	}
 	fn vkCmdSetPrimitiveTopologyEXT(&self, commandBuffer: VkCommandBuffer, primitiveTopology: VkPrimitiveTopology) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state.vk_cmd_set_primitive_topology_ext)(commandBuffer, primitiveTopology))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state.vk_cmd_set_primitive_topology_ext)(commandBuffer, primitiveTopology))))
 	}
 	fn vkCmdSetViewportWithCountEXT(&self, commandBuffer: VkCommandBuffer, viewportCount: u32, pViewports: *const VkViewport) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state.vk_cmd_set_viewport_with_count_ext)(commandBuffer, viewportCount, pViewports))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state.vk_cmd_set_viewport_with_count_ext)(commandBuffer, viewportCount, pViewports))))
 	}
 	fn vkCmdSetScissorWithCountEXT(&self, commandBuffer: VkCommandBuffer, scissorCount: u32, pScissors: *const VkRect2D) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state.vk_cmd_set_scissor_with_count_ext)(commandBuffer, scissorCount, pScissors))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state.vk_cmd_set_scissor_with_count_ext)(commandBuffer, scissorCount, pScissors))))
 	}
 	fn vkCmdBindVertexBuffers2EXT(&self, commandBuffer: VkCommandBuffer, firstBinding: u32, bindingCount: u32, pBuffers: *const VkBuffer, pOffsets: *const VkDeviceSize, pSizes: *const VkDeviceSize, pStrides: *const VkDeviceSize) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state.vk_cmd_bind_vertex_buffers2_ext)(commandBuffer, firstBinding, bindingCount, pBuffers, pOffsets, pSizes, pStrides))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state.vk_cmd_bind_vertex_buffers2_ext)(commandBuffer, firstBinding, bindingCount, pBuffers, pOffsets, pSizes, pStrides))))
 	}
 	fn vkCmdSetDepthTestEnableEXT(&self, commandBuffer: VkCommandBuffer, depthTestEnable: VkBool32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state.vk_cmd_set_depth_test_enable_ext)(commandBuffer, depthTestEnable))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state.vk_cmd_set_depth_test_enable_ext)(commandBuffer, depthTestEnable))))
 	}
 	fn vkCmdSetDepthWriteEnableEXT(&self, commandBuffer: VkCommandBuffer, depthWriteEnable: VkBool32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state.vk_cmd_set_depth_write_enable_ext)(commandBuffer, depthWriteEnable))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state.vk_cmd_set_depth_write_enable_ext)(commandBuffer, depthWriteEnable))))
 	}
 	fn vkCmdSetDepthCompareOpEXT(&self, commandBuffer: VkCommandBuffer, depthCompareOp: VkCompareOp) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state.vk_cmd_set_depth_compare_op_ext)(commandBuffer, depthCompareOp))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state.vk_cmd_set_depth_compare_op_ext)(commandBuffer, depthCompareOp))))
 	}
 	fn vkCmdSetDepthBoundsTestEnableEXT(&self, commandBuffer: VkCommandBuffer, depthBoundsTestEnable: VkBool32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state.vk_cmd_set_depth_bounds_test_enable_ext)(commandBuffer, depthBoundsTestEnable))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state.vk_cmd_set_depth_bounds_test_enable_ext)(commandBuffer, depthBoundsTestEnable))))
 	}
 	fn vkCmdSetStencilTestEnableEXT(&self, commandBuffer: VkCommandBuffer, stencilTestEnable: VkBool32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state.vk_cmd_set_stencil_test_enable_ext)(commandBuffer, stencilTestEnable))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state.vk_cmd_set_stencil_test_enable_ext)(commandBuffer, stencilTestEnable))))
 	}
 	fn vkCmdSetStencilOpEXT(&self, commandBuffer: VkCommandBuffer, faceMask: VkStencilFaceFlags, failOp: VkStencilOp, passOp: VkStencilOp, depthFailOp: VkStencilOp, compareOp: VkCompareOp) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state.vk_cmd_set_stencil_op_ext)(commandBuffer, faceMask, failOp, passOp, depthFailOp, compareOp))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state.vk_cmd_set_stencil_op_ext)(commandBuffer, faceMask, failOp, passOp, depthFailOp, compareOp))))
 	}
 }
 impl VK_EXT_host_image_copy for VkCore {
 	fn vkCopyMemoryToImageEXT(&self, device: VkDevice, pCopyMemoryToImageInfo: *const VkCopyMemoryToImageInfo) -> Result<()> {
-		convert_result("vkCopyMemoryToImageEXT", catch_unwind(||((self.vk_ext_host_image_copy.vk_copy_memory_to_image_ext)(device, pCopyMemoryToImageInfo))))
+		vk_convert_result("vkCopyMemoryToImageEXT", catch_unwind(||((self.vk_ext_host_image_copy.vk_copy_memory_to_image_ext)(device, pCopyMemoryToImageInfo))))
 	}
 	fn vkCopyImageToMemoryEXT(&self, device: VkDevice, pCopyImageToMemoryInfo: *const VkCopyImageToMemoryInfo) -> Result<()> {
-		convert_result("vkCopyImageToMemoryEXT", catch_unwind(||((self.vk_ext_host_image_copy.vk_copy_image_to_memory_ext)(device, pCopyImageToMemoryInfo))))
+		vk_convert_result("vkCopyImageToMemoryEXT", catch_unwind(||((self.vk_ext_host_image_copy.vk_copy_image_to_memory_ext)(device, pCopyImageToMemoryInfo))))
 	}
 	fn vkCopyImageToImageEXT(&self, device: VkDevice, pCopyImageToImageInfo: *const VkCopyImageToImageInfo) -> Result<()> {
-		convert_result("vkCopyImageToImageEXT", catch_unwind(||((self.vk_ext_host_image_copy.vk_copy_image_to_image_ext)(device, pCopyImageToImageInfo))))
+		vk_convert_result("vkCopyImageToImageEXT", catch_unwind(||((self.vk_ext_host_image_copy.vk_copy_image_to_image_ext)(device, pCopyImageToImageInfo))))
 	}
 	fn vkTransitionImageLayoutEXT(&self, device: VkDevice, transitionCount: u32, pTransitions: *const VkHostImageLayoutTransitionInfo) -> Result<()> {
-		convert_result("vkTransitionImageLayoutEXT", catch_unwind(||((self.vk_ext_host_image_copy.vk_transition_image_layout_ext)(device, transitionCount, pTransitions))))
+		vk_convert_result("vkTransitionImageLayoutEXT", catch_unwind(||((self.vk_ext_host_image_copy.vk_transition_image_layout_ext)(device, transitionCount, pTransitions))))
 	}
 	fn vkGetImageSubresourceLayout2EXT(&self, device: VkDevice, image: VkImage, pSubresource: *const VkImageSubresource2, pLayout: *mut VkSubresourceLayout2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_host_image_copy.vk_get_image_subresource_layout2_ext)(device, image, pSubresource, pLayout))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_host_image_copy.vk_get_image_subresource_layout2_ext)(device, image, pSubresource, pLayout))))
 	}
 }
 impl VK_EXT_map_memory_placed for VkCore {}
@@ -55789,28 +55789,28 @@ impl VK_EXT_shader_atomic_float2 for VkCore {}
 impl VK_EXT_surface_maintenance1 for VkCore {}
 impl VK_EXT_swapchain_maintenance1 for VkCore {
 	fn vkReleaseSwapchainImagesEXT(&self, device: VkDevice, pReleaseInfo: *const VkReleaseSwapchainImagesInfoKHR) -> Result<()> {
-		convert_result("vkReleaseSwapchainImagesEXT", catch_unwind(||((self.vk_ext_swapchain_maintenance1.vk_release_swapchain_images_ext)(device, pReleaseInfo))))
+		vk_convert_result("vkReleaseSwapchainImagesEXT", catch_unwind(||((self.vk_ext_swapchain_maintenance1.vk_release_swapchain_images_ext)(device, pReleaseInfo))))
 	}
 }
 impl VK_EXT_shader_demote_to_helper_invocation for VkCore {}
 impl VK_NV_device_generated_commands for VkCore {
 	fn vkGetGeneratedCommandsMemoryRequirementsNV(&self, device: VkDevice, pInfo: *const VkGeneratedCommandsMemoryRequirementsInfoNV, pMemoryRequirements: *mut VkMemoryRequirements2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_nv_device_generated_commands.vk_get_generated_commands_memory_requirements_nv)(device, pInfo, pMemoryRequirements))))
+		vk_process_catch(catch_unwind(||((self.vk_nv_device_generated_commands.vk_get_generated_commands_memory_requirements_nv)(device, pInfo, pMemoryRequirements))))
 	}
 	fn vkCmdPreprocessGeneratedCommandsNV(&self, commandBuffer: VkCommandBuffer, pGeneratedCommandsInfo: *const VkGeneratedCommandsInfoNV) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_nv_device_generated_commands.vk_cmd_preprocess_generated_commands_nv)(commandBuffer, pGeneratedCommandsInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_nv_device_generated_commands.vk_cmd_preprocess_generated_commands_nv)(commandBuffer, pGeneratedCommandsInfo))))
 	}
 	fn vkCmdExecuteGeneratedCommandsNV(&self, commandBuffer: VkCommandBuffer, isPreprocessed: VkBool32, pGeneratedCommandsInfo: *const VkGeneratedCommandsInfoNV) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_nv_device_generated_commands.vk_cmd_execute_generated_commands_nv)(commandBuffer, isPreprocessed, pGeneratedCommandsInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_nv_device_generated_commands.vk_cmd_execute_generated_commands_nv)(commandBuffer, isPreprocessed, pGeneratedCommandsInfo))))
 	}
 	fn vkCmdBindPipelineShaderGroupNV(&self, commandBuffer: VkCommandBuffer, pipelineBindPoint: VkPipelineBindPoint, pipeline: VkPipeline, groupIndex: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_nv_device_generated_commands.vk_cmd_bind_pipeline_shader_group_nv)(commandBuffer, pipelineBindPoint, pipeline, groupIndex))))
+		vk_process_catch(catch_unwind(||((self.vk_nv_device_generated_commands.vk_cmd_bind_pipeline_shader_group_nv)(commandBuffer, pipelineBindPoint, pipeline, groupIndex))))
 	}
 	fn vkCreateIndirectCommandsLayoutNV(&self, device: VkDevice, pCreateInfo: *const VkIndirectCommandsLayoutCreateInfoNV, pAllocator: *const VkAllocationCallbacks, pIndirectCommandsLayout: *mut VkIndirectCommandsLayoutNV) -> Result<()> {
-		convert_result("vkCreateIndirectCommandsLayoutNV", catch_unwind(||((self.vk_nv_device_generated_commands.vk_create_indirect_commands_layout_nv)(device, pCreateInfo, pAllocator, pIndirectCommandsLayout))))
+		vk_convert_result("vkCreateIndirectCommandsLayoutNV", catch_unwind(||((self.vk_nv_device_generated_commands.vk_create_indirect_commands_layout_nv)(device, pCreateInfo, pAllocator, pIndirectCommandsLayout))))
 	}
 	fn vkDestroyIndirectCommandsLayoutNV(&self, device: VkDevice, indirectCommandsLayout: VkIndirectCommandsLayoutNV, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_nv_device_generated_commands.vk_destroy_indirect_commands_layout_nv)(device, indirectCommandsLayout, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_nv_device_generated_commands.vk_destroy_indirect_commands_layout_nv)(device, indirectCommandsLayout, pAllocator))))
 	}
 }
 impl VK_NV_inherited_viewport_scissor for VkCore {}
@@ -55818,16 +55818,16 @@ impl VK_EXT_texel_buffer_alignment for VkCore {}
 impl VK_QCOM_render_pass_transform for VkCore {}
 impl VK_EXT_depth_bias_control for VkCore {
 	fn vkCmdSetDepthBias2EXT(&self, commandBuffer: VkCommandBuffer, pDepthBiasInfo: *const VkDepthBiasInfoEXT) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_depth_bias_control.vk_cmd_set_depth_bias2_ext)(commandBuffer, pDepthBiasInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_depth_bias_control.vk_cmd_set_depth_bias2_ext)(commandBuffer, pDepthBiasInfo))))
 	}
 }
 impl VK_EXT_device_memory_report for VkCore {}
 impl VK_EXT_acquire_drm_display for VkCore {
 	fn vkAcquireDrmDisplayEXT(&self, physicalDevice: VkPhysicalDevice, drmFd: i32, display: VkDisplayKHR) -> Result<()> {
-		convert_result("vkAcquireDrmDisplayEXT", catch_unwind(||((self.vk_ext_acquire_drm_display.vk_acquire_drm_display_ext)(physicalDevice, drmFd, display))))
+		vk_convert_result("vkAcquireDrmDisplayEXT", catch_unwind(||((self.vk_ext_acquire_drm_display.vk_acquire_drm_display_ext)(physicalDevice, drmFd, display))))
 	}
 	fn vkGetDrmDisplayEXT(&self, physicalDevice: VkPhysicalDevice, drmFd: i32, connectorId: u32, display: *mut VkDisplayKHR) -> Result<()> {
-		convert_result("vkGetDrmDisplayEXT", catch_unwind(||((self.vk_ext_acquire_drm_display.vk_get_drm_display_ext)(physicalDevice, drmFd, connectorId, display))))
+		vk_convert_result("vkGetDrmDisplayEXT", catch_unwind(||((self.vk_ext_acquire_drm_display.vk_get_drm_display_ext)(physicalDevice, drmFd, connectorId, display))))
 	}
 }
 impl VK_EXT_robustness2 for VkCore {}
@@ -55836,16 +55836,16 @@ impl VK_GOOGLE_user_type for VkCore {}
 impl VK_NV_present_barrier for VkCore {}
 impl VK_EXT_private_data for VkCore {
 	fn vkCreatePrivateDataSlotEXT(&self, device: VkDevice, pCreateInfo: *const VkPrivateDataSlotCreateInfo, pAllocator: *const VkAllocationCallbacks, pPrivateDataSlot: *mut VkPrivateDataSlot) -> Result<()> {
-		convert_result("vkCreatePrivateDataSlotEXT", catch_unwind(||((self.vk_ext_private_data.vk_create_private_data_slot_ext)(device, pCreateInfo, pAllocator, pPrivateDataSlot))))
+		vk_convert_result("vkCreatePrivateDataSlotEXT", catch_unwind(||((self.vk_ext_private_data.vk_create_private_data_slot_ext)(device, pCreateInfo, pAllocator, pPrivateDataSlot))))
 	}
 	fn vkDestroyPrivateDataSlotEXT(&self, device: VkDevice, privateDataSlot: VkPrivateDataSlot, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_private_data.vk_destroy_private_data_slot_ext)(device, privateDataSlot, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_private_data.vk_destroy_private_data_slot_ext)(device, privateDataSlot, pAllocator))))
 	}
 	fn vkSetPrivateDataEXT(&self, device: VkDevice, objectType: VkObjectType, objectHandle: u64, privateDataSlot: VkPrivateDataSlot, data: u64) -> Result<()> {
-		convert_result("vkSetPrivateDataEXT", catch_unwind(||((self.vk_ext_private_data.vk_set_private_data_ext)(device, objectType, objectHandle, privateDataSlot, data))))
+		vk_convert_result("vkSetPrivateDataEXT", catch_unwind(||((self.vk_ext_private_data.vk_set_private_data_ext)(device, objectType, objectHandle, privateDataSlot, data))))
 	}
 	fn vkGetPrivateDataEXT(&self, device: VkDevice, objectType: VkObjectType, objectHandle: u64, privateDataSlot: VkPrivateDataSlot, pData: *mut uint64_t) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_private_data.vk_get_private_data_ext)(device, objectType, objectHandle, privateDataSlot, pData))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_private_data.vk_get_private_data_ext)(device, objectType, objectHandle, privateDataSlot, pData))))
 	}
 }
 impl VK_EXT_pipeline_creation_cache_control for VkCore {}
@@ -55853,56 +55853,56 @@ impl VK_NV_device_diagnostics_config for VkCore {}
 impl VK_QCOM_render_pass_store_ops for VkCore {}
 impl VK_QCOM_tile_shading for VkCore {
 	fn vkCmdDispatchTileQCOM(&self, commandBuffer: VkCommandBuffer, pDispatchTileInfo: *const VkDispatchTileInfoQCOM) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_qcom_tile_shading.vk_cmd_dispatch_tile_qcom)(commandBuffer, pDispatchTileInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_qcom_tile_shading.vk_cmd_dispatch_tile_qcom)(commandBuffer, pDispatchTileInfo))))
 	}
 	fn vkCmdBeginPerTileExecutionQCOM(&self, commandBuffer: VkCommandBuffer, pPerTileBeginInfo: *const VkPerTileBeginInfoQCOM) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_qcom_tile_shading.vk_cmd_begin_per_tile_execution_qcom)(commandBuffer, pPerTileBeginInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_qcom_tile_shading.vk_cmd_begin_per_tile_execution_qcom)(commandBuffer, pPerTileBeginInfo))))
 	}
 	fn vkCmdEndPerTileExecutionQCOM(&self, commandBuffer: VkCommandBuffer, pPerTileEndInfo: *const VkPerTileEndInfoQCOM) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_qcom_tile_shading.vk_cmd_end_per_tile_execution_qcom)(commandBuffer, pPerTileEndInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_qcom_tile_shading.vk_cmd_end_per_tile_execution_qcom)(commandBuffer, pPerTileEndInfo))))
 	}
 }
 impl VK_NV_low_latency for VkCore {}
 impl VK_EXT_descriptor_buffer for VkCore {
 	fn vkGetDescriptorSetLayoutSizeEXT(&self, device: VkDevice, layout: VkDescriptorSetLayout, pLayoutSizeInBytes: *mut VkDeviceSize) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_descriptor_buffer.vk_get_descriptor_set_layout_size_ext)(device, layout, pLayoutSizeInBytes))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_descriptor_buffer.vk_get_descriptor_set_layout_size_ext)(device, layout, pLayoutSizeInBytes))))
 	}
 	fn vkGetDescriptorSetLayoutBindingOffsetEXT(&self, device: VkDevice, layout: VkDescriptorSetLayout, binding: u32, pOffset: *mut VkDeviceSize) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_descriptor_buffer.vk_get_descriptor_set_layout_binding_offset_ext)(device, layout, binding, pOffset))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_descriptor_buffer.vk_get_descriptor_set_layout_binding_offset_ext)(device, layout, binding, pOffset))))
 	}
 	fn vkGetDescriptorEXT(&self, device: VkDevice, pDescriptorInfo: *const VkDescriptorGetInfoEXT, dataSize: usize, pDescriptor: *mut c_void) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_descriptor_buffer.vk_get_descriptor_ext)(device, pDescriptorInfo, dataSize, pDescriptor))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_descriptor_buffer.vk_get_descriptor_ext)(device, pDescriptorInfo, dataSize, pDescriptor))))
 	}
 	fn vkCmdBindDescriptorBuffersEXT(&self, commandBuffer: VkCommandBuffer, bufferCount: u32, pBindingInfos: *const VkDescriptorBufferBindingInfoEXT) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_descriptor_buffer.vk_cmd_bind_descriptor_buffers_ext)(commandBuffer, bufferCount, pBindingInfos))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_descriptor_buffer.vk_cmd_bind_descriptor_buffers_ext)(commandBuffer, bufferCount, pBindingInfos))))
 	}
 	fn vkCmdSetDescriptorBufferOffsetsEXT(&self, commandBuffer: VkCommandBuffer, pipelineBindPoint: VkPipelineBindPoint, layout: VkPipelineLayout, firstSet: u32, setCount: u32, pBufferIndices: *const uint32_t, pOffsets: *const VkDeviceSize) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_descriptor_buffer.vk_cmd_set_descriptor_buffer_offsets_ext)(commandBuffer, pipelineBindPoint, layout, firstSet, setCount, pBufferIndices, pOffsets))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_descriptor_buffer.vk_cmd_set_descriptor_buffer_offsets_ext)(commandBuffer, pipelineBindPoint, layout, firstSet, setCount, pBufferIndices, pOffsets))))
 	}
 	fn vkCmdBindDescriptorBufferEmbeddedSamplersEXT(&self, commandBuffer: VkCommandBuffer, pipelineBindPoint: VkPipelineBindPoint, layout: VkPipelineLayout, set: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_descriptor_buffer.vk_cmd_bind_descriptor_buffer_embedded_samplers_ext)(commandBuffer, pipelineBindPoint, layout, set))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_descriptor_buffer.vk_cmd_bind_descriptor_buffer_embedded_samplers_ext)(commandBuffer, pipelineBindPoint, layout, set))))
 	}
 	fn vkGetBufferOpaqueCaptureDescriptorDataEXT(&self, device: VkDevice, pInfo: *const VkBufferCaptureDescriptorDataInfoEXT, pData: *mut c_void) -> Result<()> {
-		convert_result("vkGetBufferOpaqueCaptureDescriptorDataEXT", catch_unwind(||((self.vk_ext_descriptor_buffer.vk_get_buffer_opaque_capture_descriptor_data_ext)(device, pInfo, pData))))
+		vk_convert_result("vkGetBufferOpaqueCaptureDescriptorDataEXT", catch_unwind(||((self.vk_ext_descriptor_buffer.vk_get_buffer_opaque_capture_descriptor_data_ext)(device, pInfo, pData))))
 	}
 	fn vkGetImageOpaqueCaptureDescriptorDataEXT(&self, device: VkDevice, pInfo: *const VkImageCaptureDescriptorDataInfoEXT, pData: *mut c_void) -> Result<()> {
-		convert_result("vkGetImageOpaqueCaptureDescriptorDataEXT", catch_unwind(||((self.vk_ext_descriptor_buffer.vk_get_image_opaque_capture_descriptor_data_ext)(device, pInfo, pData))))
+		vk_convert_result("vkGetImageOpaqueCaptureDescriptorDataEXT", catch_unwind(||((self.vk_ext_descriptor_buffer.vk_get_image_opaque_capture_descriptor_data_ext)(device, pInfo, pData))))
 	}
 	fn vkGetImageViewOpaqueCaptureDescriptorDataEXT(&self, device: VkDevice, pInfo: *const VkImageViewCaptureDescriptorDataInfoEXT, pData: *mut c_void) -> Result<()> {
-		convert_result("vkGetImageViewOpaqueCaptureDescriptorDataEXT", catch_unwind(||((self.vk_ext_descriptor_buffer.vk_get_image_view_opaque_capture_descriptor_data_ext)(device, pInfo, pData))))
+		vk_convert_result("vkGetImageViewOpaqueCaptureDescriptorDataEXT", catch_unwind(||((self.vk_ext_descriptor_buffer.vk_get_image_view_opaque_capture_descriptor_data_ext)(device, pInfo, pData))))
 	}
 	fn vkGetSamplerOpaqueCaptureDescriptorDataEXT(&self, device: VkDevice, pInfo: *const VkSamplerCaptureDescriptorDataInfoEXT, pData: *mut c_void) -> Result<()> {
-		convert_result("vkGetSamplerOpaqueCaptureDescriptorDataEXT", catch_unwind(||((self.vk_ext_descriptor_buffer.vk_get_sampler_opaque_capture_descriptor_data_ext)(device, pInfo, pData))))
+		vk_convert_result("vkGetSamplerOpaqueCaptureDescriptorDataEXT", catch_unwind(||((self.vk_ext_descriptor_buffer.vk_get_sampler_opaque_capture_descriptor_data_ext)(device, pInfo, pData))))
 	}
 	fn vkGetAccelerationStructureOpaqueCaptureDescriptorDataEXT(&self, device: VkDevice, pInfo: *const VkAccelerationStructureCaptureDescriptorDataInfoEXT, pData: *mut c_void) -> Result<()> {
-		convert_result("vkGetAccelerationStructureOpaqueCaptureDescriptorDataEXT", catch_unwind(||((self.vk_ext_descriptor_buffer.vk_get_acceleration_structure_opaque_capture_descriptor_data_ext)(device, pInfo, pData))))
+		vk_convert_result("vkGetAccelerationStructureOpaqueCaptureDescriptorDataEXT", catch_unwind(||((self.vk_ext_descriptor_buffer.vk_get_acceleration_structure_opaque_capture_descriptor_data_ext)(device, pInfo, pData))))
 	}
 }
 impl VK_EXT_graphics_pipeline_library for VkCore {}
 impl VK_AMD_shader_early_and_late_fragment_tests for VkCore {}
 impl VK_NV_fragment_shading_rate_enums for VkCore {
 	fn vkCmdSetFragmentShadingRateEnumNV(&self, commandBuffer: VkCommandBuffer, shadingRate: VkFragmentShadingRateNV, combinerOps: &[VkFragmentShadingRateCombinerOpKHR; 2 as usize]) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_nv_fragment_shading_rate_enums.vk_cmd_set_fragment_shading_rate_enum_nv)(commandBuffer, shadingRate, combinerOps))))
+		vk_process_catch(catch_unwind(||((self.vk_nv_fragment_shading_rate_enums.vk_cmd_set_fragment_shading_rate_enum_nv)(commandBuffer, shadingRate, combinerOps))))
 	}
 }
 impl VK_NV_ray_tracing_motion_blur for VkCore {}
@@ -55915,7 +55915,7 @@ impl VK_EXT_attachment_feedback_loop_layout for VkCore {}
 impl VK_EXT_4444_formats for VkCore {}
 impl VK_EXT_device_fault for VkCore {
 	fn vkGetDeviceFaultInfoEXT(&self, device: VkDevice, pFaultCounts: *mut VkDeviceFaultCountsEXT, pFaultInfo: *mut VkDeviceFaultInfoEXT) -> Result<()> {
-		convert_result("vkGetDeviceFaultInfoEXT", catch_unwind(||((self.vk_ext_device_fault.vk_get_device_fault_info_ext)(device, pFaultCounts, pFaultInfo))))
+		vk_convert_result("vkGetDeviceFaultInfoEXT", catch_unwind(||((self.vk_ext_device_fault.vk_get_device_fault_info_ext)(device, pFaultCounts, pFaultInfo))))
 	}
 }
 impl VK_ARM_rasterization_order_attachment_access for VkCore {}
@@ -55923,7 +55923,7 @@ impl VK_EXT_rgba10x6_formats for VkCore {}
 impl VK_VALVE_mutable_descriptor_type for VkCore {}
 impl VK_EXT_vertex_input_dynamic_state for VkCore {
 	fn vkCmdSetVertexInputEXT(&self, commandBuffer: VkCommandBuffer, vertexBindingDescriptionCount: u32, pVertexBindingDescriptions: *const VkVertexInputBindingDescription2EXT, vertexAttributeDescriptionCount: u32, pVertexAttributeDescriptions: *const VkVertexInputAttributeDescription2EXT) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_vertex_input_dynamic_state.vk_cmd_set_vertex_input_ext)(commandBuffer, vertexBindingDescriptionCount, pVertexBindingDescriptions, vertexAttributeDescriptionCount, pVertexAttributeDescriptions))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_vertex_input_dynamic_state.vk_cmd_set_vertex_input_ext)(commandBuffer, vertexBindingDescriptionCount, pVertexBindingDescriptions, vertexAttributeDescriptionCount, pVertexAttributeDescriptions))))
 	}
 }
 impl VK_EXT_physical_device_drm for VkCore {}
@@ -55933,49 +55933,49 @@ impl VK_EXT_primitive_topology_list_restart for VkCore {}
 impl VK_EXT_present_mode_fifo_latest_ready for VkCore {}
 impl VK_HUAWEI_subpass_shading for VkCore {
 	fn vkGetDeviceSubpassShadingMaxWorkgroupSizeHUAWEI(&self, device: VkDevice, renderpass: VkRenderPass, pMaxWorkgroupSize: *mut VkExtent2D) -> Result<()> {
-		convert_result("vkGetDeviceSubpassShadingMaxWorkgroupSizeHUAWEI", catch_unwind(||((self.vk_huawei_subpass_shading.vk_get_device_subpass_shading_max_workgroup_size_huawei)(device, renderpass, pMaxWorkgroupSize))))
+		vk_convert_result("vkGetDeviceSubpassShadingMaxWorkgroupSizeHUAWEI", catch_unwind(||((self.vk_huawei_subpass_shading.vk_get_device_subpass_shading_max_workgroup_size_huawei)(device, renderpass, pMaxWorkgroupSize))))
 	}
 	fn vkCmdSubpassShadingHUAWEI(&self, commandBuffer: VkCommandBuffer) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_huawei_subpass_shading.vk_cmd_subpass_shading_huawei)(commandBuffer))))
+		vk_process_catch(catch_unwind(||((self.vk_huawei_subpass_shading.vk_cmd_subpass_shading_huawei)(commandBuffer))))
 	}
 }
 impl VK_HUAWEI_invocation_mask for VkCore {
 	fn vkCmdBindInvocationMaskHUAWEI(&self, commandBuffer: VkCommandBuffer, imageView: VkImageView, imageLayout: VkImageLayout) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_huawei_invocation_mask.vk_cmd_bind_invocation_mask_huawei)(commandBuffer, imageView, imageLayout))))
+		vk_process_catch(catch_unwind(||((self.vk_huawei_invocation_mask.vk_cmd_bind_invocation_mask_huawei)(commandBuffer, imageView, imageLayout))))
 	}
 }
 impl VK_NV_external_memory_rdma for VkCore {
 	fn vkGetMemoryRemoteAddressNV(&self, device: VkDevice, pMemoryGetRemoteAddressInfo: *const VkMemoryGetRemoteAddressInfoNV, pAddress: *mut VkRemoteAddressNV) -> Result<()> {
-		convert_result("vkGetMemoryRemoteAddressNV", catch_unwind(||((self.vk_nv_external_memory_rdma.vk_get_memory_remote_address_nv)(device, pMemoryGetRemoteAddressInfo, pAddress))))
+		vk_convert_result("vkGetMemoryRemoteAddressNV", catch_unwind(||((self.vk_nv_external_memory_rdma.vk_get_memory_remote_address_nv)(device, pMemoryGetRemoteAddressInfo, pAddress))))
 	}
 }
 impl VK_EXT_pipeline_properties for VkCore {
 	fn vkGetPipelinePropertiesEXT(&self, device: VkDevice, pPipelineInfo: *const VkPipelineInfoEXT, pPipelineProperties: *mut VkBaseOutStructure) -> Result<()> {
-		convert_result("vkGetPipelinePropertiesEXT", catch_unwind(||((self.vk_ext_pipeline_properties.vk_get_pipeline_properties_ext)(device, pPipelineInfo, pPipelineProperties))))
+		vk_convert_result("vkGetPipelinePropertiesEXT", catch_unwind(||((self.vk_ext_pipeline_properties.vk_get_pipeline_properties_ext)(device, pPipelineInfo, pPipelineProperties))))
 	}
 }
 impl VK_EXT_frame_boundary for VkCore {}
 impl VK_EXT_multisampled_render_to_single_sampled for VkCore {}
 impl VK_EXT_extended_dynamic_state2 for VkCore {
 	fn vkCmdSetPatchControlPointsEXT(&self, commandBuffer: VkCommandBuffer, patchControlPoints: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state2.vk_cmd_set_patch_control_points_ext)(commandBuffer, patchControlPoints))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state2.vk_cmd_set_patch_control_points_ext)(commandBuffer, patchControlPoints))))
 	}
 	fn vkCmdSetRasterizerDiscardEnableEXT(&self, commandBuffer: VkCommandBuffer, rasterizerDiscardEnable: VkBool32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state2.vk_cmd_set_rasterizer_discard_enable_ext)(commandBuffer, rasterizerDiscardEnable))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state2.vk_cmd_set_rasterizer_discard_enable_ext)(commandBuffer, rasterizerDiscardEnable))))
 	}
 	fn vkCmdSetDepthBiasEnableEXT(&self, commandBuffer: VkCommandBuffer, depthBiasEnable: VkBool32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state2.vk_cmd_set_depth_bias_enable_ext)(commandBuffer, depthBiasEnable))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state2.vk_cmd_set_depth_bias_enable_ext)(commandBuffer, depthBiasEnable))))
 	}
 	fn vkCmdSetLogicOpEXT(&self, commandBuffer: VkCommandBuffer, logicOp: VkLogicOp) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state2.vk_cmd_set_logic_op_ext)(commandBuffer, logicOp))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state2.vk_cmd_set_logic_op_ext)(commandBuffer, logicOp))))
 	}
 	fn vkCmdSetPrimitiveRestartEnableEXT(&self, commandBuffer: VkCommandBuffer, primitiveRestartEnable: VkBool32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state2.vk_cmd_set_primitive_restart_enable_ext)(commandBuffer, primitiveRestartEnable))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state2.vk_cmd_set_primitive_restart_enable_ext)(commandBuffer, primitiveRestartEnable))))
 	}
 }
 impl VK_EXT_color_write_enable for VkCore {
 	fn vkCmdSetColorWriteEnableEXT(&self, commandBuffer: VkCommandBuffer, attachmentCount: u32, pColorWriteEnables: *const VkBool32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_color_write_enable.vk_cmd_set_color_write_enable_ext)(commandBuffer, attachmentCount, pColorWriteEnables))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_color_write_enable.vk_cmd_set_color_write_enable_ext)(commandBuffer, attachmentCount, pColorWriteEnables))))
 	}
 }
 impl VK_EXT_primitives_generated_query for VkCore {}
@@ -55983,71 +55983,71 @@ impl VK_EXT_global_priority_query for VkCore {}
 impl VK_EXT_image_view_min_lod for VkCore {}
 impl VK_EXT_multi_draw for VkCore {
 	fn vkCmdDrawMultiEXT(&self, commandBuffer: VkCommandBuffer, drawCount: u32, pVertexInfo: *const VkMultiDrawInfoEXT, instanceCount: u32, firstInstance: u32, stride: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_multi_draw.vk_cmd_draw_multi_ext)(commandBuffer, drawCount, pVertexInfo, instanceCount, firstInstance, stride))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_multi_draw.vk_cmd_draw_multi_ext)(commandBuffer, drawCount, pVertexInfo, instanceCount, firstInstance, stride))))
 	}
 	fn vkCmdDrawMultiIndexedEXT(&self, commandBuffer: VkCommandBuffer, drawCount: u32, pIndexInfo: *const VkMultiDrawIndexedInfoEXT, instanceCount: u32, firstInstance: u32, stride: u32, pVertexOffset: *const int32_t) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_multi_draw.vk_cmd_draw_multi_indexed_ext)(commandBuffer, drawCount, pIndexInfo, instanceCount, firstInstance, stride, pVertexOffset))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_multi_draw.vk_cmd_draw_multi_indexed_ext)(commandBuffer, drawCount, pIndexInfo, instanceCount, firstInstance, stride, pVertexOffset))))
 	}
 }
 impl VK_EXT_image_2d_view_of_3d for VkCore {}
 impl VK_EXT_shader_tile_image for VkCore {}
 impl VK_EXT_opacity_micromap for VkCore {
 	fn vkCreateMicromapEXT(&self, device: VkDevice, pCreateInfo: *const VkMicromapCreateInfoEXT, pAllocator: *const VkAllocationCallbacks, pMicromap: *mut VkMicromapEXT) -> Result<()> {
-		convert_result("vkCreateMicromapEXT", catch_unwind(||((self.vk_ext_opacity_micromap.vk_create_micromap_ext)(device, pCreateInfo, pAllocator, pMicromap))))
+		vk_convert_result("vkCreateMicromapEXT", catch_unwind(||((self.vk_ext_opacity_micromap.vk_create_micromap_ext)(device, pCreateInfo, pAllocator, pMicromap))))
 	}
 	fn vkDestroyMicromapEXT(&self, device: VkDevice, micromap: VkMicromapEXT, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_opacity_micromap.vk_destroy_micromap_ext)(device, micromap, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_opacity_micromap.vk_destroy_micromap_ext)(device, micromap, pAllocator))))
 	}
 	fn vkCmdBuildMicromapsEXT(&self, commandBuffer: VkCommandBuffer, infoCount: u32, pInfos: *const VkMicromapBuildInfoEXT) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_opacity_micromap.vk_cmd_build_micromaps_ext)(commandBuffer, infoCount, pInfos))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_opacity_micromap.vk_cmd_build_micromaps_ext)(commandBuffer, infoCount, pInfos))))
 	}
 	fn vkBuildMicromapsEXT(&self, device: VkDevice, deferredOperation: VkDeferredOperationKHR, infoCount: u32, pInfos: *const VkMicromapBuildInfoEXT) -> Result<()> {
-		convert_result("vkBuildMicromapsEXT", catch_unwind(||((self.vk_ext_opacity_micromap.vk_build_micromaps_ext)(device, deferredOperation, infoCount, pInfos))))
+		vk_convert_result("vkBuildMicromapsEXT", catch_unwind(||((self.vk_ext_opacity_micromap.vk_build_micromaps_ext)(device, deferredOperation, infoCount, pInfos))))
 	}
 	fn vkCopyMicromapEXT(&self, device: VkDevice, deferredOperation: VkDeferredOperationKHR, pInfo: *const VkCopyMicromapInfoEXT) -> Result<()> {
-		convert_result("vkCopyMicromapEXT", catch_unwind(||((self.vk_ext_opacity_micromap.vk_copy_micromap_ext)(device, deferredOperation, pInfo))))
+		vk_convert_result("vkCopyMicromapEXT", catch_unwind(||((self.vk_ext_opacity_micromap.vk_copy_micromap_ext)(device, deferredOperation, pInfo))))
 	}
 	fn vkCopyMicromapToMemoryEXT(&self, device: VkDevice, deferredOperation: VkDeferredOperationKHR, pInfo: *const VkCopyMicromapToMemoryInfoEXT) -> Result<()> {
-		convert_result("vkCopyMicromapToMemoryEXT", catch_unwind(||((self.vk_ext_opacity_micromap.vk_copy_micromap_to_memory_ext)(device, deferredOperation, pInfo))))
+		vk_convert_result("vkCopyMicromapToMemoryEXT", catch_unwind(||((self.vk_ext_opacity_micromap.vk_copy_micromap_to_memory_ext)(device, deferredOperation, pInfo))))
 	}
 	fn vkCopyMemoryToMicromapEXT(&self, device: VkDevice, deferredOperation: VkDeferredOperationKHR, pInfo: *const VkCopyMemoryToMicromapInfoEXT) -> Result<()> {
-		convert_result("vkCopyMemoryToMicromapEXT", catch_unwind(||((self.vk_ext_opacity_micromap.vk_copy_memory_to_micromap_ext)(device, deferredOperation, pInfo))))
+		vk_convert_result("vkCopyMemoryToMicromapEXT", catch_unwind(||((self.vk_ext_opacity_micromap.vk_copy_memory_to_micromap_ext)(device, deferredOperation, pInfo))))
 	}
 	fn vkWriteMicromapsPropertiesEXT(&self, device: VkDevice, micromapCount: u32, pMicromaps: *const VkMicromapEXT, queryType: VkQueryType, dataSize: usize, pData: *mut c_void, stride: usize) -> Result<()> {
-		convert_result("vkWriteMicromapsPropertiesEXT", catch_unwind(||((self.vk_ext_opacity_micromap.vk_write_micromaps_properties_ext)(device, micromapCount, pMicromaps, queryType, dataSize, pData, stride))))
+		vk_convert_result("vkWriteMicromapsPropertiesEXT", catch_unwind(||((self.vk_ext_opacity_micromap.vk_write_micromaps_properties_ext)(device, micromapCount, pMicromaps, queryType, dataSize, pData, stride))))
 	}
 	fn vkCmdCopyMicromapEXT(&self, commandBuffer: VkCommandBuffer, pInfo: *const VkCopyMicromapInfoEXT) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_opacity_micromap.vk_cmd_copy_micromap_ext)(commandBuffer, pInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_opacity_micromap.vk_cmd_copy_micromap_ext)(commandBuffer, pInfo))))
 	}
 	fn vkCmdCopyMicromapToMemoryEXT(&self, commandBuffer: VkCommandBuffer, pInfo: *const VkCopyMicromapToMemoryInfoEXT) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_opacity_micromap.vk_cmd_copy_micromap_to_memory_ext)(commandBuffer, pInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_opacity_micromap.vk_cmd_copy_micromap_to_memory_ext)(commandBuffer, pInfo))))
 	}
 	fn vkCmdCopyMemoryToMicromapEXT(&self, commandBuffer: VkCommandBuffer, pInfo: *const VkCopyMemoryToMicromapInfoEXT) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_opacity_micromap.vk_cmd_copy_memory_to_micromap_ext)(commandBuffer, pInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_opacity_micromap.vk_cmd_copy_memory_to_micromap_ext)(commandBuffer, pInfo))))
 	}
 	fn vkCmdWriteMicromapsPropertiesEXT(&self, commandBuffer: VkCommandBuffer, micromapCount: u32, pMicromaps: *const VkMicromapEXT, queryType: VkQueryType, queryPool: VkQueryPool, firstQuery: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_opacity_micromap.vk_cmd_write_micromaps_properties_ext)(commandBuffer, micromapCount, pMicromaps, queryType, queryPool, firstQuery))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_opacity_micromap.vk_cmd_write_micromaps_properties_ext)(commandBuffer, micromapCount, pMicromaps, queryType, queryPool, firstQuery))))
 	}
 	fn vkGetDeviceMicromapCompatibilityEXT(&self, device: VkDevice, pVersionInfo: *const VkMicromapVersionInfoEXT, pCompatibility: *mut VkAccelerationStructureCompatibilityKHR) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_opacity_micromap.vk_get_device_micromap_compatibility_ext)(device, pVersionInfo, pCompatibility))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_opacity_micromap.vk_get_device_micromap_compatibility_ext)(device, pVersionInfo, pCompatibility))))
 	}
 	fn vkGetMicromapBuildSizesEXT(&self, device: VkDevice, buildType: VkAccelerationStructureBuildTypeKHR, pBuildInfo: *const VkMicromapBuildInfoEXT, pSizeInfo: *mut VkMicromapBuildSizesInfoEXT) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_opacity_micromap.vk_get_micromap_build_sizes_ext)(device, buildType, pBuildInfo, pSizeInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_opacity_micromap.vk_get_micromap_build_sizes_ext)(device, buildType, pBuildInfo, pSizeInfo))))
 	}
 }
 impl VK_EXT_load_store_op_none for VkCore {}
 impl VK_HUAWEI_cluster_culling_shader for VkCore {
 	fn vkCmdDrawClusterHUAWEI(&self, commandBuffer: VkCommandBuffer, groupCountX: u32, groupCountY: u32, groupCountZ: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_huawei_cluster_culling_shader.vk_cmd_draw_cluster_huawei)(commandBuffer, groupCountX, groupCountY, groupCountZ))))
+		vk_process_catch(catch_unwind(||((self.vk_huawei_cluster_culling_shader.vk_cmd_draw_cluster_huawei)(commandBuffer, groupCountX, groupCountY, groupCountZ))))
 	}
 	fn vkCmdDrawClusterIndirectHUAWEI(&self, commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_huawei_cluster_culling_shader.vk_cmd_draw_cluster_indirect_huawei)(commandBuffer, buffer, offset))))
+		vk_process_catch(catch_unwind(||((self.vk_huawei_cluster_culling_shader.vk_cmd_draw_cluster_indirect_huawei)(commandBuffer, buffer, offset))))
 	}
 }
 impl VK_EXT_border_color_swizzle for VkCore {}
 impl VK_EXT_pageable_device_local_memory for VkCore {
 	fn vkSetDeviceMemoryPriorityEXT(&self, device: VkDevice, memory: VkDeviceMemory, priority: f32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_pageable_device_local_memory.vk_set_device_memory_priority_ext)(device, memory, priority))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_pageable_device_local_memory.vk_set_device_memory_priority_ext)(device, memory, priority))))
 	}
 }
 impl VK_ARM_shader_core_properties for VkCore {}
@@ -56055,10 +56055,10 @@ impl VK_ARM_scheduling_controls for VkCore {}
 impl VK_EXT_image_sliced_view_of_3d for VkCore {}
 impl VK_VALVE_descriptor_set_host_mapping for VkCore {
 	fn vkGetDescriptorSetLayoutHostMappingInfoVALVE(&self, device: VkDevice, pBindingReference: *const VkDescriptorSetBindingReferenceVALVE, pHostMapping: *mut VkDescriptorSetLayoutHostMappingInfoVALVE) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_valve_descriptor_set_host_mapping.vk_get_descriptor_set_layout_host_mapping_info_valve)(device, pBindingReference, pHostMapping))))
+		vk_process_catch(catch_unwind(||((self.vk_valve_descriptor_set_host_mapping.vk_get_descriptor_set_layout_host_mapping_info_valve)(device, pBindingReference, pHostMapping))))
 	}
 	fn vkGetDescriptorSetHostMappingVALVE(&self, device: VkDevice, descriptorSet: VkDescriptorSet, ppData: *mut *mut c_void) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_valve_descriptor_set_host_mapping.vk_get_descriptor_set_host_mapping_valve)(device, descriptorSet, ppData))))
+		vk_process_catch(catch_unwind(||((self.vk_valve_descriptor_set_host_mapping.vk_get_descriptor_set_host_mapping_valve)(device, descriptorSet, ppData))))
 	}
 }
 impl VK_EXT_depth_clamp_zero_one for VkCore {}
@@ -56067,29 +56067,29 @@ impl VK_ARM_render_pass_striped for VkCore {}
 impl VK_QCOM_fragment_density_map_offset for VkCore {}
 impl VK_NV_copy_memory_indirect for VkCore {
 	fn vkCmdCopyMemoryIndirectNV(&self, commandBuffer: VkCommandBuffer, copyBufferAddress: VkDeviceAddress, copyCount: u32, stride: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_nv_copy_memory_indirect.vk_cmd_copy_memory_indirect_nv)(commandBuffer, copyBufferAddress, copyCount, stride))))
+		vk_process_catch(catch_unwind(||((self.vk_nv_copy_memory_indirect.vk_cmd_copy_memory_indirect_nv)(commandBuffer, copyBufferAddress, copyCount, stride))))
 	}
 	fn vkCmdCopyMemoryToImageIndirectNV(&self, commandBuffer: VkCommandBuffer, copyBufferAddress: VkDeviceAddress, copyCount: u32, stride: u32, dstImage: VkImage, dstImageLayout: VkImageLayout, pImageSubresources: *const VkImageSubresourceLayers) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_nv_copy_memory_indirect.vk_cmd_copy_memory_to_image_indirect_nv)(commandBuffer, copyBufferAddress, copyCount, stride, dstImage, dstImageLayout, pImageSubresources))))
+		vk_process_catch(catch_unwind(||((self.vk_nv_copy_memory_indirect.vk_cmd_copy_memory_to_image_indirect_nv)(commandBuffer, copyBufferAddress, copyCount, stride, dstImage, dstImageLayout, pImageSubresources))))
 	}
 }
 impl VK_NV_memory_decompression for VkCore {
 	fn vkCmdDecompressMemoryNV(&self, commandBuffer: VkCommandBuffer, decompressRegionCount: u32, pDecompressMemoryRegions: *const VkDecompressMemoryRegionNV) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_nv_memory_decompression.vk_cmd_decompress_memory_nv)(commandBuffer, decompressRegionCount, pDecompressMemoryRegions))))
+		vk_process_catch(catch_unwind(||((self.vk_nv_memory_decompression.vk_cmd_decompress_memory_nv)(commandBuffer, decompressRegionCount, pDecompressMemoryRegions))))
 	}
 	fn vkCmdDecompressMemoryIndirectCountNV(&self, commandBuffer: VkCommandBuffer, indirectCommandsAddress: VkDeviceAddress, indirectCommandsCountAddress: VkDeviceAddress, stride: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_nv_memory_decompression.vk_cmd_decompress_memory_indirect_count_nv)(commandBuffer, indirectCommandsAddress, indirectCommandsCountAddress, stride))))
+		vk_process_catch(catch_unwind(||((self.vk_nv_memory_decompression.vk_cmd_decompress_memory_indirect_count_nv)(commandBuffer, indirectCommandsAddress, indirectCommandsCountAddress, stride))))
 	}
 }
 impl VK_NV_device_generated_commands_compute for VkCore {
 	fn vkGetPipelineIndirectMemoryRequirementsNV(&self, device: VkDevice, pCreateInfo: *const VkComputePipelineCreateInfo, pMemoryRequirements: *mut VkMemoryRequirements2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_nv_device_generated_commands_compute.vk_get_pipeline_indirect_memory_requirements_nv)(device, pCreateInfo, pMemoryRequirements))))
+		vk_process_catch(catch_unwind(||((self.vk_nv_device_generated_commands_compute.vk_get_pipeline_indirect_memory_requirements_nv)(device, pCreateInfo, pMemoryRequirements))))
 	}
 	fn vkCmdUpdatePipelineIndirectBufferNV(&self, commandBuffer: VkCommandBuffer, pipelineBindPoint: VkPipelineBindPoint, pipeline: VkPipeline) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_nv_device_generated_commands_compute.vk_cmd_update_pipeline_indirect_buffer_nv)(commandBuffer, pipelineBindPoint, pipeline))))
+		vk_process_catch(catch_unwind(||((self.vk_nv_device_generated_commands_compute.vk_cmd_update_pipeline_indirect_buffer_nv)(commandBuffer, pipelineBindPoint, pipeline))))
 	}
 	fn vkGetPipelineIndirectDeviceAddressNV(&self, device: VkDevice, pInfo: *const VkPipelineIndirectDeviceAddressInfoNV) -> Result<VkDeviceAddress> {
-		process_catch(catch_unwind(||((self.vk_nv_device_generated_commands_compute.vk_get_pipeline_indirect_device_address_nv)(device, pInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_nv_device_generated_commands_compute.vk_get_pipeline_indirect_device_address_nv)(device, pInfo))))
 	}
 }
 impl VK_NV_ray_tracing_linear_swept_spheres for VkCore {}
@@ -56101,192 +56101,192 @@ impl VK_EXT_nested_command_buffer for VkCore {}
 impl VK_EXT_external_memory_acquire_unmodified for VkCore {}
 impl VK_EXT_extended_dynamic_state3 for VkCore {
 	fn vkCmdSetDepthClampEnableEXT(&self, commandBuffer: VkCommandBuffer, depthClampEnable: VkBool32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state3.vk_cmd_set_depth_clamp_enable_ext)(commandBuffer, depthClampEnable))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state3.vk_cmd_set_depth_clamp_enable_ext)(commandBuffer, depthClampEnable))))
 	}
 	fn vkCmdSetPolygonModeEXT(&self, commandBuffer: VkCommandBuffer, polygonMode: VkPolygonMode) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state3.vk_cmd_set_polygon_mode_ext)(commandBuffer, polygonMode))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state3.vk_cmd_set_polygon_mode_ext)(commandBuffer, polygonMode))))
 	}
 	fn vkCmdSetRasterizationSamplesEXT(&self, commandBuffer: VkCommandBuffer, rasterizationSamples: VkSampleCountFlagBits) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state3.vk_cmd_set_rasterization_samples_ext)(commandBuffer, rasterizationSamples))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state3.vk_cmd_set_rasterization_samples_ext)(commandBuffer, rasterizationSamples))))
 	}
 	fn vkCmdSetSampleMaskEXT(&self, commandBuffer: VkCommandBuffer, samples: VkSampleCountFlagBits, pSampleMask: *const VkSampleMask) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state3.vk_cmd_set_sample_mask_ext)(commandBuffer, samples, pSampleMask))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state3.vk_cmd_set_sample_mask_ext)(commandBuffer, samples, pSampleMask))))
 	}
 	fn vkCmdSetAlphaToCoverageEnableEXT(&self, commandBuffer: VkCommandBuffer, alphaToCoverageEnable: VkBool32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state3.vk_cmd_set_alpha_to_coverage_enable_ext)(commandBuffer, alphaToCoverageEnable))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state3.vk_cmd_set_alpha_to_coverage_enable_ext)(commandBuffer, alphaToCoverageEnable))))
 	}
 	fn vkCmdSetAlphaToOneEnableEXT(&self, commandBuffer: VkCommandBuffer, alphaToOneEnable: VkBool32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state3.vk_cmd_set_alpha_to_one_enable_ext)(commandBuffer, alphaToOneEnable))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state3.vk_cmd_set_alpha_to_one_enable_ext)(commandBuffer, alphaToOneEnable))))
 	}
 	fn vkCmdSetLogicOpEnableEXT(&self, commandBuffer: VkCommandBuffer, logicOpEnable: VkBool32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state3.vk_cmd_set_logic_op_enable_ext)(commandBuffer, logicOpEnable))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state3.vk_cmd_set_logic_op_enable_ext)(commandBuffer, logicOpEnable))))
 	}
 	fn vkCmdSetColorBlendEnableEXT(&self, commandBuffer: VkCommandBuffer, firstAttachment: u32, attachmentCount: u32, pColorBlendEnables: *const VkBool32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state3.vk_cmd_set_color_blend_enable_ext)(commandBuffer, firstAttachment, attachmentCount, pColorBlendEnables))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state3.vk_cmd_set_color_blend_enable_ext)(commandBuffer, firstAttachment, attachmentCount, pColorBlendEnables))))
 	}
 	fn vkCmdSetColorBlendEquationEXT(&self, commandBuffer: VkCommandBuffer, firstAttachment: u32, attachmentCount: u32, pColorBlendEquations: *const VkColorBlendEquationEXT) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state3.vk_cmd_set_color_blend_equation_ext)(commandBuffer, firstAttachment, attachmentCount, pColorBlendEquations))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state3.vk_cmd_set_color_blend_equation_ext)(commandBuffer, firstAttachment, attachmentCount, pColorBlendEquations))))
 	}
 	fn vkCmdSetColorWriteMaskEXT(&self, commandBuffer: VkCommandBuffer, firstAttachment: u32, attachmentCount: u32, pColorWriteMasks: *const VkColorComponentFlags) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state3.vk_cmd_set_color_write_mask_ext)(commandBuffer, firstAttachment, attachmentCount, pColorWriteMasks))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state3.vk_cmd_set_color_write_mask_ext)(commandBuffer, firstAttachment, attachmentCount, pColorWriteMasks))))
 	}
 	fn vkCmdSetTessellationDomainOriginEXT(&self, commandBuffer: VkCommandBuffer, domainOrigin: VkTessellationDomainOrigin) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state3.vk_cmd_set_tessellation_domain_origin_ext)(commandBuffer, domainOrigin))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state3.vk_cmd_set_tessellation_domain_origin_ext)(commandBuffer, domainOrigin))))
 	}
 	fn vkCmdSetRasterizationStreamEXT(&self, commandBuffer: VkCommandBuffer, rasterizationStream: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state3.vk_cmd_set_rasterization_stream_ext)(commandBuffer, rasterizationStream))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state3.vk_cmd_set_rasterization_stream_ext)(commandBuffer, rasterizationStream))))
 	}
 	fn vkCmdSetConservativeRasterizationModeEXT(&self, commandBuffer: VkCommandBuffer, conservativeRasterizationMode: VkConservativeRasterizationModeEXT) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state3.vk_cmd_set_conservative_rasterization_mode_ext)(commandBuffer, conservativeRasterizationMode))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state3.vk_cmd_set_conservative_rasterization_mode_ext)(commandBuffer, conservativeRasterizationMode))))
 	}
 	fn vkCmdSetExtraPrimitiveOverestimationSizeEXT(&self, commandBuffer: VkCommandBuffer, extraPrimitiveOverestimationSize: f32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state3.vk_cmd_set_extra_primitive_overestimation_size_ext)(commandBuffer, extraPrimitiveOverestimationSize))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state3.vk_cmd_set_extra_primitive_overestimation_size_ext)(commandBuffer, extraPrimitiveOverestimationSize))))
 	}
 	fn vkCmdSetDepthClipEnableEXT(&self, commandBuffer: VkCommandBuffer, depthClipEnable: VkBool32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state3.vk_cmd_set_depth_clip_enable_ext)(commandBuffer, depthClipEnable))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state3.vk_cmd_set_depth_clip_enable_ext)(commandBuffer, depthClipEnable))))
 	}
 	fn vkCmdSetSampleLocationsEnableEXT(&self, commandBuffer: VkCommandBuffer, sampleLocationsEnable: VkBool32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state3.vk_cmd_set_sample_locations_enable_ext)(commandBuffer, sampleLocationsEnable))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state3.vk_cmd_set_sample_locations_enable_ext)(commandBuffer, sampleLocationsEnable))))
 	}
 	fn vkCmdSetColorBlendAdvancedEXT(&self, commandBuffer: VkCommandBuffer, firstAttachment: u32, attachmentCount: u32, pColorBlendAdvanced: *const VkColorBlendAdvancedEXT) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state3.vk_cmd_set_color_blend_advanced_ext)(commandBuffer, firstAttachment, attachmentCount, pColorBlendAdvanced))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state3.vk_cmd_set_color_blend_advanced_ext)(commandBuffer, firstAttachment, attachmentCount, pColorBlendAdvanced))))
 	}
 	fn vkCmdSetProvokingVertexModeEXT(&self, commandBuffer: VkCommandBuffer, provokingVertexMode: VkProvokingVertexModeEXT) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state3.vk_cmd_set_provoking_vertex_mode_ext)(commandBuffer, provokingVertexMode))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state3.vk_cmd_set_provoking_vertex_mode_ext)(commandBuffer, provokingVertexMode))))
 	}
 	fn vkCmdSetLineRasterizationModeEXT(&self, commandBuffer: VkCommandBuffer, lineRasterizationMode: VkLineRasterizationModeEXT) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state3.vk_cmd_set_line_rasterization_mode_ext)(commandBuffer, lineRasterizationMode))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state3.vk_cmd_set_line_rasterization_mode_ext)(commandBuffer, lineRasterizationMode))))
 	}
 	fn vkCmdSetLineStippleEnableEXT(&self, commandBuffer: VkCommandBuffer, stippledLineEnable: VkBool32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state3.vk_cmd_set_line_stipple_enable_ext)(commandBuffer, stippledLineEnable))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state3.vk_cmd_set_line_stipple_enable_ext)(commandBuffer, stippledLineEnable))))
 	}
 	fn vkCmdSetDepthClipNegativeOneToOneEXT(&self, commandBuffer: VkCommandBuffer, negativeOneToOne: VkBool32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state3.vk_cmd_set_depth_clip_negative_one_to_one_ext)(commandBuffer, negativeOneToOne))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state3.vk_cmd_set_depth_clip_negative_one_to_one_ext)(commandBuffer, negativeOneToOne))))
 	}
 	fn vkCmdSetViewportWScalingEnableNV(&self, commandBuffer: VkCommandBuffer, viewportWScalingEnable: VkBool32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state3.vk_cmd_set_viewport_wscaling_enable_nv)(commandBuffer, viewportWScalingEnable))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state3.vk_cmd_set_viewport_wscaling_enable_nv)(commandBuffer, viewportWScalingEnable))))
 	}
 	fn vkCmdSetViewportSwizzleNV(&self, commandBuffer: VkCommandBuffer, firstViewport: u32, viewportCount: u32, pViewportSwizzles: *const VkViewportSwizzleNV) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state3.vk_cmd_set_viewport_swizzle_nv)(commandBuffer, firstViewport, viewportCount, pViewportSwizzles))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state3.vk_cmd_set_viewport_swizzle_nv)(commandBuffer, firstViewport, viewportCount, pViewportSwizzles))))
 	}
 	fn vkCmdSetCoverageToColorEnableNV(&self, commandBuffer: VkCommandBuffer, coverageToColorEnable: VkBool32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state3.vk_cmd_set_coverage_to_color_enable_nv)(commandBuffer, coverageToColorEnable))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state3.vk_cmd_set_coverage_to_color_enable_nv)(commandBuffer, coverageToColorEnable))))
 	}
 	fn vkCmdSetCoverageToColorLocationNV(&self, commandBuffer: VkCommandBuffer, coverageToColorLocation: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state3.vk_cmd_set_coverage_to_color_location_nv)(commandBuffer, coverageToColorLocation))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state3.vk_cmd_set_coverage_to_color_location_nv)(commandBuffer, coverageToColorLocation))))
 	}
 	fn vkCmdSetCoverageModulationModeNV(&self, commandBuffer: VkCommandBuffer, coverageModulationMode: VkCoverageModulationModeNV) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state3.vk_cmd_set_coverage_modulation_mode_nv)(commandBuffer, coverageModulationMode))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state3.vk_cmd_set_coverage_modulation_mode_nv)(commandBuffer, coverageModulationMode))))
 	}
 	fn vkCmdSetCoverageModulationTableEnableNV(&self, commandBuffer: VkCommandBuffer, coverageModulationTableEnable: VkBool32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state3.vk_cmd_set_coverage_modulation_table_enable_nv)(commandBuffer, coverageModulationTableEnable))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state3.vk_cmd_set_coverage_modulation_table_enable_nv)(commandBuffer, coverageModulationTableEnable))))
 	}
 	fn vkCmdSetCoverageModulationTableNV(&self, commandBuffer: VkCommandBuffer, coverageModulationTableCount: u32, pCoverageModulationTable: *const float) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state3.vk_cmd_set_coverage_modulation_table_nv)(commandBuffer, coverageModulationTableCount, pCoverageModulationTable))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state3.vk_cmd_set_coverage_modulation_table_nv)(commandBuffer, coverageModulationTableCount, pCoverageModulationTable))))
 	}
 	fn vkCmdSetShadingRateImageEnableNV(&self, commandBuffer: VkCommandBuffer, shadingRateImageEnable: VkBool32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state3.vk_cmd_set_shading_rate_image_enable_nv)(commandBuffer, shadingRateImageEnable))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state3.vk_cmd_set_shading_rate_image_enable_nv)(commandBuffer, shadingRateImageEnable))))
 	}
 	fn vkCmdSetRepresentativeFragmentTestEnableNV(&self, commandBuffer: VkCommandBuffer, representativeFragmentTestEnable: VkBool32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state3.vk_cmd_set_representative_fragment_test_enable_nv)(commandBuffer, representativeFragmentTestEnable))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state3.vk_cmd_set_representative_fragment_test_enable_nv)(commandBuffer, representativeFragmentTestEnable))))
 	}
 	fn vkCmdSetCoverageReductionModeNV(&self, commandBuffer: VkCommandBuffer, coverageReductionMode: VkCoverageReductionModeNV) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state3.vk_cmd_set_coverage_reduction_mode_nv)(commandBuffer, coverageReductionMode))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_extended_dynamic_state3.vk_cmd_set_coverage_reduction_mode_nv)(commandBuffer, coverageReductionMode))))
 	}
 }
 impl VK_EXT_subpass_merge_feedback for VkCore {}
 impl VK_LUNARG_direct_driver_loading for VkCore {}
 impl VK_ARM_tensors for VkCore {
 	fn vkCreateTensorARM(&self, device: VkDevice, pCreateInfo: *const VkTensorCreateInfoARM, pAllocator: *const VkAllocationCallbacks, pTensor: *mut VkTensorARM) -> Result<()> {
-		convert_result("vkCreateTensorARM", catch_unwind(||((self.vk_arm_tensors.vk_create_tensor_arm)(device, pCreateInfo, pAllocator, pTensor))))
+		vk_convert_result("vkCreateTensorARM", catch_unwind(||((self.vk_arm_tensors.vk_create_tensor_arm)(device, pCreateInfo, pAllocator, pTensor))))
 	}
 	fn vkDestroyTensorARM(&self, device: VkDevice, tensor: VkTensorARM, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_arm_tensors.vk_destroy_tensor_arm)(device, tensor, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_arm_tensors.vk_destroy_tensor_arm)(device, tensor, pAllocator))))
 	}
 	fn vkCreateTensorViewARM(&self, device: VkDevice, pCreateInfo: *const VkTensorViewCreateInfoARM, pAllocator: *const VkAllocationCallbacks, pView: *mut VkTensorViewARM) -> Result<()> {
-		convert_result("vkCreateTensorViewARM", catch_unwind(||((self.vk_arm_tensors.vk_create_tensor_view_arm)(device, pCreateInfo, pAllocator, pView))))
+		vk_convert_result("vkCreateTensorViewARM", catch_unwind(||((self.vk_arm_tensors.vk_create_tensor_view_arm)(device, pCreateInfo, pAllocator, pView))))
 	}
 	fn vkDestroyTensorViewARM(&self, device: VkDevice, tensorView: VkTensorViewARM, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_arm_tensors.vk_destroy_tensor_view_arm)(device, tensorView, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_arm_tensors.vk_destroy_tensor_view_arm)(device, tensorView, pAllocator))))
 	}
 	fn vkGetTensorMemoryRequirementsARM(&self, device: VkDevice, pInfo: *const VkTensorMemoryRequirementsInfoARM, pMemoryRequirements: *mut VkMemoryRequirements2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_arm_tensors.vk_get_tensor_memory_requirements_arm)(device, pInfo, pMemoryRequirements))))
+		vk_process_catch(catch_unwind(||((self.vk_arm_tensors.vk_get_tensor_memory_requirements_arm)(device, pInfo, pMemoryRequirements))))
 	}
 	fn vkBindTensorMemoryARM(&self, device: VkDevice, bindInfoCount: u32, pBindInfos: *const VkBindTensorMemoryInfoARM) -> Result<()> {
-		convert_result("vkBindTensorMemoryARM", catch_unwind(||((self.vk_arm_tensors.vk_bind_tensor_memory_arm)(device, bindInfoCount, pBindInfos))))
+		vk_convert_result("vkBindTensorMemoryARM", catch_unwind(||((self.vk_arm_tensors.vk_bind_tensor_memory_arm)(device, bindInfoCount, pBindInfos))))
 	}
 	fn vkGetDeviceTensorMemoryRequirementsARM(&self, device: VkDevice, pInfo: *const VkDeviceTensorMemoryRequirementsARM, pMemoryRequirements: *mut VkMemoryRequirements2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_arm_tensors.vk_get_device_tensor_memory_requirements_arm)(device, pInfo, pMemoryRequirements))))
+		vk_process_catch(catch_unwind(||((self.vk_arm_tensors.vk_get_device_tensor_memory_requirements_arm)(device, pInfo, pMemoryRequirements))))
 	}
 	fn vkCmdCopyTensorARM(&self, commandBuffer: VkCommandBuffer, pCopyTensorInfo: *const VkCopyTensorInfoARM) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_arm_tensors.vk_cmd_copy_tensor_arm)(commandBuffer, pCopyTensorInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_arm_tensors.vk_cmd_copy_tensor_arm)(commandBuffer, pCopyTensorInfo))))
 	}
 	fn vkGetPhysicalDeviceExternalTensorPropertiesARM(&self, physicalDevice: VkPhysicalDevice, pExternalTensorInfo: *const VkPhysicalDeviceExternalTensorInfoARM, pExternalTensorProperties: *mut VkExternalTensorPropertiesARM) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_arm_tensors.vk_get_physical_device_external_tensor_properties_arm)(physicalDevice, pExternalTensorInfo, pExternalTensorProperties))))
+		vk_process_catch(catch_unwind(||((self.vk_arm_tensors.vk_get_physical_device_external_tensor_properties_arm)(physicalDevice, pExternalTensorInfo, pExternalTensorProperties))))
 	}
 	fn vkGetTensorOpaqueCaptureDescriptorDataARM(&self, device: VkDevice, pInfo: *const VkTensorCaptureDescriptorDataInfoARM, pData: *mut c_void) -> Result<()> {
-		convert_result("vkGetTensorOpaqueCaptureDescriptorDataARM", catch_unwind(||((self.vk_arm_tensors.vk_get_tensor_opaque_capture_descriptor_data_arm)(device, pInfo, pData))))
+		vk_convert_result("vkGetTensorOpaqueCaptureDescriptorDataARM", catch_unwind(||((self.vk_arm_tensors.vk_get_tensor_opaque_capture_descriptor_data_arm)(device, pInfo, pData))))
 	}
 	fn vkGetTensorViewOpaqueCaptureDescriptorDataARM(&self, device: VkDevice, pInfo: *const VkTensorViewCaptureDescriptorDataInfoARM, pData: *mut c_void) -> Result<()> {
-		convert_result("vkGetTensorViewOpaqueCaptureDescriptorDataARM", catch_unwind(||((self.vk_arm_tensors.vk_get_tensor_view_opaque_capture_descriptor_data_arm)(device, pInfo, pData))))
+		vk_convert_result("vkGetTensorViewOpaqueCaptureDescriptorDataARM", catch_unwind(||((self.vk_arm_tensors.vk_get_tensor_view_opaque_capture_descriptor_data_arm)(device, pInfo, pData))))
 	}
 }
 impl VK_EXT_shader_module_identifier for VkCore {
 	fn vkGetShaderModuleIdentifierEXT(&self, device: VkDevice, shaderModule: VkShaderModule, pIdentifier: *mut VkShaderModuleIdentifierEXT) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_shader_module_identifier.vk_get_shader_module_identifier_ext)(device, shaderModule, pIdentifier))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_shader_module_identifier.vk_get_shader_module_identifier_ext)(device, shaderModule, pIdentifier))))
 	}
 	fn vkGetShaderModuleCreateInfoIdentifierEXT(&self, device: VkDevice, pCreateInfo: *const VkShaderModuleCreateInfo, pIdentifier: *mut VkShaderModuleIdentifierEXT) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_shader_module_identifier.vk_get_shader_module_create_info_identifier_ext)(device, pCreateInfo, pIdentifier))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_shader_module_identifier.vk_get_shader_module_create_info_identifier_ext)(device, pCreateInfo, pIdentifier))))
 	}
 }
 impl VK_EXT_rasterization_order_attachment_access for VkCore {}
 impl VK_NV_optical_flow for VkCore {
 	fn vkGetPhysicalDeviceOpticalFlowImageFormatsNV(&self, physicalDevice: VkPhysicalDevice, pOpticalFlowImageFormatInfo: *const VkOpticalFlowImageFormatInfoNV, pFormatCount: *mut uint32_t, pImageFormatProperties: *mut VkOpticalFlowImageFormatPropertiesNV) -> Result<()> {
-		convert_result("vkGetPhysicalDeviceOpticalFlowImageFormatsNV", catch_unwind(||((self.vk_nv_optical_flow.vk_get_physical_device_optical_flow_image_formats_nv)(physicalDevice, pOpticalFlowImageFormatInfo, pFormatCount, pImageFormatProperties))))
+		vk_convert_result("vkGetPhysicalDeviceOpticalFlowImageFormatsNV", catch_unwind(||((self.vk_nv_optical_flow.vk_get_physical_device_optical_flow_image_formats_nv)(physicalDevice, pOpticalFlowImageFormatInfo, pFormatCount, pImageFormatProperties))))
 	}
 	fn vkCreateOpticalFlowSessionNV(&self, device: VkDevice, pCreateInfo: *const VkOpticalFlowSessionCreateInfoNV, pAllocator: *const VkAllocationCallbacks, pSession: *mut VkOpticalFlowSessionNV) -> Result<()> {
-		convert_result("vkCreateOpticalFlowSessionNV", catch_unwind(||((self.vk_nv_optical_flow.vk_create_optical_flow_session_nv)(device, pCreateInfo, pAllocator, pSession))))
+		vk_convert_result("vkCreateOpticalFlowSessionNV", catch_unwind(||((self.vk_nv_optical_flow.vk_create_optical_flow_session_nv)(device, pCreateInfo, pAllocator, pSession))))
 	}
 	fn vkDestroyOpticalFlowSessionNV(&self, device: VkDevice, session: VkOpticalFlowSessionNV, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_nv_optical_flow.vk_destroy_optical_flow_session_nv)(device, session, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_nv_optical_flow.vk_destroy_optical_flow_session_nv)(device, session, pAllocator))))
 	}
 	fn vkBindOpticalFlowSessionImageNV(&self, device: VkDevice, session: VkOpticalFlowSessionNV, bindingPoint: VkOpticalFlowSessionBindingPointNV, view: VkImageView, layout: VkImageLayout) -> Result<()> {
-		convert_result("vkBindOpticalFlowSessionImageNV", catch_unwind(||((self.vk_nv_optical_flow.vk_bind_optical_flow_session_image_nv)(device, session, bindingPoint, view, layout))))
+		vk_convert_result("vkBindOpticalFlowSessionImageNV", catch_unwind(||((self.vk_nv_optical_flow.vk_bind_optical_flow_session_image_nv)(device, session, bindingPoint, view, layout))))
 	}
 	fn vkCmdOpticalFlowExecuteNV(&self, commandBuffer: VkCommandBuffer, session: VkOpticalFlowSessionNV, pExecuteInfo: *const VkOpticalFlowExecuteInfoNV) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_nv_optical_flow.vk_cmd_optical_flow_execute_nv)(commandBuffer, session, pExecuteInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_nv_optical_flow.vk_cmd_optical_flow_execute_nv)(commandBuffer, session, pExecuteInfo))))
 	}
 }
 impl VK_EXT_legacy_dithering for VkCore {}
 impl VK_EXT_pipeline_protected_access for VkCore {}
 impl VK_AMD_anti_lag for VkCore {
 	fn vkAntiLagUpdateAMD(&self, device: VkDevice, pData: *const VkAntiLagDataAMD) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_amd_anti_lag.vk_anti_lag_update_amd)(device, pData))))
+		vk_process_catch(catch_unwind(||((self.vk_amd_anti_lag.vk_anti_lag_update_amd)(device, pData))))
 	}
 }
 impl VK_EXT_shader_object for VkCore {
 	fn vkCreateShadersEXT(&self, device: VkDevice, createInfoCount: u32, pCreateInfos: *const VkShaderCreateInfoEXT, pAllocator: *const VkAllocationCallbacks, pShaders: *mut VkShaderEXT) -> Result<()> {
-		convert_result("vkCreateShadersEXT", catch_unwind(||((self.vk_ext_shader_object.vk_create_shaders_ext)(device, createInfoCount, pCreateInfos, pAllocator, pShaders))))
+		vk_convert_result("vkCreateShadersEXT", catch_unwind(||((self.vk_ext_shader_object.vk_create_shaders_ext)(device, createInfoCount, pCreateInfos, pAllocator, pShaders))))
 	}
 	fn vkDestroyShaderEXT(&self, device: VkDevice, shader: VkShaderEXT, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_shader_object.vk_destroy_shader_ext)(device, shader, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_shader_object.vk_destroy_shader_ext)(device, shader, pAllocator))))
 	}
 	fn vkGetShaderBinaryDataEXT(&self, device: VkDevice, shader: VkShaderEXT, pDataSize: *mut size_t, pData: *mut c_void) -> Result<()> {
-		convert_result("vkGetShaderBinaryDataEXT", catch_unwind(||((self.vk_ext_shader_object.vk_get_shader_binary_data_ext)(device, shader, pDataSize, pData))))
+		vk_convert_result("vkGetShaderBinaryDataEXT", catch_unwind(||((self.vk_ext_shader_object.vk_get_shader_binary_data_ext)(device, shader, pDataSize, pData))))
 	}
 	fn vkCmdBindShadersEXT(&self, commandBuffer: VkCommandBuffer, stageCount: u32, pStages: *const VkShaderStageFlagBits, pShaders: *const VkShaderEXT) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_shader_object.vk_cmd_bind_shaders_ext)(commandBuffer, stageCount, pStages, pShaders))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_shader_object.vk_cmd_bind_shaders_ext)(commandBuffer, stageCount, pStages, pShaders))))
 	}
 	fn vkCmdSetDepthClampRangeEXT(&self, commandBuffer: VkCommandBuffer, depthClampMode: VkDepthClampModeEXT, pDepthClampRange: *const VkDepthClampRangeEXT) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_shader_object.vk_cmd_set_depth_clamp_range_ext)(commandBuffer, depthClampMode, pDepthClampRange))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_shader_object.vk_cmd_set_depth_clamp_range_ext)(commandBuffer, depthClampMode, pDepthClampRange))))
 	}
 }
 impl VK_QCOM_tile_properties for VkCore {
 	fn vkGetFramebufferTilePropertiesQCOM(&self, device: VkDevice, framebuffer: VkFramebuffer, pPropertiesCount: *mut uint32_t, pProperties: *mut VkTilePropertiesQCOM) -> Result<()> {
-		convert_result("vkGetFramebufferTilePropertiesQCOM", catch_unwind(||((self.vk_qcom_tile_properties.vk_get_framebuffer_tile_properties_qcom)(device, framebuffer, pPropertiesCount, pProperties))))
+		vk_convert_result("vkGetFramebufferTilePropertiesQCOM", catch_unwind(||((self.vk_qcom_tile_properties.vk_get_framebuffer_tile_properties_qcom)(device, framebuffer, pPropertiesCount, pProperties))))
 	}
 	fn vkGetDynamicRenderingTilePropertiesQCOM(&self, device: VkDevice, pRenderingInfo: *const VkRenderingInfo, pProperties: *mut VkTilePropertiesQCOM) -> Result<()> {
-		convert_result("vkGetDynamicRenderingTilePropertiesQCOM", catch_unwind(||((self.vk_qcom_tile_properties.vk_get_dynamic_rendering_tile_properties_qcom)(device, pRenderingInfo, pProperties))))
+		vk_convert_result("vkGetDynamicRenderingTilePropertiesQCOM", catch_unwind(||((self.vk_qcom_tile_properties.vk_get_dynamic_rendering_tile_properties_qcom)(device, pRenderingInfo, pProperties))))
 	}
 }
 impl VK_SEC_amigo_profiling for VkCore {}
@@ -56294,13 +56294,13 @@ impl VK_QCOM_multiview_per_view_viewports for VkCore {}
 impl VK_NV_ray_tracing_invocation_reorder for VkCore {}
 impl VK_NV_cooperative_vector for VkCore {
 	fn vkGetPhysicalDeviceCooperativeVectorPropertiesNV(&self, physicalDevice: VkPhysicalDevice, pPropertyCount: *mut uint32_t, pProperties: *mut VkCooperativeVectorPropertiesNV) -> Result<()> {
-		convert_result("vkGetPhysicalDeviceCooperativeVectorPropertiesNV", catch_unwind(||((self.vk_nv_cooperative_vector.vk_get_physical_device_cooperative_vector_properties_nv)(physicalDevice, pPropertyCount, pProperties))))
+		vk_convert_result("vkGetPhysicalDeviceCooperativeVectorPropertiesNV", catch_unwind(||((self.vk_nv_cooperative_vector.vk_get_physical_device_cooperative_vector_properties_nv)(physicalDevice, pPropertyCount, pProperties))))
 	}
 	fn vkConvertCooperativeVectorMatrixNV(&self, device: VkDevice, pInfo: *const VkConvertCooperativeVectorMatrixInfoNV) -> Result<()> {
-		convert_result("vkConvertCooperativeVectorMatrixNV", catch_unwind(||((self.vk_nv_cooperative_vector.vk_convert_cooperative_vector_matrix_nv)(device, pInfo))))
+		vk_convert_result("vkConvertCooperativeVectorMatrixNV", catch_unwind(||((self.vk_nv_cooperative_vector.vk_convert_cooperative_vector_matrix_nv)(device, pInfo))))
 	}
 	fn vkCmdConvertCooperativeVectorMatrixNV(&self, commandBuffer: VkCommandBuffer, infoCount: u32, pInfos: *const VkConvertCooperativeVectorMatrixInfoNV) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_nv_cooperative_vector.vk_cmd_convert_cooperative_vector_matrix_nv)(commandBuffer, infoCount, pInfos))))
+		vk_process_catch(catch_unwind(||((self.vk_nv_cooperative_vector.vk_cmd_convert_cooperative_vector_matrix_nv)(commandBuffer, infoCount, pInfos))))
 	}
 }
 impl VK_NV_extended_sparse_address_space for VkCore {}
@@ -56312,54 +56312,54 @@ impl VK_EXT_pipeline_library_group_handles for VkCore {}
 impl VK_EXT_dynamic_rendering_unused_attachments for VkCore {}
 impl VK_NV_low_latency2 for VkCore {
 	fn vkSetLatencySleepModeNV(&self, device: VkDevice, swapchain: VkSwapchainKHR, pSleepModeInfo: *const VkLatencySleepModeInfoNV) -> Result<()> {
-		convert_result("vkSetLatencySleepModeNV", catch_unwind(||((self.vk_nv_low_latency2.vk_set_latency_sleep_mode_nv)(device, swapchain, pSleepModeInfo))))
+		vk_convert_result("vkSetLatencySleepModeNV", catch_unwind(||((self.vk_nv_low_latency2.vk_set_latency_sleep_mode_nv)(device, swapchain, pSleepModeInfo))))
 	}
 	fn vkLatencySleepNV(&self, device: VkDevice, swapchain: VkSwapchainKHR, pSleepInfo: *const VkLatencySleepInfoNV) -> Result<()> {
-		convert_result("vkLatencySleepNV", catch_unwind(||((self.vk_nv_low_latency2.vk_latency_sleep_nv)(device, swapchain, pSleepInfo))))
+		vk_convert_result("vkLatencySleepNV", catch_unwind(||((self.vk_nv_low_latency2.vk_latency_sleep_nv)(device, swapchain, pSleepInfo))))
 	}
 	fn vkSetLatencyMarkerNV(&self, device: VkDevice, swapchain: VkSwapchainKHR, pLatencyMarkerInfo: *const VkSetLatencyMarkerInfoNV) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_nv_low_latency2.vk_set_latency_marker_nv)(device, swapchain, pLatencyMarkerInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_nv_low_latency2.vk_set_latency_marker_nv)(device, swapchain, pLatencyMarkerInfo))))
 	}
 	fn vkGetLatencyTimingsNV(&self, device: VkDevice, swapchain: VkSwapchainKHR, pLatencyMarkerInfo: *mut VkGetLatencyMarkerInfoNV) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_nv_low_latency2.vk_get_latency_timings_nv)(device, swapchain, pLatencyMarkerInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_nv_low_latency2.vk_get_latency_timings_nv)(device, swapchain, pLatencyMarkerInfo))))
 	}
 	fn vkQueueNotifyOutOfBandNV(&self, queue: VkQueue, pQueueTypeInfo: *const VkOutOfBandQueueTypeInfoNV) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_nv_low_latency2.vk_queue_notify_out_of_band_nv)(queue, pQueueTypeInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_nv_low_latency2.vk_queue_notify_out_of_band_nv)(queue, pQueueTypeInfo))))
 	}
 }
 impl VK_ARM_data_graph for VkCore {
 	fn vkCreateDataGraphPipelinesARM(&self, device: VkDevice, deferredOperation: VkDeferredOperationKHR, pipelineCache: VkPipelineCache, createInfoCount: u32, pCreateInfos: *const VkDataGraphPipelineCreateInfoARM, pAllocator: *const VkAllocationCallbacks, pPipelines: *mut VkPipeline) -> Result<()> {
-		convert_result("vkCreateDataGraphPipelinesARM", catch_unwind(||((self.vk_arm_data_graph.vk_create_data_graph_pipelines_arm)(device, deferredOperation, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines))))
+		vk_convert_result("vkCreateDataGraphPipelinesARM", catch_unwind(||((self.vk_arm_data_graph.vk_create_data_graph_pipelines_arm)(device, deferredOperation, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines))))
 	}
 	fn vkCreateDataGraphPipelineSessionARM(&self, device: VkDevice, pCreateInfo: *const VkDataGraphPipelineSessionCreateInfoARM, pAllocator: *const VkAllocationCallbacks, pSession: *mut VkDataGraphPipelineSessionARM) -> Result<()> {
-		convert_result("vkCreateDataGraphPipelineSessionARM", catch_unwind(||((self.vk_arm_data_graph.vk_create_data_graph_pipeline_session_arm)(device, pCreateInfo, pAllocator, pSession))))
+		vk_convert_result("vkCreateDataGraphPipelineSessionARM", catch_unwind(||((self.vk_arm_data_graph.vk_create_data_graph_pipeline_session_arm)(device, pCreateInfo, pAllocator, pSession))))
 	}
 	fn vkGetDataGraphPipelineSessionBindPointRequirementsARM(&self, device: VkDevice, pInfo: *const VkDataGraphPipelineSessionBindPointRequirementsInfoARM, pBindPointRequirementCount: *mut uint32_t, pBindPointRequirements: *mut VkDataGraphPipelineSessionBindPointRequirementARM) -> Result<()> {
-		convert_result("vkGetDataGraphPipelineSessionBindPointRequirementsARM", catch_unwind(||((self.vk_arm_data_graph.vk_get_data_graph_pipeline_session_bind_point_requirements_arm)(device, pInfo, pBindPointRequirementCount, pBindPointRequirements))))
+		vk_convert_result("vkGetDataGraphPipelineSessionBindPointRequirementsARM", catch_unwind(||((self.vk_arm_data_graph.vk_get_data_graph_pipeline_session_bind_point_requirements_arm)(device, pInfo, pBindPointRequirementCount, pBindPointRequirements))))
 	}
 	fn vkGetDataGraphPipelineSessionMemoryRequirementsARM(&self, device: VkDevice, pInfo: *const VkDataGraphPipelineSessionMemoryRequirementsInfoARM, pMemoryRequirements: *mut VkMemoryRequirements2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_arm_data_graph.vk_get_data_graph_pipeline_session_memory_requirements_arm)(device, pInfo, pMemoryRequirements))))
+		vk_process_catch(catch_unwind(||((self.vk_arm_data_graph.vk_get_data_graph_pipeline_session_memory_requirements_arm)(device, pInfo, pMemoryRequirements))))
 	}
 	fn vkBindDataGraphPipelineSessionMemoryARM(&self, device: VkDevice, bindInfoCount: u32, pBindInfos: *const VkBindDataGraphPipelineSessionMemoryInfoARM) -> Result<()> {
-		convert_result("vkBindDataGraphPipelineSessionMemoryARM", catch_unwind(||((self.vk_arm_data_graph.vk_bind_data_graph_pipeline_session_memory_arm)(device, bindInfoCount, pBindInfos))))
+		vk_convert_result("vkBindDataGraphPipelineSessionMemoryARM", catch_unwind(||((self.vk_arm_data_graph.vk_bind_data_graph_pipeline_session_memory_arm)(device, bindInfoCount, pBindInfos))))
 	}
 	fn vkDestroyDataGraphPipelineSessionARM(&self, device: VkDevice, session: VkDataGraphPipelineSessionARM, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_arm_data_graph.vk_destroy_data_graph_pipeline_session_arm)(device, session, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_arm_data_graph.vk_destroy_data_graph_pipeline_session_arm)(device, session, pAllocator))))
 	}
 	fn vkCmdDispatchDataGraphARM(&self, commandBuffer: VkCommandBuffer, session: VkDataGraphPipelineSessionARM, pInfo: *const VkDataGraphPipelineDispatchInfoARM) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_arm_data_graph.vk_cmd_dispatch_data_graph_arm)(commandBuffer, session, pInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_arm_data_graph.vk_cmd_dispatch_data_graph_arm)(commandBuffer, session, pInfo))))
 	}
 	fn vkGetDataGraphPipelineAvailablePropertiesARM(&self, device: VkDevice, pPipelineInfo: *const VkDataGraphPipelineInfoARM, pPropertiesCount: *mut uint32_t, pProperties: *mut VkDataGraphPipelinePropertyARM) -> Result<()> {
-		convert_result("vkGetDataGraphPipelineAvailablePropertiesARM", catch_unwind(||((self.vk_arm_data_graph.vk_get_data_graph_pipeline_available_properties_arm)(device, pPipelineInfo, pPropertiesCount, pProperties))))
+		vk_convert_result("vkGetDataGraphPipelineAvailablePropertiesARM", catch_unwind(||((self.vk_arm_data_graph.vk_get_data_graph_pipeline_available_properties_arm)(device, pPipelineInfo, pPropertiesCount, pProperties))))
 	}
 	fn vkGetDataGraphPipelinePropertiesARM(&self, device: VkDevice, pPipelineInfo: *const VkDataGraphPipelineInfoARM, propertiesCount: u32, pProperties: *mut VkDataGraphPipelinePropertyQueryResultARM) -> Result<()> {
-		convert_result("vkGetDataGraphPipelinePropertiesARM", catch_unwind(||((self.vk_arm_data_graph.vk_get_data_graph_pipeline_properties_arm)(device, pPipelineInfo, propertiesCount, pProperties))))
+		vk_convert_result("vkGetDataGraphPipelinePropertiesARM", catch_unwind(||((self.vk_arm_data_graph.vk_get_data_graph_pipeline_properties_arm)(device, pPipelineInfo, propertiesCount, pProperties))))
 	}
 	fn vkGetPhysicalDeviceQueueFamilyDataGraphPropertiesARM(&self, physicalDevice: VkPhysicalDevice, queueFamilyIndex: u32, pQueueFamilyDataGraphPropertyCount: *mut uint32_t, pQueueFamilyDataGraphProperties: *mut VkQueueFamilyDataGraphPropertiesARM) -> Result<()> {
-		convert_result("vkGetPhysicalDeviceQueueFamilyDataGraphPropertiesARM", catch_unwind(||((self.vk_arm_data_graph.vk_get_physical_device_queue_family_data_graph_properties_arm)(physicalDevice, queueFamilyIndex, pQueueFamilyDataGraphPropertyCount, pQueueFamilyDataGraphProperties))))
+		vk_convert_result("vkGetPhysicalDeviceQueueFamilyDataGraphPropertiesARM", catch_unwind(||((self.vk_arm_data_graph.vk_get_physical_device_queue_family_data_graph_properties_arm)(physicalDevice, queueFamilyIndex, pQueueFamilyDataGraphPropertyCount, pQueueFamilyDataGraphProperties))))
 	}
 	fn vkGetPhysicalDeviceQueueFamilyDataGraphProcessingEnginePropertiesARM(&self, physicalDevice: VkPhysicalDevice, pQueueFamilyDataGraphProcessingEngineInfo: *const VkPhysicalDeviceQueueFamilyDataGraphProcessingEngineInfoARM, pQueueFamilyDataGraphProcessingEngineProperties: *mut VkQueueFamilyDataGraphProcessingEnginePropertiesARM) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_arm_data_graph.vk_get_physical_device_queue_family_data_graph_processing_engine_properties_arm)(physicalDevice, pQueueFamilyDataGraphProcessingEngineInfo, pQueueFamilyDataGraphProcessingEngineProperties))))
+		vk_process_catch(catch_unwind(||((self.vk_arm_data_graph.vk_get_physical_device_queue_family_data_graph_processing_engine_properties_arm)(physicalDevice, pQueueFamilyDataGraphProcessingEngineInfo, pQueueFamilyDataGraphProcessingEngineProperties))))
 	}
 }
 impl VK_QCOM_multiview_per_view_render_areas for VkCore {}
@@ -56370,27 +56370,27 @@ impl VK_QCOM_ycbcr_degamma for VkCore {}
 impl VK_QCOM_filter_cubic_clamp for VkCore {}
 impl VK_EXT_attachment_feedback_loop_dynamic_state for VkCore {
 	fn vkCmdSetAttachmentFeedbackLoopEnableEXT(&self, commandBuffer: VkCommandBuffer, aspectMask: VkImageAspectFlags) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_attachment_feedback_loop_dynamic_state.vk_cmd_set_attachment_feedback_loop_enable_ext)(commandBuffer, aspectMask))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_attachment_feedback_loop_dynamic_state.vk_cmd_set_attachment_feedback_loop_enable_ext)(commandBuffer, aspectMask))))
 	}
 }
 impl VK_MSFT_layered_driver for VkCore {}
 impl VK_NV_descriptor_pool_overallocation for VkCore {}
 impl VK_QCOM_tile_memory_heap for VkCore {
 	fn vkCmdBindTileMemoryQCOM(&self, commandBuffer: VkCommandBuffer, pTileMemoryBindInfo: *const VkTileMemoryBindInfoQCOM) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_qcom_tile_memory_heap.vk_cmd_bind_tile_memory_qcom)(commandBuffer, pTileMemoryBindInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_qcom_tile_memory_heap.vk_cmd_bind_tile_memory_qcom)(commandBuffer, pTileMemoryBindInfo))))
 	}
 }
 impl VK_NV_display_stereo for VkCore {}
 impl VK_NV_raw_access_chains for VkCore {}
 impl VK_NV_external_compute_queue for VkCore {
 	fn vkCreateExternalComputeQueueNV(&self, device: VkDevice, pCreateInfo: *const VkExternalComputeQueueCreateInfoNV, pAllocator: *const VkAllocationCallbacks, pExternalQueue: *mut VkExternalComputeQueueNV) -> Result<()> {
-		convert_result("vkCreateExternalComputeQueueNV", catch_unwind(||((self.vk_nv_external_compute_queue.vk_create_external_compute_queue_nv)(device, pCreateInfo, pAllocator, pExternalQueue))))
+		vk_convert_result("vkCreateExternalComputeQueueNV", catch_unwind(||((self.vk_nv_external_compute_queue.vk_create_external_compute_queue_nv)(device, pCreateInfo, pAllocator, pExternalQueue))))
 	}
 	fn vkDestroyExternalComputeQueueNV(&self, device: VkDevice, externalQueue: VkExternalComputeQueueNV, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_nv_external_compute_queue.vk_destroy_external_compute_queue_nv)(device, externalQueue, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_nv_external_compute_queue.vk_destroy_external_compute_queue_nv)(device, externalQueue, pAllocator))))
 	}
 	fn vkGetExternalComputeQueueDataNV(&self, externalQueue: VkExternalComputeQueueNV, params: *mut VkExternalComputeQueueDataParamsNV, pData: *mut c_void) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_nv_external_compute_queue.vk_get_external_compute_queue_data_nv)(externalQueue, params, pData))))
+		vk_process_catch(catch_unwind(||((self.vk_nv_external_compute_queue.vk_get_external_compute_queue_data_nv)(externalQueue, params, pData))))
 	}
 }
 impl VK_NV_command_buffer_inheritance for VkCore {}
@@ -56400,47 +56400,47 @@ impl VK_EXT_shader_float8 for VkCore {}
 impl VK_NV_ray_tracing_validation for VkCore {}
 impl VK_NV_cluster_acceleration_structure for VkCore {
 	fn vkGetClusterAccelerationStructureBuildSizesNV(&self, device: VkDevice, pInfo: *const VkClusterAccelerationStructureInputInfoNV, pSizeInfo: *mut VkAccelerationStructureBuildSizesInfoKHR) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_nv_cluster_acceleration_structure.vk_get_cluster_acceleration_structure_build_sizes_nv)(device, pInfo, pSizeInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_nv_cluster_acceleration_structure.vk_get_cluster_acceleration_structure_build_sizes_nv)(device, pInfo, pSizeInfo))))
 	}
 	fn vkCmdBuildClusterAccelerationStructureIndirectNV(&self, commandBuffer: VkCommandBuffer, pCommandInfos: *const VkClusterAccelerationStructureCommandsInfoNV) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_nv_cluster_acceleration_structure.vk_cmd_build_cluster_acceleration_structure_indirect_nv)(commandBuffer, pCommandInfos))))
+		vk_process_catch(catch_unwind(||((self.vk_nv_cluster_acceleration_structure.vk_cmd_build_cluster_acceleration_structure_indirect_nv)(commandBuffer, pCommandInfos))))
 	}
 }
 impl VK_NV_partitioned_acceleration_structure for VkCore {
 	fn vkGetPartitionedAccelerationStructuresBuildSizesNV(&self, device: VkDevice, pInfo: *const VkPartitionedAccelerationStructureInstancesInputNV, pSizeInfo: *mut VkAccelerationStructureBuildSizesInfoKHR) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_nv_partitioned_acceleration_structure.vk_get_partitioned_acceleration_structures_build_sizes_nv)(device, pInfo, pSizeInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_nv_partitioned_acceleration_structure.vk_get_partitioned_acceleration_structures_build_sizes_nv)(device, pInfo, pSizeInfo))))
 	}
 	fn vkCmdBuildPartitionedAccelerationStructuresNV(&self, commandBuffer: VkCommandBuffer, pBuildInfo: *const VkBuildPartitionedAccelerationStructureInfoNV) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_nv_partitioned_acceleration_structure.vk_cmd_build_partitioned_acceleration_structures_nv)(commandBuffer, pBuildInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_nv_partitioned_acceleration_structure.vk_cmd_build_partitioned_acceleration_structures_nv)(commandBuffer, pBuildInfo))))
 	}
 }
 impl VK_EXT_device_generated_commands for VkCore {
 	fn vkGetGeneratedCommandsMemoryRequirementsEXT(&self, device: VkDevice, pInfo: *const VkGeneratedCommandsMemoryRequirementsInfoEXT, pMemoryRequirements: *mut VkMemoryRequirements2) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_device_generated_commands.vk_get_generated_commands_memory_requirements_ext)(device, pInfo, pMemoryRequirements))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_device_generated_commands.vk_get_generated_commands_memory_requirements_ext)(device, pInfo, pMemoryRequirements))))
 	}
 	fn vkCmdPreprocessGeneratedCommandsEXT(&self, commandBuffer: VkCommandBuffer, pGeneratedCommandsInfo: *const VkGeneratedCommandsInfoEXT, stateCommandBuffer: VkCommandBuffer) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_device_generated_commands.vk_cmd_preprocess_generated_commands_ext)(commandBuffer, pGeneratedCommandsInfo, stateCommandBuffer))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_device_generated_commands.vk_cmd_preprocess_generated_commands_ext)(commandBuffer, pGeneratedCommandsInfo, stateCommandBuffer))))
 	}
 	fn vkCmdExecuteGeneratedCommandsEXT(&self, commandBuffer: VkCommandBuffer, isPreprocessed: VkBool32, pGeneratedCommandsInfo: *const VkGeneratedCommandsInfoEXT) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_device_generated_commands.vk_cmd_execute_generated_commands_ext)(commandBuffer, isPreprocessed, pGeneratedCommandsInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_device_generated_commands.vk_cmd_execute_generated_commands_ext)(commandBuffer, isPreprocessed, pGeneratedCommandsInfo))))
 	}
 	fn vkCreateIndirectCommandsLayoutEXT(&self, device: VkDevice, pCreateInfo: *const VkIndirectCommandsLayoutCreateInfoEXT, pAllocator: *const VkAllocationCallbacks, pIndirectCommandsLayout: *mut VkIndirectCommandsLayoutEXT) -> Result<()> {
-		convert_result("vkCreateIndirectCommandsLayoutEXT", catch_unwind(||((self.vk_ext_device_generated_commands.vk_create_indirect_commands_layout_ext)(device, pCreateInfo, pAllocator, pIndirectCommandsLayout))))
+		vk_convert_result("vkCreateIndirectCommandsLayoutEXT", catch_unwind(||((self.vk_ext_device_generated_commands.vk_create_indirect_commands_layout_ext)(device, pCreateInfo, pAllocator, pIndirectCommandsLayout))))
 	}
 	fn vkDestroyIndirectCommandsLayoutEXT(&self, device: VkDevice, indirectCommandsLayout: VkIndirectCommandsLayoutEXT, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_device_generated_commands.vk_destroy_indirect_commands_layout_ext)(device, indirectCommandsLayout, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_device_generated_commands.vk_destroy_indirect_commands_layout_ext)(device, indirectCommandsLayout, pAllocator))))
 	}
 	fn vkCreateIndirectExecutionSetEXT(&self, device: VkDevice, pCreateInfo: *const VkIndirectExecutionSetCreateInfoEXT, pAllocator: *const VkAllocationCallbacks, pIndirectExecutionSet: *mut VkIndirectExecutionSetEXT) -> Result<()> {
-		convert_result("vkCreateIndirectExecutionSetEXT", catch_unwind(||((self.vk_ext_device_generated_commands.vk_create_indirect_execution_set_ext)(device, pCreateInfo, pAllocator, pIndirectExecutionSet))))
+		vk_convert_result("vkCreateIndirectExecutionSetEXT", catch_unwind(||((self.vk_ext_device_generated_commands.vk_create_indirect_execution_set_ext)(device, pCreateInfo, pAllocator, pIndirectExecutionSet))))
 	}
 	fn vkDestroyIndirectExecutionSetEXT(&self, device: VkDevice, indirectExecutionSet: VkIndirectExecutionSetEXT, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_device_generated_commands.vk_destroy_indirect_execution_set_ext)(device, indirectExecutionSet, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_device_generated_commands.vk_destroy_indirect_execution_set_ext)(device, indirectExecutionSet, pAllocator))))
 	}
 	fn vkUpdateIndirectExecutionSetPipelineEXT(&self, device: VkDevice, indirectExecutionSet: VkIndirectExecutionSetEXT, executionSetWriteCount: u32, pExecutionSetWrites: *const VkWriteIndirectExecutionSetPipelineEXT) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_device_generated_commands.vk_update_indirect_execution_set_pipeline_ext)(device, indirectExecutionSet, executionSetWriteCount, pExecutionSetWrites))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_device_generated_commands.vk_update_indirect_execution_set_pipeline_ext)(device, indirectExecutionSet, executionSetWriteCount, pExecutionSetWrites))))
 	}
 	fn vkUpdateIndirectExecutionSetShaderEXT(&self, device: VkDevice, indirectExecutionSet: VkIndirectExecutionSetEXT, executionSetWriteCount: u32, pExecutionSetWrites: *const VkWriteIndirectExecutionSetShaderEXT) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_device_generated_commands.vk_update_indirect_execution_set_shader_ext)(device, indirectExecutionSet, executionSetWriteCount, pExecutionSetWrites))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_device_generated_commands.vk_update_indirect_execution_set_shader_ext)(device, indirectExecutionSet, executionSetWriteCount, pExecutionSetWrites))))
 	}
 }
 impl VK_MESA_image_alignment_control for VkCore {}
@@ -56448,7 +56448,7 @@ impl VK_EXT_depth_clamp_control for VkCore {}
 impl VK_HUAWEI_hdr_vivid for VkCore {}
 impl VK_NV_cooperative_matrix2 for VkCore {
 	fn vkGetPhysicalDeviceCooperativeMatrixFlexibleDimensionsPropertiesNV(&self, physicalDevice: VkPhysicalDevice, pPropertyCount: *mut uint32_t, pProperties: *mut VkCooperativeMatrixFlexibleDimensionsPropertiesNV) -> Result<()> {
-		convert_result("vkGetPhysicalDeviceCooperativeMatrixFlexibleDimensionsPropertiesNV", catch_unwind(||((self.vk_nv_cooperative_matrix2.vk_get_physical_device_cooperative_matrix_flexible_dimensions_properties_nv)(physicalDevice, pPropertyCount, pProperties))))
+		vk_convert_result("vkGetPhysicalDeviceCooperativeMatrixFlexibleDimensionsPropertiesNV", catch_unwind(||((self.vk_nv_cooperative_matrix2.vk_get_physical_device_cooperative_matrix_flexible_dimensions_properties_nv)(physicalDevice, pPropertyCount, pProperties))))
 	}
 }
 impl VK_ARM_pipeline_opacity_micromap for VkCore {}
@@ -56458,106 +56458,106 @@ impl VK_VALVE_fragment_density_map_layered for VkCore {}
 impl VK_NV_present_metering for VkCore {}
 impl VK_EXT_fragment_density_map_offset for VkCore {
 	fn vkCmdEndRendering2EXT(&self, commandBuffer: VkCommandBuffer, pRenderingEndInfo: *const VkRenderingEndInfoEXT) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_fragment_density_map_offset.vk_cmd_end_rendering2_ext)(commandBuffer, pRenderingEndInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_fragment_density_map_offset.vk_cmd_end_rendering2_ext)(commandBuffer, pRenderingEndInfo))))
 	}
 }
 impl VK_EXT_zero_initialize_device_memory for VkCore {}
 impl VK_SEC_pipeline_cache_incremental_mode for VkCore {}
 impl VK_KHR_acceleration_structure for VkCore {
 	fn vkCreateAccelerationStructureKHR(&self, device: VkDevice, pCreateInfo: *const VkAccelerationStructureCreateInfoKHR, pAllocator: *const VkAllocationCallbacks, pAccelerationStructure: *mut VkAccelerationStructureKHR) -> Result<()> {
-		convert_result("vkCreateAccelerationStructureKHR", catch_unwind(||((self.vk_khr_acceleration_structure.vk_create_acceleration_structure_khr)(device, pCreateInfo, pAllocator, pAccelerationStructure))))
+		vk_convert_result("vkCreateAccelerationStructureKHR", catch_unwind(||((self.vk_khr_acceleration_structure.vk_create_acceleration_structure_khr)(device, pCreateInfo, pAllocator, pAccelerationStructure))))
 	}
 	fn vkDestroyAccelerationStructureKHR(&self, device: VkDevice, accelerationStructure: VkAccelerationStructureKHR, pAllocator: *const VkAllocationCallbacks) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_khr_acceleration_structure.vk_destroy_acceleration_structure_khr)(device, accelerationStructure, pAllocator))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_acceleration_structure.vk_destroy_acceleration_structure_khr)(device, accelerationStructure, pAllocator))))
 	}
 	fn vkCmdBuildAccelerationStructuresKHR(&self, commandBuffer: VkCommandBuffer, infoCount: u32, pInfos: *const VkAccelerationStructureBuildGeometryInfoKHR, ppBuildRangeInfos: *const *const VkAccelerationStructureBuildRangeInfoKHR) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_khr_acceleration_structure.vk_cmd_build_acceleration_structures_khr)(commandBuffer, infoCount, pInfos, ppBuildRangeInfos))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_acceleration_structure.vk_cmd_build_acceleration_structures_khr)(commandBuffer, infoCount, pInfos, ppBuildRangeInfos))))
 	}
 	fn vkCmdBuildAccelerationStructuresIndirectKHR(&self, commandBuffer: VkCommandBuffer, infoCount: u32, pInfos: *const VkAccelerationStructureBuildGeometryInfoKHR, pIndirectDeviceAddresses: *const VkDeviceAddress, pIndirectStrides: *const uint32_t, ppMaxPrimitiveCounts: *const *const uint32_t) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_khr_acceleration_structure.vk_cmd_build_acceleration_structures_indirect_khr)(commandBuffer, infoCount, pInfos, pIndirectDeviceAddresses, pIndirectStrides, ppMaxPrimitiveCounts))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_acceleration_structure.vk_cmd_build_acceleration_structures_indirect_khr)(commandBuffer, infoCount, pInfos, pIndirectDeviceAddresses, pIndirectStrides, ppMaxPrimitiveCounts))))
 	}
 	fn vkBuildAccelerationStructuresKHR(&self, device: VkDevice, deferredOperation: VkDeferredOperationKHR, infoCount: u32, pInfos: *const VkAccelerationStructureBuildGeometryInfoKHR, ppBuildRangeInfos: *const *const VkAccelerationStructureBuildRangeInfoKHR) -> Result<()> {
-		convert_result("vkBuildAccelerationStructuresKHR", catch_unwind(||((self.vk_khr_acceleration_structure.vk_build_acceleration_structures_khr)(device, deferredOperation, infoCount, pInfos, ppBuildRangeInfos))))
+		vk_convert_result("vkBuildAccelerationStructuresKHR", catch_unwind(||((self.vk_khr_acceleration_structure.vk_build_acceleration_structures_khr)(device, deferredOperation, infoCount, pInfos, ppBuildRangeInfos))))
 	}
 	fn vkCopyAccelerationStructureKHR(&self, device: VkDevice, deferredOperation: VkDeferredOperationKHR, pInfo: *const VkCopyAccelerationStructureInfoKHR) -> Result<()> {
-		convert_result("vkCopyAccelerationStructureKHR", catch_unwind(||((self.vk_khr_acceleration_structure.vk_copy_acceleration_structure_khr)(device, deferredOperation, pInfo))))
+		vk_convert_result("vkCopyAccelerationStructureKHR", catch_unwind(||((self.vk_khr_acceleration_structure.vk_copy_acceleration_structure_khr)(device, deferredOperation, pInfo))))
 	}
 	fn vkCopyAccelerationStructureToMemoryKHR(&self, device: VkDevice, deferredOperation: VkDeferredOperationKHR, pInfo: *const VkCopyAccelerationStructureToMemoryInfoKHR) -> Result<()> {
-		convert_result("vkCopyAccelerationStructureToMemoryKHR", catch_unwind(||((self.vk_khr_acceleration_structure.vk_copy_acceleration_structure_to_memory_khr)(device, deferredOperation, pInfo))))
+		vk_convert_result("vkCopyAccelerationStructureToMemoryKHR", catch_unwind(||((self.vk_khr_acceleration_structure.vk_copy_acceleration_structure_to_memory_khr)(device, deferredOperation, pInfo))))
 	}
 	fn vkCopyMemoryToAccelerationStructureKHR(&self, device: VkDevice, deferredOperation: VkDeferredOperationKHR, pInfo: *const VkCopyMemoryToAccelerationStructureInfoKHR) -> Result<()> {
-		convert_result("vkCopyMemoryToAccelerationStructureKHR", catch_unwind(||((self.vk_khr_acceleration_structure.vk_copy_memory_to_acceleration_structure_khr)(device, deferredOperation, pInfo))))
+		vk_convert_result("vkCopyMemoryToAccelerationStructureKHR", catch_unwind(||((self.vk_khr_acceleration_structure.vk_copy_memory_to_acceleration_structure_khr)(device, deferredOperation, pInfo))))
 	}
 	fn vkWriteAccelerationStructuresPropertiesKHR(&self, device: VkDevice, accelerationStructureCount: u32, pAccelerationStructures: *const VkAccelerationStructureKHR, queryType: VkQueryType, dataSize: usize, pData: *mut c_void, stride: usize) -> Result<()> {
-		convert_result("vkWriteAccelerationStructuresPropertiesKHR", catch_unwind(||((self.vk_khr_acceleration_structure.vk_write_acceleration_structures_properties_khr)(device, accelerationStructureCount, pAccelerationStructures, queryType, dataSize, pData, stride))))
+		vk_convert_result("vkWriteAccelerationStructuresPropertiesKHR", catch_unwind(||((self.vk_khr_acceleration_structure.vk_write_acceleration_structures_properties_khr)(device, accelerationStructureCount, pAccelerationStructures, queryType, dataSize, pData, stride))))
 	}
 	fn vkCmdCopyAccelerationStructureKHR(&self, commandBuffer: VkCommandBuffer, pInfo: *const VkCopyAccelerationStructureInfoKHR) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_khr_acceleration_structure.vk_cmd_copy_acceleration_structure_khr)(commandBuffer, pInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_acceleration_structure.vk_cmd_copy_acceleration_structure_khr)(commandBuffer, pInfo))))
 	}
 	fn vkCmdCopyAccelerationStructureToMemoryKHR(&self, commandBuffer: VkCommandBuffer, pInfo: *const VkCopyAccelerationStructureToMemoryInfoKHR) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_khr_acceleration_structure.vk_cmd_copy_acceleration_structure_to_memory_khr)(commandBuffer, pInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_acceleration_structure.vk_cmd_copy_acceleration_structure_to_memory_khr)(commandBuffer, pInfo))))
 	}
 	fn vkCmdCopyMemoryToAccelerationStructureKHR(&self, commandBuffer: VkCommandBuffer, pInfo: *const VkCopyMemoryToAccelerationStructureInfoKHR) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_khr_acceleration_structure.vk_cmd_copy_memory_to_acceleration_structure_khr)(commandBuffer, pInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_acceleration_structure.vk_cmd_copy_memory_to_acceleration_structure_khr)(commandBuffer, pInfo))))
 	}
 	fn vkGetAccelerationStructureDeviceAddressKHR(&self, device: VkDevice, pInfo: *const VkAccelerationStructureDeviceAddressInfoKHR) -> Result<VkDeviceAddress> {
-		process_catch(catch_unwind(||((self.vk_khr_acceleration_structure.vk_get_acceleration_structure_device_address_khr)(device, pInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_acceleration_structure.vk_get_acceleration_structure_device_address_khr)(device, pInfo))))
 	}
 	fn vkCmdWriteAccelerationStructuresPropertiesKHR(&self, commandBuffer: VkCommandBuffer, accelerationStructureCount: u32, pAccelerationStructures: *const VkAccelerationStructureKHR, queryType: VkQueryType, queryPool: VkQueryPool, firstQuery: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_khr_acceleration_structure.vk_cmd_write_acceleration_structures_properties_khr)(commandBuffer, accelerationStructureCount, pAccelerationStructures, queryType, queryPool, firstQuery))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_acceleration_structure.vk_cmd_write_acceleration_structures_properties_khr)(commandBuffer, accelerationStructureCount, pAccelerationStructures, queryType, queryPool, firstQuery))))
 	}
 	fn vkGetDeviceAccelerationStructureCompatibilityKHR(&self, device: VkDevice, pVersionInfo: *const VkAccelerationStructureVersionInfoKHR, pCompatibility: *mut VkAccelerationStructureCompatibilityKHR) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_khr_acceleration_structure.vk_get_device_acceleration_structure_compatibility_khr)(device, pVersionInfo, pCompatibility))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_acceleration_structure.vk_get_device_acceleration_structure_compatibility_khr)(device, pVersionInfo, pCompatibility))))
 	}
 	fn vkGetAccelerationStructureBuildSizesKHR(&self, device: VkDevice, buildType: VkAccelerationStructureBuildTypeKHR, pBuildInfo: *const VkAccelerationStructureBuildGeometryInfoKHR, pMaxPrimitiveCounts: *const uint32_t, pSizeInfo: *mut VkAccelerationStructureBuildSizesInfoKHR) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_khr_acceleration_structure.vk_get_acceleration_structure_build_sizes_khr)(device, buildType, pBuildInfo, pMaxPrimitiveCounts, pSizeInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_acceleration_structure.vk_get_acceleration_structure_build_sizes_khr)(device, buildType, pBuildInfo, pMaxPrimitiveCounts, pSizeInfo))))
 	}
 }
 impl VK_KHR_ray_tracing_pipeline for VkCore {
 	fn vkCmdTraceRaysKHR(&self, commandBuffer: VkCommandBuffer, pRaygenShaderBindingTable: *const VkStridedDeviceAddressRegionKHR, pMissShaderBindingTable: *const VkStridedDeviceAddressRegionKHR, pHitShaderBindingTable: *const VkStridedDeviceAddressRegionKHR, pCallableShaderBindingTable: *const VkStridedDeviceAddressRegionKHR, width: u32, height: u32, depth: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_khr_ray_tracing_pipeline.vk_cmd_trace_rays_khr)(commandBuffer, pRaygenShaderBindingTable, pMissShaderBindingTable, pHitShaderBindingTable, pCallableShaderBindingTable, width, height, depth))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_ray_tracing_pipeline.vk_cmd_trace_rays_khr)(commandBuffer, pRaygenShaderBindingTable, pMissShaderBindingTable, pHitShaderBindingTable, pCallableShaderBindingTable, width, height, depth))))
 	}
 	fn vkCreateRayTracingPipelinesKHR(&self, device: VkDevice, deferredOperation: VkDeferredOperationKHR, pipelineCache: VkPipelineCache, createInfoCount: u32, pCreateInfos: *const VkRayTracingPipelineCreateInfoKHR, pAllocator: *const VkAllocationCallbacks, pPipelines: *mut VkPipeline) -> Result<()> {
-		convert_result("vkCreateRayTracingPipelinesKHR", catch_unwind(||((self.vk_khr_ray_tracing_pipeline.vk_create_ray_tracing_pipelines_khr)(device, deferredOperation, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines))))
+		vk_convert_result("vkCreateRayTracingPipelinesKHR", catch_unwind(||((self.vk_khr_ray_tracing_pipeline.vk_create_ray_tracing_pipelines_khr)(device, deferredOperation, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines))))
 	}
 	fn vkGetRayTracingCaptureReplayShaderGroupHandlesKHR(&self, device: VkDevice, pipeline: VkPipeline, firstGroup: u32, groupCount: u32, dataSize: usize, pData: *mut c_void) -> Result<()> {
-		convert_result("vkGetRayTracingCaptureReplayShaderGroupHandlesKHR", catch_unwind(||((self.vk_khr_ray_tracing_pipeline.vk_get_ray_tracing_capture_replay_shader_group_handles_khr)(device, pipeline, firstGroup, groupCount, dataSize, pData))))
+		vk_convert_result("vkGetRayTracingCaptureReplayShaderGroupHandlesKHR", catch_unwind(||((self.vk_khr_ray_tracing_pipeline.vk_get_ray_tracing_capture_replay_shader_group_handles_khr)(device, pipeline, firstGroup, groupCount, dataSize, pData))))
 	}
 	fn vkCmdTraceRaysIndirectKHR(&self, commandBuffer: VkCommandBuffer, pRaygenShaderBindingTable: *const VkStridedDeviceAddressRegionKHR, pMissShaderBindingTable: *const VkStridedDeviceAddressRegionKHR, pHitShaderBindingTable: *const VkStridedDeviceAddressRegionKHR, pCallableShaderBindingTable: *const VkStridedDeviceAddressRegionKHR, indirectDeviceAddress: VkDeviceAddress) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_khr_ray_tracing_pipeline.vk_cmd_trace_rays_indirect_khr)(commandBuffer, pRaygenShaderBindingTable, pMissShaderBindingTable, pHitShaderBindingTable, pCallableShaderBindingTable, indirectDeviceAddress))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_ray_tracing_pipeline.vk_cmd_trace_rays_indirect_khr)(commandBuffer, pRaygenShaderBindingTable, pMissShaderBindingTable, pHitShaderBindingTable, pCallableShaderBindingTable, indirectDeviceAddress))))
 	}
 	fn vkGetRayTracingShaderGroupStackSizeKHR(&self, device: VkDevice, pipeline: VkPipeline, group: u32, groupShader: VkShaderGroupShaderKHR) -> Result<VkDeviceSize> {
-		process_catch(catch_unwind(||((self.vk_khr_ray_tracing_pipeline.vk_get_ray_tracing_shader_group_stack_size_khr)(device, pipeline, group, groupShader))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_ray_tracing_pipeline.vk_get_ray_tracing_shader_group_stack_size_khr)(device, pipeline, group, groupShader))))
 	}
 	fn vkCmdSetRayTracingPipelineStackSizeKHR(&self, commandBuffer: VkCommandBuffer, pipelineStackSize: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_khr_ray_tracing_pipeline.vk_cmd_set_ray_tracing_pipeline_stack_size_khr)(commandBuffer, pipelineStackSize))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_ray_tracing_pipeline.vk_cmd_set_ray_tracing_pipeline_stack_size_khr)(commandBuffer, pipelineStackSize))))
 	}
 }
 impl VK_KHR_ray_query for VkCore {}
 impl VK_EXT_mesh_shader for VkCore {
 	fn vkCmdDrawMeshTasksEXT(&self, commandBuffer: VkCommandBuffer, groupCountX: u32, groupCountY: u32, groupCountZ: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_mesh_shader.vk_cmd_draw_mesh_tasks_ext)(commandBuffer, groupCountX, groupCountY, groupCountZ))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_mesh_shader.vk_cmd_draw_mesh_tasks_ext)(commandBuffer, groupCountX, groupCountY, groupCountZ))))
 	}
 	fn vkCmdDrawMeshTasksIndirectEXT(&self, commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize, drawCount: u32, stride: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_mesh_shader.vk_cmd_draw_mesh_tasks_indirect_ext)(commandBuffer, buffer, offset, drawCount, stride))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_mesh_shader.vk_cmd_draw_mesh_tasks_indirect_ext)(commandBuffer, buffer, offset, drawCount, stride))))
 	}
 	fn vkCmdDrawMeshTasksIndirectCountEXT(&self, commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize, countBuffer: VkBuffer, countBufferOffset: VkDeviceSize, maxDrawCount: u32, stride: u32) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_mesh_shader.vk_cmd_draw_mesh_tasks_indirect_count_ext)(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_mesh_shader.vk_cmd_draw_mesh_tasks_indirect_count_ext)(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride))))
 	}
 }
 #[cfg(feature = "android_khr")]
 impl VK_KHR_android_surface for VkCore {
 	fn vkCreateAndroidSurfaceKHR(&self, instance: VkInstance, pCreateInfo: *const VkAndroidSurfaceCreateInfoKHR, pAllocator: *const VkAllocationCallbacks, pSurface: *mut VkSurfaceKHR) -> Result<()> {
-		convert_result("vkCreateAndroidSurfaceKHR", catch_unwind(||((self.vk_khr_android_surface.vk_create_android_surface_khr)(instance, pCreateInfo, pAllocator, pSurface))))
+		vk_convert_result("vkCreateAndroidSurfaceKHR", catch_unwind(||((self.vk_khr_android_surface.vk_create_android_surface_khr)(instance, pCreateInfo, pAllocator, pSurface))))
 	}
 }
 #[cfg(feature = "android_khr")]
 impl VK_ANDROID_external_memory_android_hardware_buffer for VkCore {
 	fn vkGetAndroidHardwareBufferPropertiesANDROID(&self, device: VkDevice, buffer: *const AHardwareBuffer, pProperties: *mut VkAndroidHardwareBufferPropertiesANDROID) -> Result<()> {
-		convert_result("vkGetAndroidHardwareBufferPropertiesANDROID", catch_unwind(||((self.vk_android_external_memory_android_hardware_buffer.vk_get_android_hardware_buffer_properties_android)(device, buffer, pProperties))))
+		vk_convert_result("vkGetAndroidHardwareBufferPropertiesANDROID", catch_unwind(||((self.vk_android_external_memory_android_hardware_buffer.vk_get_android_hardware_buffer_properties_android)(device, buffer, pProperties))))
 	}
 	fn vkGetMemoryAndroidHardwareBufferANDROID(&self, device: VkDevice, pInfo: *const VkMemoryGetAndroidHardwareBufferInfoANDROID, pBuffer: *mut *mut AHardwareBuffer) -> Result<()> {
-		convert_result("vkGetMemoryAndroidHardwareBufferANDROID", catch_unwind(||((self.vk_android_external_memory_android_hardware_buffer.vk_get_memory_android_hardware_buffer_android)(device, pInfo, pBuffer))))
+		vk_convert_result("vkGetMemoryAndroidHardwareBufferANDROID", catch_unwind(||((self.vk_android_external_memory_android_hardware_buffer.vk_get_memory_android_hardware_buffer_android)(device, pInfo, pBuffer))))
 	}
 }
 #[cfg(feature = "android_khr")]
@@ -56565,61 +56565,61 @@ impl VK_ANDROID_external_format_resolve for VkCore {}
 #[cfg(feature = "ios_mvk")]
 impl VK_MVK_ios_surface for VkCore {
 	fn vkCreateIOSSurfaceMVK(&self, instance: VkInstance, pCreateInfo: *const VkIOSSurfaceCreateInfoMVK, pAllocator: *const VkAllocationCallbacks, pSurface: *mut VkSurfaceKHR) -> Result<()> {
-		convert_result("vkCreateIOSSurfaceMVK", catch_unwind(||((self.vk_mvk_ios_surface.vk_create_iossurface_mvk)(instance, pCreateInfo, pAllocator, pSurface))))
+		vk_convert_result("vkCreateIOSSurfaceMVK", catch_unwind(||((self.vk_mvk_ios_surface.vk_create_iossurface_mvk)(instance, pCreateInfo, pAllocator, pSurface))))
 	}
 }
 #[cfg(feature = "macos_mvk")]
 impl VK_MVK_macos_surface for VkCore {
 	fn vkCreateMacOSSurfaceMVK(&self, instance: VkInstance, pCreateInfo: *const VkMacOSSurfaceCreateInfoMVK, pAllocator: *const VkAllocationCallbacks, pSurface: *mut VkSurfaceKHR) -> Result<()> {
-		convert_result("vkCreateMacOSSurfaceMVK", catch_unwind(||((self.vk_mvk_macos_surface.vk_create_mac_ossurface_mvk)(instance, pCreateInfo, pAllocator, pSurface))))
+		vk_convert_result("vkCreateMacOSSurfaceMVK", catch_unwind(||((self.vk_mvk_macos_surface.vk_create_mac_ossurface_mvk)(instance, pCreateInfo, pAllocator, pSurface))))
 	}
 }
 #[cfg(feature = "metal_ext")]
 impl VK_EXT_metal_surface for VkCore {
 	fn vkCreateMetalSurfaceEXT(&self, instance: VkInstance, pCreateInfo: *const VkMetalSurfaceCreateInfoEXT, pAllocator: *const VkAllocationCallbacks, pSurface: *mut VkSurfaceKHR) -> Result<()> {
-		convert_result("vkCreateMetalSurfaceEXT", catch_unwind(||((self.vk_ext_metal_surface.vk_create_metal_surface_ext)(instance, pCreateInfo, pAllocator, pSurface))))
+		vk_convert_result("vkCreateMetalSurfaceEXT", catch_unwind(||((self.vk_ext_metal_surface.vk_create_metal_surface_ext)(instance, pCreateInfo, pAllocator, pSurface))))
 	}
 }
 #[cfg(feature = "metal_ext")]
 impl VK_EXT_metal_objects for VkCore {
 	fn vkExportMetalObjectsEXT(&self, device: VkDevice, pMetalObjectsInfo: *mut VkExportMetalObjectsInfoEXT) -> Result<()> {
-		process_catch(catch_unwind(||((self.vk_ext_metal_objects.vk_export_metal_objects_ext)(device, pMetalObjectsInfo))))
+		vk_process_catch(catch_unwind(||((self.vk_ext_metal_objects.vk_export_metal_objects_ext)(device, pMetalObjectsInfo))))
 	}
 }
 #[cfg(feature = "metal_ext")]
 impl VK_EXT_external_memory_metal for VkCore {
 	fn vkGetMemoryMetalHandleEXT(&self, device: VkDevice, pGetMetalHandleInfo: *const VkMemoryGetMetalHandleInfoEXT, pHandle: *mut *mut c_void) -> Result<()> {
-		convert_result("vkGetMemoryMetalHandleEXT", catch_unwind(||((self.vk_ext_external_memory_metal.vk_get_memory_metal_handle_ext)(device, pGetMetalHandleInfo, pHandle))))
+		vk_convert_result("vkGetMemoryMetalHandleEXT", catch_unwind(||((self.vk_ext_external_memory_metal.vk_get_memory_metal_handle_ext)(device, pGetMetalHandleInfo, pHandle))))
 	}
 	fn vkGetMemoryMetalHandlePropertiesEXT(&self, device: VkDevice, handleType: VkExternalMemoryHandleTypeFlagBits, pHandle: *const c_void, pMemoryMetalHandleProperties: *mut VkMemoryMetalHandlePropertiesEXT) -> Result<()> {
-		convert_result("vkGetMemoryMetalHandlePropertiesEXT", catch_unwind(||((self.vk_ext_external_memory_metal.vk_get_memory_metal_handle_properties_ext)(device, handleType, pHandle, pMemoryMetalHandleProperties))))
+		vk_convert_result("vkGetMemoryMetalHandlePropertiesEXT", catch_unwind(||((self.vk_ext_external_memory_metal.vk_get_memory_metal_handle_properties_ext)(device, handleType, pHandle, pMemoryMetalHandleProperties))))
 	}
 }
 #[cfg(feature = "wayland_khr")]
 impl VK_KHR_wayland_surface for VkCore {
 	fn vkCreateWaylandSurfaceKHR(&self, instance: VkInstance, pCreateInfo: *const VkWaylandSurfaceCreateInfoKHR, pAllocator: *const VkAllocationCallbacks, pSurface: *mut VkSurfaceKHR) -> Result<()> {
-		convert_result("vkCreateWaylandSurfaceKHR", catch_unwind(||((self.vk_khr_wayland_surface.vk_create_wayland_surface_khr)(instance, pCreateInfo, pAllocator, pSurface))))
+		vk_convert_result("vkCreateWaylandSurfaceKHR", catch_unwind(||((self.vk_khr_wayland_surface.vk_create_wayland_surface_khr)(instance, pCreateInfo, pAllocator, pSurface))))
 	}
 	fn vkGetPhysicalDeviceWaylandPresentationSupportKHR(&self, physicalDevice: VkPhysicalDevice, queueFamilyIndex: u32, display: *const c_void) -> Result<VkBool32> {
-		process_catch(catch_unwind(||((self.vk_khr_wayland_surface.vk_get_physical_device_wayland_presentation_support_khr)(physicalDevice, queueFamilyIndex, display))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_wayland_surface.vk_get_physical_device_wayland_presentation_support_khr)(physicalDevice, queueFamilyIndex, display))))
 	}
 }
 #[cfg(feature = "win32_khr")]
 impl VK_KHR_win32_surface for VkCore {
 	fn vkCreateWin32SurfaceKHR(&self, instance: VkInstance, pCreateInfo: *const VkWin32SurfaceCreateInfoKHR, pAllocator: *const VkAllocationCallbacks, pSurface: *mut VkSurfaceKHR) -> Result<()> {
-		convert_result("vkCreateWin32SurfaceKHR", catch_unwind(||((self.vk_khr_win32_surface.vk_create_win32_surface_khr)(instance, pCreateInfo, pAllocator, pSurface))))
+		vk_convert_result("vkCreateWin32SurfaceKHR", catch_unwind(||((self.vk_khr_win32_surface.vk_create_win32_surface_khr)(instance, pCreateInfo, pAllocator, pSurface))))
 	}
 	fn vkGetPhysicalDeviceWin32PresentationSupportKHR(&self, physicalDevice: VkPhysicalDevice, queueFamilyIndex: u32) -> Result<VkBool32> {
-		process_catch(catch_unwind(||((self.vk_khr_win32_surface.vk_get_physical_device_win32_presentation_support_khr)(physicalDevice, queueFamilyIndex))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_win32_surface.vk_get_physical_device_win32_presentation_support_khr)(physicalDevice, queueFamilyIndex))))
 	}
 }
 #[cfg(feature = "win32_khr")]
 impl VK_KHR_external_memory_win32 for VkCore {
 	fn vkGetMemoryWin32HandleKHR(&self, device: VkDevice, pGetWin32HandleInfo: *const VkMemoryGetWin32HandleInfoKHR, pHandle: *mut HANDLE) -> Result<()> {
-		convert_result("vkGetMemoryWin32HandleKHR", catch_unwind(||((self.vk_khr_external_memory_win32.vk_get_memory_win32_handle_khr)(device, pGetWin32HandleInfo, pHandle))))
+		vk_convert_result("vkGetMemoryWin32HandleKHR", catch_unwind(||((self.vk_khr_external_memory_win32.vk_get_memory_win32_handle_khr)(device, pGetWin32HandleInfo, pHandle))))
 	}
 	fn vkGetMemoryWin32HandlePropertiesKHR(&self, device: VkDevice, handleType: VkExternalMemoryHandleTypeFlagBits, handle: HANDLE, pMemoryWin32HandleProperties: *mut VkMemoryWin32HandlePropertiesKHR) -> Result<()> {
-		convert_result("vkGetMemoryWin32HandlePropertiesKHR", catch_unwind(||((self.vk_khr_external_memory_win32.vk_get_memory_win32_handle_properties_khr)(device, handleType, handle, pMemoryWin32HandleProperties))))
+		vk_convert_result("vkGetMemoryWin32HandlePropertiesKHR", catch_unwind(||((self.vk_khr_external_memory_win32.vk_get_memory_win32_handle_properties_khr)(device, handleType, handle, pMemoryWin32HandleProperties))))
 	}
 }
 #[cfg(feature = "win32_khr")]
@@ -56627,25 +56627,25 @@ impl VK_KHR_win32_keyed_mutex for VkCore {}
 #[cfg(feature = "win32_khr")]
 impl VK_KHR_external_semaphore_win32 for VkCore {
 	fn vkImportSemaphoreWin32HandleKHR(&self, device: VkDevice, pImportSemaphoreWin32HandleInfo: *const VkImportSemaphoreWin32HandleInfoKHR) -> Result<()> {
-		convert_result("vkImportSemaphoreWin32HandleKHR", catch_unwind(||((self.vk_khr_external_semaphore_win32.vk_import_semaphore_win32_handle_khr)(device, pImportSemaphoreWin32HandleInfo))))
+		vk_convert_result("vkImportSemaphoreWin32HandleKHR", catch_unwind(||((self.vk_khr_external_semaphore_win32.vk_import_semaphore_win32_handle_khr)(device, pImportSemaphoreWin32HandleInfo))))
 	}
 	fn vkGetSemaphoreWin32HandleKHR(&self, device: VkDevice, pGetWin32HandleInfo: *const VkSemaphoreGetWin32HandleInfoKHR, pHandle: *mut HANDLE) -> Result<()> {
-		convert_result("vkGetSemaphoreWin32HandleKHR", catch_unwind(||((self.vk_khr_external_semaphore_win32.vk_get_semaphore_win32_handle_khr)(device, pGetWin32HandleInfo, pHandle))))
+		vk_convert_result("vkGetSemaphoreWin32HandleKHR", catch_unwind(||((self.vk_khr_external_semaphore_win32.vk_get_semaphore_win32_handle_khr)(device, pGetWin32HandleInfo, pHandle))))
 	}
 }
 #[cfg(feature = "win32_khr")]
 impl VK_KHR_external_fence_win32 for VkCore {
 	fn vkImportFenceWin32HandleKHR(&self, device: VkDevice, pImportFenceWin32HandleInfo: *const VkImportFenceWin32HandleInfoKHR) -> Result<()> {
-		convert_result("vkImportFenceWin32HandleKHR", catch_unwind(||((self.vk_khr_external_fence_win32.vk_import_fence_win32_handle_khr)(device, pImportFenceWin32HandleInfo))))
+		vk_convert_result("vkImportFenceWin32HandleKHR", catch_unwind(||((self.vk_khr_external_fence_win32.vk_import_fence_win32_handle_khr)(device, pImportFenceWin32HandleInfo))))
 	}
 	fn vkGetFenceWin32HandleKHR(&self, device: VkDevice, pGetWin32HandleInfo: *const VkFenceGetWin32HandleInfoKHR, pHandle: *mut HANDLE) -> Result<()> {
-		convert_result("vkGetFenceWin32HandleKHR", catch_unwind(||((self.vk_khr_external_fence_win32.vk_get_fence_win32_handle_khr)(device, pGetWin32HandleInfo, pHandle))))
+		vk_convert_result("vkGetFenceWin32HandleKHR", catch_unwind(||((self.vk_khr_external_fence_win32.vk_get_fence_win32_handle_khr)(device, pGetWin32HandleInfo, pHandle))))
 	}
 }
 #[cfg(feature = "win32_khr")]
 impl VK_NV_external_memory_win32 for VkCore {
 	fn vkGetMemoryWin32HandleNV(&self, device: VkDevice, memory: VkDeviceMemory, handleType: VkExternalMemoryHandleTypeFlagsNV, pHandle: *mut HANDLE) -> Result<()> {
-		convert_result("vkGetMemoryWin32HandleNV", catch_unwind(||((self.vk_nv_external_memory_win32.vk_get_memory_win32_handle_nv)(device, memory, handleType, pHandle))))
+		vk_convert_result("vkGetMemoryWin32HandleNV", catch_unwind(||((self.vk_nv_external_memory_win32.vk_get_memory_win32_handle_nv)(device, memory, handleType, pHandle))))
 	}
 }
 #[cfg(feature = "win32_khr")]
@@ -56653,34 +56653,34 @@ impl VK_NV_win32_keyed_mutex for VkCore {}
 #[cfg(feature = "win32_khr")]
 impl VK_EXT_full_screen_exclusive for VkCore {
 	fn vkGetPhysicalDeviceSurfacePresentModes2EXT(&self, physicalDevice: VkPhysicalDevice, pSurfaceInfo: *const VkPhysicalDeviceSurfaceInfo2KHR, pPresentModeCount: *mut uint32_t, pPresentModes: *mut VkPresentModeKHR) -> Result<()> {
-		convert_result("vkGetPhysicalDeviceSurfacePresentModes2EXT", catch_unwind(||((self.vk_ext_full_screen_exclusive.vk_get_physical_device_surface_present_modes2_ext)(physicalDevice, pSurfaceInfo, pPresentModeCount, pPresentModes))))
+		vk_convert_result("vkGetPhysicalDeviceSurfacePresentModes2EXT", catch_unwind(||((self.vk_ext_full_screen_exclusive.vk_get_physical_device_surface_present_modes2_ext)(physicalDevice, pSurfaceInfo, pPresentModeCount, pPresentModes))))
 	}
 	fn vkAcquireFullScreenExclusiveModeEXT(&self, device: VkDevice, swapchain: VkSwapchainKHR) -> Result<()> {
-		convert_result("vkAcquireFullScreenExclusiveModeEXT", catch_unwind(||((self.vk_ext_full_screen_exclusive.vk_acquire_full_screen_exclusive_mode_ext)(device, swapchain))))
+		vk_convert_result("vkAcquireFullScreenExclusiveModeEXT", catch_unwind(||((self.vk_ext_full_screen_exclusive.vk_acquire_full_screen_exclusive_mode_ext)(device, swapchain))))
 	}
 	fn vkReleaseFullScreenExclusiveModeEXT(&self, device: VkDevice, swapchain: VkSwapchainKHR) -> Result<()> {
-		convert_result("vkReleaseFullScreenExclusiveModeEXT", catch_unwind(||((self.vk_ext_full_screen_exclusive.vk_release_full_screen_exclusive_mode_ext)(device, swapchain))))
+		vk_convert_result("vkReleaseFullScreenExclusiveModeEXT", catch_unwind(||((self.vk_ext_full_screen_exclusive.vk_release_full_screen_exclusive_mode_ext)(device, swapchain))))
 	}
 	fn vkGetDeviceGroupSurfacePresentModes2EXT(&self, device: VkDevice, pSurfaceInfo: *const VkPhysicalDeviceSurfaceInfo2KHR, pModes: *mut VkDeviceGroupPresentModeFlagsKHR) -> Result<()> {
-		convert_result("vkGetDeviceGroupSurfacePresentModes2EXT", catch_unwind(||((self.vk_ext_full_screen_exclusive.vk_get_device_group_surface_present_modes2_ext)(device, pSurfaceInfo, pModes))))
+		vk_convert_result("vkGetDeviceGroupSurfacePresentModes2EXT", catch_unwind(||((self.vk_ext_full_screen_exclusive.vk_get_device_group_surface_present_modes2_ext)(device, pSurfaceInfo, pModes))))
 	}
 }
 #[cfg(feature = "win32_khr")]
 impl VK_NV_acquire_winrt_display for VkCore {
 	fn vkAcquireWinrtDisplayNV(&self, physicalDevice: VkPhysicalDevice, display: VkDisplayKHR) -> Result<()> {
-		convert_result("vkAcquireWinrtDisplayNV", catch_unwind(||((self.vk_nv_acquire_winrt_display.vk_acquire_winrt_display_nv)(physicalDevice, display))))
+		vk_convert_result("vkAcquireWinrtDisplayNV", catch_unwind(||((self.vk_nv_acquire_winrt_display.vk_acquire_winrt_display_nv)(physicalDevice, display))))
 	}
 	fn vkGetWinrtDisplayNV(&self, physicalDevice: VkPhysicalDevice, deviceRelativeId: u32, pDisplay: *mut VkDisplayKHR) -> Result<()> {
-		convert_result("vkGetWinrtDisplayNV", catch_unwind(||((self.vk_nv_acquire_winrt_display.vk_get_winrt_display_nv)(physicalDevice, deviceRelativeId, pDisplay))))
+		vk_convert_result("vkGetWinrtDisplayNV", catch_unwind(||((self.vk_nv_acquire_winrt_display.vk_get_winrt_display_nv)(physicalDevice, deviceRelativeId, pDisplay))))
 	}
 }
 #[cfg(feature = "xcb_khr")]
 impl VK_KHR_xcb_surface for VkCore {
 	fn vkCreateXcbSurfaceKHR(&self, instance: VkInstance, pCreateInfo: *const VkXcbSurfaceCreateInfoKHR, pAllocator: *const VkAllocationCallbacks, pSurface: *mut VkSurfaceKHR) -> Result<()> {
-		convert_result("vkCreateXcbSurfaceKHR", catch_unwind(||((self.vk_khr_xcb_surface.vk_create_xcb_surface_khr)(instance, pCreateInfo, pAllocator, pSurface))))
+		vk_convert_result("vkCreateXcbSurfaceKHR", catch_unwind(||((self.vk_khr_xcb_surface.vk_create_xcb_surface_khr)(instance, pCreateInfo, pAllocator, pSurface))))
 	}
 	fn vkGetPhysicalDeviceXcbPresentationSupportKHR(&self, physicalDevice: VkPhysicalDevice, queueFamilyIndex: u32, connection: *const c_void, visual_id: uint32_t) -> Result<VkBool32> {
-		process_catch(catch_unwind(||((self.vk_khr_xcb_surface.vk_get_physical_device_xcb_presentation_support_khr)(physicalDevice, queueFamilyIndex, connection, visual_id))))
+		vk_process_catch(catch_unwind(||((self.vk_khr_xcb_surface.vk_get_physical_device_xcb_presentation_support_khr)(physicalDevice, queueFamilyIndex, connection, visual_id))))
 	}
 }
 impl VkCore {
