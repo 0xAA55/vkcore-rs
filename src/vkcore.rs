@@ -26,6 +26,7 @@ pub fn vk_make_video_std_version(major: u32, minor: u32, patch: u32) -> u32 {
 	(major << 22) | (minor << 12) | patch
 }
 
+/// Convert byte array to a string that represents the data of the array.
 fn to_byte_array_string<const N: usize>(input: &[u8; N]) -> String {
 	format!("[{}]", input.iter().map(|b|format!("0x{b:02X}")).collect::<Vec<String>>().join(", "))
 }
@@ -8665,279 +8666,279 @@ extern "system" fn dummy_vkCmdExecuteCommands(_: VkCommandBuffer, _: u32, _: *co
 /// trait for `VK_VERSION_1_0`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_VERSION_1_0.html>
 pub trait VK_VERSION_1_0: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateInstance.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateInstance.html>
 	fn vkCreateInstance(&self, pCreateInfo: *const VkInstanceCreateInfo, pAllocator: *const VkAllocationCallbacks, pInstance: *mut VkInstance) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroyInstance.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroyInstance.html>
 	fn vkDestroyInstance(&self, instance: VkInstance, pAllocator: *const VkAllocationCallbacks) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkEnumeratePhysicalDevices.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkEnumeratePhysicalDevices.html>
 	fn vkEnumeratePhysicalDevices(&self, instance: VkInstance, pPhysicalDeviceCount: *mut uint32_t, pPhysicalDevices: *mut VkPhysicalDevice) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceFeatures.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceFeatures.html>
 	fn vkGetPhysicalDeviceFeatures(&self, physicalDevice: VkPhysicalDevice, pFeatures: *mut VkPhysicalDeviceFeatures) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceFormatProperties.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceFormatProperties.html>
 	fn vkGetPhysicalDeviceFormatProperties(&self, physicalDevice: VkPhysicalDevice, format: VkFormat, pFormatProperties: *mut VkFormatProperties) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceImageFormatProperties.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceImageFormatProperties.html>
 	fn vkGetPhysicalDeviceImageFormatProperties(&self, physicalDevice: VkPhysicalDevice, format: VkFormat, type_: VkImageType, tiling: VkImageTiling, usage: VkImageUsageFlags, flags: VkImageCreateFlags, pImageFormatProperties: *mut VkImageFormatProperties) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceProperties.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceProperties.html>
 	fn vkGetPhysicalDeviceProperties(&self, physicalDevice: VkPhysicalDevice, pProperties: *mut VkPhysicalDeviceProperties) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceQueueFamilyProperties.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceQueueFamilyProperties.html>
 	fn vkGetPhysicalDeviceQueueFamilyProperties(&self, physicalDevice: VkPhysicalDevice, pQueueFamilyPropertyCount: *mut uint32_t, pQueueFamilyProperties: *mut VkQueueFamilyProperties) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceMemoryProperties.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceMemoryProperties.html>
 	fn vkGetPhysicalDeviceMemoryProperties(&self, physicalDevice: VkPhysicalDevice, pMemoryProperties: *mut VkPhysicalDeviceMemoryProperties) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetInstanceProcAddr.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetInstanceProcAddr.html>
 	fn vkGetInstanceProcAddr(&self, instance: VkInstance, pName: *const i8) -> Result<PFN_vkVoidFunction>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDeviceProcAddr.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDeviceProcAddr.html>
 	fn vkGetDeviceProcAddr(&self, device: VkDevice, pName: *const i8) -> Result<PFN_vkVoidFunction>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateDevice.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateDevice.html>
 	fn vkCreateDevice(&self, physicalDevice: VkPhysicalDevice, pCreateInfo: *const VkDeviceCreateInfo, pAllocator: *const VkAllocationCallbacks, pDevice: *mut VkDevice) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroyDevice.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroyDevice.html>
 	fn vkDestroyDevice(&self, device: VkDevice, pAllocator: *const VkAllocationCallbacks) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkEnumerateInstanceExtensionProperties.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkEnumerateInstanceExtensionProperties.html>
 	fn vkEnumerateInstanceExtensionProperties(&self, pLayerName: *const i8, pPropertyCount: *mut uint32_t, pProperties: *mut VkExtensionProperties) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkEnumerateDeviceExtensionProperties.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkEnumerateDeviceExtensionProperties.html>
 	fn vkEnumerateDeviceExtensionProperties(&self, physicalDevice: VkPhysicalDevice, pLayerName: *const i8, pPropertyCount: *mut uint32_t, pProperties: *mut VkExtensionProperties) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkEnumerateInstanceLayerProperties.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkEnumerateInstanceLayerProperties.html>
 	fn vkEnumerateInstanceLayerProperties(&self, pPropertyCount: *mut uint32_t, pProperties: *mut VkLayerProperties) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkEnumerateDeviceLayerProperties.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkEnumerateDeviceLayerProperties.html>
 	fn vkEnumerateDeviceLayerProperties(&self, physicalDevice: VkPhysicalDevice, pPropertyCount: *mut uint32_t, pProperties: *mut VkLayerProperties) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDeviceQueue.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDeviceQueue.html>
 	fn vkGetDeviceQueue(&self, device: VkDevice, queueFamilyIndex: u32, queueIndex: u32, pQueue: *mut VkQueue) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkQueueSubmit.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkQueueSubmit.html>
 	fn vkQueueSubmit(&self, queue: VkQueue, submitCount: u32, pSubmits: *const VkSubmitInfo, fence: VkFence) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkQueueWaitIdle.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkQueueWaitIdle.html>
 	fn vkQueueWaitIdle(&self, queue: VkQueue) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDeviceWaitIdle.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDeviceWaitIdle.html>
 	fn vkDeviceWaitIdle(&self, device: VkDevice) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkAllocateMemory.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkAllocateMemory.html>
 	fn vkAllocateMemory(&self, device: VkDevice, pAllocateInfo: *const VkMemoryAllocateInfo, pAllocator: *const VkAllocationCallbacks, pMemory: *mut VkDeviceMemory) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkFreeMemory.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkFreeMemory.html>
 	fn vkFreeMemory(&self, device: VkDevice, memory: VkDeviceMemory, pAllocator: *const VkAllocationCallbacks) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkMapMemory.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkMapMemory.html>
 	fn vkMapMemory(&self, device: VkDevice, memory: VkDeviceMemory, offset: VkDeviceSize, size: VkDeviceSize, flags: VkMemoryMapFlags, ppData: *mut *mut c_void) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkUnmapMemory.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkUnmapMemory.html>
 	fn vkUnmapMemory(&self, device: VkDevice, memory: VkDeviceMemory) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkFlushMappedMemoryRanges.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkFlushMappedMemoryRanges.html>
 	fn vkFlushMappedMemoryRanges(&self, device: VkDevice, memoryRangeCount: u32, pMemoryRanges: *const VkMappedMemoryRange) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkInvalidateMappedMemoryRanges.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkInvalidateMappedMemoryRanges.html>
 	fn vkInvalidateMappedMemoryRanges(&self, device: VkDevice, memoryRangeCount: u32, pMemoryRanges: *const VkMappedMemoryRange) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDeviceMemoryCommitment.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDeviceMemoryCommitment.html>
 	fn vkGetDeviceMemoryCommitment(&self, device: VkDevice, memory: VkDeviceMemory, pCommittedMemoryInBytes: *mut VkDeviceSize) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkBindBufferMemory.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkBindBufferMemory.html>
 	fn vkBindBufferMemory(&self, device: VkDevice, buffer: VkBuffer, memory: VkDeviceMemory, memoryOffset: VkDeviceSize) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkBindImageMemory.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkBindImageMemory.html>
 	fn vkBindImageMemory(&self, device: VkDevice, image: VkImage, memory: VkDeviceMemory, memoryOffset: VkDeviceSize) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetBufferMemoryRequirements.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetBufferMemoryRequirements.html>
 	fn vkGetBufferMemoryRequirements(&self, device: VkDevice, buffer: VkBuffer, pMemoryRequirements: *mut VkMemoryRequirements) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetImageMemoryRequirements.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetImageMemoryRequirements.html>
 	fn vkGetImageMemoryRequirements(&self, device: VkDevice, image: VkImage, pMemoryRequirements: *mut VkMemoryRequirements) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetImageSparseMemoryRequirements.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetImageSparseMemoryRequirements.html>
 	fn vkGetImageSparseMemoryRequirements(&self, device: VkDevice, image: VkImage, pSparseMemoryRequirementCount: *mut uint32_t, pSparseMemoryRequirements: *mut VkSparseImageMemoryRequirements) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceSparseImageFormatProperties.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceSparseImageFormatProperties.html>
 	fn vkGetPhysicalDeviceSparseImageFormatProperties(&self, physicalDevice: VkPhysicalDevice, format: VkFormat, type_: VkImageType, samples: VkSampleCountFlagBits, usage: VkImageUsageFlags, tiling: VkImageTiling, pPropertyCount: *mut uint32_t, pProperties: *mut VkSparseImageFormatProperties) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkQueueBindSparse.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkQueueBindSparse.html>
 	fn vkQueueBindSparse(&self, queue: VkQueue, bindInfoCount: u32, pBindInfo: *const VkBindSparseInfo, fence: VkFence) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateFence.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateFence.html>
 	fn vkCreateFence(&self, device: VkDevice, pCreateInfo: *const VkFenceCreateInfo, pAllocator: *const VkAllocationCallbacks, pFence: *mut VkFence) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroyFence.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroyFence.html>
 	fn vkDestroyFence(&self, device: VkDevice, fence: VkFence, pAllocator: *const VkAllocationCallbacks) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkResetFences.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkResetFences.html>
 	fn vkResetFences(&self, device: VkDevice, fenceCount: u32, pFences: *const VkFence) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetFenceStatus.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetFenceStatus.html>
 	fn vkGetFenceStatus(&self, device: VkDevice, fence: VkFence) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkWaitForFences.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkWaitForFences.html>
 	fn vkWaitForFences(&self, device: VkDevice, fenceCount: u32, pFences: *const VkFence, waitAll: VkBool32, timeout: u64) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateSemaphore.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateSemaphore.html>
 	fn vkCreateSemaphore(&self, device: VkDevice, pCreateInfo: *const VkSemaphoreCreateInfo, pAllocator: *const VkAllocationCallbacks, pSemaphore: *mut VkSemaphore) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroySemaphore.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroySemaphore.html>
 	fn vkDestroySemaphore(&self, device: VkDevice, semaphore: VkSemaphore, pAllocator: *const VkAllocationCallbacks) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateEvent.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateEvent.html>
 	fn vkCreateEvent(&self, device: VkDevice, pCreateInfo: *const VkEventCreateInfo, pAllocator: *const VkAllocationCallbacks, pEvent: *mut VkEvent) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroyEvent.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroyEvent.html>
 	fn vkDestroyEvent(&self, device: VkDevice, event: VkEvent, pAllocator: *const VkAllocationCallbacks) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetEventStatus.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetEventStatus.html>
 	fn vkGetEventStatus(&self, device: VkDevice, event: VkEvent) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkSetEvent.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkSetEvent.html>
 	fn vkSetEvent(&self, device: VkDevice, event: VkEvent) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkResetEvent.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkResetEvent.html>
 	fn vkResetEvent(&self, device: VkDevice, event: VkEvent) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateQueryPool.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateQueryPool.html>
 	fn vkCreateQueryPool(&self, device: VkDevice, pCreateInfo: *const VkQueryPoolCreateInfo, pAllocator: *const VkAllocationCallbacks, pQueryPool: *mut VkQueryPool) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroyQueryPool.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroyQueryPool.html>
 	fn vkDestroyQueryPool(&self, device: VkDevice, queryPool: VkQueryPool, pAllocator: *const VkAllocationCallbacks) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetQueryPoolResults.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetQueryPoolResults.html>
 	fn vkGetQueryPoolResults(&self, device: VkDevice, queryPool: VkQueryPool, firstQuery: u32, queryCount: u32, dataSize: usize, pData: *mut c_void, stride: VkDeviceSize, flags: VkQueryResultFlags) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateBuffer.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateBuffer.html>
 	fn vkCreateBuffer(&self, device: VkDevice, pCreateInfo: *const VkBufferCreateInfo, pAllocator: *const VkAllocationCallbacks, pBuffer: *mut VkBuffer) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroyBuffer.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroyBuffer.html>
 	fn vkDestroyBuffer(&self, device: VkDevice, buffer: VkBuffer, pAllocator: *const VkAllocationCallbacks) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateBufferView.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateBufferView.html>
 	fn vkCreateBufferView(&self, device: VkDevice, pCreateInfo: *const VkBufferViewCreateInfo, pAllocator: *const VkAllocationCallbacks, pView: *mut VkBufferView) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroyBufferView.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroyBufferView.html>
 	fn vkDestroyBufferView(&self, device: VkDevice, bufferView: VkBufferView, pAllocator: *const VkAllocationCallbacks) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateImage.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateImage.html>
 	fn vkCreateImage(&self, device: VkDevice, pCreateInfo: *const VkImageCreateInfo, pAllocator: *const VkAllocationCallbacks, pImage: *mut VkImage) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroyImage.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroyImage.html>
 	fn vkDestroyImage(&self, device: VkDevice, image: VkImage, pAllocator: *const VkAllocationCallbacks) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetImageSubresourceLayout.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetImageSubresourceLayout.html>
 	fn vkGetImageSubresourceLayout(&self, device: VkDevice, image: VkImage, pSubresource: *const VkImageSubresource, pLayout: *mut VkSubresourceLayout) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateImageView.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateImageView.html>
 	fn vkCreateImageView(&self, device: VkDevice, pCreateInfo: *const VkImageViewCreateInfo, pAllocator: *const VkAllocationCallbacks, pView: *mut VkImageView) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroyImageView.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroyImageView.html>
 	fn vkDestroyImageView(&self, device: VkDevice, imageView: VkImageView, pAllocator: *const VkAllocationCallbacks) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateShaderModule.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateShaderModule.html>
 	fn vkCreateShaderModule(&self, device: VkDevice, pCreateInfo: *const VkShaderModuleCreateInfo, pAllocator: *const VkAllocationCallbacks, pShaderModule: *mut VkShaderModule) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroyShaderModule.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroyShaderModule.html>
 	fn vkDestroyShaderModule(&self, device: VkDevice, shaderModule: VkShaderModule, pAllocator: *const VkAllocationCallbacks) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreatePipelineCache.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreatePipelineCache.html>
 	fn vkCreatePipelineCache(&self, device: VkDevice, pCreateInfo: *const VkPipelineCacheCreateInfo, pAllocator: *const VkAllocationCallbacks, pPipelineCache: *mut VkPipelineCache) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroyPipelineCache.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroyPipelineCache.html>
 	fn vkDestroyPipelineCache(&self, device: VkDevice, pipelineCache: VkPipelineCache, pAllocator: *const VkAllocationCallbacks) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPipelineCacheData.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPipelineCacheData.html>
 	fn vkGetPipelineCacheData(&self, device: VkDevice, pipelineCache: VkPipelineCache, pDataSize: *mut size_t, pData: *mut c_void) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkMergePipelineCaches.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkMergePipelineCaches.html>
 	fn vkMergePipelineCaches(&self, device: VkDevice, dstCache: VkPipelineCache, srcCacheCount: u32, pSrcCaches: *const VkPipelineCache) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateGraphicsPipelines.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateGraphicsPipelines.html>
 	fn vkCreateGraphicsPipelines(&self, device: VkDevice, pipelineCache: VkPipelineCache, createInfoCount: u32, pCreateInfos: *const VkGraphicsPipelineCreateInfo, pAllocator: *const VkAllocationCallbacks, pPipelines: *mut VkPipeline) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateComputePipelines.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateComputePipelines.html>
 	fn vkCreateComputePipelines(&self, device: VkDevice, pipelineCache: VkPipelineCache, createInfoCount: u32, pCreateInfos: *const VkComputePipelineCreateInfo, pAllocator: *const VkAllocationCallbacks, pPipelines: *mut VkPipeline) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroyPipeline.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroyPipeline.html>
 	fn vkDestroyPipeline(&self, device: VkDevice, pipeline: VkPipeline, pAllocator: *const VkAllocationCallbacks) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreatePipelineLayout.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreatePipelineLayout.html>
 	fn vkCreatePipelineLayout(&self, device: VkDevice, pCreateInfo: *const VkPipelineLayoutCreateInfo, pAllocator: *const VkAllocationCallbacks, pPipelineLayout: *mut VkPipelineLayout) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroyPipelineLayout.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroyPipelineLayout.html>
 	fn vkDestroyPipelineLayout(&self, device: VkDevice, pipelineLayout: VkPipelineLayout, pAllocator: *const VkAllocationCallbacks) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateSampler.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateSampler.html>
 	fn vkCreateSampler(&self, device: VkDevice, pCreateInfo: *const VkSamplerCreateInfo, pAllocator: *const VkAllocationCallbacks, pSampler: *mut VkSampler) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroySampler.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroySampler.html>
 	fn vkDestroySampler(&self, device: VkDevice, sampler: VkSampler, pAllocator: *const VkAllocationCallbacks) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateDescriptorSetLayout.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateDescriptorSetLayout.html>
 	fn vkCreateDescriptorSetLayout(&self, device: VkDevice, pCreateInfo: *const VkDescriptorSetLayoutCreateInfo, pAllocator: *const VkAllocationCallbacks, pSetLayout: *mut VkDescriptorSetLayout) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroyDescriptorSetLayout.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroyDescriptorSetLayout.html>
 	fn vkDestroyDescriptorSetLayout(&self, device: VkDevice, descriptorSetLayout: VkDescriptorSetLayout, pAllocator: *const VkAllocationCallbacks) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateDescriptorPool.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateDescriptorPool.html>
 	fn vkCreateDescriptorPool(&self, device: VkDevice, pCreateInfo: *const VkDescriptorPoolCreateInfo, pAllocator: *const VkAllocationCallbacks, pDescriptorPool: *mut VkDescriptorPool) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroyDescriptorPool.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroyDescriptorPool.html>
 	fn vkDestroyDescriptorPool(&self, device: VkDevice, descriptorPool: VkDescriptorPool, pAllocator: *const VkAllocationCallbacks) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkResetDescriptorPool.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkResetDescriptorPool.html>
 	fn vkResetDescriptorPool(&self, device: VkDevice, descriptorPool: VkDescriptorPool, flags: VkDescriptorPoolResetFlags) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkAllocateDescriptorSets.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkAllocateDescriptorSets.html>
 	fn vkAllocateDescriptorSets(&self, device: VkDevice, pAllocateInfo: *const VkDescriptorSetAllocateInfo, pDescriptorSets: *mut VkDescriptorSet) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkFreeDescriptorSets.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkFreeDescriptorSets.html>
 	fn vkFreeDescriptorSets(&self, device: VkDevice, descriptorPool: VkDescriptorPool, descriptorSetCount: u32, pDescriptorSets: *const VkDescriptorSet) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkUpdateDescriptorSets.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkUpdateDescriptorSets.html>
 	fn vkUpdateDescriptorSets(&self, device: VkDevice, descriptorWriteCount: u32, pDescriptorWrites: *const VkWriteDescriptorSet, descriptorCopyCount: u32, pDescriptorCopies: *const VkCopyDescriptorSet) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateFramebuffer.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateFramebuffer.html>
 	fn vkCreateFramebuffer(&self, device: VkDevice, pCreateInfo: *const VkFramebufferCreateInfo, pAllocator: *const VkAllocationCallbacks, pFramebuffer: *mut VkFramebuffer) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroyFramebuffer.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroyFramebuffer.html>
 	fn vkDestroyFramebuffer(&self, device: VkDevice, framebuffer: VkFramebuffer, pAllocator: *const VkAllocationCallbacks) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateRenderPass.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateRenderPass.html>
 	fn vkCreateRenderPass(&self, device: VkDevice, pCreateInfo: *const VkRenderPassCreateInfo, pAllocator: *const VkAllocationCallbacks, pRenderPass: *mut VkRenderPass) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroyRenderPass.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroyRenderPass.html>
 	fn vkDestroyRenderPass(&self, device: VkDevice, renderPass: VkRenderPass, pAllocator: *const VkAllocationCallbacks) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetRenderAreaGranularity.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetRenderAreaGranularity.html>
 	fn vkGetRenderAreaGranularity(&self, device: VkDevice, renderPass: VkRenderPass, pGranularity: *mut VkExtent2D) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateCommandPool.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateCommandPool.html>
 	fn vkCreateCommandPool(&self, device: VkDevice, pCreateInfo: *const VkCommandPoolCreateInfo, pAllocator: *const VkAllocationCallbacks, pCommandPool: *mut VkCommandPool) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroyCommandPool.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroyCommandPool.html>
 	fn vkDestroyCommandPool(&self, device: VkDevice, commandPool: VkCommandPool, pAllocator: *const VkAllocationCallbacks) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkResetCommandPool.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkResetCommandPool.html>
 	fn vkResetCommandPool(&self, device: VkDevice, commandPool: VkCommandPool, flags: VkCommandPoolResetFlags) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkAllocateCommandBuffers.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkAllocateCommandBuffers.html>
 	fn vkAllocateCommandBuffers(&self, device: VkDevice, pAllocateInfo: *const VkCommandBufferAllocateInfo, pCommandBuffers: *mut VkCommandBuffer) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkFreeCommandBuffers.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkFreeCommandBuffers.html>
 	fn vkFreeCommandBuffers(&self, device: VkDevice, commandPool: VkCommandPool, commandBufferCount: u32, pCommandBuffers: *const VkCommandBuffer) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkBeginCommandBuffer.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkBeginCommandBuffer.html>
 	fn vkBeginCommandBuffer(&self, commandBuffer: VkCommandBuffer, pBeginInfo: *const VkCommandBufferBeginInfo) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkEndCommandBuffer.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkEndCommandBuffer.html>
 	fn vkEndCommandBuffer(&self, commandBuffer: VkCommandBuffer) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkResetCommandBuffer.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkResetCommandBuffer.html>
 	fn vkResetCommandBuffer(&self, commandBuffer: VkCommandBuffer, flags: VkCommandBufferResetFlags) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdBindPipeline.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdBindPipeline.html>
 	fn vkCmdBindPipeline(&self, commandBuffer: VkCommandBuffer, pipelineBindPoint: VkPipelineBindPoint, pipeline: VkPipeline) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetViewport.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetViewport.html>
 	fn vkCmdSetViewport(&self, commandBuffer: VkCommandBuffer, firstViewport: u32, viewportCount: u32, pViewports: *const VkViewport) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetScissor.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetScissor.html>
 	fn vkCmdSetScissor(&self, commandBuffer: VkCommandBuffer, firstScissor: u32, scissorCount: u32, pScissors: *const VkRect2D) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetLineWidth.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetLineWidth.html>
 	fn vkCmdSetLineWidth(&self, commandBuffer: VkCommandBuffer, lineWidth: f32) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetDepthBias.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetDepthBias.html>
 	fn vkCmdSetDepthBias(&self, commandBuffer: VkCommandBuffer, depthBiasConstantFactor: f32, depthBiasClamp: f32, depthBiasSlopeFactor: f32) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetBlendConstants.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetBlendConstants.html>
 	fn vkCmdSetBlendConstants(&self, commandBuffer: VkCommandBuffer, blendConstants: &[float; 4 as usize]) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetDepthBounds.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetDepthBounds.html>
 	fn vkCmdSetDepthBounds(&self, commandBuffer: VkCommandBuffer, minDepthBounds: f32, maxDepthBounds: f32) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetStencilCompareMask.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetStencilCompareMask.html>
 	fn vkCmdSetStencilCompareMask(&self, commandBuffer: VkCommandBuffer, faceMask: VkStencilFaceFlags, compareMask: u32) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetStencilWriteMask.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetStencilWriteMask.html>
 	fn vkCmdSetStencilWriteMask(&self, commandBuffer: VkCommandBuffer, faceMask: VkStencilFaceFlags, writeMask: u32) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetStencilReference.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetStencilReference.html>
 	fn vkCmdSetStencilReference(&self, commandBuffer: VkCommandBuffer, faceMask: VkStencilFaceFlags, reference: u32) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdBindDescriptorSets.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdBindDescriptorSets.html>
 	fn vkCmdBindDescriptorSets(&self, commandBuffer: VkCommandBuffer, pipelineBindPoint: VkPipelineBindPoint, layout: VkPipelineLayout, firstSet: u32, descriptorSetCount: u32, pDescriptorSets: *const VkDescriptorSet, dynamicOffsetCount: u32, pDynamicOffsets: *const uint32_t) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdBindIndexBuffer.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdBindIndexBuffer.html>
 	fn vkCmdBindIndexBuffer(&self, commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize, indexType: VkIndexType) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdBindVertexBuffers.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdBindVertexBuffers.html>
 	fn vkCmdBindVertexBuffers(&self, commandBuffer: VkCommandBuffer, firstBinding: u32, bindingCount: u32, pBuffers: *const VkBuffer, pOffsets: *const VkDeviceSize) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdDraw.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdDraw.html>
 	fn vkCmdDraw(&self, commandBuffer: VkCommandBuffer, vertexCount: u32, instanceCount: u32, firstVertex: u32, firstInstance: u32) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdDrawIndexed.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdDrawIndexed.html>
 	fn vkCmdDrawIndexed(&self, commandBuffer: VkCommandBuffer, indexCount: u32, instanceCount: u32, firstIndex: u32, vertexOffset: i32, firstInstance: u32) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdDrawIndirect.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdDrawIndirect.html>
 	fn vkCmdDrawIndirect(&self, commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize, drawCount: u32, stride: u32) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdDrawIndexedIndirect.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdDrawIndexedIndirect.html>
 	fn vkCmdDrawIndexedIndirect(&self, commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize, drawCount: u32, stride: u32) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdDispatch.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdDispatch.html>
 	fn vkCmdDispatch(&self, commandBuffer: VkCommandBuffer, groupCountX: u32, groupCountY: u32, groupCountZ: u32) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdDispatchIndirect.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdDispatchIndirect.html>
 	fn vkCmdDispatchIndirect(&self, commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdCopyBuffer.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdCopyBuffer.html>
 	fn vkCmdCopyBuffer(&self, commandBuffer: VkCommandBuffer, srcBuffer: VkBuffer, dstBuffer: VkBuffer, regionCount: u32, pRegions: *const VkBufferCopy) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdCopyImage.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdCopyImage.html>
 	fn vkCmdCopyImage(&self, commandBuffer: VkCommandBuffer, srcImage: VkImage, srcImageLayout: VkImageLayout, dstImage: VkImage, dstImageLayout: VkImageLayout, regionCount: u32, pRegions: *const VkImageCopy) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdBlitImage.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdBlitImage.html>
 	fn vkCmdBlitImage(&self, commandBuffer: VkCommandBuffer, srcImage: VkImage, srcImageLayout: VkImageLayout, dstImage: VkImage, dstImageLayout: VkImageLayout, regionCount: u32, pRegions: *const VkImageBlit, filter: VkFilter) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdCopyBufferToImage.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdCopyBufferToImage.html>
 	fn vkCmdCopyBufferToImage(&self, commandBuffer: VkCommandBuffer, srcBuffer: VkBuffer, dstImage: VkImage, dstImageLayout: VkImageLayout, regionCount: u32, pRegions: *const VkBufferImageCopy) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdCopyImageToBuffer.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdCopyImageToBuffer.html>
 	fn vkCmdCopyImageToBuffer(&self, commandBuffer: VkCommandBuffer, srcImage: VkImage, srcImageLayout: VkImageLayout, dstBuffer: VkBuffer, regionCount: u32, pRegions: *const VkBufferImageCopy) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdUpdateBuffer.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdUpdateBuffer.html>
 	fn vkCmdUpdateBuffer(&self, commandBuffer: VkCommandBuffer, dstBuffer: VkBuffer, dstOffset: VkDeviceSize, dataSize: VkDeviceSize, pData: *const c_void) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdFillBuffer.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdFillBuffer.html>
 	fn vkCmdFillBuffer(&self, commandBuffer: VkCommandBuffer, dstBuffer: VkBuffer, dstOffset: VkDeviceSize, size: VkDeviceSize, data: u32) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdClearColorImage.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdClearColorImage.html>
 	fn vkCmdClearColorImage(&self, commandBuffer: VkCommandBuffer, image: VkImage, imageLayout: VkImageLayout, pColor: *const VkClearColorValue, rangeCount: u32, pRanges: *const VkImageSubresourceRange) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdClearDepthStencilImage.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdClearDepthStencilImage.html>
 	fn vkCmdClearDepthStencilImage(&self, commandBuffer: VkCommandBuffer, image: VkImage, imageLayout: VkImageLayout, pDepthStencil: *const VkClearDepthStencilValue, rangeCount: u32, pRanges: *const VkImageSubresourceRange) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdClearAttachments.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdClearAttachments.html>
 	fn vkCmdClearAttachments(&self, commandBuffer: VkCommandBuffer, attachmentCount: u32, pAttachments: *const VkClearAttachment, rectCount: u32, pRects: *const VkClearRect) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdResolveImage.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdResolveImage.html>
 	fn vkCmdResolveImage(&self, commandBuffer: VkCommandBuffer, srcImage: VkImage, srcImageLayout: VkImageLayout, dstImage: VkImage, dstImageLayout: VkImageLayout, regionCount: u32, pRegions: *const VkImageResolve) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetEvent.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetEvent.html>
 	fn vkCmdSetEvent(&self, commandBuffer: VkCommandBuffer, event: VkEvent, stageMask: VkPipelineStageFlags) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdResetEvent.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdResetEvent.html>
 	fn vkCmdResetEvent(&self, commandBuffer: VkCommandBuffer, event: VkEvent, stageMask: VkPipelineStageFlags) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdWaitEvents.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdWaitEvents.html>
 	fn vkCmdWaitEvents(&self, commandBuffer: VkCommandBuffer, eventCount: u32, pEvents: *const VkEvent, srcStageMask: VkPipelineStageFlags, dstStageMask: VkPipelineStageFlags, memoryBarrierCount: u32, pMemoryBarriers: *const VkMemoryBarrier, bufferMemoryBarrierCount: u32, pBufferMemoryBarriers: *const VkBufferMemoryBarrier, imageMemoryBarrierCount: u32, pImageMemoryBarriers: *const VkImageMemoryBarrier) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdPipelineBarrier.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdPipelineBarrier.html>
 	fn vkCmdPipelineBarrier(&self, commandBuffer: VkCommandBuffer, srcStageMask: VkPipelineStageFlags, dstStageMask: VkPipelineStageFlags, dependencyFlags: VkDependencyFlags, memoryBarrierCount: u32, pMemoryBarriers: *const VkMemoryBarrier, bufferMemoryBarrierCount: u32, pBufferMemoryBarriers: *const VkBufferMemoryBarrier, imageMemoryBarrierCount: u32, pImageMemoryBarriers: *const VkImageMemoryBarrier) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdBeginQuery.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdBeginQuery.html>
 	fn vkCmdBeginQuery(&self, commandBuffer: VkCommandBuffer, queryPool: VkQueryPool, query: u32, flags: VkQueryControlFlags) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdEndQuery.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdEndQuery.html>
 	fn vkCmdEndQuery(&self, commandBuffer: VkCommandBuffer, queryPool: VkQueryPool, query: u32) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdResetQueryPool.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdResetQueryPool.html>
 	fn vkCmdResetQueryPool(&self, commandBuffer: VkCommandBuffer, queryPool: VkQueryPool, firstQuery: u32, queryCount: u32) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdWriteTimestamp.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdWriteTimestamp.html>
 	fn vkCmdWriteTimestamp(&self, commandBuffer: VkCommandBuffer, pipelineStage: VkPipelineStageFlagBits, queryPool: VkQueryPool, query: u32) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdCopyQueryPoolResults.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdCopyQueryPoolResults.html>
 	fn vkCmdCopyQueryPoolResults(&self, commandBuffer: VkCommandBuffer, queryPool: VkQueryPool, firstQuery: u32, queryCount: u32, dstBuffer: VkBuffer, dstOffset: VkDeviceSize, stride: VkDeviceSize, flags: VkQueryResultFlags) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdPushConstants.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdPushConstants.html>
 	fn vkCmdPushConstants(&self, commandBuffer: VkCommandBuffer, layout: VkPipelineLayout, stageFlags: VkShaderStageFlags, offset: u32, size: u32, pValues: *const c_void) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdBeginRenderPass.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdBeginRenderPass.html>
 	fn vkCmdBeginRenderPass(&self, commandBuffer: VkCommandBuffer, pRenderPassBegin: *const VkRenderPassBeginInfo, contents: VkSubpassContents) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdNextSubpass.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdNextSubpass.html>
 	fn vkCmdNextSubpass(&self, commandBuffer: VkCommandBuffer, contents: VkSubpassContents) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdEndRenderPass.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdEndRenderPass.html>
 	fn vkCmdEndRenderPass(&self, commandBuffer: VkCommandBuffer) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdExecuteCommands.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdExecuteCommands.html>
 	fn vkCmdExecuteCommands(&self, commandBuffer: VkCommandBuffer, commandBufferCount: u32, pCommandBuffers: *const VkCommandBuffer) -> Result<()>;
 }
 /// struct for `VK_VERSION_1_0`
@@ -11465,61 +11466,61 @@ extern "system" fn dummy_vkGetDescriptorSetLayoutSupport(_: VkDevice, _: *const 
 /// trait for `VK_VERSION_1_1`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_VERSION_1_1.html>
 pub trait VK_VERSION_1_1: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkEnumerateInstanceVersion.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkEnumerateInstanceVersion.html>
 	fn vkEnumerateInstanceVersion(&self, pApiVersion: *mut uint32_t) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkBindBufferMemory2.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkBindBufferMemory2.html>
 	fn vkBindBufferMemory2(&self, device: VkDevice, bindInfoCount: u32, pBindInfos: *const VkBindBufferMemoryInfo) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkBindImageMemory2.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkBindImageMemory2.html>
 	fn vkBindImageMemory2(&self, device: VkDevice, bindInfoCount: u32, pBindInfos: *const VkBindImageMemoryInfo) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDeviceGroupPeerMemoryFeatures.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDeviceGroupPeerMemoryFeatures.html>
 	fn vkGetDeviceGroupPeerMemoryFeatures(&self, device: VkDevice, heapIndex: u32, localDeviceIndex: u32, remoteDeviceIndex: u32, pPeerMemoryFeatures: *mut VkPeerMemoryFeatureFlags) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetDeviceMask.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetDeviceMask.html>
 	fn vkCmdSetDeviceMask(&self, commandBuffer: VkCommandBuffer, deviceMask: u32) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdDispatchBase.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdDispatchBase.html>
 	fn vkCmdDispatchBase(&self, commandBuffer: VkCommandBuffer, baseGroupX: u32, baseGroupY: u32, baseGroupZ: u32, groupCountX: u32, groupCountY: u32, groupCountZ: u32) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkEnumeratePhysicalDeviceGroups.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkEnumeratePhysicalDeviceGroups.html>
 	fn vkEnumeratePhysicalDeviceGroups(&self, instance: VkInstance, pPhysicalDeviceGroupCount: *mut uint32_t, pPhysicalDeviceGroupProperties: *mut VkPhysicalDeviceGroupProperties) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetImageMemoryRequirements2.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetImageMemoryRequirements2.html>
 	fn vkGetImageMemoryRequirements2(&self, device: VkDevice, pInfo: *const VkImageMemoryRequirementsInfo2, pMemoryRequirements: *mut VkMemoryRequirements2) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetBufferMemoryRequirements2.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetBufferMemoryRequirements2.html>
 	fn vkGetBufferMemoryRequirements2(&self, device: VkDevice, pInfo: *const VkBufferMemoryRequirementsInfo2, pMemoryRequirements: *mut VkMemoryRequirements2) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetImageSparseMemoryRequirements2.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetImageSparseMemoryRequirements2.html>
 	fn vkGetImageSparseMemoryRequirements2(&self, device: VkDevice, pInfo: *const VkImageSparseMemoryRequirementsInfo2, pSparseMemoryRequirementCount: *mut uint32_t, pSparseMemoryRequirements: *mut VkSparseImageMemoryRequirements2) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceFeatures2.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceFeatures2.html>
 	fn vkGetPhysicalDeviceFeatures2(&self, physicalDevice: VkPhysicalDevice, pFeatures: *mut VkPhysicalDeviceFeatures2) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceProperties2.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceProperties2.html>
 	fn vkGetPhysicalDeviceProperties2(&self, physicalDevice: VkPhysicalDevice, pProperties: *mut VkPhysicalDeviceProperties2) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceFormatProperties2.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceFormatProperties2.html>
 	fn vkGetPhysicalDeviceFormatProperties2(&self, physicalDevice: VkPhysicalDevice, format: VkFormat, pFormatProperties: *mut VkFormatProperties2) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceImageFormatProperties2.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceImageFormatProperties2.html>
 	fn vkGetPhysicalDeviceImageFormatProperties2(&self, physicalDevice: VkPhysicalDevice, pImageFormatInfo: *const VkPhysicalDeviceImageFormatInfo2, pImageFormatProperties: *mut VkImageFormatProperties2) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceQueueFamilyProperties2.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceQueueFamilyProperties2.html>
 	fn vkGetPhysicalDeviceQueueFamilyProperties2(&self, physicalDevice: VkPhysicalDevice, pQueueFamilyPropertyCount: *mut uint32_t, pQueueFamilyProperties: *mut VkQueueFamilyProperties2) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceMemoryProperties2.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceMemoryProperties2.html>
 	fn vkGetPhysicalDeviceMemoryProperties2(&self, physicalDevice: VkPhysicalDevice, pMemoryProperties: *mut VkPhysicalDeviceMemoryProperties2) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceSparseImageFormatProperties2.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceSparseImageFormatProperties2.html>
 	fn vkGetPhysicalDeviceSparseImageFormatProperties2(&self, physicalDevice: VkPhysicalDevice, pFormatInfo: *const VkPhysicalDeviceSparseImageFormatInfo2, pPropertyCount: *mut uint32_t, pProperties: *mut VkSparseImageFormatProperties2) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkTrimCommandPool.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkTrimCommandPool.html>
 	fn vkTrimCommandPool(&self, device: VkDevice, commandPool: VkCommandPool, flags: VkCommandPoolTrimFlags) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDeviceQueue2.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDeviceQueue2.html>
 	fn vkGetDeviceQueue2(&self, device: VkDevice, pQueueInfo: *const VkDeviceQueueInfo2, pQueue: *mut VkQueue) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateSamplerYcbcrConversion.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateSamplerYcbcrConversion.html>
 	fn vkCreateSamplerYcbcrConversion(&self, device: VkDevice, pCreateInfo: *const VkSamplerYcbcrConversionCreateInfo, pAllocator: *const VkAllocationCallbacks, pYcbcrConversion: *mut VkSamplerYcbcrConversion) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroySamplerYcbcrConversion.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroySamplerYcbcrConversion.html>
 	fn vkDestroySamplerYcbcrConversion(&self, device: VkDevice, ycbcrConversion: VkSamplerYcbcrConversion, pAllocator: *const VkAllocationCallbacks) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateDescriptorUpdateTemplate.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateDescriptorUpdateTemplate.html>
 	fn vkCreateDescriptorUpdateTemplate(&self, device: VkDevice, pCreateInfo: *const VkDescriptorUpdateTemplateCreateInfo, pAllocator: *const VkAllocationCallbacks, pDescriptorUpdateTemplate: *mut VkDescriptorUpdateTemplate) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroyDescriptorUpdateTemplate.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroyDescriptorUpdateTemplate.html>
 	fn vkDestroyDescriptorUpdateTemplate(&self, device: VkDevice, descriptorUpdateTemplate: VkDescriptorUpdateTemplate, pAllocator: *const VkAllocationCallbacks) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkUpdateDescriptorSetWithTemplate.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkUpdateDescriptorSetWithTemplate.html>
 	fn vkUpdateDescriptorSetWithTemplate(&self, device: VkDevice, descriptorSet: VkDescriptorSet, descriptorUpdateTemplate: VkDescriptorUpdateTemplate, pData: *const c_void) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceExternalBufferProperties.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceExternalBufferProperties.html>
 	fn vkGetPhysicalDeviceExternalBufferProperties(&self, physicalDevice: VkPhysicalDevice, pExternalBufferInfo: *const VkPhysicalDeviceExternalBufferInfo, pExternalBufferProperties: *mut VkExternalBufferProperties) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceExternalFenceProperties.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceExternalFenceProperties.html>
 	fn vkGetPhysicalDeviceExternalFenceProperties(&self, physicalDevice: VkPhysicalDevice, pExternalFenceInfo: *const VkPhysicalDeviceExternalFenceInfo, pExternalFenceProperties: *mut VkExternalFenceProperties) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceExternalSemaphoreProperties.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceExternalSemaphoreProperties.html>
 	fn vkGetPhysicalDeviceExternalSemaphoreProperties(&self, physicalDevice: VkPhysicalDevice, pExternalSemaphoreInfo: *const VkPhysicalDeviceExternalSemaphoreInfo, pExternalSemaphoreProperties: *mut VkExternalSemaphoreProperties) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDescriptorSetLayoutSupport.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDescriptorSetLayoutSupport.html>
 	fn vkGetDescriptorSetLayoutSupport(&self, device: VkDevice, pCreateInfo: *const VkDescriptorSetLayoutCreateInfo, pSupport: *mut VkDescriptorSetLayoutSupport) -> Result<()>;
 }
 /// struct for `VK_VERSION_1_1`
@@ -12877,31 +12878,31 @@ extern "system" fn dummy_vkGetDeviceMemoryOpaqueCaptureAddress(_: VkDevice, _: *
 /// trait for `VK_VERSION_1_2`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_VERSION_1_2.html>
 pub trait VK_VERSION_1_2: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdDrawIndirectCount.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdDrawIndirectCount.html>
 	fn vkCmdDrawIndirectCount(&self, commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize, countBuffer: VkBuffer, countBufferOffset: VkDeviceSize, maxDrawCount: u32, stride: u32) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdDrawIndexedIndirectCount.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdDrawIndexedIndirectCount.html>
 	fn vkCmdDrawIndexedIndirectCount(&self, commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize, countBuffer: VkBuffer, countBufferOffset: VkDeviceSize, maxDrawCount: u32, stride: u32) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateRenderPass2.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateRenderPass2.html>
 	fn vkCreateRenderPass2(&self, device: VkDevice, pCreateInfo: *const VkRenderPassCreateInfo2, pAllocator: *const VkAllocationCallbacks, pRenderPass: *mut VkRenderPass) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdBeginRenderPass2.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdBeginRenderPass2.html>
 	fn vkCmdBeginRenderPass2(&self, commandBuffer: VkCommandBuffer, pRenderPassBegin: *const VkRenderPassBeginInfo, pSubpassBeginInfo: *const VkSubpassBeginInfo) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdNextSubpass2.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdNextSubpass2.html>
 	fn vkCmdNextSubpass2(&self, commandBuffer: VkCommandBuffer, pSubpassBeginInfo: *const VkSubpassBeginInfo, pSubpassEndInfo: *const VkSubpassEndInfo) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdEndRenderPass2.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdEndRenderPass2.html>
 	fn vkCmdEndRenderPass2(&self, commandBuffer: VkCommandBuffer, pSubpassEndInfo: *const VkSubpassEndInfo) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkResetQueryPool.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkResetQueryPool.html>
 	fn vkResetQueryPool(&self, device: VkDevice, queryPool: VkQueryPool, firstQuery: u32, queryCount: u32) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetSemaphoreCounterValue.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetSemaphoreCounterValue.html>
 	fn vkGetSemaphoreCounterValue(&self, device: VkDevice, semaphore: VkSemaphore, pValue: *mut uint64_t) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkWaitSemaphores.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkWaitSemaphores.html>
 	fn vkWaitSemaphores(&self, device: VkDevice, pWaitInfo: *const VkSemaphoreWaitInfo, timeout: u64) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkSignalSemaphore.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkSignalSemaphore.html>
 	fn vkSignalSemaphore(&self, device: VkDevice, pSignalInfo: *const VkSemaphoreSignalInfo) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetBufferDeviceAddress.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetBufferDeviceAddress.html>
 	fn vkGetBufferDeviceAddress(&self, device: VkDevice, pInfo: *const VkBufferDeviceAddressInfo) -> Result<VkDeviceAddress>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetBufferOpaqueCaptureAddress.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetBufferOpaqueCaptureAddress.html>
 	fn vkGetBufferOpaqueCaptureAddress(&self, device: VkDevice, pInfo: *const VkBufferDeviceAddressInfo) -> Result<u64>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDeviceMemoryOpaqueCaptureAddress.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDeviceMemoryOpaqueCaptureAddress.html>
 	fn vkGetDeviceMemoryOpaqueCaptureAddress(&self, device: VkDevice, pInfo: *const VkDeviceMemoryOpaqueCaptureAddressInfo) -> Result<u64>;
 }
 /// struct for `VK_VERSION_1_2`
@@ -14931,79 +14932,79 @@ extern "system" fn dummy_vkGetDeviceImageSparseMemoryRequirements(_: VkDevice, _
 /// trait for `VK_VERSION_1_3`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_VERSION_1_3.html>
 pub trait VK_VERSION_1_3: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceToolProperties.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceToolProperties.html>
 	fn vkGetPhysicalDeviceToolProperties(&self, physicalDevice: VkPhysicalDevice, pToolCount: *mut uint32_t, pToolProperties: *mut VkPhysicalDeviceToolProperties) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreatePrivateDataSlot.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreatePrivateDataSlot.html>
 	fn vkCreatePrivateDataSlot(&self, device: VkDevice, pCreateInfo: *const VkPrivateDataSlotCreateInfo, pAllocator: *const VkAllocationCallbacks, pPrivateDataSlot: *mut VkPrivateDataSlot) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroyPrivateDataSlot.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroyPrivateDataSlot.html>
 	fn vkDestroyPrivateDataSlot(&self, device: VkDevice, privateDataSlot: VkPrivateDataSlot, pAllocator: *const VkAllocationCallbacks) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkSetPrivateData.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkSetPrivateData.html>
 	fn vkSetPrivateData(&self, device: VkDevice, objectType: VkObjectType, objectHandle: u64, privateDataSlot: VkPrivateDataSlot, data: u64) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPrivateData.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPrivateData.html>
 	fn vkGetPrivateData(&self, device: VkDevice, objectType: VkObjectType, objectHandle: u64, privateDataSlot: VkPrivateDataSlot, pData: *mut uint64_t) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetEvent2.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetEvent2.html>
 	fn vkCmdSetEvent2(&self, commandBuffer: VkCommandBuffer, event: VkEvent, pDependencyInfo: *const VkDependencyInfo) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdResetEvent2.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdResetEvent2.html>
 	fn vkCmdResetEvent2(&self, commandBuffer: VkCommandBuffer, event: VkEvent, stageMask: VkPipelineStageFlags2) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdWaitEvents2.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdWaitEvents2.html>
 	fn vkCmdWaitEvents2(&self, commandBuffer: VkCommandBuffer, eventCount: u32, pEvents: *const VkEvent, pDependencyInfos: *const VkDependencyInfo) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdPipelineBarrier2.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdPipelineBarrier2.html>
 	fn vkCmdPipelineBarrier2(&self, commandBuffer: VkCommandBuffer, pDependencyInfo: *const VkDependencyInfo) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdWriteTimestamp2.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdWriteTimestamp2.html>
 	fn vkCmdWriteTimestamp2(&self, commandBuffer: VkCommandBuffer, stage: VkPipelineStageFlags2, queryPool: VkQueryPool, query: u32) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkQueueSubmit2.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkQueueSubmit2.html>
 	fn vkQueueSubmit2(&self, queue: VkQueue, submitCount: u32, pSubmits: *const VkSubmitInfo2, fence: VkFence) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdCopyBuffer2.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdCopyBuffer2.html>
 	fn vkCmdCopyBuffer2(&self, commandBuffer: VkCommandBuffer, pCopyBufferInfo: *const VkCopyBufferInfo2) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdCopyImage2.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdCopyImage2.html>
 	fn vkCmdCopyImage2(&self, commandBuffer: VkCommandBuffer, pCopyImageInfo: *const VkCopyImageInfo2) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdCopyBufferToImage2.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdCopyBufferToImage2.html>
 	fn vkCmdCopyBufferToImage2(&self, commandBuffer: VkCommandBuffer, pCopyBufferToImageInfo: *const VkCopyBufferToImageInfo2) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdCopyImageToBuffer2.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdCopyImageToBuffer2.html>
 	fn vkCmdCopyImageToBuffer2(&self, commandBuffer: VkCommandBuffer, pCopyImageToBufferInfo: *const VkCopyImageToBufferInfo2) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdBlitImage2.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdBlitImage2.html>
 	fn vkCmdBlitImage2(&self, commandBuffer: VkCommandBuffer, pBlitImageInfo: *const VkBlitImageInfo2) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdResolveImage2.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdResolveImage2.html>
 	fn vkCmdResolveImage2(&self, commandBuffer: VkCommandBuffer, pResolveImageInfo: *const VkResolveImageInfo2) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdBeginRendering.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdBeginRendering.html>
 	fn vkCmdBeginRendering(&self, commandBuffer: VkCommandBuffer, pRenderingInfo: *const VkRenderingInfo) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdEndRendering.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdEndRendering.html>
 	fn vkCmdEndRendering(&self, commandBuffer: VkCommandBuffer) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetCullMode.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetCullMode.html>
 	fn vkCmdSetCullMode(&self, commandBuffer: VkCommandBuffer, cullMode: VkCullModeFlags) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetFrontFace.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetFrontFace.html>
 	fn vkCmdSetFrontFace(&self, commandBuffer: VkCommandBuffer, frontFace: VkFrontFace) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetPrimitiveTopology.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetPrimitiveTopology.html>
 	fn vkCmdSetPrimitiveTopology(&self, commandBuffer: VkCommandBuffer, primitiveTopology: VkPrimitiveTopology) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetViewportWithCount.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetViewportWithCount.html>
 	fn vkCmdSetViewportWithCount(&self, commandBuffer: VkCommandBuffer, viewportCount: u32, pViewports: *const VkViewport) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetScissorWithCount.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetScissorWithCount.html>
 	fn vkCmdSetScissorWithCount(&self, commandBuffer: VkCommandBuffer, scissorCount: u32, pScissors: *const VkRect2D) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdBindVertexBuffers2.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdBindVertexBuffers2.html>
 	fn vkCmdBindVertexBuffers2(&self, commandBuffer: VkCommandBuffer, firstBinding: u32, bindingCount: u32, pBuffers: *const VkBuffer, pOffsets: *const VkDeviceSize, pSizes: *const VkDeviceSize, pStrides: *const VkDeviceSize) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetDepthTestEnable.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetDepthTestEnable.html>
 	fn vkCmdSetDepthTestEnable(&self, commandBuffer: VkCommandBuffer, depthTestEnable: VkBool32) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetDepthWriteEnable.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetDepthWriteEnable.html>
 	fn vkCmdSetDepthWriteEnable(&self, commandBuffer: VkCommandBuffer, depthWriteEnable: VkBool32) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetDepthCompareOp.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetDepthCompareOp.html>
 	fn vkCmdSetDepthCompareOp(&self, commandBuffer: VkCommandBuffer, depthCompareOp: VkCompareOp) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetDepthBoundsTestEnable.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetDepthBoundsTestEnable.html>
 	fn vkCmdSetDepthBoundsTestEnable(&self, commandBuffer: VkCommandBuffer, depthBoundsTestEnable: VkBool32) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetStencilTestEnable.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetStencilTestEnable.html>
 	fn vkCmdSetStencilTestEnable(&self, commandBuffer: VkCommandBuffer, stencilTestEnable: VkBool32) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetStencilOp.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetStencilOp.html>
 	fn vkCmdSetStencilOp(&self, commandBuffer: VkCommandBuffer, faceMask: VkStencilFaceFlags, failOp: VkStencilOp, passOp: VkStencilOp, depthFailOp: VkStencilOp, compareOp: VkCompareOp) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetRasterizerDiscardEnable.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetRasterizerDiscardEnable.html>
 	fn vkCmdSetRasterizerDiscardEnable(&self, commandBuffer: VkCommandBuffer, rasterizerDiscardEnable: VkBool32) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetDepthBiasEnable.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetDepthBiasEnable.html>
 	fn vkCmdSetDepthBiasEnable(&self, commandBuffer: VkCommandBuffer, depthBiasEnable: VkBool32) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetPrimitiveRestartEnable.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetPrimitiveRestartEnable.html>
 	fn vkCmdSetPrimitiveRestartEnable(&self, commandBuffer: VkCommandBuffer, primitiveRestartEnable: VkBool32) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDeviceBufferMemoryRequirements.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDeviceBufferMemoryRequirements.html>
 	fn vkGetDeviceBufferMemoryRequirements(&self, device: VkDevice, pInfo: *const VkDeviceBufferMemoryRequirements, pMemoryRequirements: *mut VkMemoryRequirements2) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDeviceImageMemoryRequirements.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDeviceImageMemoryRequirements.html>
 	fn vkGetDeviceImageMemoryRequirements(&self, device: VkDevice, pInfo: *const VkDeviceImageMemoryRequirements, pMemoryRequirements: *mut VkMemoryRequirements2) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDeviceImageSparseMemoryRequirements.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDeviceImageSparseMemoryRequirements.html>
 	fn vkGetDeviceImageSparseMemoryRequirements(&self, device: VkDevice, pInfo: *const VkDeviceImageMemoryRequirements, pSparseMemoryRequirementCount: *mut uint32_t, pSparseMemoryRequirements: *mut VkSparseImageMemoryRequirements2) -> Result<()>;
 }
 /// struct for `VK_VERSION_1_3`
@@ -16488,43 +16489,43 @@ extern "system" fn dummy_vkTransitionImageLayout(_: VkDevice, _: u32, _: *const 
 /// trait for `VK_VERSION_1_4`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_VERSION_1_4.html>
 pub trait VK_VERSION_1_4: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetLineStipple.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetLineStipple.html>
 	fn vkCmdSetLineStipple(&self, commandBuffer: VkCommandBuffer, lineStippleFactor: u32, lineStipplePattern: u16) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkMapMemory2.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkMapMemory2.html>
 	fn vkMapMemory2(&self, device: VkDevice, pMemoryMapInfo: *const VkMemoryMapInfo, ppData: *mut *mut c_void) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkUnmapMemory2.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkUnmapMemory2.html>
 	fn vkUnmapMemory2(&self, device: VkDevice, pMemoryUnmapInfo: *const VkMemoryUnmapInfo) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdBindIndexBuffer2.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdBindIndexBuffer2.html>
 	fn vkCmdBindIndexBuffer2(&self, commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize, size: VkDeviceSize, indexType: VkIndexType) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetRenderingAreaGranularity.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetRenderingAreaGranularity.html>
 	fn vkGetRenderingAreaGranularity(&self, device: VkDevice, pRenderingAreaInfo: *const VkRenderingAreaInfo, pGranularity: *mut VkExtent2D) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDeviceImageSubresourceLayout.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDeviceImageSubresourceLayout.html>
 	fn vkGetDeviceImageSubresourceLayout(&self, device: VkDevice, pInfo: *const VkDeviceImageSubresourceInfo, pLayout: *mut VkSubresourceLayout2) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetImageSubresourceLayout2.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetImageSubresourceLayout2.html>
 	fn vkGetImageSubresourceLayout2(&self, device: VkDevice, image: VkImage, pSubresource: *const VkImageSubresource2, pLayout: *mut VkSubresourceLayout2) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdPushDescriptorSet.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdPushDescriptorSet.html>
 	fn vkCmdPushDescriptorSet(&self, commandBuffer: VkCommandBuffer, pipelineBindPoint: VkPipelineBindPoint, layout: VkPipelineLayout, set: u32, descriptorWriteCount: u32, pDescriptorWrites: *const VkWriteDescriptorSet) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdPushDescriptorSetWithTemplate.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdPushDescriptorSetWithTemplate.html>
 	fn vkCmdPushDescriptorSetWithTemplate(&self, commandBuffer: VkCommandBuffer, descriptorUpdateTemplate: VkDescriptorUpdateTemplate, layout: VkPipelineLayout, set: u32, pData: *const c_void) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetRenderingAttachmentLocations.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetRenderingAttachmentLocations.html>
 	fn vkCmdSetRenderingAttachmentLocations(&self, commandBuffer: VkCommandBuffer, pLocationInfo: *const VkRenderingAttachmentLocationInfo) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetRenderingInputAttachmentIndices.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetRenderingInputAttachmentIndices.html>
 	fn vkCmdSetRenderingInputAttachmentIndices(&self, commandBuffer: VkCommandBuffer, pInputAttachmentIndexInfo: *const VkRenderingInputAttachmentIndexInfo) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdBindDescriptorSets2.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdBindDescriptorSets2.html>
 	fn vkCmdBindDescriptorSets2(&self, commandBuffer: VkCommandBuffer, pBindDescriptorSetsInfo: *const VkBindDescriptorSetsInfo) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdPushConstants2.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdPushConstants2.html>
 	fn vkCmdPushConstants2(&self, commandBuffer: VkCommandBuffer, pPushConstantsInfo: *const VkPushConstantsInfo) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdPushDescriptorSet2.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdPushDescriptorSet2.html>
 	fn vkCmdPushDescriptorSet2(&self, commandBuffer: VkCommandBuffer, pPushDescriptorSetInfo: *const VkPushDescriptorSetInfo) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdPushDescriptorSetWithTemplate2.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdPushDescriptorSetWithTemplate2.html>
 	fn vkCmdPushDescriptorSetWithTemplate2(&self, commandBuffer: VkCommandBuffer, pPushDescriptorSetWithTemplateInfo: *const VkPushDescriptorSetWithTemplateInfo) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCopyMemoryToImage.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCopyMemoryToImage.html>
 	fn vkCopyMemoryToImage(&self, device: VkDevice, pCopyMemoryToImageInfo: *const VkCopyMemoryToImageInfo) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCopyImageToMemory.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCopyImageToMemory.html>
 	fn vkCopyImageToMemory(&self, device: VkDevice, pCopyImageToMemoryInfo: *const VkCopyImageToMemoryInfo) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCopyImageToImage.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCopyImageToImage.html>
 	fn vkCopyImageToImage(&self, device: VkDevice, pCopyImageToImageInfo: *const VkCopyImageToImageInfo) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkTransitionImageLayout.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkTransitionImageLayout.html>
 	fn vkTransitionImageLayout(&self, device: VkDevice, transitionCount: u32, pTransitions: *const VkHostImageLayoutTransitionInfo) -> Result<()>;
 }
 /// struct for `VK_VERSION_1_4`
@@ -16872,15 +16873,15 @@ extern "system" fn dummy_vkGetPhysicalDeviceSurfacePresentModesKHR(_: VkPhysical
 /// trait for `VK_KHR_surface`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_surface.html>
 pub trait VK_KHR_surface: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroySurfaceKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroySurfaceKHR.html>
 	fn vkDestroySurfaceKHR(&self, instance: VkInstance, surface: VkSurfaceKHR, pAllocator: *const VkAllocationCallbacks) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceSurfaceSupportKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceSurfaceSupportKHR.html>
 	fn vkGetPhysicalDeviceSurfaceSupportKHR(&self, physicalDevice: VkPhysicalDevice, queueFamilyIndex: u32, surface: VkSurfaceKHR, pSupported: *mut VkBool32) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceSurfaceCapabilitiesKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceSurfaceCapabilitiesKHR.html>
 	fn vkGetPhysicalDeviceSurfaceCapabilitiesKHR(&self, physicalDevice: VkPhysicalDevice, surface: VkSurfaceKHR, pSurfaceCapabilities: *mut VkSurfaceCapabilitiesKHR) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceSurfaceFormatsKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceSurfaceFormatsKHR.html>
 	fn vkGetPhysicalDeviceSurfaceFormatsKHR(&self, physicalDevice: VkPhysicalDevice, surface: VkSurfaceKHR, pSurfaceFormatCount: *mut uint32_t, pSurfaceFormats: *mut VkSurfaceFormatKHR) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceSurfacePresentModesKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceSurfacePresentModesKHR.html>
 	fn vkGetPhysicalDeviceSurfacePresentModesKHR(&self, physicalDevice: VkPhysicalDevice, surface: VkSurfaceKHR, pPresentModeCount: *mut uint32_t, pPresentModes: *mut VkPresentModeKHR) -> Result<()>;
 }
 /// struct for `VK_KHR_surface`
@@ -17225,23 +17226,23 @@ extern "system" fn dummy_vkAcquireNextImage2KHR(_: VkDevice, _: *const VkAcquire
 /// trait for `VK_KHR_swapchain`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_swapchain.html>
 pub trait VK_KHR_swapchain: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateSwapchainKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateSwapchainKHR.html>
 	fn vkCreateSwapchainKHR(&self, device: VkDevice, pCreateInfo: *const VkSwapchainCreateInfoKHR, pAllocator: *const VkAllocationCallbacks, pSwapchain: *mut VkSwapchainKHR) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroySwapchainKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroySwapchainKHR.html>
 	fn vkDestroySwapchainKHR(&self, device: VkDevice, swapchain: VkSwapchainKHR, pAllocator: *const VkAllocationCallbacks) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetSwapchainImagesKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetSwapchainImagesKHR.html>
 	fn vkGetSwapchainImagesKHR(&self, device: VkDevice, swapchain: VkSwapchainKHR, pSwapchainImageCount: *mut uint32_t, pSwapchainImages: *mut VkImage) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkAcquireNextImageKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkAcquireNextImageKHR.html>
 	fn vkAcquireNextImageKHR(&self, device: VkDevice, swapchain: VkSwapchainKHR, timeout: u64, semaphore: VkSemaphore, fence: VkFence, pImageIndex: *mut uint32_t) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkQueuePresentKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkQueuePresentKHR.html>
 	fn vkQueuePresentKHR(&self, queue: VkQueue, pPresentInfo: *const VkPresentInfoKHR) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDeviceGroupPresentCapabilitiesKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDeviceGroupPresentCapabilitiesKHR.html>
 	fn vkGetDeviceGroupPresentCapabilitiesKHR(&self, device: VkDevice, pDeviceGroupPresentCapabilities: *mut VkDeviceGroupPresentCapabilitiesKHR) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDeviceGroupSurfacePresentModesKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDeviceGroupSurfacePresentModesKHR.html>
 	fn vkGetDeviceGroupSurfacePresentModesKHR(&self, device: VkDevice, surface: VkSurfaceKHR, pModes: *mut VkDeviceGroupPresentModeFlagsKHR) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDevicePresentRectanglesKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDevicePresentRectanglesKHR.html>
 	fn vkGetPhysicalDevicePresentRectanglesKHR(&self, physicalDevice: VkPhysicalDevice, surface: VkSurfaceKHR, pRectCount: *mut uint32_t, pRects: *mut VkRect2D) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkAcquireNextImage2KHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkAcquireNextImage2KHR.html>
 	fn vkAcquireNextImage2KHR(&self, device: VkDevice, pAcquireInfo: *const VkAcquireNextImageInfoKHR, pImageIndex: *mut uint32_t) -> Result<()>;
 }
 /// struct for `VK_KHR_swapchain`
@@ -17510,19 +17511,19 @@ extern "system" fn dummy_vkCreateDisplayPlaneSurfaceKHR(_: VkInstance, _: *const
 /// trait for `VK_KHR_display`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_display.html>
 pub trait VK_KHR_display: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceDisplayPropertiesKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceDisplayPropertiesKHR.html>
 	fn vkGetPhysicalDeviceDisplayPropertiesKHR(&self, physicalDevice: VkPhysicalDevice, pPropertyCount: *mut uint32_t, pProperties: *mut VkDisplayPropertiesKHR) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceDisplayPlanePropertiesKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceDisplayPlanePropertiesKHR.html>
 	fn vkGetPhysicalDeviceDisplayPlanePropertiesKHR(&self, physicalDevice: VkPhysicalDevice, pPropertyCount: *mut uint32_t, pProperties: *mut VkDisplayPlanePropertiesKHR) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDisplayPlaneSupportedDisplaysKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDisplayPlaneSupportedDisplaysKHR.html>
 	fn vkGetDisplayPlaneSupportedDisplaysKHR(&self, physicalDevice: VkPhysicalDevice, planeIndex: u32, pDisplayCount: *mut uint32_t, pDisplays: *mut VkDisplayKHR) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDisplayModePropertiesKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDisplayModePropertiesKHR.html>
 	fn vkGetDisplayModePropertiesKHR(&self, physicalDevice: VkPhysicalDevice, display: VkDisplayKHR, pPropertyCount: *mut uint32_t, pProperties: *mut VkDisplayModePropertiesKHR) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateDisplayModeKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateDisplayModeKHR.html>
 	fn vkCreateDisplayModeKHR(&self, physicalDevice: VkPhysicalDevice, display: VkDisplayKHR, pCreateInfo: *const VkDisplayModeCreateInfoKHR, pAllocator: *const VkAllocationCallbacks, pMode: *mut VkDisplayModeKHR) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDisplayPlaneCapabilitiesKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDisplayPlaneCapabilitiesKHR.html>
 	fn vkGetDisplayPlaneCapabilitiesKHR(&self, physicalDevice: VkPhysicalDevice, mode: VkDisplayModeKHR, planeIndex: u32, pCapabilities: *mut VkDisplayPlaneCapabilitiesKHR) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateDisplayPlaneSurfaceKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateDisplayPlaneSurfaceKHR.html>
 	fn vkCreateDisplayPlaneSurfaceKHR(&self, instance: VkInstance, pCreateInfo: *const VkDisplaySurfaceCreateInfoKHR, pAllocator: *const VkAllocationCallbacks, pSurface: *mut VkSurfaceKHR) -> Result<()>;
 }
 /// struct for `VK_KHR_display`
@@ -17606,7 +17607,7 @@ extern "system" fn dummy_vkCreateSharedSwapchainsKHR(_: VkDevice, _: u32, _: *co
 /// trait for `VK_KHR_display_swapchain`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_display_swapchain.html>
 pub trait VK_KHR_display_swapchain: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateSharedSwapchainsKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateSharedSwapchainsKHR.html>
 	fn vkCreateSharedSwapchainsKHR(&self, device: VkDevice, swapchainCount: u32, pCreateInfos: *const VkSwapchainCreateInfoKHR, pAllocator: *const VkAllocationCallbacks, pSwapchains: *mut VkSwapchainKHR) -> Result<()>;
 }
 /// struct for `VK_KHR_display_swapchain`
@@ -18266,29 +18267,29 @@ extern "system" fn dummy_vkCmdControlVideoCodingKHR(_: VkCommandBuffer, _: *cons
 /// trait for `VK_KHR_video_queue`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_video_queue.html>
 pub trait VK_KHR_video_queue: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceVideoCapabilitiesKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceVideoCapabilitiesKHR.html>
 	fn vkGetPhysicalDeviceVideoCapabilitiesKHR(&self, physicalDevice: VkPhysicalDevice, pVideoProfile: *const VkVideoProfileInfoKHR, pCapabilities: *mut VkVideoCapabilitiesKHR) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceVideoFormatPropertiesKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceVideoFormatPropertiesKHR.html>
 	fn vkGetPhysicalDeviceVideoFormatPropertiesKHR(&self, physicalDevice: VkPhysicalDevice, pVideoFormatInfo: *const VkPhysicalDeviceVideoFormatInfoKHR, pVideoFormatPropertyCount: *mut uint32_t, pVideoFormatProperties: *mut VkVideoFormatPropertiesKHR) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateVideoSessionKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateVideoSessionKHR.html>
 	fn vkCreateVideoSessionKHR(&self, device: VkDevice, pCreateInfo: *const VkVideoSessionCreateInfoKHR, pAllocator: *const VkAllocationCallbacks, pVideoSession: *mut VkVideoSessionKHR) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroyVideoSessionKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroyVideoSessionKHR.html>
 	fn vkDestroyVideoSessionKHR(&self, device: VkDevice, videoSession: VkVideoSessionKHR, pAllocator: *const VkAllocationCallbacks) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetVideoSessionMemoryRequirementsKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetVideoSessionMemoryRequirementsKHR.html>
 	fn vkGetVideoSessionMemoryRequirementsKHR(&self, device: VkDevice, videoSession: VkVideoSessionKHR, pMemoryRequirementsCount: *mut uint32_t, pMemoryRequirements: *mut VkVideoSessionMemoryRequirementsKHR) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkBindVideoSessionMemoryKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkBindVideoSessionMemoryKHR.html>
 	fn vkBindVideoSessionMemoryKHR(&self, device: VkDevice, videoSession: VkVideoSessionKHR, bindSessionMemoryInfoCount: u32, pBindSessionMemoryInfos: *const VkBindVideoSessionMemoryInfoKHR) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateVideoSessionParametersKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateVideoSessionParametersKHR.html>
 	fn vkCreateVideoSessionParametersKHR(&self, device: VkDevice, pCreateInfo: *const VkVideoSessionParametersCreateInfoKHR, pAllocator: *const VkAllocationCallbacks, pVideoSessionParameters: *mut VkVideoSessionParametersKHR) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkUpdateVideoSessionParametersKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkUpdateVideoSessionParametersKHR.html>
 	fn vkUpdateVideoSessionParametersKHR(&self, device: VkDevice, videoSessionParameters: VkVideoSessionParametersKHR, pUpdateInfo: *const VkVideoSessionParametersUpdateInfoKHR) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroyVideoSessionParametersKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroyVideoSessionParametersKHR.html>
 	fn vkDestroyVideoSessionParametersKHR(&self, device: VkDevice, videoSessionParameters: VkVideoSessionParametersKHR, pAllocator: *const VkAllocationCallbacks) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdBeginVideoCodingKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdBeginVideoCodingKHR.html>
 	fn vkCmdBeginVideoCodingKHR(&self, commandBuffer: VkCommandBuffer, pBeginInfo: *const VkVideoBeginCodingInfoKHR) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdEndVideoCodingKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdEndVideoCodingKHR.html>
 	fn vkCmdEndVideoCodingKHR(&self, commandBuffer: VkCommandBuffer, pEndCodingInfo: *const VkVideoEndCodingInfoKHR) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdControlVideoCodingKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdControlVideoCodingKHR.html>
 	fn vkCmdControlVideoCodingKHR(&self, commandBuffer: VkCommandBuffer, pCodingControlInfo: *const VkVideoCodingControlInfoKHR) -> Result<()>;
 }
 /// struct for `VK_KHR_video_queue`
@@ -18504,7 +18505,7 @@ extern "system" fn dummy_vkCmdDecodeVideoKHR(_: VkCommandBuffer, _: *const VkVid
 /// trait for `VK_KHR_video_decode_queue`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_video_decode_queue.html>
 pub trait VK_KHR_video_decode_queue: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdDecodeVideoKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdDecodeVideoKHR.html>
 	fn vkCmdDecodeVideoKHR(&self, commandBuffer: VkCommandBuffer, pDecodeInfo: *const VkVideoDecodeInfoKHR) -> Result<()>;
 }
 /// struct for `VK_KHR_video_decode_queue`
@@ -22389,9 +22390,9 @@ extern "system" fn dummy_vkCmdEndRenderingKHR(_: VkCommandBuffer) {
 /// trait for `VK_KHR_dynamic_rendering`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_dynamic_rendering.html>
 pub trait VK_KHR_dynamic_rendering: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdBeginRenderingKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdBeginRenderingKHR.html>
 	fn vkCmdBeginRenderingKHR(&self, commandBuffer: VkCommandBuffer, pRenderingInfo: *const VkRenderingInfo) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdEndRenderingKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdEndRenderingKHR.html>
 	fn vkCmdEndRenderingKHR(&self, commandBuffer: VkCommandBuffer) -> Result<()>;
 }
 /// struct for `VK_KHR_dynamic_rendering`
@@ -22529,19 +22530,19 @@ extern "system" fn dummy_vkGetPhysicalDeviceSparseImageFormatProperties2KHR(_: V
 /// trait for `VK_KHR_get_physical_device_properties2`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_get_physical_device_properties2.html>
 pub trait VK_KHR_get_physical_device_properties2: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceFeatures2KHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceFeatures2KHR.html>
 	fn vkGetPhysicalDeviceFeatures2KHR(&self, physicalDevice: VkPhysicalDevice, pFeatures: *mut VkPhysicalDeviceFeatures2) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceProperties2KHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceProperties2KHR.html>
 	fn vkGetPhysicalDeviceProperties2KHR(&self, physicalDevice: VkPhysicalDevice, pProperties: *mut VkPhysicalDeviceProperties2) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceFormatProperties2KHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceFormatProperties2KHR.html>
 	fn vkGetPhysicalDeviceFormatProperties2KHR(&self, physicalDevice: VkPhysicalDevice, format: VkFormat, pFormatProperties: *mut VkFormatProperties2) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceImageFormatProperties2KHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceImageFormatProperties2KHR.html>
 	fn vkGetPhysicalDeviceImageFormatProperties2KHR(&self, physicalDevice: VkPhysicalDevice, pImageFormatInfo: *const VkPhysicalDeviceImageFormatInfo2, pImageFormatProperties: *mut VkImageFormatProperties2) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceQueueFamilyProperties2KHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceQueueFamilyProperties2KHR.html>
 	fn vkGetPhysicalDeviceQueueFamilyProperties2KHR(&self, physicalDevice: VkPhysicalDevice, pQueueFamilyPropertyCount: *mut uint32_t, pQueueFamilyProperties: *mut VkQueueFamilyProperties2) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceMemoryProperties2KHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceMemoryProperties2KHR.html>
 	fn vkGetPhysicalDeviceMemoryProperties2KHR(&self, physicalDevice: VkPhysicalDevice, pMemoryProperties: *mut VkPhysicalDeviceMemoryProperties2) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceSparseImageFormatProperties2KHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceSparseImageFormatProperties2KHR.html>
 	fn vkGetPhysicalDeviceSparseImageFormatProperties2KHR(&self, physicalDevice: VkPhysicalDevice, pFormatInfo: *const VkPhysicalDeviceSparseImageFormatInfo2, pPropertyCount: *mut uint32_t, pProperties: *mut VkSparseImageFormatProperties2) -> Result<()>;
 }
 /// struct for `VK_KHR_get_physical_device_properties2`
@@ -22661,11 +22662,11 @@ extern "system" fn dummy_vkCmdDispatchBaseKHR(_: VkCommandBuffer, _: u32, _: u32
 /// trait for `VK_KHR_device_group`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_device_group.html>
 pub trait VK_KHR_device_group: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDeviceGroupPeerMemoryFeaturesKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDeviceGroupPeerMemoryFeaturesKHR.html>
 	fn vkGetDeviceGroupPeerMemoryFeaturesKHR(&self, device: VkDevice, heapIndex: u32, localDeviceIndex: u32, remoteDeviceIndex: u32, pPeerMemoryFeatures: *mut VkPeerMemoryFeatureFlags) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetDeviceMaskKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetDeviceMaskKHR.html>
 	fn vkCmdSetDeviceMaskKHR(&self, commandBuffer: VkCommandBuffer, deviceMask: u32) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdDispatchBaseKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdDispatchBaseKHR.html>
 	fn vkCmdDispatchBaseKHR(&self, commandBuffer: VkCommandBuffer, baseGroupX: u32, baseGroupY: u32, baseGroupZ: u32, groupCountX: u32, groupCountY: u32, groupCountZ: u32) -> Result<()>;
 }
 /// struct for `VK_KHR_device_group`
@@ -22734,7 +22735,7 @@ extern "system" fn dummy_vkTrimCommandPoolKHR(_: VkDevice, _: VkCommandPool, _: 
 /// trait for `VK_KHR_maintenance1`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_maintenance1.html>
 pub trait VK_KHR_maintenance1: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkTrimCommandPoolKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkTrimCommandPoolKHR.html>
 	fn vkTrimCommandPoolKHR(&self, device: VkDevice, commandPool: VkCommandPool, flags: VkCommandPoolTrimFlags) -> Result<()>;
 }
 /// struct for `VK_KHR_maintenance1`
@@ -22780,7 +22781,7 @@ extern "system" fn dummy_vkEnumeratePhysicalDeviceGroupsKHR(_: VkInstance, _: *m
 /// trait for `VK_KHR_device_group_creation`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_device_group_creation.html>
 pub trait VK_KHR_device_group_creation: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkEnumeratePhysicalDeviceGroupsKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkEnumeratePhysicalDeviceGroupsKHR.html>
 	fn vkEnumeratePhysicalDeviceGroupsKHR(&self, instance: VkInstance, pPhysicalDeviceGroupCount: *mut uint32_t, pPhysicalDeviceGroupProperties: *mut VkPhysicalDeviceGroupProperties) -> Result<()>;
 }
 /// struct for `VK_KHR_device_group_creation`
@@ -22850,7 +22851,7 @@ extern "system" fn dummy_vkGetPhysicalDeviceExternalBufferPropertiesKHR(_: VkPhy
 /// trait for `VK_KHR_external_memory_capabilities`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_external_memory_capabilities.html>
 pub trait VK_KHR_external_memory_capabilities: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceExternalBufferPropertiesKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceExternalBufferPropertiesKHR.html>
 	fn vkGetPhysicalDeviceExternalBufferPropertiesKHR(&self, physicalDevice: VkPhysicalDevice, pExternalBufferInfo: *const VkPhysicalDeviceExternalBufferInfo, pExternalBufferProperties: *mut VkExternalBufferProperties) -> Result<()>;
 }
 /// struct for `VK_KHR_external_memory_capabilities`
@@ -22952,9 +22953,9 @@ extern "system" fn dummy_vkGetMemoryFdPropertiesKHR(_: VkDevice, _: VkExternalMe
 /// trait for `VK_KHR_external_memory_fd`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_external_memory_fd.html>
 pub trait VK_KHR_external_memory_fd: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetMemoryFdKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetMemoryFdKHR.html>
 	fn vkGetMemoryFdKHR(&self, device: VkDevice, pGetFdInfo: *const VkMemoryGetFdInfoKHR, pFd: *mut int) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetMemoryFdPropertiesKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetMemoryFdPropertiesKHR.html>
 	fn vkGetMemoryFdPropertiesKHR(&self, device: VkDevice, handleType: VkExternalMemoryHandleTypeFlagBits, fd: i32, pMemoryFdProperties: *mut VkMemoryFdPropertiesKHR) -> Result<()>;
 }
 /// struct for `VK_KHR_external_memory_fd`
@@ -23015,7 +23016,7 @@ extern "system" fn dummy_vkGetPhysicalDeviceExternalSemaphorePropertiesKHR(_: Vk
 /// trait for `VK_KHR_external_semaphore_capabilities`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_external_semaphore_capabilities.html>
 pub trait VK_KHR_external_semaphore_capabilities: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceExternalSemaphorePropertiesKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceExternalSemaphorePropertiesKHR.html>
 	fn vkGetPhysicalDeviceExternalSemaphorePropertiesKHR(&self, physicalDevice: VkPhysicalDevice, pExternalSemaphoreInfo: *const VkPhysicalDeviceExternalSemaphoreInfo, pExternalSemaphoreProperties: *mut VkExternalSemaphoreProperties) -> Result<()>;
 }
 /// struct for `VK_KHR_external_semaphore_capabilities`
@@ -23107,9 +23108,9 @@ extern "system" fn dummy_vkGetSemaphoreFdKHR(_: VkDevice, _: *const VkSemaphoreG
 /// trait for `VK_KHR_external_semaphore_fd`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_external_semaphore_fd.html>
 pub trait VK_KHR_external_semaphore_fd: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkImportSemaphoreFdKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkImportSemaphoreFdKHR.html>
 	fn vkImportSemaphoreFdKHR(&self, device: VkDevice, pImportSemaphoreFdInfo: *const VkImportSemaphoreFdInfoKHR) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetSemaphoreFdKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetSemaphoreFdKHR.html>
 	fn vkGetSemaphoreFdKHR(&self, device: VkDevice, pGetFdInfo: *const VkSemaphoreGetFdInfoKHR, pFd: *mut int) -> Result<()>;
 }
 /// struct for `VK_KHR_external_semaphore_fd`
@@ -23162,9 +23163,9 @@ extern "system" fn dummy_vkCmdPushDescriptorSetWithTemplateKHR(_: VkCommandBuffe
 /// trait for `VK_KHR_push_descriptor`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_push_descriptor.html>
 pub trait VK_KHR_push_descriptor: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdPushDescriptorSetKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdPushDescriptorSetKHR.html>
 	fn vkCmdPushDescriptorSetKHR(&self, commandBuffer: VkCommandBuffer, pipelineBindPoint: VkPipelineBindPoint, layout: VkPipelineLayout, set: u32, descriptorWriteCount: u32, pDescriptorWrites: *const VkWriteDescriptorSet) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdPushDescriptorSetWithTemplateKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdPushDescriptorSetWithTemplateKHR.html>
 	fn vkCmdPushDescriptorSetWithTemplateKHR(&self, commandBuffer: VkCommandBuffer, descriptorUpdateTemplate: VkDescriptorUpdateTemplate, layout: VkPipelineLayout, set: u32, pData: *const c_void) -> Result<()>;
 }
 /// struct for `VK_KHR_push_descriptor`
@@ -23323,11 +23324,11 @@ extern "system" fn dummy_vkUpdateDescriptorSetWithTemplateKHR(_: VkDevice, _: Vk
 /// trait for `VK_KHR_descriptor_update_template`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_descriptor_update_template.html>
 pub trait VK_KHR_descriptor_update_template: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateDescriptorUpdateTemplateKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateDescriptorUpdateTemplateKHR.html>
 	fn vkCreateDescriptorUpdateTemplateKHR(&self, device: VkDevice, pCreateInfo: *const VkDescriptorUpdateTemplateCreateInfo, pAllocator: *const VkAllocationCallbacks, pDescriptorUpdateTemplate: *mut VkDescriptorUpdateTemplate) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroyDescriptorUpdateTemplateKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroyDescriptorUpdateTemplateKHR.html>
 	fn vkDestroyDescriptorUpdateTemplateKHR(&self, device: VkDevice, descriptorUpdateTemplate: VkDescriptorUpdateTemplate, pAllocator: *const VkAllocationCallbacks) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkUpdateDescriptorSetWithTemplateKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkUpdateDescriptorSetWithTemplateKHR.html>
 	fn vkUpdateDescriptorSetWithTemplateKHR(&self, device: VkDevice, descriptorSet: VkDescriptorSet, descriptorUpdateTemplate: VkDescriptorUpdateTemplate, pData: *const c_void) -> Result<()>;
 }
 /// struct for `VK_KHR_descriptor_update_template`
@@ -23447,13 +23448,13 @@ extern "system" fn dummy_vkCmdEndRenderPass2KHR(_: VkCommandBuffer, _: *const Vk
 /// trait for `VK_KHR_create_renderpass2`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_create_renderpass2.html>
 pub trait VK_KHR_create_renderpass2: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateRenderPass2KHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateRenderPass2KHR.html>
 	fn vkCreateRenderPass2KHR(&self, device: VkDevice, pCreateInfo: *const VkRenderPassCreateInfo2, pAllocator: *const VkAllocationCallbacks, pRenderPass: *mut VkRenderPass) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdBeginRenderPass2KHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdBeginRenderPass2KHR.html>
 	fn vkCmdBeginRenderPass2KHR(&self, commandBuffer: VkCommandBuffer, pRenderPassBegin: *const VkRenderPassBeginInfo, pSubpassBeginInfo: *const VkSubpassBeginInfo) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdNextSubpass2KHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdNextSubpass2KHR.html>
 	fn vkCmdNextSubpass2KHR(&self, commandBuffer: VkCommandBuffer, pSubpassBeginInfo: *const VkSubpassBeginInfo, pSubpassEndInfo: *const VkSubpassEndInfo) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdEndRenderPass2KHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdEndRenderPass2KHR.html>
 	fn vkCmdEndRenderPass2KHR(&self, commandBuffer: VkCommandBuffer, pSubpassEndInfo: *const VkSubpassEndInfo) -> Result<()>;
 }
 /// struct for `VK_KHR_create_renderpass2`
@@ -23517,7 +23518,7 @@ extern "system" fn dummy_vkGetSwapchainStatusKHR(_: VkDevice, _: VkSwapchainKHR)
 /// trait for `VK_KHR_shared_presentable_image`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_shared_presentable_image.html>
 pub trait VK_KHR_shared_presentable_image: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetSwapchainStatusKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetSwapchainStatusKHR.html>
 	fn vkGetSwapchainStatusKHR(&self, device: VkDevice, swapchain: VkSwapchainKHR) -> Result<()>;
 }
 /// struct for `VK_KHR_shared_presentable_image`
@@ -23572,7 +23573,7 @@ extern "system" fn dummy_vkGetPhysicalDeviceExternalFencePropertiesKHR(_: VkPhys
 /// trait for `VK_KHR_external_fence_capabilities`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_external_fence_capabilities.html>
 pub trait VK_KHR_external_fence_capabilities: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceExternalFencePropertiesKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceExternalFencePropertiesKHR.html>
 	fn vkGetPhysicalDeviceExternalFencePropertiesKHR(&self, physicalDevice: VkPhysicalDevice, pExternalFenceInfo: *const VkPhysicalDeviceExternalFenceInfo, pExternalFenceProperties: *mut VkExternalFenceProperties) -> Result<()>;
 }
 /// struct for `VK_KHR_external_fence_capabilities`
@@ -23664,9 +23665,9 @@ extern "system" fn dummy_vkGetFenceFdKHR(_: VkDevice, _: *const VkFenceGetFdInfo
 /// trait for `VK_KHR_external_fence_fd`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_external_fence_fd.html>
 pub trait VK_KHR_external_fence_fd: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkImportFenceFdKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkImportFenceFdKHR.html>
 	fn vkImportFenceFdKHR(&self, device: VkDevice, pImportFenceFdInfo: *const VkImportFenceFdInfoKHR) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetFenceFdKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetFenceFdKHR.html>
 	fn vkGetFenceFdKHR(&self, device: VkDevice, pGetFdInfo: *const VkFenceGetFdInfoKHR, pFd: *mut int) -> Result<()>;
 }
 /// struct for `VK_KHR_external_fence_fd`
@@ -23959,13 +23960,13 @@ extern "system" fn dummy_vkReleaseProfilingLockKHR(_: VkDevice) {
 /// trait for `VK_KHR_performance_query`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_performance_query.html>
 pub trait VK_KHR_performance_query: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR.html>
 	fn vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR(&self, physicalDevice: VkPhysicalDevice, queueFamilyIndex: u32, pCounterCount: *mut uint32_t, pCounters: *mut VkPerformanceCounterKHR, pCounterDescriptions: *mut VkPerformanceCounterDescriptionKHR) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR.html>
 	fn vkGetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR(&self, physicalDevice: VkPhysicalDevice, pPerformanceQueryCreateInfo: *const VkQueryPoolPerformanceCreateInfoKHR, pNumPasses: *mut uint32_t) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkAcquireProfilingLockKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkAcquireProfilingLockKHR.html>
 	fn vkAcquireProfilingLockKHR(&self, device: VkDevice, pInfo: *const VkAcquireProfilingLockInfoKHR) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkReleaseProfilingLockKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkReleaseProfilingLockKHR.html>
 	fn vkReleaseProfilingLockKHR(&self, device: VkDevice) -> Result<()>;
 }
 /// struct for `VK_KHR_performance_query`
@@ -24092,9 +24093,9 @@ extern "system" fn dummy_vkGetPhysicalDeviceSurfaceFormats2KHR(_: VkPhysicalDevi
 /// trait for `VK_KHR_get_surface_capabilities2`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_get_surface_capabilities2.html>
 pub trait VK_KHR_get_surface_capabilities2: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceSurfaceCapabilities2KHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceSurfaceCapabilities2KHR.html>
 	fn vkGetPhysicalDeviceSurfaceCapabilities2KHR(&self, physicalDevice: VkPhysicalDevice, pSurfaceInfo: *const VkPhysicalDeviceSurfaceInfo2KHR, pSurfaceCapabilities: *mut VkSurfaceCapabilities2KHR) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceSurfaceFormats2KHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceSurfaceFormats2KHR.html>
 	fn vkGetPhysicalDeviceSurfaceFormats2KHR(&self, physicalDevice: VkPhysicalDevice, pSurfaceInfo: *const VkPhysicalDeviceSurfaceInfo2KHR, pSurfaceFormatCount: *mut uint32_t, pSurfaceFormats: *mut VkSurfaceFormat2KHR) -> Result<()>;
 }
 /// struct for `VK_KHR_get_surface_capabilities2`
@@ -24227,13 +24228,13 @@ extern "system" fn dummy_vkGetDisplayPlaneCapabilities2KHR(_: VkPhysicalDevice, 
 /// trait for `VK_KHR_get_display_properties2`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_get_display_properties2.html>
 pub trait VK_KHR_get_display_properties2: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceDisplayProperties2KHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceDisplayProperties2KHR.html>
 	fn vkGetPhysicalDeviceDisplayProperties2KHR(&self, physicalDevice: VkPhysicalDevice, pPropertyCount: *mut uint32_t, pProperties: *mut VkDisplayProperties2KHR) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceDisplayPlaneProperties2KHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceDisplayPlaneProperties2KHR.html>
 	fn vkGetPhysicalDeviceDisplayPlaneProperties2KHR(&self, physicalDevice: VkPhysicalDevice, pPropertyCount: *mut uint32_t, pProperties: *mut VkDisplayPlaneProperties2KHR) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDisplayModeProperties2KHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDisplayModeProperties2KHR.html>
 	fn vkGetDisplayModeProperties2KHR(&self, physicalDevice: VkPhysicalDevice, display: VkDisplayKHR, pPropertyCount: *mut uint32_t, pProperties: *mut VkDisplayModeProperties2KHR) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDisplayPlaneCapabilities2KHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDisplayPlaneCapabilities2KHR.html>
 	fn vkGetDisplayPlaneCapabilities2KHR(&self, physicalDevice: VkPhysicalDevice, pDisplayPlaneInfo: *const VkDisplayPlaneInfo2KHR, pCapabilities: *mut VkDisplayPlaneCapabilities2KHR) -> Result<()>;
 }
 /// struct for `VK_KHR_get_display_properties2`
@@ -24402,11 +24403,11 @@ extern "system" fn dummy_vkGetImageSparseMemoryRequirements2KHR(_: VkDevice, _: 
 /// trait for `VK_KHR_get_memory_requirements2`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_get_memory_requirements2.html>
 pub trait VK_KHR_get_memory_requirements2: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetImageMemoryRequirements2KHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetImageMemoryRequirements2KHR.html>
 	fn vkGetImageMemoryRequirements2KHR(&self, device: VkDevice, pInfo: *const VkImageMemoryRequirementsInfo2, pMemoryRequirements: *mut VkMemoryRequirements2) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetBufferMemoryRequirements2KHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetBufferMemoryRequirements2KHR.html>
 	fn vkGetBufferMemoryRequirements2KHR(&self, device: VkDevice, pInfo: *const VkBufferMemoryRequirementsInfo2, pMemoryRequirements: *mut VkMemoryRequirements2) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetImageSparseMemoryRequirements2KHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetImageSparseMemoryRequirements2KHR.html>
 	fn vkGetImageSparseMemoryRequirements2KHR(&self, device: VkDevice, pInfo: *const VkImageSparseMemoryRequirementsInfo2, pSparseMemoryRequirementCount: *mut uint32_t, pSparseMemoryRequirements: *mut VkSparseImageMemoryRequirements2) -> Result<()>;
 }
 /// struct for `VK_KHR_get_memory_requirements2`
@@ -24512,9 +24513,9 @@ extern "system" fn dummy_vkDestroySamplerYcbcrConversionKHR(_: VkDevice, _: VkSa
 /// trait for `VK_KHR_sampler_ycbcr_conversion`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_sampler_ycbcr_conversion.html>
 pub trait VK_KHR_sampler_ycbcr_conversion: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateSamplerYcbcrConversionKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateSamplerYcbcrConversionKHR.html>
 	fn vkCreateSamplerYcbcrConversionKHR(&self, device: VkDevice, pCreateInfo: *const VkSamplerYcbcrConversionCreateInfo, pAllocator: *const VkAllocationCallbacks, pYcbcrConversion: *mut VkSamplerYcbcrConversion) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroySamplerYcbcrConversionKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroySamplerYcbcrConversionKHR.html>
 	fn vkDestroySamplerYcbcrConversionKHR(&self, device: VkDevice, ycbcrConversion: VkSamplerYcbcrConversion, pAllocator: *const VkAllocationCallbacks) -> Result<()>;
 }
 /// struct for `VK_KHR_sampler_ycbcr_conversion`
@@ -24570,9 +24571,9 @@ extern "system" fn dummy_vkBindImageMemory2KHR(_: VkDevice, _: u32, _: *const Vk
 /// trait for `VK_KHR_bind_memory2`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_bind_memory2.html>
 pub trait VK_KHR_bind_memory2: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkBindBufferMemory2KHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkBindBufferMemory2KHR.html>
 	fn vkBindBufferMemory2KHR(&self, device: VkDevice, bindInfoCount: u32, pBindInfos: *const VkBindBufferMemoryInfo) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkBindImageMemory2KHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkBindImageMemory2KHR.html>
 	fn vkBindImageMemory2KHR(&self, device: VkDevice, bindInfoCount: u32, pBindInfos: *const VkBindImageMemoryInfo) -> Result<()>;
 }
 /// struct for `VK_KHR_bind_memory2`
@@ -24621,7 +24622,7 @@ extern "system" fn dummy_vkGetDescriptorSetLayoutSupportKHR(_: VkDevice, _: *con
 /// trait for `VK_KHR_maintenance3`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_maintenance3.html>
 pub trait VK_KHR_maintenance3: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDescriptorSetLayoutSupportKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDescriptorSetLayoutSupportKHR.html>
 	fn vkGetDescriptorSetLayoutSupportKHR(&self, device: VkDevice, pCreateInfo: *const VkDescriptorSetLayoutCreateInfo, pSupport: *mut VkDescriptorSetLayoutSupport) -> Result<()>;
 }
 /// struct for `VK_KHR_maintenance3`
@@ -24665,9 +24666,9 @@ extern "system" fn dummy_vkCmdDrawIndexedIndirectCountKHR(_: VkCommandBuffer, _:
 /// trait for `VK_KHR_draw_indirect_count`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_draw_indirect_count.html>
 pub trait VK_KHR_draw_indirect_count: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdDrawIndirectCountKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdDrawIndirectCountKHR.html>
 	fn vkCmdDrawIndirectCountKHR(&self, commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize, countBuffer: VkBuffer, countBufferOffset: VkDeviceSize, maxDrawCount: u32, stride: u32) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdDrawIndexedIndirectCountKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdDrawIndexedIndirectCountKHR.html>
 	fn vkCmdDrawIndexedIndirectCountKHR(&self, commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize, countBuffer: VkBuffer, countBufferOffset: VkDeviceSize, maxDrawCount: u32, stride: u32) -> Result<()>;
 }
 /// struct for `VK_KHR_draw_indirect_count`
@@ -25173,11 +25174,11 @@ extern "system" fn dummy_vkSignalSemaphoreKHR(_: VkDevice, _: *const VkSemaphore
 /// trait for `VK_KHR_timeline_semaphore`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_timeline_semaphore.html>
 pub trait VK_KHR_timeline_semaphore: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetSemaphoreCounterValueKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetSemaphoreCounterValueKHR.html>
 	fn vkGetSemaphoreCounterValueKHR(&self, device: VkDevice, semaphore: VkSemaphore, pValue: *mut uint64_t) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkWaitSemaphoresKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkWaitSemaphoresKHR.html>
 	fn vkWaitSemaphoresKHR(&self, device: VkDevice, pWaitInfo: *const VkSemaphoreWaitInfo, timeout: u64) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkSignalSemaphoreKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkSignalSemaphoreKHR.html>
 	fn vkSignalSemaphoreKHR(&self, device: VkDevice, pSignalInfo: *const VkSemaphoreSignalInfo) -> Result<()>;
 }
 /// struct for `VK_KHR_timeline_semaphore`
@@ -25362,9 +25363,9 @@ extern "system" fn dummy_vkCmdSetFragmentShadingRateKHR(_: VkCommandBuffer, _: *
 /// trait for `VK_KHR_fragment_shading_rate`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_fragment_shading_rate.html>
 pub trait VK_KHR_fragment_shading_rate: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceFragmentShadingRatesKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceFragmentShadingRatesKHR.html>
 	fn vkGetPhysicalDeviceFragmentShadingRatesKHR(&self, physicalDevice: VkPhysicalDevice, pFragmentShadingRateCount: *mut uint32_t, pFragmentShadingRates: *mut VkPhysicalDeviceFragmentShadingRateKHR) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetFragmentShadingRateKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetFragmentShadingRateKHR.html>
 	fn vkCmdSetFragmentShadingRateKHR(&self, commandBuffer: VkCommandBuffer, pFragmentSize: *const VkExtent2D, combinerOps: &[VkFragmentShadingRateCombinerOpKHR; 2 as usize]) -> Result<()>;
 }
 /// struct for `VK_KHR_fragment_shading_rate`
@@ -25423,9 +25424,9 @@ extern "system" fn dummy_vkCmdSetRenderingInputAttachmentIndicesKHR(_: VkCommand
 /// trait for `VK_KHR_dynamic_rendering_local_read`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_dynamic_rendering_local_read.html>
 pub trait VK_KHR_dynamic_rendering_local_read: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetRenderingAttachmentLocationsKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetRenderingAttachmentLocationsKHR.html>
 	fn vkCmdSetRenderingAttachmentLocationsKHR(&self, commandBuffer: VkCommandBuffer, pLocationInfo: *const VkRenderingAttachmentLocationInfo) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetRenderingInputAttachmentIndicesKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetRenderingInputAttachmentIndicesKHR.html>
 	fn vkCmdSetRenderingInputAttachmentIndicesKHR(&self, commandBuffer: VkCommandBuffer, pInputAttachmentIndexInfo: *const VkRenderingInputAttachmentIndexInfo) -> Result<()>;
 }
 /// struct for `VK_KHR_dynamic_rendering_local_read`
@@ -25572,7 +25573,7 @@ extern "system" fn dummy_vkWaitForPresentKHR(_: VkDevice, _: VkSwapchainKHR, _: 
 /// trait for `VK_KHR_present_wait`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_present_wait.html>
 pub trait VK_KHR_present_wait: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkWaitForPresentKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkWaitForPresentKHR.html>
 	fn vkWaitForPresentKHR(&self, device: VkDevice, swapchain: VkSwapchainKHR, presentId: u64, timeout: u64) -> Result<()>;
 }
 /// struct for `VK_KHR_present_wait`
@@ -25658,11 +25659,11 @@ extern "system" fn dummy_vkGetDeviceMemoryOpaqueCaptureAddressKHR(_: VkDevice, _
 /// trait for `VK_KHR_buffer_device_address`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_buffer_device_address.html>
 pub trait VK_KHR_buffer_device_address: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetBufferDeviceAddressKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetBufferDeviceAddressKHR.html>
 	fn vkGetBufferDeviceAddressKHR(&self, device: VkDevice, pInfo: *const VkBufferDeviceAddressInfo) -> Result<VkDeviceAddress>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetBufferOpaqueCaptureAddressKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetBufferOpaqueCaptureAddressKHR.html>
 	fn vkGetBufferOpaqueCaptureAddressKHR(&self, device: VkDevice, pInfo: *const VkBufferDeviceAddressInfo) -> Result<u64>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDeviceMemoryOpaqueCaptureAddressKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDeviceMemoryOpaqueCaptureAddressKHR.html>
 	fn vkGetDeviceMemoryOpaqueCaptureAddressKHR(&self, device: VkDevice, pInfo: *const VkDeviceMemoryOpaqueCaptureAddressInfo) -> Result<u64>;
 }
 /// struct for `VK_KHR_buffer_device_address`
@@ -25744,15 +25745,15 @@ extern "system" fn dummy_vkDeferredOperationJoinKHR(_: VkDevice, _: VkDeferredOp
 /// trait for `VK_KHR_deferred_host_operations`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_deferred_host_operations.html>
 pub trait VK_KHR_deferred_host_operations: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateDeferredOperationKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateDeferredOperationKHR.html>
 	fn vkCreateDeferredOperationKHR(&self, device: VkDevice, pAllocator: *const VkAllocationCallbacks, pDeferredOperation: *mut VkDeferredOperationKHR) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroyDeferredOperationKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroyDeferredOperationKHR.html>
 	fn vkDestroyDeferredOperationKHR(&self, device: VkDevice, operation: VkDeferredOperationKHR, pAllocator: *const VkAllocationCallbacks) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDeferredOperationMaxConcurrencyKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDeferredOperationMaxConcurrencyKHR.html>
 	fn vkGetDeferredOperationMaxConcurrencyKHR(&self, device: VkDevice, operation: VkDeferredOperationKHR) -> Result<u32>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDeferredOperationResultKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDeferredOperationResultKHR.html>
 	fn vkGetDeferredOperationResultKHR(&self, device: VkDevice, operation: VkDeferredOperationKHR) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDeferredOperationJoinKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDeferredOperationJoinKHR.html>
 	fn vkDeferredOperationJoinKHR(&self, device: VkDevice, operation: VkDeferredOperationKHR) -> Result<()>;
 }
 /// struct for `VK_KHR_deferred_host_operations`
@@ -25960,11 +25961,11 @@ extern "system" fn dummy_vkGetPipelineExecutableInternalRepresentationsKHR(_: Vk
 /// trait for `VK_KHR_pipeline_executable_properties`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_pipeline_executable_properties.html>
 pub trait VK_KHR_pipeline_executable_properties: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPipelineExecutablePropertiesKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPipelineExecutablePropertiesKHR.html>
 	fn vkGetPipelineExecutablePropertiesKHR(&self, device: VkDevice, pPipelineInfo: *const VkPipelineInfoKHR, pExecutableCount: *mut uint32_t, pProperties: *mut VkPipelineExecutablePropertiesKHR) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPipelineExecutableStatisticsKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPipelineExecutableStatisticsKHR.html>
 	fn vkGetPipelineExecutableStatisticsKHR(&self, device: VkDevice, pExecutableInfo: *const VkPipelineExecutableInfoKHR, pStatisticCount: *mut uint32_t, pStatistics: *mut VkPipelineExecutableStatisticKHR) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPipelineExecutableInternalRepresentationsKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPipelineExecutableInternalRepresentationsKHR.html>
 	fn vkGetPipelineExecutableInternalRepresentationsKHR(&self, device: VkDevice, pExecutableInfo: *const VkPipelineExecutableInfoKHR, pInternalRepresentationCount: *mut uint32_t, pInternalRepresentations: *mut VkPipelineExecutableInternalRepresentationKHR) -> Result<()>;
 }
 /// struct for `VK_KHR_pipeline_executable_properties`
@@ -26032,9 +26033,9 @@ extern "system" fn dummy_vkUnmapMemory2KHR(_: VkDevice, _: *const VkMemoryUnmapI
 /// trait for `VK_KHR_map_memory2`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_map_memory2.html>
 pub trait VK_KHR_map_memory2: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkMapMemory2KHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkMapMemory2KHR.html>
 	fn vkMapMemory2KHR(&self, device: VkDevice, pMemoryMapInfo: *const VkMemoryMapInfo, ppData: *mut *mut c_void) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkUnmapMemory2KHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkUnmapMemory2KHR.html>
 	fn vkUnmapMemory2KHR(&self, device: VkDevice, pMemoryUnmapInfo: *const VkMemoryUnmapInfo) -> Result<()>;
 }
 /// struct for `VK_KHR_map_memory2`
@@ -26580,11 +26581,11 @@ extern "system" fn dummy_vkCmdEncodeVideoKHR(_: VkCommandBuffer, _: *const VkVid
 /// trait for `VK_KHR_video_encode_queue`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_video_encode_queue.html>
 pub trait VK_KHR_video_encode_queue: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceVideoEncodeQualityLevelPropertiesKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceVideoEncodeQualityLevelPropertiesKHR.html>
 	fn vkGetPhysicalDeviceVideoEncodeQualityLevelPropertiesKHR(&self, physicalDevice: VkPhysicalDevice, pQualityLevelInfo: *const VkPhysicalDeviceVideoEncodeQualityLevelInfoKHR, pQualityLevelProperties: *mut VkVideoEncodeQualityLevelPropertiesKHR) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetEncodedVideoSessionParametersKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetEncodedVideoSessionParametersKHR.html>
 	fn vkGetEncodedVideoSessionParametersKHR(&self, device: VkDevice, pVideoSessionParametersInfo: *const VkVideoEncodeSessionParametersGetInfoKHR, pFeedbackInfo: *mut VkVideoEncodeSessionParametersFeedbackInfoKHR, pDataSize: *mut size_t, pData: *mut c_void) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdEncodeVideoKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdEncodeVideoKHR.html>
 	fn vkCmdEncodeVideoKHR(&self, commandBuffer: VkCommandBuffer, pEncodeInfo: *const VkVideoEncodeInfoKHR) -> Result<()>;
 }
 /// struct for `VK_KHR_video_encode_queue`
@@ -26710,17 +26711,17 @@ extern "system" fn dummy_vkQueueSubmit2KHR(_: VkQueue, _: u32, _: *const VkSubmi
 /// trait for `VK_KHR_synchronization2`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_synchronization2.html>
 pub trait VK_KHR_synchronization2: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetEvent2KHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetEvent2KHR.html>
 	fn vkCmdSetEvent2KHR(&self, commandBuffer: VkCommandBuffer, event: VkEvent, pDependencyInfo: *const VkDependencyInfo) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdResetEvent2KHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdResetEvent2KHR.html>
 	fn vkCmdResetEvent2KHR(&self, commandBuffer: VkCommandBuffer, event: VkEvent, stageMask: VkPipelineStageFlags2) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdWaitEvents2KHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdWaitEvents2KHR.html>
 	fn vkCmdWaitEvents2KHR(&self, commandBuffer: VkCommandBuffer, eventCount: u32, pEvents: *const VkEvent, pDependencyInfos: *const VkDependencyInfo) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdPipelineBarrier2KHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdPipelineBarrier2KHR.html>
 	fn vkCmdPipelineBarrier2KHR(&self, commandBuffer: VkCommandBuffer, pDependencyInfo: *const VkDependencyInfo) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdWriteTimestamp2KHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdWriteTimestamp2KHR.html>
 	fn vkCmdWriteTimestamp2KHR(&self, commandBuffer: VkCommandBuffer, stage: VkPipelineStageFlags2, queryPool: VkQueryPool, query: u32) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkQueueSubmit2KHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkQueueSubmit2KHR.html>
 	fn vkQueueSubmit2KHR(&self, queue: VkQueue, submitCount: u32, pSubmits: *const VkSubmitInfo2, fence: VkFence) -> Result<()>;
 }
 /// struct for `VK_KHR_synchronization2`
@@ -26965,17 +26966,17 @@ extern "system" fn dummy_vkCmdResolveImage2KHR(_: VkCommandBuffer, _: *const VkR
 /// trait for `VK_KHR_copy_commands2`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_copy_commands2.html>
 pub trait VK_KHR_copy_commands2: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdCopyBuffer2KHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdCopyBuffer2KHR.html>
 	fn vkCmdCopyBuffer2KHR(&self, commandBuffer: VkCommandBuffer, pCopyBufferInfo: *const VkCopyBufferInfo2) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdCopyImage2KHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdCopyImage2KHR.html>
 	fn vkCmdCopyImage2KHR(&self, commandBuffer: VkCommandBuffer, pCopyImageInfo: *const VkCopyImageInfo2) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdCopyBufferToImage2KHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdCopyBufferToImage2KHR.html>
 	fn vkCmdCopyBufferToImage2KHR(&self, commandBuffer: VkCommandBuffer, pCopyBufferToImageInfo: *const VkCopyBufferToImageInfo2) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdCopyImageToBuffer2KHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdCopyImageToBuffer2KHR.html>
 	fn vkCmdCopyImageToBuffer2KHR(&self, commandBuffer: VkCommandBuffer, pCopyImageToBufferInfo: *const VkCopyImageToBufferInfo2) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdBlitImage2KHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdBlitImage2KHR.html>
 	fn vkCmdBlitImage2KHR(&self, commandBuffer: VkCommandBuffer, pBlitImageInfo: *const VkBlitImageInfo2) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdResolveImage2KHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdResolveImage2KHR.html>
 	fn vkCmdResolveImage2KHR(&self, commandBuffer: VkCommandBuffer, pResolveImageInfo: *const VkResolveImageInfo2) -> Result<()>;
 }
 /// struct for `VK_KHR_copy_commands2`
@@ -27098,7 +27099,7 @@ extern "system" fn dummy_vkCmdTraceRaysIndirect2KHR(_: VkCommandBuffer, _: VkDev
 /// trait for `VK_KHR_ray_tracing_maintenance1`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_ray_tracing_maintenance1.html>
 pub trait VK_KHR_ray_tracing_maintenance1: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdTraceRaysIndirect2KHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdTraceRaysIndirect2KHR.html>
 	fn vkCmdTraceRaysIndirect2KHR(&self, commandBuffer: VkCommandBuffer, indirectDeviceAddress: VkDeviceAddress) -> Result<()>;
 }
 /// struct for `VK_KHR_ray_tracing_maintenance1`
@@ -27178,11 +27179,11 @@ extern "system" fn dummy_vkGetDeviceImageSparseMemoryRequirementsKHR(_: VkDevice
 /// trait for `VK_KHR_maintenance4`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_maintenance4.html>
 pub trait VK_KHR_maintenance4: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDeviceBufferMemoryRequirementsKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDeviceBufferMemoryRequirementsKHR.html>
 	fn vkGetDeviceBufferMemoryRequirementsKHR(&self, device: VkDevice, pInfo: *const VkDeviceBufferMemoryRequirements, pMemoryRequirements: *mut VkMemoryRequirements2) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDeviceImageMemoryRequirementsKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDeviceImageMemoryRequirementsKHR.html>
 	fn vkGetDeviceImageMemoryRequirementsKHR(&self, device: VkDevice, pInfo: *const VkDeviceImageMemoryRequirements, pMemoryRequirements: *mut VkMemoryRequirements2) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDeviceImageSparseMemoryRequirementsKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDeviceImageSparseMemoryRequirementsKHR.html>
 	fn vkGetDeviceImageSparseMemoryRequirementsKHR(&self, device: VkDevice, pInfo: *const VkDeviceImageMemoryRequirements, pSparseMemoryRequirementCount: *mut uint32_t, pSparseMemoryRequirements: *mut VkSparseImageMemoryRequirements2) -> Result<()>;
 }
 /// struct for `VK_KHR_maintenance4`
@@ -27334,13 +27335,13 @@ extern "system" fn dummy_vkGetImageSubresourceLayout2KHR(_: VkDevice, _: VkImage
 /// trait for `VK_KHR_maintenance5`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_maintenance5.html>
 pub trait VK_KHR_maintenance5: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdBindIndexBuffer2KHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdBindIndexBuffer2KHR.html>
 	fn vkCmdBindIndexBuffer2KHR(&self, commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize, size: VkDeviceSize, indexType: VkIndexType) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetRenderingAreaGranularityKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetRenderingAreaGranularityKHR.html>
 	fn vkGetRenderingAreaGranularityKHR(&self, device: VkDevice, pRenderingAreaInfo: *const VkRenderingAreaInfo, pGranularity: *mut VkExtent2D) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDeviceImageSubresourceLayoutKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDeviceImageSubresourceLayoutKHR.html>
 	fn vkGetDeviceImageSubresourceLayoutKHR(&self, device: VkDevice, pInfo: *const VkDeviceImageSubresourceInfo, pLayout: *mut VkSubresourceLayout2) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetImageSubresourceLayout2KHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetImageSubresourceLayout2KHR.html>
 	fn vkGetImageSubresourceLayout2KHR(&self, device: VkDevice, image: VkImage, pSubresource: *const VkImageSubresource2, pLayout: *mut VkSubresourceLayout2) -> Result<()>;
 }
 /// struct for `VK_KHR_maintenance5`
@@ -27468,7 +27469,7 @@ extern "system" fn dummy_vkWaitForPresent2KHR(_: VkDevice, _: VkSwapchainKHR, _:
 /// trait for `VK_KHR_present_wait2`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_present_wait2.html>
 pub trait VK_KHR_present_wait2: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkWaitForPresent2KHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkWaitForPresent2KHR.html>
 	fn vkWaitForPresent2KHR(&self, device: VkDevice, swapchain: VkSwapchainKHR, pPresentWait2Info: *const VkPresentWait2InfoKHR) -> Result<()>;
 }
 /// struct for `VK_KHR_present_wait2`
@@ -27692,15 +27693,15 @@ extern "system" fn dummy_vkReleaseCapturedPipelineDataKHR(_: VkDevice, _: *const
 /// trait for `VK_KHR_pipeline_binary`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_pipeline_binary.html>
 pub trait VK_KHR_pipeline_binary: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreatePipelineBinariesKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreatePipelineBinariesKHR.html>
 	fn vkCreatePipelineBinariesKHR(&self, device: VkDevice, pCreateInfo: *const VkPipelineBinaryCreateInfoKHR, pAllocator: *const VkAllocationCallbacks, pBinaries: *mut VkPipelineBinaryHandlesInfoKHR) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroyPipelineBinaryKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroyPipelineBinaryKHR.html>
 	fn vkDestroyPipelineBinaryKHR(&self, device: VkDevice, pipelineBinary: VkPipelineBinaryKHR, pAllocator: *const VkAllocationCallbacks) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPipelineKeyKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPipelineKeyKHR.html>
 	fn vkGetPipelineKeyKHR(&self, device: VkDevice, pPipelineCreateInfo: *const VkPipelineCreateInfoKHR, pPipelineKey: *mut VkPipelineBinaryKeyKHR) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPipelineBinaryDataKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPipelineBinaryDataKHR.html>
 	fn vkGetPipelineBinaryDataKHR(&self, device: VkDevice, pInfo: *const VkPipelineBinaryDataInfoKHR, pPipelineBinaryKey: *mut VkPipelineBinaryKeyKHR, pPipelineBinaryDataSize: *mut size_t, pPipelineBinaryData: *mut c_void) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkReleaseCapturedPipelineDataKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkReleaseCapturedPipelineDataKHR.html>
 	fn vkReleaseCapturedPipelineDataKHR(&self, device: VkDevice, pInfo: *const VkReleaseCapturedPipelineDataInfoKHR, pAllocator: *const VkAllocationCallbacks) -> Result<()>;
 }
 /// struct for `VK_KHR_pipeline_binary`
@@ -27970,7 +27971,7 @@ extern "system" fn dummy_vkReleaseSwapchainImagesKHR(_: VkDevice, _: *const VkRe
 /// trait for `VK_KHR_swapchain_maintenance1`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_swapchain_maintenance1.html>
 pub trait VK_KHR_swapchain_maintenance1: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkReleaseSwapchainImagesKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkReleaseSwapchainImagesKHR.html>
 	fn vkReleaseSwapchainImagesKHR(&self, device: VkDevice, pReleaseInfo: *const VkReleaseSwapchainImagesInfoKHR) -> Result<()>;
 }
 /// struct for `VK_KHR_swapchain_maintenance1`
@@ -28098,7 +28099,7 @@ extern "system" fn dummy_vkGetPhysicalDeviceCooperativeMatrixPropertiesKHR(_: Vk
 /// trait for `VK_KHR_cooperative_matrix`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_cooperative_matrix.html>
 pub trait VK_KHR_cooperative_matrix: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceCooperativeMatrixPropertiesKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceCooperativeMatrixPropertiesKHR.html>
 	fn vkGetPhysicalDeviceCooperativeMatrixPropertiesKHR(&self, physicalDevice: VkPhysicalDevice, pPropertyCount: *mut uint32_t, pProperties: *mut VkCooperativeMatrixPropertiesKHR) -> Result<()>;
 }
 /// struct for `VK_KHR_cooperative_matrix`
@@ -30922,7 +30923,7 @@ extern "system" fn dummy_vkCmdSetLineStippleKHR(_: VkCommandBuffer, _: u32, _: u
 /// trait for `VK_KHR_line_rasterization`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_line_rasterization.html>
 pub trait VK_KHR_line_rasterization: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetLineStippleKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetLineStippleKHR.html>
 	fn vkCmdSetLineStippleKHR(&self, commandBuffer: VkCommandBuffer, lineStippleFactor: u32, lineStipplePattern: u16) -> Result<()>;
 }
 /// struct for `VK_KHR_line_rasterization`
@@ -30992,9 +30993,9 @@ extern "system" fn dummy_vkGetCalibratedTimestampsKHR(_: VkDevice, _: u32, _: *c
 /// trait for `VK_KHR_calibrated_timestamps`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_calibrated_timestamps.html>
 pub trait VK_KHR_calibrated_timestamps: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceCalibrateableTimeDomainsKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceCalibrateableTimeDomainsKHR.html>
 	fn vkGetPhysicalDeviceCalibrateableTimeDomainsKHR(&self, physicalDevice: VkPhysicalDevice, pTimeDomainCount: *mut uint32_t, pTimeDomains: *mut VkTimeDomainKHR) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetCalibratedTimestampsKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetCalibratedTimestampsKHR.html>
 	fn vkGetCalibratedTimestampsKHR(&self, device: VkDevice, timestampCount: u32, pTimestampInfos: *const VkCalibratedTimestampInfoKHR, pTimestamps: *mut uint64_t, pMaxDeviation: *mut uint64_t) -> Result<()>;
 }
 /// struct for `VK_KHR_calibrated_timestamps`
@@ -31138,17 +31139,17 @@ extern "system" fn dummy_vkCmdBindDescriptorBufferEmbeddedSamplers2EXT(_: VkComm
 /// trait for `VK_KHR_maintenance6`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_maintenance6.html>
 pub trait VK_KHR_maintenance6: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdBindDescriptorSets2KHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdBindDescriptorSets2KHR.html>
 	fn vkCmdBindDescriptorSets2KHR(&self, commandBuffer: VkCommandBuffer, pBindDescriptorSetsInfo: *const VkBindDescriptorSetsInfo) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdPushConstants2KHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdPushConstants2KHR.html>
 	fn vkCmdPushConstants2KHR(&self, commandBuffer: VkCommandBuffer, pPushConstantsInfo: *const VkPushConstantsInfo) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdPushDescriptorSet2KHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdPushDescriptorSet2KHR.html>
 	fn vkCmdPushDescriptorSet2KHR(&self, commandBuffer: VkCommandBuffer, pPushDescriptorSetInfo: *const VkPushDescriptorSetInfo) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdPushDescriptorSetWithTemplate2KHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdPushDescriptorSetWithTemplate2KHR.html>
 	fn vkCmdPushDescriptorSetWithTemplate2KHR(&self, commandBuffer: VkCommandBuffer, pPushDescriptorSetWithTemplateInfo: *const VkPushDescriptorSetWithTemplateInfo) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetDescriptorBufferOffsets2EXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetDescriptorBufferOffsets2EXT.html>
 	fn vkCmdSetDescriptorBufferOffsets2EXT(&self, commandBuffer: VkCommandBuffer, pSetDescriptorBufferOffsetsInfo: *const VkSetDescriptorBufferOffsetsInfoEXT) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdBindDescriptorBufferEmbeddedSamplers2EXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdBindDescriptorBufferEmbeddedSamplers2EXT.html>
 	fn vkCmdBindDescriptorBufferEmbeddedSamplers2EXT(&self, commandBuffer: VkCommandBuffer, pBindDescriptorBufferEmbeddedSamplersInfo: *const VkBindDescriptorBufferEmbeddedSamplersInfoEXT) -> Result<()>;
 }
 /// struct for `VK_KHR_maintenance6`
@@ -31946,11 +31947,11 @@ extern "system" fn dummy_vkDebugReportMessageEXT(_: VkInstance, _: VkDebugReport
 /// trait for `VK_EXT_debug_report`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_debug_report.html>
 pub trait VK_EXT_debug_report: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateDebugReportCallbackEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateDebugReportCallbackEXT.html>
 	fn vkCreateDebugReportCallbackEXT(&self, instance: VkInstance, pCreateInfo: *const VkDebugReportCallbackCreateInfoEXT, pAllocator: *const VkAllocationCallbacks, pCallback: *mut VkDebugReportCallbackEXT) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroyDebugReportCallbackEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroyDebugReportCallbackEXT.html>
 	fn vkDestroyDebugReportCallbackEXT(&self, instance: VkInstance, callback: VkDebugReportCallbackEXT, pAllocator: *const VkAllocationCallbacks) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDebugReportMessageEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDebugReportMessageEXT.html>
 	fn vkDebugReportMessageEXT(&self, instance: VkInstance, flags: VkDebugReportFlagsEXT, objectType: VkDebugReportObjectTypeEXT, object: u64, location: usize, messageCode: i32, pLayerPrefix: *const i8, pMessage: *const i8) -> Result<()>;
 }
 /// struct for `VK_EXT_debug_report`
@@ -32181,15 +32182,15 @@ extern "system" fn dummy_vkCmdDebugMarkerInsertEXT(_: VkCommandBuffer, _: *const
 /// trait for `VK_EXT_debug_marker`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_debug_marker.html>
 pub trait VK_EXT_debug_marker: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDebugMarkerSetObjectTagEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDebugMarkerSetObjectTagEXT.html>
 	fn vkDebugMarkerSetObjectTagEXT(&self, device: VkDevice, pTagInfo: *const VkDebugMarkerObjectTagInfoEXT) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDebugMarkerSetObjectNameEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDebugMarkerSetObjectNameEXT.html>
 	fn vkDebugMarkerSetObjectNameEXT(&self, device: VkDevice, pNameInfo: *const VkDebugMarkerObjectNameInfoEXT) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdDebugMarkerBeginEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdDebugMarkerBeginEXT.html>
 	fn vkCmdDebugMarkerBeginEXT(&self, commandBuffer: VkCommandBuffer, pMarkerInfo: *const VkDebugMarkerMarkerInfoEXT) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdDebugMarkerEndEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdDebugMarkerEndEXT.html>
 	fn vkCmdDebugMarkerEndEXT(&self, commandBuffer: VkCommandBuffer) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdDebugMarkerInsertEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdDebugMarkerInsertEXT.html>
 	fn vkCmdDebugMarkerInsertEXT(&self, commandBuffer: VkCommandBuffer, pMarkerInfo: *const VkDebugMarkerMarkerInfoEXT) -> Result<()>;
 }
 /// struct for `VK_EXT_debug_marker`
@@ -32388,17 +32389,17 @@ extern "system" fn dummy_vkCmdDrawIndirectByteCountEXT(_: VkCommandBuffer, _: u3
 /// trait for `VK_EXT_transform_feedback`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_transform_feedback.html>
 pub trait VK_EXT_transform_feedback: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdBindTransformFeedbackBuffersEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdBindTransformFeedbackBuffersEXT.html>
 	fn vkCmdBindTransformFeedbackBuffersEXT(&self, commandBuffer: VkCommandBuffer, firstBinding: u32, bindingCount: u32, pBuffers: *const VkBuffer, pOffsets: *const VkDeviceSize, pSizes: *const VkDeviceSize) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdBeginTransformFeedbackEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdBeginTransformFeedbackEXT.html>
 	fn vkCmdBeginTransformFeedbackEXT(&self, commandBuffer: VkCommandBuffer, firstCounterBuffer: u32, counterBufferCount: u32, pCounterBuffers: *const VkBuffer, pCounterBufferOffsets: *const VkDeviceSize) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdEndTransformFeedbackEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdEndTransformFeedbackEXT.html>
 	fn vkCmdEndTransformFeedbackEXT(&self, commandBuffer: VkCommandBuffer, firstCounterBuffer: u32, counterBufferCount: u32, pCounterBuffers: *const VkBuffer, pCounterBufferOffsets: *const VkDeviceSize) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdBeginQueryIndexedEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdBeginQueryIndexedEXT.html>
 	fn vkCmdBeginQueryIndexedEXT(&self, commandBuffer: VkCommandBuffer, queryPool: VkQueryPool, query: u32, flags: VkQueryControlFlags, index: u32) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdEndQueryIndexedEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdEndQueryIndexedEXT.html>
 	fn vkCmdEndQueryIndexedEXT(&self, commandBuffer: VkCommandBuffer, queryPool: VkQueryPool, query: u32, index: u32) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdDrawIndirectByteCountEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdDrawIndirectByteCountEXT.html>
 	fn vkCmdDrawIndirectByteCountEXT(&self, commandBuffer: VkCommandBuffer, instanceCount: u32, firstInstance: u32, counterBuffer: VkBuffer, counterBufferOffset: VkDeviceSize, counterOffset: u32, vertexStride: u32) -> Result<()>;
 }
 /// struct for `VK_EXT_transform_feedback`
@@ -32552,15 +32553,15 @@ extern "system" fn dummy_vkCmdCuLaunchKernelNVX(_: VkCommandBuffer, _: *const Vk
 /// trait for `VK_NVX_binary_import`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NVX_binary_import.html>
 pub trait VK_NVX_binary_import: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateCuModuleNVX.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateCuModuleNVX.html>
 	fn vkCreateCuModuleNVX(&self, device: VkDevice, pCreateInfo: *const VkCuModuleCreateInfoNVX, pAllocator: *const VkAllocationCallbacks, pModule: *mut VkCuModuleNVX) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateCuFunctionNVX.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateCuFunctionNVX.html>
 	fn vkCreateCuFunctionNVX(&self, device: VkDevice, pCreateInfo: *const VkCuFunctionCreateInfoNVX, pAllocator: *const VkAllocationCallbacks, pFunction: *mut VkCuFunctionNVX) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroyCuModuleNVX.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroyCuModuleNVX.html>
 	fn vkDestroyCuModuleNVX(&self, device: VkDevice, module: VkCuModuleNVX, pAllocator: *const VkAllocationCallbacks) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroyCuFunctionNVX.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroyCuFunctionNVX.html>
 	fn vkDestroyCuFunctionNVX(&self, device: VkDevice, function: VkCuFunctionNVX, pAllocator: *const VkAllocationCallbacks) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdCuLaunchKernelNVX.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdCuLaunchKernelNVX.html>
 	fn vkCmdCuLaunchKernelNVX(&self, commandBuffer: VkCommandBuffer, pLaunchInfo: *const VkCuLaunchInfoNVX) -> Result<()>;
 }
 /// struct for `VK_NVX_binary_import`
@@ -32656,11 +32657,11 @@ extern "system" fn dummy_vkGetImageViewAddressNVX(_: VkDevice, _: VkImageView, _
 /// trait for `VK_NVX_image_view_handle`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NVX_image_view_handle.html>
 pub trait VK_NVX_image_view_handle: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetImageViewHandleNVX.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetImageViewHandleNVX.html>
 	fn vkGetImageViewHandleNVX(&self, device: VkDevice, pInfo: *const VkImageViewHandleInfoNVX) -> Result<u32>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetImageViewHandle64NVX.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetImageViewHandle64NVX.html>
 	fn vkGetImageViewHandle64NVX(&self, device: VkDevice, pInfo: *const VkImageViewHandleInfoNVX) -> Result<u64>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetImageViewAddressNVX.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetImageViewAddressNVX.html>
 	fn vkGetImageViewAddressNVX(&self, device: VkDevice, imageView: VkImageView, pProperties: *mut VkImageViewAddressPropertiesNVX) -> Result<()>;
 }
 /// struct for `VK_NVX_image_view_handle`
@@ -32716,9 +32717,9 @@ extern "system" fn dummy_vkCmdDrawIndexedIndirectCountAMD(_: VkCommandBuffer, _:
 /// trait for `VK_AMD_draw_indirect_count`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_AMD_draw_indirect_count.html>
 pub trait VK_AMD_draw_indirect_count: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdDrawIndirectCountAMD.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdDrawIndirectCountAMD.html>
 	fn vkCmdDrawIndirectCountAMD(&self, commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize, countBuffer: VkBuffer, countBufferOffset: VkDeviceSize, maxDrawCount: u32, stride: u32) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdDrawIndexedIndirectCountAMD.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdDrawIndexedIndirectCountAMD.html>
 	fn vkCmdDrawIndexedIndirectCountAMD(&self, commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize, countBuffer: VkBuffer, countBufferOffset: VkDeviceSize, maxDrawCount: u32, stride: u32) -> Result<()>;
 }
 /// struct for `VK_AMD_draw_indirect_count`
@@ -32872,7 +32873,7 @@ extern "system" fn dummy_vkGetShaderInfoAMD(_: VkDevice, _: VkPipeline, _: VkSha
 /// trait for `VK_AMD_shader_info`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_AMD_shader_info.html>
 pub trait VK_AMD_shader_info: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetShaderInfoAMD.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetShaderInfoAMD.html>
 	fn vkGetShaderInfoAMD(&self, device: VkDevice, pipeline: VkPipeline, shaderStage: VkShaderStageFlagBits, infoType: VkShaderInfoTypeAMD, pInfoSize: *mut size_t, pInfo: *mut c_void) -> Result<()>;
 }
 /// struct for `VK_AMD_shader_info`
@@ -33051,7 +33052,7 @@ extern "system" fn dummy_vkGetPhysicalDeviceExternalImageFormatPropertiesNV(_: V
 /// trait for `VK_NV_external_memory_capabilities`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NV_external_memory_capabilities.html>
 pub trait VK_NV_external_memory_capabilities: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceExternalImageFormatPropertiesNV.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceExternalImageFormatPropertiesNV.html>
 	fn vkGetPhysicalDeviceExternalImageFormatPropertiesNV(&self, physicalDevice: VkPhysicalDevice, format: VkFormat, type_: VkImageType, tiling: VkImageTiling, usage: VkImageUsageFlags, flags: VkImageCreateFlags, externalHandleType: VkExternalMemoryHandleTypeFlagsNV, pExternalImageFormatProperties: *mut VkExternalImageFormatPropertiesNV) -> Result<()>;
 }
 /// struct for `VK_NV_external_memory_capabilities`
@@ -33349,9 +33350,9 @@ extern "system" fn dummy_vkCmdEndConditionalRenderingEXT(_: VkCommandBuffer) {
 /// trait for `VK_EXT_conditional_rendering`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_conditional_rendering.html>
 pub trait VK_EXT_conditional_rendering: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdBeginConditionalRenderingEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdBeginConditionalRenderingEXT.html>
 	fn vkCmdBeginConditionalRenderingEXT(&self, commandBuffer: VkCommandBuffer, pConditionalRenderingBegin: *const VkConditionalRenderingBeginInfoEXT) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdEndConditionalRenderingEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdEndConditionalRenderingEXT.html>
 	fn vkCmdEndConditionalRenderingEXT(&self, commandBuffer: VkCommandBuffer) -> Result<()>;
 }
 /// struct for `VK_EXT_conditional_rendering`
@@ -33413,7 +33414,7 @@ extern "system" fn dummy_vkCmdSetViewportWScalingNV(_: VkCommandBuffer, _: u32, 
 /// trait for `VK_NV_clip_space_w_scaling`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NV_clip_space_w_scaling.html>
 pub trait VK_NV_clip_space_w_scaling: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetViewportWScalingNV.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetViewportWScalingNV.html>
 	fn vkCmdSetViewportWScalingNV(&self, commandBuffer: VkCommandBuffer, firstViewport: u32, viewportCount: u32, pViewportWScalings: *const VkViewportWScalingNV) -> Result<()>;
 }
 /// struct for `VK_NV_clip_space_w_scaling`
@@ -33450,7 +33451,7 @@ extern "system" fn dummy_vkReleaseDisplayEXT(_: VkPhysicalDevice, _: VkDisplayKH
 /// trait for `VK_EXT_direct_mode_display`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_direct_mode_display.html>
 pub trait VK_EXT_direct_mode_display: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkReleaseDisplayEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkReleaseDisplayEXT.html>
 	fn vkReleaseDisplayEXT(&self, physicalDevice: VkPhysicalDevice, display: VkDisplayKHR) -> Result<()>;
 }
 /// struct for `VK_EXT_direct_mode_display`
@@ -33552,7 +33553,7 @@ extern "system" fn dummy_vkGetPhysicalDeviceSurfaceCapabilities2EXT(_: VkPhysica
 /// trait for `VK_EXT_display_surface_counter`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_display_surface_counter.html>
 pub trait VK_EXT_display_surface_counter: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceSurfaceCapabilities2EXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceSurfaceCapabilities2EXT.html>
 	fn vkGetPhysicalDeviceSurfaceCapabilities2EXT(&self, physicalDevice: VkPhysicalDevice, surface: VkSurfaceKHR, pSurfaceCapabilities: *mut VkSurfaceCapabilities2EXT) -> Result<()>;
 }
 /// struct for `VK_EXT_display_surface_counter`
@@ -33672,13 +33673,13 @@ extern "system" fn dummy_vkGetSwapchainCounterEXT(_: VkDevice, _: VkSwapchainKHR
 /// trait for `VK_EXT_display_control`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_display_control.html>
 pub trait VK_EXT_display_control: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDisplayPowerControlEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDisplayPowerControlEXT.html>
 	fn vkDisplayPowerControlEXT(&self, device: VkDevice, display: VkDisplayKHR, pDisplayPowerInfo: *const VkDisplayPowerInfoEXT) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkRegisterDeviceEventEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkRegisterDeviceEventEXT.html>
 	fn vkRegisterDeviceEventEXT(&self, device: VkDevice, pDeviceEventInfo: *const VkDeviceEventInfoEXT, pAllocator: *const VkAllocationCallbacks, pFence: *mut VkFence) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkRegisterDisplayEventEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkRegisterDisplayEventEXT.html>
 	fn vkRegisterDisplayEventEXT(&self, device: VkDevice, display: VkDisplayKHR, pDisplayEventInfo: *const VkDisplayEventInfoEXT, pAllocator: *const VkAllocationCallbacks, pFence: *mut VkFence) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetSwapchainCounterEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetSwapchainCounterEXT.html>
 	fn vkGetSwapchainCounterEXT(&self, device: VkDevice, swapchain: VkSwapchainKHR, counter: VkSurfaceCounterFlagBitsEXT, pCounterValue: *mut uint64_t) -> Result<()>;
 }
 /// struct for `VK_EXT_display_control`
@@ -33776,9 +33777,9 @@ extern "system" fn dummy_vkGetPastPresentationTimingGOOGLE(_: VkDevice, _: VkSwa
 /// trait for `VK_GOOGLE_display_timing`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_GOOGLE_display_timing.html>
 pub trait VK_GOOGLE_display_timing: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetRefreshCycleDurationGOOGLE.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetRefreshCycleDurationGOOGLE.html>
 	fn vkGetRefreshCycleDurationGOOGLE(&self, device: VkDevice, swapchain: VkSwapchainKHR, pDisplayTimingProperties: *mut VkRefreshCycleDurationGOOGLE) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPastPresentationTimingGOOGLE.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPastPresentationTimingGOOGLE.html>
 	fn vkGetPastPresentationTimingGOOGLE(&self, device: VkDevice, swapchain: VkSwapchainKHR, pPresentationTimingCount: *mut uint32_t, pPresentationTimings: *mut VkPastPresentationTimingGOOGLE) -> Result<()>;
 }
 /// struct for `VK_GOOGLE_display_timing`
@@ -34011,11 +34012,11 @@ extern "system" fn dummy_vkCmdSetDiscardRectangleModeEXT(_: VkCommandBuffer, _: 
 /// trait for `VK_EXT_discard_rectangles`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_discard_rectangles.html>
 pub trait VK_EXT_discard_rectangles: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetDiscardRectangleEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetDiscardRectangleEXT.html>
 	fn vkCmdSetDiscardRectangleEXT(&self, commandBuffer: VkCommandBuffer, firstDiscardRectangle: u32, discardRectangleCount: u32, pDiscardRectangles: *const VkRect2D) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetDiscardRectangleEnableEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetDiscardRectangleEnableEXT.html>
 	fn vkCmdSetDiscardRectangleEnableEXT(&self, commandBuffer: VkCommandBuffer, discardRectangleEnable: VkBool32) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetDiscardRectangleModeEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetDiscardRectangleModeEXT.html>
 	fn vkCmdSetDiscardRectangleModeEXT(&self, commandBuffer: VkCommandBuffer, discardRectangleMode: VkDiscardRectangleModeEXT) -> Result<()>;
 }
 /// struct for `VK_EXT_discard_rectangles`
@@ -34202,7 +34203,7 @@ extern "system" fn dummy_vkSetHdrMetadataEXT(_: VkDevice, _: u32, _: *const VkSw
 /// trait for `VK_EXT_hdr_metadata`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_hdr_metadata.html>
 pub trait VK_EXT_hdr_metadata: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkSetHdrMetadataEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkSetHdrMetadataEXT.html>
 	fn vkSetHdrMetadataEXT(&self, device: VkDevice, swapchainCount: u32, pSwapchains: *const VkSwapchainKHR, pMetadata: *const VkHdrMetadataEXT) -> Result<()>;
 }
 /// struct for `VK_EXT_hdr_metadata`
@@ -34530,27 +34531,27 @@ extern "system" fn dummy_vkSubmitDebugUtilsMessageEXT(_: VkInstance, _: VkDebugU
 /// trait for `VK_EXT_debug_utils`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_debug_utils.html>
 pub trait VK_EXT_debug_utils: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkSetDebugUtilsObjectNameEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkSetDebugUtilsObjectNameEXT.html>
 	fn vkSetDebugUtilsObjectNameEXT(&self, device: VkDevice, pNameInfo: *const VkDebugUtilsObjectNameInfoEXT) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkSetDebugUtilsObjectTagEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkSetDebugUtilsObjectTagEXT.html>
 	fn vkSetDebugUtilsObjectTagEXT(&self, device: VkDevice, pTagInfo: *const VkDebugUtilsObjectTagInfoEXT) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkQueueBeginDebugUtilsLabelEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkQueueBeginDebugUtilsLabelEXT.html>
 	fn vkQueueBeginDebugUtilsLabelEXT(&self, queue: VkQueue, pLabelInfo: *const VkDebugUtilsLabelEXT) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkQueueEndDebugUtilsLabelEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkQueueEndDebugUtilsLabelEXT.html>
 	fn vkQueueEndDebugUtilsLabelEXT(&self, queue: VkQueue) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkQueueInsertDebugUtilsLabelEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkQueueInsertDebugUtilsLabelEXT.html>
 	fn vkQueueInsertDebugUtilsLabelEXT(&self, queue: VkQueue, pLabelInfo: *const VkDebugUtilsLabelEXT) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdBeginDebugUtilsLabelEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdBeginDebugUtilsLabelEXT.html>
 	fn vkCmdBeginDebugUtilsLabelEXT(&self, commandBuffer: VkCommandBuffer, pLabelInfo: *const VkDebugUtilsLabelEXT) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdEndDebugUtilsLabelEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdEndDebugUtilsLabelEXT.html>
 	fn vkCmdEndDebugUtilsLabelEXT(&self, commandBuffer: VkCommandBuffer) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdInsertDebugUtilsLabelEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdInsertDebugUtilsLabelEXT.html>
 	fn vkCmdInsertDebugUtilsLabelEXT(&self, commandBuffer: VkCommandBuffer, pLabelInfo: *const VkDebugUtilsLabelEXT) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateDebugUtilsMessengerEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateDebugUtilsMessengerEXT.html>
 	fn vkCreateDebugUtilsMessengerEXT(&self, instance: VkInstance, pCreateInfo: *const VkDebugUtilsMessengerCreateInfoEXT, pAllocator: *const VkAllocationCallbacks, pMessenger: *mut VkDebugUtilsMessengerEXT) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroyDebugUtilsMessengerEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroyDebugUtilsMessengerEXT.html>
 	fn vkDestroyDebugUtilsMessengerEXT(&self, instance: VkInstance, messenger: VkDebugUtilsMessengerEXT, pAllocator: *const VkAllocationCallbacks) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkSubmitDebugUtilsMessageEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkSubmitDebugUtilsMessageEXT.html>
 	fn vkSubmitDebugUtilsMessageEXT(&self, instance: VkInstance, messageSeverity: VkDebugUtilsMessageSeverityFlagBitsEXT, messageTypes: VkDebugUtilsMessageTypeFlagsEXT, pCallbackData: *const VkDebugUtilsMessengerCallbackDataEXT) -> Result<()>;
 }
 /// struct for `VK_EXT_debug_utils`
@@ -34868,9 +34869,9 @@ extern "system" fn dummy_vkGetPhysicalDeviceMultisamplePropertiesEXT(_: VkPhysic
 /// trait for `VK_EXT_sample_locations`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_sample_locations.html>
 pub trait VK_EXT_sample_locations: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetSampleLocationsEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetSampleLocationsEXT.html>
 	fn vkCmdSetSampleLocationsEXT(&self, commandBuffer: VkCommandBuffer, pSampleLocationsInfo: *const VkSampleLocationsInfoEXT) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceMultisamplePropertiesEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceMultisamplePropertiesEXT.html>
 	fn vkGetPhysicalDeviceMultisamplePropertiesEXT(&self, physicalDevice: VkPhysicalDevice, samples: VkSampleCountFlagBits, pMultisampleProperties: *mut VkMultisamplePropertiesEXT) -> Result<()>;
 }
 /// struct for `VK_EXT_sample_locations`
@@ -35202,7 +35203,7 @@ extern "system" fn dummy_vkGetImageDrmFormatModifierPropertiesEXT(_: VkDevice, _
 /// trait for `VK_EXT_image_drm_format_modifier`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_image_drm_format_modifier.html>
 pub trait VK_EXT_image_drm_format_modifier: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetImageDrmFormatModifierPropertiesEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetImageDrmFormatModifierPropertiesEXT.html>
 	fn vkGetImageDrmFormatModifierPropertiesEXT(&self, device: VkDevice, image: VkImage, pProperties: *mut VkImageDrmFormatModifierPropertiesEXT) -> Result<()>;
 }
 /// struct for `VK_EXT_image_drm_format_modifier`
@@ -35296,13 +35297,13 @@ extern "system" fn dummy_vkGetValidationCacheDataEXT(_: VkDevice, _: VkValidatio
 /// trait for `VK_EXT_validation_cache`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_validation_cache.html>
 pub trait VK_EXT_validation_cache: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateValidationCacheEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateValidationCacheEXT.html>
 	fn vkCreateValidationCacheEXT(&self, device: VkDevice, pCreateInfo: *const VkValidationCacheCreateInfoEXT, pAllocator: *const VkAllocationCallbacks, pValidationCache: *mut VkValidationCacheEXT) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroyValidationCacheEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroyValidationCacheEXT.html>
 	fn vkDestroyValidationCacheEXT(&self, device: VkDevice, validationCache: VkValidationCacheEXT, pAllocator: *const VkAllocationCallbacks) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkMergeValidationCachesEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkMergeValidationCachesEXT.html>
 	fn vkMergeValidationCachesEXT(&self, device: VkDevice, dstCache: VkValidationCacheEXT, srcCacheCount: u32, pSrcCaches: *const VkValidationCacheEXT) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetValidationCacheDataEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetValidationCacheDataEXT.html>
 	fn vkGetValidationCacheDataEXT(&self, device: VkDevice, validationCache: VkValidationCacheEXT, pDataSize: *mut size_t, pData: *mut c_void) -> Result<()>;
 }
 /// struct for `VK_EXT_validation_cache`
@@ -35526,11 +35527,11 @@ extern "system" fn dummy_vkCmdSetCoarseSampleOrderNV(_: VkCommandBuffer, _: VkCo
 /// trait for `VK_NV_shading_rate_image`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NV_shading_rate_image.html>
 pub trait VK_NV_shading_rate_image: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdBindShadingRateImageNV.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdBindShadingRateImageNV.html>
 	fn vkCmdBindShadingRateImageNV(&self, commandBuffer: VkCommandBuffer, imageView: VkImageView, imageLayout: VkImageLayout) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetViewportShadingRatePaletteNV.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetViewportShadingRatePaletteNV.html>
 	fn vkCmdSetViewportShadingRatePaletteNV(&self, commandBuffer: VkCommandBuffer, firstViewport: u32, viewportCount: u32, pShadingRatePalettes: *const VkShadingRatePaletteNV) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetCoarseSampleOrderNV.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetCoarseSampleOrderNV.html>
 	fn vkCmdSetCoarseSampleOrderNV(&self, commandBuffer: VkCommandBuffer, sampleOrderType: VkCoarseSampleOrderTypeNV, customSampleOrderCount: u32, pCustomSampleOrders: *const VkCoarseSampleOrderCustomNV) -> Result<()>;
 }
 /// struct for `VK_NV_shading_rate_image`
@@ -36231,31 +36232,31 @@ extern "system" fn dummy_vkCompileDeferredNV(_: VkDevice, _: VkPipeline, _: u32)
 /// trait for `VK_NV_ray_tracing`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NV_ray_tracing.html>
 pub trait VK_NV_ray_tracing: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateAccelerationStructureNV.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateAccelerationStructureNV.html>
 	fn vkCreateAccelerationStructureNV(&self, device: VkDevice, pCreateInfo: *const VkAccelerationStructureCreateInfoNV, pAllocator: *const VkAllocationCallbacks, pAccelerationStructure: *mut VkAccelerationStructureNV) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroyAccelerationStructureNV.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroyAccelerationStructureNV.html>
 	fn vkDestroyAccelerationStructureNV(&self, device: VkDevice, accelerationStructure: VkAccelerationStructureNV, pAllocator: *const VkAllocationCallbacks) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetAccelerationStructureMemoryRequirementsNV.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetAccelerationStructureMemoryRequirementsNV.html>
 	fn vkGetAccelerationStructureMemoryRequirementsNV(&self, device: VkDevice, pInfo: *const VkAccelerationStructureMemoryRequirementsInfoNV, pMemoryRequirements: *mut VkMemoryRequirements2KHR) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkBindAccelerationStructureMemoryNV.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkBindAccelerationStructureMemoryNV.html>
 	fn vkBindAccelerationStructureMemoryNV(&self, device: VkDevice, bindInfoCount: u32, pBindInfos: *const VkBindAccelerationStructureMemoryInfoNV) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdBuildAccelerationStructureNV.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdBuildAccelerationStructureNV.html>
 	fn vkCmdBuildAccelerationStructureNV(&self, commandBuffer: VkCommandBuffer, pInfo: *const VkAccelerationStructureInfoNV, instanceData: VkBuffer, instanceOffset: VkDeviceSize, update: VkBool32, dst: VkAccelerationStructureNV, src: VkAccelerationStructureNV, scratch: VkBuffer, scratchOffset: VkDeviceSize) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdCopyAccelerationStructureNV.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdCopyAccelerationStructureNV.html>
 	fn vkCmdCopyAccelerationStructureNV(&self, commandBuffer: VkCommandBuffer, dst: VkAccelerationStructureNV, src: VkAccelerationStructureNV, mode: VkCopyAccelerationStructureModeKHR) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdTraceRaysNV.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdTraceRaysNV.html>
 	fn vkCmdTraceRaysNV(&self, commandBuffer: VkCommandBuffer, raygenShaderBindingTableBuffer: VkBuffer, raygenShaderBindingOffset: VkDeviceSize, missShaderBindingTableBuffer: VkBuffer, missShaderBindingOffset: VkDeviceSize, missShaderBindingStride: VkDeviceSize, hitShaderBindingTableBuffer: VkBuffer, hitShaderBindingOffset: VkDeviceSize, hitShaderBindingStride: VkDeviceSize, callableShaderBindingTableBuffer: VkBuffer, callableShaderBindingOffset: VkDeviceSize, callableShaderBindingStride: VkDeviceSize, width: u32, height: u32, depth: u32) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateRayTracingPipelinesNV.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateRayTracingPipelinesNV.html>
 	fn vkCreateRayTracingPipelinesNV(&self, device: VkDevice, pipelineCache: VkPipelineCache, createInfoCount: u32, pCreateInfos: *const VkRayTracingPipelineCreateInfoNV, pAllocator: *const VkAllocationCallbacks, pPipelines: *mut VkPipeline) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetRayTracingShaderGroupHandlesKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetRayTracingShaderGroupHandlesKHR.html>
 	fn vkGetRayTracingShaderGroupHandlesKHR(&self, device: VkDevice, pipeline: VkPipeline, firstGroup: u32, groupCount: u32, dataSize: usize, pData: *mut c_void) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetRayTracingShaderGroupHandlesNV.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetRayTracingShaderGroupHandlesNV.html>
 	fn vkGetRayTracingShaderGroupHandlesNV(&self, device: VkDevice, pipeline: VkPipeline, firstGroup: u32, groupCount: u32, dataSize: usize, pData: *mut c_void) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetAccelerationStructureHandleNV.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetAccelerationStructureHandleNV.html>
 	fn vkGetAccelerationStructureHandleNV(&self, device: VkDevice, accelerationStructure: VkAccelerationStructureNV, dataSize: usize, pData: *mut c_void) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdWriteAccelerationStructuresPropertiesNV.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdWriteAccelerationStructuresPropertiesNV.html>
 	fn vkCmdWriteAccelerationStructuresPropertiesNV(&self, commandBuffer: VkCommandBuffer, accelerationStructureCount: u32, pAccelerationStructures: *const VkAccelerationStructureNV, queryType: VkQueryType, queryPool: VkQueryPool, firstQuery: u32) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCompileDeferredNV.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCompileDeferredNV.html>
 	fn vkCompileDeferredNV(&self, device: VkDevice, pipeline: VkPipeline, shader: u32) -> Result<()>;
 }
 /// struct for `VK_NV_ray_tracing`
@@ -36503,7 +36504,7 @@ extern "system" fn dummy_vkGetMemoryHostPointerPropertiesEXT(_: VkDevice, _: VkE
 /// trait for `VK_EXT_external_memory_host`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_external_memory_host.html>
 pub trait VK_EXT_external_memory_host: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetMemoryHostPointerPropertiesEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetMemoryHostPointerPropertiesEXT.html>
 	fn vkGetMemoryHostPointerPropertiesEXT(&self, device: VkDevice, handleType: VkExternalMemoryHandleTypeFlagBits, pHostPointer: *const c_void, pMemoryHostPointerProperties: *mut VkMemoryHostPointerPropertiesEXT) -> Result<()>;
 }
 /// struct for `VK_EXT_external_memory_host`
@@ -36547,9 +36548,9 @@ extern "system" fn dummy_vkCmdWriteBufferMarker2AMD(_: VkCommandBuffer, _: VkPip
 /// trait for `VK_AMD_buffer_marker`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_AMD_buffer_marker.html>
 pub trait VK_AMD_buffer_marker: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdWriteBufferMarkerAMD.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdWriteBufferMarkerAMD.html>
 	fn vkCmdWriteBufferMarkerAMD(&self, commandBuffer: VkCommandBuffer, pipelineStage: VkPipelineStageFlagBits, dstBuffer: VkBuffer, dstOffset: VkDeviceSize, marker: u32) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdWriteBufferMarker2AMD.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdWriteBufferMarker2AMD.html>
 	fn vkCmdWriteBufferMarker2AMD(&self, commandBuffer: VkCommandBuffer, stage: VkPipelineStageFlags2, dstBuffer: VkBuffer, dstOffset: VkDeviceSize, marker: u32) -> Result<()>;
 }
 /// struct for `VK_AMD_buffer_marker`
@@ -36657,9 +36658,9 @@ extern "system" fn dummy_vkGetCalibratedTimestampsEXT(_: VkDevice, _: u32, _: *c
 /// trait for `VK_EXT_calibrated_timestamps`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_calibrated_timestamps.html>
 pub trait VK_EXT_calibrated_timestamps: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceCalibrateableTimeDomainsEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceCalibrateableTimeDomainsEXT.html>
 	fn vkGetPhysicalDeviceCalibrateableTimeDomainsEXT(&self, physicalDevice: VkPhysicalDevice, pTimeDomainCount: *mut uint32_t, pTimeDomains: *mut VkTimeDomainKHR) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetCalibratedTimestampsEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetCalibratedTimestampsEXT.html>
 	fn vkGetCalibratedTimestampsEXT(&self, device: VkDevice, timestampCount: u32, pTimestampInfos: *const VkCalibratedTimestampInfoKHR, pTimestamps: *mut uint64_t, pMaxDeviation: *mut uint64_t) -> Result<()>;
 }
 /// struct for `VK_EXT_calibrated_timestamps`
@@ -36931,11 +36932,11 @@ extern "system" fn dummy_vkCmdDrawMeshTasksIndirectCountNV(_: VkCommandBuffer, _
 /// trait for `VK_NV_mesh_shader`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NV_mesh_shader.html>
 pub trait VK_NV_mesh_shader: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdDrawMeshTasksNV.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdDrawMeshTasksNV.html>
 	fn vkCmdDrawMeshTasksNV(&self, commandBuffer: VkCommandBuffer, taskCount: u32, firstTask: u32) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdDrawMeshTasksIndirectNV.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdDrawMeshTasksIndirectNV.html>
 	fn vkCmdDrawMeshTasksIndirectNV(&self, commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize, drawCount: u32, stride: u32) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdDrawMeshTasksIndirectCountNV.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdDrawMeshTasksIndirectCountNV.html>
 	fn vkCmdDrawMeshTasksIndirectCountNV(&self, commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize, countBuffer: VkBuffer, countBufferOffset: VkDeviceSize, maxDrawCount: u32, stride: u32) -> Result<()>;
 }
 /// struct for `VK_NV_mesh_shader`
@@ -37056,9 +37057,9 @@ extern "system" fn dummy_vkCmdSetExclusiveScissorNV(_: VkCommandBuffer, _: u32, 
 /// trait for `VK_NV_scissor_exclusive`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NV_scissor_exclusive.html>
 pub trait VK_NV_scissor_exclusive: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetExclusiveScissorEnableNV.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetExclusiveScissorEnableNV.html>
 	fn vkCmdSetExclusiveScissorEnableNV(&self, commandBuffer: VkCommandBuffer, firstExclusiveScissor: u32, exclusiveScissorCount: u32, pExclusiveScissorEnables: *const VkBool32) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetExclusiveScissorNV.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetExclusiveScissorNV.html>
 	fn vkCmdSetExclusiveScissorNV(&self, commandBuffer: VkCommandBuffer, firstExclusiveScissor: u32, exclusiveScissorCount: u32, pExclusiveScissors: *const VkRect2D) -> Result<()>;
 }
 /// struct for `VK_NV_scissor_exclusive`
@@ -37153,11 +37154,11 @@ extern "system" fn dummy_vkGetQueueCheckpointData2NV(_: VkQueue, _: *mut uint32_
 /// trait for `VK_NV_device_diagnostic_checkpoints`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NV_device_diagnostic_checkpoints.html>
 pub trait VK_NV_device_diagnostic_checkpoints: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetCheckpointNV.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetCheckpointNV.html>
 	fn vkCmdSetCheckpointNV(&self, commandBuffer: VkCommandBuffer, pCheckpointMarker: *const c_void) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetQueueCheckpointDataNV.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetQueueCheckpointDataNV.html>
 	fn vkGetQueueCheckpointDataNV(&self, queue: VkQueue, pCheckpointDataCount: *mut uint32_t, pCheckpointData: *mut VkCheckpointDataNV) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetQueueCheckpointData2NV.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetQueueCheckpointData2NV.html>
 	fn vkGetQueueCheckpointData2NV(&self, queue: VkQueue, pCheckpointDataCount: *mut uint32_t, pCheckpointData: *mut VkCheckpointData2NV) -> Result<()>;
 }
 /// struct for `VK_NV_device_diagnostic_checkpoints`
@@ -37428,23 +37429,23 @@ extern "system" fn dummy_vkGetPerformanceParameterINTEL(_: VkDevice, _: VkPerfor
 /// trait for `VK_INTEL_performance_query`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_INTEL_performance_query.html>
 pub trait VK_INTEL_performance_query: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkInitializePerformanceApiINTEL.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkInitializePerformanceApiINTEL.html>
 	fn vkInitializePerformanceApiINTEL(&self, device: VkDevice, pInitializeInfo: *const VkInitializePerformanceApiInfoINTEL) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkUninitializePerformanceApiINTEL.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkUninitializePerformanceApiINTEL.html>
 	fn vkUninitializePerformanceApiINTEL(&self, device: VkDevice) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetPerformanceMarkerINTEL.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetPerformanceMarkerINTEL.html>
 	fn vkCmdSetPerformanceMarkerINTEL(&self, commandBuffer: VkCommandBuffer, pMarkerInfo: *const VkPerformanceMarkerInfoINTEL) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetPerformanceStreamMarkerINTEL.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetPerformanceStreamMarkerINTEL.html>
 	fn vkCmdSetPerformanceStreamMarkerINTEL(&self, commandBuffer: VkCommandBuffer, pMarkerInfo: *const VkPerformanceStreamMarkerInfoINTEL) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetPerformanceOverrideINTEL.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetPerformanceOverrideINTEL.html>
 	fn vkCmdSetPerformanceOverrideINTEL(&self, commandBuffer: VkCommandBuffer, pOverrideInfo: *const VkPerformanceOverrideInfoINTEL) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkAcquirePerformanceConfigurationINTEL.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkAcquirePerformanceConfigurationINTEL.html>
 	fn vkAcquirePerformanceConfigurationINTEL(&self, device: VkDevice, pAcquireInfo: *const VkPerformanceConfigurationAcquireInfoINTEL, pConfiguration: *mut VkPerformanceConfigurationINTEL) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkReleasePerformanceConfigurationINTEL.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkReleasePerformanceConfigurationINTEL.html>
 	fn vkReleasePerformanceConfigurationINTEL(&self, device: VkDevice, configuration: VkPerformanceConfigurationINTEL) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkQueueSetPerformanceConfigurationINTEL.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkQueueSetPerformanceConfigurationINTEL.html>
 	fn vkQueueSetPerformanceConfigurationINTEL(&self, queue: VkQueue, configuration: VkPerformanceConfigurationINTEL) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPerformanceParameterINTEL.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPerformanceParameterINTEL.html>
 	fn vkGetPerformanceParameterINTEL(&self, device: VkDevice, parameter: VkPerformanceParameterTypeINTEL, pValue: *mut VkPerformanceValueINTEL) -> Result<()>;
 }
 /// struct for `VK_INTEL_performance_query`
@@ -37576,7 +37577,7 @@ extern "system" fn dummy_vkSetLocalDimmingAMD(_: VkDevice, _: VkSwapchainKHR, _:
 /// trait for `VK_AMD_display_native_hdr`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_AMD_display_native_hdr.html>
 pub trait VK_AMD_display_native_hdr: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkSetLocalDimmingAMD.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkSetLocalDimmingAMD.html>
 	fn vkSetLocalDimmingAMD(&self, device: VkDevice, swapChain: VkSwapchainKHR, localDimmingEnable: VkBool32) -> Result<()>;
 }
 /// struct for `VK_AMD_display_native_hdr`
@@ -37972,7 +37973,7 @@ extern "system" fn dummy_vkGetBufferDeviceAddressEXT(_: VkDevice, _: *const VkBu
 /// trait for `VK_EXT_buffer_device_address`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_buffer_device_address.html>
 pub trait VK_EXT_buffer_device_address: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetBufferDeviceAddressEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetBufferDeviceAddressEXT.html>
 	fn vkGetBufferDeviceAddressEXT(&self, device: VkDevice, pInfo: *const VkBufferDeviceAddressInfo) -> Result<VkDeviceAddress>;
 }
 /// struct for `VK_EXT_buffer_device_address`
@@ -38018,7 +38019,7 @@ extern "system" fn dummy_vkGetPhysicalDeviceToolPropertiesEXT(_: VkPhysicalDevic
 /// trait for `VK_EXT_tooling_info`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_tooling_info.html>
 pub trait VK_EXT_tooling_info: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceToolPropertiesEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceToolPropertiesEXT.html>
 	fn vkGetPhysicalDeviceToolPropertiesEXT(&self, physicalDevice: VkPhysicalDevice, pToolCount: *mut uint32_t, pToolProperties: *mut VkPhysicalDeviceToolProperties) -> Result<()>;
 }
 /// struct for `VK_EXT_tooling_info`
@@ -38172,7 +38173,7 @@ extern "system" fn dummy_vkGetPhysicalDeviceCooperativeMatrixPropertiesNV(_: VkP
 /// trait for `VK_NV_cooperative_matrix`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NV_cooperative_matrix.html>
 pub trait VK_NV_cooperative_matrix: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceCooperativeMatrixPropertiesNV.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceCooperativeMatrixPropertiesNV.html>
 	fn vkGetPhysicalDeviceCooperativeMatrixPropertiesNV(&self, physicalDevice: VkPhysicalDevice, pPropertyCount: *mut uint32_t, pProperties: *mut VkCooperativeMatrixPropertiesNV) -> Result<()>;
 }
 /// struct for `VK_NV_cooperative_matrix`
@@ -38252,7 +38253,7 @@ extern "system" fn dummy_vkGetPhysicalDeviceSupportedFramebufferMixedSamplesComb
 /// trait for `VK_NV_coverage_reduction_mode`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NV_coverage_reduction_mode.html>
 pub trait VK_NV_coverage_reduction_mode: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV.html>
 	fn vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV(&self, physicalDevice: VkPhysicalDevice, pCombinationCount: *mut uint32_t, pCombinations: *mut VkFramebufferMixedSamplesCombinationNV) -> Result<()>;
 }
 /// struct for `VK_NV_coverage_reduction_mode`
@@ -38410,7 +38411,7 @@ extern "system" fn dummy_vkCreateHeadlessSurfaceEXT(_: VkInstance, _: *const VkH
 /// trait for `VK_EXT_headless_surface`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_headless_surface.html>
 pub trait VK_EXT_headless_surface: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateHeadlessSurfaceEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateHeadlessSurfaceEXT.html>
 	fn vkCreateHeadlessSurfaceEXT(&self, instance: VkInstance, pCreateInfo: *const VkHeadlessSurfaceCreateInfoEXT, pAllocator: *const VkAllocationCallbacks, pSurface: *mut VkSurfaceKHR) -> Result<()>;
 }
 /// struct for `VK_EXT_headless_surface`
@@ -38459,7 +38460,7 @@ extern "system" fn dummy_vkCmdSetLineStippleEXT(_: VkCommandBuffer, _: u32, _: u
 /// trait for `VK_EXT_line_rasterization`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_line_rasterization.html>
 pub trait VK_EXT_line_rasterization: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetLineStippleEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetLineStippleEXT.html>
 	fn vkCmdSetLineStippleEXT(&self, commandBuffer: VkCommandBuffer, lineStippleFactor: u32, lineStipplePattern: u16) -> Result<()>;
 }
 /// struct for `VK_EXT_line_rasterization`
@@ -38536,7 +38537,7 @@ extern "system" fn dummy_vkResetQueryPoolEXT(_: VkDevice, _: VkQueryPool, _: u32
 /// trait for `VK_EXT_host_query_reset`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_host_query_reset.html>
 pub trait VK_EXT_host_query_reset: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkResetQueryPoolEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkResetQueryPoolEXT.html>
 	fn vkResetQueryPoolEXT(&self, device: VkDevice, queryPool: VkQueryPool, firstQuery: u32, queryCount: u32) -> Result<()>;
 }
 /// struct for `VK_EXT_host_query_reset`
@@ -38679,29 +38680,29 @@ extern "system" fn dummy_vkCmdSetStencilOpEXT(_: VkCommandBuffer, _: VkStencilFa
 /// trait for `VK_EXT_extended_dynamic_state`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_extended_dynamic_state.html>
 pub trait VK_EXT_extended_dynamic_state: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetCullModeEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetCullModeEXT.html>
 	fn vkCmdSetCullModeEXT(&self, commandBuffer: VkCommandBuffer, cullMode: VkCullModeFlags) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetFrontFaceEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetFrontFaceEXT.html>
 	fn vkCmdSetFrontFaceEXT(&self, commandBuffer: VkCommandBuffer, frontFace: VkFrontFace) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetPrimitiveTopologyEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetPrimitiveTopologyEXT.html>
 	fn vkCmdSetPrimitiveTopologyEXT(&self, commandBuffer: VkCommandBuffer, primitiveTopology: VkPrimitiveTopology) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetViewportWithCountEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetViewportWithCountEXT.html>
 	fn vkCmdSetViewportWithCountEXT(&self, commandBuffer: VkCommandBuffer, viewportCount: u32, pViewports: *const VkViewport) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetScissorWithCountEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetScissorWithCountEXT.html>
 	fn vkCmdSetScissorWithCountEXT(&self, commandBuffer: VkCommandBuffer, scissorCount: u32, pScissors: *const VkRect2D) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdBindVertexBuffers2EXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdBindVertexBuffers2EXT.html>
 	fn vkCmdBindVertexBuffers2EXT(&self, commandBuffer: VkCommandBuffer, firstBinding: u32, bindingCount: u32, pBuffers: *const VkBuffer, pOffsets: *const VkDeviceSize, pSizes: *const VkDeviceSize, pStrides: *const VkDeviceSize) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetDepthTestEnableEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetDepthTestEnableEXT.html>
 	fn vkCmdSetDepthTestEnableEXT(&self, commandBuffer: VkCommandBuffer, depthTestEnable: VkBool32) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetDepthWriteEnableEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetDepthWriteEnableEXT.html>
 	fn vkCmdSetDepthWriteEnableEXT(&self, commandBuffer: VkCommandBuffer, depthWriteEnable: VkBool32) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetDepthCompareOpEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetDepthCompareOpEXT.html>
 	fn vkCmdSetDepthCompareOpEXT(&self, commandBuffer: VkCommandBuffer, depthCompareOp: VkCompareOp) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetDepthBoundsTestEnableEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetDepthBoundsTestEnableEXT.html>
 	fn vkCmdSetDepthBoundsTestEnableEXT(&self, commandBuffer: VkCommandBuffer, depthBoundsTestEnable: VkBool32) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetStencilTestEnableEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetStencilTestEnableEXT.html>
 	fn vkCmdSetStencilTestEnableEXT(&self, commandBuffer: VkCommandBuffer, stencilTestEnable: VkBool32) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetStencilOpEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetStencilOpEXT.html>
 	fn vkCmdSetStencilOpEXT(&self, commandBuffer: VkCommandBuffer, faceMask: VkStencilFaceFlags, failOp: VkStencilOp, passOp: VkStencilOp, depthFailOp: VkStencilOp, compareOp: VkCompareOp) -> Result<()>;
 }
 /// struct for `VK_EXT_extended_dynamic_state`
@@ -38874,15 +38875,15 @@ extern "system" fn dummy_vkGetImageSubresourceLayout2EXT(_: VkDevice, _: VkImage
 /// trait for `VK_EXT_host_image_copy`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_host_image_copy.html>
 pub trait VK_EXT_host_image_copy: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCopyMemoryToImageEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCopyMemoryToImageEXT.html>
 	fn vkCopyMemoryToImageEXT(&self, device: VkDevice, pCopyMemoryToImageInfo: *const VkCopyMemoryToImageInfo) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCopyImageToMemoryEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCopyImageToMemoryEXT.html>
 	fn vkCopyImageToMemoryEXT(&self, device: VkDevice, pCopyImageToMemoryInfo: *const VkCopyImageToMemoryInfo) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCopyImageToImageEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCopyImageToImageEXT.html>
 	fn vkCopyImageToImageEXT(&self, device: VkDevice, pCopyImageToImageInfo: *const VkCopyImageToImageInfo) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkTransitionImageLayoutEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkTransitionImageLayoutEXT.html>
 	fn vkTransitionImageLayoutEXT(&self, device: VkDevice, transitionCount: u32, pTransitions: *const VkHostImageLayoutTransitionInfo) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetImageSubresourceLayout2EXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetImageSubresourceLayout2EXT.html>
 	fn vkGetImageSubresourceLayout2EXT(&self, device: VkDevice, image: VkImage, pSubresource: *const VkImageSubresource2, pLayout: *mut VkSubresourceLayout2) -> Result<()>;
 }
 /// struct for `VK_EXT_host_image_copy`
@@ -39082,7 +39083,7 @@ extern "system" fn dummy_vkReleaseSwapchainImagesEXT(_: VkDevice, _: *const VkRe
 /// trait for `VK_EXT_swapchain_maintenance1`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_swapchain_maintenance1.html>
 pub trait VK_EXT_swapchain_maintenance1: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkReleaseSwapchainImagesEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkReleaseSwapchainImagesEXT.html>
 	fn vkReleaseSwapchainImagesEXT(&self, device: VkDevice, pReleaseInfo: *const VkReleaseSwapchainImagesInfoKHR) -> Result<()>;
 }
 /// struct for `VK_EXT_swapchain_maintenance1`
@@ -39440,17 +39441,17 @@ extern "system" fn dummy_vkDestroyIndirectCommandsLayoutNV(_: VkDevice, _: VkInd
 /// trait for `VK_NV_device_generated_commands`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NV_device_generated_commands.html>
 pub trait VK_NV_device_generated_commands: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetGeneratedCommandsMemoryRequirementsNV.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetGeneratedCommandsMemoryRequirementsNV.html>
 	fn vkGetGeneratedCommandsMemoryRequirementsNV(&self, device: VkDevice, pInfo: *const VkGeneratedCommandsMemoryRequirementsInfoNV, pMemoryRequirements: *mut VkMemoryRequirements2) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdPreprocessGeneratedCommandsNV.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdPreprocessGeneratedCommandsNV.html>
 	fn vkCmdPreprocessGeneratedCommandsNV(&self, commandBuffer: VkCommandBuffer, pGeneratedCommandsInfo: *const VkGeneratedCommandsInfoNV) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdExecuteGeneratedCommandsNV.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdExecuteGeneratedCommandsNV.html>
 	fn vkCmdExecuteGeneratedCommandsNV(&self, commandBuffer: VkCommandBuffer, isPreprocessed: VkBool32, pGeneratedCommandsInfo: *const VkGeneratedCommandsInfoNV) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdBindPipelineShaderGroupNV.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdBindPipelineShaderGroupNV.html>
 	fn vkCmdBindPipelineShaderGroupNV(&self, commandBuffer: VkCommandBuffer, pipelineBindPoint: VkPipelineBindPoint, pipeline: VkPipeline, groupIndex: u32) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateIndirectCommandsLayoutNV.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateIndirectCommandsLayoutNV.html>
 	fn vkCreateIndirectCommandsLayoutNV(&self, device: VkDevice, pCreateInfo: *const VkIndirectCommandsLayoutCreateInfoNV, pAllocator: *const VkAllocationCallbacks, pIndirectCommandsLayout: *mut VkIndirectCommandsLayoutNV) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroyIndirectCommandsLayoutNV.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroyIndirectCommandsLayoutNV.html>
 	fn vkDestroyIndirectCommandsLayoutNV(&self, device: VkDevice, indirectCommandsLayout: VkIndirectCommandsLayoutNV, pAllocator: *const VkAllocationCallbacks) -> Result<()>;
 }
 /// struct for `VK_NV_device_generated_commands`
@@ -39662,7 +39663,7 @@ extern "system" fn dummy_vkCmdSetDepthBias2EXT(_: VkCommandBuffer, _: *const VkD
 /// trait for `VK_EXT_depth_bias_control`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_depth_bias_control.html>
 pub trait VK_EXT_depth_bias_control: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetDepthBias2EXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetDepthBias2EXT.html>
 	fn vkCmdSetDepthBias2EXT(&self, commandBuffer: VkCommandBuffer, pDepthBiasInfo: *const VkDepthBiasInfoEXT) -> Result<()>;
 }
 /// struct for `VK_EXT_depth_bias_control`
@@ -39776,9 +39777,9 @@ extern "system" fn dummy_vkGetDrmDisplayEXT(_: VkPhysicalDevice, _: i32, _: u32,
 /// trait for `VK_EXT_acquire_drm_display`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_acquire_drm_display.html>
 pub trait VK_EXT_acquire_drm_display: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkAcquireDrmDisplayEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkAcquireDrmDisplayEXT.html>
 	fn vkAcquireDrmDisplayEXT(&self, physicalDevice: VkPhysicalDevice, drmFd: i32, display: VkDisplayKHR) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDrmDisplayEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDrmDisplayEXT.html>
 	fn vkGetDrmDisplayEXT(&self, physicalDevice: VkPhysicalDevice, drmFd: i32, connectorId: u32, display: *mut VkDisplayKHR) -> Result<()>;
 }
 /// struct for `VK_EXT_acquire_drm_display`
@@ -39987,13 +39988,13 @@ extern "system" fn dummy_vkGetPrivateDataEXT(_: VkDevice, _: VkObjectType, _: u6
 /// trait for `VK_EXT_private_data`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_private_data.html>
 pub trait VK_EXT_private_data: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreatePrivateDataSlotEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreatePrivateDataSlotEXT.html>
 	fn vkCreatePrivateDataSlotEXT(&self, device: VkDevice, pCreateInfo: *const VkPrivateDataSlotCreateInfo, pAllocator: *const VkAllocationCallbacks, pPrivateDataSlot: *mut VkPrivateDataSlot) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroyPrivateDataSlotEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroyPrivateDataSlotEXT.html>
 	fn vkDestroyPrivateDataSlotEXT(&self, device: VkDevice, privateDataSlot: VkPrivateDataSlot, pAllocator: *const VkAllocationCallbacks) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkSetPrivateDataEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkSetPrivateDataEXT.html>
 	fn vkSetPrivateDataEXT(&self, device: VkDevice, objectType: VkObjectType, objectHandle: u64, privateDataSlot: VkPrivateDataSlot, data: u64) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPrivateDataEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPrivateDataEXT.html>
 	fn vkGetPrivateDataEXT(&self, device: VkDevice, objectType: VkObjectType, objectHandle: u64, privateDataSlot: VkPrivateDataSlot, pData: *mut uint64_t) -> Result<()>;
 }
 /// struct for `VK_EXT_private_data`
@@ -40279,11 +40280,11 @@ extern "system" fn dummy_vkCmdEndPerTileExecutionQCOM(_: VkCommandBuffer, _: *co
 /// trait for `VK_QCOM_tile_shading`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_QCOM_tile_shading.html>
 pub trait VK_QCOM_tile_shading: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdDispatchTileQCOM.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdDispatchTileQCOM.html>
 	fn vkCmdDispatchTileQCOM(&self, commandBuffer: VkCommandBuffer, pDispatchTileInfo: *const VkDispatchTileInfoQCOM) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdBeginPerTileExecutionQCOM.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdBeginPerTileExecutionQCOM.html>
 	fn vkCmdBeginPerTileExecutionQCOM(&self, commandBuffer: VkCommandBuffer, pPerTileBeginInfo: *const VkPerTileBeginInfoQCOM) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdEndPerTileExecutionQCOM.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdEndPerTileExecutionQCOM.html>
 	fn vkCmdEndPerTileExecutionQCOM(&self, commandBuffer: VkCommandBuffer, pPerTileEndInfo: *const VkPerTileEndInfoQCOM) -> Result<()>;
 }
 /// struct for `VK_QCOM_tile_shading`
@@ -40622,27 +40623,27 @@ extern "system" fn dummy_vkGetAccelerationStructureOpaqueCaptureDescriptorDataEX
 /// trait for `VK_EXT_descriptor_buffer`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_descriptor_buffer.html>
 pub trait VK_EXT_descriptor_buffer: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDescriptorSetLayoutSizeEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDescriptorSetLayoutSizeEXT.html>
 	fn vkGetDescriptorSetLayoutSizeEXT(&self, device: VkDevice, layout: VkDescriptorSetLayout, pLayoutSizeInBytes: *mut VkDeviceSize) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDescriptorSetLayoutBindingOffsetEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDescriptorSetLayoutBindingOffsetEXT.html>
 	fn vkGetDescriptorSetLayoutBindingOffsetEXT(&self, device: VkDevice, layout: VkDescriptorSetLayout, binding: u32, pOffset: *mut VkDeviceSize) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDescriptorEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDescriptorEXT.html>
 	fn vkGetDescriptorEXT(&self, device: VkDevice, pDescriptorInfo: *const VkDescriptorGetInfoEXT, dataSize: usize, pDescriptor: *mut c_void) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdBindDescriptorBuffersEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdBindDescriptorBuffersEXT.html>
 	fn vkCmdBindDescriptorBuffersEXT(&self, commandBuffer: VkCommandBuffer, bufferCount: u32, pBindingInfos: *const VkDescriptorBufferBindingInfoEXT) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetDescriptorBufferOffsetsEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetDescriptorBufferOffsetsEXT.html>
 	fn vkCmdSetDescriptorBufferOffsetsEXT(&self, commandBuffer: VkCommandBuffer, pipelineBindPoint: VkPipelineBindPoint, layout: VkPipelineLayout, firstSet: u32, setCount: u32, pBufferIndices: *const uint32_t, pOffsets: *const VkDeviceSize) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdBindDescriptorBufferEmbeddedSamplersEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdBindDescriptorBufferEmbeddedSamplersEXT.html>
 	fn vkCmdBindDescriptorBufferEmbeddedSamplersEXT(&self, commandBuffer: VkCommandBuffer, pipelineBindPoint: VkPipelineBindPoint, layout: VkPipelineLayout, set: u32) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetBufferOpaqueCaptureDescriptorDataEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetBufferOpaqueCaptureDescriptorDataEXT.html>
 	fn vkGetBufferOpaqueCaptureDescriptorDataEXT(&self, device: VkDevice, pInfo: *const VkBufferCaptureDescriptorDataInfoEXT, pData: *mut c_void) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetImageOpaqueCaptureDescriptorDataEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetImageOpaqueCaptureDescriptorDataEXT.html>
 	fn vkGetImageOpaqueCaptureDescriptorDataEXT(&self, device: VkDevice, pInfo: *const VkImageCaptureDescriptorDataInfoEXT, pData: *mut c_void) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetImageViewOpaqueCaptureDescriptorDataEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetImageViewOpaqueCaptureDescriptorDataEXT.html>
 	fn vkGetImageViewOpaqueCaptureDescriptorDataEXT(&self, device: VkDevice, pInfo: *const VkImageViewCaptureDescriptorDataInfoEXT, pData: *mut c_void) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetSamplerOpaqueCaptureDescriptorDataEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetSamplerOpaqueCaptureDescriptorDataEXT.html>
 	fn vkGetSamplerOpaqueCaptureDescriptorDataEXT(&self, device: VkDevice, pInfo: *const VkSamplerCaptureDescriptorDataInfoEXT, pData: *mut c_void) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetAccelerationStructureOpaqueCaptureDescriptorDataEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetAccelerationStructureOpaqueCaptureDescriptorDataEXT.html>
 	fn vkGetAccelerationStructureOpaqueCaptureDescriptorDataEXT(&self, device: VkDevice, pInfo: *const VkAccelerationStructureCaptureDescriptorDataInfoEXT, pData: *mut c_void) -> Result<()>;
 }
 /// struct for `VK_EXT_descriptor_buffer`
@@ -40911,7 +40912,7 @@ extern "system" fn dummy_vkCmdSetFragmentShadingRateEnumNV(_: VkCommandBuffer, _
 /// trait for `VK_NV_fragment_shading_rate_enums`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NV_fragment_shading_rate_enums.html>
 pub trait VK_NV_fragment_shading_rate_enums: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetFragmentShadingRateEnumNV.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetFragmentShadingRateEnumNV.html>
 	fn vkCmdSetFragmentShadingRateEnumNV(&self, commandBuffer: VkCommandBuffer, shadingRate: VkFragmentShadingRateNV, combinerOps: &[VkFragmentShadingRateCombinerOpKHR; 2 as usize]) -> Result<()>;
 }
 /// struct for `VK_NV_fragment_shading_rate_enums`
@@ -41666,7 +41667,7 @@ extern "system" fn dummy_vkGetDeviceFaultInfoEXT(_: VkDevice, _: *mut VkDeviceFa
 /// trait for `VK_EXT_device_fault`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_device_fault.html>
 pub trait VK_EXT_device_fault: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDeviceFaultInfoEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDeviceFaultInfoEXT.html>
 	fn vkGetDeviceFaultInfoEXT(&self, device: VkDevice, pFaultCounts: *mut VkDeviceFaultCountsEXT, pFaultInfo: *mut VkDeviceFaultInfoEXT) -> Result<()>;
 }
 /// struct for `VK_EXT_device_fault`
@@ -41846,7 +41847,7 @@ extern "system" fn dummy_vkCmdSetVertexInputEXT(_: VkCommandBuffer, _: u32, _: *
 /// trait for `VK_EXT_vertex_input_dynamic_state`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_vertex_input_dynamic_state.html>
 pub trait VK_EXT_vertex_input_dynamic_state: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetVertexInputEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetVertexInputEXT.html>
 	fn vkCmdSetVertexInputEXT(&self, commandBuffer: VkCommandBuffer, vertexBindingDescriptionCount: u32, pVertexBindingDescriptions: *const VkVertexInputBindingDescription2EXT, vertexAttributeDescriptionCount: u32, pVertexAttributeDescriptions: *const VkVertexInputAttributeDescription2EXT) -> Result<()>;
 }
 /// struct for `VK_EXT_vertex_input_dynamic_state`
@@ -42111,9 +42112,9 @@ extern "system" fn dummy_vkCmdSubpassShadingHUAWEI(_: VkCommandBuffer) {
 /// trait for `VK_HUAWEI_subpass_shading`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_HUAWEI_subpass_shading.html>
 pub trait VK_HUAWEI_subpass_shading: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDeviceSubpassShadingMaxWorkgroupSizeHUAWEI.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDeviceSubpassShadingMaxWorkgroupSizeHUAWEI.html>
 	fn vkGetDeviceSubpassShadingMaxWorkgroupSizeHUAWEI(&self, device: VkDevice, renderpass: VkRenderPass, pMaxWorkgroupSize: *mut VkExtent2D) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSubpassShadingHUAWEI.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSubpassShadingHUAWEI.html>
 	fn vkCmdSubpassShadingHUAWEI(&self, commandBuffer: VkCommandBuffer) -> Result<()>;
 }
 /// struct for `VK_HUAWEI_subpass_shading`
@@ -42165,7 +42166,7 @@ extern "system" fn dummy_vkCmdBindInvocationMaskHUAWEI(_: VkCommandBuffer, _: Vk
 /// trait for `VK_HUAWEI_invocation_mask`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_HUAWEI_invocation_mask.html>
 pub trait VK_HUAWEI_invocation_mask: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdBindInvocationMaskHUAWEI.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdBindInvocationMaskHUAWEI.html>
 	fn vkCmdBindInvocationMaskHUAWEI(&self, commandBuffer: VkCommandBuffer, imageView: VkImageView, imageLayout: VkImageLayout) -> Result<()>;
 }
 /// struct for `VK_HUAWEI_invocation_mask`
@@ -42224,7 +42225,7 @@ extern "system" fn dummy_vkGetMemoryRemoteAddressNV(_: VkDevice, _: *const VkMem
 /// trait for `VK_NV_external_memory_rdma`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NV_external_memory_rdma.html>
 pub trait VK_NV_external_memory_rdma: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetMemoryRemoteAddressNV.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetMemoryRemoteAddressNV.html>
 	fn vkGetMemoryRemoteAddressNV(&self, device: VkDevice, pMemoryGetRemoteAddressInfo: *const VkMemoryGetRemoteAddressInfoNV, pAddress: *mut VkRemoteAddressNV) -> Result<()>;
 }
 /// struct for `VK_NV_external_memory_rdma`
@@ -42291,7 +42292,7 @@ extern "system" fn dummy_vkGetPipelinePropertiesEXT(_: VkDevice, _: *const VkPip
 /// trait for `VK_EXT_pipeline_properties`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_pipeline_properties.html>
 pub trait VK_EXT_pipeline_properties: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPipelinePropertiesEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPipelinePropertiesEXT.html>
 	fn vkGetPipelinePropertiesEXT(&self, device: VkDevice, pPipelineInfo: *const VkPipelineInfoEXT, pPipelineProperties: *mut VkBaseOutStructure) -> Result<()>;
 }
 /// struct for `VK_EXT_pipeline_properties`
@@ -42493,15 +42494,15 @@ extern "system" fn dummy_vkCmdSetPrimitiveRestartEnableEXT(_: VkCommandBuffer, _
 /// trait for `VK_EXT_extended_dynamic_state2`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_extended_dynamic_state2.html>
 pub trait VK_EXT_extended_dynamic_state2: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetPatchControlPointsEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetPatchControlPointsEXT.html>
 	fn vkCmdSetPatchControlPointsEXT(&self, commandBuffer: VkCommandBuffer, patchControlPoints: u32) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetRasterizerDiscardEnableEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetRasterizerDiscardEnableEXT.html>
 	fn vkCmdSetRasterizerDiscardEnableEXT(&self, commandBuffer: VkCommandBuffer, rasterizerDiscardEnable: VkBool32) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetDepthBiasEnableEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetDepthBiasEnableEXT.html>
 	fn vkCmdSetDepthBiasEnableEXT(&self, commandBuffer: VkCommandBuffer, depthBiasEnable: VkBool32) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetLogicOpEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetLogicOpEXT.html>
 	fn vkCmdSetLogicOpEXT(&self, commandBuffer: VkCommandBuffer, logicOp: VkLogicOp) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetPrimitiveRestartEnableEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetPrimitiveRestartEnableEXT.html>
 	fn vkCmdSetPrimitiveRestartEnableEXT(&self, commandBuffer: VkCommandBuffer, primitiveRestartEnable: VkBool32) -> Result<()>;
 }
 /// struct for `VK_EXT_extended_dynamic_state2`
@@ -42581,7 +42582,7 @@ extern "system" fn dummy_vkCmdSetColorWriteEnableEXT(_: VkCommandBuffer, _: u32,
 /// trait for `VK_EXT_color_write_enable`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_color_write_enable.html>
 pub trait VK_EXT_color_write_enable: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetColorWriteEnableEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetColorWriteEnableEXT.html>
 	fn vkCmdSetColorWriteEnableEXT(&self, commandBuffer: VkCommandBuffer, attachmentCount: u32, pColorWriteEnables: *const VkBool32) -> Result<()>;
 }
 /// struct for `VK_EXT_color_write_enable`
@@ -42749,9 +42750,9 @@ extern "system" fn dummy_vkCmdDrawMultiIndexedEXT(_: VkCommandBuffer, _: u32, _:
 /// trait for `VK_EXT_multi_draw`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_multi_draw.html>
 pub trait VK_EXT_multi_draw: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdDrawMultiEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdDrawMultiEXT.html>
 	fn vkCmdDrawMultiEXT(&self, commandBuffer: VkCommandBuffer, drawCount: u32, pVertexInfo: *const VkMultiDrawInfoEXT, instanceCount: u32, firstInstance: u32, stride: u32) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdDrawMultiIndexedEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdDrawMultiIndexedEXT.html>
 	fn vkCmdDrawMultiIndexedEXT(&self, commandBuffer: VkCommandBuffer, drawCount: u32, pIndexInfo: *const VkMultiDrawIndexedInfoEXT, instanceCount: u32, firstInstance: u32, stride: u32, pVertexOffset: *const int32_t) -> Result<()>;
 }
 /// struct for `VK_EXT_multi_draw`
@@ -43264,33 +43265,33 @@ extern "system" fn dummy_vkGetMicromapBuildSizesEXT(_: VkDevice, _: VkAccelerati
 /// trait for `VK_EXT_opacity_micromap`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_opacity_micromap.html>
 pub trait VK_EXT_opacity_micromap: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateMicromapEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateMicromapEXT.html>
 	fn vkCreateMicromapEXT(&self, device: VkDevice, pCreateInfo: *const VkMicromapCreateInfoEXT, pAllocator: *const VkAllocationCallbacks, pMicromap: *mut VkMicromapEXT) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroyMicromapEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroyMicromapEXT.html>
 	fn vkDestroyMicromapEXT(&self, device: VkDevice, micromap: VkMicromapEXT, pAllocator: *const VkAllocationCallbacks) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdBuildMicromapsEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdBuildMicromapsEXT.html>
 	fn vkCmdBuildMicromapsEXT(&self, commandBuffer: VkCommandBuffer, infoCount: u32, pInfos: *const VkMicromapBuildInfoEXT) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkBuildMicromapsEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkBuildMicromapsEXT.html>
 	fn vkBuildMicromapsEXT(&self, device: VkDevice, deferredOperation: VkDeferredOperationKHR, infoCount: u32, pInfos: *const VkMicromapBuildInfoEXT) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCopyMicromapEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCopyMicromapEXT.html>
 	fn vkCopyMicromapEXT(&self, device: VkDevice, deferredOperation: VkDeferredOperationKHR, pInfo: *const VkCopyMicromapInfoEXT) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCopyMicromapToMemoryEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCopyMicromapToMemoryEXT.html>
 	fn vkCopyMicromapToMemoryEXT(&self, device: VkDevice, deferredOperation: VkDeferredOperationKHR, pInfo: *const VkCopyMicromapToMemoryInfoEXT) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCopyMemoryToMicromapEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCopyMemoryToMicromapEXT.html>
 	fn vkCopyMemoryToMicromapEXT(&self, device: VkDevice, deferredOperation: VkDeferredOperationKHR, pInfo: *const VkCopyMemoryToMicromapInfoEXT) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkWriteMicromapsPropertiesEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkWriteMicromapsPropertiesEXT.html>
 	fn vkWriteMicromapsPropertiesEXT(&self, device: VkDevice, micromapCount: u32, pMicromaps: *const VkMicromapEXT, queryType: VkQueryType, dataSize: usize, pData: *mut c_void, stride: usize) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdCopyMicromapEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdCopyMicromapEXT.html>
 	fn vkCmdCopyMicromapEXT(&self, commandBuffer: VkCommandBuffer, pInfo: *const VkCopyMicromapInfoEXT) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdCopyMicromapToMemoryEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdCopyMicromapToMemoryEXT.html>
 	fn vkCmdCopyMicromapToMemoryEXT(&self, commandBuffer: VkCommandBuffer, pInfo: *const VkCopyMicromapToMemoryInfoEXT) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdCopyMemoryToMicromapEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdCopyMemoryToMicromapEXT.html>
 	fn vkCmdCopyMemoryToMicromapEXT(&self, commandBuffer: VkCommandBuffer, pInfo: *const VkCopyMemoryToMicromapInfoEXT) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdWriteMicromapsPropertiesEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdWriteMicromapsPropertiesEXT.html>
 	fn vkCmdWriteMicromapsPropertiesEXT(&self, commandBuffer: VkCommandBuffer, micromapCount: u32, pMicromaps: *const VkMicromapEXT, queryType: VkQueryType, queryPool: VkQueryPool, firstQuery: u32) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDeviceMicromapCompatibilityEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDeviceMicromapCompatibilityEXT.html>
 	fn vkGetDeviceMicromapCompatibilityEXT(&self, device: VkDevice, pVersionInfo: *const VkMicromapVersionInfoEXT, pCompatibility: *mut VkAccelerationStructureCompatibilityKHR) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetMicromapBuildSizesEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetMicromapBuildSizesEXT.html>
 	fn vkGetMicromapBuildSizesEXT(&self, device: VkDevice, buildType: VkAccelerationStructureBuildTypeKHR, pBuildInfo: *const VkMicromapBuildInfoEXT, pSizeInfo: *mut VkMicromapBuildSizesInfoEXT) -> Result<()>;
 }
 /// struct for `VK_EXT_opacity_micromap`
@@ -43460,9 +43461,9 @@ extern "system" fn dummy_vkCmdDrawClusterIndirectHUAWEI(_: VkCommandBuffer, _: V
 /// trait for `VK_HUAWEI_cluster_culling_shader`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_HUAWEI_cluster_culling_shader.html>
 pub trait VK_HUAWEI_cluster_culling_shader: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdDrawClusterHUAWEI.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdDrawClusterHUAWEI.html>
 	fn vkCmdDrawClusterHUAWEI(&self, commandBuffer: VkCommandBuffer, groupCountX: u32, groupCountY: u32, groupCountZ: u32) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdDrawClusterIndirectHUAWEI.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdDrawClusterIndirectHUAWEI.html>
 	fn vkCmdDrawClusterIndirectHUAWEI(&self, commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize) -> Result<()>;
 }
 /// struct for `VK_HUAWEI_cluster_culling_shader`
@@ -43551,7 +43552,7 @@ extern "system" fn dummy_vkSetDeviceMemoryPriorityEXT(_: VkDevice, _: VkDeviceMe
 /// trait for `VK_EXT_pageable_device_local_memory`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_pageable_device_local_memory.html>
 pub trait VK_EXT_pageable_device_local_memory: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkSetDeviceMemoryPriorityEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkSetDeviceMemoryPriorityEXT.html>
 	fn vkSetDeviceMemoryPriorityEXT(&self, device: VkDevice, memory: VkDeviceMemory, priority: f32) -> Result<()>;
 }
 /// struct for `VK_EXT_pageable_device_local_memory`
@@ -43744,9 +43745,9 @@ extern "system" fn dummy_vkGetDescriptorSetHostMappingVALVE(_: VkDevice, _: VkDe
 /// trait for `VK_VALVE_descriptor_set_host_mapping`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_VALVE_descriptor_set_host_mapping.html>
 pub trait VK_VALVE_descriptor_set_host_mapping: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDescriptorSetLayoutHostMappingInfoVALVE.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDescriptorSetLayoutHostMappingInfoVALVE.html>
 	fn vkGetDescriptorSetLayoutHostMappingInfoVALVE(&self, device: VkDevice, pBindingReference: *const VkDescriptorSetBindingReferenceVALVE, pHostMapping: *mut VkDescriptorSetLayoutHostMappingInfoVALVE) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDescriptorSetHostMappingVALVE.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDescriptorSetHostMappingVALVE.html>
 	fn vkGetDescriptorSetHostMappingVALVE(&self, device: VkDevice, descriptorSet: VkDescriptorSet, ppData: *mut *mut c_void) -> Result<()>;
 }
 /// struct for `VK_VALVE_descriptor_set_host_mapping`
@@ -44000,9 +44001,9 @@ extern "system" fn dummy_vkCmdCopyMemoryToImageIndirectNV(_: VkCommandBuffer, _:
 /// trait for `VK_NV_copy_memory_indirect`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NV_copy_memory_indirect.html>
 pub trait VK_NV_copy_memory_indirect: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdCopyMemoryIndirectNV.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdCopyMemoryIndirectNV.html>
 	fn vkCmdCopyMemoryIndirectNV(&self, commandBuffer: VkCommandBuffer, copyBufferAddress: VkDeviceAddress, copyCount: u32, stride: u32) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdCopyMemoryToImageIndirectNV.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdCopyMemoryToImageIndirectNV.html>
 	fn vkCmdCopyMemoryToImageIndirectNV(&self, commandBuffer: VkCommandBuffer, copyBufferAddress: VkDeviceAddress, copyCount: u32, stride: u32, dstImage: VkImage, dstImageLayout: VkImageLayout, pImageSubresources: *const VkImageSubresourceLayers) -> Result<()>;
 }
 /// struct for `VK_NV_copy_memory_indirect`
@@ -44091,9 +44092,9 @@ extern "system" fn dummy_vkCmdDecompressMemoryIndirectCountNV(_: VkCommandBuffer
 /// trait for `VK_NV_memory_decompression`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NV_memory_decompression.html>
 pub trait VK_NV_memory_decompression: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdDecompressMemoryNV.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdDecompressMemoryNV.html>
 	fn vkCmdDecompressMemoryNV(&self, commandBuffer: VkCommandBuffer, decompressRegionCount: u32, pDecompressMemoryRegions: *const VkDecompressMemoryRegionNV) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdDecompressMemoryIndirectCountNV.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdDecompressMemoryIndirectCountNV.html>
 	fn vkCmdDecompressMemoryIndirectCountNV(&self, commandBuffer: VkCommandBuffer, indirectCommandsAddress: VkDeviceAddress, indirectCommandsCountAddress: VkDeviceAddress, stride: u32) -> Result<()>;
 }
 /// struct for `VK_NV_memory_decompression`
@@ -44189,11 +44190,11 @@ extern "system" fn dummy_vkGetPipelineIndirectDeviceAddressNV(_: VkDevice, _: *c
 /// trait for `VK_NV_device_generated_commands_compute`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NV_device_generated_commands_compute.html>
 pub trait VK_NV_device_generated_commands_compute: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPipelineIndirectMemoryRequirementsNV.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPipelineIndirectMemoryRequirementsNV.html>
 	fn vkGetPipelineIndirectMemoryRequirementsNV(&self, device: VkDevice, pCreateInfo: *const VkComputePipelineCreateInfo, pMemoryRequirements: *mut VkMemoryRequirements2) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdUpdatePipelineIndirectBufferNV.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdUpdatePipelineIndirectBufferNV.html>
 	fn vkCmdUpdatePipelineIndirectBufferNV(&self, commandBuffer: VkCommandBuffer, pipelineBindPoint: VkPipelineBindPoint, pipeline: VkPipeline) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPipelineIndirectDeviceAddressNV.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPipelineIndirectDeviceAddressNV.html>
 	fn vkGetPipelineIndirectDeviceAddressNV(&self, device: VkDevice, pInfo: *const VkPipelineIndirectDeviceAddressInfoNV) -> Result<VkDeviceAddress>;
 }
 /// struct for `VK_NV_device_generated_commands_compute`
@@ -44787,67 +44788,67 @@ extern "system" fn dummy_vkCmdSetCoverageReductionModeNV(_: VkCommandBuffer, _: 
 /// trait for `VK_EXT_extended_dynamic_state3`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_extended_dynamic_state3.html>
 pub trait VK_EXT_extended_dynamic_state3: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetDepthClampEnableEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetDepthClampEnableEXT.html>
 	fn vkCmdSetDepthClampEnableEXT(&self, commandBuffer: VkCommandBuffer, depthClampEnable: VkBool32) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetPolygonModeEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetPolygonModeEXT.html>
 	fn vkCmdSetPolygonModeEXT(&self, commandBuffer: VkCommandBuffer, polygonMode: VkPolygonMode) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetRasterizationSamplesEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetRasterizationSamplesEXT.html>
 	fn vkCmdSetRasterizationSamplesEXT(&self, commandBuffer: VkCommandBuffer, rasterizationSamples: VkSampleCountFlagBits) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetSampleMaskEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetSampleMaskEXT.html>
 	fn vkCmdSetSampleMaskEXT(&self, commandBuffer: VkCommandBuffer, samples: VkSampleCountFlagBits, pSampleMask: *const VkSampleMask) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetAlphaToCoverageEnableEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetAlphaToCoverageEnableEXT.html>
 	fn vkCmdSetAlphaToCoverageEnableEXT(&self, commandBuffer: VkCommandBuffer, alphaToCoverageEnable: VkBool32) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetAlphaToOneEnableEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetAlphaToOneEnableEXT.html>
 	fn vkCmdSetAlphaToOneEnableEXT(&self, commandBuffer: VkCommandBuffer, alphaToOneEnable: VkBool32) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetLogicOpEnableEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetLogicOpEnableEXT.html>
 	fn vkCmdSetLogicOpEnableEXT(&self, commandBuffer: VkCommandBuffer, logicOpEnable: VkBool32) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetColorBlendEnableEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetColorBlendEnableEXT.html>
 	fn vkCmdSetColorBlendEnableEXT(&self, commandBuffer: VkCommandBuffer, firstAttachment: u32, attachmentCount: u32, pColorBlendEnables: *const VkBool32) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetColorBlendEquationEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetColorBlendEquationEXT.html>
 	fn vkCmdSetColorBlendEquationEXT(&self, commandBuffer: VkCommandBuffer, firstAttachment: u32, attachmentCount: u32, pColorBlendEquations: *const VkColorBlendEquationEXT) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetColorWriteMaskEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetColorWriteMaskEXT.html>
 	fn vkCmdSetColorWriteMaskEXT(&self, commandBuffer: VkCommandBuffer, firstAttachment: u32, attachmentCount: u32, pColorWriteMasks: *const VkColorComponentFlags) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetTessellationDomainOriginEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetTessellationDomainOriginEXT.html>
 	fn vkCmdSetTessellationDomainOriginEXT(&self, commandBuffer: VkCommandBuffer, domainOrigin: VkTessellationDomainOrigin) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetRasterizationStreamEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetRasterizationStreamEXT.html>
 	fn vkCmdSetRasterizationStreamEXT(&self, commandBuffer: VkCommandBuffer, rasterizationStream: u32) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetConservativeRasterizationModeEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetConservativeRasterizationModeEXT.html>
 	fn vkCmdSetConservativeRasterizationModeEXT(&self, commandBuffer: VkCommandBuffer, conservativeRasterizationMode: VkConservativeRasterizationModeEXT) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetExtraPrimitiveOverestimationSizeEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetExtraPrimitiveOverestimationSizeEXT.html>
 	fn vkCmdSetExtraPrimitiveOverestimationSizeEXT(&self, commandBuffer: VkCommandBuffer, extraPrimitiveOverestimationSize: f32) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetDepthClipEnableEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetDepthClipEnableEXT.html>
 	fn vkCmdSetDepthClipEnableEXT(&self, commandBuffer: VkCommandBuffer, depthClipEnable: VkBool32) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetSampleLocationsEnableEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetSampleLocationsEnableEXT.html>
 	fn vkCmdSetSampleLocationsEnableEXT(&self, commandBuffer: VkCommandBuffer, sampleLocationsEnable: VkBool32) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetColorBlendAdvancedEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetColorBlendAdvancedEXT.html>
 	fn vkCmdSetColorBlendAdvancedEXT(&self, commandBuffer: VkCommandBuffer, firstAttachment: u32, attachmentCount: u32, pColorBlendAdvanced: *const VkColorBlendAdvancedEXT) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetProvokingVertexModeEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetProvokingVertexModeEXT.html>
 	fn vkCmdSetProvokingVertexModeEXT(&self, commandBuffer: VkCommandBuffer, provokingVertexMode: VkProvokingVertexModeEXT) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetLineRasterizationModeEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetLineRasterizationModeEXT.html>
 	fn vkCmdSetLineRasterizationModeEXT(&self, commandBuffer: VkCommandBuffer, lineRasterizationMode: VkLineRasterizationModeEXT) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetLineStippleEnableEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetLineStippleEnableEXT.html>
 	fn vkCmdSetLineStippleEnableEXT(&self, commandBuffer: VkCommandBuffer, stippledLineEnable: VkBool32) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetDepthClipNegativeOneToOneEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetDepthClipNegativeOneToOneEXT.html>
 	fn vkCmdSetDepthClipNegativeOneToOneEXT(&self, commandBuffer: VkCommandBuffer, negativeOneToOne: VkBool32) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetViewportWScalingEnableNV.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetViewportWScalingEnableNV.html>
 	fn vkCmdSetViewportWScalingEnableNV(&self, commandBuffer: VkCommandBuffer, viewportWScalingEnable: VkBool32) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetViewportSwizzleNV.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetViewportSwizzleNV.html>
 	fn vkCmdSetViewportSwizzleNV(&self, commandBuffer: VkCommandBuffer, firstViewport: u32, viewportCount: u32, pViewportSwizzles: *const VkViewportSwizzleNV) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetCoverageToColorEnableNV.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetCoverageToColorEnableNV.html>
 	fn vkCmdSetCoverageToColorEnableNV(&self, commandBuffer: VkCommandBuffer, coverageToColorEnable: VkBool32) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetCoverageToColorLocationNV.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetCoverageToColorLocationNV.html>
 	fn vkCmdSetCoverageToColorLocationNV(&self, commandBuffer: VkCommandBuffer, coverageToColorLocation: u32) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetCoverageModulationModeNV.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetCoverageModulationModeNV.html>
 	fn vkCmdSetCoverageModulationModeNV(&self, commandBuffer: VkCommandBuffer, coverageModulationMode: VkCoverageModulationModeNV) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetCoverageModulationTableEnableNV.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetCoverageModulationTableEnableNV.html>
 	fn vkCmdSetCoverageModulationTableEnableNV(&self, commandBuffer: VkCommandBuffer, coverageModulationTableEnable: VkBool32) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetCoverageModulationTableNV.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetCoverageModulationTableNV.html>
 	fn vkCmdSetCoverageModulationTableNV(&self, commandBuffer: VkCommandBuffer, coverageModulationTableCount: u32, pCoverageModulationTable: *const float) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetShadingRateImageEnableNV.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetShadingRateImageEnableNV.html>
 	fn vkCmdSetShadingRateImageEnableNV(&self, commandBuffer: VkCommandBuffer, shadingRateImageEnable: VkBool32) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetRepresentativeFragmentTestEnableNV.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetRepresentativeFragmentTestEnableNV.html>
 	fn vkCmdSetRepresentativeFragmentTestEnableNV(&self, commandBuffer: VkCommandBuffer, representativeFragmentTestEnable: VkBool32) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetCoverageReductionModeNV.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetCoverageReductionModeNV.html>
 	fn vkCmdSetCoverageReductionModeNV(&self, commandBuffer: VkCommandBuffer, coverageReductionMode: VkCoverageReductionModeNV) -> Result<()>;
 }
 /// struct for `VK_EXT_extended_dynamic_state3`
@@ -45616,27 +45617,27 @@ extern "system" fn dummy_vkGetTensorViewOpaqueCaptureDescriptorDataARM(_: VkDevi
 /// trait for `VK_ARM_tensors`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_ARM_tensors.html>
 pub trait VK_ARM_tensors: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateTensorARM.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateTensorARM.html>
 	fn vkCreateTensorARM(&self, device: VkDevice, pCreateInfo: *const VkTensorCreateInfoARM, pAllocator: *const VkAllocationCallbacks, pTensor: *mut VkTensorARM) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroyTensorARM.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroyTensorARM.html>
 	fn vkDestroyTensorARM(&self, device: VkDevice, tensor: VkTensorARM, pAllocator: *const VkAllocationCallbacks) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateTensorViewARM.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateTensorViewARM.html>
 	fn vkCreateTensorViewARM(&self, device: VkDevice, pCreateInfo: *const VkTensorViewCreateInfoARM, pAllocator: *const VkAllocationCallbacks, pView: *mut VkTensorViewARM) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroyTensorViewARM.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroyTensorViewARM.html>
 	fn vkDestroyTensorViewARM(&self, device: VkDevice, tensorView: VkTensorViewARM, pAllocator: *const VkAllocationCallbacks) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetTensorMemoryRequirementsARM.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetTensorMemoryRequirementsARM.html>
 	fn vkGetTensorMemoryRequirementsARM(&self, device: VkDevice, pInfo: *const VkTensorMemoryRequirementsInfoARM, pMemoryRequirements: *mut VkMemoryRequirements2) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkBindTensorMemoryARM.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkBindTensorMemoryARM.html>
 	fn vkBindTensorMemoryARM(&self, device: VkDevice, bindInfoCount: u32, pBindInfos: *const VkBindTensorMemoryInfoARM) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDeviceTensorMemoryRequirementsARM.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDeviceTensorMemoryRequirementsARM.html>
 	fn vkGetDeviceTensorMemoryRequirementsARM(&self, device: VkDevice, pInfo: *const VkDeviceTensorMemoryRequirementsARM, pMemoryRequirements: *mut VkMemoryRequirements2) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdCopyTensorARM.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdCopyTensorARM.html>
 	fn vkCmdCopyTensorARM(&self, commandBuffer: VkCommandBuffer, pCopyTensorInfo: *const VkCopyTensorInfoARM) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceExternalTensorPropertiesARM.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceExternalTensorPropertiesARM.html>
 	fn vkGetPhysicalDeviceExternalTensorPropertiesARM(&self, physicalDevice: VkPhysicalDevice, pExternalTensorInfo: *const VkPhysicalDeviceExternalTensorInfoARM, pExternalTensorProperties: *mut VkExternalTensorPropertiesARM) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetTensorOpaqueCaptureDescriptorDataARM.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetTensorOpaqueCaptureDescriptorDataARM.html>
 	fn vkGetTensorOpaqueCaptureDescriptorDataARM(&self, device: VkDevice, pInfo: *const VkTensorCaptureDescriptorDataInfoARM, pData: *mut c_void) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetTensorViewOpaqueCaptureDescriptorDataARM.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetTensorViewOpaqueCaptureDescriptorDataARM.html>
 	fn vkGetTensorViewOpaqueCaptureDescriptorDataARM(&self, device: VkDevice, pInfo: *const VkTensorViewCaptureDescriptorDataInfoARM, pData: *mut c_void) -> Result<()>;
 }
 /// struct for `VK_ARM_tensors`
@@ -45800,9 +45801,9 @@ extern "system" fn dummy_vkGetShaderModuleCreateInfoIdentifierEXT(_: VkDevice, _
 /// trait for `VK_EXT_shader_module_identifier`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_shader_module_identifier.html>
 pub trait VK_EXT_shader_module_identifier: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetShaderModuleIdentifierEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetShaderModuleIdentifierEXT.html>
 	fn vkGetShaderModuleIdentifierEXT(&self, device: VkDevice, shaderModule: VkShaderModule, pIdentifier: *mut VkShaderModuleIdentifierEXT) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetShaderModuleCreateInfoIdentifierEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetShaderModuleCreateInfoIdentifierEXT.html>
 	fn vkGetShaderModuleCreateInfoIdentifierEXT(&self, device: VkDevice, pCreateInfo: *const VkShaderModuleCreateInfo, pIdentifier: *mut VkShaderModuleIdentifierEXT) -> Result<()>;
 }
 /// struct for `VK_EXT_shader_module_identifier`
@@ -46199,15 +46200,15 @@ extern "system" fn dummy_vkCmdOpticalFlowExecuteNV(_: VkCommandBuffer, _: VkOpti
 /// trait for `VK_NV_optical_flow`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NV_optical_flow.html>
 pub trait VK_NV_optical_flow: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceOpticalFlowImageFormatsNV.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceOpticalFlowImageFormatsNV.html>
 	fn vkGetPhysicalDeviceOpticalFlowImageFormatsNV(&self, physicalDevice: VkPhysicalDevice, pOpticalFlowImageFormatInfo: *const VkOpticalFlowImageFormatInfoNV, pFormatCount: *mut uint32_t, pImageFormatProperties: *mut VkOpticalFlowImageFormatPropertiesNV) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateOpticalFlowSessionNV.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateOpticalFlowSessionNV.html>
 	fn vkCreateOpticalFlowSessionNV(&self, device: VkDevice, pCreateInfo: *const VkOpticalFlowSessionCreateInfoNV, pAllocator: *const VkAllocationCallbacks, pSession: *mut VkOpticalFlowSessionNV) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroyOpticalFlowSessionNV.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroyOpticalFlowSessionNV.html>
 	fn vkDestroyOpticalFlowSessionNV(&self, device: VkDevice, session: VkOpticalFlowSessionNV, pAllocator: *const VkAllocationCallbacks) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkBindOpticalFlowSessionImageNV.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkBindOpticalFlowSessionImageNV.html>
 	fn vkBindOpticalFlowSessionImageNV(&self, device: VkDevice, session: VkOpticalFlowSessionNV, bindingPoint: VkOpticalFlowSessionBindingPointNV, view: VkImageView, layout: VkImageLayout) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdOpticalFlowExecuteNV.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdOpticalFlowExecuteNV.html>
 	fn vkCmdOpticalFlowExecuteNV(&self, commandBuffer: VkCommandBuffer, session: VkOpticalFlowSessionNV, pExecuteInfo: *const VkOpticalFlowExecuteInfoNV) -> Result<()>;
 }
 /// struct for `VK_NV_optical_flow`
@@ -46363,7 +46364,7 @@ extern "system" fn dummy_vkAntiLagUpdateAMD(_: VkDevice, _: *const VkAntiLagData
 /// trait for `VK_AMD_anti_lag`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_AMD_anti_lag.html>
 pub trait VK_AMD_anti_lag: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkAntiLagUpdateAMD.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkAntiLagUpdateAMD.html>
 	fn vkAntiLagUpdateAMD(&self, device: VkDevice, pData: *const VkAntiLagDataAMD) -> Result<()>;
 }
 /// struct for `VK_AMD_anti_lag`
@@ -46580,15 +46581,15 @@ extern "system" fn dummy_vkCmdSetDepthClampRangeEXT(_: VkCommandBuffer, _: VkDep
 /// trait for `VK_EXT_shader_object`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_shader_object.html>
 pub trait VK_EXT_shader_object: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateShadersEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateShadersEXT.html>
 	fn vkCreateShadersEXT(&self, device: VkDevice, createInfoCount: u32, pCreateInfos: *const VkShaderCreateInfoEXT, pAllocator: *const VkAllocationCallbacks, pShaders: *mut VkShaderEXT) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroyShaderEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroyShaderEXT.html>
 	fn vkDestroyShaderEXT(&self, device: VkDevice, shader: VkShaderEXT, pAllocator: *const VkAllocationCallbacks) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetShaderBinaryDataEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetShaderBinaryDataEXT.html>
 	fn vkGetShaderBinaryDataEXT(&self, device: VkDevice, shader: VkShaderEXT, pDataSize: *mut size_t, pData: *mut c_void) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdBindShadersEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdBindShadersEXT.html>
 	fn vkCmdBindShadersEXT(&self, commandBuffer: VkCommandBuffer, stageCount: u32, pStages: *const VkShaderStageFlagBits, pShaders: *const VkShaderEXT) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetDepthClampRangeEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetDepthClampRangeEXT.html>
 	fn vkCmdSetDepthClampRangeEXT(&self, commandBuffer: VkCommandBuffer, depthClampMode: VkDepthClampModeEXT, pDepthClampRange: *const VkDepthClampRangeEXT) -> Result<()>;
 }
 /// struct for `VK_EXT_shader_object`
@@ -46676,9 +46677,9 @@ extern "system" fn dummy_vkGetDynamicRenderingTilePropertiesQCOM(_: VkDevice, _:
 /// trait for `VK_QCOM_tile_properties`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_QCOM_tile_properties.html>
 pub trait VK_QCOM_tile_properties: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetFramebufferTilePropertiesQCOM.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetFramebufferTilePropertiesQCOM.html>
 	fn vkGetFramebufferTilePropertiesQCOM(&self, device: VkDevice, framebuffer: VkFramebuffer, pPropertiesCount: *mut uint32_t, pProperties: *mut VkTilePropertiesQCOM) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDynamicRenderingTilePropertiesQCOM.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDynamicRenderingTilePropertiesQCOM.html>
 	fn vkGetDynamicRenderingTilePropertiesQCOM(&self, device: VkDevice, pRenderingInfo: *const VkRenderingInfo, pProperties: *mut VkTilePropertiesQCOM) -> Result<()>;
 }
 /// struct for `VK_QCOM_tile_properties`
@@ -46908,11 +46909,11 @@ extern "system" fn dummy_vkCmdConvertCooperativeVectorMatrixNV(_: VkCommandBuffe
 /// trait for `VK_NV_cooperative_vector`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NV_cooperative_vector.html>
 pub trait VK_NV_cooperative_vector: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceCooperativeVectorPropertiesNV.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceCooperativeVectorPropertiesNV.html>
 	fn vkGetPhysicalDeviceCooperativeVectorPropertiesNV(&self, physicalDevice: VkPhysicalDevice, pPropertyCount: *mut uint32_t, pProperties: *mut VkCooperativeVectorPropertiesNV) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkConvertCooperativeVectorMatrixNV.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkConvertCooperativeVectorMatrixNV.html>
 	fn vkConvertCooperativeVectorMatrixNV(&self, device: VkDevice, pInfo: *const VkConvertCooperativeVectorMatrixInfoNV) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdConvertCooperativeVectorMatrixNV.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdConvertCooperativeVectorMatrixNV.html>
 	fn vkCmdConvertCooperativeVectorMatrixNV(&self, commandBuffer: VkCommandBuffer, infoCount: u32, pInfos: *const VkConvertCooperativeVectorMatrixInfoNV) -> Result<()>;
 }
 /// struct for `VK_NV_cooperative_vector`
@@ -47348,15 +47349,15 @@ extern "system" fn dummy_vkQueueNotifyOutOfBandNV(_: VkQueue, _: *const VkOutOfB
 /// trait for `VK_NV_low_latency2`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NV_low_latency2.html>
 pub trait VK_NV_low_latency2: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkSetLatencySleepModeNV.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkSetLatencySleepModeNV.html>
 	fn vkSetLatencySleepModeNV(&self, device: VkDevice, swapchain: VkSwapchainKHR, pSleepModeInfo: *const VkLatencySleepModeInfoNV) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkLatencySleepNV.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkLatencySleepNV.html>
 	fn vkLatencySleepNV(&self, device: VkDevice, swapchain: VkSwapchainKHR, pSleepInfo: *const VkLatencySleepInfoNV) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkSetLatencyMarkerNV.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkSetLatencyMarkerNV.html>
 	fn vkSetLatencyMarkerNV(&self, device: VkDevice, swapchain: VkSwapchainKHR, pLatencyMarkerInfo: *const VkSetLatencyMarkerInfoNV) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetLatencyTimingsNV.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetLatencyTimingsNV.html>
 	fn vkGetLatencyTimingsNV(&self, device: VkDevice, swapchain: VkSwapchainKHR, pLatencyMarkerInfo: *mut VkGetLatencyMarkerInfoNV) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkQueueNotifyOutOfBandNV.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkQueueNotifyOutOfBandNV.html>
 	fn vkQueueNotifyOutOfBandNV(&self, queue: VkQueue, pQueueTypeInfo: *const VkOutOfBandQueueTypeInfoNV) -> Result<()>;
 }
 /// struct for `VK_NV_low_latency2`
@@ -47790,27 +47791,27 @@ extern "system" fn dummy_vkGetPhysicalDeviceQueueFamilyDataGraphProcessingEngine
 /// trait for `VK_ARM_data_graph`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_ARM_data_graph.html>
 pub trait VK_ARM_data_graph: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateDataGraphPipelinesARM.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateDataGraphPipelinesARM.html>
 	fn vkCreateDataGraphPipelinesARM(&self, device: VkDevice, deferredOperation: VkDeferredOperationKHR, pipelineCache: VkPipelineCache, createInfoCount: u32, pCreateInfos: *const VkDataGraphPipelineCreateInfoARM, pAllocator: *const VkAllocationCallbacks, pPipelines: *mut VkPipeline) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateDataGraphPipelineSessionARM.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateDataGraphPipelineSessionARM.html>
 	fn vkCreateDataGraphPipelineSessionARM(&self, device: VkDevice, pCreateInfo: *const VkDataGraphPipelineSessionCreateInfoARM, pAllocator: *const VkAllocationCallbacks, pSession: *mut VkDataGraphPipelineSessionARM) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDataGraphPipelineSessionBindPointRequirementsARM.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDataGraphPipelineSessionBindPointRequirementsARM.html>
 	fn vkGetDataGraphPipelineSessionBindPointRequirementsARM(&self, device: VkDevice, pInfo: *const VkDataGraphPipelineSessionBindPointRequirementsInfoARM, pBindPointRequirementCount: *mut uint32_t, pBindPointRequirements: *mut VkDataGraphPipelineSessionBindPointRequirementARM) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDataGraphPipelineSessionMemoryRequirementsARM.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDataGraphPipelineSessionMemoryRequirementsARM.html>
 	fn vkGetDataGraphPipelineSessionMemoryRequirementsARM(&self, device: VkDevice, pInfo: *const VkDataGraphPipelineSessionMemoryRequirementsInfoARM, pMemoryRequirements: *mut VkMemoryRequirements2) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkBindDataGraphPipelineSessionMemoryARM.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkBindDataGraphPipelineSessionMemoryARM.html>
 	fn vkBindDataGraphPipelineSessionMemoryARM(&self, device: VkDevice, bindInfoCount: u32, pBindInfos: *const VkBindDataGraphPipelineSessionMemoryInfoARM) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroyDataGraphPipelineSessionARM.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroyDataGraphPipelineSessionARM.html>
 	fn vkDestroyDataGraphPipelineSessionARM(&self, device: VkDevice, session: VkDataGraphPipelineSessionARM, pAllocator: *const VkAllocationCallbacks) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdDispatchDataGraphARM.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdDispatchDataGraphARM.html>
 	fn vkCmdDispatchDataGraphARM(&self, commandBuffer: VkCommandBuffer, session: VkDataGraphPipelineSessionARM, pInfo: *const VkDataGraphPipelineDispatchInfoARM) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDataGraphPipelineAvailablePropertiesARM.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDataGraphPipelineAvailablePropertiesARM.html>
 	fn vkGetDataGraphPipelineAvailablePropertiesARM(&self, device: VkDevice, pPipelineInfo: *const VkDataGraphPipelineInfoARM, pPropertiesCount: *mut uint32_t, pProperties: *mut VkDataGraphPipelinePropertyARM) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDataGraphPipelinePropertiesARM.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDataGraphPipelinePropertiesARM.html>
 	fn vkGetDataGraphPipelinePropertiesARM(&self, device: VkDevice, pPipelineInfo: *const VkDataGraphPipelineInfoARM, propertiesCount: u32, pProperties: *mut VkDataGraphPipelinePropertyQueryResultARM) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceQueueFamilyDataGraphPropertiesARM.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceQueueFamilyDataGraphPropertiesARM.html>
 	fn vkGetPhysicalDeviceQueueFamilyDataGraphPropertiesARM(&self, physicalDevice: VkPhysicalDevice, queueFamilyIndex: u32, pQueueFamilyDataGraphPropertyCount: *mut uint32_t, pQueueFamilyDataGraphProperties: *mut VkQueueFamilyDataGraphPropertiesARM) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceQueueFamilyDataGraphProcessingEnginePropertiesARM.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceQueueFamilyDataGraphProcessingEnginePropertiesARM.html>
 	fn vkGetPhysicalDeviceQueueFamilyDataGraphProcessingEnginePropertiesARM(&self, physicalDevice: VkPhysicalDevice, pQueueFamilyDataGraphProcessingEngineInfo: *const VkPhysicalDeviceQueueFamilyDataGraphProcessingEngineInfoARM, pQueueFamilyDataGraphProcessingEngineProperties: *mut VkQueueFamilyDataGraphProcessingEnginePropertiesARM) -> Result<()>;
 }
 /// struct for `VK_ARM_data_graph`
@@ -48150,7 +48151,7 @@ extern "system" fn dummy_vkCmdSetAttachmentFeedbackLoopEnableEXT(_: VkCommandBuf
 /// trait for `VK_EXT_attachment_feedback_loop_dynamic_state`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_attachment_feedback_loop_dynamic_state.html>
 pub trait VK_EXT_attachment_feedback_loop_dynamic_state: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetAttachmentFeedbackLoopEnableEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetAttachmentFeedbackLoopEnableEXT.html>
 	fn vkCmdSetAttachmentFeedbackLoopEnableEXT(&self, commandBuffer: VkCommandBuffer, aspectMask: VkImageAspectFlags) -> Result<()>;
 }
 /// struct for `VK_EXT_attachment_feedback_loop_dynamic_state`
@@ -48295,7 +48296,7 @@ extern "system" fn dummy_vkCmdBindTileMemoryQCOM(_: VkCommandBuffer, _: *const V
 /// trait for `VK_QCOM_tile_memory_heap`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_QCOM_tile_memory_heap.html>
 pub trait VK_QCOM_tile_memory_heap: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdBindTileMemoryQCOM.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdBindTileMemoryQCOM.html>
 	fn vkCmdBindTileMemoryQCOM(&self, commandBuffer: VkCommandBuffer, pTileMemoryBindInfo: *const VkTileMemoryBindInfoQCOM) -> Result<()>;
 }
 /// struct for `VK_QCOM_tile_memory_heap`
@@ -48459,11 +48460,11 @@ extern "system" fn dummy_vkGetExternalComputeQueueDataNV(_: VkExternalComputeQue
 /// trait for `VK_NV_external_compute_queue`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NV_external_compute_queue.html>
 pub trait VK_NV_external_compute_queue: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateExternalComputeQueueNV.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateExternalComputeQueueNV.html>
 	fn vkCreateExternalComputeQueueNV(&self, device: VkDevice, pCreateInfo: *const VkExternalComputeQueueCreateInfoNV, pAllocator: *const VkAllocationCallbacks, pExternalQueue: *mut VkExternalComputeQueueNV) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroyExternalComputeQueueNV.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroyExternalComputeQueueNV.html>
 	fn vkDestroyExternalComputeQueueNV(&self, device: VkDevice, externalQueue: VkExternalComputeQueueNV, pAllocator: *const VkAllocationCallbacks) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetExternalComputeQueueDataNV.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetExternalComputeQueueDataNV.html>
 	fn vkGetExternalComputeQueueDataNV(&self, externalQueue: VkExternalComputeQueueNV, params: *mut VkExternalComputeQueueDataParamsNV, pData: *mut c_void) -> Result<()>;
 }
 /// struct for `VK_NV_external_compute_queue`
@@ -49208,9 +49209,9 @@ extern "system" fn dummy_vkCmdBuildClusterAccelerationStructureIndirectNV(_: VkC
 /// trait for `VK_NV_cluster_acceleration_structure`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NV_cluster_acceleration_structure.html>
 pub trait VK_NV_cluster_acceleration_structure: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetClusterAccelerationStructureBuildSizesNV.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetClusterAccelerationStructureBuildSizesNV.html>
 	fn vkGetClusterAccelerationStructureBuildSizesNV(&self, device: VkDevice, pInfo: *const VkClusterAccelerationStructureInputInfoNV, pSizeInfo: *mut VkAccelerationStructureBuildSizesInfoKHR) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdBuildClusterAccelerationStructureIndirectNV.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdBuildClusterAccelerationStructureIndirectNV.html>
 	fn vkCmdBuildClusterAccelerationStructureIndirectNV(&self, commandBuffer: VkCommandBuffer, pCommandInfos: *const VkClusterAccelerationStructureCommandsInfoNV) -> Result<()>;
 }
 /// struct for `VK_NV_cluster_acceleration_structure`
@@ -49430,9 +49431,9 @@ extern "system" fn dummy_vkCmdBuildPartitionedAccelerationStructuresNV(_: VkComm
 /// trait for `VK_NV_partitioned_acceleration_structure`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NV_partitioned_acceleration_structure.html>
 pub trait VK_NV_partitioned_acceleration_structure: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPartitionedAccelerationStructuresBuildSizesNV.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPartitionedAccelerationStructuresBuildSizesNV.html>
 	fn vkGetPartitionedAccelerationStructuresBuildSizesNV(&self, device: VkDevice, pInfo: *const VkPartitionedAccelerationStructureInstancesInputNV, pSizeInfo: *mut VkAccelerationStructureBuildSizesInfoKHR) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdBuildPartitionedAccelerationStructuresNV.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdBuildPartitionedAccelerationStructuresNV.html>
 	fn vkCmdBuildPartitionedAccelerationStructuresNV(&self, commandBuffer: VkCommandBuffer, pBuildInfo: *const VkBuildPartitionedAccelerationStructureInfoNV) -> Result<()>;
 }
 /// struct for `VK_NV_partitioned_acceleration_structure`
@@ -49916,23 +49917,23 @@ extern "system" fn dummy_vkUpdateIndirectExecutionSetShaderEXT(_: VkDevice, _: V
 /// trait for `VK_EXT_device_generated_commands`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_device_generated_commands.html>
 pub trait VK_EXT_device_generated_commands: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetGeneratedCommandsMemoryRequirementsEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetGeneratedCommandsMemoryRequirementsEXT.html>
 	fn vkGetGeneratedCommandsMemoryRequirementsEXT(&self, device: VkDevice, pInfo: *const VkGeneratedCommandsMemoryRequirementsInfoEXT, pMemoryRequirements: *mut VkMemoryRequirements2) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdPreprocessGeneratedCommandsEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdPreprocessGeneratedCommandsEXT.html>
 	fn vkCmdPreprocessGeneratedCommandsEXT(&self, commandBuffer: VkCommandBuffer, pGeneratedCommandsInfo: *const VkGeneratedCommandsInfoEXT, stateCommandBuffer: VkCommandBuffer) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdExecuteGeneratedCommandsEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdExecuteGeneratedCommandsEXT.html>
 	fn vkCmdExecuteGeneratedCommandsEXT(&self, commandBuffer: VkCommandBuffer, isPreprocessed: VkBool32, pGeneratedCommandsInfo: *const VkGeneratedCommandsInfoEXT) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateIndirectCommandsLayoutEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateIndirectCommandsLayoutEXT.html>
 	fn vkCreateIndirectCommandsLayoutEXT(&self, device: VkDevice, pCreateInfo: *const VkIndirectCommandsLayoutCreateInfoEXT, pAllocator: *const VkAllocationCallbacks, pIndirectCommandsLayout: *mut VkIndirectCommandsLayoutEXT) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroyIndirectCommandsLayoutEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroyIndirectCommandsLayoutEXT.html>
 	fn vkDestroyIndirectCommandsLayoutEXT(&self, device: VkDevice, indirectCommandsLayout: VkIndirectCommandsLayoutEXT, pAllocator: *const VkAllocationCallbacks) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateIndirectExecutionSetEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateIndirectExecutionSetEXT.html>
 	fn vkCreateIndirectExecutionSetEXT(&self, device: VkDevice, pCreateInfo: *const VkIndirectExecutionSetCreateInfoEXT, pAllocator: *const VkAllocationCallbacks, pIndirectExecutionSet: *mut VkIndirectExecutionSetEXT) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroyIndirectExecutionSetEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroyIndirectExecutionSetEXT.html>
 	fn vkDestroyIndirectExecutionSetEXT(&self, device: VkDevice, indirectExecutionSet: VkIndirectExecutionSetEXT, pAllocator: *const VkAllocationCallbacks) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkUpdateIndirectExecutionSetPipelineEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkUpdateIndirectExecutionSetPipelineEXT.html>
 	fn vkUpdateIndirectExecutionSetPipelineEXT(&self, device: VkDevice, indirectExecutionSet: VkIndirectExecutionSetEXT, executionSetWriteCount: u32, pExecutionSetWrites: *const VkWriteIndirectExecutionSetPipelineEXT) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkUpdateIndirectExecutionSetShaderEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkUpdateIndirectExecutionSetShaderEXT.html>
 	fn vkUpdateIndirectExecutionSetShaderEXT(&self, device: VkDevice, indirectExecutionSet: VkIndirectExecutionSetEXT, executionSetWriteCount: u32, pExecutionSetWrites: *const VkWriteIndirectExecutionSetShaderEXT) -> Result<()>;
 }
 /// struct for `VK_EXT_device_generated_commands`
@@ -50177,7 +50178,7 @@ extern "system" fn dummy_vkGetPhysicalDeviceCooperativeMatrixFlexibleDimensionsP
 /// trait for `VK_NV_cooperative_matrix2`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NV_cooperative_matrix2.html>
 pub trait VK_NV_cooperative_matrix2: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceCooperativeMatrixFlexibleDimensionsPropertiesNV.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceCooperativeMatrixFlexibleDimensionsPropertiesNV.html>
 	fn vkGetPhysicalDeviceCooperativeMatrixFlexibleDimensionsPropertiesNV(&self, physicalDevice: VkPhysicalDevice, pPropertyCount: *mut uint32_t, pProperties: *mut VkCooperativeMatrixFlexibleDimensionsPropertiesNV) -> Result<()>;
 }
 /// struct for `VK_NV_cooperative_matrix2`
@@ -50380,7 +50381,7 @@ extern "system" fn dummy_vkCmdEndRendering2EXT(_: VkCommandBuffer, _: *const VkR
 /// trait for `VK_EXT_fragment_density_map_offset`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_fragment_density_map_offset.html>
 pub trait VK_EXT_fragment_density_map_offset: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdEndRendering2EXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdEndRendering2EXT.html>
 	fn vkCmdEndRendering2EXT(&self, commandBuffer: VkCommandBuffer, pRenderingEndInfo: *const VkRenderingEndInfoEXT) -> Result<()>;
 }
 /// struct for `VK_EXT_fragment_density_map_offset`
@@ -50821,37 +50822,37 @@ extern "system" fn dummy_vkGetAccelerationStructureBuildSizesKHR(_: VkDevice, _:
 /// trait for `VK_KHR_acceleration_structure`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_acceleration_structure.html>
 pub trait VK_KHR_acceleration_structure: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateAccelerationStructureKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateAccelerationStructureKHR.html>
 	fn vkCreateAccelerationStructureKHR(&self, device: VkDevice, pCreateInfo: *const VkAccelerationStructureCreateInfoKHR, pAllocator: *const VkAllocationCallbacks, pAccelerationStructure: *mut VkAccelerationStructureKHR) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroyAccelerationStructureKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkDestroyAccelerationStructureKHR.html>
 	fn vkDestroyAccelerationStructureKHR(&self, device: VkDevice, accelerationStructure: VkAccelerationStructureKHR, pAllocator: *const VkAllocationCallbacks) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdBuildAccelerationStructuresKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdBuildAccelerationStructuresKHR.html>
 	fn vkCmdBuildAccelerationStructuresKHR(&self, commandBuffer: VkCommandBuffer, infoCount: u32, pInfos: *const VkAccelerationStructureBuildGeometryInfoKHR, ppBuildRangeInfos: *const *const VkAccelerationStructureBuildRangeInfoKHR) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdBuildAccelerationStructuresIndirectKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdBuildAccelerationStructuresIndirectKHR.html>
 	fn vkCmdBuildAccelerationStructuresIndirectKHR(&self, commandBuffer: VkCommandBuffer, infoCount: u32, pInfos: *const VkAccelerationStructureBuildGeometryInfoKHR, pIndirectDeviceAddresses: *const VkDeviceAddress, pIndirectStrides: *const uint32_t, ppMaxPrimitiveCounts: *const *const uint32_t) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkBuildAccelerationStructuresKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkBuildAccelerationStructuresKHR.html>
 	fn vkBuildAccelerationStructuresKHR(&self, device: VkDevice, deferredOperation: VkDeferredOperationKHR, infoCount: u32, pInfos: *const VkAccelerationStructureBuildGeometryInfoKHR, ppBuildRangeInfos: *const *const VkAccelerationStructureBuildRangeInfoKHR) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCopyAccelerationStructureKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCopyAccelerationStructureKHR.html>
 	fn vkCopyAccelerationStructureKHR(&self, device: VkDevice, deferredOperation: VkDeferredOperationKHR, pInfo: *const VkCopyAccelerationStructureInfoKHR) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCopyAccelerationStructureToMemoryKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCopyAccelerationStructureToMemoryKHR.html>
 	fn vkCopyAccelerationStructureToMemoryKHR(&self, device: VkDevice, deferredOperation: VkDeferredOperationKHR, pInfo: *const VkCopyAccelerationStructureToMemoryInfoKHR) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCopyMemoryToAccelerationStructureKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCopyMemoryToAccelerationStructureKHR.html>
 	fn vkCopyMemoryToAccelerationStructureKHR(&self, device: VkDevice, deferredOperation: VkDeferredOperationKHR, pInfo: *const VkCopyMemoryToAccelerationStructureInfoKHR) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkWriteAccelerationStructuresPropertiesKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkWriteAccelerationStructuresPropertiesKHR.html>
 	fn vkWriteAccelerationStructuresPropertiesKHR(&self, device: VkDevice, accelerationStructureCount: u32, pAccelerationStructures: *const VkAccelerationStructureKHR, queryType: VkQueryType, dataSize: usize, pData: *mut c_void, stride: usize) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdCopyAccelerationStructureKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdCopyAccelerationStructureKHR.html>
 	fn vkCmdCopyAccelerationStructureKHR(&self, commandBuffer: VkCommandBuffer, pInfo: *const VkCopyAccelerationStructureInfoKHR) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdCopyAccelerationStructureToMemoryKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdCopyAccelerationStructureToMemoryKHR.html>
 	fn vkCmdCopyAccelerationStructureToMemoryKHR(&self, commandBuffer: VkCommandBuffer, pInfo: *const VkCopyAccelerationStructureToMemoryInfoKHR) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdCopyMemoryToAccelerationStructureKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdCopyMemoryToAccelerationStructureKHR.html>
 	fn vkCmdCopyMemoryToAccelerationStructureKHR(&self, commandBuffer: VkCommandBuffer, pInfo: *const VkCopyMemoryToAccelerationStructureInfoKHR) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetAccelerationStructureDeviceAddressKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetAccelerationStructureDeviceAddressKHR.html>
 	fn vkGetAccelerationStructureDeviceAddressKHR(&self, device: VkDevice, pInfo: *const VkAccelerationStructureDeviceAddressInfoKHR) -> Result<VkDeviceAddress>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdWriteAccelerationStructuresPropertiesKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdWriteAccelerationStructuresPropertiesKHR.html>
 	fn vkCmdWriteAccelerationStructuresPropertiesKHR(&self, commandBuffer: VkCommandBuffer, accelerationStructureCount: u32, pAccelerationStructures: *const VkAccelerationStructureKHR, queryType: VkQueryType, queryPool: VkQueryPool, firstQuery: u32) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDeviceAccelerationStructureCompatibilityKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDeviceAccelerationStructureCompatibilityKHR.html>
 	fn vkGetDeviceAccelerationStructureCompatibilityKHR(&self, device: VkDevice, pVersionInfo: *const VkAccelerationStructureVersionInfoKHR, pCompatibility: *mut VkAccelerationStructureCompatibilityKHR) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetAccelerationStructureBuildSizesKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetAccelerationStructureBuildSizesKHR.html>
 	fn vkGetAccelerationStructureBuildSizesKHR(&self, device: VkDevice, buildType: VkAccelerationStructureBuildTypeKHR, pBuildInfo: *const VkAccelerationStructureBuildGeometryInfoKHR, pMaxPrimitiveCounts: *const uint32_t, pSizeInfo: *mut VkAccelerationStructureBuildSizesInfoKHR) -> Result<()>;
 }
 /// struct for `VK_KHR_acceleration_structure`
@@ -51106,17 +51107,17 @@ extern "system" fn dummy_vkCmdSetRayTracingPipelineStackSizeKHR(_: VkCommandBuff
 /// trait for `VK_KHR_ray_tracing_pipeline`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_ray_tracing_pipeline.html>
 pub trait VK_KHR_ray_tracing_pipeline: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdTraceRaysKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdTraceRaysKHR.html>
 	fn vkCmdTraceRaysKHR(&self, commandBuffer: VkCommandBuffer, pRaygenShaderBindingTable: *const VkStridedDeviceAddressRegionKHR, pMissShaderBindingTable: *const VkStridedDeviceAddressRegionKHR, pHitShaderBindingTable: *const VkStridedDeviceAddressRegionKHR, pCallableShaderBindingTable: *const VkStridedDeviceAddressRegionKHR, width: u32, height: u32, depth: u32) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateRayTracingPipelinesKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateRayTracingPipelinesKHR.html>
 	fn vkCreateRayTracingPipelinesKHR(&self, device: VkDevice, deferredOperation: VkDeferredOperationKHR, pipelineCache: VkPipelineCache, createInfoCount: u32, pCreateInfos: *const VkRayTracingPipelineCreateInfoKHR, pAllocator: *const VkAllocationCallbacks, pPipelines: *mut VkPipeline) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetRayTracingCaptureReplayShaderGroupHandlesKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetRayTracingCaptureReplayShaderGroupHandlesKHR.html>
 	fn vkGetRayTracingCaptureReplayShaderGroupHandlesKHR(&self, device: VkDevice, pipeline: VkPipeline, firstGroup: u32, groupCount: u32, dataSize: usize, pData: *mut c_void) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdTraceRaysIndirectKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdTraceRaysIndirectKHR.html>
 	fn vkCmdTraceRaysIndirectKHR(&self, commandBuffer: VkCommandBuffer, pRaygenShaderBindingTable: *const VkStridedDeviceAddressRegionKHR, pMissShaderBindingTable: *const VkStridedDeviceAddressRegionKHR, pHitShaderBindingTable: *const VkStridedDeviceAddressRegionKHR, pCallableShaderBindingTable: *const VkStridedDeviceAddressRegionKHR, indirectDeviceAddress: VkDeviceAddress) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetRayTracingShaderGroupStackSizeKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetRayTracingShaderGroupStackSizeKHR.html>
 	fn vkGetRayTracingShaderGroupStackSizeKHR(&self, device: VkDevice, pipeline: VkPipeline, group: u32, groupShader: VkShaderGroupShaderKHR) -> Result<VkDeviceSize>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetRayTracingPipelineStackSizeKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdSetRayTracingPipelineStackSizeKHR.html>
 	fn vkCmdSetRayTracingPipelineStackSizeKHR(&self, commandBuffer: VkCommandBuffer, pipelineStackSize: u32) -> Result<()>;
 }
 /// struct for `VK_KHR_ray_tracing_pipeline`
@@ -51281,11 +51282,11 @@ extern "system" fn dummy_vkCmdDrawMeshTasksIndirectCountEXT(_: VkCommandBuffer, 
 /// trait for `VK_EXT_mesh_shader`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_mesh_shader.html>
 pub trait VK_EXT_mesh_shader: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdDrawMeshTasksEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdDrawMeshTasksEXT.html>
 	fn vkCmdDrawMeshTasksEXT(&self, commandBuffer: VkCommandBuffer, groupCountX: u32, groupCountY: u32, groupCountZ: u32) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdDrawMeshTasksIndirectEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdDrawMeshTasksIndirectEXT.html>
 	fn vkCmdDrawMeshTasksIndirectEXT(&self, commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize, drawCount: u32, stride: u32) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdDrawMeshTasksIndirectCountEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdDrawMeshTasksIndirectCountEXT.html>
 	fn vkCmdDrawMeshTasksIndirectCountEXT(&self, commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize, countBuffer: VkBuffer, countBufferOffset: VkDeviceSize, maxDrawCount: u32, stride: u32) -> Result<()>;
 }
 /// struct for `VK_EXT_mesh_shader`
@@ -51356,7 +51357,7 @@ extern "system" fn dummy_vkCreateAndroidSurfaceKHR(_: VkInstance, _: *const VkAn
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_android_surface.html>
 #[cfg(feature = "android_khr")]
 pub trait VK_KHR_android_surface: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateAndroidSurfaceKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateAndroidSurfaceKHR.html>
 	fn vkCreateAndroidSurfaceKHR(&self, instance: VkInstance, pCreateInfo: *const VkAndroidSurfaceCreateInfoKHR, pAllocator: *const VkAllocationCallbacks, pSurface: *mut VkSurfaceKHR) -> Result<()>;
 }
 /// struct for `VK_KHR_android_surface`
@@ -51498,9 +51499,9 @@ extern "system" fn dummy_vkGetMemoryAndroidHardwareBufferANDROID(_: VkDevice, _:
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_ANDROID_external_memory_android_hardware_buffer.html>
 #[cfg(feature = "android_khr")]
 pub trait VK_ANDROID_external_memory_android_hardware_buffer: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetAndroidHardwareBufferPropertiesANDROID.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetAndroidHardwareBufferPropertiesANDROID.html>
 	fn vkGetAndroidHardwareBufferPropertiesANDROID(&self, device: VkDevice, buffer: *const AHardwareBuffer, pProperties: *mut VkAndroidHardwareBufferPropertiesANDROID) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetMemoryAndroidHardwareBufferANDROID.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetMemoryAndroidHardwareBufferANDROID.html>
 	fn vkGetMemoryAndroidHardwareBufferANDROID(&self, device: VkDevice, pInfo: *const VkMemoryGetAndroidHardwareBufferInfoANDROID, pBuffer: *mut *mut AHardwareBuffer) -> Result<()>;
 }
 /// struct for `VK_ANDROID_external_memory_android_hardware_buffer`
@@ -51619,7 +51620,7 @@ extern "system" fn dummy_vkCreateIOSSurfaceMVK(_: VkInstance, _: *const VkIOSSur
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_MVK_ios_surface.html>
 #[cfg(feature = "ios_mvk")]
 pub trait VK_MVK_ios_surface: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateIOSSurfaceMVK.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateIOSSurfaceMVK.html>
 	fn vkCreateIOSSurfaceMVK(&self, instance: VkInstance, pCreateInfo: *const VkIOSSurfaceCreateInfoMVK, pAllocator: *const VkAllocationCallbacks, pSurface: *mut VkSurfaceKHR) -> Result<()>;
 }
 /// struct for `VK_MVK_ios_surface`
@@ -51678,7 +51679,7 @@ extern "system" fn dummy_vkCreateMacOSSurfaceMVK(_: VkInstance, _: *const VkMacO
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_MVK_macos_surface.html>
 #[cfg(feature = "macos_mvk")]
 pub trait VK_MVK_macos_surface: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateMacOSSurfaceMVK.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateMacOSSurfaceMVK.html>
 	fn vkCreateMacOSSurfaceMVK(&self, instance: VkInstance, pCreateInfo: *const VkMacOSSurfaceCreateInfoMVK, pAllocator: *const VkAllocationCallbacks, pSurface: *mut VkSurfaceKHR) -> Result<()>;
 }
 /// struct for `VK_MVK_macos_surface`
@@ -51741,7 +51742,7 @@ extern "system" fn dummy_vkCreateMetalSurfaceEXT(_: VkInstance, _: *const VkMeta
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_metal_surface.html>
 #[cfg(feature = "metal_ext")]
 pub trait VK_EXT_metal_surface: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateMetalSurfaceEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateMetalSurfaceEXT.html>
 	fn vkCreateMetalSurfaceEXT(&self, instance: VkInstance, pCreateInfo: *const VkMetalSurfaceCreateInfoEXT, pAllocator: *const VkAllocationCallbacks, pSurface: *mut VkSurfaceKHR) -> Result<()>;
 }
 /// struct for `VK_EXT_metal_surface`
@@ -51982,7 +51983,7 @@ extern "system" fn dummy_vkExportMetalObjectsEXT(_: VkDevice, _: *mut VkExportMe
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_metal_objects.html>
 #[cfg(feature = "metal_ext")]
 pub trait VK_EXT_metal_objects: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkExportMetalObjectsEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkExportMetalObjectsEXT.html>
 	fn vkExportMetalObjectsEXT(&self, device: VkDevice, pMetalObjectsInfo: *mut VkExportMetalObjectsInfoEXT) -> Result<()>;
 }
 /// struct for `VK_EXT_metal_objects`
@@ -52067,9 +52068,9 @@ extern "system" fn dummy_vkGetMemoryMetalHandlePropertiesEXT(_: VkDevice, _: VkE
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_external_memory_metal.html>
 #[cfg(feature = "metal_ext")]
 pub trait VK_EXT_external_memory_metal: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetMemoryMetalHandleEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetMemoryMetalHandleEXT.html>
 	fn vkGetMemoryMetalHandleEXT(&self, device: VkDevice, pGetMetalHandleInfo: *const VkMemoryGetMetalHandleInfoEXT, pHandle: *mut *mut c_void) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetMemoryMetalHandlePropertiesEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetMemoryMetalHandlePropertiesEXT.html>
 	fn vkGetMemoryMetalHandlePropertiesEXT(&self, device: VkDevice, handleType: VkExternalMemoryHandleTypeFlagBits, pHandle: *const c_void, pMemoryMetalHandleProperties: *mut VkMemoryMetalHandlePropertiesEXT) -> Result<()>;
 }
 /// struct for `VK_EXT_external_memory_metal`
@@ -52108,8 +52109,12 @@ impl Vulkan_EXT_external_memory_metal {
 }
 /// type definition for Rust: `struct wl_display*` = `*const c_void`
 /// - Reference: <https://en.cppreference.com/w/cpp/types/integer.html>
+#[cfg(feature = "wayland_khr")]
+pub type wl_display = *const c_void;
 /// type definition for Rust: `struct wl_surface*` = `*const c_void`
 /// - Reference: <https://en.cppreference.com/w/cpp/types/integer.html>
+#[cfg(feature = "wayland_khr")]
+pub type wl_surface = *const c_void;
 /// type definition `VkWaylandSurfaceCreateFlagsKHR` from VK_KHR_wayland_surface
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkWaylandSurfaceCreateFlagsKHR.html>
 #[cfg(feature = "wayland_khr")]
@@ -52123,8 +52128,8 @@ pub struct VkWaylandSurfaceCreateInfoKHR {
 	pub sType: VkStructureType,
 	pub pNext: *const c_void,
 	pub flags: VkWaylandSurfaceCreateFlagsKHR,
-	pub display: *const c_void,
-	pub surface: *const c_void,
+	pub display: wl_display,
+	pub surface: wl_surface,
 }
 /// function prototype `PFN_vkCreateWaylandSurfaceKHR` from VK_KHR_wayland_surface
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateWaylandSurfaceKHR.html>
@@ -52133,7 +52138,7 @@ type PFN_vkCreateWaylandSurfaceKHR = extern "system" fn(instance: VkInstance, pC
 /// function prototype `PFN_vkGetPhysicalDeviceWaylandPresentationSupportKHR` from VK_KHR_wayland_surface
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceWaylandPresentationSupportKHR.html>
 #[cfg(feature = "wayland_khr")]
-type PFN_vkGetPhysicalDeviceWaylandPresentationSupportKHR = extern "system" fn(physicalDevice: VkPhysicalDevice, queueFamilyIndex: u32, display: *const c_void) -> VkBool32;
+type PFN_vkGetPhysicalDeviceWaylandPresentationSupportKHR = extern "system" fn(physicalDevice: VkPhysicalDevice, queueFamilyIndex: u32, display: wl_display) -> VkBool32;
 /// The dummy function for `vkCreateWaylandSurfaceKHR` from `VK_KHR_wayland_surface`
 #[cfg(feature = "wayland_khr")]
 extern "system" fn dummy_vkCreateWaylandSurfaceKHR(_: VkInstance, _: *const VkWaylandSurfaceCreateInfoKHR, _: *const VkAllocationCallbacks, _: *mut VkSurfaceKHR) -> VkResult {
@@ -52141,17 +52146,17 @@ extern "system" fn dummy_vkCreateWaylandSurfaceKHR(_: VkInstance, _: *const VkWa
 }
 /// The dummy function for `vkGetPhysicalDeviceWaylandPresentationSupportKHR` from `VK_KHR_wayland_surface`
 #[cfg(feature = "wayland_khr")]
-extern "system" fn dummy_vkGetPhysicalDeviceWaylandPresentationSupportKHR(_: VkPhysicalDevice, _: u32, _: *const c_void) -> VkBool32 {
+extern "system" fn dummy_vkGetPhysicalDeviceWaylandPresentationSupportKHR(_: VkPhysicalDevice, _: u32, _: wl_display) -> VkBool32 {
 	panic_any(VkError::NullFunctionPointer("vkGetPhysicalDeviceWaylandPresentationSupportKHR"))
 }
 /// trait for `VK_KHR_wayland_surface`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_wayland_surface.html>
 #[cfg(feature = "wayland_khr")]
 pub trait VK_KHR_wayland_surface: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateWaylandSurfaceKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateWaylandSurfaceKHR.html>
 	fn vkCreateWaylandSurfaceKHR(&self, instance: VkInstance, pCreateInfo: *const VkWaylandSurfaceCreateInfoKHR, pAllocator: *const VkAllocationCallbacks, pSurface: *mut VkSurfaceKHR) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceWaylandPresentationSupportKHR.html>
-	fn vkGetPhysicalDeviceWaylandPresentationSupportKHR(&self, physicalDevice: VkPhysicalDevice, queueFamilyIndex: u32, display: *const c_void) -> Result<VkBool32>;
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceWaylandPresentationSupportKHR.html>
+	fn vkGetPhysicalDeviceWaylandPresentationSupportKHR(&self, physicalDevice: VkPhysicalDevice, queueFamilyIndex: u32, display: wl_display) -> Result<VkBool32>;
 }
 /// struct for `VK_KHR_wayland_surface`
 #[cfg(feature = "wayland_khr")]
@@ -52165,7 +52170,7 @@ impl VK_KHR_wayland_surface for Vulkan_KHR_wayland_surface {
 	fn vkCreateWaylandSurfaceKHR(&self, instance: VkInstance, pCreateInfo: *const VkWaylandSurfaceCreateInfoKHR, pAllocator: *const VkAllocationCallbacks, pSurface: *mut VkSurfaceKHR) -> Result<()> {
 		vk_convert_result("vkCreateWaylandSurfaceKHR", catch_unwind(||((self.vk_create_wayland_surface_khr)(instance, pCreateInfo, pAllocator, pSurface))))
 	}
-	fn vkGetPhysicalDeviceWaylandPresentationSupportKHR(&self, physicalDevice: VkPhysicalDevice, queueFamilyIndex: u32, display: *const c_void) -> Result<VkBool32> {
+	fn vkGetPhysicalDeviceWaylandPresentationSupportKHR(&self, physicalDevice: VkPhysicalDevice, queueFamilyIndex: u32, display: wl_display) -> Result<VkBool32> {
 		vk_process_catch(catch_unwind(||((self.vk_get_physical_device_wayland_presentation_support_khr)(physicalDevice, queueFamilyIndex, display))))
 	}
 }
@@ -52187,22 +52192,30 @@ impl Vulkan_KHR_wayland_surface {
 		}
 	}
 }
-/// type definition for Rust: `LPCWSTR` = `*const i16`
-/// - Reference: <https://en.cppreference.com/w/cpp/types/integer.html>
+/// type definition `LPCWSTR` from VK_KHR_win32_surface
+/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/LPCWSTR.html>
 #[cfg(feature = "win32_khr")]
 pub type LPCWSTR = *const i16;
-/// type definition for Rust: `DWORD` = `u32`
-/// - Reference: <https://en.cppreference.com/w/cpp/types/integer.html>
+/// type definition `DWORD` from VK_KHR_win32_surface
+/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/DWORD.html>
 #[cfg(feature = "win32_khr")]
 pub type DWORD = u32;
-/// type definition for Rust: `BOOL` = `u32`
-/// - Reference: <https://en.cppreference.com/w/cpp/types/integer.html>
+/// type definition `BOOL` from VK_KHR_win32_surface
+/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/BOOL.html>
 #[cfg(feature = "win32_khr")]
 pub type BOOL = u32;
 /// type definition `VkWin32SurfaceCreateFlagsKHR` from VK_KHR_win32_surface
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkWin32SurfaceCreateFlagsKHR.html>
 #[cfg(feature = "win32_khr")]
 pub type VkWin32SurfaceCreateFlagsKHR = VkFlags;
+/// Normal handle `HMONITOR` from VK_KHR_win32_surface
+/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/HMONITOR.html>
+#[cfg(feature = "win32_khr")] #[repr(C)] #[derive(Debug, Clone, Copy)] pub struct HMONITOR_T {_unused: u32,}
+#[cfg(feature = "win32_khr")] pub type HMONITOR = *const HMONITOR_T;
+/// Normal handle `HWND` from VK_KHR_win32_surface
+/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/HWND.html>
+#[cfg(feature = "win32_khr")] #[repr(C)] #[derive(Debug, Clone, Copy)] pub struct HWND_T {_unused: u32,}
+#[cfg(feature = "win32_khr")] pub type HWND = *const HWND_T;
 /// Normal handle `HINSTANCE` from VK_KHR_win32_surface
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/HINSTANCE.html>
 #[cfg(feature = "win32_khr")] #[repr(C)] #[derive(Debug, Clone, Copy)] pub struct HINSTANCE_T {_unused: u32,}
@@ -52211,23 +52224,15 @@ pub type VkWin32SurfaceCreateFlagsKHR = VkFlags;
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/HANDLE.html>
 #[cfg(feature = "win32_khr")] #[repr(C)] #[derive(Debug, Clone, Copy)] pub struct HANDLE_T {_unused: u32,}
 #[cfg(feature = "win32_khr")] pub type HANDLE = *const HANDLE_T;
-/// Normal handle `HWND` from VK_KHR_win32_surface
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/HWND.html>
-#[cfg(feature = "win32_khr")] #[repr(C)] #[derive(Debug, Clone, Copy)] pub struct HWND_T {_unused: u32,}
-#[cfg(feature = "win32_khr")] pub type HWND = *const HWND_T;
-/// Normal handle `HMONITOR` from VK_KHR_win32_surface
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/HMONITOR.html>
-#[cfg(feature = "win32_khr")] #[repr(C)] #[derive(Debug, Clone, Copy)] pub struct HMONITOR_T {_unused: u32,}
-#[cfg(feature = "win32_khr")] pub type HMONITOR = *const HMONITOR_T;
 /// struct `SECURITY_ATTRIBUTES` from VK_KHR_win32_surface
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/SECURITY_ATTRIBUTES.html>
 #[cfg(feature = "win32_khr")]
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct SECURITY_ATTRIBUTES {
-	pub nLength: u32,
+	pub nLength: DWORD,
 	pub lpSecurityDescriptor: *const c_void,
-	pub bInheritHandle: u32,
+	pub bInheritHandle: BOOL,
 }
 /// struct `VkWin32SurfaceCreateInfoKHR` from VK_KHR_win32_surface
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkWin32SurfaceCreateInfoKHR.html>
@@ -52263,9 +52268,9 @@ extern "system" fn dummy_vkGetPhysicalDeviceWin32PresentationSupportKHR(_: VkPhy
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_win32_surface.html>
 #[cfg(feature = "win32_khr")]
 pub trait VK_KHR_win32_surface: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateWin32SurfaceKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateWin32SurfaceKHR.html>
 	fn vkCreateWin32SurfaceKHR(&self, instance: VkInstance, pCreateInfo: *const VkWin32SurfaceCreateInfoKHR, pAllocator: *const VkAllocationCallbacks, pSurface: *mut VkSurfaceKHR) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceWin32PresentationSupportKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceWin32PresentationSupportKHR.html>
 	fn vkGetPhysicalDeviceWin32PresentationSupportKHR(&self, physicalDevice: VkPhysicalDevice, queueFamilyIndex: u32) -> Result<VkBool32>;
 }
 /// struct for `VK_KHR_win32_surface`
@@ -52312,7 +52317,7 @@ pub struct VkImportMemoryWin32HandleInfoKHR {
 	pub pNext: *const c_void,
 	pub handleType: VkExternalMemoryHandleTypeFlagBits,
 	pub handle: HANDLE,
-	pub name: *const i16,
+	pub name: LPCWSTR,
 }
 /// struct `VkExportMemoryWin32HandleInfoKHR` from VK_KHR_external_memory_win32
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkExportMemoryWin32HandleInfoKHR.html>
@@ -52323,8 +52328,8 @@ pub struct VkExportMemoryWin32HandleInfoKHR {
 	pub sType: VkStructureType,
 	pub pNext: *const c_void,
 	pub pAttributes: *const SECURITY_ATTRIBUTES,
-	pub dwAccess: u32,
-	pub name: *const i16,
+	pub dwAccess: DWORD,
+	pub name: LPCWSTR,
 }
 /// struct `VkMemoryWin32HandlePropertiesKHR` from VK_KHR_external_memory_win32
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkMemoryWin32HandlePropertiesKHR.html>
@@ -52369,9 +52374,9 @@ extern "system" fn dummy_vkGetMemoryWin32HandlePropertiesKHR(_: VkDevice, _: VkE
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_external_memory_win32.html>
 #[cfg(feature = "win32_khr")]
 pub trait VK_KHR_external_memory_win32: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetMemoryWin32HandleKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetMemoryWin32HandleKHR.html>
 	fn vkGetMemoryWin32HandleKHR(&self, device: VkDevice, pGetWin32HandleInfo: *const VkMemoryGetWin32HandleInfoKHR, pHandle: *mut HANDLE) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetMemoryWin32HandlePropertiesKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetMemoryWin32HandlePropertiesKHR.html>
 	fn vkGetMemoryWin32HandlePropertiesKHR(&self, device: VkDevice, handleType: VkExternalMemoryHandleTypeFlagBits, handle: HANDLE, pMemoryWin32HandleProperties: *mut VkMemoryWin32HandlePropertiesKHR) -> Result<()>;
 }
 /// struct for `VK_KHR_external_memory_win32`
@@ -52458,7 +52463,7 @@ pub struct VkImportSemaphoreWin32HandleInfoKHR {
 	pub flags: VkSemaphoreImportFlags,
 	pub handleType: VkExternalSemaphoreHandleTypeFlagBits,
 	pub handle: HANDLE,
-	pub name: *const i16,
+	pub name: LPCWSTR,
 }
 /// struct `VkExportSemaphoreWin32HandleInfoKHR` from VK_KHR_external_semaphore_win32
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkExportSemaphoreWin32HandleInfoKHR.html>
@@ -52469,8 +52474,8 @@ pub struct VkExportSemaphoreWin32HandleInfoKHR {
 	pub sType: VkStructureType,
 	pub pNext: *const c_void,
 	pub pAttributes: *const SECURITY_ATTRIBUTES,
-	pub dwAccess: u32,
-	pub name: *const i16,
+	pub dwAccess: DWORD,
+	pub name: LPCWSTR,
 }
 /// struct `VkD3D12FenceSubmitInfoKHR` from VK_KHR_external_semaphore_win32
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkD3D12FenceSubmitInfoKHR.html>
@@ -52518,9 +52523,9 @@ extern "system" fn dummy_vkGetSemaphoreWin32HandleKHR(_: VkDevice, _: *const VkS
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_external_semaphore_win32.html>
 #[cfg(feature = "win32_khr")]
 pub trait VK_KHR_external_semaphore_win32: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkImportSemaphoreWin32HandleKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkImportSemaphoreWin32HandleKHR.html>
 	fn vkImportSemaphoreWin32HandleKHR(&self, device: VkDevice, pImportSemaphoreWin32HandleInfo: *const VkImportSemaphoreWin32HandleInfoKHR) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetSemaphoreWin32HandleKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetSemaphoreWin32HandleKHR.html>
 	fn vkGetSemaphoreWin32HandleKHR(&self, device: VkDevice, pGetWin32HandleInfo: *const VkSemaphoreGetWin32HandleInfoKHR, pHandle: *mut HANDLE) -> Result<()>;
 }
 /// struct for `VK_KHR_external_semaphore_win32`
@@ -52569,7 +52574,7 @@ pub struct VkImportFenceWin32HandleInfoKHR {
 	pub flags: VkFenceImportFlags,
 	pub handleType: VkExternalFenceHandleTypeFlagBits,
 	pub handle: HANDLE,
-	pub name: *const i16,
+	pub name: LPCWSTR,
 }
 /// struct `VkExportFenceWin32HandleInfoKHR` from VK_KHR_external_fence_win32
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkExportFenceWin32HandleInfoKHR.html>
@@ -52580,8 +52585,8 @@ pub struct VkExportFenceWin32HandleInfoKHR {
 	pub sType: VkStructureType,
 	pub pNext: *const c_void,
 	pub pAttributes: *const SECURITY_ATTRIBUTES,
-	pub dwAccess: u32,
-	pub name: *const i16,
+	pub dwAccess: DWORD,
+	pub name: LPCWSTR,
 }
 /// struct `VkFenceGetWin32HandleInfoKHR` from VK_KHR_external_fence_win32
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkFenceGetWin32HandleInfoKHR.html>
@@ -52616,9 +52621,9 @@ extern "system" fn dummy_vkGetFenceWin32HandleKHR(_: VkDevice, _: *const VkFence
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_external_fence_win32.html>
 #[cfg(feature = "win32_khr")]
 pub trait VK_KHR_external_fence_win32: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkImportFenceWin32HandleKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkImportFenceWin32HandleKHR.html>
 	fn vkImportFenceWin32HandleKHR(&self, device: VkDevice, pImportFenceWin32HandleInfo: *const VkImportFenceWin32HandleInfoKHR) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetFenceWin32HandleKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetFenceWin32HandleKHR.html>
 	fn vkGetFenceWin32HandleKHR(&self, device: VkDevice, pGetWin32HandleInfo: *const VkFenceGetWin32HandleInfoKHR, pHandle: *mut HANDLE) -> Result<()>;
 }
 /// struct for `VK_KHR_external_fence_win32`
@@ -52675,7 +52680,7 @@ pub struct VkExportMemoryWin32HandleInfoNV {
 	pub sType: VkStructureType,
 	pub pNext: *const c_void,
 	pub pAttributes: *const SECURITY_ATTRIBUTES,
-	pub dwAccess: u32,
+	pub dwAccess: DWORD,
 }
 /// function prototype `PFN_vkGetMemoryWin32HandleNV` from VK_NV_external_memory_win32
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetMemoryWin32HandleNV.html>
@@ -52690,7 +52695,7 @@ extern "system" fn dummy_vkGetMemoryWin32HandleNV(_: VkDevice, _: VkDeviceMemory
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NV_external_memory_win32.html>
 #[cfg(feature = "win32_khr")]
 pub trait VK_NV_external_memory_win32: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetMemoryWin32HandleNV.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetMemoryWin32HandleNV.html>
 	fn vkGetMemoryWin32HandleNV(&self, device: VkDevice, memory: VkDeviceMemory, handleType: VkExternalMemoryHandleTypeFlagsNV, pHandle: *mut HANDLE) -> Result<()>;
 }
 /// struct for `VK_NV_external_memory_win32`
@@ -52841,13 +52846,13 @@ extern "system" fn dummy_vkGetDeviceGroupSurfacePresentModes2EXT(_: VkDevice, _:
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_full_screen_exclusive.html>
 #[cfg(feature = "win32_khr")]
 pub trait VK_EXT_full_screen_exclusive: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceSurfacePresentModes2EXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceSurfacePresentModes2EXT.html>
 	fn vkGetPhysicalDeviceSurfacePresentModes2EXT(&self, physicalDevice: VkPhysicalDevice, pSurfaceInfo: *const VkPhysicalDeviceSurfaceInfo2KHR, pPresentModeCount: *mut uint32_t, pPresentModes: *mut VkPresentModeKHR) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkAcquireFullScreenExclusiveModeEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkAcquireFullScreenExclusiveModeEXT.html>
 	fn vkAcquireFullScreenExclusiveModeEXT(&self, device: VkDevice, swapchain: VkSwapchainKHR) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkReleaseFullScreenExclusiveModeEXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkReleaseFullScreenExclusiveModeEXT.html>
 	fn vkReleaseFullScreenExclusiveModeEXT(&self, device: VkDevice, swapchain: VkSwapchainKHR) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDeviceGroupSurfacePresentModes2EXT.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDeviceGroupSurfacePresentModes2EXT.html>
 	fn vkGetDeviceGroupSurfacePresentModes2EXT(&self, device: VkDevice, pSurfaceInfo: *const VkPhysicalDeviceSurfaceInfo2KHR, pModes: *mut VkDeviceGroupPresentModeFlagsKHR) -> Result<()>;
 }
 /// struct for `VK_EXT_full_screen_exclusive`
@@ -52918,9 +52923,9 @@ extern "system" fn dummy_vkGetWinrtDisplayNV(_: VkPhysicalDevice, _: u32, _: *mu
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NV_acquire_winrt_display.html>
 #[cfg(feature = "win32_khr")]
 pub trait VK_NV_acquire_winrt_display: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkAcquireWinrtDisplayNV.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkAcquireWinrtDisplayNV.html>
 	fn vkAcquireWinrtDisplayNV(&self, physicalDevice: VkPhysicalDevice, display: VkDisplayKHR) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetWinrtDisplayNV.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetWinrtDisplayNV.html>
 	fn vkGetWinrtDisplayNV(&self, physicalDevice: VkPhysicalDevice, deviceRelativeId: u32, pDisplay: *mut VkDisplayKHR) -> Result<()>;
 }
 /// struct for `VK_NV_acquire_winrt_display`
@@ -52957,14 +52962,16 @@ impl Vulkan_NV_acquire_winrt_display {
 		}
 	}
 }
-/// type definition for Rust: `xcb_connection_t*` = `*const c_void`
-/// - Reference: <https://en.cppreference.com/w/cpp/types/integer.html>
-/// type definition for Rust: `xcb_window_t` = `u32`
-/// - Reference: <https://en.cppreference.com/w/cpp/types/integer.html>
+/// type definition `xcb_connection_t*` from VK_KHR_xcb_surface
+/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/xcb_connection_t*.html>
+#[cfg(feature = "xcb_khr")]
+pub type xcb_connection_t = *const c_void;
+/// type definition `xcb_window_t` from VK_KHR_xcb_surface
+/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/xcb_window_t.html>
 #[cfg(feature = "xcb_khr")]
 pub type xcb_window_t = u32;
-/// type definition for Rust: `xcb_visualid_t` = `u32`
-/// - Reference: <https://en.cppreference.com/w/cpp/types/integer.html>
+/// type definition `xcb_visualid_t` from VK_KHR_xcb_surface
+/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/xcb_visualid_t.html>
 #[cfg(feature = "xcb_khr")]
 pub type xcb_visualid_t = u32;
 /// type definition `VkXcbSurfaceCreateFlagsKHR` from VK_KHR_xcb_surface
@@ -52980,8 +52987,8 @@ pub struct VkXcbSurfaceCreateInfoKHR {
 	pub sType: VkStructureType,
 	pub pNext: *const c_void,
 	pub flags: VkXcbSurfaceCreateFlagsKHR,
-	pub connection: *const c_void,
-	pub window: uint32_t,
+	pub connection: *mut xcb_connection_t,
+	pub window: xcb_window_t,
 }
 /// function prototype `PFN_vkCreateXcbSurfaceKHR` from VK_KHR_xcb_surface
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateXcbSurfaceKHR.html>
@@ -52990,7 +52997,7 @@ type PFN_vkCreateXcbSurfaceKHR = extern "system" fn(instance: VkInstance, pCreat
 /// function prototype `PFN_vkGetPhysicalDeviceXcbPresentationSupportKHR` from VK_KHR_xcb_surface
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceXcbPresentationSupportKHR.html>
 #[cfg(feature = "xcb_khr")]
-type PFN_vkGetPhysicalDeviceXcbPresentationSupportKHR = extern "system" fn(physicalDevice: VkPhysicalDevice, queueFamilyIndex: u32, connection: *const c_void, visual_id: uint32_t) -> VkBool32;
+type PFN_vkGetPhysicalDeviceXcbPresentationSupportKHR = extern "system" fn(physicalDevice: VkPhysicalDevice, queueFamilyIndex: u32, connection: *mut xcb_connection_t, visual_id: xcb_visualid_t) -> VkBool32;
 /// The dummy function for `vkCreateXcbSurfaceKHR` from `VK_KHR_xcb_surface`
 #[cfg(feature = "xcb_khr")]
 extern "system" fn dummy_vkCreateXcbSurfaceKHR(_: VkInstance, _: *const VkXcbSurfaceCreateInfoKHR, _: *const VkAllocationCallbacks, _: *mut VkSurfaceKHR) -> VkResult {
@@ -52998,17 +53005,17 @@ extern "system" fn dummy_vkCreateXcbSurfaceKHR(_: VkInstance, _: *const VkXcbSur
 }
 /// The dummy function for `vkGetPhysicalDeviceXcbPresentationSupportKHR` from `VK_KHR_xcb_surface`
 #[cfg(feature = "xcb_khr")]
-extern "system" fn dummy_vkGetPhysicalDeviceXcbPresentationSupportKHR(_: VkPhysicalDevice, _: u32, _: *const c_void, _: uint32_t) -> VkBool32 {
+extern "system" fn dummy_vkGetPhysicalDeviceXcbPresentationSupportKHR(_: VkPhysicalDevice, _: u32, _: *mut xcb_connection_t, _: xcb_visualid_t) -> VkBool32 {
 	panic_any(VkError::NullFunctionPointer("vkGetPhysicalDeviceXcbPresentationSupportKHR"))
 }
 /// trait for `VK_KHR_xcb_surface`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_xcb_surface.html>
 #[cfg(feature = "xcb_khr")]
 pub trait VK_KHR_xcb_surface: Debug {
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateXcbSurfaceKHR.html>
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateXcbSurfaceKHR.html>
 	fn vkCreateXcbSurfaceKHR(&self, instance: VkInstance, pCreateInfo: *const VkXcbSurfaceCreateInfoKHR, pAllocator: *const VkAllocationCallbacks, pSurface: *mut VkSurfaceKHR) -> Result<()>;
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceXcbPresentationSupportKHR.html>
-	fn vkGetPhysicalDeviceXcbPresentationSupportKHR(&self, physicalDevice: VkPhysicalDevice, queueFamilyIndex: u32, connection: *const c_void, visual_id: uint32_t) -> Result<VkBool32>;
+	/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceXcbPresentationSupportKHR.html>
+	fn vkGetPhysicalDeviceXcbPresentationSupportKHR(&self, physicalDevice: VkPhysicalDevice, queueFamilyIndex: u32, connection: *mut xcb_connection_t, visual_id: xcb_visualid_t) -> Result<VkBool32>;
 }
 /// struct for `VK_KHR_xcb_surface`
 #[cfg(feature = "xcb_khr")]
@@ -53022,7 +53029,7 @@ impl VK_KHR_xcb_surface for Vulkan_KHR_xcb_surface {
 	fn vkCreateXcbSurfaceKHR(&self, instance: VkInstance, pCreateInfo: *const VkXcbSurfaceCreateInfoKHR, pAllocator: *const VkAllocationCallbacks, pSurface: *mut VkSurfaceKHR) -> Result<()> {
 		vk_convert_result("vkCreateXcbSurfaceKHR", catch_unwind(||((self.vk_create_xcb_surface_khr)(instance, pCreateInfo, pAllocator, pSurface))))
 	}
-	fn vkGetPhysicalDeviceXcbPresentationSupportKHR(&self, physicalDevice: VkPhysicalDevice, queueFamilyIndex: u32, connection: *const c_void, visual_id: uint32_t) -> Result<VkBool32> {
+	fn vkGetPhysicalDeviceXcbPresentationSupportKHR(&self, physicalDevice: VkPhysicalDevice, queueFamilyIndex: u32, connection: *mut xcb_connection_t, visual_id: xcb_visualid_t) -> Result<VkBool32> {
 		vk_process_catch(catch_unwind(||((self.vk_get_physical_device_xcb_presentation_support_khr)(physicalDevice, queueFamilyIndex, connection, visual_id))))
 	}
 }
@@ -56600,7 +56607,7 @@ impl VK_KHR_wayland_surface for VkCore {
 	fn vkCreateWaylandSurfaceKHR(&self, instance: VkInstance, pCreateInfo: *const VkWaylandSurfaceCreateInfoKHR, pAllocator: *const VkAllocationCallbacks, pSurface: *mut VkSurfaceKHR) -> Result<()> {
 		vk_convert_result("vkCreateWaylandSurfaceKHR", catch_unwind(||((self.vk_khr_wayland_surface.vk_create_wayland_surface_khr)(instance, pCreateInfo, pAllocator, pSurface))))
 	}
-	fn vkGetPhysicalDeviceWaylandPresentationSupportKHR(&self, physicalDevice: VkPhysicalDevice, queueFamilyIndex: u32, display: *const c_void) -> Result<VkBool32> {
+	fn vkGetPhysicalDeviceWaylandPresentationSupportKHR(&self, physicalDevice: VkPhysicalDevice, queueFamilyIndex: u32, display: wl_display) -> Result<VkBool32> {
 		vk_process_catch(catch_unwind(||((self.vk_khr_wayland_surface.vk_get_physical_device_wayland_presentation_support_khr)(physicalDevice, queueFamilyIndex, display))))
 	}
 }
@@ -56679,7 +56686,7 @@ impl VK_KHR_xcb_surface for VkCore {
 	fn vkCreateXcbSurfaceKHR(&self, instance: VkInstance, pCreateInfo: *const VkXcbSurfaceCreateInfoKHR, pAllocator: *const VkAllocationCallbacks, pSurface: *mut VkSurfaceKHR) -> Result<()> {
 		vk_convert_result("vkCreateXcbSurfaceKHR", catch_unwind(||((self.vk_khr_xcb_surface.vk_create_xcb_surface_khr)(instance, pCreateInfo, pAllocator, pSurface))))
 	}
-	fn vkGetPhysicalDeviceXcbPresentationSupportKHR(&self, physicalDevice: VkPhysicalDevice, queueFamilyIndex: u32, connection: *const c_void, visual_id: uint32_t) -> Result<VkBool32> {
+	fn vkGetPhysicalDeviceXcbPresentationSupportKHR(&self, physicalDevice: VkPhysicalDevice, queueFamilyIndex: u32, connection: *mut xcb_connection_t, visual_id: xcb_visualid_t) -> Result<VkBool32> {
 		vk_process_catch(catch_unwind(||((self.vk_khr_xcb_surface.vk_get_physical_device_xcb_presentation_support_khr)(physicalDevice, queueFamilyIndex, connection, visual_id))))
 	}
 }
@@ -57184,3 +57191,19 @@ impl Drop for VkCore {
 	}
 }
 
+
+#[cfg(any(feature = "glfw", test))]
+mod glfw_create_surface {
+	use vkcore_rs::*;
+	use glfw::*;
+	unsafe extern "C" {
+		fn glfwCreateWindowSurface(instance: VkInstance, window: *const GLFWwindow, allocator: *const VkAllocationCallbacks, surface: *mut VkSurfaceKHR) -> VkResult;
+	}
+	/// The function for you to create a `VkSurfaceKHR` when the feature "glfw" is enabled
+	pub fn vkCreateWindowSurfaceGLFW(instance: VkInstance, window: &PWindow, allocator: *const VkAllocationCallbacks, surface: *mut VkSurfaceKHR) -> VkResult {
+		glfwCreateWindowSurface(instance, window.window_ptr(), allocator, &mut surface)
+	}
+}
+
+#[cfg(any(feature = "glfw", test))]
+pub use glfw_create_surface::vkCreateWindowSurfaceGLFW;
