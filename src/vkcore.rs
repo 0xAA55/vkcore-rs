@@ -27,15 +27,15 @@ pub fn vk_make_video_std_version(major: u32, minor: u32, patch: u32) -> u32 {
 }
 
 /// Convert byte array to a string that represents the data of the array.
-fn to_byte_array_string<const N: usize>(input: &[u8; N]) -> String {
+pub fn vk_to_byte_array_string<const N: usize>(input: &[u8; N]) -> String {
 	format!("[{}]", input.iter().map(|b|format!("0x{b:02X}")).collect::<Vec<String>>().join(", "))
 }
 
 /// Convert a fixed-length `i8` array to a Rust string if it is a UTF-8 string; otherwise, return the hexadecimal sequences of the byte array
-fn maybe_string<const N: usize>(input: &[i8; N]) -> String {
+pub fn vk_format_maybe_string<const N: usize>(input: &[i8; N]) -> String {
 	match unsafe{CStr::from_ptr(input.as_ptr())}.to_str() {
 		Ok(s) => format!("\"{s}\""),
-		Err(_) => to_byte_array_string::<N>(unsafe{transmute(input)}),
+		Err(_) => vk_to_byte_array_string::<N>(unsafe{transmute(input)}),
 	}
 }
 
@@ -463,7 +463,12 @@ pub fn vk_access_flags_to_string(value: VkAccessFlags) -> String {
 	if (value & VkAccessFlagBits::VK_ACCESS_FLAG_BITS_MAX_ENUM as VkAccessFlags) == VkAccessFlagBits::VK_ACCESS_FLAG_BITS_MAX_ENUM as VkAccessFlags {
 		flags.push("VkAccessFlagBits::VK_ACCESS_FLAG_BITS_MAX_ENUM");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkImageAspectFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkImageAspectFlags.html>
@@ -522,7 +527,12 @@ pub fn vk_image_aspect_flags_to_string(value: VkImageAspectFlags) -> String {
 	if (value & VkImageAspectFlagBits::VK_IMAGE_ASPECT_FLAG_BITS_MAX_ENUM as VkImageAspectFlags) == VkImageAspectFlagBits::VK_IMAGE_ASPECT_FLAG_BITS_MAX_ENUM as VkImageAspectFlags {
 		flags.push("VkImageAspectFlagBits::VK_IMAGE_ASPECT_FLAG_BITS_MAX_ENUM");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkFormatFeatureFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkFormatFeatureFlags.html>
@@ -659,7 +669,12 @@ pub fn vk_format_feature_flags_to_string(value: VkFormatFeatureFlags) -> String 
 	if (value & VkFormatFeatureFlagBits::VK_FORMAT_FEATURE_FLAG_BITS_MAX_ENUM as VkFormatFeatureFlags) == VkFormatFeatureFlagBits::VK_FORMAT_FEATURE_FLAG_BITS_MAX_ENUM as VkFormatFeatureFlags {
 		flags.push("VkFormatFeatureFlagBits::VK_FORMAT_FEATURE_FLAG_BITS_MAX_ENUM");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkImageCreateFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkImageCreateFlags.html>
@@ -751,7 +766,12 @@ pub fn vk_image_create_flags_to_string(value: VkImageCreateFlags) -> String {
 	if (value & VkImageCreateFlagBits::VK_IMAGE_CREATE_FLAG_BITS_MAX_ENUM as VkImageCreateFlags) == VkImageCreateFlagBits::VK_IMAGE_CREATE_FLAG_BITS_MAX_ENUM as VkImageCreateFlags {
 		flags.push("VkImageCreateFlagBits::VK_IMAGE_CREATE_FLAG_BITS_MAX_ENUM");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkSampleCountFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkSampleCountFlags.html>
@@ -783,7 +803,12 @@ pub fn vk_sample_count_flags_to_string(value: VkSampleCountFlags) -> String {
 	if (value & VkSampleCountFlagBits::VK_SAMPLE_COUNT_FLAG_BITS_MAX_ENUM as VkSampleCountFlags) == VkSampleCountFlagBits::VK_SAMPLE_COUNT_FLAG_BITS_MAX_ENUM as VkSampleCountFlags {
 		flags.push("VkSampleCountFlagBits::VK_SAMPLE_COUNT_FLAG_BITS_MAX_ENUM");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkImageUsageFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkImageUsageFlags.html>
@@ -875,7 +900,12 @@ pub fn vk_image_usage_flags_to_string(value: VkImageUsageFlags) -> String {
 	if (value & VkImageUsageFlagBits::VK_IMAGE_USAGE_FLAG_BITS_MAX_ENUM as VkImageUsageFlags) == VkImageUsageFlagBits::VK_IMAGE_USAGE_FLAG_BITS_MAX_ENUM as VkImageUsageFlags {
 		flags.push("VkImageUsageFlagBits::VK_IMAGE_USAGE_FLAG_BITS_MAX_ENUM");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkInstanceCreateFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkInstanceCreateFlags.html>
@@ -889,7 +919,12 @@ pub fn vk_instance_create_flags_to_string(value: VkInstanceCreateFlags) -> Strin
 	if (value & VkInstanceCreateFlagBits::VK_INSTANCE_CREATE_FLAG_BITS_MAX_ENUM as VkInstanceCreateFlags) == VkInstanceCreateFlagBits::VK_INSTANCE_CREATE_FLAG_BITS_MAX_ENUM as VkInstanceCreateFlags {
 		flags.push("VkInstanceCreateFlagBits::VK_INSTANCE_CREATE_FLAG_BITS_MAX_ENUM");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkMemoryHeapFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkMemoryHeapFlags.html>
@@ -912,7 +947,12 @@ pub fn vk_memory_heap_flags_to_string(value: VkMemoryHeapFlags) -> String {
 	if (value & VkMemoryHeapFlagBits::VK_MEMORY_HEAP_FLAG_BITS_MAX_ENUM as VkMemoryHeapFlags) == VkMemoryHeapFlagBits::VK_MEMORY_HEAP_FLAG_BITS_MAX_ENUM as VkMemoryHeapFlags {
 		flags.push("VkMemoryHeapFlagBits::VK_MEMORY_HEAP_FLAG_BITS_MAX_ENUM");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkMemoryPropertyFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkMemoryPropertyFlags.html>
@@ -950,7 +990,12 @@ pub fn vk_memory_property_flags_to_string(value: VkMemoryPropertyFlags) -> Strin
 	if (value & VkMemoryPropertyFlagBits::VK_MEMORY_PROPERTY_FLAG_BITS_MAX_ENUM as VkMemoryPropertyFlags) == VkMemoryPropertyFlagBits::VK_MEMORY_PROPERTY_FLAG_BITS_MAX_ENUM as VkMemoryPropertyFlags {
 		flags.push("VkMemoryPropertyFlagBits::VK_MEMORY_PROPERTY_FLAG_BITS_MAX_ENUM");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkQueueFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkQueueFlags.html>
@@ -988,7 +1033,12 @@ pub fn vk_queue_flags_to_string(value: VkQueueFlags) -> String {
 	if (value & VkQueueFlagBits::VK_QUEUE_FLAG_BITS_MAX_ENUM as VkQueueFlags) == VkQueueFlagBits::VK_QUEUE_FLAG_BITS_MAX_ENUM as VkQueueFlags {
 		flags.push("VkQueueFlagBits::VK_QUEUE_FLAG_BITS_MAX_ENUM");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkDeviceCreateFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkDeviceCreateFlags.html>
@@ -1005,7 +1055,12 @@ pub fn vk_device_queue_create_flags_to_string(value: VkDeviceQueueCreateFlags) -
 	if (value & VkDeviceQueueCreateFlagBits::VK_DEVICE_QUEUE_CREATE_FLAG_BITS_MAX_ENUM as VkDeviceQueueCreateFlags) == VkDeviceQueueCreateFlagBits::VK_DEVICE_QUEUE_CREATE_FLAG_BITS_MAX_ENUM as VkDeviceQueueCreateFlags {
 		flags.push("VkDeviceQueueCreateFlagBits::VK_DEVICE_QUEUE_CREATE_FLAG_BITS_MAX_ENUM");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkPipelineStageFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPipelineStageFlags.html>
@@ -1118,7 +1173,12 @@ pub fn vk_pipeline_stage_flags_to_string(value: VkPipelineStageFlags) -> String 
 	if (value & VkPipelineStageFlagBits::VK_PIPELINE_STAGE_FLAG_BITS_MAX_ENUM as VkPipelineStageFlags) == VkPipelineStageFlagBits::VK_PIPELINE_STAGE_FLAG_BITS_MAX_ENUM as VkPipelineStageFlags {
 		flags.push("VkPipelineStageFlagBits::VK_PIPELINE_STAGE_FLAG_BITS_MAX_ENUM");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkMemoryMapFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkMemoryMapFlags.html>
@@ -1132,7 +1192,12 @@ pub fn vk_memory_map_flags_to_string(value: VkMemoryMapFlags) -> String {
 	if (value & VkMemoryMapFlagBits::VK_MEMORY_MAP_FLAG_BITS_MAX_ENUM as VkMemoryMapFlags) == VkMemoryMapFlagBits::VK_MEMORY_MAP_FLAG_BITS_MAX_ENUM as VkMemoryMapFlags {
 		flags.push("VkMemoryMapFlagBits::VK_MEMORY_MAP_FLAG_BITS_MAX_ENUM");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkSparseMemoryBindFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkSparseMemoryBindFlags.html>
@@ -1146,7 +1211,12 @@ pub fn vk_sparse_memory_bind_flags_to_string(value: VkSparseMemoryBindFlags) -> 
 	if (value & VkSparseMemoryBindFlagBits::VK_SPARSE_MEMORY_BIND_FLAG_BITS_MAX_ENUM as VkSparseMemoryBindFlags) == VkSparseMemoryBindFlagBits::VK_SPARSE_MEMORY_BIND_FLAG_BITS_MAX_ENUM as VkSparseMemoryBindFlags {
 		flags.push("VkSparseMemoryBindFlagBits::VK_SPARSE_MEMORY_BIND_FLAG_BITS_MAX_ENUM");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkSparseImageFormatFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkSparseImageFormatFlags.html>
@@ -1166,7 +1236,12 @@ pub fn vk_sparse_image_format_flags_to_string(value: VkSparseImageFormatFlags) -
 	if (value & VkSparseImageFormatFlagBits::VK_SPARSE_IMAGE_FORMAT_FLAG_BITS_MAX_ENUM as VkSparseImageFormatFlags) == VkSparseImageFormatFlagBits::VK_SPARSE_IMAGE_FORMAT_FLAG_BITS_MAX_ENUM as VkSparseImageFormatFlags {
 		flags.push("VkSparseImageFormatFlagBits::VK_SPARSE_IMAGE_FORMAT_FLAG_BITS_MAX_ENUM");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkFenceCreateFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkFenceCreateFlags.html>
@@ -1180,7 +1255,12 @@ pub fn vk_fence_create_flags_to_string(value: VkFenceCreateFlags) -> String {
 	if (value & VkFenceCreateFlagBits::VK_FENCE_CREATE_FLAG_BITS_MAX_ENUM as VkFenceCreateFlags) == VkFenceCreateFlagBits::VK_FENCE_CREATE_FLAG_BITS_MAX_ENUM as VkFenceCreateFlags {
 		flags.push("VkFenceCreateFlagBits::VK_FENCE_CREATE_FLAG_BITS_MAX_ENUM");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkSemaphoreCreateFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkSemaphoreCreateFlags.html>
@@ -1200,7 +1280,12 @@ pub fn vk_event_create_flags_to_string(value: VkEventCreateFlags) -> String {
 	if (value & VkEventCreateFlagBits::VK_EVENT_CREATE_FLAG_BITS_MAX_ENUM as VkEventCreateFlags) == VkEventCreateFlagBits::VK_EVENT_CREATE_FLAG_BITS_MAX_ENUM as VkEventCreateFlags {
 		flags.push("VkEventCreateFlagBits::VK_EVENT_CREATE_FLAG_BITS_MAX_ENUM");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkQueryPipelineStatisticFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkQueryPipelineStatisticFlags.html>
@@ -1253,7 +1338,12 @@ pub fn vk_query_pipeline_statistic_flags_to_string(value: VkQueryPipelineStatist
 	if (value & VkQueryPipelineStatisticFlagBits::VK_QUERY_PIPELINE_STATISTIC_FLAG_BITS_MAX_ENUM as VkQueryPipelineStatisticFlags) == VkQueryPipelineStatisticFlagBits::VK_QUERY_PIPELINE_STATISTIC_FLAG_BITS_MAX_ENUM as VkQueryPipelineStatisticFlags {
 		flags.push("VkQueryPipelineStatisticFlagBits::VK_QUERY_PIPELINE_STATISTIC_FLAG_BITS_MAX_ENUM");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkQueryPoolCreateFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkQueryPoolCreateFlags.html>
@@ -1267,7 +1357,12 @@ pub fn vk_query_pool_create_flags_to_string(value: VkQueryPoolCreateFlags) -> St
 	if (value & VkQueryPoolCreateFlagBits::VK_QUERY_POOL_CREATE_FLAG_BITS_MAX_ENUM as VkQueryPoolCreateFlags) == VkQueryPoolCreateFlagBits::VK_QUERY_POOL_CREATE_FLAG_BITS_MAX_ENUM as VkQueryPoolCreateFlags {
 		flags.push("VkQueryPoolCreateFlagBits::VK_QUERY_POOL_CREATE_FLAG_BITS_MAX_ENUM");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkQueryResultFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkQueryResultFlags.html>
@@ -1293,7 +1388,12 @@ pub fn vk_query_result_flags_to_string(value: VkQueryResultFlags) -> String {
 	if (value & VkQueryResultFlagBits::VK_QUERY_RESULT_FLAG_BITS_MAX_ENUM as VkQueryResultFlags) == VkQueryResultFlagBits::VK_QUERY_RESULT_FLAG_BITS_MAX_ENUM as VkQueryResultFlags {
 		flags.push("VkQueryResultFlagBits::VK_QUERY_RESULT_FLAG_BITS_MAX_ENUM");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkBufferCreateFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkBufferCreateFlags.html>
@@ -1331,7 +1431,12 @@ pub fn vk_buffer_create_flags_to_string(value: VkBufferCreateFlags) -> String {
 	if (value & VkBufferCreateFlagBits::VK_BUFFER_CREATE_FLAG_BITS_MAX_ENUM as VkBufferCreateFlags) == VkBufferCreateFlagBits::VK_BUFFER_CREATE_FLAG_BITS_MAX_ENUM as VkBufferCreateFlags {
 		flags.push("VkBufferCreateFlagBits::VK_BUFFER_CREATE_FLAG_BITS_MAX_ENUM");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkBufferUsageFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkBufferUsageFlags.html>
@@ -1432,7 +1537,12 @@ pub fn vk_buffer_usage_flags_to_string(value: VkBufferUsageFlags) -> String {
 	if (value & VkBufferUsageFlagBits::VK_BUFFER_USAGE_FLAG_BITS_MAX_ENUM as VkBufferUsageFlags) == VkBufferUsageFlagBits::VK_BUFFER_USAGE_FLAG_BITS_MAX_ENUM as VkBufferUsageFlags {
 		flags.push("VkBufferUsageFlagBits::VK_BUFFER_USAGE_FLAG_BITS_MAX_ENUM");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkBufferViewCreateFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkBufferViewCreateFlags.html>
@@ -1455,7 +1565,12 @@ pub fn vk_image_view_create_flags_to_string(value: VkImageViewCreateFlags) -> St
 	if (value & VkImageViewCreateFlagBits::VK_IMAGE_VIEW_CREATE_FLAG_BITS_MAX_ENUM as VkImageViewCreateFlags) == VkImageViewCreateFlagBits::VK_IMAGE_VIEW_CREATE_FLAG_BITS_MAX_ENUM as VkImageViewCreateFlags {
 		flags.push("VkImageViewCreateFlagBits::VK_IMAGE_VIEW_CREATE_FLAG_BITS_MAX_ENUM");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkShaderModuleCreateFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkShaderModuleCreateFlags.html>
@@ -1478,7 +1593,12 @@ pub fn vk_pipeline_cache_create_flags_to_string(value: VkPipelineCacheCreateFlag
 	if (value & VkPipelineCacheCreateFlagBits::VK_PIPELINE_CACHE_CREATE_FLAG_BITS_MAX_ENUM as VkPipelineCacheCreateFlags) == VkPipelineCacheCreateFlagBits::VK_PIPELINE_CACHE_CREATE_FLAG_BITS_MAX_ENUM as VkPipelineCacheCreateFlags {
 		flags.push("VkPipelineCacheCreateFlagBits::VK_PIPELINE_CACHE_CREATE_FLAG_BITS_MAX_ENUM");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkColorComponentFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkColorComponentFlags.html>
@@ -1501,7 +1621,12 @@ pub fn vk_color_component_flags_to_string(value: VkColorComponentFlags) -> Strin
 	if (value & VkColorComponentFlagBits::VK_COLOR_COMPONENT_FLAG_BITS_MAX_ENUM as VkColorComponentFlags) == VkColorComponentFlagBits::VK_COLOR_COMPONENT_FLAG_BITS_MAX_ENUM as VkColorComponentFlags {
 		flags.push("VkColorComponentFlagBits::VK_COLOR_COMPONENT_FLAG_BITS_MAX_ENUM");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkPipelineCreateFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPipelineCreateFlags.html>
@@ -1635,7 +1760,12 @@ pub fn vk_pipeline_create_flags_to_string(value: VkPipelineCreateFlags) -> Strin
 	if (value & VkPipelineCreateFlagBits::VK_PIPELINE_CREATE_FLAG_BITS_MAX_ENUM as VkPipelineCreateFlags) == VkPipelineCreateFlagBits::VK_PIPELINE_CREATE_FLAG_BITS_MAX_ENUM as VkPipelineCreateFlags {
 		flags.push("VkPipelineCreateFlagBits::VK_PIPELINE_CREATE_FLAG_BITS_MAX_ENUM");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkPipelineShaderStageCreateFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPipelineShaderStageCreateFlags.html>
@@ -1658,7 +1788,12 @@ pub fn vk_pipeline_shader_stage_create_flags_to_string(value: VkPipelineShaderSt
 	if (value & VkPipelineShaderStageCreateFlagBits::VK_PIPELINE_SHADER_STAGE_CREATE_FLAG_BITS_MAX_ENUM as VkPipelineShaderStageCreateFlags) == VkPipelineShaderStageCreateFlagBits::VK_PIPELINE_SHADER_STAGE_CREATE_FLAG_BITS_MAX_ENUM as VkPipelineShaderStageCreateFlags {
 		flags.push("VkPipelineShaderStageCreateFlagBits::VK_PIPELINE_SHADER_STAGE_CREATE_FLAG_BITS_MAX_ENUM");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkCullModeFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkCullModeFlags.html>
@@ -1681,7 +1816,12 @@ pub fn vk_cull_mode_flags_to_string(value: VkCullModeFlags) -> String {
 	if (value & VkCullModeFlagBits::VK_CULL_MODE_FLAG_BITS_MAX_ENUM as VkCullModeFlags) == VkCullModeFlagBits::VK_CULL_MODE_FLAG_BITS_MAX_ENUM as VkCullModeFlags {
 		flags.push("VkCullModeFlagBits::VK_CULL_MODE_FLAG_BITS_MAX_ENUM");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkPipelineVertexInputStateCreateFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPipelineVertexInputStateCreateFlags.html>
@@ -1722,7 +1862,12 @@ pub fn vk_pipeline_depth_stencil_state_create_flags_to_string(value: VkPipelineD
 	if (value & VkPipelineDepthStencilStateCreateFlagBits::VK_PIPELINE_DEPTH_STENCIL_STATE_CREATE_FLAG_BITS_MAX_ENUM as VkPipelineDepthStencilStateCreateFlags) == VkPipelineDepthStencilStateCreateFlagBits::VK_PIPELINE_DEPTH_STENCIL_STATE_CREATE_FLAG_BITS_MAX_ENUM as VkPipelineDepthStencilStateCreateFlags {
 		flags.push("VkPipelineDepthStencilStateCreateFlagBits::VK_PIPELINE_DEPTH_STENCIL_STATE_CREATE_FLAG_BITS_MAX_ENUM");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkPipelineColorBlendStateCreateFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPipelineColorBlendStateCreateFlags.html>
@@ -1739,7 +1884,12 @@ pub fn vk_pipeline_color_blend_state_create_flags_to_string(value: VkPipelineCol
 	if (value & VkPipelineColorBlendStateCreateFlagBits::VK_PIPELINE_COLOR_BLEND_STATE_CREATE_FLAG_BITS_MAX_ENUM as VkPipelineColorBlendStateCreateFlags) == VkPipelineColorBlendStateCreateFlagBits::VK_PIPELINE_COLOR_BLEND_STATE_CREATE_FLAG_BITS_MAX_ENUM as VkPipelineColorBlendStateCreateFlags {
 		flags.push("VkPipelineColorBlendStateCreateFlagBits::VK_PIPELINE_COLOR_BLEND_STATE_CREATE_FLAG_BITS_MAX_ENUM");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkPipelineDynamicStateCreateFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPipelineDynamicStateCreateFlags.html>
@@ -1756,7 +1906,12 @@ pub fn vk_pipeline_layout_create_flags_to_string(value: VkPipelineLayoutCreateFl
 	if (value & VkPipelineLayoutCreateFlagBits::VK_PIPELINE_LAYOUT_CREATE_FLAG_BITS_MAX_ENUM as VkPipelineLayoutCreateFlags) == VkPipelineLayoutCreateFlagBits::VK_PIPELINE_LAYOUT_CREATE_FLAG_BITS_MAX_ENUM as VkPipelineLayoutCreateFlags {
 		flags.push("VkPipelineLayoutCreateFlagBits::VK_PIPELINE_LAYOUT_CREATE_FLAG_BITS_MAX_ENUM");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkShaderStageFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkShaderStageFlags.html>
@@ -1845,7 +2000,12 @@ pub fn vk_shader_stage_flags_to_string(value: VkShaderStageFlags) -> String {
 	if (value & VkShaderStageFlagBits::VK_SHADER_STAGE_FLAG_BITS_MAX_ENUM as VkShaderStageFlags) == VkShaderStageFlagBits::VK_SHADER_STAGE_FLAG_BITS_MAX_ENUM as VkShaderStageFlags {
 		flags.push("VkShaderStageFlagBits::VK_SHADER_STAGE_FLAG_BITS_MAX_ENUM");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkSamplerCreateFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkSamplerCreateFlags.html>
@@ -1871,7 +2031,12 @@ pub fn vk_sampler_create_flags_to_string(value: VkSamplerCreateFlags) -> String 
 	if (value & VkSamplerCreateFlagBits::VK_SAMPLER_CREATE_FLAG_BITS_MAX_ENUM as VkSamplerCreateFlags) == VkSamplerCreateFlagBits::VK_SAMPLER_CREATE_FLAG_BITS_MAX_ENUM as VkSamplerCreateFlags {
 		flags.push("VkSamplerCreateFlagBits::VK_SAMPLER_CREATE_FLAG_BITS_MAX_ENUM");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkDescriptorPoolCreateFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkDescriptorPoolCreateFlags.html>
@@ -1903,7 +2068,12 @@ pub fn vk_descriptor_pool_create_flags_to_string(value: VkDescriptorPoolCreateFl
 	if (value & VkDescriptorPoolCreateFlagBits::VK_DESCRIPTOR_POOL_CREATE_FLAG_BITS_MAX_ENUM as VkDescriptorPoolCreateFlags) == VkDescriptorPoolCreateFlagBits::VK_DESCRIPTOR_POOL_CREATE_FLAG_BITS_MAX_ENUM as VkDescriptorPoolCreateFlags {
 		flags.push("VkDescriptorPoolCreateFlagBits::VK_DESCRIPTOR_POOL_CREATE_FLAG_BITS_MAX_ENUM");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkDescriptorPoolResetFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkDescriptorPoolResetFlags.html>
@@ -1947,7 +2117,12 @@ pub fn vk_descriptor_set_layout_create_flags_to_string(value: VkDescriptorSetLay
 	if (value & VkDescriptorSetLayoutCreateFlagBits::VK_DESCRIPTOR_SET_LAYOUT_CREATE_FLAG_BITS_MAX_ENUM as VkDescriptorSetLayoutCreateFlags) == VkDescriptorSetLayoutCreateFlagBits::VK_DESCRIPTOR_SET_LAYOUT_CREATE_FLAG_BITS_MAX_ENUM as VkDescriptorSetLayoutCreateFlags {
 		flags.push("VkDescriptorSetLayoutCreateFlagBits::VK_DESCRIPTOR_SET_LAYOUT_CREATE_FLAG_BITS_MAX_ENUM");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkAttachmentDescriptionFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkAttachmentDescriptionFlags.html>
@@ -1961,7 +2136,12 @@ pub fn vk_attachment_description_flags_to_string(value: VkAttachmentDescriptionF
 	if (value & VkAttachmentDescriptionFlagBits::VK_ATTACHMENT_DESCRIPTION_FLAG_BITS_MAX_ENUM as VkAttachmentDescriptionFlags) == VkAttachmentDescriptionFlagBits::VK_ATTACHMENT_DESCRIPTION_FLAG_BITS_MAX_ENUM as VkAttachmentDescriptionFlags {
 		flags.push("VkAttachmentDescriptionFlagBits::VK_ATTACHMENT_DESCRIPTION_FLAG_BITS_MAX_ENUM");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkDependencyFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkDependencyFlags.html>
@@ -1996,7 +2176,12 @@ pub fn vk_dependency_flags_to_string(value: VkDependencyFlags) -> String {
 	if (value & VkDependencyFlagBits::VK_DEPENDENCY_FLAG_BITS_MAX_ENUM as VkDependencyFlags) == VkDependencyFlagBits::VK_DEPENDENCY_FLAG_BITS_MAX_ENUM as VkDependencyFlags {
 		flags.push("VkDependencyFlagBits::VK_DEPENDENCY_FLAG_BITS_MAX_ENUM");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkFramebufferCreateFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkFramebufferCreateFlags.html>
@@ -2013,7 +2198,12 @@ pub fn vk_framebuffer_create_flags_to_string(value: VkFramebufferCreateFlags) ->
 	if (value & VkFramebufferCreateFlagBits::VK_FRAMEBUFFER_CREATE_FLAG_BITS_MAX_ENUM as VkFramebufferCreateFlags) == VkFramebufferCreateFlagBits::VK_FRAMEBUFFER_CREATE_FLAG_BITS_MAX_ENUM as VkFramebufferCreateFlags {
 		flags.push("VkFramebufferCreateFlagBits::VK_FRAMEBUFFER_CREATE_FLAG_BITS_MAX_ENUM");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkRenderPassCreateFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkRenderPassCreateFlags.html>
@@ -2030,7 +2220,12 @@ pub fn vk_render_pass_create_flags_to_string(value: VkRenderPassCreateFlags) -> 
 	if (value & VkRenderPassCreateFlagBits::VK_RENDER_PASS_CREATE_FLAG_BITS_MAX_ENUM as VkRenderPassCreateFlags) == VkRenderPassCreateFlagBits::VK_RENDER_PASS_CREATE_FLAG_BITS_MAX_ENUM as VkRenderPassCreateFlags {
 		flags.push("VkRenderPassCreateFlagBits::VK_RENDER_PASS_CREATE_FLAG_BITS_MAX_ENUM");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkSubpassDescriptionFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkSubpassDescriptionFlags.html>
@@ -2077,7 +2272,12 @@ pub fn vk_subpass_description_flags_to_string(value: VkSubpassDescriptionFlags) 
 	if (value & VkSubpassDescriptionFlagBits::VK_SUBPASS_DESCRIPTION_FLAG_BITS_MAX_ENUM as VkSubpassDescriptionFlags) == VkSubpassDescriptionFlagBits::VK_SUBPASS_DESCRIPTION_FLAG_BITS_MAX_ENUM as VkSubpassDescriptionFlags {
 		flags.push("VkSubpassDescriptionFlagBits::VK_SUBPASS_DESCRIPTION_FLAG_BITS_MAX_ENUM");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkCommandPoolCreateFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkCommandPoolCreateFlags.html>
@@ -2097,7 +2297,12 @@ pub fn vk_command_pool_create_flags_to_string(value: VkCommandPoolCreateFlags) -
 	if (value & VkCommandPoolCreateFlagBits::VK_COMMAND_POOL_CREATE_FLAG_BITS_MAX_ENUM as VkCommandPoolCreateFlags) == VkCommandPoolCreateFlagBits::VK_COMMAND_POOL_CREATE_FLAG_BITS_MAX_ENUM as VkCommandPoolCreateFlags {
 		flags.push("VkCommandPoolCreateFlagBits::VK_COMMAND_POOL_CREATE_FLAG_BITS_MAX_ENUM");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkCommandPoolResetFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkCommandPoolResetFlags.html>
@@ -2111,7 +2316,12 @@ pub fn vk_command_pool_reset_flags_to_string(value: VkCommandPoolResetFlags) -> 
 	if (value & VkCommandPoolResetFlagBits::VK_COMMAND_POOL_RESET_FLAG_BITS_MAX_ENUM as VkCommandPoolResetFlags) == VkCommandPoolResetFlagBits::VK_COMMAND_POOL_RESET_FLAG_BITS_MAX_ENUM as VkCommandPoolResetFlags {
 		flags.push("VkCommandPoolResetFlagBits::VK_COMMAND_POOL_RESET_FLAG_BITS_MAX_ENUM");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkCommandBufferUsageFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkCommandBufferUsageFlags.html>
@@ -2131,7 +2341,12 @@ pub fn vk_command_buffer_usage_flags_to_string(value: VkCommandBufferUsageFlags)
 	if (value & VkCommandBufferUsageFlagBits::VK_COMMAND_BUFFER_USAGE_FLAG_BITS_MAX_ENUM as VkCommandBufferUsageFlags) == VkCommandBufferUsageFlagBits::VK_COMMAND_BUFFER_USAGE_FLAG_BITS_MAX_ENUM as VkCommandBufferUsageFlags {
 		flags.push("VkCommandBufferUsageFlagBits::VK_COMMAND_BUFFER_USAGE_FLAG_BITS_MAX_ENUM");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkQueryControlFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkQueryControlFlags.html>
@@ -2145,7 +2360,12 @@ pub fn vk_query_control_flags_to_string(value: VkQueryControlFlags) -> String {
 	if (value & VkQueryControlFlagBits::VK_QUERY_CONTROL_FLAG_BITS_MAX_ENUM as VkQueryControlFlags) == VkQueryControlFlagBits::VK_QUERY_CONTROL_FLAG_BITS_MAX_ENUM as VkQueryControlFlags {
 		flags.push("VkQueryControlFlagBits::VK_QUERY_CONTROL_FLAG_BITS_MAX_ENUM");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkCommandBufferResetFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkCommandBufferResetFlags.html>
@@ -2159,7 +2379,12 @@ pub fn vk_command_buffer_reset_flags_to_string(value: VkCommandBufferResetFlags)
 	if (value & VkCommandBufferResetFlagBits::VK_COMMAND_BUFFER_RESET_FLAG_BITS_MAX_ENUM as VkCommandBufferResetFlags) == VkCommandBufferResetFlagBits::VK_COMMAND_BUFFER_RESET_FLAG_BITS_MAX_ENUM as VkCommandBufferResetFlags {
 		flags.push("VkCommandBufferResetFlagBits::VK_COMMAND_BUFFER_RESET_FLAG_BITS_MAX_ENUM");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkStencilFaceFlags` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkStencilFaceFlags.html>
@@ -2182,7 +2407,12 @@ pub fn vk_stencil_face_flags_to_string(value: VkStencilFaceFlags) -> String {
 	if (value & VkStencilFaceFlagBits::VK_STENCIL_FACE_FLAG_BITS_MAX_ENUM as VkStencilFaceFlags) == VkStencilFaceFlagBits::VK_STENCIL_FACE_FLAG_BITS_MAX_ENUM as VkStencilFaceFlags {
 		flags.push("VkStencilFaceFlagBits::VK_STENCIL_FACE_FLAG_BITS_MAX_ENUM");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// Normal handle `VkInstance` from VK_VERSION_1_0
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkInstance.html>
@@ -5802,7 +6032,7 @@ impl Debug for VkPipelineCacheHeaderVersionOne {
 		.field("headerVersion", &self.headerVersion)
 		.field("vendorID", &self.vendorID)
 		.field("deviceID", &self.deviceID)
-		.field("pipelineCacheUUID", &format_args!("{}", to_byte_array_string(&self.pipelineCacheUUID)))
+		.field("pipelineCacheUUID", &format_args!("{}", vk_to_byte_array_string(&self.pipelineCacheUUID)))
 		.finish()
 	}
 }
@@ -6260,8 +6490,8 @@ impl Debug for VkPhysicalDeviceProperties {
 		.field("vendorID", &self.vendorID)
 		.field("deviceID", &self.deviceID)
 		.field("deviceType", &self.deviceType)
-		.field("deviceName", &format_args!("{}", maybe_string(&self.deviceName)))
-		.field("pipelineCacheUUID", &format_args!("{}", to_byte_array_string(&self.pipelineCacheUUID)))
+		.field("deviceName", &format_args!("{}", vk_format_maybe_string(&self.deviceName)))
+		.field("pipelineCacheUUID", &format_args!("{}", vk_to_byte_array_string(&self.pipelineCacheUUID)))
 		.field("limits", &self.limits)
 		.field("sparseProperties", &self.sparseProperties)
 		.finish()
@@ -6338,7 +6568,7 @@ pub struct VkExtensionProperties {
 impl Debug for VkExtensionProperties {
 	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
 		f.debug_struct("VkExtensionProperties")
-		.field("extensionName", &format_args!("{}", maybe_string(&self.extensionName)))
+		.field("extensionName", &format_args!("{}", vk_format_maybe_string(&self.extensionName)))
 		.field("specVersion", &self.specVersion)
 		.finish()
 	}
@@ -6356,10 +6586,10 @@ pub struct VkLayerProperties {
 impl Debug for VkLayerProperties {
 	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
 		f.debug_struct("VkLayerProperties")
-		.field("layerName", &format_args!("{}", maybe_string(&self.layerName)))
+		.field("layerName", &format_args!("{}", vk_format_maybe_string(&self.layerName)))
 		.field("specVersion", &self.specVersion)
 		.field("implementationVersion", &self.implementationVersion)
-		.field("description", &format_args!("{}", maybe_string(&self.description)))
+		.field("description", &format_args!("{}", vk_format_maybe_string(&self.description)))
 		.finish()
 	}
 }
@@ -9887,7 +10117,12 @@ pub fn vk_subgroup_feature_flags_to_string(value: VkSubgroupFeatureFlags) -> Str
 	if (value & VkSubgroupFeatureFlagBits::VK_SUBGROUP_FEATURE_FLAG_BITS_MAX_ENUM as VkSubgroupFeatureFlags) == VkSubgroupFeatureFlagBits::VK_SUBGROUP_FEATURE_FLAG_BITS_MAX_ENUM as VkSubgroupFeatureFlags {
 		flags.push("VkSubgroupFeatureFlagBits::VK_SUBGROUP_FEATURE_FLAG_BITS_MAX_ENUM");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkPeerMemoryFeatureFlags` from VK_VERSION_1_1
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPeerMemoryFeatureFlags.html>
@@ -9922,7 +10157,12 @@ pub fn vk_peer_memory_feature_flags_to_string(value: VkPeerMemoryFeatureFlags) -
 	if (value & VkPeerMemoryFeatureFlagBits::VK_PEER_MEMORY_FEATURE_FLAG_BITS_MAX_ENUM as VkPeerMemoryFeatureFlags) == VkPeerMemoryFeatureFlagBits::VK_PEER_MEMORY_FEATURE_FLAG_BITS_MAX_ENUM as VkPeerMemoryFeatureFlags {
 		flags.push("VkPeerMemoryFeatureFlagBits::VK_PEER_MEMORY_FEATURE_FLAG_BITS_MAX_ENUM");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkMemoryAllocateFlags` from VK_VERSION_1_1
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkMemoryAllocateFlags.html>
@@ -9954,7 +10194,12 @@ pub fn vk_memory_allocate_flags_to_string(value: VkMemoryAllocateFlags) -> Strin
 	if (value & VkMemoryAllocateFlagBits::VK_MEMORY_ALLOCATE_FLAG_BITS_MAX_ENUM as VkMemoryAllocateFlags) == VkMemoryAllocateFlagBits::VK_MEMORY_ALLOCATE_FLAG_BITS_MAX_ENUM as VkMemoryAllocateFlags {
 		flags.push("VkMemoryAllocateFlagBits::VK_MEMORY_ALLOCATE_FLAG_BITS_MAX_ENUM");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkCommandPoolTrimFlags` from VK_VERSION_1_1
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkCommandPoolTrimFlags.html>
@@ -10043,7 +10288,12 @@ pub fn vk_external_memory_handle_type_flags_to_string(value: VkExternalMemoryHan
 	if (value & VkExternalMemoryHandleTypeFlagBits::VK_EXTERNAL_MEMORY_HANDLE_TYPE_FLAG_BITS_MAX_ENUM as VkExternalMemoryHandleTypeFlags) == VkExternalMemoryHandleTypeFlagBits::VK_EXTERNAL_MEMORY_HANDLE_TYPE_FLAG_BITS_MAX_ENUM as VkExternalMemoryHandleTypeFlags {
 		flags.push("VkExternalMemoryHandleTypeFlagBits::VK_EXTERNAL_MEMORY_HANDLE_TYPE_FLAG_BITS_MAX_ENUM");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkExternalMemoryFeatureFlags` from VK_VERSION_1_1
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkExternalMemoryFeatureFlags.html>
@@ -10072,7 +10322,12 @@ pub fn vk_external_memory_feature_flags_to_string(value: VkExternalMemoryFeature
 	if (value & VkExternalMemoryFeatureFlagBits::VK_EXTERNAL_MEMORY_FEATURE_FLAG_BITS_MAX_ENUM as VkExternalMemoryFeatureFlags) == VkExternalMemoryFeatureFlagBits::VK_EXTERNAL_MEMORY_FEATURE_FLAG_BITS_MAX_ENUM as VkExternalMemoryFeatureFlags {
 		flags.push("VkExternalMemoryFeatureFlagBits::VK_EXTERNAL_MEMORY_FEATURE_FLAG_BITS_MAX_ENUM");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkExternalFenceHandleTypeFlags` from VK_VERSION_1_1
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkExternalFenceHandleTypeFlags.html>
@@ -10107,7 +10362,12 @@ pub fn vk_external_fence_handle_type_flags_to_string(value: VkExternalFenceHandl
 	if (value & VkExternalFenceHandleTypeFlagBits::VK_EXTERNAL_FENCE_HANDLE_TYPE_FLAG_BITS_MAX_ENUM as VkExternalFenceHandleTypeFlags) == VkExternalFenceHandleTypeFlagBits::VK_EXTERNAL_FENCE_HANDLE_TYPE_FLAG_BITS_MAX_ENUM as VkExternalFenceHandleTypeFlags {
 		flags.push("VkExternalFenceHandleTypeFlagBits::VK_EXTERNAL_FENCE_HANDLE_TYPE_FLAG_BITS_MAX_ENUM");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkExternalFenceFeatureFlags` from VK_VERSION_1_1
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkExternalFenceFeatureFlags.html>
@@ -10130,7 +10390,12 @@ pub fn vk_external_fence_feature_flags_to_string(value: VkExternalFenceFeatureFl
 	if (value & VkExternalFenceFeatureFlagBits::VK_EXTERNAL_FENCE_FEATURE_FLAG_BITS_MAX_ENUM as VkExternalFenceFeatureFlags) == VkExternalFenceFeatureFlagBits::VK_EXTERNAL_FENCE_FEATURE_FLAG_BITS_MAX_ENUM as VkExternalFenceFeatureFlags {
 		flags.push("VkExternalFenceFeatureFlagBits::VK_EXTERNAL_FENCE_FEATURE_FLAG_BITS_MAX_ENUM");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkFenceImportFlags` from VK_VERSION_1_1
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkFenceImportFlags.html>
@@ -10147,7 +10412,12 @@ pub fn vk_fence_import_flags_to_string(value: VkFenceImportFlags) -> String {
 	if (value & VkFenceImportFlagBits::VK_FENCE_IMPORT_FLAG_BITS_MAX_ENUM as VkFenceImportFlags) == VkFenceImportFlagBits::VK_FENCE_IMPORT_FLAG_BITS_MAX_ENUM as VkFenceImportFlags {
 		flags.push("VkFenceImportFlagBits::VK_FENCE_IMPORT_FLAG_BITS_MAX_ENUM");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkSemaphoreImportFlags` from VK_VERSION_1_1
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkSemaphoreImportFlags.html>
@@ -10164,7 +10434,12 @@ pub fn vk_semaphore_import_flags_to_string(value: VkSemaphoreImportFlags) -> Str
 	if (value & VkSemaphoreImportFlagBits::VK_SEMAPHORE_IMPORT_FLAG_BITS_MAX_ENUM as VkSemaphoreImportFlags) == VkSemaphoreImportFlagBits::VK_SEMAPHORE_IMPORT_FLAG_BITS_MAX_ENUM as VkSemaphoreImportFlags {
 		flags.push("VkSemaphoreImportFlagBits::VK_SEMAPHORE_IMPORT_FLAG_BITS_MAX_ENUM");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkExternalSemaphoreHandleTypeFlags` from VK_VERSION_1_1
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkExternalSemaphoreHandleTypeFlags.html>
@@ -10211,7 +10486,12 @@ pub fn vk_external_semaphore_handle_type_flags_to_string(value: VkExternalSemaph
 	if (value & VkExternalSemaphoreHandleTypeFlagBits::VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_FLAG_BITS_MAX_ENUM as VkExternalSemaphoreHandleTypeFlags) == VkExternalSemaphoreHandleTypeFlagBits::VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_FLAG_BITS_MAX_ENUM as VkExternalSemaphoreHandleTypeFlags {
 		flags.push("VkExternalSemaphoreHandleTypeFlagBits::VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_FLAG_BITS_MAX_ENUM");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkExternalSemaphoreFeatureFlags` from VK_VERSION_1_1
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkExternalSemaphoreFeatureFlags.html>
@@ -10234,7 +10514,12 @@ pub fn vk_external_semaphore_feature_flags_to_string(value: VkExternalSemaphoreF
 	if (value & VkExternalSemaphoreFeatureFlagBits::VK_EXTERNAL_SEMAPHORE_FEATURE_FLAG_BITS_MAX_ENUM as VkExternalSemaphoreFeatureFlags) == VkExternalSemaphoreFeatureFlagBits::VK_EXTERNAL_SEMAPHORE_FEATURE_FLAG_BITS_MAX_ENUM as VkExternalSemaphoreFeatureFlags {
 		flags.push("VkExternalSemaphoreFeatureFlagBits::VK_EXTERNAL_SEMAPHORE_FEATURE_FLAG_BITS_MAX_ENUM");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkPhysicalDeviceVariablePointerFeatures` from VK_VERSION_1_1
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPhysicalDeviceVariablePointerFeatures.html>
@@ -11136,9 +11421,9 @@ impl Debug for VkPhysicalDeviceIDProperties {
 		f.debug_struct("VkPhysicalDeviceIDProperties")
 		.field("sType", &self.sType)
 		.field("pNext", &self.pNext)
-		.field("deviceUUID", &format_args!("{}", to_byte_array_string(&self.deviceUUID)))
-		.field("driverUUID", &format_args!("{}", to_byte_array_string(&self.driverUUID)))
-		.field("deviceLUID", &format_args!("{}", to_byte_array_string(&self.deviceLUID)))
+		.field("deviceUUID", &format_args!("{}", vk_to_byte_array_string(&self.deviceUUID)))
+		.field("driverUUID", &format_args!("{}", vk_to_byte_array_string(&self.driverUUID)))
+		.field("deviceLUID", &format_args!("{}", vk_to_byte_array_string(&self.deviceLUID)))
 		.field("deviceNodeMask", &self.deviceNodeMask)
 		.field("deviceLUIDValid", &self.deviceLUIDValid)
 		.finish()
@@ -11820,7 +12105,12 @@ pub fn vk_resolve_mode_flags_to_string(value: VkResolveModeFlags) -> String {
 	if (value & VkResolveModeFlagBits::VK_RESOLVE_MODE_FLAG_BITS_MAX_ENUM as VkResolveModeFlags) == VkResolveModeFlagBits::VK_RESOLVE_MODE_FLAG_BITS_MAX_ENUM as VkResolveModeFlags {
 		flags.push("VkResolveModeFlagBits::VK_RESOLVE_MODE_FLAG_BITS_MAX_ENUM");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkDescriptorBindingFlags` from VK_VERSION_1_2
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkDescriptorBindingFlags.html>
@@ -11855,7 +12145,12 @@ pub fn vk_descriptor_binding_flags_to_string(value: VkDescriptorBindingFlags) ->
 	if (value & VkDescriptorBindingFlagBits::VK_DESCRIPTOR_BINDING_FLAG_BITS_MAX_ENUM as VkDescriptorBindingFlags) == VkDescriptorBindingFlagBits::VK_DESCRIPTOR_BINDING_FLAG_BITS_MAX_ENUM as VkDescriptorBindingFlags {
 		flags.push("VkDescriptorBindingFlagBits::VK_DESCRIPTOR_BINDING_FLAG_BITS_MAX_ENUM");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkSemaphoreWaitFlags` from VK_VERSION_1_2
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkSemaphoreWaitFlags.html>
@@ -11872,7 +12167,12 @@ pub fn vk_semaphore_wait_flags_to_string(value: VkSemaphoreWaitFlags) -> String 
 	if (value & VkSemaphoreWaitFlagBits::VK_SEMAPHORE_WAIT_FLAG_BITS_MAX_ENUM as VkSemaphoreWaitFlags) == VkSemaphoreWaitFlagBits::VK_SEMAPHORE_WAIT_FLAG_BITS_MAX_ENUM as VkSemaphoreWaitFlags {
 		flags.push("VkSemaphoreWaitFlagBits::VK_SEMAPHORE_WAIT_FLAG_BITS_MAX_ENUM");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// enum `VkDriverId` from VK_VERSION_1_2
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkDriverId.html>
@@ -12063,9 +12363,9 @@ impl Debug for VkPhysicalDeviceVulkan11Properties {
 		f.debug_struct("VkPhysicalDeviceVulkan11Properties")
 		.field("sType", &self.sType)
 		.field("pNext", &self.pNext)
-		.field("deviceUUID", &format_args!("{}", to_byte_array_string(&self.deviceUUID)))
-		.field("driverUUID", &format_args!("{}", to_byte_array_string(&self.driverUUID)))
-		.field("deviceLUID", &format_args!("{}", to_byte_array_string(&self.deviceLUID)))
+		.field("deviceUUID", &format_args!("{}", vk_to_byte_array_string(&self.deviceUUID)))
+		.field("driverUUID", &format_args!("{}", vk_to_byte_array_string(&self.driverUUID)))
+		.field("deviceLUID", &format_args!("{}", vk_to_byte_array_string(&self.deviceLUID)))
 		.field("deviceNodeMask", &self.deviceNodeMask)
 		.field("deviceLUIDValid", &self.deviceLUIDValid)
 		.field("subgroupSize", &self.subgroupSize)
@@ -12212,8 +12512,8 @@ impl Debug for VkPhysicalDeviceVulkan12Properties {
 		.field("sType", &self.sType)
 		.field("pNext", &self.pNext)
 		.field("driverID", &self.driverID)
-		.field("driverName", &format_args!("{}", maybe_string(&self.driverName)))
-		.field("driverInfo", &format_args!("{}", maybe_string(&self.driverInfo)))
+		.field("driverName", &format_args!("{}", vk_format_maybe_string(&self.driverName)))
+		.field("driverInfo", &format_args!("{}", vk_format_maybe_string(&self.driverInfo)))
 		.field("conformanceVersion", &self.conformanceVersion)
 		.field("denormBehaviorIndependence", &self.denormBehaviorIndependence)
 		.field("roundingModeIndependence", &self.roundingModeIndependence)
@@ -12402,8 +12702,8 @@ impl Debug for VkPhysicalDeviceDriverProperties {
 		.field("sType", &self.sType)
 		.field("pNext", &self.pNext)
 		.field("driverID", &self.driverID)
-		.field("driverName", &format_args!("{}", maybe_string(&self.driverName)))
-		.field("driverInfo", &format_args!("{}", maybe_string(&self.driverInfo)))
+		.field("driverName", &format_args!("{}", vk_format_maybe_string(&self.driverName)))
+		.field("driverInfo", &format_args!("{}", vk_format_maybe_string(&self.driverInfo)))
 		.field("conformanceVersion", &self.conformanceVersion)
 		.finish()
 	}
@@ -13778,7 +14078,12 @@ pub fn vk_pipeline_creation_feedback_flags_to_string(value: VkPipelineCreationFe
 	if (value & VkPipelineCreationFeedbackFlagBits::VK_PIPELINE_CREATION_FEEDBACK_FLAG_BITS_MAX_ENUM as VkPipelineCreationFeedbackFlags) == VkPipelineCreationFeedbackFlagBits::VK_PIPELINE_CREATION_FEEDBACK_FLAG_BITS_MAX_ENUM as VkPipelineCreationFeedbackFlags {
 		flags.push("VkPipelineCreationFeedbackFlagBits::VK_PIPELINE_CREATION_FEEDBACK_FLAG_BITS_MAX_ENUM");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkToolPurposeFlags` from VK_VERSION_1_3
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkToolPurposeFlags.html>
@@ -13825,7 +14130,12 @@ pub fn vk_tool_purpose_flags_to_string(value: VkToolPurposeFlags) -> String {
 	if (value & VkToolPurposeFlagBits::VK_TOOL_PURPOSE_FLAG_BITS_MAX_ENUM as VkToolPurposeFlags) == VkToolPurposeFlagBits::VK_TOOL_PURPOSE_FLAG_BITS_MAX_ENUM as VkToolPurposeFlags {
 		flags.push("VkToolPurposeFlagBits::VK_TOOL_PURPOSE_FLAG_BITS_MAX_ENUM");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkPrivateDataSlotCreateFlags` from VK_VERSION_1_3
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPrivateDataSlotCreateFlags.html>
@@ -13857,7 +14167,12 @@ pub fn vk_submit_flags_to_string(value: VkSubmitFlags) -> String {
 	if (value & VkSubmitFlagBits::VK_SUBMIT_FLAG_BITS_MAX_ENUM as VkSubmitFlags) == VkSubmitFlagBits::VK_SUBMIT_FLAG_BITS_MAX_ENUM as VkSubmitFlags {
 		flags.push("VkSubmitFlagBits::VK_SUBMIT_FLAG_BITS_MAX_ENUM");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkRenderingFlags` from VK_VERSION_1_3
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkRenderingFlags.html>
@@ -13898,7 +14213,12 @@ pub fn vk_rendering_flags_to_string(value: VkRenderingFlags) -> String {
 	if (value & VkRenderingFlagBits::VK_RENDERING_FLAG_BITS_MAX_ENUM as VkRenderingFlags) == VkRenderingFlagBits::VK_RENDERING_FLAG_BITS_MAX_ENUM as VkRenderingFlags {
 		flags.push("VkRenderingFlagBits::VK_RENDERING_FLAG_BITS_MAX_ENUM");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkFormatFeatureFlags2` from VK_VERSION_1_3
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkFormatFeatureFlags2.html>
@@ -14107,11 +14427,11 @@ impl Debug for VkPhysicalDeviceToolProperties {
 		f.debug_struct("VkPhysicalDeviceToolProperties")
 		.field("sType", &self.sType)
 		.field("pNext", &self.pNext)
-		.field("name", &format_args!("{}", maybe_string(&self.name)))
-		.field("version", &format_args!("{}", maybe_string(&self.version)))
+		.field("name", &format_args!("{}", vk_format_maybe_string(&self.name)))
+		.field("version", &format_args!("{}", vk_format_maybe_string(&self.version)))
 		.field("purposes", &format_args!("{}", vk_tool_purpose_flags_to_string(self.purposes)))
-		.field("description", &format_args!("{}", maybe_string(&self.description)))
-		.field("layer", &format_args!("{}", maybe_string(&self.layer)))
+		.field("description", &format_args!("{}", vk_format_maybe_string(&self.description)))
+		.field("layer", &format_args!("{}", vk_format_maybe_string(&self.layer)))
 		.finish()
 	}
 }
@@ -15596,7 +15916,12 @@ pub fn vk_memory_unmap_flags_to_string(value: VkMemoryUnmapFlags) -> String {
 	if (value & VkMemoryUnmapFlagBits::VK_MEMORY_UNMAP_FLAG_BITS_MAX_ENUM as VkMemoryUnmapFlags) == VkMemoryUnmapFlagBits::VK_MEMORY_UNMAP_FLAG_BITS_MAX_ENUM as VkMemoryUnmapFlags {
 		flags.push("VkMemoryUnmapFlagBits::VK_MEMORY_UNMAP_FLAG_BITS_MAX_ENUM");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkPipelineCreateFlags2` from VK_VERSION_1_4
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPipelineCreateFlags2.html>
@@ -15631,7 +15956,12 @@ pub fn vk_host_image_copy_flags_to_string(value: VkHostImageCopyFlags) -> String
 	if (value & VkHostImageCopyFlagBits::VK_HOST_IMAGE_COPY_FLAG_BITS_MAX_ENUM as VkHostImageCopyFlags) == VkHostImageCopyFlagBits::VK_HOST_IMAGE_COPY_FLAG_BITS_MAX_ENUM as VkHostImageCopyFlags {
 		flags.push("VkHostImageCopyFlagBits::VK_HOST_IMAGE_COPY_FLAG_BITS_MAX_ENUM");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// enum `VkPipelineRobustnessBufferBehavior` from VK_VERSION_1_4
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPipelineRobustnessBufferBehavior.html>
@@ -15820,7 +16150,7 @@ impl Debug for VkPhysicalDeviceVulkan14Properties {
 		.field("pCopySrcLayouts", &self.pCopySrcLayouts)
 		.field("copyDstLayoutCount", &self.copyDstLayoutCount)
 		.field("pCopyDstLayouts", &self.pCopyDstLayouts)
-		.field("optimalTilingLayoutUUID", &format_args!("{}", to_byte_array_string(&self.optimalTilingLayoutUUID)))
+		.field("optimalTilingLayoutUUID", &format_args!("{}", vk_to_byte_array_string(&self.optimalTilingLayoutUUID)))
 		.field("identicalMemoryTypeRequirements", &self.identicalMemoryTypeRequirements)
 		.finish()
 	}
@@ -16273,7 +16603,7 @@ impl Debug for VkPhysicalDeviceHostImageCopyProperties {
 		.field("pCopySrcLayouts", &self.pCopySrcLayouts)
 		.field("copyDstLayoutCount", &self.copyDstLayoutCount)
 		.field("pCopyDstLayouts", &self.pCopyDstLayouts)
-		.field("optimalTilingLayoutUUID", &format_args!("{}", to_byte_array_string(&self.optimalTilingLayoutUUID)))
+		.field("optimalTilingLayoutUUID", &format_args!("{}", vk_to_byte_array_string(&self.optimalTilingLayoutUUID)))
 		.field("identicalMemoryTypeRequirements", &self.identicalMemoryTypeRequirements)
 		.finish()
 	}
@@ -16747,7 +17077,12 @@ pub fn vk_composite_alpha_flags_khr_to_string(value: VkCompositeAlphaFlagsKHR) -
 	if (value & VkCompositeAlphaFlagBitsKHR::VK_COMPOSITE_ALPHA_FLAG_BITS_MAX_ENUM_KHR as VkCompositeAlphaFlagsKHR) == VkCompositeAlphaFlagBitsKHR::VK_COMPOSITE_ALPHA_FLAG_BITS_MAX_ENUM_KHR as VkCompositeAlphaFlagsKHR {
 		flags.push("VkCompositeAlphaFlagBitsKHR::VK_COMPOSITE_ALPHA_FLAG_BITS_MAX_ENUM_KHR");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkSurfaceTransformFlagsKHR` from VK_KHR_surface
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkSurfaceTransformFlagsKHR.html>
@@ -16785,7 +17120,12 @@ pub fn vk_surface_transform_flags_khr_to_string(value: VkSurfaceTransformFlagsKH
 	if (value & VkSurfaceTransformFlagBitsKHR::VK_SURFACE_TRANSFORM_FLAG_BITS_MAX_ENUM_KHR as VkSurfaceTransformFlagsKHR) == VkSurfaceTransformFlagBitsKHR::VK_SURFACE_TRANSFORM_FLAG_BITS_MAX_ENUM_KHR as VkSurfaceTransformFlagsKHR {
 		flags.push("VkSurfaceTransformFlagBitsKHR::VK_SURFACE_TRANSFORM_FLAG_BITS_MAX_ENUM_KHR");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// Non-dispatchable handle `VkSurfaceKHR` from VK_KHR_surface
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkSurfaceKHR.html
@@ -17030,7 +17370,12 @@ pub fn vk_swapchain_create_flags_khr_to_string(value: VkSwapchainCreateFlagsKHR)
 	if (value & VkSwapchainCreateFlagBitsKHR::VK_SWAPCHAIN_CREATE_FLAG_BITS_MAX_ENUM_KHR as VkSwapchainCreateFlagsKHR) == VkSwapchainCreateFlagBitsKHR::VK_SWAPCHAIN_CREATE_FLAG_BITS_MAX_ENUM_KHR as VkSwapchainCreateFlagsKHR {
 		flags.push("VkSwapchainCreateFlagBitsKHR::VK_SWAPCHAIN_CREATE_FLAG_BITS_MAX_ENUM_KHR");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkDeviceGroupPresentModeFlagsKHR` from VK_KHR_swapchain
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkDeviceGroupPresentModeFlagsKHR.html>
@@ -17053,7 +17398,12 @@ pub fn vk_device_group_present_mode_flags_khr_to_string(value: VkDeviceGroupPres
 	if (value & VkDeviceGroupPresentModeFlagBitsKHR::VK_DEVICE_GROUP_PRESENT_MODE_FLAG_BITS_MAX_ENUM_KHR as VkDeviceGroupPresentModeFlagsKHR) == VkDeviceGroupPresentModeFlagBitsKHR::VK_DEVICE_GROUP_PRESENT_MODE_FLAG_BITS_MAX_ENUM_KHR as VkDeviceGroupPresentModeFlagsKHR {
 		flags.push("VkDeviceGroupPresentModeFlagBitsKHR::VK_DEVICE_GROUP_PRESENT_MODE_FLAG_BITS_MAX_ENUM_KHR");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// Non-dispatchable handle `VkSwapchainKHR` from VK_KHR_swapchain
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkSwapchainKHR.html
@@ -17411,7 +17761,12 @@ pub fn vk_display_plane_alpha_flags_khr_to_string(value: VkDisplayPlaneAlphaFlag
 	if (value & VkDisplayPlaneAlphaFlagBitsKHR::VK_DISPLAY_PLANE_ALPHA_FLAG_BITS_MAX_ENUM_KHR as VkDisplayPlaneAlphaFlagsKHR) == VkDisplayPlaneAlphaFlagBitsKHR::VK_DISPLAY_PLANE_ALPHA_FLAG_BITS_MAX_ENUM_KHR as VkDisplayPlaneAlphaFlagsKHR {
 		flags.push("VkDisplayPlaneAlphaFlagBitsKHR::VK_DISPLAY_PLANE_ALPHA_FLAG_BITS_MAX_ENUM_KHR");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkDisplaySurfaceCreateFlagsKHR` from VK_KHR_display
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkDisplaySurfaceCreateFlagsKHR.html>
@@ -17755,7 +18110,12 @@ pub fn vk_video_codec_operation_flags_khr_to_string(value: VkVideoCodecOperation
 	if (value & VkVideoCodecOperationFlagBitsKHR::VK_VIDEO_CODEC_OPERATION_FLAG_BITS_MAX_ENUM_KHR as VkVideoCodecOperationFlagsKHR) == VkVideoCodecOperationFlagBitsKHR::VK_VIDEO_CODEC_OPERATION_FLAG_BITS_MAX_ENUM_KHR as VkVideoCodecOperationFlagsKHR {
 		flags.push("VkVideoCodecOperationFlagBitsKHR::VK_VIDEO_CODEC_OPERATION_FLAG_BITS_MAX_ENUM_KHR");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkVideoChromaSubsamplingFlagsKHR` from VK_KHR_video_queue
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkVideoChromaSubsamplingFlagsKHR.html>
@@ -17781,7 +18141,12 @@ pub fn vk_video_chroma_subsampling_flags_khr_to_string(value: VkVideoChromaSubsa
 	if (value & VkVideoChromaSubsamplingFlagBitsKHR::VK_VIDEO_CHROMA_SUBSAMPLING_FLAG_BITS_MAX_ENUM_KHR as VkVideoChromaSubsamplingFlagsKHR) == VkVideoChromaSubsamplingFlagBitsKHR::VK_VIDEO_CHROMA_SUBSAMPLING_FLAG_BITS_MAX_ENUM_KHR as VkVideoChromaSubsamplingFlagsKHR {
 		flags.push("VkVideoChromaSubsamplingFlagBitsKHR::VK_VIDEO_CHROMA_SUBSAMPLING_FLAG_BITS_MAX_ENUM_KHR");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkVideoComponentBitDepthFlagsKHR` from VK_KHR_video_queue
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkVideoComponentBitDepthFlagsKHR.html>
@@ -17804,7 +18169,12 @@ pub fn vk_video_component_bit_depth_flags_khr_to_string(value: VkVideoComponentB
 	if (value & VkVideoComponentBitDepthFlagBitsKHR::VK_VIDEO_COMPONENT_BIT_DEPTH_FLAG_BITS_MAX_ENUM_KHR as VkVideoComponentBitDepthFlagsKHR) == VkVideoComponentBitDepthFlagBitsKHR::VK_VIDEO_COMPONENT_BIT_DEPTH_FLAG_BITS_MAX_ENUM_KHR as VkVideoComponentBitDepthFlagsKHR {
 		flags.push("VkVideoComponentBitDepthFlagBitsKHR::VK_VIDEO_COMPONENT_BIT_DEPTH_FLAG_BITS_MAX_ENUM_KHR");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkVideoCapabilityFlagsKHR` from VK_KHR_video_queue
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkVideoCapabilityFlagsKHR.html>
@@ -17821,7 +18191,12 @@ pub fn vk_video_capability_flags_khr_to_string(value: VkVideoCapabilityFlagsKHR)
 	if (value & VkVideoCapabilityFlagBitsKHR::VK_VIDEO_CAPABILITY_FLAG_BITS_MAX_ENUM_KHR as VkVideoCapabilityFlagsKHR) == VkVideoCapabilityFlagBitsKHR::VK_VIDEO_CAPABILITY_FLAG_BITS_MAX_ENUM_KHR as VkVideoCapabilityFlagsKHR {
 		flags.push("VkVideoCapabilityFlagBitsKHR::VK_VIDEO_CAPABILITY_FLAG_BITS_MAX_ENUM_KHR");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkVideoSessionCreateFlagsKHR` from VK_KHR_video_queue
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkVideoSessionCreateFlagsKHR.html>
@@ -17850,7 +18225,12 @@ pub fn vk_video_session_create_flags_khr_to_string(value: VkVideoSessionCreateFl
 	if (value & VkVideoSessionCreateFlagBitsKHR::VK_VIDEO_SESSION_CREATE_FLAG_BITS_MAX_ENUM_KHR as VkVideoSessionCreateFlagsKHR) == VkVideoSessionCreateFlagBitsKHR::VK_VIDEO_SESSION_CREATE_FLAG_BITS_MAX_ENUM_KHR as VkVideoSessionCreateFlagsKHR {
 		flags.push("VkVideoSessionCreateFlagBitsKHR::VK_VIDEO_SESSION_CREATE_FLAG_BITS_MAX_ENUM_KHR");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkVideoSessionParametersCreateFlagsKHR` from VK_KHR_video_queue
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkVideoSessionParametersCreateFlagsKHR.html>
@@ -17864,7 +18244,12 @@ pub fn vk_video_session_parameters_create_flags_khr_to_string(value: VkVideoSess
 	if (value & VkVideoSessionParametersCreateFlagBitsKHR::VK_VIDEO_SESSION_PARAMETERS_CREATE_FLAG_BITS_MAX_ENUM_KHR as VkVideoSessionParametersCreateFlagsKHR) == VkVideoSessionParametersCreateFlagBitsKHR::VK_VIDEO_SESSION_PARAMETERS_CREATE_FLAG_BITS_MAX_ENUM_KHR as VkVideoSessionParametersCreateFlagsKHR {
 		flags.push("VkVideoSessionParametersCreateFlagBitsKHR::VK_VIDEO_SESSION_PARAMETERS_CREATE_FLAG_BITS_MAX_ENUM_KHR");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkVideoBeginCodingFlagsKHR` from VK_KHR_video_queue
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkVideoBeginCodingFlagsKHR.html>
@@ -17890,7 +18275,12 @@ pub fn vk_video_coding_control_flags_khr_to_string(value: VkVideoCodingControlFl
 	if (value & VkVideoCodingControlFlagBitsKHR::VK_VIDEO_CODING_CONTROL_FLAG_BITS_MAX_ENUM_KHR as VkVideoCodingControlFlagsKHR) == VkVideoCodingControlFlagBitsKHR::VK_VIDEO_CODING_CONTROL_FLAG_BITS_MAX_ENUM_KHR as VkVideoCodingControlFlagsKHR {
 		flags.push("VkVideoCodingControlFlagBitsKHR::VK_VIDEO_CODING_CONTROL_FLAG_BITS_MAX_ENUM_KHR");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// Non-dispatchable handle `VkVideoSessionKHR` from VK_KHR_video_queue
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkVideoSessionKHR.html
@@ -18475,7 +18865,12 @@ pub fn vk_video_decode_capability_flags_khr_to_string(value: VkVideoDecodeCapabi
 	if (value & VkVideoDecodeCapabilityFlagBitsKHR::VK_VIDEO_DECODE_CAPABILITY_FLAG_BITS_MAX_ENUM_KHR as VkVideoDecodeCapabilityFlagsKHR) == VkVideoDecodeCapabilityFlagBitsKHR::VK_VIDEO_DECODE_CAPABILITY_FLAG_BITS_MAX_ENUM_KHR as VkVideoDecodeCapabilityFlagsKHR {
 		flags.push("VkVideoDecodeCapabilityFlagBitsKHR::VK_VIDEO_DECODE_CAPABILITY_FLAG_BITS_MAX_ENUM_KHR");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkVideoDecodeUsageFlagsKHR` from VK_KHR_video_decode_queue
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkVideoDecodeUsageFlagsKHR.html>
@@ -18498,7 +18893,12 @@ pub fn vk_video_decode_usage_flags_khr_to_string(value: VkVideoDecodeUsageFlagsK
 	if (value & VkVideoDecodeUsageFlagBitsKHR::VK_VIDEO_DECODE_USAGE_FLAG_BITS_MAX_ENUM_KHR as VkVideoDecodeUsageFlagsKHR) == VkVideoDecodeUsageFlagBitsKHR::VK_VIDEO_DECODE_USAGE_FLAG_BITS_MAX_ENUM_KHR as VkVideoDecodeUsageFlagsKHR {
 		flags.push("VkVideoDecodeUsageFlagBitsKHR::VK_VIDEO_DECODE_USAGE_FLAG_BITS_MAX_ENUM_KHR");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkVideoDecodeFlagsKHR` from VK_KHR_video_decode_queue
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkVideoDecodeFlagsKHR.html>
@@ -18654,7 +19054,12 @@ pub fn vk_video_encode_h264_capability_flags_khr_to_string(value: VkVideoEncodeH
 	if (value & VkVideoEncodeH264CapabilityFlagBitsKHR::VK_VIDEO_ENCODE_H264_CAPABILITY_FLAG_BITS_MAX_ENUM_KHR as VkVideoEncodeH264CapabilityFlagsKHR) == VkVideoEncodeH264CapabilityFlagBitsKHR::VK_VIDEO_ENCODE_H264_CAPABILITY_FLAG_BITS_MAX_ENUM_KHR as VkVideoEncodeH264CapabilityFlagsKHR {
 		flags.push("VkVideoEncodeH264CapabilityFlagBitsKHR::VK_VIDEO_ENCODE_H264_CAPABILITY_FLAG_BITS_MAX_ENUM_KHR");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkVideoEncodeH264StdFlagsKHR` from VK_KHR_video_encode_h264
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkVideoEncodeH264StdFlagsKHR.html>
@@ -18725,7 +19130,12 @@ pub fn vk_video_encode_h264_std_flags_khr_to_string(value: VkVideoEncodeH264StdF
 	if (value & VkVideoEncodeH264StdFlagBitsKHR::VK_VIDEO_ENCODE_H264_STD_FLAG_BITS_MAX_ENUM_KHR as VkVideoEncodeH264StdFlagsKHR) == VkVideoEncodeH264StdFlagBitsKHR::VK_VIDEO_ENCODE_H264_STD_FLAG_BITS_MAX_ENUM_KHR as VkVideoEncodeH264StdFlagsKHR {
 		flags.push("VkVideoEncodeH264StdFlagBitsKHR::VK_VIDEO_ENCODE_H264_STD_FLAG_BITS_MAX_ENUM_KHR");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkVideoEncodeH264RateControlFlagsKHR` from VK_KHR_video_encode_h264
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkVideoEncodeH264RateControlFlagsKHR.html>
@@ -18751,7 +19161,12 @@ pub fn vk_video_encode_h264_rate_control_flags_khr_to_string(value: VkVideoEncod
 	if (value & VkVideoEncodeH264RateControlFlagBitsKHR::VK_VIDEO_ENCODE_H264_RATE_CONTROL_FLAG_BITS_MAX_ENUM_KHR as VkVideoEncodeH264RateControlFlagsKHR) == VkVideoEncodeH264RateControlFlagBitsKHR::VK_VIDEO_ENCODE_H264_RATE_CONTROL_FLAG_BITS_MAX_ENUM_KHR as VkVideoEncodeH264RateControlFlagsKHR {
 		flags.push("VkVideoEncodeH264RateControlFlagBitsKHR::VK_VIDEO_ENCODE_H264_RATE_CONTROL_FLAG_BITS_MAX_ENUM_KHR");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// enum `VkVideoEncodeH264CapabilityFlagBitsKHR` from VK_KHR_video_encode_h264
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkVideoEncodeH264CapabilityFlagBitsKHR.html>
@@ -19408,7 +19823,7 @@ impl Debug for StdVideoH264HrdParameters {
 		.field("reserved1", &self.reserved1)
 		.field("bit_rate_value_minus1", &self.bit_rate_value_minus1)
 		.field("cpb_size_value_minus1", &self.cpb_size_value_minus1)
-		.field("cbr_flag", &format_args!("{}", to_byte_array_string(&self.cbr_flag)))
+		.field("cbr_flag", &format_args!("{}", vk_to_byte_array_string(&self.cbr_flag)))
 		.field("initial_cpb_removal_delay_length_minus1", &self.initial_cpb_removal_delay_length_minus1)
 		.field("cpb_removal_delay_length_minus1", &self.cpb_removal_delay_length_minus1)
 		.field("dpb_output_delay_length_minus1", &self.dpb_output_delay_length_minus1)
@@ -19744,12 +20159,12 @@ impl Debug for StdVideoEncodeH264WeightTable {
 		.field("flags", &self.flags)
 		.field("luma_log2_weight_denom", &self.luma_log2_weight_denom)
 		.field("chroma_log2_weight_denom", &self.chroma_log2_weight_denom)
-		.field("luma_weight_l0", &format_args!("{}", maybe_string(&self.luma_weight_l0)))
-		.field("luma_offset_l0", &format_args!("{}", maybe_string(&self.luma_offset_l0)))
+		.field("luma_weight_l0", &format_args!("{}", vk_format_maybe_string(&self.luma_weight_l0)))
+		.field("luma_offset_l0", &format_args!("{}", vk_format_maybe_string(&self.luma_offset_l0)))
 		.field("chroma_weight_l0", &self.chroma_weight_l0)
 		.field("chroma_offset_l0", &self.chroma_offset_l0)
-		.field("luma_weight_l1", &format_args!("{}", maybe_string(&self.luma_weight_l1)))
-		.field("luma_offset_l1", &format_args!("{}", maybe_string(&self.luma_offset_l1)))
+		.field("luma_weight_l1", &format_args!("{}", vk_format_maybe_string(&self.luma_weight_l1)))
+		.field("luma_offset_l1", &format_args!("{}", vk_format_maybe_string(&self.luma_offset_l1)))
 		.field("chroma_weight_l1", &self.chroma_weight_l1)
 		.field("chroma_offset_l1", &self.chroma_offset_l1)
 		.finish()
@@ -19926,12 +20341,12 @@ impl Debug for StdVideoEncodeH264ReferenceListsInfo {
 		.field("flags", &self.flags)
 		.field("num_ref_idx_l0_active_minus1", &self.num_ref_idx_l0_active_minus1)
 		.field("num_ref_idx_l1_active_minus1", &self.num_ref_idx_l1_active_minus1)
-		.field("RefPicList0", &format_args!("{}", to_byte_array_string(&self.RefPicList0)))
-		.field("RefPicList1", &format_args!("{}", to_byte_array_string(&self.RefPicList1)))
+		.field("RefPicList0", &format_args!("{}", vk_to_byte_array_string(&self.RefPicList0)))
+		.field("RefPicList1", &format_args!("{}", vk_to_byte_array_string(&self.RefPicList1)))
 		.field("refList0ModOpCount", &self.refList0ModOpCount)
 		.field("refList1ModOpCount", &self.refList1ModOpCount)
 		.field("refPicMarkingOpCount", &self.refPicMarkingOpCount)
-		.field("reserved1", &format_args!("{}", to_byte_array_string(&self.reserved1)))
+		.field("reserved1", &format_args!("{}", vk_to_byte_array_string(&self.reserved1)))
 		.field("pRefList0ModOperations", &self.pRefList0ModOperations)
 		.field("pRefList1ModOperations", &self.pRefList1ModOperations)
 		.field("pRefPicMarkingOperations", &self.pRefPicMarkingOperations)
@@ -19964,7 +20379,7 @@ impl Debug for StdVideoEncodeH264PictureInfo {
 		.field("frame_num", &self.frame_num)
 		.field("PicOrderCnt", &self.PicOrderCnt)
 		.field("temporal_id", &self.temporal_id)
-		.field("reserved1", &format_args!("{}", to_byte_array_string(&self.reserved1)))
+		.field("reserved1", &format_args!("{}", vk_to_byte_array_string(&self.reserved1)))
 		.field("pRefLists", &self.pRefLists)
 		.finish()
 	}
@@ -20058,7 +20473,12 @@ pub fn vk_video_encode_h265_capability_flags_khr_to_string(value: VkVideoEncodeH
 	if (value & VkVideoEncodeH265CapabilityFlagBitsKHR::VK_VIDEO_ENCODE_H265_CAPABILITY_FLAG_BITS_MAX_ENUM_KHR as VkVideoEncodeH265CapabilityFlagsKHR) == VkVideoEncodeH265CapabilityFlagBitsKHR::VK_VIDEO_ENCODE_H265_CAPABILITY_FLAG_BITS_MAX_ENUM_KHR as VkVideoEncodeH265CapabilityFlagsKHR {
 		flags.push("VkVideoEncodeH265CapabilityFlagBitsKHR::VK_VIDEO_ENCODE_H265_CAPABILITY_FLAG_BITS_MAX_ENUM_KHR");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkVideoEncodeH265StdFlagsKHR` from VK_KHR_video_encode_h265
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkVideoEncodeH265StdFlagsKHR.html>
@@ -20132,7 +20552,12 @@ pub fn vk_video_encode_h265_std_flags_khr_to_string(value: VkVideoEncodeH265StdF
 	if (value & VkVideoEncodeH265StdFlagBitsKHR::VK_VIDEO_ENCODE_H265_STD_FLAG_BITS_MAX_ENUM_KHR as VkVideoEncodeH265StdFlagsKHR) == VkVideoEncodeH265StdFlagBitsKHR::VK_VIDEO_ENCODE_H265_STD_FLAG_BITS_MAX_ENUM_KHR as VkVideoEncodeH265StdFlagsKHR {
 		flags.push("VkVideoEncodeH265StdFlagBitsKHR::VK_VIDEO_ENCODE_H265_STD_FLAG_BITS_MAX_ENUM_KHR");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkVideoEncodeH265CtbSizeFlagsKHR` from VK_KHR_video_encode_h265
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkVideoEncodeH265CtbSizeFlagsKHR.html>
@@ -20152,7 +20577,12 @@ pub fn vk_video_encode_h265_ctb_size_flags_khr_to_string(value: VkVideoEncodeH26
 	if (value & VkVideoEncodeH265CtbSizeFlagBitsKHR::VK_VIDEO_ENCODE_H265_CTB_SIZE_FLAG_BITS_MAX_ENUM_KHR as VkVideoEncodeH265CtbSizeFlagsKHR) == VkVideoEncodeH265CtbSizeFlagBitsKHR::VK_VIDEO_ENCODE_H265_CTB_SIZE_FLAG_BITS_MAX_ENUM_KHR as VkVideoEncodeH265CtbSizeFlagsKHR {
 		flags.push("VkVideoEncodeH265CtbSizeFlagBitsKHR::VK_VIDEO_ENCODE_H265_CTB_SIZE_FLAG_BITS_MAX_ENUM_KHR");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkVideoEncodeH265TransformBlockSizeFlagsKHR` from VK_KHR_video_encode_h265
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkVideoEncodeH265TransformBlockSizeFlagsKHR.html>
@@ -20175,7 +20605,12 @@ pub fn vk_video_encode_h265_transform_block_size_flags_khr_to_string(value: VkVi
 	if (value & VkVideoEncodeH265TransformBlockSizeFlagBitsKHR::VK_VIDEO_ENCODE_H265_TRANSFORM_BLOCK_SIZE_FLAG_BITS_MAX_ENUM_KHR as VkVideoEncodeH265TransformBlockSizeFlagsKHR) == VkVideoEncodeH265TransformBlockSizeFlagBitsKHR::VK_VIDEO_ENCODE_H265_TRANSFORM_BLOCK_SIZE_FLAG_BITS_MAX_ENUM_KHR as VkVideoEncodeH265TransformBlockSizeFlagsKHR {
 		flags.push("VkVideoEncodeH265TransformBlockSizeFlagBitsKHR::VK_VIDEO_ENCODE_H265_TRANSFORM_BLOCK_SIZE_FLAG_BITS_MAX_ENUM_KHR");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkVideoEncodeH265RateControlFlagsKHR` from VK_KHR_video_encode_h265
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkVideoEncodeH265RateControlFlagsKHR.html>
@@ -20201,7 +20636,12 @@ pub fn vk_video_encode_h265_rate_control_flags_khr_to_string(value: VkVideoEncod
 	if (value & VkVideoEncodeH265RateControlFlagBitsKHR::VK_VIDEO_ENCODE_H265_RATE_CONTROL_FLAG_BITS_MAX_ENUM_KHR as VkVideoEncodeH265RateControlFlagsKHR) == VkVideoEncodeH265RateControlFlagBitsKHR::VK_VIDEO_ENCODE_H265_RATE_CONTROL_FLAG_BITS_MAX_ENUM_KHR as VkVideoEncodeH265RateControlFlagsKHR {
 		flags.push("VkVideoEncodeH265RateControlFlagBitsKHR::VK_VIDEO_ENCODE_H265_RATE_CONTROL_FLAG_BITS_MAX_ENUM_KHR");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// enum `VkVideoEncodeH265CapabilityFlagBitsKHR` from VK_KHR_video_encode_h265
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkVideoEncodeH265CapabilityFlagBitsKHR.html>
@@ -20732,8 +21172,8 @@ impl Debug for StdVideoH265DecPicBufMgr {
 	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
 		f.debug_struct("StdVideoH265DecPicBufMgr")
 		.field("max_latency_increase_plus1", &self.max_latency_increase_plus1)
-		.field("max_dec_pic_buffering_minus1", &format_args!("{}", to_byte_array_string(&self.max_dec_pic_buffering_minus1)))
-		.field("max_num_reorder_pics", &format_args!("{}", to_byte_array_string(&self.max_num_reorder_pics)))
+		.field("max_dec_pic_buffering_minus1", &format_args!("{}", vk_to_byte_array_string(&self.max_dec_pic_buffering_minus1)))
+		.field("max_num_reorder_pics", &format_args!("{}", vk_to_byte_array_string(&self.max_num_reorder_pics)))
 		.finish()
 	}
 }
@@ -20837,7 +21277,7 @@ impl Debug for StdVideoH265HrdParameters {
 		.field("initial_cpb_removal_delay_length_minus1", &self.initial_cpb_removal_delay_length_minus1)
 		.field("au_cpb_removal_delay_length_minus1", &self.au_cpb_removal_delay_length_minus1)
 		.field("dpb_output_delay_length_minus1", &self.dpb_output_delay_length_minus1)
-		.field("cpb_cnt_minus1", &format_args!("{}", to_byte_array_string(&self.cpb_cnt_minus1)))
+		.field("cpb_cnt_minus1", &format_args!("{}", vk_to_byte_array_string(&self.cpb_cnt_minus1)))
 		.field("elemental_duration_in_tc_minus1", &self.elemental_duration_in_tc_minus1)
 		.field("reserved", &self.reserved)
 		.field("pSubLayerHrdParametersNal", &self.pSubLayerHrdParametersNal)
@@ -20967,8 +21407,8 @@ impl Debug for StdVideoH265ScalingLists {
 		.field("ScalingList8x8", &self.ScalingList8x8)
 		.field("ScalingList16x16", &self.ScalingList16x16)
 		.field("ScalingList32x32", &self.ScalingList32x32)
-		.field("ScalingListDCCoef16x16", &format_args!("{}", to_byte_array_string(&self.ScalingListDCCoef16x16)))
-		.field("ScalingListDCCoef32x32", &format_args!("{}", to_byte_array_string(&self.ScalingListDCCoef32x32)))
+		.field("ScalingListDCCoef16x16", &format_args!("{}", vk_to_byte_array_string(&self.ScalingListDCCoef16x16)))
+		.field("ScalingListDCCoef32x32", &format_args!("{}", vk_to_byte_array_string(&self.ScalingListDCCoef32x32)))
 		.finish()
 	}
 }
@@ -21739,8 +22179,8 @@ impl Debug for StdVideoH265PictureParameterSet {
 		.field("log2_max_transform_skip_block_size_minus2", &self.log2_max_transform_skip_block_size_minus2)
 		.field("diff_cu_chroma_qp_offset_depth", &self.diff_cu_chroma_qp_offset_depth)
 		.field("chroma_qp_offset_list_len_minus1", &self.chroma_qp_offset_list_len_minus1)
-		.field("cb_qp_offset_list", &format_args!("{}", maybe_string(&self.cb_qp_offset_list)))
-		.field("cr_qp_offset_list", &format_args!("{}", maybe_string(&self.cr_qp_offset_list)))
+		.field("cb_qp_offset_list", &format_args!("{}", vk_format_maybe_string(&self.cb_qp_offset_list)))
+		.field("cr_qp_offset_list", &format_args!("{}", vk_format_maybe_string(&self.cr_qp_offset_list)))
 		.field("log2_sao_offset_scale_luma", &self.log2_sao_offset_scale_luma)
 		.field("log2_sao_offset_scale_chroma", &self.log2_sao_offset_scale_chroma)
 		.field("pps_act_y_qp_offset_plus5", &self.pps_act_y_qp_offset_plus5)
@@ -21812,12 +22252,12 @@ impl Debug for StdVideoEncodeH265WeightTable {
 		.field("flags", &self.flags)
 		.field("luma_log2_weight_denom", &self.luma_log2_weight_denom)
 		.field("delta_chroma_log2_weight_denom", &self.delta_chroma_log2_weight_denom)
-		.field("delta_luma_weight_l0", &format_args!("{}", maybe_string(&self.delta_luma_weight_l0)))
-		.field("luma_offset_l0", &format_args!("{}", maybe_string(&self.luma_offset_l0)))
+		.field("delta_luma_weight_l0", &format_args!("{}", vk_format_maybe_string(&self.delta_luma_weight_l0)))
+		.field("luma_offset_l0", &format_args!("{}", vk_format_maybe_string(&self.luma_offset_l0)))
 		.field("delta_chroma_weight_l0", &self.delta_chroma_weight_l0)
 		.field("delta_chroma_offset_l0", &self.delta_chroma_offset_l0)
-		.field("delta_luma_weight_l1", &format_args!("{}", maybe_string(&self.delta_luma_weight_l1)))
-		.field("luma_offset_l1", &format_args!("{}", maybe_string(&self.luma_offset_l1)))
+		.field("delta_luma_weight_l1", &format_args!("{}", vk_format_maybe_string(&self.delta_luma_weight_l1)))
+		.field("luma_offset_l1", &format_args!("{}", vk_format_maybe_string(&self.luma_offset_l1)))
 		.field("delta_chroma_weight_l1", &self.delta_chroma_weight_l1)
 		.field("delta_chroma_offset_l1", &self.delta_chroma_offset_l1)
 		.finish()
@@ -21989,10 +22429,10 @@ impl Debug for StdVideoEncodeH265ReferenceListsInfo {
 		.field("flags", &self.flags)
 		.field("num_ref_idx_l0_active_minus1", &self.num_ref_idx_l0_active_minus1)
 		.field("num_ref_idx_l1_active_minus1", &self.num_ref_idx_l1_active_minus1)
-		.field("RefPicList0", &format_args!("{}", to_byte_array_string(&self.RefPicList0)))
-		.field("RefPicList1", &format_args!("{}", to_byte_array_string(&self.RefPicList1)))
-		.field("list_entry_l0", &format_args!("{}", to_byte_array_string(&self.list_entry_l0)))
-		.field("list_entry_l1", &format_args!("{}", to_byte_array_string(&self.list_entry_l1)))
+		.field("RefPicList0", &format_args!("{}", vk_to_byte_array_string(&self.RefPicList0)))
+		.field("RefPicList1", &format_args!("{}", vk_to_byte_array_string(&self.RefPicList1)))
+		.field("list_entry_l0", &format_args!("{}", vk_to_byte_array_string(&self.list_entry_l0)))
+		.field("list_entry_l1", &format_args!("{}", vk_to_byte_array_string(&self.list_entry_l1)))
 		.finish()
 	}
 }
@@ -22091,11 +22531,11 @@ impl Debug for StdVideoEncodeH265LongTermRefPics {
 		f.debug_struct("StdVideoEncodeH265LongTermRefPics")
 		.field("num_long_term_sps", &self.num_long_term_sps)
 		.field("num_long_term_pics", &self.num_long_term_pics)
-		.field("lt_idx_sps", &format_args!("{}", to_byte_array_string(&self.lt_idx_sps)))
-		.field("poc_lsb_lt", &format_args!("{}", to_byte_array_string(&self.poc_lsb_lt)))
+		.field("lt_idx_sps", &format_args!("{}", vk_to_byte_array_string(&self.lt_idx_sps)))
+		.field("poc_lsb_lt", &format_args!("{}", vk_to_byte_array_string(&self.poc_lsb_lt)))
 		.field("used_by_curr_pic_lt_flag", &self.used_by_curr_pic_lt_flag)
-		.field("delta_poc_msb_present_flag", &format_args!("{}", to_byte_array_string(&self.delta_poc_msb_present_flag)))
-		.field("delta_poc_msb_cycle_lt", &format_args!("{}", to_byte_array_string(&self.delta_poc_msb_cycle_lt)))
+		.field("delta_poc_msb_present_flag", &format_args!("{}", vk_to_byte_array_string(&self.delta_poc_msb_present_flag)))
+		.field("delta_poc_msb_cycle_lt", &format_args!("{}", vk_to_byte_array_string(&self.delta_poc_msb_cycle_lt)))
 		.finish()
 	}
 }
@@ -22127,7 +22567,7 @@ impl Debug for StdVideoEncodeH265PictureInfo {
 		.field("short_term_ref_pic_set_idx", &self.short_term_ref_pic_set_idx)
 		.field("PicOrderCntVal", &self.PicOrderCntVal)
 		.field("TemporalId", &self.TemporalId)
-		.field("reserved1", &format_args!("{}", to_byte_array_string(&self.reserved1)))
+		.field("reserved1", &format_args!("{}", vk_to_byte_array_string(&self.reserved1)))
 		.field("pRefLists", &self.pRefLists)
 		.field("pShortTermRefPicSet", &self.pShortTermRefPicSet)
 		.field("pLongTermRefPics", &self.pLongTermRefPics)
@@ -22207,7 +22647,12 @@ pub fn vk_video_decode_h264_picture_layout_flags_khr_to_string(value: VkVideoDec
 	if (value & VkVideoDecodeH264PictureLayoutFlagBitsKHR::VK_VIDEO_DECODE_H264_PICTURE_LAYOUT_FLAG_BITS_MAX_ENUM_KHR as VkVideoDecodeH264PictureLayoutFlagsKHR) == VkVideoDecodeH264PictureLayoutFlagBitsKHR::VK_VIDEO_DECODE_H264_PICTURE_LAYOUT_FLAG_BITS_MAX_ENUM_KHR as VkVideoDecodeH264PictureLayoutFlagsKHR {
 		flags.push("VkVideoDecodeH264PictureLayoutFlagBitsKHR::VK_VIDEO_DECODE_H264_PICTURE_LAYOUT_FLAG_BITS_MAX_ENUM_KHR");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// enum `VkVideoDecodeH264PictureLayoutFlagBitsKHR` from VK_KHR_video_decode_h264
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkVideoDecodeH264PictureLayoutFlagBitsKHR.html>
@@ -23810,7 +24255,12 @@ pub fn vk_performance_counter_description_flags_khr_to_string(value: VkPerforman
 	if (value & VkPerformanceCounterDescriptionFlagBitsKHR::VK_PERFORMANCE_COUNTER_DESCRIPTION_FLAG_BITS_MAX_ENUM_KHR as VkPerformanceCounterDescriptionFlagsKHR) == VkPerformanceCounterDescriptionFlagBitsKHR::VK_PERFORMANCE_COUNTER_DESCRIPTION_FLAG_BITS_MAX_ENUM_KHR as VkPerformanceCounterDescriptionFlagsKHR {
 		flags.push("VkPerformanceCounterDescriptionFlagBitsKHR::VK_PERFORMANCE_COUNTER_DESCRIPTION_FLAG_BITS_MAX_ENUM_KHR");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkAcquireProfilingLockFlagsKHR` from VK_KHR_performance_query
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkAcquireProfilingLockFlagsKHR.html>
@@ -23821,7 +24271,12 @@ pub fn vk_acquire_profiling_lock_flags_khr_to_string(value: VkAcquireProfilingLo
 	if (value & VkAcquireProfilingLockFlagBitsKHR::VK_ACQUIRE_PROFILING_LOCK_FLAG_BITS_MAX_ENUM_KHR as VkAcquireProfilingLockFlagsKHR) == VkAcquireProfilingLockFlagBitsKHR::VK_ACQUIRE_PROFILING_LOCK_FLAG_BITS_MAX_ENUM_KHR as VkAcquireProfilingLockFlagsKHR {
 		flags.push("VkAcquireProfilingLockFlagBitsKHR::VK_ACQUIRE_PROFILING_LOCK_FLAG_BITS_MAX_ENUM_KHR");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// enum `VkPerformanceCounterUnitKHR` from VK_KHR_performance_query
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPerformanceCounterUnitKHR.html>
@@ -23952,7 +24407,7 @@ impl Debug for VkPerformanceCounterKHR {
 		.field("unit", &self.unit)
 		.field("scope", &self.scope)
 		.field("storage", &self.storage)
-		.field("uuid", &format_args!("{}", to_byte_array_string(&self.uuid)))
+		.field("uuid", &format_args!("{}", vk_to_byte_array_string(&self.uuid)))
 		.finish()
 	}
 }
@@ -23974,9 +24429,9 @@ impl Debug for VkPerformanceCounterDescriptionKHR {
 		.field("sType", &self.sType)
 		.field("pNext", &self.pNext)
 		.field("flags", &format_args!("{}", vk_performance_counter_description_flags_khr_to_string(self.flags)))
-		.field("name", &format_args!("{}", maybe_string(&self.name)))
-		.field("category", &format_args!("{}", maybe_string(&self.category)))
-		.field("description", &format_args!("{}", maybe_string(&self.description)))
+		.field("name", &format_args!("{}", vk_format_maybe_string(&self.name)))
+		.field("category", &format_args!("{}", vk_format_maybe_string(&self.category)))
+		.field("description", &format_args!("{}", vk_format_maybe_string(&self.description)))
 		.finish()
 	}
 }
@@ -25029,9 +25484,9 @@ impl Debug for StdVideoDecodeH265PictureInfo {
 		.field("PicOrderCntVal", &self.PicOrderCntVal)
 		.field("NumBitsForSTRefPicSetInSlice", &self.NumBitsForSTRefPicSetInSlice)
 		.field("reserved", &self.reserved)
-		.field("RefPicSetStCurrBefore", &format_args!("{}", to_byte_array_string(&self.RefPicSetStCurrBefore)))
-		.field("RefPicSetStCurrAfter", &format_args!("{}", to_byte_array_string(&self.RefPicSetStCurrAfter)))
-		.field("RefPicSetLtCurr", &format_args!("{}", to_byte_array_string(&self.RefPicSetLtCurr)))
+		.field("RefPicSetStCurrBefore", &format_args!("{}", vk_to_byte_array_string(&self.RefPicSetStCurrBefore)))
+		.field("RefPicSetStCurrAfter", &format_args!("{}", vk_to_byte_array_string(&self.RefPicSetStCurrAfter)))
+		.field("RefPicSetLtCurr", &format_args!("{}", vk_to_byte_array_string(&self.RefPicSetLtCurr)))
 		.finish()
 	}
 }
@@ -25962,8 +26417,8 @@ impl Debug for VkPipelineExecutablePropertiesKHR {
 		.field("sType", &self.sType)
 		.field("pNext", &self.pNext)
 		.field("stages", &self.stages)
-		.field("name", &format_args!("{}", maybe_string(&self.name)))
-		.field("description", &format_args!("{}", maybe_string(&self.description)))
+		.field("name", &format_args!("{}", vk_format_maybe_string(&self.name)))
+		.field("description", &format_args!("{}", vk_format_maybe_string(&self.description)))
 		.field("subgroupSize", &self.subgroupSize)
 		.finish()
 	}
@@ -25995,8 +26450,8 @@ impl Debug for VkPipelineExecutableStatisticKHR {
 		f.debug_struct("VkPipelineExecutableStatisticKHR")
 		.field("sType", &self.sType)
 		.field("pNext", &self.pNext)
-		.field("name", &format_args!("{}", maybe_string(&self.name)))
-		.field("description", &format_args!("{}", maybe_string(&self.description)))
+		.field("name", &format_args!("{}", vk_format_maybe_string(&self.name)))
+		.field("description", &format_args!("{}", vk_format_maybe_string(&self.description)))
 		.field("format", &self.format)
 		.field("value", &self.value)
 		.finish()
@@ -26020,8 +26475,8 @@ impl Debug for VkPipelineExecutableInternalRepresentationKHR {
 		f.debug_struct("VkPipelineExecutableInternalRepresentationKHR")
 		.field("sType", &self.sType)
 		.field("pNext", &self.pNext)
-		.field("name", &format_args!("{}", maybe_string(&self.name)))
-		.field("description", &format_args!("{}", maybe_string(&self.description)))
+		.field("name", &format_args!("{}", vk_format_maybe_string(&self.name)))
+		.field("description", &format_args!("{}", vk_format_maybe_string(&self.description)))
 		.field("isText", &self.isText)
 		.field("dataSize", &self.dataSize)
 		.field("pData", &self.pData)
@@ -26280,7 +26735,12 @@ pub fn vk_video_encode_flags_khr_to_string(value: VkVideoEncodeFlagsKHR) -> Stri
 	if (value & VkVideoEncodeFlagBitsKHR::VK_VIDEO_ENCODE_FLAG_BITS_MAX_ENUM_KHR as VkVideoEncodeFlagsKHR) == VkVideoEncodeFlagBitsKHR::VK_VIDEO_ENCODE_FLAG_BITS_MAX_ENUM_KHR as VkVideoEncodeFlagsKHR {
 		flags.push("VkVideoEncodeFlagBitsKHR::VK_VIDEO_ENCODE_FLAG_BITS_MAX_ENUM_KHR");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkVideoEncodeCapabilityFlagsKHR` from VK_KHR_video_encode_queue
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkVideoEncodeCapabilityFlagsKHR.html>
@@ -26303,7 +26763,12 @@ pub fn vk_video_encode_capability_flags_khr_to_string(value: VkVideoEncodeCapabi
 	if (value & VkVideoEncodeCapabilityFlagBitsKHR::VK_VIDEO_ENCODE_CAPABILITY_FLAG_BITS_MAX_ENUM_KHR as VkVideoEncodeCapabilityFlagsKHR) == VkVideoEncodeCapabilityFlagBitsKHR::VK_VIDEO_ENCODE_CAPABILITY_FLAG_BITS_MAX_ENUM_KHR as VkVideoEncodeCapabilityFlagsKHR {
 		flags.push("VkVideoEncodeCapabilityFlagBitsKHR::VK_VIDEO_ENCODE_CAPABILITY_FLAG_BITS_MAX_ENUM_KHR");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkVideoEncodeRateControlModeFlagsKHR` from VK_KHR_video_encode_queue
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkVideoEncodeRateControlModeFlagsKHR.html>
@@ -26326,7 +26791,12 @@ pub fn vk_video_encode_rate_control_mode_flags_khr_to_string(value: VkVideoEncod
 	if (value & VkVideoEncodeRateControlModeFlagBitsKHR::VK_VIDEO_ENCODE_RATE_CONTROL_MODE_FLAG_BITS_MAX_ENUM_KHR as VkVideoEncodeRateControlModeFlagsKHR) == VkVideoEncodeRateControlModeFlagBitsKHR::VK_VIDEO_ENCODE_RATE_CONTROL_MODE_FLAG_BITS_MAX_ENUM_KHR as VkVideoEncodeRateControlModeFlagsKHR {
 		flags.push("VkVideoEncodeRateControlModeFlagBitsKHR::VK_VIDEO_ENCODE_RATE_CONTROL_MODE_FLAG_BITS_MAX_ENUM_KHR");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkVideoEncodeFeedbackFlagsKHR` from VK_KHR_video_encode_queue
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkVideoEncodeFeedbackFlagsKHR.html>
@@ -26346,7 +26816,12 @@ pub fn vk_video_encode_feedback_flags_khr_to_string(value: VkVideoEncodeFeedback
 	if (value & VkVideoEncodeFeedbackFlagBitsKHR::VK_VIDEO_ENCODE_FEEDBACK_FLAG_BITS_MAX_ENUM_KHR as VkVideoEncodeFeedbackFlagsKHR) == VkVideoEncodeFeedbackFlagBitsKHR::VK_VIDEO_ENCODE_FEEDBACK_FLAG_BITS_MAX_ENUM_KHR as VkVideoEncodeFeedbackFlagsKHR {
 		flags.push("VkVideoEncodeFeedbackFlagBitsKHR::VK_VIDEO_ENCODE_FEEDBACK_FLAG_BITS_MAX_ENUM_KHR");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkVideoEncodeUsageFlagsKHR` from VK_KHR_video_encode_queue
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkVideoEncodeUsageFlagsKHR.html>
@@ -26372,7 +26847,12 @@ pub fn vk_video_encode_usage_flags_khr_to_string(value: VkVideoEncodeUsageFlagsK
 	if (value & VkVideoEncodeUsageFlagBitsKHR::VK_VIDEO_ENCODE_USAGE_FLAG_BITS_MAX_ENUM_KHR as VkVideoEncodeUsageFlagsKHR) == VkVideoEncodeUsageFlagBitsKHR::VK_VIDEO_ENCODE_USAGE_FLAG_BITS_MAX_ENUM_KHR as VkVideoEncodeUsageFlagsKHR {
 		flags.push("VkVideoEncodeUsageFlagBitsKHR::VK_VIDEO_ENCODE_USAGE_FLAG_BITS_MAX_ENUM_KHR");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkVideoEncodeContentFlagsKHR` from VK_KHR_video_encode_queue
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkVideoEncodeContentFlagsKHR.html>
@@ -26395,7 +26875,12 @@ pub fn vk_video_encode_content_flags_khr_to_string(value: VkVideoEncodeContentFl
 	if (value & VkVideoEncodeContentFlagBitsKHR::VK_VIDEO_ENCODE_CONTENT_FLAG_BITS_MAX_ENUM_KHR as VkVideoEncodeContentFlagsKHR) == VkVideoEncodeContentFlagBitsKHR::VK_VIDEO_ENCODE_CONTENT_FLAG_BITS_MAX_ENUM_KHR as VkVideoEncodeContentFlagsKHR {
 		flags.push("VkVideoEncodeContentFlagBitsKHR::VK_VIDEO_ENCODE_CONTENT_FLAG_BITS_MAX_ENUM_KHR");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkVideoEncodeRateControlFlagsKHR` from VK_KHR_video_encode_queue
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkVideoEncodeRateControlFlagsKHR.html>
@@ -27674,7 +28159,7 @@ impl Debug for VkPipelineBinaryKeyKHR {
 		.field("sType", &self.sType)
 		.field("pNext", &self.pNext)
 		.field("keySize", &self.keySize)
-		.field("key", &format_args!("{}", to_byte_array_string(&self.key)))
+		.field("key", &format_args!("{}", vk_to_byte_array_string(&self.key)))
 		.finish()
 	}
 }
@@ -27876,7 +28361,12 @@ pub fn vk_present_scaling_flags_khr_to_string(value: VkPresentScalingFlagsKHR) -
 	if (value & VkPresentScalingFlagBitsKHR::VK_PRESENT_SCALING_FLAG_BITS_MAX_ENUM_KHR as VkPresentScalingFlagsKHR) == VkPresentScalingFlagBitsKHR::VK_PRESENT_SCALING_FLAG_BITS_MAX_ENUM_KHR as VkPresentScalingFlagsKHR {
 		flags.push("VkPresentScalingFlagBitsKHR::VK_PRESENT_SCALING_FLAG_BITS_MAX_ENUM_KHR");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkPresentGravityFlagsKHR` from VK_KHR_surface_maintenance1
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPresentGravityFlagsKHR.html>
@@ -27905,7 +28395,12 @@ pub fn vk_present_gravity_flags_khr_to_string(value: VkPresentGravityFlagsKHR) -
 	if (value & VkPresentGravityFlagBitsKHR::VK_PRESENT_GRAVITY_FLAG_BITS_MAX_ENUM_KHR as VkPresentGravityFlagsKHR) == VkPresentGravityFlagBitsKHR::VK_PRESENT_GRAVITY_FLAG_BITS_MAX_ENUM_KHR as VkPresentGravityFlagsKHR {
 		flags.push("VkPresentGravityFlagBitsKHR::VK_PRESENT_GRAVITY_FLAG_BITS_MAX_ENUM_KHR");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// enum `VkPresentScalingFlagBitsKHR` from VK_KHR_surface_maintenance1
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPresentScalingFlagBitsKHR.html>
@@ -28729,12 +29224,12 @@ impl Debug for StdVideoAV1LoopFilter {
 	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
 		f.debug_struct("StdVideoAV1LoopFilter")
 		.field("flags", &self.flags)
-		.field("loop_filter_level", &format_args!("{}", to_byte_array_string(&self.loop_filter_level)))
+		.field("loop_filter_level", &format_args!("{}", vk_to_byte_array_string(&self.loop_filter_level)))
 		.field("loop_filter_sharpness", &self.loop_filter_sharpness)
 		.field("update_ref_delta", &self.update_ref_delta)
-		.field("loop_filter_ref_deltas", &format_args!("{}", maybe_string(&self.loop_filter_ref_deltas)))
+		.field("loop_filter_ref_deltas", &format_args!("{}", vk_format_maybe_string(&self.loop_filter_ref_deltas)))
 		.field("update_mode_delta", &self.update_mode_delta)
-		.field("loop_filter_mode_deltas", &format_args!("{}", maybe_string(&self.loop_filter_mode_deltas)))
+		.field("loop_filter_mode_deltas", &format_args!("{}", vk_format_maybe_string(&self.loop_filter_mode_deltas)))
 		.finish()
 	}
 }
@@ -28792,7 +29287,7 @@ pub struct StdVideoAV1Segmentation {
 impl Debug for StdVideoAV1Segmentation {
 	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
 		f.debug_struct("StdVideoAV1Segmentation")
-		.field("FeatureEnabled", &format_args!("{}", to_byte_array_string(&self.FeatureEnabled)))
+		.field("FeatureEnabled", &format_args!("{}", vk_to_byte_array_string(&self.FeatureEnabled)))
 		.field("FeatureData", &self.FeatureData)
 		.finish()
 	}
@@ -28842,7 +29337,7 @@ impl Debug for StdVideoAV1TileInfo {
 		.field("TileRows", &self.TileRows)
 		.field("context_update_tile_id", &self.context_update_tile_id)
 		.field("tile_size_bytes_minus_1", &self.tile_size_bytes_minus_1)
-		.field("reserved1", &format_args!("{}", to_byte_array_string(&self.reserved1)))
+		.field("reserved1", &format_args!("{}", vk_to_byte_array_string(&self.reserved1)))
 		.field("pMiColStarts", &self.pMiColStarts)
 		.field("pMiRowStarts", &self.pMiRowStarts)
 		.field("pWidthInSbsMinus1", &self.pWidthInSbsMinus1)
@@ -28866,10 +29361,10 @@ impl Debug for StdVideoAV1CDEF {
 		f.debug_struct("StdVideoAV1CDEF")
 		.field("cdef_damping_minus_3", &self.cdef_damping_minus_3)
 		.field("cdef_bits", &self.cdef_bits)
-		.field("cdef_y_pri_strength", &format_args!("{}", to_byte_array_string(&self.cdef_y_pri_strength)))
-		.field("cdef_y_sec_strength", &format_args!("{}", to_byte_array_string(&self.cdef_y_sec_strength)))
-		.field("cdef_uv_pri_strength", &format_args!("{}", to_byte_array_string(&self.cdef_uv_pri_strength)))
-		.field("cdef_uv_sec_strength", &format_args!("{}", to_byte_array_string(&self.cdef_uv_sec_strength)))
+		.field("cdef_y_pri_strength", &format_args!("{}", vk_to_byte_array_string(&self.cdef_y_pri_strength)))
+		.field("cdef_y_sec_strength", &format_args!("{}", vk_to_byte_array_string(&self.cdef_y_sec_strength)))
+		.field("cdef_uv_pri_strength", &format_args!("{}", vk_to_byte_array_string(&self.cdef_uv_pri_strength)))
+		.field("cdef_uv_sec_strength", &format_args!("{}", vk_to_byte_array_string(&self.cdef_uv_sec_strength)))
 		.finish()
 	}
 }
@@ -28890,7 +29385,7 @@ pub struct StdVideoAV1GlobalMotion {
 impl Debug for StdVideoAV1GlobalMotion {
 	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
 		f.debug_struct("StdVideoAV1GlobalMotion")
-		.field("GmType", &format_args!("{}", to_byte_array_string(&self.GmType)))
+		.field("GmType", &format_args!("{}", vk_to_byte_array_string(&self.GmType)))
 		.field("gm_params", &self.gm_params)
 		.finish()
 	}
@@ -28979,17 +29474,17 @@ impl Debug for StdVideoAV1FilmGrain {
 		.field("grain_seed", &self.grain_seed)
 		.field("film_grain_params_ref_idx", &self.film_grain_params_ref_idx)
 		.field("num_y_points", &self.num_y_points)
-		.field("point_y_value", &format_args!("{}", to_byte_array_string(&self.point_y_value)))
-		.field("point_y_scaling", &format_args!("{}", to_byte_array_string(&self.point_y_scaling)))
+		.field("point_y_value", &format_args!("{}", vk_to_byte_array_string(&self.point_y_value)))
+		.field("point_y_scaling", &format_args!("{}", vk_to_byte_array_string(&self.point_y_scaling)))
 		.field("num_cb_points", &self.num_cb_points)
-		.field("point_cb_value", &format_args!("{}", to_byte_array_string(&self.point_cb_value)))
-		.field("point_cb_scaling", &format_args!("{}", to_byte_array_string(&self.point_cb_scaling)))
+		.field("point_cb_value", &format_args!("{}", vk_to_byte_array_string(&self.point_cb_value)))
+		.field("point_cb_scaling", &format_args!("{}", vk_to_byte_array_string(&self.point_cb_scaling)))
 		.field("num_cr_points", &self.num_cr_points)
-		.field("point_cr_value", &format_args!("{}", to_byte_array_string(&self.point_cr_value)))
-		.field("point_cr_scaling", &format_args!("{}", to_byte_array_string(&self.point_cr_scaling)))
-		.field("ar_coeffs_y_plus_128", &format_args!("{}", maybe_string(&self.ar_coeffs_y_plus_128)))
-		.field("ar_coeffs_cb_plus_128", &format_args!("{}", maybe_string(&self.ar_coeffs_cb_plus_128)))
-		.field("ar_coeffs_cr_plus_128", &format_args!("{}", maybe_string(&self.ar_coeffs_cr_plus_128)))
+		.field("point_cr_value", &format_args!("{}", vk_to_byte_array_string(&self.point_cr_value)))
+		.field("point_cr_scaling", &format_args!("{}", vk_to_byte_array_string(&self.point_cr_scaling)))
+		.field("ar_coeffs_y_plus_128", &format_args!("{}", vk_format_maybe_string(&self.ar_coeffs_y_plus_128)))
+		.field("ar_coeffs_cb_plus_128", &format_args!("{}", vk_format_maybe_string(&self.ar_coeffs_cb_plus_128)))
+		.field("ar_coeffs_cr_plus_128", &format_args!("{}", vk_format_maybe_string(&self.ar_coeffs_cr_plus_128)))
 		.field("cb_mult", &self.cb_mult)
 		.field("cb_luma_mult", &self.cb_luma_mult)
 		.field("cb_offset", &self.cb_offset)
@@ -29180,7 +29675,7 @@ impl Debug for StdVideoAV1SequenceHeader {
 		.field("order_hint_bits_minus_1", &self.order_hint_bits_minus_1)
 		.field("seq_force_integer_mv", &self.seq_force_integer_mv)
 		.field("seq_force_screen_content_tools", &self.seq_force_screen_content_tools)
-		.field("reserved1", &format_args!("{}", to_byte_array_string(&self.reserved1)))
+		.field("reserved1", &format_args!("{}", vk_to_byte_array_string(&self.reserved1)))
 		.field("pColorConfig", &self.pColorConfig)
 		.field("pTimingInfo", &self.pTimingInfo)
 		.finish()
@@ -29467,10 +29962,10 @@ impl Debug for StdVideoDecodeAV1PictureInfo {
 		.field("TxMode", &self.TxMode)
 		.field("delta_q_res", &self.delta_q_res)
 		.field("delta_lf_res", &self.delta_lf_res)
-		.field("SkipModeFrame", &format_args!("{}", to_byte_array_string(&self.SkipModeFrame)))
+		.field("SkipModeFrame", &format_args!("{}", vk_to_byte_array_string(&self.SkipModeFrame)))
 		.field("coded_denom", &self.coded_denom)
-		.field("reserved2", &format_args!("{}", to_byte_array_string(&self.reserved2)))
-		.field("OrderHints", &format_args!("{}", to_byte_array_string(&self.OrderHints)))
+		.field("reserved2", &format_args!("{}", vk_to_byte_array_string(&self.reserved2)))
+		.field("OrderHints", &format_args!("{}", vk_to_byte_array_string(&self.OrderHints)))
 		.field("expectedFrameId", &self.expectedFrameId)
 		.field("pTileInfo", &self.pTileInfo)
 		.field("pQuantization", &self.pQuantization)
@@ -29529,7 +30024,7 @@ impl Debug for StdVideoDecodeAV1ReferenceInfo {
 		.field("frame_type", &self.frame_type)
 		.field("RefFrameSignBias", &self.RefFrameSignBias)
 		.field("OrderHint", &self.OrderHint)
-		.field("SavedOrderHints", &format_args!("{}", to_byte_array_string(&self.SavedOrderHints)))
+		.field("SavedOrderHints", &format_args!("{}", vk_to_byte_array_string(&self.SavedOrderHints)))
 		.finish()
 	}
 }
@@ -29577,7 +30072,12 @@ pub fn vk_video_encode_av1_capability_flags_khr_to_string(value: VkVideoEncodeAV
 	if (value & VkVideoEncodeAV1CapabilityFlagBitsKHR::VK_VIDEO_ENCODE_AV1_CAPABILITY_FLAG_BITS_MAX_ENUM_KHR as VkVideoEncodeAV1CapabilityFlagsKHR) == VkVideoEncodeAV1CapabilityFlagBitsKHR::VK_VIDEO_ENCODE_AV1_CAPABILITY_FLAG_BITS_MAX_ENUM_KHR as VkVideoEncodeAV1CapabilityFlagsKHR {
 		flags.push("VkVideoEncodeAV1CapabilityFlagBitsKHR::VK_VIDEO_ENCODE_AV1_CAPABILITY_FLAG_BITS_MAX_ENUM_KHR");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkVideoEncodeAV1StdFlagsKHR` from VK_KHR_video_encode_av1
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkVideoEncodeAV1StdFlagsKHR.html>
@@ -29600,7 +30100,12 @@ pub fn vk_video_encode_av1_std_flags_khr_to_string(value: VkVideoEncodeAV1StdFla
 	if (value & VkVideoEncodeAV1StdFlagBitsKHR::VK_VIDEO_ENCODE_AV1_STD_FLAG_BITS_MAX_ENUM_KHR as VkVideoEncodeAV1StdFlagsKHR) == VkVideoEncodeAV1StdFlagBitsKHR::VK_VIDEO_ENCODE_AV1_STD_FLAG_BITS_MAX_ENUM_KHR as VkVideoEncodeAV1StdFlagsKHR {
 		flags.push("VkVideoEncodeAV1StdFlagBitsKHR::VK_VIDEO_ENCODE_AV1_STD_FLAG_BITS_MAX_ENUM_KHR");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkVideoEncodeAV1SuperblockSizeFlagsKHR` from VK_KHR_video_encode_av1
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkVideoEncodeAV1SuperblockSizeFlagsKHR.html>
@@ -29617,7 +30122,12 @@ pub fn vk_video_encode_av1_superblock_size_flags_khr_to_string(value: VkVideoEnc
 	if (value & VkVideoEncodeAV1SuperblockSizeFlagBitsKHR::VK_VIDEO_ENCODE_AV1_SUPERBLOCK_SIZE_FLAG_BITS_MAX_ENUM_KHR as VkVideoEncodeAV1SuperblockSizeFlagsKHR) == VkVideoEncodeAV1SuperblockSizeFlagBitsKHR::VK_VIDEO_ENCODE_AV1_SUPERBLOCK_SIZE_FLAG_BITS_MAX_ENUM_KHR as VkVideoEncodeAV1SuperblockSizeFlagsKHR {
 		flags.push("VkVideoEncodeAV1SuperblockSizeFlagBitsKHR::VK_VIDEO_ENCODE_AV1_SUPERBLOCK_SIZE_FLAG_BITS_MAX_ENUM_KHR");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkVideoEncodeAV1RateControlFlagsKHR` from VK_KHR_video_encode_av1
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkVideoEncodeAV1RateControlFlagsKHR.html>
@@ -29640,7 +30150,12 @@ pub fn vk_video_encode_av1_rate_control_flags_khr_to_string(value: VkVideoEncode
 	if (value & VkVideoEncodeAV1RateControlFlagBitsKHR::VK_VIDEO_ENCODE_AV1_RATE_CONTROL_FLAG_BITS_MAX_ENUM_KHR as VkVideoEncodeAV1RateControlFlagsKHR) == VkVideoEncodeAV1RateControlFlagBitsKHR::VK_VIDEO_ENCODE_AV1_RATE_CONTROL_FLAG_BITS_MAX_ENUM_KHR as VkVideoEncodeAV1RateControlFlagsKHR {
 		flags.push("VkVideoEncodeAV1RateControlFlagBitsKHR::VK_VIDEO_ENCODE_AV1_RATE_CONTROL_FLAG_BITS_MAX_ENUM_KHR");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// enum `VkVideoEncodeAV1PredictionModeKHR` from VK_KHR_video_encode_av1
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkVideoEncodeAV1PredictionModeKHR.html>
@@ -30303,9 +30818,9 @@ impl Debug for StdVideoEncodeAV1PictureInfo {
 		.field("TxMode", &self.TxMode)
 		.field("delta_q_res", &self.delta_q_res)
 		.field("delta_lf_res", &self.delta_lf_res)
-		.field("ref_order_hint", &format_args!("{}", to_byte_array_string(&self.ref_order_hint)))
-		.field("ref_frame_idx", &format_args!("{}", maybe_string(&self.ref_frame_idx)))
-		.field("reserved1", &format_args!("{}", to_byte_array_string(&self.reserved1)))
+		.field("ref_order_hint", &format_args!("{}", vk_to_byte_array_string(&self.ref_order_hint)))
+		.field("ref_frame_idx", &format_args!("{}", vk_format_maybe_string(&self.ref_frame_idx)))
+		.field("reserved1", &format_args!("{}", vk_to_byte_array_string(&self.reserved1)))
 		.field("delta_frame_id_minus_1", &self.delta_frame_id_minus_1)
 		.field("pTileInfo", &self.pTileInfo)
 		.field("pQuantization", &self.pQuantization)
@@ -30366,7 +30881,7 @@ impl Debug for StdVideoEncodeAV1ReferenceInfo {
 		.field("RefFrameId", &self.RefFrameId)
 		.field("frame_type", &self.frame_type)
 		.field("OrderHint", &self.OrderHint)
-		.field("reserved1", &format_args!("{}", to_byte_array_string(&self.reserved1)))
+		.field("reserved1", &format_args!("{}", vk_to_byte_array_string(&self.reserved1)))
 		.field("pExtensionHeader", &self.pExtensionHeader)
 		.finish()
 	}
@@ -30644,9 +31159,9 @@ impl Debug for StdVideoVP9LoopFilter {
 		.field("loop_filter_level", &self.loop_filter_level)
 		.field("loop_filter_sharpness", &self.loop_filter_sharpness)
 		.field("update_ref_delta", &self.update_ref_delta)
-		.field("loop_filter_ref_deltas", &format_args!("{}", maybe_string(&self.loop_filter_ref_deltas)))
+		.field("loop_filter_ref_deltas", &format_args!("{}", vk_format_maybe_string(&self.loop_filter_ref_deltas)))
 		.field("update_mode_delta", &self.update_mode_delta)
-		.field("loop_filter_mode_deltas", &format_args!("{}", maybe_string(&self.loop_filter_mode_deltas)))
+		.field("loop_filter_mode_deltas", &format_args!("{}", vk_format_maybe_string(&self.loop_filter_mode_deltas)))
 		.finish()
 	}
 }
@@ -30707,9 +31222,9 @@ impl Debug for StdVideoVP9Segmentation {
 	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
 		f.debug_struct("StdVideoVP9Segmentation")
 		.field("flags", &self.flags)
-		.field("segmentation_tree_probs", &format_args!("{}", to_byte_array_string(&self.segmentation_tree_probs)))
-		.field("segmentation_pred_prob", &format_args!("{}", to_byte_array_string(&self.segmentation_pred_prob)))
-		.field("FeatureEnabled", &format_args!("{}", to_byte_array_string(&self.FeatureEnabled)))
+		.field("segmentation_tree_probs", &format_args!("{}", vk_to_byte_array_string(&self.segmentation_tree_probs)))
+		.field("segmentation_pred_prob", &format_args!("{}", vk_to_byte_array_string(&self.segmentation_pred_prob)))
+		.field("FeatureEnabled", &format_args!("{}", vk_to_byte_array_string(&self.FeatureEnabled)))
 		.field("FeatureData", &self.FeatureData)
 		.finish()
 	}
@@ -31333,7 +31848,12 @@ pub fn vk_video_encode_intra_refresh_mode_flags_khr_to_string(value: VkVideoEnco
 	if (value & VkVideoEncodeIntraRefreshModeFlagBitsKHR::VK_VIDEO_ENCODE_INTRA_REFRESH_MODE_FLAG_BITS_MAX_ENUM_KHR as VkVideoEncodeIntraRefreshModeFlagsKHR) == VkVideoEncodeIntraRefreshModeFlagBitsKHR::VK_VIDEO_ENCODE_INTRA_REFRESH_MODE_FLAG_BITS_MAX_ENUM_KHR as VkVideoEncodeIntraRefreshModeFlagsKHR {
 		flags.push("VkVideoEncodeIntraRefreshModeFlagBitsKHR::VK_VIDEO_ENCODE_INTRA_REFRESH_MODE_FLAG_BITS_MAX_ENUM_KHR");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// enum `VkVideoEncodeIntraRefreshModeFlagBitsKHR` from VK_KHR_video_encode_intra_refresh
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkVideoEncodeIntraRefreshModeFlagBitsKHR.html>
@@ -31621,7 +32141,7 @@ impl Debug for VkPhysicalDeviceLayeredApiPropertiesKHR {
 		.field("vendorID", &self.vendorID)
 		.field("deviceID", &self.deviceID)
 		.field("layeredAPI", &self.layeredAPI)
-		.field("deviceName", &format_args!("{}", maybe_string(&self.deviceName)))
+		.field("deviceName", &format_args!("{}", vk_format_maybe_string(&self.deviceName)))
 		.finish()
 	}
 }
@@ -31930,7 +32450,12 @@ pub fn vk_debug_report_flags_ext_to_string(value: VkDebugReportFlagsEXT) -> Stri
 	if (value & VkDebugReportFlagBitsEXT::VK_DEBUG_REPORT_FLAG_BITS_MAX_ENUM_EXT as VkDebugReportFlagsEXT) == VkDebugReportFlagBitsEXT::VK_DEBUG_REPORT_FLAG_BITS_MAX_ENUM_EXT as VkDebugReportFlagsEXT {
 		flags.push("VkDebugReportFlagBitsEXT::VK_DEBUG_REPORT_FLAG_BITS_MAX_ENUM_EXT");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// Non-dispatchable handle `VkDebugReportCallbackEXT` from VK_EXT_debug_report
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkDebugReportCallbackEXT.html
@@ -33086,7 +33611,12 @@ pub fn vk_external_memory_handle_type_flags_nv_to_string(value: VkExternalMemory
 	if (value & VkExternalMemoryHandleTypeFlagBitsNV::VK_EXTERNAL_MEMORY_HANDLE_TYPE_FLAG_BITS_MAX_ENUM_NV as VkExternalMemoryHandleTypeFlagsNV) == VkExternalMemoryHandleTypeFlagBitsNV::VK_EXTERNAL_MEMORY_HANDLE_TYPE_FLAG_BITS_MAX_ENUM_NV as VkExternalMemoryHandleTypeFlagsNV {
 		flags.push("VkExternalMemoryHandleTypeFlagBitsNV::VK_EXTERNAL_MEMORY_HANDLE_TYPE_FLAG_BITS_MAX_ENUM_NV");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkExternalMemoryFeatureFlagsNV` from VK_NV_external_memory_capabilities
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkExternalMemoryFeatureFlagsNV.html>
@@ -33106,7 +33636,12 @@ pub fn vk_external_memory_feature_flags_nv_to_string(value: VkExternalMemoryFeat
 	if (value & VkExternalMemoryFeatureFlagBitsNV::VK_EXTERNAL_MEMORY_FEATURE_FLAG_BITS_MAX_ENUM_NV as VkExternalMemoryFeatureFlagsNV) == VkExternalMemoryFeatureFlagBitsNV::VK_EXTERNAL_MEMORY_FEATURE_FLAG_BITS_MAX_ENUM_NV as VkExternalMemoryFeatureFlagsNV {
 		flags.push("VkExternalMemoryFeatureFlagBitsNV::VK_EXTERNAL_MEMORY_FEATURE_FLAG_BITS_MAX_ENUM_NV");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// enum `VkExternalMemoryHandleTypeFlagBitsNV` from VK_NV_external_memory_capabilities
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkExternalMemoryHandleTypeFlagBitsNV.html>
@@ -33390,7 +33925,12 @@ pub fn vk_conditional_rendering_flags_ext_to_string(value: VkConditionalRenderin
 	if (value & VkConditionalRenderingFlagBitsEXT::VK_CONDITIONAL_RENDERING_FLAG_BITS_MAX_ENUM_EXT as VkConditionalRenderingFlagsEXT) == VkConditionalRenderingFlagBitsEXT::VK_CONDITIONAL_RENDERING_FLAG_BITS_MAX_ENUM_EXT as VkConditionalRenderingFlagsEXT {
 		flags.push("VkConditionalRenderingFlagBitsEXT::VK_CONDITIONAL_RENDERING_FLAG_BITS_MAX_ENUM_EXT");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// enum `VkConditionalRenderingFlagBitsEXT` from VK_EXT_conditional_rendering
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkConditionalRenderingFlagBitsEXT.html>
@@ -33601,7 +34141,12 @@ pub fn vk_surface_counter_flags_ext_to_string(value: VkSurfaceCounterFlagsEXT) -
 	if (value & VkSurfaceCounterFlagBitsEXT::VK_SURFACE_COUNTER_FLAG_BITS_MAX_ENUM_EXT as VkSurfaceCounterFlagsEXT) == VkSurfaceCounterFlagBitsEXT::VK_SURFACE_COUNTER_FLAG_BITS_MAX_ENUM_EXT as VkSurfaceCounterFlagsEXT {
 		flags.push("VkSurfaceCounterFlagBitsEXT::VK_SURFACE_COUNTER_FLAG_BITS_MAX_ENUM_EXT");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// enum `VkSurfaceCounterFlagBitsEXT` from VK_EXT_display_surface_counter
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkSurfaceCounterFlagBitsEXT.html>
@@ -34426,7 +34971,12 @@ pub fn vk_debug_utils_message_type_flags_ext_to_string(value: VkDebugUtilsMessag
 	if (value & VkDebugUtilsMessageTypeFlagBitsEXT::VK_DEBUG_UTILS_MESSAGE_TYPE_FLAG_BITS_MAX_ENUM_EXT as VkDebugUtilsMessageTypeFlagsEXT) == VkDebugUtilsMessageTypeFlagBitsEXT::VK_DEBUG_UTILS_MESSAGE_TYPE_FLAG_BITS_MAX_ENUM_EXT as VkDebugUtilsMessageTypeFlagsEXT {
 		flags.push("VkDebugUtilsMessageTypeFlagBitsEXT::VK_DEBUG_UTILS_MESSAGE_TYPE_FLAG_BITS_MAX_ENUM_EXT");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkDebugUtilsMessageSeverityFlagsEXT` from VK_EXT_debug_utils
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkDebugUtilsMessageSeverityFlagsEXT.html>
@@ -34449,7 +34999,12 @@ pub fn vk_debug_utils_message_severity_flags_ext_to_string(value: VkDebugUtilsMe
 	if (value & VkDebugUtilsMessageSeverityFlagBitsEXT::VK_DEBUG_UTILS_MESSAGE_SEVERITY_FLAG_BITS_MAX_ENUM_EXT as VkDebugUtilsMessageSeverityFlagsEXT) == VkDebugUtilsMessageSeverityFlagBitsEXT::VK_DEBUG_UTILS_MESSAGE_SEVERITY_FLAG_BITS_MAX_ENUM_EXT as VkDebugUtilsMessageSeverityFlagsEXT {
 		flags.push("VkDebugUtilsMessageSeverityFlagBitsEXT::VK_DEBUG_UTILS_MESSAGE_SEVERITY_FLAG_BITS_MAX_ENUM_EXT");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkDebugUtilsMessengerCreateFlagsEXT` from VK_EXT_debug_utils
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkDebugUtilsMessengerCreateFlagsEXT.html>
@@ -35720,7 +36275,12 @@ pub fn vk_geometry_flags_khr_to_string(value: VkGeometryFlagsKHR) -> String {
 	if (value & VkGeometryFlagBitsKHR::VK_GEOMETRY_FLAG_BITS_MAX_ENUM_KHR as VkGeometryFlagsKHR) == VkGeometryFlagBitsKHR::VK_GEOMETRY_FLAG_BITS_MAX_ENUM_KHR as VkGeometryFlagsKHR {
 		flags.push("VkGeometryFlagBitsKHR::VK_GEOMETRY_FLAG_BITS_MAX_ENUM_KHR");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkGeometryFlagsNV` from VK_NV_ray_tracing
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkGeometryFlagsNV.html>
@@ -35776,7 +36336,12 @@ pub fn vk_geometry_instance_flags_khr_to_string(value: VkGeometryInstanceFlagsKH
 	if (value & VkGeometryInstanceFlagBitsKHR::VK_GEOMETRY_INSTANCE_FLAG_BITS_MAX_ENUM_KHR as VkGeometryInstanceFlagsKHR) == VkGeometryInstanceFlagBitsKHR::VK_GEOMETRY_INSTANCE_FLAG_BITS_MAX_ENUM_KHR as VkGeometryInstanceFlagsKHR {
 		flags.push("VkGeometryInstanceFlagBitsKHR::VK_GEOMETRY_INSTANCE_FLAG_BITS_MAX_ENUM_KHR");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkGeometryInstanceFlagsNV` from VK_NV_ray_tracing
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkGeometryInstanceFlagsNV.html>
@@ -35859,7 +36424,12 @@ pub fn vk_build_acceleration_structure_flags_khr_to_string(value: VkBuildAcceler
 	if (value & VkBuildAccelerationStructureFlagBitsKHR::VK_BUILD_ACCELERATION_STRUCTURE_FLAG_BITS_MAX_ENUM_KHR as VkBuildAccelerationStructureFlagsKHR) == VkBuildAccelerationStructureFlagBitsKHR::VK_BUILD_ACCELERATION_STRUCTURE_FLAG_BITS_MAX_ENUM_KHR as VkBuildAccelerationStructureFlagsKHR {
 		flags.push("VkBuildAccelerationStructureFlagBitsKHR::VK_BUILD_ACCELERATION_STRUCTURE_FLAG_BITS_MAX_ENUM_KHR");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkBuildAccelerationStructureFlagsNV` from VK_NV_ray_tracing
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkBuildAccelerationStructureFlagsNV.html>
@@ -36706,7 +37276,12 @@ pub fn vk_pipeline_compiler_control_flags_amd_to_string(value: VkPipelineCompile
 	if (value & VkPipelineCompilerControlFlagBitsAMD::VK_PIPELINE_COMPILER_CONTROL_FLAG_BITS_MAX_ENUM_AMD as VkPipelineCompilerControlFlagsAMD) == VkPipelineCompilerControlFlagBitsAMD::VK_PIPELINE_COMPILER_CONTROL_FLAG_BITS_MAX_ENUM_AMD as VkPipelineCompilerControlFlagsAMD {
 		flags.push("VkPipelineCompilerControlFlagBitsAMD::VK_PIPELINE_COMPILER_CONTROL_FLAG_BITS_MAX_ENUM_AMD");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// enum `VkPipelineCompilerControlFlagBitsAMD` from VK_AMD_pipeline_compiler_control
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPipelineCompilerControlFlagBitsAMD.html>
@@ -37866,7 +38441,12 @@ pub fn vk_shader_core_properties_flags_amd_to_string(value: VkShaderCoreProperti
 	if (value & VkShaderCorePropertiesFlagBitsAMD::VK_SHADER_CORE_PROPERTIES_FLAG_BITS_MAX_ENUM_AMD as VkShaderCorePropertiesFlagsAMD) == VkShaderCorePropertiesFlagBitsAMD::VK_SHADER_CORE_PROPERTIES_FLAG_BITS_MAX_ENUM_AMD as VkShaderCorePropertiesFlagsAMD {
 		flags.push("VkShaderCorePropertiesFlagBitsAMD::VK_SHADER_CORE_PROPERTIES_FLAG_BITS_MAX_ENUM_AMD");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// enum `VkShaderCorePropertiesFlagBitsAMD` from VK_AMD_shader_core_properties2
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkShaderCorePropertiesFlagBitsAMD.html>
@@ -39258,7 +39838,12 @@ pub fn vk_indirect_state_flags_nv_to_string(value: VkIndirectStateFlagsNV) -> St
 	if (value & VkIndirectStateFlagBitsNV::VK_INDIRECT_STATE_FLAG_BITS_MAX_ENUM_NV as VkIndirectStateFlagsNV) == VkIndirectStateFlagBitsNV::VK_INDIRECT_STATE_FLAG_BITS_MAX_ENUM_NV as VkIndirectStateFlagsNV {
 		flags.push("VkIndirectStateFlagBitsNV::VK_INDIRECT_STATE_FLAG_BITS_MAX_ENUM_NV");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkIndirectCommandsLayoutUsageFlagsNV` from VK_NV_device_generated_commands
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkIndirectCommandsLayoutUsageFlagsNV.html>
@@ -39278,7 +39863,12 @@ pub fn vk_indirect_commands_layout_usage_flags_nv_to_string(value: VkIndirectCom
 	if (value & VkIndirectCommandsLayoutUsageFlagBitsNV::VK_INDIRECT_COMMANDS_LAYOUT_USAGE_FLAG_BITS_MAX_ENUM_NV as VkIndirectCommandsLayoutUsageFlagsNV) == VkIndirectCommandsLayoutUsageFlagBitsNV::VK_INDIRECT_COMMANDS_LAYOUT_USAGE_FLAG_BITS_MAX_ENUM_NV as VkIndirectCommandsLayoutUsageFlagsNV {
 		flags.push("VkIndirectCommandsLayoutUsageFlagBitsNV::VK_INDIRECT_COMMANDS_LAYOUT_USAGE_FLAG_BITS_MAX_ENUM_NV");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// Non-dispatchable handle `VkIndirectCommandsLayoutNV` from VK_NV_device_generated_commands
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkIndirectCommandsLayoutNV.html
@@ -40198,7 +40788,12 @@ pub fn vk_device_diagnostics_config_flags_nv_to_string(value: VkDeviceDiagnostic
 	if (value & VkDeviceDiagnosticsConfigFlagBitsNV::VK_DEVICE_DIAGNOSTICS_CONFIG_FLAG_BITS_MAX_ENUM_NV as VkDeviceDiagnosticsConfigFlagsNV) == VkDeviceDiagnosticsConfigFlagBitsNV::VK_DEVICE_DIAGNOSTICS_CONFIG_FLAG_BITS_MAX_ENUM_NV as VkDeviceDiagnosticsConfigFlagsNV {
 		flags.push("VkDeviceDiagnosticsConfigFlagBitsNV::VK_DEVICE_DIAGNOSTICS_CONFIG_FLAG_BITS_MAX_ENUM_NV");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// enum `VkDeviceDiagnosticsConfigFlagBitsNV` from VK_NV_device_diagnostics_config
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkDeviceDiagnosticsConfigFlagBitsNV.html>
@@ -40287,7 +40882,12 @@ pub fn vk_tile_shading_render_pass_flags_qcom_to_string(value: VkTileShadingRend
 	if (value & VkTileShadingRenderPassFlagBitsQCOM::VK_TILE_SHADING_RENDER_PASS_FLAG_BITS_MAX_ENUM_QCOM as VkTileShadingRenderPassFlagsQCOM) == VkTileShadingRenderPassFlagBitsQCOM::VK_TILE_SHADING_RENDER_PASS_FLAG_BITS_MAX_ENUM_QCOM as VkTileShadingRenderPassFlagsQCOM {
 		flags.push("VkTileShadingRenderPassFlagBitsQCOM::VK_TILE_SHADING_RENDER_PASS_FLAG_BITS_MAX_ENUM_QCOM");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// enum `VkTileShadingRenderPassFlagBitsQCOM` from VK_QCOM_tile_shading
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkTileShadingRenderPassFlagBitsQCOM.html>
@@ -40871,7 +41471,12 @@ pub fn vk_graphics_pipeline_library_flags_ext_to_string(value: VkGraphicsPipelin
 	if (value & VkGraphicsPipelineLibraryFlagBitsEXT::VK_GRAPHICS_PIPELINE_LIBRARY_FLAG_BITS_MAX_ENUM_EXT as VkGraphicsPipelineLibraryFlagsEXT) == VkGraphicsPipelineLibraryFlagBitsEXT::VK_GRAPHICS_PIPELINE_LIBRARY_FLAG_BITS_MAX_ENUM_EXT as VkGraphicsPipelineLibraryFlagsEXT {
 		flags.push("VkGraphicsPipelineLibraryFlagBitsEXT::VK_GRAPHICS_PIPELINE_LIBRARY_FLAG_BITS_MAX_ENUM_EXT");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// enum `VkGraphicsPipelineLibraryFlagBitsEXT` from VK_EXT_graphics_pipeline_library
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkGraphicsPipelineLibraryFlagBitsEXT.html>
@@ -41400,7 +42005,12 @@ pub fn vk_image_compression_flags_ext_to_string(value: VkImageCompressionFlagsEX
 	if (value & VkImageCompressionFlagBitsEXT::VK_IMAGE_COMPRESSION_FLAG_BITS_MAX_ENUM_EXT as VkImageCompressionFlagsEXT) == VkImageCompressionFlagBitsEXT::VK_IMAGE_COMPRESSION_FLAG_BITS_MAX_ENUM_EXT as VkImageCompressionFlagsEXT {
 		flags.push("VkImageCompressionFlagBitsEXT::VK_IMAGE_COMPRESSION_FLAG_BITS_MAX_ENUM_EXT");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkImageCompressionFixedRateFlagsEXT` from VK_EXT_image_compression_control
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkImageCompressionFixedRateFlagsEXT.html>
@@ -41486,7 +42096,12 @@ pub fn vk_image_compression_fixed_rate_flags_ext_to_string(value: VkImageCompres
 	if (value & VkImageCompressionFixedRateFlagBitsEXT::VK_IMAGE_COMPRESSION_FIXED_RATE_FLAG_BITS_MAX_ENUM_EXT as VkImageCompressionFixedRateFlagsEXT) == VkImageCompressionFixedRateFlagBitsEXT::VK_IMAGE_COMPRESSION_FIXED_RATE_FLAG_BITS_MAX_ENUM_EXT as VkImageCompressionFixedRateFlagsEXT {
 		flags.push("VkImageCompressionFixedRateFlagBitsEXT::VK_IMAGE_COMPRESSION_FIXED_RATE_FLAG_BITS_MAX_ENUM_EXT");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// enum `VkImageCompressionFlagBitsEXT` from VK_EXT_image_compression_control
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkImageCompressionFlagBitsEXT.html>
@@ -41716,7 +42331,7 @@ pub struct VkDeviceFaultVendorInfoEXT {
 impl Debug for VkDeviceFaultVendorInfoEXT {
 	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
 		f.debug_struct("VkDeviceFaultVendorInfoEXT")
-		.field("description", &format_args!("{}", maybe_string(&self.description)))
+		.field("description", &format_args!("{}", vk_format_maybe_string(&self.description)))
 		.field("vendorFaultCode", &self.vendorFaultCode)
 		.field("vendorFaultData", &self.vendorFaultData)
 		.finish()
@@ -41739,7 +42354,7 @@ impl Debug for VkDeviceFaultInfoEXT {
 		f.debug_struct("VkDeviceFaultInfoEXT")
 		.field("sType", &self.sType)
 		.field("pNext", &self.pNext)
-		.field("description", &format_args!("{}", maybe_string(&self.description)))
+		.field("description", &format_args!("{}", vk_format_maybe_string(&self.description)))
 		.field("pAddressInfos", &self.pAddressInfos)
 		.field("pVendorInfos", &self.pVendorInfos)
 		.field("pVendorBinaryData", &self.pVendorBinaryData)
@@ -41771,7 +42386,7 @@ impl Debug for VkDeviceFaultVendorBinaryHeaderVersionOneEXT {
 		.field("vendorID", &self.vendorID)
 		.field("deviceID", &self.deviceID)
 		.field("driverVersion", &self.driverVersion)
-		.field("pipelineCacheUUID", &format_args!("{}", to_byte_array_string(&self.pipelineCacheUUID)))
+		.field("pipelineCacheUUID", &format_args!("{}", vk_to_byte_array_string(&self.pipelineCacheUUID)))
 		.field("applicationNameOffset", &self.applicationNameOffset)
 		.field("applicationVersion", &self.applicationVersion)
 		.field("engineNameOffset", &self.engineNameOffset)
@@ -42040,7 +42655,12 @@ pub fn vk_device_address_binding_flags_ext_to_string(value: VkDeviceAddressBindi
 	if (value & VkDeviceAddressBindingFlagBitsEXT::VK_DEVICE_ADDRESS_BINDING_FLAG_BITS_MAX_ENUM_EXT as VkDeviceAddressBindingFlagsEXT) == VkDeviceAddressBindingFlagBitsEXT::VK_DEVICE_ADDRESS_BINDING_FLAG_BITS_MAX_ENUM_EXT as VkDeviceAddressBindingFlagsEXT {
 		flags.push("VkDeviceAddressBindingFlagBitsEXT::VK_DEVICE_ADDRESS_BINDING_FLAG_BITS_MAX_ENUM_EXT");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// enum `VkDeviceAddressBindingTypeEXT` from VK_EXT_device_address_binding_report
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkDeviceAddressBindingTypeEXT.html>
@@ -42393,7 +43013,7 @@ impl Debug for VkPipelinePropertiesIdentifierEXT {
 		f.debug_struct("VkPipelinePropertiesIdentifierEXT")
 		.field("sType", &self.sType)
 		.field("pNext", &self.pNext)
-		.field("pipelineIdentifier", &format_args!("{}", to_byte_array_string(&self.pipelineIdentifier)))
+		.field("pipelineIdentifier", &format_args!("{}", vk_to_byte_array_string(&self.pipelineIdentifier)))
 		.finish()
 	}
 }
@@ -42455,7 +43075,12 @@ pub fn vk_frame_boundary_flags_ext_to_string(value: VkFrameBoundaryFlagsEXT) -> 
 	if (value & VkFrameBoundaryFlagBitsEXT::VK_FRAME_BOUNDARY_FLAG_BITS_MAX_ENUM_EXT as VkFrameBoundaryFlagsEXT) == VkFrameBoundaryFlagBitsEXT::VK_FRAME_BOUNDARY_FLAG_BITS_MAX_ENUM_EXT as VkFrameBoundaryFlagsEXT {
 		flags.push("VkFrameBoundaryFlagBitsEXT::VK_FRAME_BOUNDARY_FLAG_BITS_MAX_ENUM_EXT");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// enum `VkFrameBoundaryFlagBitsEXT` from VK_EXT_frame_boundary
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkFrameBoundaryFlagBitsEXT.html>
@@ -42994,7 +43619,12 @@ pub fn vk_build_micromap_flags_ext_to_string(value: VkBuildMicromapFlagsEXT) -> 
 	if (value & VkBuildMicromapFlagBitsEXT::VK_BUILD_MICROMAP_FLAG_BITS_MAX_ENUM_EXT as VkBuildMicromapFlagsEXT) == VkBuildMicromapFlagBitsEXT::VK_BUILD_MICROMAP_FLAG_BITS_MAX_ENUM_EXT as VkBuildMicromapFlagsEXT {
 		flags.push("VkBuildMicromapFlagBitsEXT::VK_BUILD_MICROMAP_FLAG_BITS_MAX_ENUM_EXT");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkMicromapCreateFlagsEXT` from VK_EXT_opacity_micromap
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkMicromapCreateFlagsEXT.html>
@@ -43008,7 +43638,12 @@ pub fn vk_micromap_create_flags_ext_to_string(value: VkMicromapCreateFlagsEXT) -
 	if (value & VkMicromapCreateFlagBitsEXT::VK_MICROMAP_CREATE_FLAG_BITS_MAX_ENUM_EXT as VkMicromapCreateFlagsEXT) == VkMicromapCreateFlagBitsEXT::VK_MICROMAP_CREATE_FLAG_BITS_MAX_ENUM_EXT as VkMicromapCreateFlagsEXT {
 		flags.push("VkMicromapCreateFlagBitsEXT::VK_MICROMAP_CREATE_FLAG_BITS_MAX_ENUM_EXT");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// Non-dispatchable handle `VkMicromapEXT` from VK_EXT_opacity_micromap
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkMicromapEXT.html
@@ -45250,7 +45885,7 @@ impl Debug for VkRenderPassSubpassFeedbackInfoEXT {
 	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
 		f.debug_struct("VkRenderPassSubpassFeedbackInfoEXT")
 		.field("subpassMergeStatus", &self.subpassMergeStatus)
-		.field("description", &format_args!("{}", maybe_string(&self.description)))
+		.field("description", &format_args!("{}", vk_format_maybe_string(&self.description)))
 		.field("postMergeIndex", &self.postMergeIndex)
 		.finish()
 	}
@@ -45877,7 +46512,7 @@ impl Debug for VkPhysicalDeviceShaderModuleIdentifierPropertiesEXT {
 		f.debug_struct("VkPhysicalDeviceShaderModuleIdentifierPropertiesEXT")
 		.field("sType", &self.sType)
 		.field("pNext", &self.pNext)
-		.field("shaderModuleIdentifierAlgorithmUUID", &format_args!("{}", to_byte_array_string(&self.shaderModuleIdentifierAlgorithmUUID)))
+		.field("shaderModuleIdentifierAlgorithmUUID", &format_args!("{}", vk_to_byte_array_string(&self.shaderModuleIdentifierAlgorithmUUID)))
 		.finish()
 	}
 }
@@ -45907,7 +46542,7 @@ impl Debug for VkShaderModuleIdentifierEXT {
 		.field("sType", &self.sType)
 		.field("pNext", &self.pNext)
 		.field("identifierSize", &self.identifierSize)
-		.field("identifier", &format_args!("{}", to_byte_array_string(&self.identifier)))
+		.field("identifier", &format_args!("{}", vk_to_byte_array_string(&self.identifier)))
 		.finish()
 	}
 }
@@ -46004,7 +46639,12 @@ pub fn vk_optical_flow_grid_size_flags_nv_to_string(value: VkOpticalFlowGridSize
 	if (value & VkOpticalFlowGridSizeFlagBitsNV::VK_OPTICAL_FLOW_GRID_SIZE_FLAG_BITS_MAX_ENUM_NV as VkOpticalFlowGridSizeFlagsNV) == VkOpticalFlowGridSizeFlagBitsNV::VK_OPTICAL_FLOW_GRID_SIZE_FLAG_BITS_MAX_ENUM_NV as VkOpticalFlowGridSizeFlagsNV {
 		flags.push("VkOpticalFlowGridSizeFlagBitsNV::VK_OPTICAL_FLOW_GRID_SIZE_FLAG_BITS_MAX_ENUM_NV");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkOpticalFlowUsageFlagsNV` from VK_NV_optical_flow
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkOpticalFlowUsageFlagsNV.html>
@@ -46033,7 +46673,12 @@ pub fn vk_optical_flow_usage_flags_nv_to_string(value: VkOpticalFlowUsageFlagsNV
 	if (value & VkOpticalFlowUsageFlagBitsNV::VK_OPTICAL_FLOW_USAGE_FLAG_BITS_MAX_ENUM_NV as VkOpticalFlowUsageFlagsNV) == VkOpticalFlowUsageFlagBitsNV::VK_OPTICAL_FLOW_USAGE_FLAG_BITS_MAX_ENUM_NV as VkOpticalFlowUsageFlagsNV {
 		flags.push("VkOpticalFlowUsageFlagBitsNV::VK_OPTICAL_FLOW_USAGE_FLAG_BITS_MAX_ENUM_NV");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkOpticalFlowSessionCreateFlagsNV` from VK_NV_optical_flow
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkOpticalFlowSessionCreateFlagsNV.html>
@@ -46059,7 +46704,12 @@ pub fn vk_optical_flow_session_create_flags_nv_to_string(value: VkOpticalFlowSes
 	if (value & VkOpticalFlowSessionCreateFlagBitsNV::VK_OPTICAL_FLOW_SESSION_CREATE_FLAG_BITS_MAX_ENUM_NV as VkOpticalFlowSessionCreateFlagsNV) == VkOpticalFlowSessionCreateFlagBitsNV::VK_OPTICAL_FLOW_SESSION_CREATE_FLAG_BITS_MAX_ENUM_NV as VkOpticalFlowSessionCreateFlagsNV {
 		flags.push("VkOpticalFlowSessionCreateFlagBitsNV::VK_OPTICAL_FLOW_SESSION_CREATE_FLAG_BITS_MAX_ENUM_NV");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkOpticalFlowExecuteFlagsNV` from VK_NV_optical_flow
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkOpticalFlowExecuteFlagsNV.html>
@@ -46073,7 +46723,12 @@ pub fn vk_optical_flow_execute_flags_nv_to_string(value: VkOpticalFlowExecuteFla
 	if (value & VkOpticalFlowExecuteFlagBitsNV::VK_OPTICAL_FLOW_EXECUTE_FLAG_BITS_MAX_ENUM_NV as VkOpticalFlowExecuteFlagsNV) == VkOpticalFlowExecuteFlagBitsNV::VK_OPTICAL_FLOW_EXECUTE_FLAG_BITS_MAX_ENUM_NV as VkOpticalFlowExecuteFlagsNV {
 		flags.push("VkOpticalFlowExecuteFlagBitsNV::VK_OPTICAL_FLOW_EXECUTE_FLAG_BITS_MAX_ENUM_NV");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// Non-dispatchable handle `VkOpticalFlowSessionNV` from VK_NV_optical_flow
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkOpticalFlowSessionNV.html
@@ -46555,7 +47210,12 @@ pub fn vk_shader_create_flags_ext_to_string(value: VkShaderCreateFlagsEXT) -> St
 	if (value & VkShaderCreateFlagBitsEXT::VK_SHADER_CREATE_FLAG_BITS_MAX_ENUM_EXT as VkShaderCreateFlagsEXT) == VkShaderCreateFlagBitsEXT::VK_SHADER_CREATE_FLAG_BITS_MAX_ENUM_EXT as VkShaderCreateFlagsEXT {
 		flags.push("VkShaderCreateFlagBitsEXT::VK_SHADER_CREATE_FLAG_BITS_MAX_ENUM_EXT");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkShaderRequiredSubgroupSizeCreateInfoEXT` from VK_EXT_shader_object
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkShaderRequiredSubgroupSizeCreateInfoEXT.html>
@@ -46622,7 +47282,7 @@ impl Debug for VkPhysicalDeviceShaderObjectPropertiesEXT {
 		f.debug_struct("VkPhysicalDeviceShaderObjectPropertiesEXT")
 		.field("sType", &self.sType)
 		.field("pNext", &self.pNext)
-		.field("shaderBinaryUUID", &format_args!("{}", to_byte_array_string(&self.shaderBinaryUUID)))
+		.field("shaderBinaryUUID", &format_args!("{}", vk_to_byte_array_string(&self.shaderBinaryUUID)))
 		.field("shaderBinaryVersion", &self.shaderBinaryVersion)
 		.finish()
 	}
@@ -47787,7 +48447,7 @@ impl Debug for VkPhysicalDeviceDataGraphOperationSupportARM {
 	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
 		f.debug_struct("VkPhysicalDeviceDataGraphOperationSupportARM")
 		.field("operationType", &self.operationType)
-		.field("name", &format_args!("{}", maybe_string(&self.name)))
+		.field("name", &format_args!("{}", vk_format_maybe_string(&self.name)))
 		.field("version", &self.version)
 		.finish()
 	}
@@ -48796,7 +49456,12 @@ pub fn vk_cluster_acceleration_structure_address_resolution_flags_nv_to_string(v
 	if (value & VkClusterAccelerationStructureAddressResolutionFlagBitsNV::VK_CLUSTER_ACCELERATION_STRUCTURE_ADDRESS_RESOLUTION_FLAG_BITS_MAX_ENUM_NV as VkClusterAccelerationStructureAddressResolutionFlagsNV) == VkClusterAccelerationStructureAddressResolutionFlagBitsNV::VK_CLUSTER_ACCELERATION_STRUCTURE_ADDRESS_RESOLUTION_FLAG_BITS_MAX_ENUM_NV as VkClusterAccelerationStructureAddressResolutionFlagsNV {
 		flags.push("VkClusterAccelerationStructureAddressResolutionFlagBitsNV::VK_CLUSTER_ACCELERATION_STRUCTURE_ADDRESS_RESOLUTION_FLAG_BITS_MAX_ENUM_NV");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkClusterAccelerationStructureClusterFlagsNV` from VK_NV_cluster_acceleration_structure
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkClusterAccelerationStructureClusterFlagsNV.html>
@@ -48810,7 +49475,12 @@ pub fn vk_cluster_acceleration_structure_cluster_flags_nv_to_string(value: VkClu
 	if (value & VkClusterAccelerationStructureClusterFlagBitsNV::VK_CLUSTER_ACCELERATION_STRUCTURE_CLUSTER_FLAG_BITS_MAX_ENUM_NV as VkClusterAccelerationStructureClusterFlagsNV) == VkClusterAccelerationStructureClusterFlagBitsNV::VK_CLUSTER_ACCELERATION_STRUCTURE_CLUSTER_FLAG_BITS_MAX_ENUM_NV as VkClusterAccelerationStructureClusterFlagsNV {
 		flags.push("VkClusterAccelerationStructureClusterFlagBitsNV::VK_CLUSTER_ACCELERATION_STRUCTURE_CLUSTER_FLAG_BITS_MAX_ENUM_NV");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkClusterAccelerationStructureGeometryFlagsNV` from VK_NV_cluster_acceleration_structure
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkClusterAccelerationStructureGeometryFlagsNV.html>
@@ -48830,7 +49500,12 @@ pub fn vk_cluster_acceleration_structure_geometry_flags_nv_to_string(value: VkCl
 	if (value & VkClusterAccelerationStructureGeometryFlagBitsNV::VK_CLUSTER_ACCELERATION_STRUCTURE_GEOMETRY_FLAG_BITS_MAX_ENUM_NV as VkClusterAccelerationStructureGeometryFlagsNV) == VkClusterAccelerationStructureGeometryFlagBitsNV::VK_CLUSTER_ACCELERATION_STRUCTURE_GEOMETRY_FLAG_BITS_MAX_ENUM_NV as VkClusterAccelerationStructureGeometryFlagsNV {
 		flags.push("VkClusterAccelerationStructureGeometryFlagBitsNV::VK_CLUSTER_ACCELERATION_STRUCTURE_GEOMETRY_FLAG_BITS_MAX_ENUM_NV");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkClusterAccelerationStructureIndexFormatFlagsNV` from VK_NV_cluster_acceleration_structure
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkClusterAccelerationStructureIndexFormatFlagsNV.html>
@@ -48850,7 +49525,12 @@ pub fn vk_cluster_acceleration_structure_index_format_flags_nv_to_string(value: 
 	if (value & VkClusterAccelerationStructureIndexFormatFlagBitsNV::VK_CLUSTER_ACCELERATION_STRUCTURE_INDEX_FORMAT_FLAG_BITS_MAX_ENUM_NV as VkClusterAccelerationStructureIndexFormatFlagsNV) == VkClusterAccelerationStructureIndexFormatFlagBitsNV::VK_CLUSTER_ACCELERATION_STRUCTURE_INDEX_FORMAT_FLAG_BITS_MAX_ENUM_NV as VkClusterAccelerationStructureIndexFormatFlagsNV {
 		flags.push("VkClusterAccelerationStructureIndexFormatFlagBitsNV::VK_CLUSTER_ACCELERATION_STRUCTURE_INDEX_FORMAT_FLAG_BITS_MAX_ENUM_NV");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// enum `VkClusterAccelerationStructureTypeNV` from VK_NV_cluster_acceleration_structure
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkClusterAccelerationStructureTypeNV.html>
@@ -49407,7 +50087,12 @@ pub fn vk_partitioned_acceleration_structure_instance_flags_nv_to_string(value: 
 	if (value & VkPartitionedAccelerationStructureInstanceFlagBitsNV::VK_PARTITIONED_ACCELERATION_STRUCTURE_INSTANCE_FLAG_BITS_MAX_ENUM_NV as VkPartitionedAccelerationStructureInstanceFlagsNV) == VkPartitionedAccelerationStructureInstanceFlagBitsNV::VK_PARTITIONED_ACCELERATION_STRUCTURE_INSTANCE_FLAG_BITS_MAX_ENUM_NV as VkPartitionedAccelerationStructureInstanceFlagsNV {
 		flags.push("VkPartitionedAccelerationStructureInstanceFlagBitsNV::VK_PARTITIONED_ACCELERATION_STRUCTURE_INSTANCE_FLAG_BITS_MAX_ENUM_NV");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// enum `VkPartitionedAccelerationStructureOpTypeNV` from VK_NV_partitioned_acceleration_structure
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPartitionedAccelerationStructureOpTypeNV.html>
@@ -49618,7 +50303,12 @@ pub fn vk_indirect_commands_input_mode_flags_ext_to_string(value: VkIndirectComm
 	if (value & VkIndirectCommandsInputModeFlagBitsEXT::VK_INDIRECT_COMMANDS_INPUT_MODE_FLAG_BITS_MAX_ENUM_EXT as VkIndirectCommandsInputModeFlagsEXT) == VkIndirectCommandsInputModeFlagBitsEXT::VK_INDIRECT_COMMANDS_INPUT_MODE_FLAG_BITS_MAX_ENUM_EXT as VkIndirectCommandsInputModeFlagsEXT {
 		flags.push("VkIndirectCommandsInputModeFlagBitsEXT::VK_INDIRECT_COMMANDS_INPUT_MODE_FLAG_BITS_MAX_ENUM_EXT");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// type definition `VkIndirectCommandsLayoutUsageFlagsEXT` from VK_EXT_device_generated_commands
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkIndirectCommandsLayoutUsageFlagsEXT.html>
@@ -49635,7 +50325,12 @@ pub fn vk_indirect_commands_layout_usage_flags_ext_to_string(value: VkIndirectCo
 	if (value & VkIndirectCommandsLayoutUsageFlagBitsEXT::VK_INDIRECT_COMMANDS_LAYOUT_USAGE_FLAG_BITS_MAX_ENUM_EXT as VkIndirectCommandsLayoutUsageFlagsEXT) == VkIndirectCommandsLayoutUsageFlagBitsEXT::VK_INDIRECT_COMMANDS_LAYOUT_USAGE_FLAG_BITS_MAX_ENUM_EXT as VkIndirectCommandsLayoutUsageFlagsEXT {
 		flags.push("VkIndirectCommandsLayoutUsageFlagBitsEXT::VK_INDIRECT_COMMANDS_LAYOUT_USAGE_FLAG_BITS_MAX_ENUM_EXT");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// Non-dispatchable handle `VkIndirectExecutionSetEXT` from VK_EXT_device_generated_commands
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkIndirectExecutionSetEXT.html
@@ -50617,7 +51312,12 @@ pub fn vk_acceleration_structure_create_flags_khr_to_string(value: VkAcceleratio
 	if (value & VkAccelerationStructureCreateFlagBitsKHR::VK_ACCELERATION_STRUCTURE_CREATE_FLAG_BITS_MAX_ENUM_KHR as VkAccelerationStructureCreateFlagsKHR) == VkAccelerationStructureCreateFlagBitsKHR::VK_ACCELERATION_STRUCTURE_CREATE_FLAG_BITS_MAX_ENUM_KHR as VkAccelerationStructureCreateFlagsKHR {
 		flags.push("VkAccelerationStructureCreateFlagBitsKHR::VK_ACCELERATION_STRUCTURE_CREATE_FLAG_BITS_MAX_ENUM_KHR");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// enum `VkBuildAccelerationStructureModeKHR` from VK_KHR_acceleration_structure
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkBuildAccelerationStructureModeKHR.html>
@@ -51962,7 +52662,12 @@ pub fn vk_export_metal_object_type_flags_ext_to_string(value: VkExportMetalObjec
 	if (value & VkExportMetalObjectTypeFlagBitsEXT::VK_EXPORT_METAL_OBJECT_TYPE_FLAG_BITS_MAX_ENUM_EXT as VkExportMetalObjectTypeFlagsEXT) == VkExportMetalObjectTypeFlagBitsEXT::VK_EXPORT_METAL_OBJECT_TYPE_FLAG_BITS_MAX_ENUM_EXT as VkExportMetalObjectTypeFlagsEXT {
 		flags.push("VkExportMetalObjectTypeFlagBitsEXT::VK_EXPORT_METAL_OBJECT_TYPE_FLAG_BITS_MAX_ENUM_EXT");
 	}
-	flags.join(" | ")
+	let ret = flags.join(" | ");
+	if ret.len() != 0 {
+		ret
+	} else {
+		String::from("0")
+	}
 }
 /// Normal handle `IOSurfaceRef` from VK_EXT_metal_objects
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/IOSurfaceRef.html>
@@ -52353,10 +53058,6 @@ pub type VkWin32SurfaceCreateFlagsKHR = VkFlags;
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/HANDLE.html>
 #[cfg(feature = "win32_khr")] #[repr(C)] #[derive(Debug, Clone, Copy)] pub struct HANDLE_T {_unused: u32,}
 #[cfg(feature = "win32_khr")] pub type HANDLE = *const HANDLE_T;
-/// Normal handle `HINSTANCE` from VK_KHR_win32_surface
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/HINSTANCE.html>
-#[cfg(feature = "win32_khr")] #[repr(C)] #[derive(Debug, Clone, Copy)] pub struct HINSTANCE_T {_unused: u32,}
-#[cfg(feature = "win32_khr")] pub type HINSTANCE = *const HINSTANCE_T;
 /// Normal handle `HMONITOR` from VK_KHR_win32_surface
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/HMONITOR.html>
 #[cfg(feature = "win32_khr")] #[repr(C)] #[derive(Debug, Clone, Copy)] pub struct HMONITOR_T {_unused: u32,}
@@ -52365,6 +53066,10 @@ pub type VkWin32SurfaceCreateFlagsKHR = VkFlags;
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/HWND.html>
 #[cfg(feature = "win32_khr")] #[repr(C)] #[derive(Debug, Clone, Copy)] pub struct HWND_T {_unused: u32,}
 #[cfg(feature = "win32_khr")] pub type HWND = *const HWND_T;
+/// Normal handle `HINSTANCE` from VK_KHR_win32_surface
+/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/HINSTANCE.html>
+#[cfg(feature = "win32_khr")] #[repr(C)] #[derive(Debug, Clone, Copy)] pub struct HINSTANCE_T {_unused: u32,}
+#[cfg(feature = "win32_khr")] pub type HINSTANCE = *const HINSTANCE_T;
 /// struct `SECURITY_ATTRIBUTES` from VK_KHR_win32_surface
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/SECURITY_ATTRIBUTES.html>
 #[cfg(feature = "win32_khr")]
