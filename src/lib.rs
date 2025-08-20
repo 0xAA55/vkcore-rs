@@ -20,11 +20,10 @@ mod tests {
 	fn test() {
 		let test_time: Option<f64> = Some(TEST_TIME);
 		let mut glfw = glfw::init(glfw::fail_on_errors).unwrap();
+		glfw.window_hint(WindowHint::ClientApi(ClientApiHint::NoApi));
 		let (mut window, events) = glfw.create_window(1024, 768, "GLFW Window", glfw::WindowMode::Windowed).expect("Failed to create VKFW window.");
 
 		window.set_key_polling(true);
-		window.make_current();
-		glfw.set_swap_interval(SwapInterval::Adaptive);
 
 		let app_name = CString::new("vkcore-rs test").unwrap();
 		let engine_name = CString::new("vkcore-rs").unwrap();
