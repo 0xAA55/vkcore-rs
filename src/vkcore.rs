@@ -3,7 +3,7 @@
 #![allow(non_snake_case)]
 #![allow(non_camel_case_types)]
 #![allow(non_upper_case_globals)]
-
+#![allow(unpredictable_function_pointer_comparisons)]
 use std::{
 	collections::BTreeSet,
 	ffi::{c_void, CStr, CString},
@@ -9218,7 +9218,7 @@ pub trait VK_VERSION_1_0: Debug {
 	fn vkCmdExecuteCommands(&self, commandBuffer: VkCommandBuffer, commandBufferCount: u32, pCommandBuffers: *const VkCommandBuffer) -> Result<()>;
 }
 /// struct for `VK_VERSION_1_0`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_VERSION_1_0 {
 	vk_create_instance: PFN_vkCreateInstance,
 	vk_destroy_instance: PFN_vkDestroyInstance,
@@ -10055,6 +10055,149 @@ impl Vulkan_VERSION_1_0 {
 			vk_cmd_end_render_pass: {let proc = get_instance_proc_address(instance, "vkCmdEndRenderPass"); if proc == null() {dummy_vkCmdEndRenderPass} else {unsafe {transmute(proc)}}},
 			vk_cmd_execute_commands: {let proc = get_instance_proc_address(instance, "vkCmdExecuteCommands"); if proc == null() {dummy_vkCmdExecuteCommands} else {unsafe {transmute(proc)}}},
 		}
+	}
+}
+impl Debug for Vulkan_VERSION_1_0 {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_VERSION_1_0")
+		.field("vkCreateInstance", &if self.vk_create_instance == dummy_vkCreateInstance {unsafe {transmute(null::<PFN_vkCreateInstance>())}} else {self.vk_create_instance})
+		.field("vkDestroyInstance", &if self.vk_destroy_instance == dummy_vkDestroyInstance {unsafe {transmute(null::<PFN_vkDestroyInstance>())}} else {self.vk_destroy_instance})
+		.field("vkEnumeratePhysicalDevices", &if self.vk_enumerate_physical_devices == dummy_vkEnumeratePhysicalDevices {unsafe {transmute(null::<PFN_vkEnumeratePhysicalDevices>())}} else {self.vk_enumerate_physical_devices})
+		.field("vkGetPhysicalDeviceFeatures", &if self.vk_get_physical_device_features == dummy_vkGetPhysicalDeviceFeatures {unsafe {transmute(null::<PFN_vkGetPhysicalDeviceFeatures>())}} else {self.vk_get_physical_device_features})
+		.field("vkGetPhysicalDeviceFormatProperties", &if self.vk_get_physical_device_format_properties == dummy_vkGetPhysicalDeviceFormatProperties {unsafe {transmute(null::<PFN_vkGetPhysicalDeviceFormatProperties>())}} else {self.vk_get_physical_device_format_properties})
+		.field("vkGetPhysicalDeviceImageFormatProperties", &if self.vk_get_physical_device_image_format_properties == dummy_vkGetPhysicalDeviceImageFormatProperties {unsafe {transmute(null::<PFN_vkGetPhysicalDeviceImageFormatProperties>())}} else {self.vk_get_physical_device_image_format_properties})
+		.field("vkGetPhysicalDeviceProperties", &if self.vk_get_physical_device_properties == dummy_vkGetPhysicalDeviceProperties {unsafe {transmute(null::<PFN_vkGetPhysicalDeviceProperties>())}} else {self.vk_get_physical_device_properties})
+		.field("vkGetPhysicalDeviceQueueFamilyProperties", &if self.vk_get_physical_device_queue_family_properties == dummy_vkGetPhysicalDeviceQueueFamilyProperties {unsafe {transmute(null::<PFN_vkGetPhysicalDeviceQueueFamilyProperties>())}} else {self.vk_get_physical_device_queue_family_properties})
+		.field("vkGetPhysicalDeviceMemoryProperties", &if self.vk_get_physical_device_memory_properties == dummy_vkGetPhysicalDeviceMemoryProperties {unsafe {transmute(null::<PFN_vkGetPhysicalDeviceMemoryProperties>())}} else {self.vk_get_physical_device_memory_properties})
+		.field("vkGetInstanceProcAddr", &if self.vk_get_instance_proc_addr == dummy_vkGetInstanceProcAddr {unsafe {transmute(null::<PFN_vkGetInstanceProcAddr>())}} else {self.vk_get_instance_proc_addr})
+		.field("vkGetDeviceProcAddr", &if self.vk_get_device_proc_addr == dummy_vkGetDeviceProcAddr {unsafe {transmute(null::<PFN_vkGetDeviceProcAddr>())}} else {self.vk_get_device_proc_addr})
+		.field("vkCreateDevice", &if self.vk_create_device == dummy_vkCreateDevice {unsafe {transmute(null::<PFN_vkCreateDevice>())}} else {self.vk_create_device})
+		.field("vkDestroyDevice", &if self.vk_destroy_device == dummy_vkDestroyDevice {unsafe {transmute(null::<PFN_vkDestroyDevice>())}} else {self.vk_destroy_device})
+		.field("vkEnumerateInstanceExtensionProperties", &if self.vk_enumerate_instance_extension_properties == dummy_vkEnumerateInstanceExtensionProperties {unsafe {transmute(null::<PFN_vkEnumerateInstanceExtensionProperties>())}} else {self.vk_enumerate_instance_extension_properties})
+		.field("vkEnumerateDeviceExtensionProperties", &if self.vk_enumerate_device_extension_properties == dummy_vkEnumerateDeviceExtensionProperties {unsafe {transmute(null::<PFN_vkEnumerateDeviceExtensionProperties>())}} else {self.vk_enumerate_device_extension_properties})
+		.field("vkEnumerateInstanceLayerProperties", &if self.vk_enumerate_instance_layer_properties == dummy_vkEnumerateInstanceLayerProperties {unsafe {transmute(null::<PFN_vkEnumerateInstanceLayerProperties>())}} else {self.vk_enumerate_instance_layer_properties})
+		.field("vkEnumerateDeviceLayerProperties", &if self.vk_enumerate_device_layer_properties == dummy_vkEnumerateDeviceLayerProperties {unsafe {transmute(null::<PFN_vkEnumerateDeviceLayerProperties>())}} else {self.vk_enumerate_device_layer_properties})
+		.field("vkGetDeviceQueue", &if self.vk_get_device_queue == dummy_vkGetDeviceQueue {unsafe {transmute(null::<PFN_vkGetDeviceQueue>())}} else {self.vk_get_device_queue})
+		.field("vkQueueSubmit", &if self.vk_queue_submit == dummy_vkQueueSubmit {unsafe {transmute(null::<PFN_vkQueueSubmit>())}} else {self.vk_queue_submit})
+		.field("vkQueueWaitIdle", &if self.vk_queue_wait_idle == dummy_vkQueueWaitIdle {unsafe {transmute(null::<PFN_vkQueueWaitIdle>())}} else {self.vk_queue_wait_idle})
+		.field("vkDeviceWaitIdle", &if self.vk_device_wait_idle == dummy_vkDeviceWaitIdle {unsafe {transmute(null::<PFN_vkDeviceWaitIdle>())}} else {self.vk_device_wait_idle})
+		.field("vkAllocateMemory", &if self.vk_allocate_memory == dummy_vkAllocateMemory {unsafe {transmute(null::<PFN_vkAllocateMemory>())}} else {self.vk_allocate_memory})
+		.field("vkFreeMemory", &if self.vk_free_memory == dummy_vkFreeMemory {unsafe {transmute(null::<PFN_vkFreeMemory>())}} else {self.vk_free_memory})
+		.field("vkMapMemory", &if self.vk_map_memory == dummy_vkMapMemory {unsafe {transmute(null::<PFN_vkMapMemory>())}} else {self.vk_map_memory})
+		.field("vkUnmapMemory", &if self.vk_unmap_memory == dummy_vkUnmapMemory {unsafe {transmute(null::<PFN_vkUnmapMemory>())}} else {self.vk_unmap_memory})
+		.field("vkFlushMappedMemoryRanges", &if self.vk_flush_mapped_memory_ranges == dummy_vkFlushMappedMemoryRanges {unsafe {transmute(null::<PFN_vkFlushMappedMemoryRanges>())}} else {self.vk_flush_mapped_memory_ranges})
+		.field("vkInvalidateMappedMemoryRanges", &if self.vk_invalidate_mapped_memory_ranges == dummy_vkInvalidateMappedMemoryRanges {unsafe {transmute(null::<PFN_vkInvalidateMappedMemoryRanges>())}} else {self.vk_invalidate_mapped_memory_ranges})
+		.field("vkGetDeviceMemoryCommitment", &if self.vk_get_device_memory_commitment == dummy_vkGetDeviceMemoryCommitment {unsafe {transmute(null::<PFN_vkGetDeviceMemoryCommitment>())}} else {self.vk_get_device_memory_commitment})
+		.field("vkBindBufferMemory", &if self.vk_bind_buffer_memory == dummy_vkBindBufferMemory {unsafe {transmute(null::<PFN_vkBindBufferMemory>())}} else {self.vk_bind_buffer_memory})
+		.field("vkBindImageMemory", &if self.vk_bind_image_memory == dummy_vkBindImageMemory {unsafe {transmute(null::<PFN_vkBindImageMemory>())}} else {self.vk_bind_image_memory})
+		.field("vkGetBufferMemoryRequirements", &if self.vk_get_buffer_memory_requirements == dummy_vkGetBufferMemoryRequirements {unsafe {transmute(null::<PFN_vkGetBufferMemoryRequirements>())}} else {self.vk_get_buffer_memory_requirements})
+		.field("vkGetImageMemoryRequirements", &if self.vk_get_image_memory_requirements == dummy_vkGetImageMemoryRequirements {unsafe {transmute(null::<PFN_vkGetImageMemoryRequirements>())}} else {self.vk_get_image_memory_requirements})
+		.field("vkGetImageSparseMemoryRequirements", &if self.vk_get_image_sparse_memory_requirements == dummy_vkGetImageSparseMemoryRequirements {unsafe {transmute(null::<PFN_vkGetImageSparseMemoryRequirements>())}} else {self.vk_get_image_sparse_memory_requirements})
+		.field("vkGetPhysicalDeviceSparseImageFormatProperties", &if self.vk_get_physical_device_sparse_image_format_properties == dummy_vkGetPhysicalDeviceSparseImageFormatProperties {unsafe {transmute(null::<PFN_vkGetPhysicalDeviceSparseImageFormatProperties>())}} else {self.vk_get_physical_device_sparse_image_format_properties})
+		.field("vkQueueBindSparse", &if self.vk_queue_bind_sparse == dummy_vkQueueBindSparse {unsafe {transmute(null::<PFN_vkQueueBindSparse>())}} else {self.vk_queue_bind_sparse})
+		.field("vkCreateFence", &if self.vk_create_fence == dummy_vkCreateFence {unsafe {transmute(null::<PFN_vkCreateFence>())}} else {self.vk_create_fence})
+		.field("vkDestroyFence", &if self.vk_destroy_fence == dummy_vkDestroyFence {unsafe {transmute(null::<PFN_vkDestroyFence>())}} else {self.vk_destroy_fence})
+		.field("vkResetFences", &if self.vk_reset_fences == dummy_vkResetFences {unsafe {transmute(null::<PFN_vkResetFences>())}} else {self.vk_reset_fences})
+		.field("vkGetFenceStatus", &if self.vk_get_fence_status == dummy_vkGetFenceStatus {unsafe {transmute(null::<PFN_vkGetFenceStatus>())}} else {self.vk_get_fence_status})
+		.field("vkWaitForFences", &if self.vk_wait_for_fences == dummy_vkWaitForFences {unsafe {transmute(null::<PFN_vkWaitForFences>())}} else {self.vk_wait_for_fences})
+		.field("vkCreateSemaphore", &if self.vk_create_semaphore == dummy_vkCreateSemaphore {unsafe {transmute(null::<PFN_vkCreateSemaphore>())}} else {self.vk_create_semaphore})
+		.field("vkDestroySemaphore", &if self.vk_destroy_semaphore == dummy_vkDestroySemaphore {unsafe {transmute(null::<PFN_vkDestroySemaphore>())}} else {self.vk_destroy_semaphore})
+		.field("vkCreateEvent", &if self.vk_create_event == dummy_vkCreateEvent {unsafe {transmute(null::<PFN_vkCreateEvent>())}} else {self.vk_create_event})
+		.field("vkDestroyEvent", &if self.vk_destroy_event == dummy_vkDestroyEvent {unsafe {transmute(null::<PFN_vkDestroyEvent>())}} else {self.vk_destroy_event})
+		.field("vkGetEventStatus", &if self.vk_get_event_status == dummy_vkGetEventStatus {unsafe {transmute(null::<PFN_vkGetEventStatus>())}} else {self.vk_get_event_status})
+		.field("vkSetEvent", &if self.vk_set_event == dummy_vkSetEvent {unsafe {transmute(null::<PFN_vkSetEvent>())}} else {self.vk_set_event})
+		.field("vkResetEvent", &if self.vk_reset_event == dummy_vkResetEvent {unsafe {transmute(null::<PFN_vkResetEvent>())}} else {self.vk_reset_event})
+		.field("vkCreateQueryPool", &if self.vk_create_query_pool == dummy_vkCreateQueryPool {unsafe {transmute(null::<PFN_vkCreateQueryPool>())}} else {self.vk_create_query_pool})
+		.field("vkDestroyQueryPool", &if self.vk_destroy_query_pool == dummy_vkDestroyQueryPool {unsafe {transmute(null::<PFN_vkDestroyQueryPool>())}} else {self.vk_destroy_query_pool})
+		.field("vkGetQueryPoolResults", &if self.vk_get_query_pool_results == dummy_vkGetQueryPoolResults {unsafe {transmute(null::<PFN_vkGetQueryPoolResults>())}} else {self.vk_get_query_pool_results})
+		.field("vkCreateBuffer", &if self.vk_create_buffer == dummy_vkCreateBuffer {unsafe {transmute(null::<PFN_vkCreateBuffer>())}} else {self.vk_create_buffer})
+		.field("vkDestroyBuffer", &if self.vk_destroy_buffer == dummy_vkDestroyBuffer {unsafe {transmute(null::<PFN_vkDestroyBuffer>())}} else {self.vk_destroy_buffer})
+		.field("vkCreateBufferView", &if self.vk_create_buffer_view == dummy_vkCreateBufferView {unsafe {transmute(null::<PFN_vkCreateBufferView>())}} else {self.vk_create_buffer_view})
+		.field("vkDestroyBufferView", &if self.vk_destroy_buffer_view == dummy_vkDestroyBufferView {unsafe {transmute(null::<PFN_vkDestroyBufferView>())}} else {self.vk_destroy_buffer_view})
+		.field("vkCreateImage", &if self.vk_create_image == dummy_vkCreateImage {unsafe {transmute(null::<PFN_vkCreateImage>())}} else {self.vk_create_image})
+		.field("vkDestroyImage", &if self.vk_destroy_image == dummy_vkDestroyImage {unsafe {transmute(null::<PFN_vkDestroyImage>())}} else {self.vk_destroy_image})
+		.field("vkGetImageSubresourceLayout", &if self.vk_get_image_subresource_layout == dummy_vkGetImageSubresourceLayout {unsafe {transmute(null::<PFN_vkGetImageSubresourceLayout>())}} else {self.vk_get_image_subresource_layout})
+		.field("vkCreateImageView", &if self.vk_create_image_view == dummy_vkCreateImageView {unsafe {transmute(null::<PFN_vkCreateImageView>())}} else {self.vk_create_image_view})
+		.field("vkDestroyImageView", &if self.vk_destroy_image_view == dummy_vkDestroyImageView {unsafe {transmute(null::<PFN_vkDestroyImageView>())}} else {self.vk_destroy_image_view})
+		.field("vkCreateShaderModule", &if self.vk_create_shader_module == dummy_vkCreateShaderModule {unsafe {transmute(null::<PFN_vkCreateShaderModule>())}} else {self.vk_create_shader_module})
+		.field("vkDestroyShaderModule", &if self.vk_destroy_shader_module == dummy_vkDestroyShaderModule {unsafe {transmute(null::<PFN_vkDestroyShaderModule>())}} else {self.vk_destroy_shader_module})
+		.field("vkCreatePipelineCache", &if self.vk_create_pipeline_cache == dummy_vkCreatePipelineCache {unsafe {transmute(null::<PFN_vkCreatePipelineCache>())}} else {self.vk_create_pipeline_cache})
+		.field("vkDestroyPipelineCache", &if self.vk_destroy_pipeline_cache == dummy_vkDestroyPipelineCache {unsafe {transmute(null::<PFN_vkDestroyPipelineCache>())}} else {self.vk_destroy_pipeline_cache})
+		.field("vkGetPipelineCacheData", &if self.vk_get_pipeline_cache_data == dummy_vkGetPipelineCacheData {unsafe {transmute(null::<PFN_vkGetPipelineCacheData>())}} else {self.vk_get_pipeline_cache_data})
+		.field("vkMergePipelineCaches", &if self.vk_merge_pipeline_caches == dummy_vkMergePipelineCaches {unsafe {transmute(null::<PFN_vkMergePipelineCaches>())}} else {self.vk_merge_pipeline_caches})
+		.field("vkCreateGraphicsPipelines", &if self.vk_create_graphics_pipelines == dummy_vkCreateGraphicsPipelines {unsafe {transmute(null::<PFN_vkCreateGraphicsPipelines>())}} else {self.vk_create_graphics_pipelines})
+		.field("vkCreateComputePipelines", &if self.vk_create_compute_pipelines == dummy_vkCreateComputePipelines {unsafe {transmute(null::<PFN_vkCreateComputePipelines>())}} else {self.vk_create_compute_pipelines})
+		.field("vkDestroyPipeline", &if self.vk_destroy_pipeline == dummy_vkDestroyPipeline {unsafe {transmute(null::<PFN_vkDestroyPipeline>())}} else {self.vk_destroy_pipeline})
+		.field("vkCreatePipelineLayout", &if self.vk_create_pipeline_layout == dummy_vkCreatePipelineLayout {unsafe {transmute(null::<PFN_vkCreatePipelineLayout>())}} else {self.vk_create_pipeline_layout})
+		.field("vkDestroyPipelineLayout", &if self.vk_destroy_pipeline_layout == dummy_vkDestroyPipelineLayout {unsafe {transmute(null::<PFN_vkDestroyPipelineLayout>())}} else {self.vk_destroy_pipeline_layout})
+		.field("vkCreateSampler", &if self.vk_create_sampler == dummy_vkCreateSampler {unsafe {transmute(null::<PFN_vkCreateSampler>())}} else {self.vk_create_sampler})
+		.field("vkDestroySampler", &if self.vk_destroy_sampler == dummy_vkDestroySampler {unsafe {transmute(null::<PFN_vkDestroySampler>())}} else {self.vk_destroy_sampler})
+		.field("vkCreateDescriptorSetLayout", &if self.vk_create_descriptor_set_layout == dummy_vkCreateDescriptorSetLayout {unsafe {transmute(null::<PFN_vkCreateDescriptorSetLayout>())}} else {self.vk_create_descriptor_set_layout})
+		.field("vkDestroyDescriptorSetLayout", &if self.vk_destroy_descriptor_set_layout == dummy_vkDestroyDescriptorSetLayout {unsafe {transmute(null::<PFN_vkDestroyDescriptorSetLayout>())}} else {self.vk_destroy_descriptor_set_layout})
+		.field("vkCreateDescriptorPool", &if self.vk_create_descriptor_pool == dummy_vkCreateDescriptorPool {unsafe {transmute(null::<PFN_vkCreateDescriptorPool>())}} else {self.vk_create_descriptor_pool})
+		.field("vkDestroyDescriptorPool", &if self.vk_destroy_descriptor_pool == dummy_vkDestroyDescriptorPool {unsafe {transmute(null::<PFN_vkDestroyDescriptorPool>())}} else {self.vk_destroy_descriptor_pool})
+		.field("vkResetDescriptorPool", &if self.vk_reset_descriptor_pool == dummy_vkResetDescriptorPool {unsafe {transmute(null::<PFN_vkResetDescriptorPool>())}} else {self.vk_reset_descriptor_pool})
+		.field("vkAllocateDescriptorSets", &if self.vk_allocate_descriptor_sets == dummy_vkAllocateDescriptorSets {unsafe {transmute(null::<PFN_vkAllocateDescriptorSets>())}} else {self.vk_allocate_descriptor_sets})
+		.field("vkFreeDescriptorSets", &if self.vk_free_descriptor_sets == dummy_vkFreeDescriptorSets {unsafe {transmute(null::<PFN_vkFreeDescriptorSets>())}} else {self.vk_free_descriptor_sets})
+		.field("vkUpdateDescriptorSets", &if self.vk_update_descriptor_sets == dummy_vkUpdateDescriptorSets {unsafe {transmute(null::<PFN_vkUpdateDescriptorSets>())}} else {self.vk_update_descriptor_sets})
+		.field("vkCreateFramebuffer", &if self.vk_create_framebuffer == dummy_vkCreateFramebuffer {unsafe {transmute(null::<PFN_vkCreateFramebuffer>())}} else {self.vk_create_framebuffer})
+		.field("vkDestroyFramebuffer", &if self.vk_destroy_framebuffer == dummy_vkDestroyFramebuffer {unsafe {transmute(null::<PFN_vkDestroyFramebuffer>())}} else {self.vk_destroy_framebuffer})
+		.field("vkCreateRenderPass", &if self.vk_create_render_pass == dummy_vkCreateRenderPass {unsafe {transmute(null::<PFN_vkCreateRenderPass>())}} else {self.vk_create_render_pass})
+		.field("vkDestroyRenderPass", &if self.vk_destroy_render_pass == dummy_vkDestroyRenderPass {unsafe {transmute(null::<PFN_vkDestroyRenderPass>())}} else {self.vk_destroy_render_pass})
+		.field("vkGetRenderAreaGranularity", &if self.vk_get_render_area_granularity == dummy_vkGetRenderAreaGranularity {unsafe {transmute(null::<PFN_vkGetRenderAreaGranularity>())}} else {self.vk_get_render_area_granularity})
+		.field("vkCreateCommandPool", &if self.vk_create_command_pool == dummy_vkCreateCommandPool {unsafe {transmute(null::<PFN_vkCreateCommandPool>())}} else {self.vk_create_command_pool})
+		.field("vkDestroyCommandPool", &if self.vk_destroy_command_pool == dummy_vkDestroyCommandPool {unsafe {transmute(null::<PFN_vkDestroyCommandPool>())}} else {self.vk_destroy_command_pool})
+		.field("vkResetCommandPool", &if self.vk_reset_command_pool == dummy_vkResetCommandPool {unsafe {transmute(null::<PFN_vkResetCommandPool>())}} else {self.vk_reset_command_pool})
+		.field("vkAllocateCommandBuffers", &if self.vk_allocate_command_buffers == dummy_vkAllocateCommandBuffers {unsafe {transmute(null::<PFN_vkAllocateCommandBuffers>())}} else {self.vk_allocate_command_buffers})
+		.field("vkFreeCommandBuffers", &if self.vk_free_command_buffers == dummy_vkFreeCommandBuffers {unsafe {transmute(null::<PFN_vkFreeCommandBuffers>())}} else {self.vk_free_command_buffers})
+		.field("vkBeginCommandBuffer", &if self.vk_begin_command_buffer == dummy_vkBeginCommandBuffer {unsafe {transmute(null::<PFN_vkBeginCommandBuffer>())}} else {self.vk_begin_command_buffer})
+		.field("vkEndCommandBuffer", &if self.vk_end_command_buffer == dummy_vkEndCommandBuffer {unsafe {transmute(null::<PFN_vkEndCommandBuffer>())}} else {self.vk_end_command_buffer})
+		.field("vkResetCommandBuffer", &if self.vk_reset_command_buffer == dummy_vkResetCommandBuffer {unsafe {transmute(null::<PFN_vkResetCommandBuffer>())}} else {self.vk_reset_command_buffer})
+		.field("vkCmdBindPipeline", &if self.vk_cmd_bind_pipeline == dummy_vkCmdBindPipeline {unsafe {transmute(null::<PFN_vkCmdBindPipeline>())}} else {self.vk_cmd_bind_pipeline})
+		.field("vkCmdSetViewport", &if self.vk_cmd_set_viewport == dummy_vkCmdSetViewport {unsafe {transmute(null::<PFN_vkCmdSetViewport>())}} else {self.vk_cmd_set_viewport})
+		.field("vkCmdSetScissor", &if self.vk_cmd_set_scissor == dummy_vkCmdSetScissor {unsafe {transmute(null::<PFN_vkCmdSetScissor>())}} else {self.vk_cmd_set_scissor})
+		.field("vkCmdSetLineWidth", &if self.vk_cmd_set_line_width == dummy_vkCmdSetLineWidth {unsafe {transmute(null::<PFN_vkCmdSetLineWidth>())}} else {self.vk_cmd_set_line_width})
+		.field("vkCmdSetDepthBias", &if self.vk_cmd_set_depth_bias == dummy_vkCmdSetDepthBias {unsafe {transmute(null::<PFN_vkCmdSetDepthBias>())}} else {self.vk_cmd_set_depth_bias})
+		.field("vkCmdSetBlendConstants", &if self.vk_cmd_set_blend_constants == dummy_vkCmdSetBlendConstants {unsafe {transmute(null::<PFN_vkCmdSetBlendConstants>())}} else {self.vk_cmd_set_blend_constants})
+		.field("vkCmdSetDepthBounds", &if self.vk_cmd_set_depth_bounds == dummy_vkCmdSetDepthBounds {unsafe {transmute(null::<PFN_vkCmdSetDepthBounds>())}} else {self.vk_cmd_set_depth_bounds})
+		.field("vkCmdSetStencilCompareMask", &if self.vk_cmd_set_stencil_compare_mask == dummy_vkCmdSetStencilCompareMask {unsafe {transmute(null::<PFN_vkCmdSetStencilCompareMask>())}} else {self.vk_cmd_set_stencil_compare_mask})
+		.field("vkCmdSetStencilWriteMask", &if self.vk_cmd_set_stencil_write_mask == dummy_vkCmdSetStencilWriteMask {unsafe {transmute(null::<PFN_vkCmdSetStencilWriteMask>())}} else {self.vk_cmd_set_stencil_write_mask})
+		.field("vkCmdSetStencilReference", &if self.vk_cmd_set_stencil_reference == dummy_vkCmdSetStencilReference {unsafe {transmute(null::<PFN_vkCmdSetStencilReference>())}} else {self.vk_cmd_set_stencil_reference})
+		.field("vkCmdBindDescriptorSets", &if self.vk_cmd_bind_descriptor_sets == dummy_vkCmdBindDescriptorSets {unsafe {transmute(null::<PFN_vkCmdBindDescriptorSets>())}} else {self.vk_cmd_bind_descriptor_sets})
+		.field("vkCmdBindIndexBuffer", &if self.vk_cmd_bind_index_buffer == dummy_vkCmdBindIndexBuffer {unsafe {transmute(null::<PFN_vkCmdBindIndexBuffer>())}} else {self.vk_cmd_bind_index_buffer})
+		.field("vkCmdBindVertexBuffers", &if self.vk_cmd_bind_vertex_buffers == dummy_vkCmdBindVertexBuffers {unsafe {transmute(null::<PFN_vkCmdBindVertexBuffers>())}} else {self.vk_cmd_bind_vertex_buffers})
+		.field("vkCmdDraw", &if self.vk_cmd_draw == dummy_vkCmdDraw {unsafe {transmute(null::<PFN_vkCmdDraw>())}} else {self.vk_cmd_draw})
+		.field("vkCmdDrawIndexed", &if self.vk_cmd_draw_indexed == dummy_vkCmdDrawIndexed {unsafe {transmute(null::<PFN_vkCmdDrawIndexed>())}} else {self.vk_cmd_draw_indexed})
+		.field("vkCmdDrawIndirect", &if self.vk_cmd_draw_indirect == dummy_vkCmdDrawIndirect {unsafe {transmute(null::<PFN_vkCmdDrawIndirect>())}} else {self.vk_cmd_draw_indirect})
+		.field("vkCmdDrawIndexedIndirect", &if self.vk_cmd_draw_indexed_indirect == dummy_vkCmdDrawIndexedIndirect {unsafe {transmute(null::<PFN_vkCmdDrawIndexedIndirect>())}} else {self.vk_cmd_draw_indexed_indirect})
+		.field("vkCmdDispatch", &if self.vk_cmd_dispatch == dummy_vkCmdDispatch {unsafe {transmute(null::<PFN_vkCmdDispatch>())}} else {self.vk_cmd_dispatch})
+		.field("vkCmdDispatchIndirect", &if self.vk_cmd_dispatch_indirect == dummy_vkCmdDispatchIndirect {unsafe {transmute(null::<PFN_vkCmdDispatchIndirect>())}} else {self.vk_cmd_dispatch_indirect})
+		.field("vkCmdCopyBuffer", &if self.vk_cmd_copy_buffer == dummy_vkCmdCopyBuffer {unsafe {transmute(null::<PFN_vkCmdCopyBuffer>())}} else {self.vk_cmd_copy_buffer})
+		.field("vkCmdCopyImage", &if self.vk_cmd_copy_image == dummy_vkCmdCopyImage {unsafe {transmute(null::<PFN_vkCmdCopyImage>())}} else {self.vk_cmd_copy_image})
+		.field("vkCmdBlitImage", &if self.vk_cmd_blit_image == dummy_vkCmdBlitImage {unsafe {transmute(null::<PFN_vkCmdBlitImage>())}} else {self.vk_cmd_blit_image})
+		.field("vkCmdCopyBufferToImage", &if self.vk_cmd_copy_buffer_to_image == dummy_vkCmdCopyBufferToImage {unsafe {transmute(null::<PFN_vkCmdCopyBufferToImage>())}} else {self.vk_cmd_copy_buffer_to_image})
+		.field("vkCmdCopyImageToBuffer", &if self.vk_cmd_copy_image_to_buffer == dummy_vkCmdCopyImageToBuffer {unsafe {transmute(null::<PFN_vkCmdCopyImageToBuffer>())}} else {self.vk_cmd_copy_image_to_buffer})
+		.field("vkCmdUpdateBuffer", &if self.vk_cmd_update_buffer == dummy_vkCmdUpdateBuffer {unsafe {transmute(null::<PFN_vkCmdUpdateBuffer>())}} else {self.vk_cmd_update_buffer})
+		.field("vkCmdFillBuffer", &if self.vk_cmd_fill_buffer == dummy_vkCmdFillBuffer {unsafe {transmute(null::<PFN_vkCmdFillBuffer>())}} else {self.vk_cmd_fill_buffer})
+		.field("vkCmdClearColorImage", &if self.vk_cmd_clear_color_image == dummy_vkCmdClearColorImage {unsafe {transmute(null::<PFN_vkCmdClearColorImage>())}} else {self.vk_cmd_clear_color_image})
+		.field("vkCmdClearDepthStencilImage", &if self.vk_cmd_clear_depth_stencil_image == dummy_vkCmdClearDepthStencilImage {unsafe {transmute(null::<PFN_vkCmdClearDepthStencilImage>())}} else {self.vk_cmd_clear_depth_stencil_image})
+		.field("vkCmdClearAttachments", &if self.vk_cmd_clear_attachments == dummy_vkCmdClearAttachments {unsafe {transmute(null::<PFN_vkCmdClearAttachments>())}} else {self.vk_cmd_clear_attachments})
+		.field("vkCmdResolveImage", &if self.vk_cmd_resolve_image == dummy_vkCmdResolveImage {unsafe {transmute(null::<PFN_vkCmdResolveImage>())}} else {self.vk_cmd_resolve_image})
+		.field("vkCmdSetEvent", &if self.vk_cmd_set_event == dummy_vkCmdSetEvent {unsafe {transmute(null::<PFN_vkCmdSetEvent>())}} else {self.vk_cmd_set_event})
+		.field("vkCmdResetEvent", &if self.vk_cmd_reset_event == dummy_vkCmdResetEvent {unsafe {transmute(null::<PFN_vkCmdResetEvent>())}} else {self.vk_cmd_reset_event})
+		.field("vkCmdWaitEvents", &if self.vk_cmd_wait_events == dummy_vkCmdWaitEvents {unsafe {transmute(null::<PFN_vkCmdWaitEvents>())}} else {self.vk_cmd_wait_events})
+		.field("vkCmdPipelineBarrier", &if self.vk_cmd_pipeline_barrier == dummy_vkCmdPipelineBarrier {unsafe {transmute(null::<PFN_vkCmdPipelineBarrier>())}} else {self.vk_cmd_pipeline_barrier})
+		.field("vkCmdBeginQuery", &if self.vk_cmd_begin_query == dummy_vkCmdBeginQuery {unsafe {transmute(null::<PFN_vkCmdBeginQuery>())}} else {self.vk_cmd_begin_query})
+		.field("vkCmdEndQuery", &if self.vk_cmd_end_query == dummy_vkCmdEndQuery {unsafe {transmute(null::<PFN_vkCmdEndQuery>())}} else {self.vk_cmd_end_query})
+		.field("vkCmdResetQueryPool", &if self.vk_cmd_reset_query_pool == dummy_vkCmdResetQueryPool {unsafe {transmute(null::<PFN_vkCmdResetQueryPool>())}} else {self.vk_cmd_reset_query_pool})
+		.field("vkCmdWriteTimestamp", &if self.vk_cmd_write_timestamp == dummy_vkCmdWriteTimestamp {unsafe {transmute(null::<PFN_vkCmdWriteTimestamp>())}} else {self.vk_cmd_write_timestamp})
+		.field("vkCmdCopyQueryPoolResults", &if self.vk_cmd_copy_query_pool_results == dummy_vkCmdCopyQueryPoolResults {unsafe {transmute(null::<PFN_vkCmdCopyQueryPoolResults>())}} else {self.vk_cmd_copy_query_pool_results})
+		.field("vkCmdPushConstants", &if self.vk_cmd_push_constants == dummy_vkCmdPushConstants {unsafe {transmute(null::<PFN_vkCmdPushConstants>())}} else {self.vk_cmd_push_constants})
+		.field("vkCmdBeginRenderPass", &if self.vk_cmd_begin_render_pass == dummy_vkCmdBeginRenderPass {unsafe {transmute(null::<PFN_vkCmdBeginRenderPass>())}} else {self.vk_cmd_begin_render_pass})
+		.field("vkCmdNextSubpass", &if self.vk_cmd_next_subpass == dummy_vkCmdNextSubpass {unsafe {transmute(null::<PFN_vkCmdNextSubpass>())}} else {self.vk_cmd_next_subpass})
+		.field("vkCmdEndRenderPass", &if self.vk_cmd_end_render_pass == dummy_vkCmdEndRenderPass {unsafe {transmute(null::<PFN_vkCmdEndRenderPass>())}} else {self.vk_cmd_end_render_pass})
+		.field("vkCmdExecuteCommands", &if self.vk_cmd_execute_commands == dummy_vkCmdExecuteCommands {unsafe {transmute(null::<PFN_vkCmdExecuteCommands>())}} else {self.vk_cmd_execute_commands})
+		.finish()
 	}
 }
 /// constant `VK_API_VERSION_1_1` from VK_VERSION_1_1
@@ -11866,7 +12009,7 @@ pub trait VK_VERSION_1_1: Debug {
 	fn vkGetDescriptorSetLayoutSupport(&self, device: VkDevice, pCreateInfo: *const VkDescriptorSetLayoutCreateInfo, pSupport: *mut VkDescriptorSetLayoutSupport) -> Result<()>;
 }
 /// struct for `VK_VERSION_1_1`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_VERSION_1_1 {
 	vk_enumerate_instance_version: PFN_vkEnumerateInstanceVersion,
 	vk_bind_buffer_memory2: PFN_vkBindBufferMemory2,
@@ -12049,6 +12192,40 @@ impl Vulkan_VERSION_1_1 {
 			vk_get_physical_device_external_semaphore_properties: {let proc = get_instance_proc_address(instance, "vkGetPhysicalDeviceExternalSemaphoreProperties"); if proc == null() {dummy_vkGetPhysicalDeviceExternalSemaphoreProperties} else {unsafe {transmute(proc)}}},
 			vk_get_descriptor_set_layout_support: {let proc = get_instance_proc_address(instance, "vkGetDescriptorSetLayoutSupport"); if proc == null() {dummy_vkGetDescriptorSetLayoutSupport} else {unsafe {transmute(proc)}}},
 		}
+	}
+}
+impl Debug for Vulkan_VERSION_1_1 {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_VERSION_1_1")
+		.field("vkEnumerateInstanceVersion", &if self.vk_enumerate_instance_version == dummy_vkEnumerateInstanceVersion {unsafe {transmute(null::<PFN_vkEnumerateInstanceVersion>())}} else {self.vk_enumerate_instance_version})
+		.field("vkBindBufferMemory2", &if self.vk_bind_buffer_memory2 == dummy_vkBindBufferMemory2 {unsafe {transmute(null::<PFN_vkBindBufferMemory2>())}} else {self.vk_bind_buffer_memory2})
+		.field("vkBindImageMemory2", &if self.vk_bind_image_memory2 == dummy_vkBindImageMemory2 {unsafe {transmute(null::<PFN_vkBindImageMemory2>())}} else {self.vk_bind_image_memory2})
+		.field("vkGetDeviceGroupPeerMemoryFeatures", &if self.vk_get_device_group_peer_memory_features == dummy_vkGetDeviceGroupPeerMemoryFeatures {unsafe {transmute(null::<PFN_vkGetDeviceGroupPeerMemoryFeatures>())}} else {self.vk_get_device_group_peer_memory_features})
+		.field("vkCmdSetDeviceMask", &if self.vk_cmd_set_device_mask == dummy_vkCmdSetDeviceMask {unsafe {transmute(null::<PFN_vkCmdSetDeviceMask>())}} else {self.vk_cmd_set_device_mask})
+		.field("vkCmdDispatchBase", &if self.vk_cmd_dispatch_base == dummy_vkCmdDispatchBase {unsafe {transmute(null::<PFN_vkCmdDispatchBase>())}} else {self.vk_cmd_dispatch_base})
+		.field("vkEnumeratePhysicalDeviceGroups", &if self.vk_enumerate_physical_device_groups == dummy_vkEnumeratePhysicalDeviceGroups {unsafe {transmute(null::<PFN_vkEnumeratePhysicalDeviceGroups>())}} else {self.vk_enumerate_physical_device_groups})
+		.field("vkGetImageMemoryRequirements2", &if self.vk_get_image_memory_requirements2 == dummy_vkGetImageMemoryRequirements2 {unsafe {transmute(null::<PFN_vkGetImageMemoryRequirements2>())}} else {self.vk_get_image_memory_requirements2})
+		.field("vkGetBufferMemoryRequirements2", &if self.vk_get_buffer_memory_requirements2 == dummy_vkGetBufferMemoryRequirements2 {unsafe {transmute(null::<PFN_vkGetBufferMemoryRequirements2>())}} else {self.vk_get_buffer_memory_requirements2})
+		.field("vkGetImageSparseMemoryRequirements2", &if self.vk_get_image_sparse_memory_requirements2 == dummy_vkGetImageSparseMemoryRequirements2 {unsafe {transmute(null::<PFN_vkGetImageSparseMemoryRequirements2>())}} else {self.vk_get_image_sparse_memory_requirements2})
+		.field("vkGetPhysicalDeviceFeatures2", &if self.vk_get_physical_device_features2 == dummy_vkGetPhysicalDeviceFeatures2 {unsafe {transmute(null::<PFN_vkGetPhysicalDeviceFeatures2>())}} else {self.vk_get_physical_device_features2})
+		.field("vkGetPhysicalDeviceProperties2", &if self.vk_get_physical_device_properties2 == dummy_vkGetPhysicalDeviceProperties2 {unsafe {transmute(null::<PFN_vkGetPhysicalDeviceProperties2>())}} else {self.vk_get_physical_device_properties2})
+		.field("vkGetPhysicalDeviceFormatProperties2", &if self.vk_get_physical_device_format_properties2 == dummy_vkGetPhysicalDeviceFormatProperties2 {unsafe {transmute(null::<PFN_vkGetPhysicalDeviceFormatProperties2>())}} else {self.vk_get_physical_device_format_properties2})
+		.field("vkGetPhysicalDeviceImageFormatProperties2", &if self.vk_get_physical_device_image_format_properties2 == dummy_vkGetPhysicalDeviceImageFormatProperties2 {unsafe {transmute(null::<PFN_vkGetPhysicalDeviceImageFormatProperties2>())}} else {self.vk_get_physical_device_image_format_properties2})
+		.field("vkGetPhysicalDeviceQueueFamilyProperties2", &if self.vk_get_physical_device_queue_family_properties2 == dummy_vkGetPhysicalDeviceQueueFamilyProperties2 {unsafe {transmute(null::<PFN_vkGetPhysicalDeviceQueueFamilyProperties2>())}} else {self.vk_get_physical_device_queue_family_properties2})
+		.field("vkGetPhysicalDeviceMemoryProperties2", &if self.vk_get_physical_device_memory_properties2 == dummy_vkGetPhysicalDeviceMemoryProperties2 {unsafe {transmute(null::<PFN_vkGetPhysicalDeviceMemoryProperties2>())}} else {self.vk_get_physical_device_memory_properties2})
+		.field("vkGetPhysicalDeviceSparseImageFormatProperties2", &if self.vk_get_physical_device_sparse_image_format_properties2 == dummy_vkGetPhysicalDeviceSparseImageFormatProperties2 {unsafe {transmute(null::<PFN_vkGetPhysicalDeviceSparseImageFormatProperties2>())}} else {self.vk_get_physical_device_sparse_image_format_properties2})
+		.field("vkTrimCommandPool", &if self.vk_trim_command_pool == dummy_vkTrimCommandPool {unsafe {transmute(null::<PFN_vkTrimCommandPool>())}} else {self.vk_trim_command_pool})
+		.field("vkGetDeviceQueue2", &if self.vk_get_device_queue2 == dummy_vkGetDeviceQueue2 {unsafe {transmute(null::<PFN_vkGetDeviceQueue2>())}} else {self.vk_get_device_queue2})
+		.field("vkCreateSamplerYcbcrConversion", &if self.vk_create_sampler_ycbcr_conversion == dummy_vkCreateSamplerYcbcrConversion {unsafe {transmute(null::<PFN_vkCreateSamplerYcbcrConversion>())}} else {self.vk_create_sampler_ycbcr_conversion})
+		.field("vkDestroySamplerYcbcrConversion", &if self.vk_destroy_sampler_ycbcr_conversion == dummy_vkDestroySamplerYcbcrConversion {unsafe {transmute(null::<PFN_vkDestroySamplerYcbcrConversion>())}} else {self.vk_destroy_sampler_ycbcr_conversion})
+		.field("vkCreateDescriptorUpdateTemplate", &if self.vk_create_descriptor_update_template == dummy_vkCreateDescriptorUpdateTemplate {unsafe {transmute(null::<PFN_vkCreateDescriptorUpdateTemplate>())}} else {self.vk_create_descriptor_update_template})
+		.field("vkDestroyDescriptorUpdateTemplate", &if self.vk_destroy_descriptor_update_template == dummy_vkDestroyDescriptorUpdateTemplate {unsafe {transmute(null::<PFN_vkDestroyDescriptorUpdateTemplate>())}} else {self.vk_destroy_descriptor_update_template})
+		.field("vkUpdateDescriptorSetWithTemplate", &if self.vk_update_descriptor_set_with_template == dummy_vkUpdateDescriptorSetWithTemplate {unsafe {transmute(null::<PFN_vkUpdateDescriptorSetWithTemplate>())}} else {self.vk_update_descriptor_set_with_template})
+		.field("vkGetPhysicalDeviceExternalBufferProperties", &if self.vk_get_physical_device_external_buffer_properties == dummy_vkGetPhysicalDeviceExternalBufferProperties {unsafe {transmute(null::<PFN_vkGetPhysicalDeviceExternalBufferProperties>())}} else {self.vk_get_physical_device_external_buffer_properties})
+		.field("vkGetPhysicalDeviceExternalFenceProperties", &if self.vk_get_physical_device_external_fence_properties == dummy_vkGetPhysicalDeviceExternalFenceProperties {unsafe {transmute(null::<PFN_vkGetPhysicalDeviceExternalFenceProperties>())}} else {self.vk_get_physical_device_external_fence_properties})
+		.field("vkGetPhysicalDeviceExternalSemaphoreProperties", &if self.vk_get_physical_device_external_semaphore_properties == dummy_vkGetPhysicalDeviceExternalSemaphoreProperties {unsafe {transmute(null::<PFN_vkGetPhysicalDeviceExternalSemaphoreProperties>())}} else {self.vk_get_physical_device_external_semaphore_properties})
+		.field("vkGetDescriptorSetLayoutSupport", &if self.vk_get_descriptor_set_layout_support == dummy_vkGetDescriptorSetLayoutSupport {unsafe {transmute(null::<PFN_vkGetDescriptorSetLayoutSupport>())}} else {self.vk_get_descriptor_set_layout_support})
+		.finish()
 	}
 }
 /// constant `VK_API_VERSION_1_2` from VK_VERSION_1_2
@@ -13266,7 +13443,7 @@ pub trait VK_VERSION_1_2: Debug {
 	fn vkGetDeviceMemoryOpaqueCaptureAddress(&self, device: VkDevice, pInfo: *const VkDeviceMemoryOpaqueCaptureAddressInfo) -> Result<u64>;
 }
 /// struct for `VK_VERSION_1_2`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_VERSION_1_2 {
 	vk_cmd_draw_indirect_count: PFN_vkCmdDrawIndirectCount,
 	vk_cmd_draw_indexed_indirect_count: PFN_vkCmdDrawIndexedIndirectCount,
@@ -13359,6 +13536,25 @@ impl Vulkan_VERSION_1_2 {
 			vk_get_buffer_opaque_capture_address: {let proc = get_instance_proc_address(instance, "vkGetBufferOpaqueCaptureAddress"); if proc == null() {dummy_vkGetBufferOpaqueCaptureAddress} else {unsafe {transmute(proc)}}},
 			vk_get_device_memory_opaque_capture_address: {let proc = get_instance_proc_address(instance, "vkGetDeviceMemoryOpaqueCaptureAddress"); if proc == null() {dummy_vkGetDeviceMemoryOpaqueCaptureAddress} else {unsafe {transmute(proc)}}},
 		}
+	}
+}
+impl Debug for Vulkan_VERSION_1_2 {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_VERSION_1_2")
+		.field("vkCmdDrawIndirectCount", &if self.vk_cmd_draw_indirect_count == dummy_vkCmdDrawIndirectCount {unsafe {transmute(null::<PFN_vkCmdDrawIndirectCount>())}} else {self.vk_cmd_draw_indirect_count})
+		.field("vkCmdDrawIndexedIndirectCount", &if self.vk_cmd_draw_indexed_indirect_count == dummy_vkCmdDrawIndexedIndirectCount {unsafe {transmute(null::<PFN_vkCmdDrawIndexedIndirectCount>())}} else {self.vk_cmd_draw_indexed_indirect_count})
+		.field("vkCreateRenderPass2", &if self.vk_create_render_pass2 == dummy_vkCreateRenderPass2 {unsafe {transmute(null::<PFN_vkCreateRenderPass2>())}} else {self.vk_create_render_pass2})
+		.field("vkCmdBeginRenderPass2", &if self.vk_cmd_begin_render_pass2 == dummy_vkCmdBeginRenderPass2 {unsafe {transmute(null::<PFN_vkCmdBeginRenderPass2>())}} else {self.vk_cmd_begin_render_pass2})
+		.field("vkCmdNextSubpass2", &if self.vk_cmd_next_subpass2 == dummy_vkCmdNextSubpass2 {unsafe {transmute(null::<PFN_vkCmdNextSubpass2>())}} else {self.vk_cmd_next_subpass2})
+		.field("vkCmdEndRenderPass2", &if self.vk_cmd_end_render_pass2 == dummy_vkCmdEndRenderPass2 {unsafe {transmute(null::<PFN_vkCmdEndRenderPass2>())}} else {self.vk_cmd_end_render_pass2})
+		.field("vkResetQueryPool", &if self.vk_reset_query_pool == dummy_vkResetQueryPool {unsafe {transmute(null::<PFN_vkResetQueryPool>())}} else {self.vk_reset_query_pool})
+		.field("vkGetSemaphoreCounterValue", &if self.vk_get_semaphore_counter_value == dummy_vkGetSemaphoreCounterValue {unsafe {transmute(null::<PFN_vkGetSemaphoreCounterValue>())}} else {self.vk_get_semaphore_counter_value})
+		.field("vkWaitSemaphores", &if self.vk_wait_semaphores == dummy_vkWaitSemaphores {unsafe {transmute(null::<PFN_vkWaitSemaphores>())}} else {self.vk_wait_semaphores})
+		.field("vkSignalSemaphore", &if self.vk_signal_semaphore == dummy_vkSignalSemaphore {unsafe {transmute(null::<PFN_vkSignalSemaphore>())}} else {self.vk_signal_semaphore})
+		.field("vkGetBufferDeviceAddress", &if self.vk_get_buffer_device_address == dummy_vkGetBufferDeviceAddress {unsafe {transmute(null::<PFN_vkGetBufferDeviceAddress>())}} else {self.vk_get_buffer_device_address})
+		.field("vkGetBufferOpaqueCaptureAddress", &if self.vk_get_buffer_opaque_capture_address == dummy_vkGetBufferOpaqueCaptureAddress {unsafe {transmute(null::<PFN_vkGetBufferOpaqueCaptureAddress>())}} else {self.vk_get_buffer_opaque_capture_address})
+		.field("vkGetDeviceMemoryOpaqueCaptureAddress", &if self.vk_get_device_memory_opaque_capture_address == dummy_vkGetDeviceMemoryOpaqueCaptureAddress {unsafe {transmute(null::<PFN_vkGetDeviceMemoryOpaqueCaptureAddress>())}} else {self.vk_get_device_memory_opaque_capture_address})
+		.finish()
 	}
 }
 /// constant `VK_API_VERSION_1_3` from VK_VERSION_1_3
@@ -15392,7 +15588,7 @@ pub trait VK_VERSION_1_3: Debug {
 	fn vkGetDeviceImageSparseMemoryRequirements(&self, device: VkDevice, pInfo: *const VkDeviceImageMemoryRequirements, pSparseMemoryRequirementCount: *mut uint32_t, pSparseMemoryRequirements: *mut VkSparseImageMemoryRequirements2) -> Result<()>;
 }
 /// struct for `VK_VERSION_1_3`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_VERSION_1_3 {
 	vk_get_physical_device_tool_properties: PFN_vkGetPhysicalDeviceToolProperties,
 	vk_create_private_data_slot: PFN_vkCreatePrivateDataSlot,
@@ -15629,6 +15825,49 @@ impl Vulkan_VERSION_1_3 {
 			vk_get_device_image_memory_requirements: {let proc = get_instance_proc_address(instance, "vkGetDeviceImageMemoryRequirements"); if proc == null() {dummy_vkGetDeviceImageMemoryRequirements} else {unsafe {transmute(proc)}}},
 			vk_get_device_image_sparse_memory_requirements: {let proc = get_instance_proc_address(instance, "vkGetDeviceImageSparseMemoryRequirements"); if proc == null() {dummy_vkGetDeviceImageSparseMemoryRequirements} else {unsafe {transmute(proc)}}},
 		}
+	}
+}
+impl Debug for Vulkan_VERSION_1_3 {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_VERSION_1_3")
+		.field("vkGetPhysicalDeviceToolProperties", &if self.vk_get_physical_device_tool_properties == dummy_vkGetPhysicalDeviceToolProperties {unsafe {transmute(null::<PFN_vkGetPhysicalDeviceToolProperties>())}} else {self.vk_get_physical_device_tool_properties})
+		.field("vkCreatePrivateDataSlot", &if self.vk_create_private_data_slot == dummy_vkCreatePrivateDataSlot {unsafe {transmute(null::<PFN_vkCreatePrivateDataSlot>())}} else {self.vk_create_private_data_slot})
+		.field("vkDestroyPrivateDataSlot", &if self.vk_destroy_private_data_slot == dummy_vkDestroyPrivateDataSlot {unsafe {transmute(null::<PFN_vkDestroyPrivateDataSlot>())}} else {self.vk_destroy_private_data_slot})
+		.field("vkSetPrivateData", &if self.vk_set_private_data == dummy_vkSetPrivateData {unsafe {transmute(null::<PFN_vkSetPrivateData>())}} else {self.vk_set_private_data})
+		.field("vkGetPrivateData", &if self.vk_get_private_data == dummy_vkGetPrivateData {unsafe {transmute(null::<PFN_vkGetPrivateData>())}} else {self.vk_get_private_data})
+		.field("vkCmdSetEvent2", &if self.vk_cmd_set_event2 == dummy_vkCmdSetEvent2 {unsafe {transmute(null::<PFN_vkCmdSetEvent2>())}} else {self.vk_cmd_set_event2})
+		.field("vkCmdResetEvent2", &if self.vk_cmd_reset_event2 == dummy_vkCmdResetEvent2 {unsafe {transmute(null::<PFN_vkCmdResetEvent2>())}} else {self.vk_cmd_reset_event2})
+		.field("vkCmdWaitEvents2", &if self.vk_cmd_wait_events2 == dummy_vkCmdWaitEvents2 {unsafe {transmute(null::<PFN_vkCmdWaitEvents2>())}} else {self.vk_cmd_wait_events2})
+		.field("vkCmdPipelineBarrier2", &if self.vk_cmd_pipeline_barrier2 == dummy_vkCmdPipelineBarrier2 {unsafe {transmute(null::<PFN_vkCmdPipelineBarrier2>())}} else {self.vk_cmd_pipeline_barrier2})
+		.field("vkCmdWriteTimestamp2", &if self.vk_cmd_write_timestamp2 == dummy_vkCmdWriteTimestamp2 {unsafe {transmute(null::<PFN_vkCmdWriteTimestamp2>())}} else {self.vk_cmd_write_timestamp2})
+		.field("vkQueueSubmit2", &if self.vk_queue_submit2 == dummy_vkQueueSubmit2 {unsafe {transmute(null::<PFN_vkQueueSubmit2>())}} else {self.vk_queue_submit2})
+		.field("vkCmdCopyBuffer2", &if self.vk_cmd_copy_buffer2 == dummy_vkCmdCopyBuffer2 {unsafe {transmute(null::<PFN_vkCmdCopyBuffer2>())}} else {self.vk_cmd_copy_buffer2})
+		.field("vkCmdCopyImage2", &if self.vk_cmd_copy_image2 == dummy_vkCmdCopyImage2 {unsafe {transmute(null::<PFN_vkCmdCopyImage2>())}} else {self.vk_cmd_copy_image2})
+		.field("vkCmdCopyBufferToImage2", &if self.vk_cmd_copy_buffer_to_image2 == dummy_vkCmdCopyBufferToImage2 {unsafe {transmute(null::<PFN_vkCmdCopyBufferToImage2>())}} else {self.vk_cmd_copy_buffer_to_image2})
+		.field("vkCmdCopyImageToBuffer2", &if self.vk_cmd_copy_image_to_buffer2 == dummy_vkCmdCopyImageToBuffer2 {unsafe {transmute(null::<PFN_vkCmdCopyImageToBuffer2>())}} else {self.vk_cmd_copy_image_to_buffer2})
+		.field("vkCmdBlitImage2", &if self.vk_cmd_blit_image2 == dummy_vkCmdBlitImage2 {unsafe {transmute(null::<PFN_vkCmdBlitImage2>())}} else {self.vk_cmd_blit_image2})
+		.field("vkCmdResolveImage2", &if self.vk_cmd_resolve_image2 == dummy_vkCmdResolveImage2 {unsafe {transmute(null::<PFN_vkCmdResolveImage2>())}} else {self.vk_cmd_resolve_image2})
+		.field("vkCmdBeginRendering", &if self.vk_cmd_begin_rendering == dummy_vkCmdBeginRendering {unsafe {transmute(null::<PFN_vkCmdBeginRendering>())}} else {self.vk_cmd_begin_rendering})
+		.field("vkCmdEndRendering", &if self.vk_cmd_end_rendering == dummy_vkCmdEndRendering {unsafe {transmute(null::<PFN_vkCmdEndRendering>())}} else {self.vk_cmd_end_rendering})
+		.field("vkCmdSetCullMode", &if self.vk_cmd_set_cull_mode == dummy_vkCmdSetCullMode {unsafe {transmute(null::<PFN_vkCmdSetCullMode>())}} else {self.vk_cmd_set_cull_mode})
+		.field("vkCmdSetFrontFace", &if self.vk_cmd_set_front_face == dummy_vkCmdSetFrontFace {unsafe {transmute(null::<PFN_vkCmdSetFrontFace>())}} else {self.vk_cmd_set_front_face})
+		.field("vkCmdSetPrimitiveTopology", &if self.vk_cmd_set_primitive_topology == dummy_vkCmdSetPrimitiveTopology {unsafe {transmute(null::<PFN_vkCmdSetPrimitiveTopology>())}} else {self.vk_cmd_set_primitive_topology})
+		.field("vkCmdSetViewportWithCount", &if self.vk_cmd_set_viewport_with_count == dummy_vkCmdSetViewportWithCount {unsafe {transmute(null::<PFN_vkCmdSetViewportWithCount>())}} else {self.vk_cmd_set_viewport_with_count})
+		.field("vkCmdSetScissorWithCount", &if self.vk_cmd_set_scissor_with_count == dummy_vkCmdSetScissorWithCount {unsafe {transmute(null::<PFN_vkCmdSetScissorWithCount>())}} else {self.vk_cmd_set_scissor_with_count})
+		.field("vkCmdBindVertexBuffers2", &if self.vk_cmd_bind_vertex_buffers2 == dummy_vkCmdBindVertexBuffers2 {unsafe {transmute(null::<PFN_vkCmdBindVertexBuffers2>())}} else {self.vk_cmd_bind_vertex_buffers2})
+		.field("vkCmdSetDepthTestEnable", &if self.vk_cmd_set_depth_test_enable == dummy_vkCmdSetDepthTestEnable {unsafe {transmute(null::<PFN_vkCmdSetDepthTestEnable>())}} else {self.vk_cmd_set_depth_test_enable})
+		.field("vkCmdSetDepthWriteEnable", &if self.vk_cmd_set_depth_write_enable == dummy_vkCmdSetDepthWriteEnable {unsafe {transmute(null::<PFN_vkCmdSetDepthWriteEnable>())}} else {self.vk_cmd_set_depth_write_enable})
+		.field("vkCmdSetDepthCompareOp", &if self.vk_cmd_set_depth_compare_op == dummy_vkCmdSetDepthCompareOp {unsafe {transmute(null::<PFN_vkCmdSetDepthCompareOp>())}} else {self.vk_cmd_set_depth_compare_op})
+		.field("vkCmdSetDepthBoundsTestEnable", &if self.vk_cmd_set_depth_bounds_test_enable == dummy_vkCmdSetDepthBoundsTestEnable {unsafe {transmute(null::<PFN_vkCmdSetDepthBoundsTestEnable>())}} else {self.vk_cmd_set_depth_bounds_test_enable})
+		.field("vkCmdSetStencilTestEnable", &if self.vk_cmd_set_stencil_test_enable == dummy_vkCmdSetStencilTestEnable {unsafe {transmute(null::<PFN_vkCmdSetStencilTestEnable>())}} else {self.vk_cmd_set_stencil_test_enable})
+		.field("vkCmdSetStencilOp", &if self.vk_cmd_set_stencil_op == dummy_vkCmdSetStencilOp {unsafe {transmute(null::<PFN_vkCmdSetStencilOp>())}} else {self.vk_cmd_set_stencil_op})
+		.field("vkCmdSetRasterizerDiscardEnable", &if self.vk_cmd_set_rasterizer_discard_enable == dummy_vkCmdSetRasterizerDiscardEnable {unsafe {transmute(null::<PFN_vkCmdSetRasterizerDiscardEnable>())}} else {self.vk_cmd_set_rasterizer_discard_enable})
+		.field("vkCmdSetDepthBiasEnable", &if self.vk_cmd_set_depth_bias_enable == dummy_vkCmdSetDepthBiasEnable {unsafe {transmute(null::<PFN_vkCmdSetDepthBiasEnable>())}} else {self.vk_cmd_set_depth_bias_enable})
+		.field("vkCmdSetPrimitiveRestartEnable", &if self.vk_cmd_set_primitive_restart_enable == dummy_vkCmdSetPrimitiveRestartEnable {unsafe {transmute(null::<PFN_vkCmdSetPrimitiveRestartEnable>())}} else {self.vk_cmd_set_primitive_restart_enable})
+		.field("vkGetDeviceBufferMemoryRequirements", &if self.vk_get_device_buffer_memory_requirements == dummy_vkGetDeviceBufferMemoryRequirements {unsafe {transmute(null::<PFN_vkGetDeviceBufferMemoryRequirements>())}} else {self.vk_get_device_buffer_memory_requirements})
+		.field("vkGetDeviceImageMemoryRequirements", &if self.vk_get_device_image_memory_requirements == dummy_vkGetDeviceImageMemoryRequirements {unsafe {transmute(null::<PFN_vkGetDeviceImageMemoryRequirements>())}} else {self.vk_get_device_image_memory_requirements})
+		.field("vkGetDeviceImageSparseMemoryRequirements", &if self.vk_get_device_image_sparse_memory_requirements == dummy_vkGetDeviceImageSparseMemoryRequirements {unsafe {transmute(null::<PFN_vkGetDeviceImageSparseMemoryRequirements>())}} else {self.vk_get_device_image_sparse_memory_requirements})
+		.finish()
 	}
 }
 /// constant `VK_API_VERSION_1_4` from VK_VERSION_1_4
@@ -16925,7 +17164,7 @@ pub trait VK_VERSION_1_4: Debug {
 	fn vkTransitionImageLayout(&self, device: VkDevice, transitionCount: u32, pTransitions: *const VkHostImageLayoutTransitionInfo) -> Result<()>;
 }
 /// struct for `VK_VERSION_1_4`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_VERSION_1_4 {
 	vk_cmd_set_line_stipple: PFN_vkCmdSetLineStipple,
 	vk_map_memory2: PFN_vkMapMemory2,
@@ -17054,6 +17293,31 @@ impl Vulkan_VERSION_1_4 {
 			vk_copy_image_to_image: {let proc = get_instance_proc_address(instance, "vkCopyImageToImage"); if proc == null() {dummy_vkCopyImageToImage} else {unsafe {transmute(proc)}}},
 			vk_transition_image_layout: {let proc = get_instance_proc_address(instance, "vkTransitionImageLayout"); if proc == null() {dummy_vkTransitionImageLayout} else {unsafe {transmute(proc)}}},
 		}
+	}
+}
+impl Debug for Vulkan_VERSION_1_4 {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_VERSION_1_4")
+		.field("vkCmdSetLineStipple", &if self.vk_cmd_set_line_stipple == dummy_vkCmdSetLineStipple {unsafe {transmute(null::<PFN_vkCmdSetLineStipple>())}} else {self.vk_cmd_set_line_stipple})
+		.field("vkMapMemory2", &if self.vk_map_memory2 == dummy_vkMapMemory2 {unsafe {transmute(null::<PFN_vkMapMemory2>())}} else {self.vk_map_memory2})
+		.field("vkUnmapMemory2", &if self.vk_unmap_memory2 == dummy_vkUnmapMemory2 {unsafe {transmute(null::<PFN_vkUnmapMemory2>())}} else {self.vk_unmap_memory2})
+		.field("vkCmdBindIndexBuffer2", &if self.vk_cmd_bind_index_buffer2 == dummy_vkCmdBindIndexBuffer2 {unsafe {transmute(null::<PFN_vkCmdBindIndexBuffer2>())}} else {self.vk_cmd_bind_index_buffer2})
+		.field("vkGetRenderingAreaGranularity", &if self.vk_get_rendering_area_granularity == dummy_vkGetRenderingAreaGranularity {unsafe {transmute(null::<PFN_vkGetRenderingAreaGranularity>())}} else {self.vk_get_rendering_area_granularity})
+		.field("vkGetDeviceImageSubresourceLayout", &if self.vk_get_device_image_subresource_layout == dummy_vkGetDeviceImageSubresourceLayout {unsafe {transmute(null::<PFN_vkGetDeviceImageSubresourceLayout>())}} else {self.vk_get_device_image_subresource_layout})
+		.field("vkGetImageSubresourceLayout2", &if self.vk_get_image_subresource_layout2 == dummy_vkGetImageSubresourceLayout2 {unsafe {transmute(null::<PFN_vkGetImageSubresourceLayout2>())}} else {self.vk_get_image_subresource_layout2})
+		.field("vkCmdPushDescriptorSet", &if self.vk_cmd_push_descriptor_set == dummy_vkCmdPushDescriptorSet {unsafe {transmute(null::<PFN_vkCmdPushDescriptorSet>())}} else {self.vk_cmd_push_descriptor_set})
+		.field("vkCmdPushDescriptorSetWithTemplate", &if self.vk_cmd_push_descriptor_set_with_template == dummy_vkCmdPushDescriptorSetWithTemplate {unsafe {transmute(null::<PFN_vkCmdPushDescriptorSetWithTemplate>())}} else {self.vk_cmd_push_descriptor_set_with_template})
+		.field("vkCmdSetRenderingAttachmentLocations", &if self.vk_cmd_set_rendering_attachment_locations == dummy_vkCmdSetRenderingAttachmentLocations {unsafe {transmute(null::<PFN_vkCmdSetRenderingAttachmentLocations>())}} else {self.vk_cmd_set_rendering_attachment_locations})
+		.field("vkCmdSetRenderingInputAttachmentIndices", &if self.vk_cmd_set_rendering_input_attachment_indices == dummy_vkCmdSetRenderingInputAttachmentIndices {unsafe {transmute(null::<PFN_vkCmdSetRenderingInputAttachmentIndices>())}} else {self.vk_cmd_set_rendering_input_attachment_indices})
+		.field("vkCmdBindDescriptorSets2", &if self.vk_cmd_bind_descriptor_sets2 == dummy_vkCmdBindDescriptorSets2 {unsafe {transmute(null::<PFN_vkCmdBindDescriptorSets2>())}} else {self.vk_cmd_bind_descriptor_sets2})
+		.field("vkCmdPushConstants2", &if self.vk_cmd_push_constants2 == dummy_vkCmdPushConstants2 {unsafe {transmute(null::<PFN_vkCmdPushConstants2>())}} else {self.vk_cmd_push_constants2})
+		.field("vkCmdPushDescriptorSet2", &if self.vk_cmd_push_descriptor_set2 == dummy_vkCmdPushDescriptorSet2 {unsafe {transmute(null::<PFN_vkCmdPushDescriptorSet2>())}} else {self.vk_cmd_push_descriptor_set2})
+		.field("vkCmdPushDescriptorSetWithTemplate2", &if self.vk_cmd_push_descriptor_set_with_template2 == dummy_vkCmdPushDescriptorSetWithTemplate2 {unsafe {transmute(null::<PFN_vkCmdPushDescriptorSetWithTemplate2>())}} else {self.vk_cmd_push_descriptor_set_with_template2})
+		.field("vkCopyMemoryToImage", &if self.vk_copy_memory_to_image == dummy_vkCopyMemoryToImage {unsafe {transmute(null::<PFN_vkCopyMemoryToImage>())}} else {self.vk_copy_memory_to_image})
+		.field("vkCopyImageToMemory", &if self.vk_copy_image_to_memory == dummy_vkCopyImageToMemory {unsafe {transmute(null::<PFN_vkCopyImageToMemory>())}} else {self.vk_copy_image_to_memory})
+		.field("vkCopyImageToImage", &if self.vk_copy_image_to_image == dummy_vkCopyImageToImage {unsafe {transmute(null::<PFN_vkCopyImageToImage>())}} else {self.vk_copy_image_to_image})
+		.field("vkTransitionImageLayout", &if self.vk_transition_image_layout == dummy_vkTransitionImageLayout {unsafe {transmute(null::<PFN_vkTransitionImageLayout>())}} else {self.vk_transition_image_layout})
+		.finish()
 	}
 }
 /// type definition `VkCompositeAlphaFlagsKHR` from VK_KHR_surface
@@ -17293,7 +17557,7 @@ pub trait VK_KHR_surface: Debug {
 	fn vkGetPhysicalDeviceSurfacePresentModesKHR(&self, physicalDevice: VkPhysicalDevice, surface: VkSurfaceKHR, pPresentModeCount: *mut uint32_t, pPresentModes: *mut VkPresentModeKHR) -> Result<()>;
 }
 /// struct for `VK_KHR_surface`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_surface {
 	vk_destroy_surface_khr: PFN_vkDestroySurfaceKHR,
 	vk_get_physical_device_surface_support_khr: PFN_vkGetPhysicalDeviceSurfaceSupportKHR,
@@ -17338,6 +17602,17 @@ impl Vulkan_KHR_surface {
 			vk_get_physical_device_surface_formats_khr: {let proc = get_instance_proc_address(instance, "vkGetPhysicalDeviceSurfaceFormatsKHR"); if proc == null() {dummy_vkGetPhysicalDeviceSurfaceFormatsKHR} else {unsafe {transmute(proc)}}},
 			vk_get_physical_device_surface_present_modes_khr: {let proc = get_instance_proc_address(instance, "vkGetPhysicalDeviceSurfacePresentModesKHR"); if proc == null() {dummy_vkGetPhysicalDeviceSurfacePresentModesKHR} else {unsafe {transmute(proc)}}},
 		}
+	}
+}
+impl Debug for Vulkan_KHR_surface {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_surface")
+		.field("vkDestroySurfaceKHR", &if self.vk_destroy_surface_khr == dummy_vkDestroySurfaceKHR {unsafe {transmute(null::<PFN_vkDestroySurfaceKHR>())}} else {self.vk_destroy_surface_khr})
+		.field("vkGetPhysicalDeviceSurfaceSupportKHR", &if self.vk_get_physical_device_surface_support_khr == dummy_vkGetPhysicalDeviceSurfaceSupportKHR {unsafe {transmute(null::<PFN_vkGetPhysicalDeviceSurfaceSupportKHR>())}} else {self.vk_get_physical_device_surface_support_khr})
+		.field("vkGetPhysicalDeviceSurfaceCapabilitiesKHR", &if self.vk_get_physical_device_surface_capabilities_khr == dummy_vkGetPhysicalDeviceSurfaceCapabilitiesKHR {unsafe {transmute(null::<PFN_vkGetPhysicalDeviceSurfaceCapabilitiesKHR>())}} else {self.vk_get_physical_device_surface_capabilities_khr})
+		.field("vkGetPhysicalDeviceSurfaceFormatsKHR", &if self.vk_get_physical_device_surface_formats_khr == dummy_vkGetPhysicalDeviceSurfaceFormatsKHR {unsafe {transmute(null::<PFN_vkGetPhysicalDeviceSurfaceFormatsKHR>())}} else {self.vk_get_physical_device_surface_formats_khr})
+		.field("vkGetPhysicalDeviceSurfacePresentModesKHR", &if self.vk_get_physical_device_surface_present_modes_khr == dummy_vkGetPhysicalDeviceSurfacePresentModesKHR {unsafe {transmute(null::<PFN_vkGetPhysicalDeviceSurfacePresentModesKHR>())}} else {self.vk_get_physical_device_surface_present_modes_khr})
+		.finish()
 	}
 }
 /// type definition `VkSwapchainCreateFlagsKHR` from VK_KHR_swapchain
@@ -17666,7 +17941,7 @@ pub trait VK_KHR_swapchain: Debug {
 	fn vkAcquireNextImage2KHR(&self, device: VkDevice, pAcquireInfo: *const VkAcquireNextImageInfoKHR, pImageIndex: *mut uint32_t) -> Result<()>;
 }
 /// struct for `VK_KHR_swapchain`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_swapchain {
 	vk_create_swapchain_khr: PFN_vkCreateSwapchainKHR,
 	vk_destroy_swapchain_khr: PFN_vkDestroySwapchainKHR,
@@ -17735,6 +18010,21 @@ impl Vulkan_KHR_swapchain {
 			vk_get_physical_device_present_rectangles_khr: {let proc = get_instance_proc_address(instance, "vkGetPhysicalDevicePresentRectanglesKHR"); if proc == null() {dummy_vkGetPhysicalDevicePresentRectanglesKHR} else {unsafe {transmute(proc)}}},
 			vk_acquire_next_image2_khr: {let proc = get_instance_proc_address(instance, "vkAcquireNextImage2KHR"); if proc == null() {dummy_vkAcquireNextImage2KHR} else {unsafe {transmute(proc)}}},
 		}
+	}
+}
+impl Debug for Vulkan_KHR_swapchain {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_swapchain")
+		.field("vkCreateSwapchainKHR", &if self.vk_create_swapchain_khr == dummy_vkCreateSwapchainKHR {unsafe {transmute(null::<PFN_vkCreateSwapchainKHR>())}} else {self.vk_create_swapchain_khr})
+		.field("vkDestroySwapchainKHR", &if self.vk_destroy_swapchain_khr == dummy_vkDestroySwapchainKHR {unsafe {transmute(null::<PFN_vkDestroySwapchainKHR>())}} else {self.vk_destroy_swapchain_khr})
+		.field("vkGetSwapchainImagesKHR", &if self.vk_get_swapchain_images_khr == dummy_vkGetSwapchainImagesKHR {unsafe {transmute(null::<PFN_vkGetSwapchainImagesKHR>())}} else {self.vk_get_swapchain_images_khr})
+		.field("vkAcquireNextImageKHR", &if self.vk_acquire_next_image_khr == dummy_vkAcquireNextImageKHR {unsafe {transmute(null::<PFN_vkAcquireNextImageKHR>())}} else {self.vk_acquire_next_image_khr})
+		.field("vkQueuePresentKHR", &if self.vk_queue_present_khr == dummy_vkQueuePresentKHR {unsafe {transmute(null::<PFN_vkQueuePresentKHR>())}} else {self.vk_queue_present_khr})
+		.field("vkGetDeviceGroupPresentCapabilitiesKHR", &if self.vk_get_device_group_present_capabilities_khr == dummy_vkGetDeviceGroupPresentCapabilitiesKHR {unsafe {transmute(null::<PFN_vkGetDeviceGroupPresentCapabilitiesKHR>())}} else {self.vk_get_device_group_present_capabilities_khr})
+		.field("vkGetDeviceGroupSurfacePresentModesKHR", &if self.vk_get_device_group_surface_present_modes_khr == dummy_vkGetDeviceGroupSurfacePresentModesKHR {unsafe {transmute(null::<PFN_vkGetDeviceGroupSurfacePresentModesKHR>())}} else {self.vk_get_device_group_surface_present_modes_khr})
+		.field("vkGetPhysicalDevicePresentRectanglesKHR", &if self.vk_get_physical_device_present_rectangles_khr == dummy_vkGetPhysicalDevicePresentRectanglesKHR {unsafe {transmute(null::<PFN_vkGetPhysicalDevicePresentRectanglesKHR>())}} else {self.vk_get_physical_device_present_rectangles_khr})
+		.field("vkAcquireNextImage2KHR", &if self.vk_acquire_next_image2_khr == dummy_vkAcquireNextImage2KHR {unsafe {transmute(null::<PFN_vkAcquireNextImage2KHR>())}} else {self.vk_acquire_next_image2_khr})
+		.finish()
 	}
 }
 /// type definition `VkDisplayModeCreateFlagsKHR` from VK_KHR_display
@@ -17953,7 +18243,7 @@ pub trait VK_KHR_display: Debug {
 	fn vkCreateDisplayPlaneSurfaceKHR(&self, instance: VkInstance, pCreateInfo: *const VkDisplaySurfaceCreateInfoKHR, pAllocator: *const VkAllocationCallbacks, pSurface: *mut VkSurfaceKHR) -> Result<()>;
 }
 /// struct for `VK_KHR_display`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_display {
 	vk_get_physical_device_display_properties_khr: PFN_vkGetPhysicalDeviceDisplayPropertiesKHR,
 	vk_get_physical_device_display_plane_properties_khr: PFN_vkGetPhysicalDeviceDisplayPlanePropertiesKHR,
@@ -18012,6 +18302,19 @@ impl Vulkan_KHR_display {
 		}
 	}
 }
+impl Debug for Vulkan_KHR_display {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_display")
+		.field("vkGetPhysicalDeviceDisplayPropertiesKHR", &if self.vk_get_physical_device_display_properties_khr == dummy_vkGetPhysicalDeviceDisplayPropertiesKHR {unsafe {transmute(null::<PFN_vkGetPhysicalDeviceDisplayPropertiesKHR>())}} else {self.vk_get_physical_device_display_properties_khr})
+		.field("vkGetPhysicalDeviceDisplayPlanePropertiesKHR", &if self.vk_get_physical_device_display_plane_properties_khr == dummy_vkGetPhysicalDeviceDisplayPlanePropertiesKHR {unsafe {transmute(null::<PFN_vkGetPhysicalDeviceDisplayPlanePropertiesKHR>())}} else {self.vk_get_physical_device_display_plane_properties_khr})
+		.field("vkGetDisplayPlaneSupportedDisplaysKHR", &if self.vk_get_display_plane_supported_displays_khr == dummy_vkGetDisplayPlaneSupportedDisplaysKHR {unsafe {transmute(null::<PFN_vkGetDisplayPlaneSupportedDisplaysKHR>())}} else {self.vk_get_display_plane_supported_displays_khr})
+		.field("vkGetDisplayModePropertiesKHR", &if self.vk_get_display_mode_properties_khr == dummy_vkGetDisplayModePropertiesKHR {unsafe {transmute(null::<PFN_vkGetDisplayModePropertiesKHR>())}} else {self.vk_get_display_mode_properties_khr})
+		.field("vkCreateDisplayModeKHR", &if self.vk_create_display_mode_khr == dummy_vkCreateDisplayModeKHR {unsafe {transmute(null::<PFN_vkCreateDisplayModeKHR>())}} else {self.vk_create_display_mode_khr})
+		.field("vkGetDisplayPlaneCapabilitiesKHR", &if self.vk_get_display_plane_capabilities_khr == dummy_vkGetDisplayPlaneCapabilitiesKHR {unsafe {transmute(null::<PFN_vkGetDisplayPlaneCapabilitiesKHR>())}} else {self.vk_get_display_plane_capabilities_khr})
+		.field("vkCreateDisplayPlaneSurfaceKHR", &if self.vk_create_display_plane_surface_khr == dummy_vkCreateDisplayPlaneSurfaceKHR {unsafe {transmute(null::<PFN_vkCreateDisplayPlaneSurfaceKHR>())}} else {self.vk_create_display_plane_surface_khr})
+		.finish()
+	}
+}
 /// struct `VkDisplayPresentInfoKHR` from VK_KHR_display_swapchain
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkDisplayPresentInfoKHR.html>
 #[repr(C)]
@@ -18037,7 +18340,7 @@ pub trait VK_KHR_display_swapchain: Debug {
 	fn vkCreateSharedSwapchainsKHR(&self, device: VkDevice, swapchainCount: u32, pCreateInfos: *const VkSwapchainCreateInfoKHR, pAllocator: *const VkAllocationCallbacks, pSwapchains: *mut VkSwapchainKHR) -> Result<()>;
 }
 /// struct for `VK_KHR_display_swapchain`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_display_swapchain {
 	vk_create_shared_swapchains_khr: PFN_vkCreateSharedSwapchainsKHR,
 }
@@ -18060,11 +18363,18 @@ impl Vulkan_KHR_display_swapchain {
 		}
 	}
 }
+impl Debug for Vulkan_KHR_display_swapchain {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_display_swapchain")
+		.field("vkCreateSharedSwapchainsKHR", &if self.vk_create_shared_swapchains_khr == dummy_vkCreateSharedSwapchainsKHR {unsafe {transmute(null::<PFN_vkCreateSharedSwapchainsKHR>())}} else {self.vk_create_shared_swapchains_khr})
+		.finish()
+	}
+}
 /// trait for `VK_KHR_sampler_mirror_clamp_to_edge`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_sampler_mirror_clamp_to_edge.html>
 pub trait VK_KHR_sampler_mirror_clamp_to_edge: Debug {}
 /// struct for `VK_KHR_sampler_mirror_clamp_to_edge`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_sampler_mirror_clamp_to_edge {}
 impl VK_KHR_sampler_mirror_clamp_to_edge for Vulkan_KHR_sampler_mirror_clamp_to_edge {}
 impl Default for Vulkan_KHR_sampler_mirror_clamp_to_edge {
@@ -18075,6 +18385,12 @@ impl Default for Vulkan_KHR_sampler_mirror_clamp_to_edge {
 impl Vulkan_KHR_sampler_mirror_clamp_to_edge {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_KHR_sampler_mirror_clamp_to_edge {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_sampler_mirror_clamp_to_edge")
+		.finish()
 	}
 }
 /// type definition `VkVideoCodecOperationFlagsKHR` from VK_KHR_video_queue
@@ -18761,7 +19077,7 @@ pub trait VK_KHR_video_queue: Debug {
 	fn vkCmdControlVideoCodingKHR(&self, commandBuffer: VkCommandBuffer, pCodingControlInfo: *const VkVideoCodingControlInfoKHR) -> Result<()>;
 }
 /// struct for `VK_KHR_video_queue`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_video_queue {
 	vk_get_physical_device_video_capabilities_khr: PFN_vkGetPhysicalDeviceVideoCapabilitiesKHR,
 	vk_get_physical_device_video_format_properties_khr: PFN_vkGetPhysicalDeviceVideoFormatPropertiesKHR,
@@ -18848,6 +19164,24 @@ impl Vulkan_KHR_video_queue {
 			vk_cmd_end_video_coding_khr: {let proc = get_instance_proc_address(instance, "vkCmdEndVideoCodingKHR"); if proc == null() {dummy_vkCmdEndVideoCodingKHR} else {unsafe {transmute(proc)}}},
 			vk_cmd_control_video_coding_khr: {let proc = get_instance_proc_address(instance, "vkCmdControlVideoCodingKHR"); if proc == null() {dummy_vkCmdControlVideoCodingKHR} else {unsafe {transmute(proc)}}},
 		}
+	}
+}
+impl Debug for Vulkan_KHR_video_queue {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_video_queue")
+		.field("vkGetPhysicalDeviceVideoCapabilitiesKHR", &if self.vk_get_physical_device_video_capabilities_khr == dummy_vkGetPhysicalDeviceVideoCapabilitiesKHR {unsafe {transmute(null::<PFN_vkGetPhysicalDeviceVideoCapabilitiesKHR>())}} else {self.vk_get_physical_device_video_capabilities_khr})
+		.field("vkGetPhysicalDeviceVideoFormatPropertiesKHR", &if self.vk_get_physical_device_video_format_properties_khr == dummy_vkGetPhysicalDeviceVideoFormatPropertiesKHR {unsafe {transmute(null::<PFN_vkGetPhysicalDeviceVideoFormatPropertiesKHR>())}} else {self.vk_get_physical_device_video_format_properties_khr})
+		.field("vkCreateVideoSessionKHR", &if self.vk_create_video_session_khr == dummy_vkCreateVideoSessionKHR {unsafe {transmute(null::<PFN_vkCreateVideoSessionKHR>())}} else {self.vk_create_video_session_khr})
+		.field("vkDestroyVideoSessionKHR", &if self.vk_destroy_video_session_khr == dummy_vkDestroyVideoSessionKHR {unsafe {transmute(null::<PFN_vkDestroyVideoSessionKHR>())}} else {self.vk_destroy_video_session_khr})
+		.field("vkGetVideoSessionMemoryRequirementsKHR", &if self.vk_get_video_session_memory_requirements_khr == dummy_vkGetVideoSessionMemoryRequirementsKHR {unsafe {transmute(null::<PFN_vkGetVideoSessionMemoryRequirementsKHR>())}} else {self.vk_get_video_session_memory_requirements_khr})
+		.field("vkBindVideoSessionMemoryKHR", &if self.vk_bind_video_session_memory_khr == dummy_vkBindVideoSessionMemoryKHR {unsafe {transmute(null::<PFN_vkBindVideoSessionMemoryKHR>())}} else {self.vk_bind_video_session_memory_khr})
+		.field("vkCreateVideoSessionParametersKHR", &if self.vk_create_video_session_parameters_khr == dummy_vkCreateVideoSessionParametersKHR {unsafe {transmute(null::<PFN_vkCreateVideoSessionParametersKHR>())}} else {self.vk_create_video_session_parameters_khr})
+		.field("vkUpdateVideoSessionParametersKHR", &if self.vk_update_video_session_parameters_khr == dummy_vkUpdateVideoSessionParametersKHR {unsafe {transmute(null::<PFN_vkUpdateVideoSessionParametersKHR>())}} else {self.vk_update_video_session_parameters_khr})
+		.field("vkDestroyVideoSessionParametersKHR", &if self.vk_destroy_video_session_parameters_khr == dummy_vkDestroyVideoSessionParametersKHR {unsafe {transmute(null::<PFN_vkDestroyVideoSessionParametersKHR>())}} else {self.vk_destroy_video_session_parameters_khr})
+		.field("vkCmdBeginVideoCodingKHR", &if self.vk_cmd_begin_video_coding_khr == dummy_vkCmdBeginVideoCodingKHR {unsafe {transmute(null::<PFN_vkCmdBeginVideoCodingKHR>())}} else {self.vk_cmd_begin_video_coding_khr})
+		.field("vkCmdEndVideoCodingKHR", &if self.vk_cmd_end_video_coding_khr == dummy_vkCmdEndVideoCodingKHR {unsafe {transmute(null::<PFN_vkCmdEndVideoCodingKHR>())}} else {self.vk_cmd_end_video_coding_khr})
+		.field("vkCmdControlVideoCodingKHR", &if self.vk_cmd_control_video_coding_khr == dummy_vkCmdControlVideoCodingKHR {unsafe {transmute(null::<PFN_vkCmdControlVideoCodingKHR>())}} else {self.vk_cmd_control_video_coding_khr})
+		.finish()
 	}
 }
 /// type definition `VkVideoDecodeCapabilityFlagsKHR` from VK_KHR_video_decode_queue
@@ -18989,7 +19323,7 @@ pub trait VK_KHR_video_decode_queue: Debug {
 	fn vkCmdDecodeVideoKHR(&self, commandBuffer: VkCommandBuffer, pDecodeInfo: *const VkVideoDecodeInfoKHR) -> Result<()>;
 }
 /// struct for `VK_KHR_video_decode_queue`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_video_decode_queue {
 	vk_cmd_decode_video_khr: PFN_vkCmdDecodeVideoKHR,
 }
@@ -19010,6 +19344,13 @@ impl Vulkan_KHR_video_decode_queue {
 		Self {
 			vk_cmd_decode_video_khr: {let proc = get_instance_proc_address(instance, "vkCmdDecodeVideoKHR"); if proc == null() {dummy_vkCmdDecodeVideoKHR} else {unsafe {transmute(proc)}}},
 		}
+	}
+}
+impl Debug for Vulkan_KHR_video_decode_queue {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_video_decode_queue")
+		.field("vkCmdDecodeVideoKHR", &if self.vk_cmd_decode_video_khr == dummy_vkCmdDecodeVideoKHR {unsafe {transmute(null::<PFN_vkCmdDecodeVideoKHR>())}} else {self.vk_cmd_decode_video_khr})
+		.finish()
 	}
 }
 /// type definition `VkVideoEncodeH264CapabilityFlagsKHR` from VK_KHR_video_encode_h264
@@ -19470,7 +19811,7 @@ pub struct VkVideoEncodeH264GopRemainingFrameInfoKHR {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_video_encode_h264.html>
 pub trait VK_KHR_video_encode_h264: Debug {}
 /// struct for `VK_KHR_video_encode_h264`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_video_encode_h264 {}
 impl VK_KHR_video_encode_h264 for Vulkan_KHR_video_encode_h264 {}
 impl Default for Vulkan_KHR_video_encode_h264 {
@@ -19481,6 +19822,12 @@ impl Default for Vulkan_KHR_video_encode_h264 {
 impl Vulkan_KHR_video_encode_h264 {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_KHR_video_encode_h264 {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_video_encode_h264")
+		.finish()
 	}
 }
 /// constant `STD_VIDEO_H264_CPB_CNT_LIST_SIZE` from vulkan_video_codec_h264std
@@ -20095,7 +20442,7 @@ pub struct StdVideoH264PictureParameterSet {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vulkan_video_codec_h264std.html>
 pub trait vulkan_video_codec_h264std: Debug {}
 /// struct for `vulkan_video_codec_h264std`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_video_codec_h264std {}
 impl vulkan_video_codec_h264std for Vulkan_video_codec_h264std {}
 impl Default for Vulkan_video_codec_h264std {
@@ -20108,11 +20455,17 @@ impl Vulkan_video_codec_h264std {
 		Self {}
 	}
 }
+impl Debug for Vulkan_video_codec_h264std {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_video_codec_h264std")
+		.finish()
+	}
+}
 /// trait for `vulkan_video_codecs_common`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vulkan_video_codecs_common.html>
 pub trait vulkan_video_codecs_common: Debug {}
 /// struct for `vulkan_video_codecs_common`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_video_codecs_common {}
 impl vulkan_video_codecs_common for Vulkan_video_codecs_common {}
 impl Default for Vulkan_video_codecs_common {
@@ -20123,6 +20476,12 @@ impl Default for Vulkan_video_codecs_common {
 impl Vulkan_video_codecs_common {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_video_codecs_common {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_video_codecs_common")
+		.finish()
 	}
 }
 /// constant `VK_STD_VULKAN_VIDEO_CODEC_H264_ENCODE_API_VERSION_1_0_0` from vulkan_video_codec_h264std_encode
@@ -20415,7 +20774,7 @@ pub struct StdVideoEncodeH264SliceHeader {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vulkan_video_codec_h264std_encode.html>
 pub trait vulkan_video_codec_h264std_encode: Debug {}
 /// struct for `vulkan_video_codec_h264std_encode`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_video_codec_h264std_encode {}
 impl vulkan_video_codec_h264std_encode for Vulkan_video_codec_h264std_encode {}
 impl Default for Vulkan_video_codec_h264std_encode {
@@ -20426,6 +20785,12 @@ impl Default for Vulkan_video_codec_h264std_encode {
 impl Vulkan_video_codec_h264std_encode {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_video_codec_h264std_encode {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_video_codec_h264std_encode")
+		.finish()
 	}
 }
 /// type definition `VkVideoEncodeH265CapabilityFlagsKHR` from VK_KHR_video_encode_h265
@@ -20977,7 +21342,7 @@ pub struct VkVideoEncodeH265GopRemainingFrameInfoKHR {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_video_encode_h265.html>
 pub trait VK_KHR_video_encode_h265: Debug {}
 /// struct for `VK_KHR_video_encode_h265`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_video_encode_h265 {}
 impl VK_KHR_video_encode_h265 for Vulkan_KHR_video_encode_h265 {}
 impl Default for Vulkan_KHR_video_encode_h265 {
@@ -20988,6 +21353,12 @@ impl Default for Vulkan_KHR_video_encode_h265 {
 impl Vulkan_KHR_video_encode_h265 {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_KHR_video_encode_h265 {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_video_encode_h265")
+		.finish()
 	}
 }
 /// constant `STD_VIDEO_H265_CPB_CNT_LIST_SIZE` from vulkan_video_codec_h265std
@@ -22205,7 +22576,7 @@ impl Debug for StdVideoH265PictureParameterSet {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vulkan_video_codec_h265std.html>
 pub trait vulkan_video_codec_h265std: Debug {}
 /// struct for `vulkan_video_codec_h265std`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_video_codec_h265std {}
 impl vulkan_video_codec_h265std for Vulkan_video_codec_h265std {}
 impl Default for Vulkan_video_codec_h265std {
@@ -22216,6 +22587,12 @@ impl Default for Vulkan_video_codec_h265std {
 impl Vulkan_video_codec_h265std {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_video_codec_h265std {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_video_codec_h265std")
+		.finish()
 	}
 }
 /// constant `VK_STD_VULKAN_VIDEO_CODEC_H265_ENCODE_API_VERSION_1_0_0` from vulkan_video_codec_h265std_encode
@@ -22616,7 +22993,7 @@ pub struct StdVideoEncodeH265ReferenceInfo {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vulkan_video_codec_h265std_encode.html>
 pub trait vulkan_video_codec_h265std_encode: Debug {}
 /// struct for `vulkan_video_codec_h265std_encode`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_video_codec_h265std_encode {}
 impl vulkan_video_codec_h265std_encode for Vulkan_video_codec_h265std_encode {}
 impl Default for Vulkan_video_codec_h265std_encode {
@@ -22627,6 +23004,12 @@ impl Default for Vulkan_video_codec_h265std_encode {
 impl Vulkan_video_codec_h265std_encode {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_video_codec_h265std_encode {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_video_codec_h265std_encode")
+		.finish()
 	}
 }
 /// type definition `VkVideoDecodeH264PictureLayoutFlagsKHR` from VK_KHR_video_decode_h264
@@ -22731,7 +23114,7 @@ pub struct VkVideoDecodeH264DpbSlotInfoKHR {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_video_decode_h264.html>
 pub trait VK_KHR_video_decode_h264: Debug {}
 /// struct for `VK_KHR_video_decode_h264`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_video_decode_h264 {}
 impl VK_KHR_video_decode_h264 for Vulkan_KHR_video_decode_h264 {}
 impl Default for Vulkan_KHR_video_decode_h264 {
@@ -22742,6 +23125,12 @@ impl Default for Vulkan_KHR_video_decode_h264 {
 impl Vulkan_KHR_video_decode_h264 {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_KHR_video_decode_h264 {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_video_decode_h264")
+		.finish()
 	}
 }
 /// constant `VK_STD_VULKAN_VIDEO_CODEC_H264_DECODE_API_VERSION_1_0_0` from vulkan_video_codec_h264std_decode
@@ -22873,7 +23262,7 @@ pub struct StdVideoDecodeH264ReferenceInfo {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vulkan_video_codec_h264std_decode.html>
 pub trait vulkan_video_codec_h264std_decode: Debug {}
 /// struct for `vulkan_video_codec_h264std_decode`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_video_codec_h264std_decode {}
 impl vulkan_video_codec_h264std_decode for Vulkan_video_codec_h264std_decode {}
 impl Default for Vulkan_video_codec_h264std_decode {
@@ -22884,6 +23273,12 @@ impl Default for Vulkan_video_codec_h264std_decode {
 impl Vulkan_video_codec_h264std_decode {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_video_codec_h264std_decode {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_video_codec_h264std_decode")
+		.finish()
 	}
 }
 /// type definition `VkRenderingFlagsKHR` from VK_KHR_dynamic_rendering
@@ -22930,7 +23325,7 @@ pub trait VK_KHR_dynamic_rendering: Debug {
 	fn vkCmdEndRenderingKHR(&self, commandBuffer: VkCommandBuffer) -> Result<()>;
 }
 /// struct for `VK_KHR_dynamic_rendering`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_dynamic_rendering {
 	vk_cmd_begin_rendering_khr: PFN_vkCmdBeginRenderingKHR,
 	vk_cmd_end_rendering_khr: PFN_vkCmdEndRenderingKHR,
@@ -22959,6 +23354,14 @@ impl Vulkan_KHR_dynamic_rendering {
 		}
 	}
 }
+impl Debug for Vulkan_KHR_dynamic_rendering {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_dynamic_rendering")
+		.field("vkCmdBeginRenderingKHR", &if self.vk_cmd_begin_rendering_khr == dummy_vkCmdBeginRenderingKHR {unsafe {transmute(null::<PFN_vkCmdBeginRenderingKHR>())}} else {self.vk_cmd_begin_rendering_khr})
+		.field("vkCmdEndRenderingKHR", &if self.vk_cmd_end_rendering_khr == dummy_vkCmdEndRenderingKHR {unsafe {transmute(null::<PFN_vkCmdEndRenderingKHR>())}} else {self.vk_cmd_end_rendering_khr})
+		.finish()
+	}
+}
 /// type definition `VkRenderPassMultiviewCreateInfoKHR` from VK_KHR_multiview
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkRenderPassMultiviewCreateInfoKHR.html>
 pub type VkRenderPassMultiviewCreateInfoKHR = VkRenderPassMultiviewCreateInfo;
@@ -22972,7 +23375,7 @@ pub type VkPhysicalDeviceMultiviewPropertiesKHR = VkPhysicalDeviceMultiviewPrope
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_multiview.html>
 pub trait VK_KHR_multiview: Debug {}
 /// struct for `VK_KHR_multiview`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_multiview {}
 impl VK_KHR_multiview for Vulkan_KHR_multiview {}
 impl Default for Vulkan_KHR_multiview {
@@ -22983,6 +23386,12 @@ impl Default for Vulkan_KHR_multiview {
 impl Vulkan_KHR_multiview {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_KHR_multiview {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_multiview")
+		.finish()
 	}
 }
 /// type definition `VkPhysicalDeviceFeatures2KHR` from VK_KHR_get_physical_device_properties2
@@ -23080,7 +23489,7 @@ pub trait VK_KHR_get_physical_device_properties2: Debug {
 	fn vkGetPhysicalDeviceSparseImageFormatProperties2KHR(&self, physicalDevice: VkPhysicalDevice, pFormatInfo: *const VkPhysicalDeviceSparseImageFormatInfo2, pPropertyCount: *mut uint32_t, pProperties: *mut VkSparseImageFormatProperties2) -> Result<()>;
 }
 /// struct for `VK_KHR_get_physical_device_properties2`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_get_physical_device_properties2 {
 	vk_get_physical_device_features2_khr: PFN_vkGetPhysicalDeviceFeatures2KHR,
 	vk_get_physical_device_properties2_khr: PFN_vkGetPhysicalDeviceProperties2KHR,
@@ -23137,6 +23546,19 @@ impl Vulkan_KHR_get_physical_device_properties2 {
 			vk_get_physical_device_memory_properties2_khr: {let proc = get_instance_proc_address(instance, "vkGetPhysicalDeviceMemoryProperties2KHR"); if proc == null() {dummy_vkGetPhysicalDeviceMemoryProperties2KHR} else {unsafe {transmute(proc)}}},
 			vk_get_physical_device_sparse_image_format_properties2_khr: {let proc = get_instance_proc_address(instance, "vkGetPhysicalDeviceSparseImageFormatProperties2KHR"); if proc == null() {dummy_vkGetPhysicalDeviceSparseImageFormatProperties2KHR} else {unsafe {transmute(proc)}}},
 		}
+	}
+}
+impl Debug for Vulkan_KHR_get_physical_device_properties2 {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_get_physical_device_properties2")
+		.field("vkGetPhysicalDeviceFeatures2KHR", &if self.vk_get_physical_device_features2_khr == dummy_vkGetPhysicalDeviceFeatures2KHR {unsafe {transmute(null::<PFN_vkGetPhysicalDeviceFeatures2KHR>())}} else {self.vk_get_physical_device_features2_khr})
+		.field("vkGetPhysicalDeviceProperties2KHR", &if self.vk_get_physical_device_properties2_khr == dummy_vkGetPhysicalDeviceProperties2KHR {unsafe {transmute(null::<PFN_vkGetPhysicalDeviceProperties2KHR>())}} else {self.vk_get_physical_device_properties2_khr})
+		.field("vkGetPhysicalDeviceFormatProperties2KHR", &if self.vk_get_physical_device_format_properties2_khr == dummy_vkGetPhysicalDeviceFormatProperties2KHR {unsafe {transmute(null::<PFN_vkGetPhysicalDeviceFormatProperties2KHR>())}} else {self.vk_get_physical_device_format_properties2_khr})
+		.field("vkGetPhysicalDeviceImageFormatProperties2KHR", &if self.vk_get_physical_device_image_format_properties2_khr == dummy_vkGetPhysicalDeviceImageFormatProperties2KHR {unsafe {transmute(null::<PFN_vkGetPhysicalDeviceImageFormatProperties2KHR>())}} else {self.vk_get_physical_device_image_format_properties2_khr})
+		.field("vkGetPhysicalDeviceQueueFamilyProperties2KHR", &if self.vk_get_physical_device_queue_family_properties2_khr == dummy_vkGetPhysicalDeviceQueueFamilyProperties2KHR {unsafe {transmute(null::<PFN_vkGetPhysicalDeviceQueueFamilyProperties2KHR>())}} else {self.vk_get_physical_device_queue_family_properties2_khr})
+		.field("vkGetPhysicalDeviceMemoryProperties2KHR", &if self.vk_get_physical_device_memory_properties2_khr == dummy_vkGetPhysicalDeviceMemoryProperties2KHR {unsafe {transmute(null::<PFN_vkGetPhysicalDeviceMemoryProperties2KHR>())}} else {self.vk_get_physical_device_memory_properties2_khr})
+		.field("vkGetPhysicalDeviceSparseImageFormatProperties2KHR", &if self.vk_get_physical_device_sparse_image_format_properties2_khr == dummy_vkGetPhysicalDeviceSparseImageFormatProperties2KHR {unsafe {transmute(null::<PFN_vkGetPhysicalDeviceSparseImageFormatProperties2KHR>())}} else {self.vk_get_physical_device_sparse_image_format_properties2_khr})
+		.finish()
 	}
 }
 /// type definition `VkPeerMemoryFeatureFlagsKHR` from VK_KHR_device_group
@@ -23204,7 +23626,7 @@ pub trait VK_KHR_device_group: Debug {
 	fn vkCmdDispatchBaseKHR(&self, commandBuffer: VkCommandBuffer, baseGroupX: u32, baseGroupY: u32, baseGroupZ: u32, groupCountX: u32, groupCountY: u32, groupCountZ: u32) -> Result<()>;
 }
 /// struct for `VK_KHR_device_group`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_device_group {
 	vk_get_device_group_peer_memory_features_khr: PFN_vkGetDeviceGroupPeerMemoryFeaturesKHR,
 	vk_cmd_set_device_mask_khr: PFN_vkCmdSetDeviceMaskKHR,
@@ -23239,11 +23661,20 @@ impl Vulkan_KHR_device_group {
 		}
 	}
 }
+impl Debug for Vulkan_KHR_device_group {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_device_group")
+		.field("vkGetDeviceGroupPeerMemoryFeaturesKHR", &if self.vk_get_device_group_peer_memory_features_khr == dummy_vkGetDeviceGroupPeerMemoryFeaturesKHR {unsafe {transmute(null::<PFN_vkGetDeviceGroupPeerMemoryFeaturesKHR>())}} else {self.vk_get_device_group_peer_memory_features_khr})
+		.field("vkCmdSetDeviceMaskKHR", &if self.vk_cmd_set_device_mask_khr == dummy_vkCmdSetDeviceMaskKHR {unsafe {transmute(null::<PFN_vkCmdSetDeviceMaskKHR>())}} else {self.vk_cmd_set_device_mask_khr})
+		.field("vkCmdDispatchBaseKHR", &if self.vk_cmd_dispatch_base_khr == dummy_vkCmdDispatchBaseKHR {unsafe {transmute(null::<PFN_vkCmdDispatchBaseKHR>())}} else {self.vk_cmd_dispatch_base_khr})
+		.finish()
+	}
+}
 /// trait for `VK_KHR_shader_draw_parameters`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_shader_draw_parameters.html>
 pub trait VK_KHR_shader_draw_parameters: Debug {}
 /// struct for `VK_KHR_shader_draw_parameters`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_shader_draw_parameters {}
 impl VK_KHR_shader_draw_parameters for Vulkan_KHR_shader_draw_parameters {}
 impl Default for Vulkan_KHR_shader_draw_parameters {
@@ -23254,6 +23685,12 @@ impl Default for Vulkan_KHR_shader_draw_parameters {
 impl Vulkan_KHR_shader_draw_parameters {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_KHR_shader_draw_parameters {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_shader_draw_parameters")
+		.finish()
 	}
 }
 /// type definition `VkCommandPoolTrimFlagsKHR` from VK_KHR_maintenance1
@@ -23273,7 +23710,7 @@ pub trait VK_KHR_maintenance1: Debug {
 	fn vkTrimCommandPoolKHR(&self, device: VkDevice, commandPool: VkCommandPool, flags: VkCommandPoolTrimFlags) -> Result<()>;
 }
 /// struct for `VK_KHR_maintenance1`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_maintenance1 {
 	vk_trim_command_pool_khr: PFN_vkTrimCommandPoolKHR,
 }
@@ -23294,6 +23731,13 @@ impl Vulkan_KHR_maintenance1 {
 		Self {
 			vk_trim_command_pool_khr: {let proc = get_instance_proc_address(instance, "vkTrimCommandPoolKHR"); if proc == null() {dummy_vkTrimCommandPoolKHR} else {unsafe {transmute(proc)}}},
 		}
+	}
+}
+impl Debug for Vulkan_KHR_maintenance1 {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_maintenance1")
+		.field("vkTrimCommandPoolKHR", &if self.vk_trim_command_pool_khr == dummy_vkTrimCommandPoolKHR {unsafe {transmute(null::<PFN_vkTrimCommandPoolKHR>())}} else {self.vk_trim_command_pool_khr})
+		.finish()
 	}
 }
 /// constant `VK_MAX_DEVICE_GROUP_SIZE_KHR` from VK_KHR_device_group_creation
@@ -23319,7 +23763,7 @@ pub trait VK_KHR_device_group_creation: Debug {
 	fn vkEnumeratePhysicalDeviceGroupsKHR(&self, instance: VkInstance, pPhysicalDeviceGroupCount: *mut uint32_t, pPhysicalDeviceGroupProperties: *mut VkPhysicalDeviceGroupProperties) -> Result<()>;
 }
 /// struct for `VK_KHR_device_group_creation`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_device_group_creation {
 	vk_enumerate_physical_device_groups_khr: PFN_vkEnumeratePhysicalDeviceGroupsKHR,
 }
@@ -23340,6 +23784,13 @@ impl Vulkan_KHR_device_group_creation {
 		Self {
 			vk_enumerate_physical_device_groups_khr: {let proc = get_instance_proc_address(instance, "vkEnumeratePhysicalDeviceGroupsKHR"); if proc == null() {dummy_vkEnumeratePhysicalDeviceGroupsKHR} else {unsafe {transmute(proc)}}},
 		}
+	}
+}
+impl Debug for Vulkan_KHR_device_group_creation {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_device_group_creation")
+		.field("vkEnumeratePhysicalDeviceGroupsKHR", &if self.vk_enumerate_physical_device_groups_khr == dummy_vkEnumeratePhysicalDeviceGroupsKHR {unsafe {transmute(null::<PFN_vkEnumeratePhysicalDeviceGroupsKHR>())}} else {self.vk_enumerate_physical_device_groups_khr})
+		.finish()
 	}
 }
 /// constant `VK_LUID_SIZE_KHR` from VK_KHR_external_memory_capabilities
@@ -23389,7 +23840,7 @@ pub trait VK_KHR_external_memory_capabilities: Debug {
 	fn vkGetPhysicalDeviceExternalBufferPropertiesKHR(&self, physicalDevice: VkPhysicalDevice, pExternalBufferInfo: *const VkPhysicalDeviceExternalBufferInfo, pExternalBufferProperties: *mut VkExternalBufferProperties) -> Result<()>;
 }
 /// struct for `VK_KHR_external_memory_capabilities`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_external_memory_capabilities {
 	vk_get_physical_device_external_buffer_properties_khr: PFN_vkGetPhysicalDeviceExternalBufferPropertiesKHR,
 }
@@ -23412,6 +23863,13 @@ impl Vulkan_KHR_external_memory_capabilities {
 		}
 	}
 }
+impl Debug for Vulkan_KHR_external_memory_capabilities {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_external_memory_capabilities")
+		.field("vkGetPhysicalDeviceExternalBufferPropertiesKHR", &if self.vk_get_physical_device_external_buffer_properties_khr == dummy_vkGetPhysicalDeviceExternalBufferPropertiesKHR {unsafe {transmute(null::<PFN_vkGetPhysicalDeviceExternalBufferPropertiesKHR>())}} else {self.vk_get_physical_device_external_buffer_properties_khr})
+		.finish()
+	}
+}
 /// constant `VK_QUEUE_FAMILY_EXTERNAL_KHR` from VK_KHR_external_memory
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_QUEUE_FAMILY_EXTERNAL_KHR.html>
 pub const VK_QUEUE_FAMILY_EXTERNAL_KHR: u32 = !1u32;
@@ -23428,7 +23886,7 @@ pub type VkExportMemoryAllocateInfoKHR = VkExportMemoryAllocateInfo;
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_external_memory.html>
 pub trait VK_KHR_external_memory: Debug {}
 /// struct for `VK_KHR_external_memory`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_external_memory {}
 impl VK_KHR_external_memory for Vulkan_KHR_external_memory {}
 impl Default for Vulkan_KHR_external_memory {
@@ -23439,6 +23897,12 @@ impl Default for Vulkan_KHR_external_memory {
 impl Vulkan_KHR_external_memory {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_KHR_external_memory {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_external_memory")
+		.finish()
 	}
 }
 /// struct `VkImportMemoryFdInfoKHR` from VK_KHR_external_memory_fd
@@ -23493,7 +23957,7 @@ pub trait VK_KHR_external_memory_fd: Debug {
 	fn vkGetMemoryFdPropertiesKHR(&self, device: VkDevice, handleType: VkExternalMemoryHandleTypeFlagBits, fd: i32, pMemoryFdProperties: *mut VkMemoryFdPropertiesKHR) -> Result<()>;
 }
 /// struct for `VK_KHR_external_memory_fd`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_external_memory_fd {
 	vk_get_memory_fd_khr: PFN_vkGetMemoryFdKHR,
 	vk_get_memory_fd_properties_khr: PFN_vkGetMemoryFdPropertiesKHR,
@@ -23520,6 +23984,14 @@ impl Vulkan_KHR_external_memory_fd {
 			vk_get_memory_fd_khr: {let proc = get_instance_proc_address(instance, "vkGetMemoryFdKHR"); if proc == null() {dummy_vkGetMemoryFdKHR} else {unsafe {transmute(proc)}}},
 			vk_get_memory_fd_properties_khr: {let proc = get_instance_proc_address(instance, "vkGetMemoryFdPropertiesKHR"); if proc == null() {dummy_vkGetMemoryFdPropertiesKHR} else {unsafe {transmute(proc)}}},
 		}
+	}
+}
+impl Debug for Vulkan_KHR_external_memory_fd {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_external_memory_fd")
+		.field("vkGetMemoryFdKHR", &if self.vk_get_memory_fd_khr == dummy_vkGetMemoryFdKHR {unsafe {transmute(null::<PFN_vkGetMemoryFdKHR>())}} else {self.vk_get_memory_fd_khr})
+		.field("vkGetMemoryFdPropertiesKHR", &if self.vk_get_memory_fd_properties_khr == dummy_vkGetMemoryFdPropertiesKHR {unsafe {transmute(null::<PFN_vkGetMemoryFdPropertiesKHR>())}} else {self.vk_get_memory_fd_properties_khr})
+		.finish()
 	}
 }
 /// type definition `VkExternalSemaphoreHandleTypeFlagsKHR` from VK_KHR_external_semaphore_capabilities
@@ -23554,7 +24026,7 @@ pub trait VK_KHR_external_semaphore_capabilities: Debug {
 	fn vkGetPhysicalDeviceExternalSemaphorePropertiesKHR(&self, physicalDevice: VkPhysicalDevice, pExternalSemaphoreInfo: *const VkPhysicalDeviceExternalSemaphoreInfo, pExternalSemaphoreProperties: *mut VkExternalSemaphoreProperties) -> Result<()>;
 }
 /// struct for `VK_KHR_external_semaphore_capabilities`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_external_semaphore_capabilities {
 	vk_get_physical_device_external_semaphore_properties_khr: PFN_vkGetPhysicalDeviceExternalSemaphorePropertiesKHR,
 }
@@ -23577,6 +24049,13 @@ impl Vulkan_KHR_external_semaphore_capabilities {
 		}
 	}
 }
+impl Debug for Vulkan_KHR_external_semaphore_capabilities {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_external_semaphore_capabilities")
+		.field("vkGetPhysicalDeviceExternalSemaphorePropertiesKHR", &if self.vk_get_physical_device_external_semaphore_properties_khr == dummy_vkGetPhysicalDeviceExternalSemaphorePropertiesKHR {unsafe {transmute(null::<PFN_vkGetPhysicalDeviceExternalSemaphorePropertiesKHR>())}} else {self.vk_get_physical_device_external_semaphore_properties_khr})
+		.finish()
+	}
+}
 /// type definition `VkSemaphoreImportFlagsKHR` from VK_KHR_external_semaphore
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkSemaphoreImportFlagsKHR.html>
 pub type VkSemaphoreImportFlagsKHR = VkSemaphoreImportFlags;
@@ -23590,7 +24069,7 @@ pub type VkExportSemaphoreCreateInfoKHR = VkExportSemaphoreCreateInfo;
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_external_semaphore.html>
 pub trait VK_KHR_external_semaphore: Debug {}
 /// struct for `VK_KHR_external_semaphore`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_external_semaphore {}
 impl VK_KHR_external_semaphore for Vulkan_KHR_external_semaphore {}
 impl Default for Vulkan_KHR_external_semaphore {
@@ -23601,6 +24080,12 @@ impl Default for Vulkan_KHR_external_semaphore {
 impl Vulkan_KHR_external_semaphore {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_KHR_external_semaphore {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_external_semaphore")
+		.finish()
 	}
 }
 /// struct `VkImportSemaphoreFdInfoKHR` from VK_KHR_external_semaphore_fd
@@ -23648,7 +24133,7 @@ pub trait VK_KHR_external_semaphore_fd: Debug {
 	fn vkGetSemaphoreFdKHR(&self, device: VkDevice, pGetFdInfo: *const VkSemaphoreGetFdInfoKHR, pFd: *mut int) -> Result<()>;
 }
 /// struct for `VK_KHR_external_semaphore_fd`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_external_semaphore_fd {
 	vk_import_semaphore_fd_khr: PFN_vkImportSemaphoreFdKHR,
 	vk_get_semaphore_fd_khr: PFN_vkGetSemaphoreFdKHR,
@@ -23677,6 +24162,14 @@ impl Vulkan_KHR_external_semaphore_fd {
 		}
 	}
 }
+impl Debug for Vulkan_KHR_external_semaphore_fd {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_external_semaphore_fd")
+		.field("vkImportSemaphoreFdKHR", &if self.vk_import_semaphore_fd_khr == dummy_vkImportSemaphoreFdKHR {unsafe {transmute(null::<PFN_vkImportSemaphoreFdKHR>())}} else {self.vk_import_semaphore_fd_khr})
+		.field("vkGetSemaphoreFdKHR", &if self.vk_get_semaphore_fd_khr == dummy_vkGetSemaphoreFdKHR {unsafe {transmute(null::<PFN_vkGetSemaphoreFdKHR>())}} else {self.vk_get_semaphore_fd_khr})
+		.finish()
+	}
+}
 /// type definition `VkPhysicalDevicePushDescriptorPropertiesKHR` from VK_KHR_push_descriptor
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPhysicalDevicePushDescriptorPropertiesKHR.html>
 pub type VkPhysicalDevicePushDescriptorPropertiesKHR = VkPhysicalDevicePushDescriptorProperties;
@@ -23703,7 +24196,7 @@ pub trait VK_KHR_push_descriptor: Debug {
 	fn vkCmdPushDescriptorSetWithTemplateKHR(&self, commandBuffer: VkCommandBuffer, descriptorUpdateTemplate: VkDescriptorUpdateTemplate, layout: VkPipelineLayout, set: u32, pData: *const c_void) -> Result<()>;
 }
 /// struct for `VK_KHR_push_descriptor`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_push_descriptor {
 	vk_cmd_push_descriptor_set_khr: PFN_vkCmdPushDescriptorSetKHR,
 	vk_cmd_push_descriptor_set_with_template_khr: PFN_vkCmdPushDescriptorSetWithTemplateKHR,
@@ -23732,6 +24225,14 @@ impl Vulkan_KHR_push_descriptor {
 		}
 	}
 }
+impl Debug for Vulkan_KHR_push_descriptor {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_push_descriptor")
+		.field("vkCmdPushDescriptorSetKHR", &if self.vk_cmd_push_descriptor_set_khr == dummy_vkCmdPushDescriptorSetKHR {unsafe {transmute(null::<PFN_vkCmdPushDescriptorSetKHR>())}} else {self.vk_cmd_push_descriptor_set_khr})
+		.field("vkCmdPushDescriptorSetWithTemplateKHR", &if self.vk_cmd_push_descriptor_set_with_template_khr == dummy_vkCmdPushDescriptorSetWithTemplateKHR {unsafe {transmute(null::<PFN_vkCmdPushDescriptorSetWithTemplateKHR>())}} else {self.vk_cmd_push_descriptor_set_with_template_khr})
+		.finish()
+	}
+}
 /// type definition `VkPhysicalDeviceShaderFloat16Int8FeaturesKHR` from VK_KHR_shader_float16_int8
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPhysicalDeviceShaderFloat16Int8FeaturesKHR.html>
 pub type VkPhysicalDeviceShaderFloat16Int8FeaturesKHR = VkPhysicalDeviceShaderFloat16Int8Features;
@@ -23742,7 +24243,7 @@ pub type VkPhysicalDeviceFloat16Int8FeaturesKHR = VkPhysicalDeviceShaderFloat16I
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_shader_float16_int8.html>
 pub trait VK_KHR_shader_float16_int8: Debug {}
 /// struct for `VK_KHR_shader_float16_int8`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_shader_float16_int8 {}
 impl VK_KHR_shader_float16_int8 for Vulkan_KHR_shader_float16_int8 {}
 impl Default for Vulkan_KHR_shader_float16_int8 {
@@ -23755,6 +24256,12 @@ impl Vulkan_KHR_shader_float16_int8 {
 		Self {}
 	}
 }
+impl Debug for Vulkan_KHR_shader_float16_int8 {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_shader_float16_int8")
+		.finish()
+	}
+}
 /// type definition `VkPhysicalDevice16BitStorageFeaturesKHR` from VK_KHR_16bit_storage
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPhysicalDevice16BitStorageFeaturesKHR.html>
 pub type VkPhysicalDevice16BitStorageFeaturesKHR = VkPhysicalDevice16BitStorageFeatures;
@@ -23762,7 +24269,7 @@ pub type VkPhysicalDevice16BitStorageFeaturesKHR = VkPhysicalDevice16BitStorageF
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_16bit_storage.html>
 pub trait VK_KHR_16bit_storage: Debug {}
 /// struct for `VK_KHR_16bit_storage`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_16bit_storage {}
 impl VK_KHR_16bit_storage for Vulkan_KHR_16bit_storage {}
 impl Default for Vulkan_KHR_16bit_storage {
@@ -23773,6 +24280,12 @@ impl Default for Vulkan_KHR_16bit_storage {
 impl Vulkan_KHR_16bit_storage {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_KHR_16bit_storage {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_16bit_storage")
+		.finish()
 	}
 }
 /// struct `VkRectLayerKHR` from VK_KHR_incremental_present
@@ -23806,7 +24319,7 @@ pub struct VkPresentRegionsKHR {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_incremental_present.html>
 pub trait VK_KHR_incremental_present: Debug {}
 /// struct for `VK_KHR_incremental_present`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_incremental_present {}
 impl VK_KHR_incremental_present for Vulkan_KHR_incremental_present {}
 impl Default for Vulkan_KHR_incremental_present {
@@ -23817,6 +24330,12 @@ impl Default for Vulkan_KHR_incremental_present {
 impl Vulkan_KHR_incremental_present {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_KHR_incremental_present {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_incremental_present")
+		.finish()
 	}
 }
 /// type definition `VkDescriptorUpdateTemplateKHR` from VK_KHR_descriptor_update_template
@@ -23866,7 +24385,7 @@ pub trait VK_KHR_descriptor_update_template: Debug {
 	fn vkUpdateDescriptorSetWithTemplateKHR(&self, device: VkDevice, descriptorSet: VkDescriptorSet, descriptorUpdateTemplate: VkDescriptorUpdateTemplate, pData: *const c_void) -> Result<()>;
 }
 /// struct for `VK_KHR_descriptor_update_template`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_descriptor_update_template {
 	vk_create_descriptor_update_template_khr: PFN_vkCreateDescriptorUpdateTemplateKHR,
 	vk_destroy_descriptor_update_template_khr: PFN_vkDestroyDescriptorUpdateTemplateKHR,
@@ -23901,6 +24420,15 @@ impl Vulkan_KHR_descriptor_update_template {
 		}
 	}
 }
+impl Debug for Vulkan_KHR_descriptor_update_template {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_descriptor_update_template")
+		.field("vkCreateDescriptorUpdateTemplateKHR", &if self.vk_create_descriptor_update_template_khr == dummy_vkCreateDescriptorUpdateTemplateKHR {unsafe {transmute(null::<PFN_vkCreateDescriptorUpdateTemplateKHR>())}} else {self.vk_create_descriptor_update_template_khr})
+		.field("vkDestroyDescriptorUpdateTemplateKHR", &if self.vk_destroy_descriptor_update_template_khr == dummy_vkDestroyDescriptorUpdateTemplateKHR {unsafe {transmute(null::<PFN_vkDestroyDescriptorUpdateTemplateKHR>())}} else {self.vk_destroy_descriptor_update_template_khr})
+		.field("vkUpdateDescriptorSetWithTemplateKHR", &if self.vk_update_descriptor_set_with_template_khr == dummy_vkUpdateDescriptorSetWithTemplateKHR {unsafe {transmute(null::<PFN_vkUpdateDescriptorSetWithTemplateKHR>())}} else {self.vk_update_descriptor_set_with_template_khr})
+		.finish()
+	}
+}
 /// type definition `VkPhysicalDeviceImagelessFramebufferFeaturesKHR` from VK_KHR_imageless_framebuffer
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPhysicalDeviceImagelessFramebufferFeaturesKHR.html>
 pub type VkPhysicalDeviceImagelessFramebufferFeaturesKHR = VkPhysicalDeviceImagelessFramebufferFeatures;
@@ -23917,7 +24445,7 @@ pub type VkRenderPassAttachmentBeginInfoKHR = VkRenderPassAttachmentBeginInfo;
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_imageless_framebuffer.html>
 pub trait VK_KHR_imageless_framebuffer: Debug {}
 /// struct for `VK_KHR_imageless_framebuffer`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_imageless_framebuffer {}
 impl VK_KHR_imageless_framebuffer for Vulkan_KHR_imageless_framebuffer {}
 impl Default for Vulkan_KHR_imageless_framebuffer {
@@ -23928,6 +24456,12 @@ impl Default for Vulkan_KHR_imageless_framebuffer {
 impl Vulkan_KHR_imageless_framebuffer {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_KHR_imageless_framebuffer {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_imageless_framebuffer")
+		.finish()
 	}
 }
 /// type definition `VkRenderPassCreateInfo2KHR` from VK_KHR_create_renderpass2
@@ -23992,7 +24526,7 @@ pub trait VK_KHR_create_renderpass2: Debug {
 	fn vkCmdEndRenderPass2KHR(&self, commandBuffer: VkCommandBuffer, pSubpassEndInfo: *const VkSubpassEndInfo) -> Result<()>;
 }
 /// struct for `VK_KHR_create_renderpass2`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_create_renderpass2 {
 	vk_create_render_pass2_khr: PFN_vkCreateRenderPass2KHR,
 	vk_cmd_begin_render_pass2_khr: PFN_vkCmdBeginRenderPass2KHR,
@@ -24033,6 +24567,16 @@ impl Vulkan_KHR_create_renderpass2 {
 		}
 	}
 }
+impl Debug for Vulkan_KHR_create_renderpass2 {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_create_renderpass2")
+		.field("vkCreateRenderPass2KHR", &if self.vk_create_render_pass2_khr == dummy_vkCreateRenderPass2KHR {unsafe {transmute(null::<PFN_vkCreateRenderPass2KHR>())}} else {self.vk_create_render_pass2_khr})
+		.field("vkCmdBeginRenderPass2KHR", &if self.vk_cmd_begin_render_pass2_khr == dummy_vkCmdBeginRenderPass2KHR {unsafe {transmute(null::<PFN_vkCmdBeginRenderPass2KHR>())}} else {self.vk_cmd_begin_render_pass2_khr})
+		.field("vkCmdNextSubpass2KHR", &if self.vk_cmd_next_subpass2_khr == dummy_vkCmdNextSubpass2KHR {unsafe {transmute(null::<PFN_vkCmdNextSubpass2KHR>())}} else {self.vk_cmd_next_subpass2_khr})
+		.field("vkCmdEndRenderPass2KHR", &if self.vk_cmd_end_render_pass2_khr == dummy_vkCmdEndRenderPass2KHR {unsafe {transmute(null::<PFN_vkCmdEndRenderPass2KHR>())}} else {self.vk_cmd_end_render_pass2_khr})
+		.finish()
+	}
+}
 /// struct `VkSharedPresentSurfaceCapabilitiesKHR` from VK_KHR_shared_presentable_image
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkSharedPresentSurfaceCapabilitiesKHR.html>
 #[repr(C)]
@@ -24056,7 +24600,7 @@ pub trait VK_KHR_shared_presentable_image: Debug {
 	fn vkGetSwapchainStatusKHR(&self, device: VkDevice, swapchain: VkSwapchainKHR) -> Result<()>;
 }
 /// struct for `VK_KHR_shared_presentable_image`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_shared_presentable_image {
 	vk_get_swapchain_status_khr: PFN_vkGetSwapchainStatusKHR,
 }
@@ -24077,6 +24621,13 @@ impl Vulkan_KHR_shared_presentable_image {
 		Self {
 			vk_get_swapchain_status_khr: {let proc = get_instance_proc_address(instance, "vkGetSwapchainStatusKHR"); if proc == null() {dummy_vkGetSwapchainStatusKHR} else {unsafe {transmute(proc)}}},
 		}
+	}
+}
+impl Debug for Vulkan_KHR_shared_presentable_image {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_shared_presentable_image")
+		.field("vkGetSwapchainStatusKHR", &if self.vk_get_swapchain_status_khr == dummy_vkGetSwapchainStatusKHR {unsafe {transmute(null::<PFN_vkGetSwapchainStatusKHR>())}} else {self.vk_get_swapchain_status_khr})
+		.finish()
 	}
 }
 /// type definition `VkExternalFenceHandleTypeFlagsKHR` from VK_KHR_external_fence_capabilities
@@ -24111,7 +24662,7 @@ pub trait VK_KHR_external_fence_capabilities: Debug {
 	fn vkGetPhysicalDeviceExternalFencePropertiesKHR(&self, physicalDevice: VkPhysicalDevice, pExternalFenceInfo: *const VkPhysicalDeviceExternalFenceInfo, pExternalFenceProperties: *mut VkExternalFenceProperties) -> Result<()>;
 }
 /// struct for `VK_KHR_external_fence_capabilities`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_external_fence_capabilities {
 	vk_get_physical_device_external_fence_properties_khr: PFN_vkGetPhysicalDeviceExternalFencePropertiesKHR,
 }
@@ -24134,6 +24685,13 @@ impl Vulkan_KHR_external_fence_capabilities {
 		}
 	}
 }
+impl Debug for Vulkan_KHR_external_fence_capabilities {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_external_fence_capabilities")
+		.field("vkGetPhysicalDeviceExternalFencePropertiesKHR", &if self.vk_get_physical_device_external_fence_properties_khr == dummy_vkGetPhysicalDeviceExternalFencePropertiesKHR {unsafe {transmute(null::<PFN_vkGetPhysicalDeviceExternalFencePropertiesKHR>())}} else {self.vk_get_physical_device_external_fence_properties_khr})
+		.finish()
+	}
+}
 /// type definition `VkFenceImportFlagsKHR` from VK_KHR_external_fence
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkFenceImportFlagsKHR.html>
 pub type VkFenceImportFlagsKHR = VkFenceImportFlags;
@@ -24147,7 +24705,7 @@ pub type VkExportFenceCreateInfoKHR = VkExportFenceCreateInfo;
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_external_fence.html>
 pub trait VK_KHR_external_fence: Debug {}
 /// struct for `VK_KHR_external_fence`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_external_fence {}
 impl VK_KHR_external_fence for Vulkan_KHR_external_fence {}
 impl Default for Vulkan_KHR_external_fence {
@@ -24158,6 +24716,12 @@ impl Default for Vulkan_KHR_external_fence {
 impl Vulkan_KHR_external_fence {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_KHR_external_fence {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_external_fence")
+		.finish()
 	}
 }
 /// struct `VkImportFenceFdInfoKHR` from VK_KHR_external_fence_fd
@@ -24205,7 +24769,7 @@ pub trait VK_KHR_external_fence_fd: Debug {
 	fn vkGetFenceFdKHR(&self, device: VkDevice, pGetFdInfo: *const VkFenceGetFdInfoKHR, pFd: *mut int) -> Result<()>;
 }
 /// struct for `VK_KHR_external_fence_fd`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_external_fence_fd {
 	vk_import_fence_fd_khr: PFN_vkImportFenceFdKHR,
 	vk_get_fence_fd_khr: PFN_vkGetFenceFdKHR,
@@ -24232,6 +24796,14 @@ impl Vulkan_KHR_external_fence_fd {
 			vk_import_fence_fd_khr: {let proc = get_instance_proc_address(instance, "vkImportFenceFdKHR"); if proc == null() {dummy_vkImportFenceFdKHR} else {unsafe {transmute(proc)}}},
 			vk_get_fence_fd_khr: {let proc = get_instance_proc_address(instance, "vkGetFenceFdKHR"); if proc == null() {dummy_vkGetFenceFdKHR} else {unsafe {transmute(proc)}}},
 		}
+	}
+}
+impl Debug for Vulkan_KHR_external_fence_fd {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_external_fence_fd")
+		.field("vkImportFenceFdKHR", &if self.vk_import_fence_fd_khr == dummy_vkImportFenceFdKHR {unsafe {transmute(null::<PFN_vkImportFenceFdKHR>())}} else {self.vk_import_fence_fd_khr})
+		.field("vkGetFenceFdKHR", &if self.vk_get_fence_fd_khr == dummy_vkGetFenceFdKHR {unsafe {transmute(null::<PFN_vkGetFenceFdKHR>())}} else {self.vk_get_fence_fd_khr})
+		.finish()
 	}
 }
 /// type definition `VkPerformanceCounterDescriptionFlagsKHR` from VK_KHR_performance_query
@@ -24516,7 +25088,7 @@ pub trait VK_KHR_performance_query: Debug {
 	fn vkReleaseProfilingLockKHR(&self, device: VkDevice) -> Result<()>;
 }
 /// struct for `VK_KHR_performance_query`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_performance_query {
 	vk_enumerate_physical_device_queue_family_performance_query_counters_khr: PFN_vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR,
 	vk_get_physical_device_queue_family_performance_query_passes_khr: PFN_vkGetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR,
@@ -24557,6 +25129,16 @@ impl Vulkan_KHR_performance_query {
 		}
 	}
 }
+impl Debug for Vulkan_KHR_performance_query {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_performance_query")
+		.field("vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR", &if self.vk_enumerate_physical_device_queue_family_performance_query_counters_khr == dummy_vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR {unsafe {transmute(null::<PFN_vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR>())}} else {self.vk_enumerate_physical_device_queue_family_performance_query_counters_khr})
+		.field("vkGetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR", &if self.vk_get_physical_device_queue_family_performance_query_passes_khr == dummy_vkGetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR {unsafe {transmute(null::<PFN_vkGetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR>())}} else {self.vk_get_physical_device_queue_family_performance_query_passes_khr})
+		.field("vkAcquireProfilingLockKHR", &if self.vk_acquire_profiling_lock_khr == dummy_vkAcquireProfilingLockKHR {unsafe {transmute(null::<PFN_vkAcquireProfilingLockKHR>())}} else {self.vk_acquire_profiling_lock_khr})
+		.field("vkReleaseProfilingLockKHR", &if self.vk_release_profiling_lock_khr == dummy_vkReleaseProfilingLockKHR {unsafe {transmute(null::<PFN_vkReleaseProfilingLockKHR>())}} else {self.vk_release_profiling_lock_khr})
+		.finish()
+	}
+}
 /// type definition `VkPointClippingBehaviorKHR` from VK_KHR_maintenance2
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPointClippingBehaviorKHR.html>
 pub type VkPointClippingBehaviorKHR = VkPointClippingBehavior;
@@ -24582,7 +25164,7 @@ pub type VkPipelineTessellationDomainOriginStateCreateInfoKHR = VkPipelineTessel
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_maintenance2.html>
 pub trait VK_KHR_maintenance2: Debug {}
 /// struct for `VK_KHR_maintenance2`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_maintenance2 {}
 impl VK_KHR_maintenance2 for Vulkan_KHR_maintenance2 {}
 impl Default for Vulkan_KHR_maintenance2 {
@@ -24593,6 +25175,12 @@ impl Default for Vulkan_KHR_maintenance2 {
 impl Vulkan_KHR_maintenance2 {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_KHR_maintenance2 {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_maintenance2")
+		.finish()
 	}
 }
 /// struct `VkPhysicalDeviceSurfaceInfo2KHR` from VK_KHR_get_surface_capabilities2
@@ -24645,7 +25233,7 @@ pub trait VK_KHR_get_surface_capabilities2: Debug {
 	fn vkGetPhysicalDeviceSurfaceFormats2KHR(&self, physicalDevice: VkPhysicalDevice, pSurfaceInfo: *const VkPhysicalDeviceSurfaceInfo2KHR, pSurfaceFormatCount: *mut uint32_t, pSurfaceFormats: *mut VkSurfaceFormat2KHR) -> Result<()>;
 }
 /// struct for `VK_KHR_get_surface_capabilities2`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_get_surface_capabilities2 {
 	vk_get_physical_device_surface_capabilities2_khr: PFN_vkGetPhysicalDeviceSurfaceCapabilities2KHR,
 	vk_get_physical_device_surface_formats2_khr: PFN_vkGetPhysicalDeviceSurfaceFormats2KHR,
@@ -24674,6 +25262,14 @@ impl Vulkan_KHR_get_surface_capabilities2 {
 		}
 	}
 }
+impl Debug for Vulkan_KHR_get_surface_capabilities2 {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_get_surface_capabilities2")
+		.field("vkGetPhysicalDeviceSurfaceCapabilities2KHR", &if self.vk_get_physical_device_surface_capabilities2_khr == dummy_vkGetPhysicalDeviceSurfaceCapabilities2KHR {unsafe {transmute(null::<PFN_vkGetPhysicalDeviceSurfaceCapabilities2KHR>())}} else {self.vk_get_physical_device_surface_capabilities2_khr})
+		.field("vkGetPhysicalDeviceSurfaceFormats2KHR", &if self.vk_get_physical_device_surface_formats2_khr == dummy_vkGetPhysicalDeviceSurfaceFormats2KHR {unsafe {transmute(null::<PFN_vkGetPhysicalDeviceSurfaceFormats2KHR>())}} else {self.vk_get_physical_device_surface_formats2_khr})
+		.finish()
+	}
+}
 /// type definition `VkPhysicalDeviceVariablePointerFeaturesKHR` from VK_KHR_variable_pointers
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPhysicalDeviceVariablePointerFeaturesKHR.html>
 pub type VkPhysicalDeviceVariablePointerFeaturesKHR = VkPhysicalDeviceVariablePointersFeatures;
@@ -24684,7 +25280,7 @@ pub type VkPhysicalDeviceVariablePointersFeaturesKHR = VkPhysicalDeviceVariableP
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_variable_pointers.html>
 pub trait VK_KHR_variable_pointers: Debug {}
 /// struct for `VK_KHR_variable_pointers`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_variable_pointers {}
 impl VK_KHR_variable_pointers for Vulkan_KHR_variable_pointers {}
 impl Default for Vulkan_KHR_variable_pointers {
@@ -24695,6 +25291,12 @@ impl Default for Vulkan_KHR_variable_pointers {
 impl Vulkan_KHR_variable_pointers {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_KHR_variable_pointers {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_variable_pointers")
+		.finish()
 	}
 }
 /// struct `VkDisplayProperties2KHR` from VK_KHR_get_display_properties2
@@ -24784,7 +25386,7 @@ pub trait VK_KHR_get_display_properties2: Debug {
 	fn vkGetDisplayPlaneCapabilities2KHR(&self, physicalDevice: VkPhysicalDevice, pDisplayPlaneInfo: *const VkDisplayPlaneInfo2KHR, pCapabilities: *mut VkDisplayPlaneCapabilities2KHR) -> Result<()>;
 }
 /// struct for `VK_KHR_get_display_properties2`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_get_display_properties2 {
 	vk_get_physical_device_display_properties2_khr: PFN_vkGetPhysicalDeviceDisplayProperties2KHR,
 	vk_get_physical_device_display_plane_properties2_khr: PFN_vkGetPhysicalDeviceDisplayPlaneProperties2KHR,
@@ -24825,6 +25427,16 @@ impl Vulkan_KHR_get_display_properties2 {
 		}
 	}
 }
+impl Debug for Vulkan_KHR_get_display_properties2 {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_get_display_properties2")
+		.field("vkGetPhysicalDeviceDisplayProperties2KHR", &if self.vk_get_physical_device_display_properties2_khr == dummy_vkGetPhysicalDeviceDisplayProperties2KHR {unsafe {transmute(null::<PFN_vkGetPhysicalDeviceDisplayProperties2KHR>())}} else {self.vk_get_physical_device_display_properties2_khr})
+		.field("vkGetPhysicalDeviceDisplayPlaneProperties2KHR", &if self.vk_get_physical_device_display_plane_properties2_khr == dummy_vkGetPhysicalDeviceDisplayPlaneProperties2KHR {unsafe {transmute(null::<PFN_vkGetPhysicalDeviceDisplayPlaneProperties2KHR>())}} else {self.vk_get_physical_device_display_plane_properties2_khr})
+		.field("vkGetDisplayModeProperties2KHR", &if self.vk_get_display_mode_properties2_khr == dummy_vkGetDisplayModeProperties2KHR {unsafe {transmute(null::<PFN_vkGetDisplayModeProperties2KHR>())}} else {self.vk_get_display_mode_properties2_khr})
+		.field("vkGetDisplayPlaneCapabilities2KHR", &if self.vk_get_display_plane_capabilities2_khr == dummy_vkGetDisplayPlaneCapabilities2KHR {unsafe {transmute(null::<PFN_vkGetDisplayPlaneCapabilities2KHR>())}} else {self.vk_get_display_plane_capabilities2_khr})
+		.finish()
+	}
+}
 /// type definition `VkMemoryDedicatedRequirementsKHR` from VK_KHR_dedicated_allocation
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkMemoryDedicatedRequirementsKHR.html>
 pub type VkMemoryDedicatedRequirementsKHR = VkMemoryDedicatedRequirements;
@@ -24835,7 +25447,7 @@ pub type VkMemoryDedicatedAllocateInfoKHR = VkMemoryDedicatedAllocateInfo;
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_dedicated_allocation.html>
 pub trait VK_KHR_dedicated_allocation: Debug {}
 /// struct for `VK_KHR_dedicated_allocation`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_dedicated_allocation {}
 impl VK_KHR_dedicated_allocation for Vulkan_KHR_dedicated_allocation {}
 impl Default for Vulkan_KHR_dedicated_allocation {
@@ -24848,11 +25460,17 @@ impl Vulkan_KHR_dedicated_allocation {
 		Self {}
 	}
 }
+impl Debug for Vulkan_KHR_dedicated_allocation {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_dedicated_allocation")
+		.finish()
+	}
+}
 /// trait for `VK_KHR_storage_buffer_storage_class`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_storage_buffer_storage_class.html>
 pub trait VK_KHR_storage_buffer_storage_class: Debug {}
 /// struct for `VK_KHR_storage_buffer_storage_class`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_storage_buffer_storage_class {}
 impl VK_KHR_storage_buffer_storage_class for Vulkan_KHR_storage_buffer_storage_class {}
 impl Default for Vulkan_KHR_storage_buffer_storage_class {
@@ -24863,6 +25481,12 @@ impl Default for Vulkan_KHR_storage_buffer_storage_class {
 impl Vulkan_KHR_storage_buffer_storage_class {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_KHR_storage_buffer_storage_class {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_storage_buffer_storage_class")
+		.finish()
 	}
 }
 /// struct `VkPhysicalDeviceShaderBfloat16FeaturesKHR` from VK_KHR_shader_bfloat16
@@ -24880,7 +25504,7 @@ pub struct VkPhysicalDeviceShaderBfloat16FeaturesKHR {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_shader_bfloat16.html>
 pub trait VK_KHR_shader_bfloat16: Debug {}
 /// struct for `VK_KHR_shader_bfloat16`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_shader_bfloat16 {}
 impl VK_KHR_shader_bfloat16 for Vulkan_KHR_shader_bfloat16 {}
 impl Default for Vulkan_KHR_shader_bfloat16 {
@@ -24893,11 +25517,17 @@ impl Vulkan_KHR_shader_bfloat16 {
 		Self {}
 	}
 }
+impl Debug for Vulkan_KHR_shader_bfloat16 {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_shader_bfloat16")
+		.finish()
+	}
+}
 /// trait for `VK_KHR_relaxed_block_layout`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_relaxed_block_layout.html>
 pub trait VK_KHR_relaxed_block_layout: Debug {}
 /// struct for `VK_KHR_relaxed_block_layout`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_relaxed_block_layout {}
 impl VK_KHR_relaxed_block_layout for Vulkan_KHR_relaxed_block_layout {}
 impl Default for Vulkan_KHR_relaxed_block_layout {
@@ -24908,6 +25538,12 @@ impl Default for Vulkan_KHR_relaxed_block_layout {
 impl Vulkan_KHR_relaxed_block_layout {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_KHR_relaxed_block_layout {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_relaxed_block_layout")
+		.finish()
 	}
 }
 /// type definition `VkBufferMemoryRequirementsInfo2KHR` from VK_KHR_get_memory_requirements2
@@ -24957,7 +25593,7 @@ pub trait VK_KHR_get_memory_requirements2: Debug {
 	fn vkGetImageSparseMemoryRequirements2KHR(&self, device: VkDevice, pInfo: *const VkImageSparseMemoryRequirementsInfo2, pSparseMemoryRequirementCount: *mut uint32_t, pSparseMemoryRequirements: *mut VkSparseImageMemoryRequirements2) -> Result<()>;
 }
 /// struct for `VK_KHR_get_memory_requirements2`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_get_memory_requirements2 {
 	vk_get_image_memory_requirements2_khr: PFN_vkGetImageMemoryRequirements2KHR,
 	vk_get_buffer_memory_requirements2_khr: PFN_vkGetBufferMemoryRequirements2KHR,
@@ -24992,6 +25628,15 @@ impl Vulkan_KHR_get_memory_requirements2 {
 		}
 	}
 }
+impl Debug for Vulkan_KHR_get_memory_requirements2 {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_get_memory_requirements2")
+		.field("vkGetImageMemoryRequirements2KHR", &if self.vk_get_image_memory_requirements2_khr == dummy_vkGetImageMemoryRequirements2KHR {unsafe {transmute(null::<PFN_vkGetImageMemoryRequirements2KHR>())}} else {self.vk_get_image_memory_requirements2_khr})
+		.field("vkGetBufferMemoryRequirements2KHR", &if self.vk_get_buffer_memory_requirements2_khr == dummy_vkGetBufferMemoryRequirements2KHR {unsafe {transmute(null::<PFN_vkGetBufferMemoryRequirements2KHR>())}} else {self.vk_get_buffer_memory_requirements2_khr})
+		.field("vkGetImageSparseMemoryRequirements2KHR", &if self.vk_get_image_sparse_memory_requirements2_khr == dummy_vkGetImageSparseMemoryRequirements2KHR {unsafe {transmute(null::<PFN_vkGetImageSparseMemoryRequirements2KHR>())}} else {self.vk_get_image_sparse_memory_requirements2_khr})
+		.finish()
+	}
+}
 /// type definition `VkImageFormatListCreateInfoKHR` from VK_KHR_image_format_list
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkImageFormatListCreateInfoKHR.html>
 pub type VkImageFormatListCreateInfoKHR = VkImageFormatListCreateInfo;
@@ -24999,7 +25644,7 @@ pub type VkImageFormatListCreateInfoKHR = VkImageFormatListCreateInfo;
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_image_format_list.html>
 pub trait VK_KHR_image_format_list: Debug {}
 /// struct for `VK_KHR_image_format_list`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_image_format_list {}
 impl VK_KHR_image_format_list for Vulkan_KHR_image_format_list {}
 impl Default for Vulkan_KHR_image_format_list {
@@ -25010,6 +25655,12 @@ impl Default for Vulkan_KHR_image_format_list {
 impl Vulkan_KHR_image_format_list {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_KHR_image_format_list {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_image_format_list")
+		.finish()
 	}
 }
 /// type definition `VkSamplerYcbcrConversionKHR` from VK_KHR_sampler_ycbcr_conversion
@@ -25065,7 +25716,7 @@ pub trait VK_KHR_sampler_ycbcr_conversion: Debug {
 	fn vkDestroySamplerYcbcrConversionKHR(&self, device: VkDevice, ycbcrConversion: VkSamplerYcbcrConversion, pAllocator: *const VkAllocationCallbacks) -> Result<()>;
 }
 /// struct for `VK_KHR_sampler_ycbcr_conversion`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_sampler_ycbcr_conversion {
 	vk_create_sampler_ycbcr_conversion_khr: PFN_vkCreateSamplerYcbcrConversionKHR,
 	vk_destroy_sampler_ycbcr_conversion_khr: PFN_vkDestroySamplerYcbcrConversionKHR,
@@ -25092,6 +25743,14 @@ impl Vulkan_KHR_sampler_ycbcr_conversion {
 			vk_create_sampler_ycbcr_conversion_khr: {let proc = get_instance_proc_address(instance, "vkCreateSamplerYcbcrConversionKHR"); if proc == null() {dummy_vkCreateSamplerYcbcrConversionKHR} else {unsafe {transmute(proc)}}},
 			vk_destroy_sampler_ycbcr_conversion_khr: {let proc = get_instance_proc_address(instance, "vkDestroySamplerYcbcrConversionKHR"); if proc == null() {dummy_vkDestroySamplerYcbcrConversionKHR} else {unsafe {transmute(proc)}}},
 		}
+	}
+}
+impl Debug for Vulkan_KHR_sampler_ycbcr_conversion {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_sampler_ycbcr_conversion")
+		.field("vkCreateSamplerYcbcrConversionKHR", &if self.vk_create_sampler_ycbcr_conversion_khr == dummy_vkCreateSamplerYcbcrConversionKHR {unsafe {transmute(null::<PFN_vkCreateSamplerYcbcrConversionKHR>())}} else {self.vk_create_sampler_ycbcr_conversion_khr})
+		.field("vkDestroySamplerYcbcrConversionKHR", &if self.vk_destroy_sampler_ycbcr_conversion_khr == dummy_vkDestroySamplerYcbcrConversionKHR {unsafe {transmute(null::<PFN_vkDestroySamplerYcbcrConversionKHR>())}} else {self.vk_destroy_sampler_ycbcr_conversion_khr})
+		.finish()
 	}
 }
 /// type definition `VkBindBufferMemoryInfoKHR` from VK_KHR_bind_memory2
@@ -25123,7 +25782,7 @@ pub trait VK_KHR_bind_memory2: Debug {
 	fn vkBindImageMemory2KHR(&self, device: VkDevice, bindInfoCount: u32, pBindInfos: *const VkBindImageMemoryInfo) -> Result<()>;
 }
 /// struct for `VK_KHR_bind_memory2`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_bind_memory2 {
 	vk_bind_buffer_memory2_khr: PFN_vkBindBufferMemory2KHR,
 	vk_bind_image_memory2_khr: PFN_vkBindImageMemory2KHR,
@@ -25152,6 +25811,14 @@ impl Vulkan_KHR_bind_memory2 {
 		}
 	}
 }
+impl Debug for Vulkan_KHR_bind_memory2 {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_bind_memory2")
+		.field("vkBindBufferMemory2KHR", &if self.vk_bind_buffer_memory2_khr == dummy_vkBindBufferMemory2KHR {unsafe {transmute(null::<PFN_vkBindBufferMemory2KHR>())}} else {self.vk_bind_buffer_memory2_khr})
+		.field("vkBindImageMemory2KHR", &if self.vk_bind_image_memory2_khr == dummy_vkBindImageMemory2KHR {unsafe {transmute(null::<PFN_vkBindImageMemory2KHR>())}} else {self.vk_bind_image_memory2_khr})
+		.finish()
+	}
+}
 /// type definition `VkPhysicalDeviceMaintenance3PropertiesKHR` from VK_KHR_maintenance3
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPhysicalDeviceMaintenance3PropertiesKHR.html>
 pub type VkPhysicalDeviceMaintenance3PropertiesKHR = VkPhysicalDeviceMaintenance3Properties;
@@ -25172,7 +25839,7 @@ pub trait VK_KHR_maintenance3: Debug {
 	fn vkGetDescriptorSetLayoutSupportKHR(&self, device: VkDevice, pCreateInfo: *const VkDescriptorSetLayoutCreateInfo, pSupport: *mut VkDescriptorSetLayoutSupport) -> Result<()>;
 }
 /// struct for `VK_KHR_maintenance3`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_maintenance3 {
 	vk_get_descriptor_set_layout_support_khr: PFN_vkGetDescriptorSetLayoutSupportKHR,
 }
@@ -25193,6 +25860,13 @@ impl Vulkan_KHR_maintenance3 {
 		Self {
 			vk_get_descriptor_set_layout_support_khr: {let proc = get_instance_proc_address(instance, "vkGetDescriptorSetLayoutSupportKHR"); if proc == null() {dummy_vkGetDescriptorSetLayoutSupportKHR} else {unsafe {transmute(proc)}}},
 		}
+	}
+}
+impl Debug for Vulkan_KHR_maintenance3 {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_maintenance3")
+		.field("vkGetDescriptorSetLayoutSupportKHR", &if self.vk_get_descriptor_set_layout_support_khr == dummy_vkGetDescriptorSetLayoutSupportKHR {unsafe {transmute(null::<PFN_vkGetDescriptorSetLayoutSupportKHR>())}} else {self.vk_get_descriptor_set_layout_support_khr})
+		.finish()
 	}
 }
 /// function prototype `PFN_vkCmdDrawIndirectCountKHR` from VK_KHR_draw_indirect_count
@@ -25218,7 +25892,7 @@ pub trait VK_KHR_draw_indirect_count: Debug {
 	fn vkCmdDrawIndexedIndirectCountKHR(&self, commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize, countBuffer: VkBuffer, countBufferOffset: VkDeviceSize, maxDrawCount: u32, stride: u32) -> Result<()>;
 }
 /// struct for `VK_KHR_draw_indirect_count`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_draw_indirect_count {
 	vk_cmd_draw_indirect_count_khr: PFN_vkCmdDrawIndirectCountKHR,
 	vk_cmd_draw_indexed_indirect_count_khr: PFN_vkCmdDrawIndexedIndirectCountKHR,
@@ -25247,6 +25921,14 @@ impl Vulkan_KHR_draw_indirect_count {
 		}
 	}
 }
+impl Debug for Vulkan_KHR_draw_indirect_count {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_draw_indirect_count")
+		.field("vkCmdDrawIndirectCountKHR", &if self.vk_cmd_draw_indirect_count_khr == dummy_vkCmdDrawIndirectCountKHR {unsafe {transmute(null::<PFN_vkCmdDrawIndirectCountKHR>())}} else {self.vk_cmd_draw_indirect_count_khr})
+		.field("vkCmdDrawIndexedIndirectCountKHR", &if self.vk_cmd_draw_indexed_indirect_count_khr == dummy_vkCmdDrawIndexedIndirectCountKHR {unsafe {transmute(null::<PFN_vkCmdDrawIndexedIndirectCountKHR>())}} else {self.vk_cmd_draw_indexed_indirect_count_khr})
+		.finish()
+	}
+}
 /// type definition `VkPhysicalDeviceShaderSubgroupExtendedTypesFeaturesKHR` from VK_KHR_shader_subgroup_extended_types
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPhysicalDeviceShaderSubgroupExtendedTypesFeaturesKHR.html>
 pub type VkPhysicalDeviceShaderSubgroupExtendedTypesFeaturesKHR = VkPhysicalDeviceShaderSubgroupExtendedTypesFeatures;
@@ -25254,7 +25936,7 @@ pub type VkPhysicalDeviceShaderSubgroupExtendedTypesFeaturesKHR = VkPhysicalDevi
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_shader_subgroup_extended_types.html>
 pub trait VK_KHR_shader_subgroup_extended_types: Debug {}
 /// struct for `VK_KHR_shader_subgroup_extended_types`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_shader_subgroup_extended_types {}
 impl VK_KHR_shader_subgroup_extended_types for Vulkan_KHR_shader_subgroup_extended_types {}
 impl Default for Vulkan_KHR_shader_subgroup_extended_types {
@@ -25267,6 +25949,12 @@ impl Vulkan_KHR_shader_subgroup_extended_types {
 		Self {}
 	}
 }
+impl Debug for Vulkan_KHR_shader_subgroup_extended_types {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_shader_subgroup_extended_types")
+		.finish()
+	}
+}
 /// type definition `VkPhysicalDevice8BitStorageFeaturesKHR` from VK_KHR_8bit_storage
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPhysicalDevice8BitStorageFeaturesKHR.html>
 pub type VkPhysicalDevice8BitStorageFeaturesKHR = VkPhysicalDevice8BitStorageFeatures;
@@ -25274,7 +25962,7 @@ pub type VkPhysicalDevice8BitStorageFeaturesKHR = VkPhysicalDevice8BitStorageFea
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_8bit_storage.html>
 pub trait VK_KHR_8bit_storage: Debug {}
 /// struct for `VK_KHR_8bit_storage`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_8bit_storage {}
 impl VK_KHR_8bit_storage for Vulkan_KHR_8bit_storage {}
 impl Default for Vulkan_KHR_8bit_storage {
@@ -25287,6 +25975,12 @@ impl Vulkan_KHR_8bit_storage {
 		Self {}
 	}
 }
+impl Debug for Vulkan_KHR_8bit_storage {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_8bit_storage")
+		.finish()
+	}
+}
 /// type definition `VkPhysicalDeviceShaderAtomicInt64FeaturesKHR` from VK_KHR_shader_atomic_int64
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPhysicalDeviceShaderAtomicInt64FeaturesKHR.html>
 pub type VkPhysicalDeviceShaderAtomicInt64FeaturesKHR = VkPhysicalDeviceShaderAtomicInt64Features;
@@ -25294,7 +25988,7 @@ pub type VkPhysicalDeviceShaderAtomicInt64FeaturesKHR = VkPhysicalDeviceShaderAt
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_shader_atomic_int64.html>
 pub trait VK_KHR_shader_atomic_int64: Debug {}
 /// struct for `VK_KHR_shader_atomic_int64`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_shader_atomic_int64 {}
 impl VK_KHR_shader_atomic_int64 for Vulkan_KHR_shader_atomic_int64 {}
 impl Default for Vulkan_KHR_shader_atomic_int64 {
@@ -25305,6 +25999,12 @@ impl Default for Vulkan_KHR_shader_atomic_int64 {
 impl Vulkan_KHR_shader_atomic_int64 {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_KHR_shader_atomic_int64 {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_shader_atomic_int64")
+		.finish()
 	}
 }
 /// struct `VkPhysicalDeviceShaderClockFeaturesKHR` from VK_KHR_shader_clock
@@ -25321,7 +26021,7 @@ pub struct VkPhysicalDeviceShaderClockFeaturesKHR {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_shader_clock.html>
 pub trait VK_KHR_shader_clock: Debug {}
 /// struct for `VK_KHR_shader_clock`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_shader_clock {}
 impl VK_KHR_shader_clock for Vulkan_KHR_shader_clock {}
 impl Default for Vulkan_KHR_shader_clock {
@@ -25332,6 +26032,12 @@ impl Default for Vulkan_KHR_shader_clock {
 impl Vulkan_KHR_shader_clock {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_KHR_shader_clock {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_shader_clock")
+		.finish()
 	}
 }
 /// struct `VkVideoDecodeH265ProfileInfoKHR` from VK_KHR_video_decode_h265
@@ -25402,7 +26108,7 @@ pub struct VkVideoDecodeH265DpbSlotInfoKHR {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_video_decode_h265.html>
 pub trait VK_KHR_video_decode_h265: Debug {}
 /// struct for `VK_KHR_video_decode_h265`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_video_decode_h265 {}
 impl VK_KHR_video_decode_h265 for Vulkan_KHR_video_decode_h265 {}
 impl Default for Vulkan_KHR_video_decode_h265 {
@@ -25413,6 +26119,12 @@ impl Default for Vulkan_KHR_video_decode_h265 {
 impl Vulkan_KHR_video_decode_h265 {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_KHR_video_decode_h265 {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_video_decode_h265")
+		.finish()
 	}
 }
 /// constant `VK_STD_VULKAN_VIDEO_CODEC_H265_DECODE_API_VERSION_1_0_0` from vulkan_video_codec_h265std_decode
@@ -25523,7 +26235,7 @@ pub struct StdVideoDecodeH265ReferenceInfo {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vulkan_video_codec_h265std_decode.html>
 pub trait vulkan_video_codec_h265std_decode: Debug {}
 /// struct for `vulkan_video_codec_h265std_decode`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_video_codec_h265std_decode {}
 impl vulkan_video_codec_h265std_decode for Vulkan_video_codec_h265std_decode {}
 impl Default for Vulkan_video_codec_h265std_decode {
@@ -25534,6 +26246,12 @@ impl Default for Vulkan_video_codec_h265std_decode {
 impl Vulkan_video_codec_h265std_decode {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_video_codec_h265std_decode {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_video_codec_h265std_decode")
+		.finish()
 	}
 }
 /// constant `VK_MAX_GLOBAL_PRIORITY_SIZE_KHR` from VK_KHR_global_priority
@@ -25555,7 +26273,7 @@ pub type VkQueueFamilyGlobalPriorityPropertiesKHR = VkQueueFamilyGlobalPriorityP
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_global_priority.html>
 pub trait VK_KHR_global_priority: Debug {}
 /// struct for `VK_KHR_global_priority`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_global_priority {}
 impl VK_KHR_global_priority for Vulkan_KHR_global_priority {}
 impl Default for Vulkan_KHR_global_priority {
@@ -25566,6 +26284,12 @@ impl Default for Vulkan_KHR_global_priority {
 impl Vulkan_KHR_global_priority {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_KHR_global_priority {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_global_priority")
+		.finish()
 	}
 }
 /// constant `VK_MAX_DRIVER_NAME_SIZE_KHR` from VK_KHR_driver_properties
@@ -25587,7 +26311,7 @@ pub type VkPhysicalDeviceDriverPropertiesKHR = VkPhysicalDeviceDriverProperties;
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_driver_properties.html>
 pub trait VK_KHR_driver_properties: Debug {}
 /// struct for `VK_KHR_driver_properties`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_driver_properties {}
 impl VK_KHR_driver_properties for Vulkan_KHR_driver_properties {}
 impl Default for Vulkan_KHR_driver_properties {
@@ -25600,6 +26324,12 @@ impl Vulkan_KHR_driver_properties {
 		Self {}
 	}
 }
+impl Debug for Vulkan_KHR_driver_properties {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_driver_properties")
+		.finish()
+	}
+}
 /// type definition `VkShaderFloatControlsIndependenceKHR` from VK_KHR_shader_float_controls
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkShaderFloatControlsIndependenceKHR.html>
 pub type VkShaderFloatControlsIndependenceKHR = VkShaderFloatControlsIndependence;
@@ -25610,7 +26340,7 @@ pub type VkPhysicalDeviceFloatControlsPropertiesKHR = VkPhysicalDeviceFloatContr
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_shader_float_controls.html>
 pub trait VK_KHR_shader_float_controls: Debug {}
 /// struct for `VK_KHR_shader_float_controls`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_shader_float_controls {}
 impl VK_KHR_shader_float_controls for Vulkan_KHR_shader_float_controls {}
 impl Default for Vulkan_KHR_shader_float_controls {
@@ -25621,6 +26351,12 @@ impl Default for Vulkan_KHR_shader_float_controls {
 impl Vulkan_KHR_shader_float_controls {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_KHR_shader_float_controls {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_shader_float_controls")
+		.finish()
 	}
 }
 /// type definition `VkResolveModeFlagBitsKHR` from VK_KHR_depth_stencil_resolve
@@ -25639,7 +26375,7 @@ pub type VkPhysicalDeviceDepthStencilResolvePropertiesKHR = VkPhysicalDeviceDept
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_depth_stencil_resolve.html>
 pub trait VK_KHR_depth_stencil_resolve: Debug {}
 /// struct for `VK_KHR_depth_stencil_resolve`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_depth_stencil_resolve {}
 impl VK_KHR_depth_stencil_resolve for Vulkan_KHR_depth_stencil_resolve {}
 impl Default for Vulkan_KHR_depth_stencil_resolve {
@@ -25652,11 +26388,17 @@ impl Vulkan_KHR_depth_stencil_resolve {
 		Self {}
 	}
 }
+impl Debug for Vulkan_KHR_depth_stencil_resolve {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_depth_stencil_resolve")
+		.finish()
+	}
+}
 /// trait for `VK_KHR_swapchain_mutable_format`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_swapchain_mutable_format.html>
 pub trait VK_KHR_swapchain_mutable_format: Debug {}
 /// struct for `VK_KHR_swapchain_mutable_format`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_swapchain_mutable_format {}
 impl VK_KHR_swapchain_mutable_format for Vulkan_KHR_swapchain_mutable_format {}
 impl Default for Vulkan_KHR_swapchain_mutable_format {
@@ -25667,6 +26409,12 @@ impl Default for Vulkan_KHR_swapchain_mutable_format {
 impl Vulkan_KHR_swapchain_mutable_format {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_KHR_swapchain_mutable_format {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_swapchain_mutable_format")
+		.finish()
 	}
 }
 /// type definition `VkSemaphoreTypeKHR` from VK_KHR_timeline_semaphore
@@ -25728,7 +26476,7 @@ pub trait VK_KHR_timeline_semaphore: Debug {
 	fn vkSignalSemaphoreKHR(&self, device: VkDevice, pSignalInfo: *const VkSemaphoreSignalInfo) -> Result<()>;
 }
 /// struct for `VK_KHR_timeline_semaphore`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_timeline_semaphore {
 	vk_get_semaphore_counter_value_khr: PFN_vkGetSemaphoreCounterValueKHR,
 	vk_wait_semaphores_khr: PFN_vkWaitSemaphoresKHR,
@@ -25763,6 +26511,15 @@ impl Vulkan_KHR_timeline_semaphore {
 		}
 	}
 }
+impl Debug for Vulkan_KHR_timeline_semaphore {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_timeline_semaphore")
+		.field("vkGetSemaphoreCounterValueKHR", &if self.vk_get_semaphore_counter_value_khr == dummy_vkGetSemaphoreCounterValueKHR {unsafe {transmute(null::<PFN_vkGetSemaphoreCounterValueKHR>())}} else {self.vk_get_semaphore_counter_value_khr})
+		.field("vkWaitSemaphoresKHR", &if self.vk_wait_semaphores_khr == dummy_vkWaitSemaphoresKHR {unsafe {transmute(null::<PFN_vkWaitSemaphoresKHR>())}} else {self.vk_wait_semaphores_khr})
+		.field("vkSignalSemaphoreKHR", &if self.vk_signal_semaphore_khr == dummy_vkSignalSemaphoreKHR {unsafe {transmute(null::<PFN_vkSignalSemaphoreKHR>())}} else {self.vk_signal_semaphore_khr})
+		.finish()
+	}
+}
 /// type definition `VkPhysicalDeviceVulkanMemoryModelFeaturesKHR` from VK_KHR_vulkan_memory_model
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPhysicalDeviceVulkanMemoryModelFeaturesKHR.html>
 pub type VkPhysicalDeviceVulkanMemoryModelFeaturesKHR = VkPhysicalDeviceVulkanMemoryModelFeatures;
@@ -25770,7 +26527,7 @@ pub type VkPhysicalDeviceVulkanMemoryModelFeaturesKHR = VkPhysicalDeviceVulkanMe
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_vulkan_memory_model.html>
 pub trait VK_KHR_vulkan_memory_model: Debug {}
 /// struct for `VK_KHR_vulkan_memory_model`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_vulkan_memory_model {}
 impl VK_KHR_vulkan_memory_model for Vulkan_KHR_vulkan_memory_model {}
 impl Default for Vulkan_KHR_vulkan_memory_model {
@@ -25783,6 +26540,12 @@ impl Vulkan_KHR_vulkan_memory_model {
 		Self {}
 	}
 }
+impl Debug for Vulkan_KHR_vulkan_memory_model {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_vulkan_memory_model")
+		.finish()
+	}
+}
 /// type definition `VkPhysicalDeviceShaderTerminateInvocationFeaturesKHR` from VK_KHR_shader_terminate_invocation
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPhysicalDeviceShaderTerminateInvocationFeaturesKHR.html>
 pub type VkPhysicalDeviceShaderTerminateInvocationFeaturesKHR = VkPhysicalDeviceShaderTerminateInvocationFeatures;
@@ -25790,7 +26553,7 @@ pub type VkPhysicalDeviceShaderTerminateInvocationFeaturesKHR = VkPhysicalDevice
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_shader_terminate_invocation.html>
 pub trait VK_KHR_shader_terminate_invocation: Debug {}
 /// struct for `VK_KHR_shader_terminate_invocation`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_shader_terminate_invocation {}
 impl VK_KHR_shader_terminate_invocation for Vulkan_KHR_shader_terminate_invocation {}
 impl Default for Vulkan_KHR_shader_terminate_invocation {
@@ -25801,6 +26564,12 @@ impl Default for Vulkan_KHR_shader_terminate_invocation {
 impl Vulkan_KHR_shader_terminate_invocation {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_KHR_shader_terminate_invocation {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_shader_terminate_invocation")
+		.finish()
 	}
 }
 /// enum `VkFragmentShadingRateCombinerOpKHR` from VK_KHR_fragment_shading_rate
@@ -25915,7 +26684,7 @@ pub trait VK_KHR_fragment_shading_rate: Debug {
 	fn vkCmdSetFragmentShadingRateKHR(&self, commandBuffer: VkCommandBuffer, pFragmentSize: *const VkExtent2D, combinerOps: &[VkFragmentShadingRateCombinerOpKHR; 2 as usize]) -> Result<()>;
 }
 /// struct for `VK_KHR_fragment_shading_rate`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_fragment_shading_rate {
 	vk_get_physical_device_fragment_shading_rates_khr: PFN_vkGetPhysicalDeviceFragmentShadingRatesKHR,
 	vk_cmd_set_fragment_shading_rate_khr: PFN_vkCmdSetFragmentShadingRateKHR,
@@ -25942,6 +26711,14 @@ impl Vulkan_KHR_fragment_shading_rate {
 			vk_get_physical_device_fragment_shading_rates_khr: {let proc = get_instance_proc_address(instance, "vkGetPhysicalDeviceFragmentShadingRatesKHR"); if proc == null() {dummy_vkGetPhysicalDeviceFragmentShadingRatesKHR} else {unsafe {transmute(proc)}}},
 			vk_cmd_set_fragment_shading_rate_khr: {let proc = get_instance_proc_address(instance, "vkCmdSetFragmentShadingRateKHR"); if proc == null() {dummy_vkCmdSetFragmentShadingRateKHR} else {unsafe {transmute(proc)}}},
 		}
+	}
+}
+impl Debug for Vulkan_KHR_fragment_shading_rate {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_fragment_shading_rate")
+		.field("vkGetPhysicalDeviceFragmentShadingRatesKHR", &if self.vk_get_physical_device_fragment_shading_rates_khr == dummy_vkGetPhysicalDeviceFragmentShadingRatesKHR {unsafe {transmute(null::<PFN_vkGetPhysicalDeviceFragmentShadingRatesKHR>())}} else {self.vk_get_physical_device_fragment_shading_rates_khr})
+		.field("vkCmdSetFragmentShadingRateKHR", &if self.vk_cmd_set_fragment_shading_rate_khr == dummy_vkCmdSetFragmentShadingRateKHR {unsafe {transmute(null::<PFN_vkCmdSetFragmentShadingRateKHR>())}} else {self.vk_cmd_set_fragment_shading_rate_khr})
+		.finish()
 	}
 }
 /// type definition `VkPhysicalDeviceDynamicRenderingLocalReadFeaturesKHR` from VK_KHR_dynamic_rendering_local_read
@@ -25976,7 +26753,7 @@ pub trait VK_KHR_dynamic_rendering_local_read: Debug {
 	fn vkCmdSetRenderingInputAttachmentIndicesKHR(&self, commandBuffer: VkCommandBuffer, pInputAttachmentIndexInfo: *const VkRenderingInputAttachmentIndexInfo) -> Result<()>;
 }
 /// struct for `VK_KHR_dynamic_rendering_local_read`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_dynamic_rendering_local_read {
 	vk_cmd_set_rendering_attachment_locations_khr: PFN_vkCmdSetRenderingAttachmentLocationsKHR,
 	vk_cmd_set_rendering_input_attachment_indices_khr: PFN_vkCmdSetRenderingInputAttachmentIndicesKHR,
@@ -26005,6 +26782,14 @@ impl Vulkan_KHR_dynamic_rendering_local_read {
 		}
 	}
 }
+impl Debug for Vulkan_KHR_dynamic_rendering_local_read {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_dynamic_rendering_local_read")
+		.field("vkCmdSetRenderingAttachmentLocationsKHR", &if self.vk_cmd_set_rendering_attachment_locations_khr == dummy_vkCmdSetRenderingAttachmentLocationsKHR {unsafe {transmute(null::<PFN_vkCmdSetRenderingAttachmentLocationsKHR>())}} else {self.vk_cmd_set_rendering_attachment_locations_khr})
+		.field("vkCmdSetRenderingInputAttachmentIndicesKHR", &if self.vk_cmd_set_rendering_input_attachment_indices_khr == dummy_vkCmdSetRenderingInputAttachmentIndicesKHR {unsafe {transmute(null::<PFN_vkCmdSetRenderingInputAttachmentIndicesKHR>())}} else {self.vk_cmd_set_rendering_input_attachment_indices_khr})
+		.finish()
+	}
+}
 /// struct `VkPhysicalDeviceShaderQuadControlFeaturesKHR` from VK_KHR_shader_quad_control
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPhysicalDeviceShaderQuadControlFeaturesKHR.html>
 #[repr(C)]
@@ -26018,7 +26803,7 @@ pub struct VkPhysicalDeviceShaderQuadControlFeaturesKHR {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_shader_quad_control.html>
 pub trait VK_KHR_shader_quad_control: Debug {}
 /// struct for `VK_KHR_shader_quad_control`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_shader_quad_control {}
 impl VK_KHR_shader_quad_control for Vulkan_KHR_shader_quad_control {}
 impl Default for Vulkan_KHR_shader_quad_control {
@@ -26031,11 +26816,17 @@ impl Vulkan_KHR_shader_quad_control {
 		Self {}
 	}
 }
+impl Debug for Vulkan_KHR_shader_quad_control {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_shader_quad_control")
+		.finish()
+	}
+}
 /// trait for `VK_KHR_spirv_1_4`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_spirv_1_4.html>
 pub trait VK_KHR_spirv_1_4: Debug {}
 /// struct for `VK_KHR_spirv_1_4`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_spirv_1_4 {}
 impl VK_KHR_spirv_1_4 for Vulkan_KHR_spirv_1_4 {}
 impl Default for Vulkan_KHR_spirv_1_4 {
@@ -26046,6 +26837,12 @@ impl Default for Vulkan_KHR_spirv_1_4 {
 impl Vulkan_KHR_spirv_1_4 {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_KHR_spirv_1_4 {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_spirv_1_4")
+		.finish()
 	}
 }
 /// struct `VkSurfaceProtectedCapabilitiesKHR` from VK_KHR_surface_protected_capabilities
@@ -26061,7 +26858,7 @@ pub struct VkSurfaceProtectedCapabilitiesKHR {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_surface_protected_capabilities.html>
 pub trait VK_KHR_surface_protected_capabilities: Debug {}
 /// struct for `VK_KHR_surface_protected_capabilities`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_surface_protected_capabilities {}
 impl VK_KHR_surface_protected_capabilities for Vulkan_KHR_surface_protected_capabilities {}
 impl Default for Vulkan_KHR_surface_protected_capabilities {
@@ -26072,6 +26869,12 @@ impl Default for Vulkan_KHR_surface_protected_capabilities {
 impl Vulkan_KHR_surface_protected_capabilities {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_KHR_surface_protected_capabilities {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_surface_protected_capabilities")
+		.finish()
 	}
 }
 /// type definition `VkPhysicalDeviceSeparateDepthStencilLayoutsFeaturesKHR` from VK_KHR_separate_depth_stencil_layouts
@@ -26087,7 +26890,7 @@ pub type VkAttachmentDescriptionStencilLayoutKHR = VkAttachmentDescriptionStenci
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_separate_depth_stencil_layouts.html>
 pub trait VK_KHR_separate_depth_stencil_layouts: Debug {}
 /// struct for `VK_KHR_separate_depth_stencil_layouts`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_separate_depth_stencil_layouts {}
 impl VK_KHR_separate_depth_stencil_layouts for Vulkan_KHR_separate_depth_stencil_layouts {}
 impl Default for Vulkan_KHR_separate_depth_stencil_layouts {
@@ -26098,6 +26901,12 @@ impl Default for Vulkan_KHR_separate_depth_stencil_layouts {
 impl Vulkan_KHR_separate_depth_stencil_layouts {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_KHR_separate_depth_stencil_layouts {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_separate_depth_stencil_layouts")
+		.finish()
 	}
 }
 /// struct `VkPhysicalDevicePresentWaitFeaturesKHR` from VK_KHR_present_wait
@@ -26123,7 +26932,7 @@ pub trait VK_KHR_present_wait: Debug {
 	fn vkWaitForPresentKHR(&self, device: VkDevice, swapchain: VkSwapchainKHR, presentId: u64, timeout: u64) -> Result<()>;
 }
 /// struct for `VK_KHR_present_wait`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_present_wait {
 	vk_wait_for_present_khr: PFN_vkWaitForPresentKHR,
 }
@@ -26146,6 +26955,13 @@ impl Vulkan_KHR_present_wait {
 		}
 	}
 }
+impl Debug for Vulkan_KHR_present_wait {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_present_wait")
+		.field("vkWaitForPresentKHR", &if self.vk_wait_for_present_khr == dummy_vkWaitForPresentKHR {unsafe {transmute(null::<PFN_vkWaitForPresentKHR>())}} else {self.vk_wait_for_present_khr})
+		.finish()
+	}
+}
 /// type definition `VkPhysicalDeviceUniformBufferStandardLayoutFeaturesKHR` from VK_KHR_uniform_buffer_standard_layout
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPhysicalDeviceUniformBufferStandardLayoutFeaturesKHR.html>
 pub type VkPhysicalDeviceUniformBufferStandardLayoutFeaturesKHR = VkPhysicalDeviceUniformBufferStandardLayoutFeatures;
@@ -26153,7 +26969,7 @@ pub type VkPhysicalDeviceUniformBufferStandardLayoutFeaturesKHR = VkPhysicalDevi
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_uniform_buffer_standard_layout.html>
 pub trait VK_KHR_uniform_buffer_standard_layout: Debug {}
 /// struct for `VK_KHR_uniform_buffer_standard_layout`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_uniform_buffer_standard_layout {}
 impl VK_KHR_uniform_buffer_standard_layout for Vulkan_KHR_uniform_buffer_standard_layout {}
 impl Default for Vulkan_KHR_uniform_buffer_standard_layout {
@@ -26164,6 +26980,12 @@ impl Default for Vulkan_KHR_uniform_buffer_standard_layout {
 impl Vulkan_KHR_uniform_buffer_standard_layout {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_KHR_uniform_buffer_standard_layout {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_uniform_buffer_standard_layout")
+		.finish()
 	}
 }
 /// type definition `VkPhysicalDeviceBufferDeviceAddressFeaturesKHR` from VK_KHR_buffer_device_address
@@ -26213,7 +27035,7 @@ pub trait VK_KHR_buffer_device_address: Debug {
 	fn vkGetDeviceMemoryOpaqueCaptureAddressKHR(&self, device: VkDevice, pInfo: *const VkDeviceMemoryOpaqueCaptureAddressInfo) -> Result<u64>;
 }
 /// struct for `VK_KHR_buffer_device_address`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_buffer_device_address {
 	vk_get_buffer_device_address_khr: PFN_vkGetBufferDeviceAddressKHR,
 	vk_get_buffer_opaque_capture_address_khr: PFN_vkGetBufferOpaqueCaptureAddressKHR,
@@ -26246,6 +27068,15 @@ impl Vulkan_KHR_buffer_device_address {
 			vk_get_buffer_opaque_capture_address_khr: {let proc = get_instance_proc_address(instance, "vkGetBufferOpaqueCaptureAddressKHR"); if proc == null() {dummy_vkGetBufferOpaqueCaptureAddressKHR} else {unsafe {transmute(proc)}}},
 			vk_get_device_memory_opaque_capture_address_khr: {let proc = get_instance_proc_address(instance, "vkGetDeviceMemoryOpaqueCaptureAddressKHR"); if proc == null() {dummy_vkGetDeviceMemoryOpaqueCaptureAddressKHR} else {unsafe {transmute(proc)}}},
 		}
+	}
+}
+impl Debug for Vulkan_KHR_buffer_device_address {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_buffer_device_address")
+		.field("vkGetBufferDeviceAddressKHR", &if self.vk_get_buffer_device_address_khr == dummy_vkGetBufferDeviceAddressKHR {unsafe {transmute(null::<PFN_vkGetBufferDeviceAddressKHR>())}} else {self.vk_get_buffer_device_address_khr})
+		.field("vkGetBufferOpaqueCaptureAddressKHR", &if self.vk_get_buffer_opaque_capture_address_khr == dummy_vkGetBufferOpaqueCaptureAddressKHR {unsafe {transmute(null::<PFN_vkGetBufferOpaqueCaptureAddressKHR>())}} else {self.vk_get_buffer_opaque_capture_address_khr})
+		.field("vkGetDeviceMemoryOpaqueCaptureAddressKHR", &if self.vk_get_device_memory_opaque_capture_address_khr == dummy_vkGetDeviceMemoryOpaqueCaptureAddressKHR {unsafe {transmute(null::<PFN_vkGetDeviceMemoryOpaqueCaptureAddressKHR>())}} else {self.vk_get_device_memory_opaque_capture_address_khr})
+		.finish()
 	}
 }
 /// Non-dispatchable handle `VkDeferredOperationKHR` from VK_KHR_deferred_host_operations
@@ -26303,7 +27134,7 @@ pub trait VK_KHR_deferred_host_operations: Debug {
 	fn vkDeferredOperationJoinKHR(&self, device: VkDevice, operation: VkDeferredOperationKHR) -> Result<()>;
 }
 /// struct for `VK_KHR_deferred_host_operations`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_deferred_host_operations {
 	vk_create_deferred_operation_khr: PFN_vkCreateDeferredOperationKHR,
 	vk_destroy_deferred_operation_khr: PFN_vkDestroyDeferredOperationKHR,
@@ -26348,6 +27179,17 @@ impl Vulkan_KHR_deferred_host_operations {
 			vk_get_deferred_operation_result_khr: {let proc = get_instance_proc_address(instance, "vkGetDeferredOperationResultKHR"); if proc == null() {dummy_vkGetDeferredOperationResultKHR} else {unsafe {transmute(proc)}}},
 			vk_deferred_operation_join_khr: {let proc = get_instance_proc_address(instance, "vkDeferredOperationJoinKHR"); if proc == null() {dummy_vkDeferredOperationJoinKHR} else {unsafe {transmute(proc)}}},
 		}
+	}
+}
+impl Debug for Vulkan_KHR_deferred_host_operations {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_deferred_host_operations")
+		.field("vkCreateDeferredOperationKHR", &if self.vk_create_deferred_operation_khr == dummy_vkCreateDeferredOperationKHR {unsafe {transmute(null::<PFN_vkCreateDeferredOperationKHR>())}} else {self.vk_create_deferred_operation_khr})
+		.field("vkDestroyDeferredOperationKHR", &if self.vk_destroy_deferred_operation_khr == dummy_vkDestroyDeferredOperationKHR {unsafe {transmute(null::<PFN_vkDestroyDeferredOperationKHR>())}} else {self.vk_destroy_deferred_operation_khr})
+		.field("vkGetDeferredOperationMaxConcurrencyKHR", &if self.vk_get_deferred_operation_max_concurrency_khr == dummy_vkGetDeferredOperationMaxConcurrencyKHR {unsafe {transmute(null::<PFN_vkGetDeferredOperationMaxConcurrencyKHR>())}} else {self.vk_get_deferred_operation_max_concurrency_khr})
+		.field("vkGetDeferredOperationResultKHR", &if self.vk_get_deferred_operation_result_khr == dummy_vkGetDeferredOperationResultKHR {unsafe {transmute(null::<PFN_vkGetDeferredOperationResultKHR>())}} else {self.vk_get_deferred_operation_result_khr})
+		.field("vkDeferredOperationJoinKHR", &if self.vk_deferred_operation_join_khr == dummy_vkDeferredOperationJoinKHR {unsafe {transmute(null::<PFN_vkDeferredOperationJoinKHR>())}} else {self.vk_deferred_operation_join_khr})
+		.finish()
 	}
 }
 /// enum `VkPipelineExecutableStatisticFormatKHR` from VK_KHR_pipeline_executable_properties
@@ -26515,7 +27357,7 @@ pub trait VK_KHR_pipeline_executable_properties: Debug {
 	fn vkGetPipelineExecutableInternalRepresentationsKHR(&self, device: VkDevice, pExecutableInfo: *const VkPipelineExecutableInfoKHR, pInternalRepresentationCount: *mut uint32_t, pInternalRepresentations: *mut VkPipelineExecutableInternalRepresentationKHR) -> Result<()>;
 }
 /// struct for `VK_KHR_pipeline_executable_properties`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_pipeline_executable_properties {
 	vk_get_pipeline_executable_properties_khr: PFN_vkGetPipelineExecutablePropertiesKHR,
 	vk_get_pipeline_executable_statistics_khr: PFN_vkGetPipelineExecutableStatisticsKHR,
@@ -26548,6 +27390,15 @@ impl Vulkan_KHR_pipeline_executable_properties {
 			vk_get_pipeline_executable_statistics_khr: {let proc = get_instance_proc_address(instance, "vkGetPipelineExecutableStatisticsKHR"); if proc == null() {dummy_vkGetPipelineExecutableStatisticsKHR} else {unsafe {transmute(proc)}}},
 			vk_get_pipeline_executable_internal_representations_khr: {let proc = get_instance_proc_address(instance, "vkGetPipelineExecutableInternalRepresentationsKHR"); if proc == null() {dummy_vkGetPipelineExecutableInternalRepresentationsKHR} else {unsafe {transmute(proc)}}},
 		}
+	}
+}
+impl Debug for Vulkan_KHR_pipeline_executable_properties {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_pipeline_executable_properties")
+		.field("vkGetPipelineExecutablePropertiesKHR", &if self.vk_get_pipeline_executable_properties_khr == dummy_vkGetPipelineExecutablePropertiesKHR {unsafe {transmute(null::<PFN_vkGetPipelineExecutablePropertiesKHR>())}} else {self.vk_get_pipeline_executable_properties_khr})
+		.field("vkGetPipelineExecutableStatisticsKHR", &if self.vk_get_pipeline_executable_statistics_khr == dummy_vkGetPipelineExecutableStatisticsKHR {unsafe {transmute(null::<PFN_vkGetPipelineExecutableStatisticsKHR>())}} else {self.vk_get_pipeline_executable_statistics_khr})
+		.field("vkGetPipelineExecutableInternalRepresentationsKHR", &if self.vk_get_pipeline_executable_internal_representations_khr == dummy_vkGetPipelineExecutableInternalRepresentationsKHR {unsafe {transmute(null::<PFN_vkGetPipelineExecutableInternalRepresentationsKHR>())}} else {self.vk_get_pipeline_executable_internal_representations_khr})
+		.finish()
 	}
 }
 /// type definition `VkMemoryUnmapFlagBitsKHR` from VK_KHR_map_memory2
@@ -26585,7 +27436,7 @@ pub trait VK_KHR_map_memory2: Debug {
 	fn vkUnmapMemory2KHR(&self, device: VkDevice, pMemoryUnmapInfo: *const VkMemoryUnmapInfo) -> Result<()>;
 }
 /// struct for `VK_KHR_map_memory2`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_map_memory2 {
 	vk_map_memory2_khr: PFN_vkMapMemory2KHR,
 	vk_unmap_memory2_khr: PFN_vkUnmapMemory2KHR,
@@ -26614,6 +27465,14 @@ impl Vulkan_KHR_map_memory2 {
 		}
 	}
 }
+impl Debug for Vulkan_KHR_map_memory2 {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_map_memory2")
+		.field("vkMapMemory2KHR", &if self.vk_map_memory2_khr == dummy_vkMapMemory2KHR {unsafe {transmute(null::<PFN_vkMapMemory2KHR>())}} else {self.vk_map_memory2_khr})
+		.field("vkUnmapMemory2KHR", &if self.vk_unmap_memory2_khr == dummy_vkUnmapMemory2KHR {unsafe {transmute(null::<PFN_vkUnmapMemory2KHR>())}} else {self.vk_unmap_memory2_khr})
+		.finish()
+	}
+}
 /// type definition `VkPhysicalDeviceShaderIntegerDotProductFeaturesKHR` from VK_KHR_shader_integer_dot_product
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPhysicalDeviceShaderIntegerDotProductFeaturesKHR.html>
 pub type VkPhysicalDeviceShaderIntegerDotProductFeaturesKHR = VkPhysicalDeviceShaderIntegerDotProductFeatures;
@@ -26624,7 +27483,7 @@ pub type VkPhysicalDeviceShaderIntegerDotProductPropertiesKHR = VkPhysicalDevice
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_shader_integer_dot_product.html>
 pub trait VK_KHR_shader_integer_dot_product: Debug {}
 /// struct for `VK_KHR_shader_integer_dot_product`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_shader_integer_dot_product {}
 impl VK_KHR_shader_integer_dot_product for Vulkan_KHR_shader_integer_dot_product {}
 impl Default for Vulkan_KHR_shader_integer_dot_product {
@@ -26635,6 +27494,12 @@ impl Default for Vulkan_KHR_shader_integer_dot_product {
 impl Vulkan_KHR_shader_integer_dot_product {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_KHR_shader_integer_dot_product {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_shader_integer_dot_product")
+		.finish()
 	}
 }
 /// struct `VkPipelineLibraryCreateInfoKHR` from VK_KHR_pipeline_library
@@ -26651,7 +27516,7 @@ pub struct VkPipelineLibraryCreateInfoKHR {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_pipeline_library.html>
 pub trait VK_KHR_pipeline_library: Debug {}
 /// struct for `VK_KHR_pipeline_library`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_pipeline_library {}
 impl VK_KHR_pipeline_library for Vulkan_KHR_pipeline_library {}
 impl Default for Vulkan_KHR_pipeline_library {
@@ -26664,11 +27529,17 @@ impl Vulkan_KHR_pipeline_library {
 		Self {}
 	}
 }
+impl Debug for Vulkan_KHR_pipeline_library {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_pipeline_library")
+		.finish()
+	}
+}
 /// trait for `VK_KHR_shader_non_semantic_info`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_shader_non_semantic_info.html>
 pub trait VK_KHR_shader_non_semantic_info: Debug {}
 /// struct for `VK_KHR_shader_non_semantic_info`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_shader_non_semantic_info {}
 impl VK_KHR_shader_non_semantic_info for Vulkan_KHR_shader_non_semantic_info {}
 impl Default for Vulkan_KHR_shader_non_semantic_info {
@@ -26679,6 +27550,12 @@ impl Default for Vulkan_KHR_shader_non_semantic_info {
 impl Vulkan_KHR_shader_non_semantic_info {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_KHR_shader_non_semantic_info {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_shader_non_semantic_info")
+		.finish()
 	}
 }
 /// struct `VkPresentIdKHR` from VK_KHR_present_id
@@ -26704,7 +27581,7 @@ pub struct VkPhysicalDevicePresentIdFeaturesKHR {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_present_id.html>
 pub trait VK_KHR_present_id: Debug {}
 /// struct for `VK_KHR_present_id`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_present_id {}
 impl VK_KHR_present_id for Vulkan_KHR_present_id {}
 impl Default for Vulkan_KHR_present_id {
@@ -26715,6 +27592,12 @@ impl Default for Vulkan_KHR_present_id {
 impl Vulkan_KHR_present_id {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_KHR_present_id {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_present_id")
+		.finish()
 	}
 }
 /// type definition `VkVideoEncodeFlagsKHR` from VK_KHR_video_encode_queue
@@ -27171,7 +28054,7 @@ pub trait VK_KHR_video_encode_queue: Debug {
 	fn vkCmdEncodeVideoKHR(&self, commandBuffer: VkCommandBuffer, pEncodeInfo: *const VkVideoEncodeInfoKHR) -> Result<()>;
 }
 /// struct for `VK_KHR_video_encode_queue`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_video_encode_queue {
 	vk_get_physical_device_video_encode_quality_level_properties_khr: PFN_vkGetPhysicalDeviceVideoEncodeQualityLevelPropertiesKHR,
 	vk_get_encoded_video_session_parameters_khr: PFN_vkGetEncodedVideoSessionParametersKHR,
@@ -27204,6 +28087,15 @@ impl Vulkan_KHR_video_encode_queue {
 			vk_get_encoded_video_session_parameters_khr: {let proc = get_instance_proc_address(instance, "vkGetEncodedVideoSessionParametersKHR"); if proc == null() {dummy_vkGetEncodedVideoSessionParametersKHR} else {unsafe {transmute(proc)}}},
 			vk_cmd_encode_video_khr: {let proc = get_instance_proc_address(instance, "vkCmdEncodeVideoKHR"); if proc == null() {dummy_vkCmdEncodeVideoKHR} else {unsafe {transmute(proc)}}},
 		}
+	}
+}
+impl Debug for Vulkan_KHR_video_encode_queue {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_video_encode_queue")
+		.field("vkGetPhysicalDeviceVideoEncodeQualityLevelPropertiesKHR", &if self.vk_get_physical_device_video_encode_quality_level_properties_khr == dummy_vkGetPhysicalDeviceVideoEncodeQualityLevelPropertiesKHR {unsafe {transmute(null::<PFN_vkGetPhysicalDeviceVideoEncodeQualityLevelPropertiesKHR>())}} else {self.vk_get_physical_device_video_encode_quality_level_properties_khr})
+		.field("vkGetEncodedVideoSessionParametersKHR", &if self.vk_get_encoded_video_session_parameters_khr == dummy_vkGetEncodedVideoSessionParametersKHR {unsafe {transmute(null::<PFN_vkGetEncodedVideoSessionParametersKHR>())}} else {self.vk_get_encoded_video_session_parameters_khr})
+		.field("vkCmdEncodeVideoKHR", &if self.vk_cmd_encode_video_khr == dummy_vkCmdEncodeVideoKHR {unsafe {transmute(null::<PFN_vkCmdEncodeVideoKHR>())}} else {self.vk_cmd_encode_video_khr})
+		.finish()
 	}
 }
 /// type definition `VkPipelineStageFlags2KHR` from VK_KHR_synchronization2
@@ -27307,7 +28199,7 @@ pub trait VK_KHR_synchronization2: Debug {
 	fn vkQueueSubmit2KHR(&self, queue: VkQueue, submitCount: u32, pSubmits: *const VkSubmitInfo2, fence: VkFence) -> Result<()>;
 }
 /// struct for `VK_KHR_synchronization2`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_synchronization2 {
 	vk_cmd_set_event2_khr: PFN_vkCmdSetEvent2KHR,
 	vk_cmd_reset_event2_khr: PFN_vkCmdResetEvent2KHR,
@@ -27360,6 +28252,18 @@ impl Vulkan_KHR_synchronization2 {
 		}
 	}
 }
+impl Debug for Vulkan_KHR_synchronization2 {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_synchronization2")
+		.field("vkCmdSetEvent2KHR", &if self.vk_cmd_set_event2_khr == dummy_vkCmdSetEvent2KHR {unsafe {transmute(null::<PFN_vkCmdSetEvent2KHR>())}} else {self.vk_cmd_set_event2_khr})
+		.field("vkCmdResetEvent2KHR", &if self.vk_cmd_reset_event2_khr == dummy_vkCmdResetEvent2KHR {unsafe {transmute(null::<PFN_vkCmdResetEvent2KHR>())}} else {self.vk_cmd_reset_event2_khr})
+		.field("vkCmdWaitEvents2KHR", &if self.vk_cmd_wait_events2_khr == dummy_vkCmdWaitEvents2KHR {unsafe {transmute(null::<PFN_vkCmdWaitEvents2KHR>())}} else {self.vk_cmd_wait_events2_khr})
+		.field("vkCmdPipelineBarrier2KHR", &if self.vk_cmd_pipeline_barrier2_khr == dummy_vkCmdPipelineBarrier2KHR {unsafe {transmute(null::<PFN_vkCmdPipelineBarrier2KHR>())}} else {self.vk_cmd_pipeline_barrier2_khr})
+		.field("vkCmdWriteTimestamp2KHR", &if self.vk_cmd_write_timestamp2_khr == dummy_vkCmdWriteTimestamp2KHR {unsafe {transmute(null::<PFN_vkCmdWriteTimestamp2KHR>())}} else {self.vk_cmd_write_timestamp2_khr})
+		.field("vkQueueSubmit2KHR", &if self.vk_queue_submit2_khr == dummy_vkQueueSubmit2KHR {unsafe {transmute(null::<PFN_vkQueueSubmit2KHR>())}} else {self.vk_queue_submit2_khr})
+		.finish()
+	}
+}
 /// struct `VkPhysicalDeviceFragmentShaderBarycentricFeaturesKHR` from VK_KHR_fragment_shader_barycentric
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPhysicalDeviceFragmentShaderBarycentricFeaturesKHR.html>
 #[repr(C)]
@@ -27382,7 +28286,7 @@ pub struct VkPhysicalDeviceFragmentShaderBarycentricPropertiesKHR {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_fragment_shader_barycentric.html>
 pub trait VK_KHR_fragment_shader_barycentric: Debug {}
 /// struct for `VK_KHR_fragment_shader_barycentric`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_fragment_shader_barycentric {}
 impl VK_KHR_fragment_shader_barycentric for Vulkan_KHR_fragment_shader_barycentric {}
 impl Default for Vulkan_KHR_fragment_shader_barycentric {
@@ -27393,6 +28297,12 @@ impl Default for Vulkan_KHR_fragment_shader_barycentric {
 impl Vulkan_KHR_fragment_shader_barycentric {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_KHR_fragment_shader_barycentric {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_fragment_shader_barycentric")
+		.finish()
 	}
 }
 /// struct `VkPhysicalDeviceShaderSubgroupUniformControlFlowFeaturesKHR` from VK_KHR_shader_subgroup_uniform_control_flow
@@ -27408,7 +28318,7 @@ pub struct VkPhysicalDeviceShaderSubgroupUniformControlFlowFeaturesKHR {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_shader_subgroup_uniform_control_flow.html>
 pub trait VK_KHR_shader_subgroup_uniform_control_flow: Debug {}
 /// struct for `VK_KHR_shader_subgroup_uniform_control_flow`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_shader_subgroup_uniform_control_flow {}
 impl VK_KHR_shader_subgroup_uniform_control_flow for Vulkan_KHR_shader_subgroup_uniform_control_flow {}
 impl Default for Vulkan_KHR_shader_subgroup_uniform_control_flow {
@@ -27421,6 +28331,12 @@ impl Vulkan_KHR_shader_subgroup_uniform_control_flow {
 		Self {}
 	}
 }
+impl Debug for Vulkan_KHR_shader_subgroup_uniform_control_flow {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_shader_subgroup_uniform_control_flow")
+		.finish()
+	}
+}
 /// type definition `VkPhysicalDeviceZeroInitializeWorkgroupMemoryFeaturesKHR` from VK_KHR_zero_initialize_workgroup_memory
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPhysicalDeviceZeroInitializeWorkgroupMemoryFeaturesKHR.html>
 pub type VkPhysicalDeviceZeroInitializeWorkgroupMemoryFeaturesKHR = VkPhysicalDeviceZeroInitializeWorkgroupMemoryFeatures;
@@ -27428,7 +28344,7 @@ pub type VkPhysicalDeviceZeroInitializeWorkgroupMemoryFeaturesKHR = VkPhysicalDe
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_zero_initialize_workgroup_memory.html>
 pub trait VK_KHR_zero_initialize_workgroup_memory: Debug {}
 /// struct for `VK_KHR_zero_initialize_workgroup_memory`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_zero_initialize_workgroup_memory {}
 impl VK_KHR_zero_initialize_workgroup_memory for Vulkan_KHR_zero_initialize_workgroup_memory {}
 impl Default for Vulkan_KHR_zero_initialize_workgroup_memory {
@@ -27439,6 +28355,12 @@ impl Default for Vulkan_KHR_zero_initialize_workgroup_memory {
 impl Vulkan_KHR_zero_initialize_workgroup_memory {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_KHR_zero_initialize_workgroup_memory {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_zero_initialize_workgroup_memory")
+		.finish()
 	}
 }
 /// struct `VkPhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR` from VK_KHR_workgroup_memory_explicit_layout
@@ -27457,7 +28379,7 @@ pub struct VkPhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_workgroup_memory_explicit_layout.html>
 pub trait VK_KHR_workgroup_memory_explicit_layout: Debug {}
 /// struct for `VK_KHR_workgroup_memory_explicit_layout`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_workgroup_memory_explicit_layout {}
 impl VK_KHR_workgroup_memory_explicit_layout for Vulkan_KHR_workgroup_memory_explicit_layout {}
 impl Default for Vulkan_KHR_workgroup_memory_explicit_layout {
@@ -27468,6 +28390,12 @@ impl Default for Vulkan_KHR_workgroup_memory_explicit_layout {
 impl Vulkan_KHR_workgroup_memory_explicit_layout {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_KHR_workgroup_memory_explicit_layout {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_workgroup_memory_explicit_layout")
+		.finish()
 	}
 }
 /// type definition `VkCopyBufferInfo2KHR` from VK_KHR_copy_commands2
@@ -27562,7 +28490,7 @@ pub trait VK_KHR_copy_commands2: Debug {
 	fn vkCmdResolveImage2KHR(&self, commandBuffer: VkCommandBuffer, pResolveImageInfo: *const VkResolveImageInfo2) -> Result<()>;
 }
 /// struct for `VK_KHR_copy_commands2`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_copy_commands2 {
 	vk_cmd_copy_buffer2_khr: PFN_vkCmdCopyBuffer2KHR,
 	vk_cmd_copy_image2_khr: PFN_vkCmdCopyImage2KHR,
@@ -27615,6 +28543,18 @@ impl Vulkan_KHR_copy_commands2 {
 		}
 	}
 }
+impl Debug for Vulkan_KHR_copy_commands2 {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_copy_commands2")
+		.field("vkCmdCopyBuffer2KHR", &if self.vk_cmd_copy_buffer2_khr == dummy_vkCmdCopyBuffer2KHR {unsafe {transmute(null::<PFN_vkCmdCopyBuffer2KHR>())}} else {self.vk_cmd_copy_buffer2_khr})
+		.field("vkCmdCopyImage2KHR", &if self.vk_cmd_copy_image2_khr == dummy_vkCmdCopyImage2KHR {unsafe {transmute(null::<PFN_vkCmdCopyImage2KHR>())}} else {self.vk_cmd_copy_image2_khr})
+		.field("vkCmdCopyBufferToImage2KHR", &if self.vk_cmd_copy_buffer_to_image2_khr == dummy_vkCmdCopyBufferToImage2KHR {unsafe {transmute(null::<PFN_vkCmdCopyBufferToImage2KHR>())}} else {self.vk_cmd_copy_buffer_to_image2_khr})
+		.field("vkCmdCopyImageToBuffer2KHR", &if self.vk_cmd_copy_image_to_buffer2_khr == dummy_vkCmdCopyImageToBuffer2KHR {unsafe {transmute(null::<PFN_vkCmdCopyImageToBuffer2KHR>())}} else {self.vk_cmd_copy_image_to_buffer2_khr})
+		.field("vkCmdBlitImage2KHR", &if self.vk_cmd_blit_image2_khr == dummy_vkCmdBlitImage2KHR {unsafe {transmute(null::<PFN_vkCmdBlitImage2KHR>())}} else {self.vk_cmd_blit_image2_khr})
+		.field("vkCmdResolveImage2KHR", &if self.vk_cmd_resolve_image2_khr == dummy_vkCmdResolveImage2KHR {unsafe {transmute(null::<PFN_vkCmdResolveImage2KHR>())}} else {self.vk_cmd_resolve_image2_khr})
+		.finish()
+	}
+}
 /// type definition `VkFormatFeatureFlags2KHR` from VK_KHR_format_feature_flags2
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkFormatFeatureFlags2KHR.html>
 pub type VkFormatFeatureFlags2KHR = VkFormatFeatureFlags2;
@@ -27628,7 +28568,7 @@ pub type VkFormatProperties3KHR = VkFormatProperties3;
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_format_feature_flags2.html>
 pub trait VK_KHR_format_feature_flags2: Debug {}
 /// struct for `VK_KHR_format_feature_flags2`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_format_feature_flags2 {}
 impl VK_KHR_format_feature_flags2 for Vulkan_KHR_format_feature_flags2 {}
 impl Default for Vulkan_KHR_format_feature_flags2 {
@@ -27639,6 +28579,12 @@ impl Default for Vulkan_KHR_format_feature_flags2 {
 impl Vulkan_KHR_format_feature_flags2 {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_KHR_format_feature_flags2 {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_format_feature_flags2")
+		.finish()
 	}
 }
 /// struct `VkPhysicalDeviceRayTracingMaintenance1FeaturesKHR` from VK_KHR_ray_tracing_maintenance1
@@ -27685,7 +28631,7 @@ pub trait VK_KHR_ray_tracing_maintenance1: Debug {
 	fn vkCmdTraceRaysIndirect2KHR(&self, commandBuffer: VkCommandBuffer, indirectDeviceAddress: VkDeviceAddress) -> Result<()>;
 }
 /// struct for `VK_KHR_ray_tracing_maintenance1`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_ray_tracing_maintenance1 {
 	vk_cmd_trace_rays_indirect2_khr: PFN_vkCmdTraceRaysIndirect2KHR,
 }
@@ -27708,11 +28654,18 @@ impl Vulkan_KHR_ray_tracing_maintenance1 {
 		}
 	}
 }
+impl Debug for Vulkan_KHR_ray_tracing_maintenance1 {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_ray_tracing_maintenance1")
+		.field("vkCmdTraceRaysIndirect2KHR", &if self.vk_cmd_trace_rays_indirect2_khr == dummy_vkCmdTraceRaysIndirect2KHR {unsafe {transmute(null::<PFN_vkCmdTraceRaysIndirect2KHR>())}} else {self.vk_cmd_trace_rays_indirect2_khr})
+		.finish()
+	}
+}
 /// trait for `VK_KHR_portability_enumeration`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_portability_enumeration.html>
 pub trait VK_KHR_portability_enumeration: Debug {}
 /// struct for `VK_KHR_portability_enumeration`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_portability_enumeration {}
 impl VK_KHR_portability_enumeration for Vulkan_KHR_portability_enumeration {}
 impl Default for Vulkan_KHR_portability_enumeration {
@@ -27723,6 +28676,12 @@ impl Default for Vulkan_KHR_portability_enumeration {
 impl Vulkan_KHR_portability_enumeration {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_KHR_portability_enumeration {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_portability_enumeration")
+		.finish()
 	}
 }
 /// type definition `VkPhysicalDeviceMaintenance4FeaturesKHR` from VK_KHR_maintenance4
@@ -27769,7 +28728,7 @@ pub trait VK_KHR_maintenance4: Debug {
 	fn vkGetDeviceImageSparseMemoryRequirementsKHR(&self, device: VkDevice, pInfo: *const VkDeviceImageMemoryRequirements, pSparseMemoryRequirementCount: *mut uint32_t, pSparseMemoryRequirements: *mut VkSparseImageMemoryRequirements2) -> Result<()>;
 }
 /// struct for `VK_KHR_maintenance4`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_maintenance4 {
 	vk_get_device_buffer_memory_requirements_khr: PFN_vkGetDeviceBufferMemoryRequirementsKHR,
 	vk_get_device_image_memory_requirements_khr: PFN_vkGetDeviceImageMemoryRequirementsKHR,
@@ -27804,6 +28763,15 @@ impl Vulkan_KHR_maintenance4 {
 		}
 	}
 }
+impl Debug for Vulkan_KHR_maintenance4 {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_maintenance4")
+		.field("vkGetDeviceBufferMemoryRequirementsKHR", &if self.vk_get_device_buffer_memory_requirements_khr == dummy_vkGetDeviceBufferMemoryRequirementsKHR {unsafe {transmute(null::<PFN_vkGetDeviceBufferMemoryRequirementsKHR>())}} else {self.vk_get_device_buffer_memory_requirements_khr})
+		.field("vkGetDeviceImageMemoryRequirementsKHR", &if self.vk_get_device_image_memory_requirements_khr == dummy_vkGetDeviceImageMemoryRequirementsKHR {unsafe {transmute(null::<PFN_vkGetDeviceImageMemoryRequirementsKHR>())}} else {self.vk_get_device_image_memory_requirements_khr})
+		.field("vkGetDeviceImageSparseMemoryRequirementsKHR", &if self.vk_get_device_image_sparse_memory_requirements_khr == dummy_vkGetDeviceImageSparseMemoryRequirementsKHR {unsafe {transmute(null::<PFN_vkGetDeviceImageSparseMemoryRequirementsKHR>())}} else {self.vk_get_device_image_sparse_memory_requirements_khr})
+		.finish()
+	}
+}
 /// type definition `VkPhysicalDeviceShaderSubgroupRotateFeaturesKHR` from VK_KHR_shader_subgroup_rotate
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPhysicalDeviceShaderSubgroupRotateFeaturesKHR.html>
 pub type VkPhysicalDeviceShaderSubgroupRotateFeaturesKHR = VkPhysicalDeviceShaderSubgroupRotateFeatures;
@@ -27811,7 +28779,7 @@ pub type VkPhysicalDeviceShaderSubgroupRotateFeaturesKHR = VkPhysicalDeviceShade
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_shader_subgroup_rotate.html>
 pub trait VK_KHR_shader_subgroup_rotate: Debug {}
 /// struct for `VK_KHR_shader_subgroup_rotate`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_shader_subgroup_rotate {}
 impl VK_KHR_shader_subgroup_rotate for Vulkan_KHR_shader_subgroup_rotate {}
 impl Default for Vulkan_KHR_shader_subgroup_rotate {
@@ -27822,6 +28790,12 @@ impl Default for Vulkan_KHR_shader_subgroup_rotate {
 impl Vulkan_KHR_shader_subgroup_rotate {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_KHR_shader_subgroup_rotate {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_shader_subgroup_rotate")
+		.finish()
 	}
 }
 /// struct `VkPhysicalDeviceShaderMaximalReconvergenceFeaturesKHR` from VK_KHR_shader_maximal_reconvergence
@@ -27837,7 +28811,7 @@ pub struct VkPhysicalDeviceShaderMaximalReconvergenceFeaturesKHR {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_shader_maximal_reconvergence.html>
 pub trait VK_KHR_shader_maximal_reconvergence: Debug {}
 /// struct for `VK_KHR_shader_maximal_reconvergence`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_shader_maximal_reconvergence {}
 impl VK_KHR_shader_maximal_reconvergence for Vulkan_KHR_shader_maximal_reconvergence {}
 impl Default for Vulkan_KHR_shader_maximal_reconvergence {
@@ -27848,6 +28822,12 @@ impl Default for Vulkan_KHR_shader_maximal_reconvergence {
 impl Vulkan_KHR_shader_maximal_reconvergence {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_KHR_shader_maximal_reconvergence {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_shader_maximal_reconvergence")
+		.finish()
 	}
 }
 /// type definition `VkPipelineCreateFlags2KHR` from VK_KHR_maintenance5
@@ -27927,7 +28907,7 @@ pub trait VK_KHR_maintenance5: Debug {
 	fn vkGetImageSubresourceLayout2KHR(&self, device: VkDevice, image: VkImage, pSubresource: *const VkImageSubresource2, pLayout: *mut VkSubresourceLayout2) -> Result<()>;
 }
 /// struct for `VK_KHR_maintenance5`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_maintenance5 {
 	vk_cmd_bind_index_buffer2_khr: PFN_vkCmdBindIndexBuffer2KHR,
 	vk_get_rendering_area_granularity_khr: PFN_vkGetRenderingAreaGranularityKHR,
@@ -27968,6 +28948,16 @@ impl Vulkan_KHR_maintenance5 {
 		}
 	}
 }
+impl Debug for Vulkan_KHR_maintenance5 {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_maintenance5")
+		.field("vkCmdBindIndexBuffer2KHR", &if self.vk_cmd_bind_index_buffer2_khr == dummy_vkCmdBindIndexBuffer2KHR {unsafe {transmute(null::<PFN_vkCmdBindIndexBuffer2KHR>())}} else {self.vk_cmd_bind_index_buffer2_khr})
+		.field("vkGetRenderingAreaGranularityKHR", &if self.vk_get_rendering_area_granularity_khr == dummy_vkGetRenderingAreaGranularityKHR {unsafe {transmute(null::<PFN_vkGetRenderingAreaGranularityKHR>())}} else {self.vk_get_rendering_area_granularity_khr})
+		.field("vkGetDeviceImageSubresourceLayoutKHR", &if self.vk_get_device_image_subresource_layout_khr == dummy_vkGetDeviceImageSubresourceLayoutKHR {unsafe {transmute(null::<PFN_vkGetDeviceImageSubresourceLayoutKHR>())}} else {self.vk_get_device_image_subresource_layout_khr})
+		.field("vkGetImageSubresourceLayout2KHR", &if self.vk_get_image_subresource_layout2_khr == dummy_vkGetImageSubresourceLayout2KHR {unsafe {transmute(null::<PFN_vkGetImageSubresourceLayout2KHR>())}} else {self.vk_get_image_subresource_layout2_khr})
+		.finish()
+	}
+}
 /// struct `VkSurfaceCapabilitiesPresentId2KHR` from VK_KHR_present_id2
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkSurfaceCapabilitiesPresentId2KHR.html>
 #[repr(C)]
@@ -28000,7 +28990,7 @@ pub struct VkPhysicalDevicePresentId2FeaturesKHR {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_present_id2.html>
 pub trait VK_KHR_present_id2: Debug {}
 /// struct for `VK_KHR_present_id2`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_present_id2 {}
 impl VK_KHR_present_id2 for Vulkan_KHR_present_id2 {}
 impl Default for Vulkan_KHR_present_id2 {
@@ -28011,6 +29001,12 @@ impl Default for Vulkan_KHR_present_id2 {
 impl Vulkan_KHR_present_id2 {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_KHR_present_id2 {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_present_id2")
+		.finish()
 	}
 }
 /// struct `VkSurfaceCapabilitiesPresentWait2KHR` from VK_KHR_present_wait2
@@ -28055,7 +29051,7 @@ pub trait VK_KHR_present_wait2: Debug {
 	fn vkWaitForPresent2KHR(&self, device: VkDevice, swapchain: VkSwapchainKHR, pPresentWait2Info: *const VkPresentWait2InfoKHR) -> Result<()>;
 }
 /// struct for `VK_KHR_present_wait2`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_present_wait2 {
 	vk_wait_for_present2_khr: PFN_vkWaitForPresent2KHR,
 }
@@ -28078,6 +29074,13 @@ impl Vulkan_KHR_present_wait2 {
 		}
 	}
 }
+impl Debug for Vulkan_KHR_present_wait2 {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_present_wait2")
+		.field("vkWaitForPresent2KHR", &if self.vk_wait_for_present2_khr == dummy_vkWaitForPresent2KHR {unsafe {transmute(null::<PFN_vkWaitForPresent2KHR>())}} else {self.vk_wait_for_present2_khr})
+		.finish()
+	}
+}
 /// struct `VkPhysicalDeviceRayTracingPositionFetchFeaturesKHR` from VK_KHR_ray_tracing_position_fetch
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPhysicalDeviceRayTracingPositionFetchFeaturesKHR.html>
 #[repr(C)]
@@ -28091,7 +29094,7 @@ pub struct VkPhysicalDeviceRayTracingPositionFetchFeaturesKHR {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_ray_tracing_position_fetch.html>
 pub trait VK_KHR_ray_tracing_position_fetch: Debug {}
 /// struct for `VK_KHR_ray_tracing_position_fetch`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_ray_tracing_position_fetch {}
 impl VK_KHR_ray_tracing_position_fetch for Vulkan_KHR_ray_tracing_position_fetch {}
 impl Default for Vulkan_KHR_ray_tracing_position_fetch {
@@ -28102,6 +29105,12 @@ impl Default for Vulkan_KHR_ray_tracing_position_fetch {
 impl Vulkan_KHR_ray_tracing_position_fetch {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_KHR_ray_tracing_position_fetch {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_ray_tracing_position_fetch")
+		.finish()
 	}
 }
 /// constant `VK_MAX_PIPELINE_BINARY_KEY_SIZE_KHR` from VK_KHR_pipeline_binary
@@ -28287,7 +29296,7 @@ pub trait VK_KHR_pipeline_binary: Debug {
 	fn vkReleaseCapturedPipelineDataKHR(&self, device: VkDevice, pInfo: *const VkReleaseCapturedPipelineDataInfoKHR, pAllocator: *const VkAllocationCallbacks) -> Result<()>;
 }
 /// struct for `VK_KHR_pipeline_binary`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_pipeline_binary {
 	vk_create_pipeline_binaries_khr: PFN_vkCreatePipelineBinariesKHR,
 	vk_destroy_pipeline_binary_khr: PFN_vkDestroyPipelineBinaryKHR,
@@ -28332,6 +29341,17 @@ impl Vulkan_KHR_pipeline_binary {
 			vk_get_pipeline_binary_data_khr: {let proc = get_instance_proc_address(instance, "vkGetPipelineBinaryDataKHR"); if proc == null() {dummy_vkGetPipelineBinaryDataKHR} else {unsafe {transmute(proc)}}},
 			vk_release_captured_pipeline_data_khr: {let proc = get_instance_proc_address(instance, "vkReleaseCapturedPipelineDataKHR"); if proc == null() {dummy_vkReleaseCapturedPipelineDataKHR} else {unsafe {transmute(proc)}}},
 		}
+	}
+}
+impl Debug for Vulkan_KHR_pipeline_binary {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_pipeline_binary")
+		.field("vkCreatePipelineBinariesKHR", &if self.vk_create_pipeline_binaries_khr == dummy_vkCreatePipelineBinariesKHR {unsafe {transmute(null::<PFN_vkCreatePipelineBinariesKHR>())}} else {self.vk_create_pipeline_binaries_khr})
+		.field("vkDestroyPipelineBinaryKHR", &if self.vk_destroy_pipeline_binary_khr == dummy_vkDestroyPipelineBinaryKHR {unsafe {transmute(null::<PFN_vkDestroyPipelineBinaryKHR>())}} else {self.vk_destroy_pipeline_binary_khr})
+		.field("vkGetPipelineKeyKHR", &if self.vk_get_pipeline_key_khr == dummy_vkGetPipelineKeyKHR {unsafe {transmute(null::<PFN_vkGetPipelineKeyKHR>())}} else {self.vk_get_pipeline_key_khr})
+		.field("vkGetPipelineBinaryDataKHR", &if self.vk_get_pipeline_binary_data_khr == dummy_vkGetPipelineBinaryDataKHR {unsafe {transmute(null::<PFN_vkGetPipelineBinaryDataKHR>())}} else {self.vk_get_pipeline_binary_data_khr})
+		.field("vkReleaseCapturedPipelineDataKHR", &if self.vk_release_captured_pipeline_data_khr == dummy_vkReleaseCapturedPipelineDataKHR {unsafe {transmute(null::<PFN_vkReleaseCapturedPipelineDataKHR>())}} else {self.vk_release_captured_pipeline_data_khr})
+		.finish()
 	}
 }
 /// type definition `VkPresentScalingFlagsKHR` from VK_KHR_surface_maintenance1
@@ -28481,7 +29501,7 @@ pub struct VkSurfacePresentModeCompatibilityKHR {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_surface_maintenance1.html>
 pub trait VK_KHR_surface_maintenance1: Debug {}
 /// struct for `VK_KHR_surface_maintenance1`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_surface_maintenance1 {}
 impl VK_KHR_surface_maintenance1 for Vulkan_KHR_surface_maintenance1 {}
 impl Default for Vulkan_KHR_surface_maintenance1 {
@@ -28492,6 +29512,12 @@ impl Default for Vulkan_KHR_surface_maintenance1 {
 impl Vulkan_KHR_surface_maintenance1 {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_KHR_surface_maintenance1 {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_surface_maintenance1")
+		.finish()
 	}
 }
 /// struct `VkPhysicalDeviceSwapchainMaintenance1FeaturesKHR` from VK_KHR_swapchain_maintenance1
@@ -28569,7 +29595,7 @@ pub trait VK_KHR_swapchain_maintenance1: Debug {
 	fn vkReleaseSwapchainImagesKHR(&self, device: VkDevice, pReleaseInfo: *const VkReleaseSwapchainImagesInfoKHR) -> Result<()>;
 }
 /// struct for `VK_KHR_swapchain_maintenance1`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_swapchain_maintenance1 {
 	vk_release_swapchain_images_khr: PFN_vkReleaseSwapchainImagesKHR,
 }
@@ -28590,6 +29616,13 @@ impl Vulkan_KHR_swapchain_maintenance1 {
 		Self {
 			vk_release_swapchain_images_khr: {let proc = get_instance_proc_address(instance, "vkReleaseSwapchainImagesKHR"); if proc == null() {dummy_vkReleaseSwapchainImagesKHR} else {unsafe {transmute(proc)}}},
 		}
+	}
+}
+impl Debug for Vulkan_KHR_swapchain_maintenance1 {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_swapchain_maintenance1")
+		.field("vkReleaseSwapchainImagesKHR", &if self.vk_release_swapchain_images_khr == dummy_vkReleaseSwapchainImagesKHR {unsafe {transmute(null::<PFN_vkReleaseSwapchainImagesKHR>())}} else {self.vk_release_swapchain_images_khr})
+		.finish()
 	}
 }
 /// enum `VkComponentTypeKHR` from VK_KHR_cooperative_matrix
@@ -28697,7 +29730,7 @@ pub trait VK_KHR_cooperative_matrix: Debug {
 	fn vkGetPhysicalDeviceCooperativeMatrixPropertiesKHR(&self, physicalDevice: VkPhysicalDevice, pPropertyCount: *mut uint32_t, pProperties: *mut VkCooperativeMatrixPropertiesKHR) -> Result<()>;
 }
 /// struct for `VK_KHR_cooperative_matrix`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_cooperative_matrix {
 	vk_get_physical_device_cooperative_matrix_properties_khr: PFN_vkGetPhysicalDeviceCooperativeMatrixPropertiesKHR,
 }
@@ -28718,6 +29751,13 @@ impl Vulkan_KHR_cooperative_matrix {
 		Self {
 			vk_get_physical_device_cooperative_matrix_properties_khr: {let proc = get_instance_proc_address(instance, "vkGetPhysicalDeviceCooperativeMatrixPropertiesKHR"); if proc == null() {dummy_vkGetPhysicalDeviceCooperativeMatrixPropertiesKHR} else {unsafe {transmute(proc)}}},
 		}
+	}
+}
+impl Debug for Vulkan_KHR_cooperative_matrix {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_cooperative_matrix")
+		.field("vkGetPhysicalDeviceCooperativeMatrixPropertiesKHR", &if self.vk_get_physical_device_cooperative_matrix_properties_khr == dummy_vkGetPhysicalDeviceCooperativeMatrixPropertiesKHR {unsafe {transmute(null::<PFN_vkGetPhysicalDeviceCooperativeMatrixPropertiesKHR>())}} else {self.vk_get_physical_device_cooperative_matrix_properties_khr})
+		.finish()
 	}
 }
 /// struct `VkPhysicalDeviceComputeShaderDerivativesFeaturesKHR` from VK_KHR_compute_shader_derivatives
@@ -28743,7 +29783,7 @@ pub struct VkPhysicalDeviceComputeShaderDerivativesPropertiesKHR {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_compute_shader_derivatives.html>
 pub trait VK_KHR_compute_shader_derivatives: Debug {}
 /// struct for `VK_KHR_compute_shader_derivatives`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_compute_shader_derivatives {}
 impl VK_KHR_compute_shader_derivatives for Vulkan_KHR_compute_shader_derivatives {}
 impl Default for Vulkan_KHR_compute_shader_derivatives {
@@ -28754,6 +29794,12 @@ impl Default for Vulkan_KHR_compute_shader_derivatives {
 impl Vulkan_KHR_compute_shader_derivatives {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_KHR_compute_shader_derivatives {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_compute_shader_derivatives")
+		.finish()
 	}
 }
 /// constant `VK_MAX_VIDEO_AV1_REFERENCES_PER_FRAME_KHR` from VK_KHR_video_decode_av1
@@ -28814,7 +29860,7 @@ pub struct VkVideoDecodeAV1DpbSlotInfoKHR {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_video_decode_av1.html>
 pub trait VK_KHR_video_decode_av1: Debug {}
 /// struct for `VK_KHR_video_decode_av1`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_video_decode_av1 {}
 impl VK_KHR_video_decode_av1 for Vulkan_KHR_video_decode_av1 {}
 impl Default for Vulkan_KHR_video_decode_av1 {
@@ -28825,6 +29871,12 @@ impl Default for Vulkan_KHR_video_decode_av1 {
 impl Vulkan_KHR_video_decode_av1 {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_KHR_video_decode_av1 {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_video_decode_av1")
+		.finish()
 	}
 }
 /// constant `STD_VIDEO_AV1_NUM_REF_FRAMES` from vulkan_video_codec_av1std
@@ -29685,7 +30737,7 @@ impl Debug for StdVideoAV1SequenceHeader {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vulkan_video_codec_av1std.html>
 pub trait vulkan_video_codec_av1std: Debug {}
 /// struct for `vulkan_video_codec_av1std`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_video_codec_av1std {}
 impl vulkan_video_codec_av1std for Vulkan_video_codec_av1std {}
 impl Default for Vulkan_video_codec_av1std {
@@ -29696,6 +30748,12 @@ impl Default for Vulkan_video_codec_av1std {
 impl Vulkan_video_codec_av1std {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_video_codec_av1std {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_video_codec_av1std")
+		.finish()
 	}
 }
 /// constant `VK_STD_VULKAN_VIDEO_CODEC_AV1_DECODE_API_VERSION_1_0_0` from vulkan_video_codec_av1std_decode
@@ -30032,7 +31090,7 @@ impl Debug for StdVideoDecodeAV1ReferenceInfo {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vulkan_video_codec_av1std_decode.html>
 pub trait vulkan_video_codec_av1std_decode: Debug {}
 /// struct for `vulkan_video_codec_av1std_decode`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_video_codec_av1std_decode {}
 impl vulkan_video_codec_av1std_decode for Vulkan_video_codec_av1std_decode {}
 impl Default for Vulkan_video_codec_av1std_decode {
@@ -30043,6 +31101,12 @@ impl Default for Vulkan_video_codec_av1std_decode {
 impl Vulkan_video_codec_av1std_decode {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_video_codec_av1std_decode {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_video_codec_av1std_decode")
+		.finish()
 	}
 }
 /// type definition `VkVideoEncodeAV1CapabilityFlagsKHR` from VK_KHR_video_encode_av1
@@ -30470,7 +31534,7 @@ pub struct VkVideoEncodeAV1RateControlLayerInfoKHR {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_video_encode_av1.html>
 pub trait VK_KHR_video_encode_av1: Debug {}
 /// struct for `VK_KHR_video_encode_av1`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_video_encode_av1 {}
 impl VK_KHR_video_encode_av1 for Vulkan_KHR_video_encode_av1 {}
 impl Default for Vulkan_KHR_video_encode_av1 {
@@ -30481,6 +31545,12 @@ impl Default for Vulkan_KHR_video_encode_av1 {
 impl Vulkan_KHR_video_encode_av1 {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_KHR_video_encode_av1 {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_video_encode_av1")
+		.finish()
 	}
 }
 /// constant `VK_STD_VULKAN_VIDEO_CODEC_AV1_ENCODE_API_VERSION_1_0_0` from vulkan_video_codec_av1std_encode
@@ -30890,7 +31960,7 @@ impl Debug for StdVideoEncodeAV1ReferenceInfo {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vulkan_video_codec_av1std_encode.html>
 pub trait vulkan_video_codec_av1std_encode: Debug {}
 /// struct for `vulkan_video_codec_av1std_encode`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_video_codec_av1std_encode {}
 impl vulkan_video_codec_av1std_encode for Vulkan_video_codec_av1std_encode {}
 impl Default for Vulkan_video_codec_av1std_encode {
@@ -30901,6 +31971,12 @@ impl Default for Vulkan_video_codec_av1std_encode {
 impl Vulkan_video_codec_av1std_encode {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_video_codec_av1std_encode {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_video_codec_av1std_encode")
+		.finish()
 	}
 }
 /// constant `VK_MAX_VIDEO_VP9_REFERENCES_PER_FRAME_KHR` from VK_KHR_video_decode_vp9
@@ -30950,7 +32026,7 @@ pub struct VkVideoDecodeVP9PictureInfoKHR {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_video_decode_vp9.html>
 pub trait VK_KHR_video_decode_vp9: Debug {}
 /// struct for `VK_KHR_video_decode_vp9`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_video_decode_vp9 {}
 impl VK_KHR_video_decode_vp9 for Vulkan_KHR_video_decode_vp9 {}
 impl Default for Vulkan_KHR_video_decode_vp9 {
@@ -30961,6 +32037,12 @@ impl Default for Vulkan_KHR_video_decode_vp9 {
 impl Vulkan_KHR_video_decode_vp9 {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_KHR_video_decode_vp9 {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_video_decode_vp9")
+		.finish()
 	}
 }
 /// constant `STD_VIDEO_VP9_NUM_REF_FRAMES` from vulkan_video_codec_vp9std
@@ -31233,7 +32315,7 @@ impl Debug for StdVideoVP9Segmentation {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vulkan_video_codec_vp9std.html>
 pub trait vulkan_video_codec_vp9std: Debug {}
 /// struct for `vulkan_video_codec_vp9std`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_video_codec_vp9std {}
 impl vulkan_video_codec_vp9std for Vulkan_video_codec_vp9std {}
 impl Default for Vulkan_video_codec_vp9std {
@@ -31244,6 +32326,12 @@ impl Default for Vulkan_video_codec_vp9std {
 impl Vulkan_video_codec_vp9std {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_video_codec_vp9std {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_video_codec_vp9std")
+		.finish()
 	}
 }
 /// constant `VK_STD_VULKAN_VIDEO_CODEC_VP9_DECODE_API_VERSION_1_0_0` from vulkan_video_codec_vp9std_decode
@@ -31347,7 +32435,7 @@ pub struct StdVideoDecodeVP9PictureInfo {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vulkan_video_codec_vp9std_decode.html>
 pub trait vulkan_video_codec_vp9std_decode: Debug {}
 /// struct for `vulkan_video_codec_vp9std_decode`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_video_codec_vp9std_decode {}
 impl vulkan_video_codec_vp9std_decode for Vulkan_video_codec_vp9std_decode {}
 impl Default for Vulkan_video_codec_vp9std_decode {
@@ -31358,6 +32446,12 @@ impl Default for Vulkan_video_codec_vp9std_decode {
 impl Vulkan_video_codec_vp9std_decode {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_video_codec_vp9std_decode {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_video_codec_vp9std_decode")
+		.finish()
 	}
 }
 /// struct `VkPhysicalDeviceVideoMaintenance1FeaturesKHR` from VK_KHR_video_maintenance1
@@ -31384,7 +32478,7 @@ pub struct VkVideoInlineQueryInfoKHR {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_video_maintenance1.html>
 pub trait VK_KHR_video_maintenance1: Debug {}
 /// struct for `VK_KHR_video_maintenance1`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_video_maintenance1 {}
 impl VK_KHR_video_maintenance1 for Vulkan_KHR_video_maintenance1 {}
 impl Default for Vulkan_KHR_video_maintenance1 {
@@ -31395,6 +32489,12 @@ impl Default for Vulkan_KHR_video_maintenance1 {
 impl Vulkan_KHR_video_maintenance1 {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_KHR_video_maintenance1 {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_video_maintenance1")
+		.finish()
 	}
 }
 /// type definition `VkPhysicalDeviceVertexAttributeDivisorPropertiesKHR` from VK_KHR_vertex_attribute_divisor
@@ -31413,7 +32513,7 @@ pub type VkPhysicalDeviceVertexAttributeDivisorFeaturesKHR = VkPhysicalDeviceVer
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_vertex_attribute_divisor.html>
 pub trait VK_KHR_vertex_attribute_divisor: Debug {}
 /// struct for `VK_KHR_vertex_attribute_divisor`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_vertex_attribute_divisor {}
 impl VK_KHR_vertex_attribute_divisor for Vulkan_KHR_vertex_attribute_divisor {}
 impl Default for Vulkan_KHR_vertex_attribute_divisor {
@@ -31426,11 +32526,17 @@ impl Vulkan_KHR_vertex_attribute_divisor {
 		Self {}
 	}
 }
+impl Debug for Vulkan_KHR_vertex_attribute_divisor {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_vertex_attribute_divisor")
+		.finish()
+	}
+}
 /// trait for `VK_KHR_load_store_op_none`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_load_store_op_none.html>
 pub trait VK_KHR_load_store_op_none: Debug {}
 /// struct for `VK_KHR_load_store_op_none`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_load_store_op_none {}
 impl VK_KHR_load_store_op_none for Vulkan_KHR_load_store_op_none {}
 impl Default for Vulkan_KHR_load_store_op_none {
@@ -31441,6 +32547,12 @@ impl Default for Vulkan_KHR_load_store_op_none {
 impl Vulkan_KHR_load_store_op_none {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_KHR_load_store_op_none {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_load_store_op_none")
+		.finish()
 	}
 }
 /// struct `VkPhysicalDeviceUnifiedImageLayoutsFeaturesKHR` from VK_KHR_unified_image_layouts
@@ -31466,7 +32578,7 @@ pub struct VkAttachmentFeedbackLoopInfoEXT {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_unified_image_layouts.html>
 pub trait VK_KHR_unified_image_layouts: Debug {}
 /// struct for `VK_KHR_unified_image_layouts`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_unified_image_layouts {}
 impl VK_KHR_unified_image_layouts for Vulkan_KHR_unified_image_layouts {}
 impl Default for Vulkan_KHR_unified_image_layouts {
@@ -31479,6 +32591,12 @@ impl Vulkan_KHR_unified_image_layouts {
 		Self {}
 	}
 }
+impl Debug for Vulkan_KHR_unified_image_layouts {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_unified_image_layouts")
+		.finish()
+	}
+}
 /// type definition `VkPhysicalDeviceShaderFloatControls2FeaturesKHR` from VK_KHR_shader_float_controls2
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPhysicalDeviceShaderFloatControls2FeaturesKHR.html>
 pub type VkPhysicalDeviceShaderFloatControls2FeaturesKHR = VkPhysicalDeviceShaderFloatControls2Features;
@@ -31486,7 +32604,7 @@ pub type VkPhysicalDeviceShaderFloatControls2FeaturesKHR = VkPhysicalDeviceShade
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_shader_float_controls2.html>
 pub trait VK_KHR_shader_float_controls2: Debug {}
 /// struct for `VK_KHR_shader_float_controls2`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_shader_float_controls2 {}
 impl VK_KHR_shader_float_controls2 for Vulkan_KHR_shader_float_controls2 {}
 impl Default for Vulkan_KHR_shader_float_controls2 {
@@ -31499,6 +32617,12 @@ impl Vulkan_KHR_shader_float_controls2 {
 		Self {}
 	}
 }
+impl Debug for Vulkan_KHR_shader_float_controls2 {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_shader_float_controls2")
+		.finish()
+	}
+}
 /// type definition `VkPhysicalDeviceIndexTypeUint8FeaturesKHR` from VK_KHR_index_type_uint8
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPhysicalDeviceIndexTypeUint8FeaturesKHR.html>
 pub type VkPhysicalDeviceIndexTypeUint8FeaturesKHR = VkPhysicalDeviceIndexTypeUint8Features;
@@ -31506,7 +32630,7 @@ pub type VkPhysicalDeviceIndexTypeUint8FeaturesKHR = VkPhysicalDeviceIndexTypeUi
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_index_type_uint8.html>
 pub trait VK_KHR_index_type_uint8: Debug {}
 /// struct for `VK_KHR_index_type_uint8`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_index_type_uint8 {}
 impl VK_KHR_index_type_uint8 for Vulkan_KHR_index_type_uint8 {}
 impl Default for Vulkan_KHR_index_type_uint8 {
@@ -31517,6 +32641,12 @@ impl Default for Vulkan_KHR_index_type_uint8 {
 impl Vulkan_KHR_index_type_uint8 {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_KHR_index_type_uint8 {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_index_type_uint8")
+		.finish()
 	}
 }
 /// type definition `VkLineRasterizationModeKHR` from VK_KHR_line_rasterization
@@ -31545,7 +32675,7 @@ pub trait VK_KHR_line_rasterization: Debug {
 	fn vkCmdSetLineStippleKHR(&self, commandBuffer: VkCommandBuffer, lineStippleFactor: u32, lineStipplePattern: u16) -> Result<()>;
 }
 /// struct for `VK_KHR_line_rasterization`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_line_rasterization {
 	vk_cmd_set_line_stipple_khr: PFN_vkCmdSetLineStippleKHR,
 }
@@ -31566,6 +32696,13 @@ impl Vulkan_KHR_line_rasterization {
 		Self {
 			vk_cmd_set_line_stipple_khr: {let proc = get_instance_proc_address(instance, "vkCmdSetLineStippleKHR"); if proc == null() {dummy_vkCmdSetLineStippleKHR} else {unsafe {transmute(proc)}}},
 		}
+	}
+}
+impl Debug for Vulkan_KHR_line_rasterization {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_line_rasterization")
+		.field("vkCmdSetLineStippleKHR", &if self.vk_cmd_set_line_stipple_khr == dummy_vkCmdSetLineStippleKHR {unsafe {transmute(null::<PFN_vkCmdSetLineStippleKHR>())}} else {self.vk_cmd_set_line_stipple_khr})
+		.finish()
 	}
 }
 /// enum `VkTimeDomainKHR` from VK_KHR_calibrated_timestamps
@@ -31617,7 +32754,7 @@ pub trait VK_KHR_calibrated_timestamps: Debug {
 	fn vkGetCalibratedTimestampsKHR(&self, device: VkDevice, timestampCount: u32, pTimestampInfos: *const VkCalibratedTimestampInfoKHR, pTimestamps: *mut uint64_t, pMaxDeviation: *mut uint64_t) -> Result<()>;
 }
 /// struct for `VK_KHR_calibrated_timestamps`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_calibrated_timestamps {
 	vk_get_physical_device_calibrateable_time_domains_khr: PFN_vkGetPhysicalDeviceCalibrateableTimeDomainsKHR,
 	vk_get_calibrated_timestamps_khr: PFN_vkGetCalibratedTimestampsKHR,
@@ -31646,6 +32783,14 @@ impl Vulkan_KHR_calibrated_timestamps {
 		}
 	}
 }
+impl Debug for Vulkan_KHR_calibrated_timestamps {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_calibrated_timestamps")
+		.field("vkGetPhysicalDeviceCalibrateableTimeDomainsKHR", &if self.vk_get_physical_device_calibrateable_time_domains_khr == dummy_vkGetPhysicalDeviceCalibrateableTimeDomainsKHR {unsafe {transmute(null::<PFN_vkGetPhysicalDeviceCalibrateableTimeDomainsKHR>())}} else {self.vk_get_physical_device_calibrateable_time_domains_khr})
+		.field("vkGetCalibratedTimestampsKHR", &if self.vk_get_calibrated_timestamps_khr == dummy_vkGetCalibratedTimestampsKHR {unsafe {transmute(null::<PFN_vkGetCalibratedTimestampsKHR>())}} else {self.vk_get_calibrated_timestamps_khr})
+		.finish()
+	}
+}
 /// type definition `VkPhysicalDeviceShaderExpectAssumeFeaturesKHR` from VK_KHR_shader_expect_assume
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPhysicalDeviceShaderExpectAssumeFeaturesKHR.html>
 pub type VkPhysicalDeviceShaderExpectAssumeFeaturesKHR = VkPhysicalDeviceShaderExpectAssumeFeatures;
@@ -31653,7 +32798,7 @@ pub type VkPhysicalDeviceShaderExpectAssumeFeaturesKHR = VkPhysicalDeviceShaderE
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_shader_expect_assume.html>
 pub trait VK_KHR_shader_expect_assume: Debug {}
 /// struct for `VK_KHR_shader_expect_assume`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_shader_expect_assume {}
 impl VK_KHR_shader_expect_assume for Vulkan_KHR_shader_expect_assume {}
 impl Default for Vulkan_KHR_shader_expect_assume {
@@ -31664,6 +32809,12 @@ impl Default for Vulkan_KHR_shader_expect_assume {
 impl Vulkan_KHR_shader_expect_assume {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_KHR_shader_expect_assume {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_shader_expect_assume")
+		.finish()
 	}
 }
 /// type definition `VkPhysicalDeviceMaintenance6FeaturesKHR` from VK_KHR_maintenance6
@@ -31771,7 +32922,7 @@ pub trait VK_KHR_maintenance6: Debug {
 	fn vkCmdBindDescriptorBufferEmbeddedSamplers2EXT(&self, commandBuffer: VkCommandBuffer, pBindDescriptorBufferEmbeddedSamplersInfo: *const VkBindDescriptorBufferEmbeddedSamplersInfoEXT) -> Result<()>;
 }
 /// struct for `VK_KHR_maintenance6`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_maintenance6 {
 	vk_cmd_bind_descriptor_sets2_khr: PFN_vkCmdBindDescriptorSets2KHR,
 	vk_cmd_push_constants2_khr: PFN_vkCmdPushConstants2KHR,
@@ -31822,6 +32973,18 @@ impl Vulkan_KHR_maintenance6 {
 			vk_cmd_set_descriptor_buffer_offsets2_ext: {let proc = get_instance_proc_address(instance, "vkCmdSetDescriptorBufferOffsets2EXT"); if proc == null() {dummy_vkCmdSetDescriptorBufferOffsets2EXT} else {unsafe {transmute(proc)}}},
 			vk_cmd_bind_descriptor_buffer_embedded_samplers2_ext: {let proc = get_instance_proc_address(instance, "vkCmdBindDescriptorBufferEmbeddedSamplers2EXT"); if proc == null() {dummy_vkCmdBindDescriptorBufferEmbeddedSamplers2EXT} else {unsafe {transmute(proc)}}},
 		}
+	}
+}
+impl Debug for Vulkan_KHR_maintenance6 {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_maintenance6")
+		.field("vkCmdBindDescriptorSets2KHR", &if self.vk_cmd_bind_descriptor_sets2_khr == dummy_vkCmdBindDescriptorSets2KHR {unsafe {transmute(null::<PFN_vkCmdBindDescriptorSets2KHR>())}} else {self.vk_cmd_bind_descriptor_sets2_khr})
+		.field("vkCmdPushConstants2KHR", &if self.vk_cmd_push_constants2_khr == dummy_vkCmdPushConstants2KHR {unsafe {transmute(null::<PFN_vkCmdPushConstants2KHR>())}} else {self.vk_cmd_push_constants2_khr})
+		.field("vkCmdPushDescriptorSet2KHR", &if self.vk_cmd_push_descriptor_set2_khr == dummy_vkCmdPushDescriptorSet2KHR {unsafe {transmute(null::<PFN_vkCmdPushDescriptorSet2KHR>())}} else {self.vk_cmd_push_descriptor_set2_khr})
+		.field("vkCmdPushDescriptorSetWithTemplate2KHR", &if self.vk_cmd_push_descriptor_set_with_template2_khr == dummy_vkCmdPushDescriptorSetWithTemplate2KHR {unsafe {transmute(null::<PFN_vkCmdPushDescriptorSetWithTemplate2KHR>())}} else {self.vk_cmd_push_descriptor_set_with_template2_khr})
+		.field("vkCmdSetDescriptorBufferOffsets2EXT", &if self.vk_cmd_set_descriptor_buffer_offsets2_ext == dummy_vkCmdSetDescriptorBufferOffsets2EXT {unsafe {transmute(null::<PFN_vkCmdSetDescriptorBufferOffsets2EXT>())}} else {self.vk_cmd_set_descriptor_buffer_offsets2_ext})
+		.field("vkCmdBindDescriptorBufferEmbeddedSamplers2EXT", &if self.vk_cmd_bind_descriptor_buffer_embedded_samplers2_ext == dummy_vkCmdBindDescriptorBufferEmbeddedSamplers2EXT {unsafe {transmute(null::<PFN_vkCmdBindDescriptorBufferEmbeddedSamplers2EXT>())}} else {self.vk_cmd_bind_descriptor_buffer_embedded_samplers2_ext})
+		.finish()
 	}
 }
 /// type definition `VkVideoEncodeIntraRefreshModeFlagsKHR` from VK_KHR_video_encode_intra_refresh
@@ -31934,7 +33097,7 @@ pub struct VkPhysicalDeviceVideoEncodeIntraRefreshFeaturesKHR {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_video_encode_intra_refresh.html>
 pub trait VK_KHR_video_encode_intra_refresh: Debug {}
 /// struct for `VK_KHR_video_encode_intra_refresh`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_video_encode_intra_refresh {}
 impl VK_KHR_video_encode_intra_refresh for Vulkan_KHR_video_encode_intra_refresh {}
 impl Default for Vulkan_KHR_video_encode_intra_refresh {
@@ -31945,6 +33108,12 @@ impl Default for Vulkan_KHR_video_encode_intra_refresh {
 impl Vulkan_KHR_video_encode_intra_refresh {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_KHR_video_encode_intra_refresh {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_video_encode_intra_refresh")
+		.finish()
 	}
 }
 /// struct `VkVideoEncodeQuantizationMapCapabilitiesKHR` from VK_KHR_video_encode_quantization_map
@@ -32045,7 +33214,7 @@ pub struct VkVideoFormatAV1QuantizationMapPropertiesKHR {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_video_encode_quantization_map.html>
 pub trait VK_KHR_video_encode_quantization_map: Debug {}
 /// struct for `VK_KHR_video_encode_quantization_map`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_video_encode_quantization_map {}
 impl VK_KHR_video_encode_quantization_map for Vulkan_KHR_video_encode_quantization_map {}
 impl Default for Vulkan_KHR_video_encode_quantization_map {
@@ -32056,6 +33225,12 @@ impl Default for Vulkan_KHR_video_encode_quantization_map {
 impl Vulkan_KHR_video_encode_quantization_map {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_KHR_video_encode_quantization_map {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_video_encode_quantization_map")
+		.finish()
 	}
 }
 /// struct `VkPhysicalDeviceShaderRelaxedExtendedInstructionFeaturesKHR` from VK_KHR_shader_relaxed_extended_instruction
@@ -32071,7 +33246,7 @@ pub struct VkPhysicalDeviceShaderRelaxedExtendedInstructionFeaturesKHR {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_shader_relaxed_extended_instruction.html>
 pub trait VK_KHR_shader_relaxed_extended_instruction: Debug {}
 /// struct for `VK_KHR_shader_relaxed_extended_instruction`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_shader_relaxed_extended_instruction {}
 impl VK_KHR_shader_relaxed_extended_instruction for Vulkan_KHR_shader_relaxed_extended_instruction {}
 impl Default for Vulkan_KHR_shader_relaxed_extended_instruction {
@@ -32082,6 +33257,12 @@ impl Default for Vulkan_KHR_shader_relaxed_extended_instruction {
 impl Vulkan_KHR_shader_relaxed_extended_instruction {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_KHR_shader_relaxed_extended_instruction {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_shader_relaxed_extended_instruction")
+		.finish()
 	}
 }
 /// enum `VkPhysicalDeviceLayeredApiKHR` from VK_KHR_maintenance7
@@ -32168,7 +33349,7 @@ pub struct VkPhysicalDeviceLayeredApiVulkanPropertiesKHR {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_maintenance7.html>
 pub trait VK_KHR_maintenance7: Debug {}
 /// struct for `VK_KHR_maintenance7`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_maintenance7 {}
 impl VK_KHR_maintenance7 for Vulkan_KHR_maintenance7 {}
 impl Default for Vulkan_KHR_maintenance7 {
@@ -32179,6 +33360,12 @@ impl Default for Vulkan_KHR_maintenance7 {
 impl Vulkan_KHR_maintenance7 {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_KHR_maintenance7 {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_maintenance7")
+		.finish()
 	}
 }
 /// constant `VK_ACCESS_3_NONE_KHR` from VK_KHR_maintenance8
@@ -32213,7 +33400,7 @@ pub struct VkPhysicalDeviceMaintenance8FeaturesKHR {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_maintenance8.html>
 pub trait VK_KHR_maintenance8: Debug {}
 /// struct for `VK_KHR_maintenance8`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_maintenance8 {}
 impl VK_KHR_maintenance8 for Vulkan_KHR_maintenance8 {}
 impl Default for Vulkan_KHR_maintenance8 {
@@ -32224,6 +33411,12 @@ impl Default for Vulkan_KHR_maintenance8 {
 impl Vulkan_KHR_maintenance8 {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_KHR_maintenance8 {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_maintenance8")
+		.finish()
 	}
 }
 /// enum `VkDefaultVertexAttributeValueKHR` from VK_KHR_maintenance9
@@ -32267,7 +33460,7 @@ pub struct VkQueueFamilyOwnershipTransferPropertiesKHR {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_maintenance9.html>
 pub trait VK_KHR_maintenance9: Debug {}
 /// struct for `VK_KHR_maintenance9`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_maintenance9 {}
 impl VK_KHR_maintenance9 for Vulkan_KHR_maintenance9 {}
 impl Default for Vulkan_KHR_maintenance9 {
@@ -32278,6 +33471,12 @@ impl Default for Vulkan_KHR_maintenance9 {
 impl Vulkan_KHR_maintenance9 {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_KHR_maintenance9 {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_maintenance9")
+		.finish()
 	}
 }
 /// struct `VkPhysicalDeviceVideoMaintenance2FeaturesKHR` from VK_KHR_video_maintenance2
@@ -32323,7 +33522,7 @@ pub struct VkVideoDecodeAV1InlineSessionParametersInfoKHR {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_video_maintenance2.html>
 pub trait VK_KHR_video_maintenance2: Debug {}
 /// struct for `VK_KHR_video_maintenance2`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_video_maintenance2 {}
 impl VK_KHR_video_maintenance2 for Vulkan_KHR_video_maintenance2 {}
 impl Default for Vulkan_KHR_video_maintenance2 {
@@ -32334,6 +33533,12 @@ impl Default for Vulkan_KHR_video_maintenance2 {
 impl Vulkan_KHR_video_maintenance2 {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_KHR_video_maintenance2 {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_video_maintenance2")
+		.finish()
 	}
 }
 /// struct `VkPhysicalDeviceDepthClampZeroOneFeaturesKHR` from VK_KHR_depth_clamp_zero_one
@@ -32349,7 +33554,7 @@ pub struct VkPhysicalDeviceDepthClampZeroOneFeaturesKHR {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_depth_clamp_zero_one.html>
 pub trait VK_KHR_depth_clamp_zero_one: Debug {}
 /// struct for `VK_KHR_depth_clamp_zero_one`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_depth_clamp_zero_one {}
 impl VK_KHR_depth_clamp_zero_one for Vulkan_KHR_depth_clamp_zero_one {}
 impl Default for Vulkan_KHR_depth_clamp_zero_one {
@@ -32360,6 +33565,12 @@ impl Default for Vulkan_KHR_depth_clamp_zero_one {
 impl Vulkan_KHR_depth_clamp_zero_one {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_KHR_depth_clamp_zero_one {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_depth_clamp_zero_one")
+		.finish()
 	}
 }
 /// struct `VkPhysicalDeviceRobustness2FeaturesKHR` from VK_KHR_robustness2
@@ -32387,7 +33598,7 @@ pub struct VkPhysicalDeviceRobustness2PropertiesKHR {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_robustness2.html>
 pub trait VK_KHR_robustness2: Debug {}
 /// struct for `VK_KHR_robustness2`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_robustness2 {}
 impl VK_KHR_robustness2 for Vulkan_KHR_robustness2 {}
 impl Default for Vulkan_KHR_robustness2 {
@@ -32398,6 +33609,12 @@ impl Default for Vulkan_KHR_robustness2 {
 impl Vulkan_KHR_robustness2 {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_KHR_robustness2 {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_robustness2")
+		.finish()
 	}
 }
 /// struct `VkPhysicalDevicePresentModeFifoLatestReadyFeaturesKHR` from VK_KHR_present_mode_fifo_latest_ready
@@ -32413,7 +33630,7 @@ pub struct VkPhysicalDevicePresentModeFifoLatestReadyFeaturesKHR {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_present_mode_fifo_latest_ready.html>
 pub trait VK_KHR_present_mode_fifo_latest_ready: Debug {}
 /// struct for `VK_KHR_present_mode_fifo_latest_ready`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_present_mode_fifo_latest_ready {}
 impl VK_KHR_present_mode_fifo_latest_ready for Vulkan_KHR_present_mode_fifo_latest_ready {}
 impl Default for Vulkan_KHR_present_mode_fifo_latest_ready {
@@ -32424,6 +33641,12 @@ impl Default for Vulkan_KHR_present_mode_fifo_latest_ready {
 impl Vulkan_KHR_present_mode_fifo_latest_ready {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_KHR_present_mode_fifo_latest_ready {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_present_mode_fifo_latest_ready")
+		.finish()
 	}
 }
 /// type definition `VkDebugReportFlagsEXT` from VK_EXT_debug_report
@@ -32585,7 +33808,7 @@ pub trait VK_EXT_debug_report: Debug {
 	fn vkDebugReportMessageEXT(&self, instance: VkInstance, flags: VkDebugReportFlagsEXT, objectType: VkDebugReportObjectTypeEXT, object: u64, location: usize, messageCode: i32, pLayerPrefix: *const i8, pMessage: *const i8) -> Result<()>;
 }
 /// struct for `VK_EXT_debug_report`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_debug_report {
 	vk_create_debug_report_callback_ext: PFN_vkCreateDebugReportCallbackEXT,
 	vk_destroy_debug_report_callback_ext: PFN_vkDestroyDebugReportCallbackEXT,
@@ -32620,11 +33843,20 @@ impl Vulkan_EXT_debug_report {
 		}
 	}
 }
+impl Debug for Vulkan_EXT_debug_report {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_debug_report")
+		.field("vkCreateDebugReportCallbackEXT", &if self.vk_create_debug_report_callback_ext == dummy_vkCreateDebugReportCallbackEXT {unsafe {transmute(null::<PFN_vkCreateDebugReportCallbackEXT>())}} else {self.vk_create_debug_report_callback_ext})
+		.field("vkDestroyDebugReportCallbackEXT", &if self.vk_destroy_debug_report_callback_ext == dummy_vkDestroyDebugReportCallbackEXT {unsafe {transmute(null::<PFN_vkDestroyDebugReportCallbackEXT>())}} else {self.vk_destroy_debug_report_callback_ext})
+		.field("vkDebugReportMessageEXT", &if self.vk_debug_report_message_ext == dummy_vkDebugReportMessageEXT {unsafe {transmute(null::<PFN_vkDebugReportMessageEXT>())}} else {self.vk_debug_report_message_ext})
+		.finish()
+	}
+}
 /// trait for `VK_NV_glsl_shader`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NV_glsl_shader.html>
 pub trait VK_NV_glsl_shader: Debug {}
 /// struct for `VK_NV_glsl_shader`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_NV_glsl_shader {}
 impl VK_NV_glsl_shader for Vulkan_NV_glsl_shader {}
 impl Default for Vulkan_NV_glsl_shader {
@@ -32637,11 +33869,17 @@ impl Vulkan_NV_glsl_shader {
 		Self {}
 	}
 }
+impl Debug for Vulkan_NV_glsl_shader {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_NV_glsl_shader")
+		.finish()
+	}
+}
 /// trait for `VK_EXT_depth_range_unrestricted`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_depth_range_unrestricted.html>
 pub trait VK_EXT_depth_range_unrestricted: Debug {}
 /// struct for `VK_EXT_depth_range_unrestricted`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_depth_range_unrestricted {}
 impl VK_EXT_depth_range_unrestricted for Vulkan_EXT_depth_range_unrestricted {}
 impl Default for Vulkan_EXT_depth_range_unrestricted {
@@ -32654,11 +33892,17 @@ impl Vulkan_EXT_depth_range_unrestricted {
 		Self {}
 	}
 }
+impl Debug for Vulkan_EXT_depth_range_unrestricted {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_depth_range_unrestricted")
+		.finish()
+	}
+}
 /// trait for `VK_IMG_filter_cubic`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_IMG_filter_cubic.html>
 pub trait VK_IMG_filter_cubic: Debug {}
 /// struct for `VK_IMG_filter_cubic`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_IMG_filter_cubic {}
 impl VK_IMG_filter_cubic for Vulkan_IMG_filter_cubic {}
 impl Default for Vulkan_IMG_filter_cubic {
@@ -32669,6 +33913,12 @@ impl Default for Vulkan_IMG_filter_cubic {
 impl Vulkan_IMG_filter_cubic {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_IMG_filter_cubic {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_IMG_filter_cubic")
+		.finish()
 	}
 }
 /// enum `VkRasterizationOrderAMD` from VK_AMD_rasterization_order
@@ -32693,7 +33943,7 @@ pub struct VkPipelineRasterizationStateRasterizationOrderAMD {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_AMD_rasterization_order.html>
 pub trait VK_AMD_rasterization_order: Debug {}
 /// struct for `VK_AMD_rasterization_order`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_AMD_rasterization_order {}
 impl VK_AMD_rasterization_order for Vulkan_AMD_rasterization_order {}
 impl Default for Vulkan_AMD_rasterization_order {
@@ -32706,11 +33956,17 @@ impl Vulkan_AMD_rasterization_order {
 		Self {}
 	}
 }
+impl Debug for Vulkan_AMD_rasterization_order {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_AMD_rasterization_order")
+		.finish()
+	}
+}
 /// trait for `VK_AMD_shader_trinary_minmax`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_AMD_shader_trinary_minmax.html>
 pub trait VK_AMD_shader_trinary_minmax: Debug {}
 /// struct for `VK_AMD_shader_trinary_minmax`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_AMD_shader_trinary_minmax {}
 impl VK_AMD_shader_trinary_minmax for Vulkan_AMD_shader_trinary_minmax {}
 impl Default for Vulkan_AMD_shader_trinary_minmax {
@@ -32723,11 +33979,17 @@ impl Vulkan_AMD_shader_trinary_minmax {
 		Self {}
 	}
 }
+impl Debug for Vulkan_AMD_shader_trinary_minmax {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_AMD_shader_trinary_minmax")
+		.finish()
+	}
+}
 /// trait for `VK_AMD_shader_explicit_vertex_parameter`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_AMD_shader_explicit_vertex_parameter.html>
 pub trait VK_AMD_shader_explicit_vertex_parameter: Debug {}
 /// struct for `VK_AMD_shader_explicit_vertex_parameter`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_AMD_shader_explicit_vertex_parameter {}
 impl VK_AMD_shader_explicit_vertex_parameter for Vulkan_AMD_shader_explicit_vertex_parameter {}
 impl Default for Vulkan_AMD_shader_explicit_vertex_parameter {
@@ -32738,6 +34000,12 @@ impl Default for Vulkan_AMD_shader_explicit_vertex_parameter {
 impl Vulkan_AMD_shader_explicit_vertex_parameter {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_AMD_shader_explicit_vertex_parameter {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_AMD_shader_explicit_vertex_parameter")
+		.finish()
 	}
 }
 /// struct `VkDebugMarkerObjectNameInfoEXT` from VK_EXT_debug_marker
@@ -32824,7 +34092,7 @@ pub trait VK_EXT_debug_marker: Debug {
 	fn vkCmdDebugMarkerInsertEXT(&self, commandBuffer: VkCommandBuffer, pMarkerInfo: *const VkDebugMarkerMarkerInfoEXT) -> Result<()>;
 }
 /// struct for `VK_EXT_debug_marker`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_debug_marker {
 	vk_debug_marker_set_object_tag_ext: PFN_vkDebugMarkerSetObjectTagEXT,
 	vk_debug_marker_set_object_name_ext: PFN_vkDebugMarkerSetObjectNameEXT,
@@ -32871,11 +34139,22 @@ impl Vulkan_EXT_debug_marker {
 		}
 	}
 }
+impl Debug for Vulkan_EXT_debug_marker {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_debug_marker")
+		.field("vkDebugMarkerSetObjectTagEXT", &if self.vk_debug_marker_set_object_tag_ext == dummy_vkDebugMarkerSetObjectTagEXT {unsafe {transmute(null::<PFN_vkDebugMarkerSetObjectTagEXT>())}} else {self.vk_debug_marker_set_object_tag_ext})
+		.field("vkDebugMarkerSetObjectNameEXT", &if self.vk_debug_marker_set_object_name_ext == dummy_vkDebugMarkerSetObjectNameEXT {unsafe {transmute(null::<PFN_vkDebugMarkerSetObjectNameEXT>())}} else {self.vk_debug_marker_set_object_name_ext})
+		.field("vkCmdDebugMarkerBeginEXT", &if self.vk_cmd_debug_marker_begin_ext == dummy_vkCmdDebugMarkerBeginEXT {unsafe {transmute(null::<PFN_vkCmdDebugMarkerBeginEXT>())}} else {self.vk_cmd_debug_marker_begin_ext})
+		.field("vkCmdDebugMarkerEndEXT", &if self.vk_cmd_debug_marker_end_ext == dummy_vkCmdDebugMarkerEndEXT {unsafe {transmute(null::<PFN_vkCmdDebugMarkerEndEXT>())}} else {self.vk_cmd_debug_marker_end_ext})
+		.field("vkCmdDebugMarkerInsertEXT", &if self.vk_cmd_debug_marker_insert_ext == dummy_vkCmdDebugMarkerInsertEXT {unsafe {transmute(null::<PFN_vkCmdDebugMarkerInsertEXT>())}} else {self.vk_cmd_debug_marker_insert_ext})
+		.finish()
+	}
+}
 /// trait for `VK_AMD_gcn_shader`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_AMD_gcn_shader.html>
 pub trait VK_AMD_gcn_shader: Debug {}
 /// struct for `VK_AMD_gcn_shader`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_AMD_gcn_shader {}
 impl VK_AMD_gcn_shader for Vulkan_AMD_gcn_shader {}
 impl Default for Vulkan_AMD_gcn_shader {
@@ -32886,6 +34165,12 @@ impl Default for Vulkan_AMD_gcn_shader {
 impl Vulkan_AMD_gcn_shader {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_AMD_gcn_shader {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_AMD_gcn_shader")
+		.finish()
 	}
 }
 /// struct `VkDedicatedAllocationImageCreateInfoNV` from VK_NV_dedicated_allocation
@@ -32920,7 +34205,7 @@ pub struct VkDedicatedAllocationMemoryAllocateInfoNV {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NV_dedicated_allocation.html>
 pub trait VK_NV_dedicated_allocation: Debug {}
 /// struct for `VK_NV_dedicated_allocation`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_NV_dedicated_allocation {}
 impl VK_NV_dedicated_allocation for Vulkan_NV_dedicated_allocation {}
 impl Default for Vulkan_NV_dedicated_allocation {
@@ -32931,6 +34216,12 @@ impl Default for Vulkan_NV_dedicated_allocation {
 impl Vulkan_NV_dedicated_allocation {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_NV_dedicated_allocation {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_NV_dedicated_allocation")
+		.finish()
 	}
 }
 /// type definition `VkPipelineRasterizationStateStreamCreateFlagsEXT` from VK_EXT_transform_feedback
@@ -33033,7 +34324,7 @@ pub trait VK_EXT_transform_feedback: Debug {
 	fn vkCmdDrawIndirectByteCountEXT(&self, commandBuffer: VkCommandBuffer, instanceCount: u32, firstInstance: u32, counterBuffer: VkBuffer, counterBufferOffset: VkDeviceSize, counterOffset: u32, vertexStride: u32) -> Result<()>;
 }
 /// struct for `VK_EXT_transform_feedback`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_transform_feedback {
 	vk_cmd_bind_transform_feedback_buffers_ext: PFN_vkCmdBindTransformFeedbackBuffersEXT,
 	vk_cmd_begin_transform_feedback_ext: PFN_vkCmdBeginTransformFeedbackEXT,
@@ -33084,6 +34375,18 @@ impl Vulkan_EXT_transform_feedback {
 			vk_cmd_end_query_indexed_ext: {let proc = get_instance_proc_address(instance, "vkCmdEndQueryIndexedEXT"); if proc == null() {dummy_vkCmdEndQueryIndexedEXT} else {unsafe {transmute(proc)}}},
 			vk_cmd_draw_indirect_byte_count_ext: {let proc = get_instance_proc_address(instance, "vkCmdDrawIndirectByteCountEXT"); if proc == null() {dummy_vkCmdDrawIndirectByteCountEXT} else {unsafe {transmute(proc)}}},
 		}
+	}
+}
+impl Debug for Vulkan_EXT_transform_feedback {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_transform_feedback")
+		.field("vkCmdBindTransformFeedbackBuffersEXT", &if self.vk_cmd_bind_transform_feedback_buffers_ext == dummy_vkCmdBindTransformFeedbackBuffersEXT {unsafe {transmute(null::<PFN_vkCmdBindTransformFeedbackBuffersEXT>())}} else {self.vk_cmd_bind_transform_feedback_buffers_ext})
+		.field("vkCmdBeginTransformFeedbackEXT", &if self.vk_cmd_begin_transform_feedback_ext == dummy_vkCmdBeginTransformFeedbackEXT {unsafe {transmute(null::<PFN_vkCmdBeginTransformFeedbackEXT>())}} else {self.vk_cmd_begin_transform_feedback_ext})
+		.field("vkCmdEndTransformFeedbackEXT", &if self.vk_cmd_end_transform_feedback_ext == dummy_vkCmdEndTransformFeedbackEXT {unsafe {transmute(null::<PFN_vkCmdEndTransformFeedbackEXT>())}} else {self.vk_cmd_end_transform_feedback_ext})
+		.field("vkCmdBeginQueryIndexedEXT", &if self.vk_cmd_begin_query_indexed_ext == dummy_vkCmdBeginQueryIndexedEXT {unsafe {transmute(null::<PFN_vkCmdBeginQueryIndexedEXT>())}} else {self.vk_cmd_begin_query_indexed_ext})
+		.field("vkCmdEndQueryIndexedEXT", &if self.vk_cmd_end_query_indexed_ext == dummy_vkCmdEndQueryIndexedEXT {unsafe {transmute(null::<PFN_vkCmdEndQueryIndexedEXT>())}} else {self.vk_cmd_end_query_indexed_ext})
+		.field("vkCmdDrawIndirectByteCountEXT", &if self.vk_cmd_draw_indirect_byte_count_ext == dummy_vkCmdDrawIndirectByteCountEXT {unsafe {transmute(null::<PFN_vkCmdDrawIndirectByteCountEXT>())}} else {self.vk_cmd_draw_indirect_byte_count_ext})
+		.finish()
 	}
 }
 /// Non-dispatchable handle `VkCuModuleNVX` from VK_NVX_binary_import
@@ -33195,7 +34498,7 @@ pub trait VK_NVX_binary_import: Debug {
 	fn vkCmdCuLaunchKernelNVX(&self, commandBuffer: VkCommandBuffer, pLaunchInfo: *const VkCuLaunchInfoNVX) -> Result<()>;
 }
 /// struct for `VK_NVX_binary_import`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_NVX_binary_import {
 	vk_create_cu_module_nvx: PFN_vkCreateCuModuleNVX,
 	vk_create_cu_function_nvx: PFN_vkCreateCuFunctionNVX,
@@ -33240,6 +34543,17 @@ impl Vulkan_NVX_binary_import {
 			vk_destroy_cu_function_nvx: {let proc = get_instance_proc_address(instance, "vkDestroyCuFunctionNVX"); if proc == null() {dummy_vkDestroyCuFunctionNVX} else {unsafe {transmute(proc)}}},
 			vk_cmd_cu_launch_kernel_nvx: {let proc = get_instance_proc_address(instance, "vkCmdCuLaunchKernelNVX"); if proc == null() {dummy_vkCmdCuLaunchKernelNVX} else {unsafe {transmute(proc)}}},
 		}
+	}
+}
+impl Debug for Vulkan_NVX_binary_import {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_NVX_binary_import")
+		.field("vkCreateCuModuleNVX", &if self.vk_create_cu_module_nvx == dummy_vkCreateCuModuleNVX {unsafe {transmute(null::<PFN_vkCreateCuModuleNVX>())}} else {self.vk_create_cu_module_nvx})
+		.field("vkCreateCuFunctionNVX", &if self.vk_create_cu_function_nvx == dummy_vkCreateCuFunctionNVX {unsafe {transmute(null::<PFN_vkCreateCuFunctionNVX>())}} else {self.vk_create_cu_function_nvx})
+		.field("vkDestroyCuModuleNVX", &if self.vk_destroy_cu_module_nvx == dummy_vkDestroyCuModuleNVX {unsafe {transmute(null::<PFN_vkDestroyCuModuleNVX>())}} else {self.vk_destroy_cu_module_nvx})
+		.field("vkDestroyCuFunctionNVX", &if self.vk_destroy_cu_function_nvx == dummy_vkDestroyCuFunctionNVX {unsafe {transmute(null::<PFN_vkDestroyCuFunctionNVX>())}} else {self.vk_destroy_cu_function_nvx})
+		.field("vkCmdCuLaunchKernelNVX", &if self.vk_cmd_cu_launch_kernel_nvx == dummy_vkCmdCuLaunchKernelNVX {unsafe {transmute(null::<PFN_vkCmdCuLaunchKernelNVX>())}} else {self.vk_cmd_cu_launch_kernel_nvx})
+		.finish()
 	}
 }
 /// struct `VkImageViewHandleInfoNVX` from VK_NVX_image_view_handle
@@ -33295,7 +34609,7 @@ pub trait VK_NVX_image_view_handle: Debug {
 	fn vkGetImageViewAddressNVX(&self, device: VkDevice, imageView: VkImageView, pProperties: *mut VkImageViewAddressPropertiesNVX) -> Result<()>;
 }
 /// struct for `VK_NVX_image_view_handle`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_NVX_image_view_handle {
 	vk_get_image_view_handle_nvx: PFN_vkGetImageViewHandleNVX,
 	vk_get_image_view_handle64_nvx: PFN_vkGetImageViewHandle64NVX,
@@ -33330,6 +34644,15 @@ impl Vulkan_NVX_image_view_handle {
 		}
 	}
 }
+impl Debug for Vulkan_NVX_image_view_handle {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_NVX_image_view_handle")
+		.field("vkGetImageViewHandleNVX", &if self.vk_get_image_view_handle_nvx == dummy_vkGetImageViewHandleNVX {unsafe {transmute(null::<PFN_vkGetImageViewHandleNVX>())}} else {self.vk_get_image_view_handle_nvx})
+		.field("vkGetImageViewHandle64NVX", &if self.vk_get_image_view_handle64_nvx == dummy_vkGetImageViewHandle64NVX {unsafe {transmute(null::<PFN_vkGetImageViewHandle64NVX>())}} else {self.vk_get_image_view_handle64_nvx})
+		.field("vkGetImageViewAddressNVX", &if self.vk_get_image_view_address_nvx == dummy_vkGetImageViewAddressNVX {unsafe {transmute(null::<PFN_vkGetImageViewAddressNVX>())}} else {self.vk_get_image_view_address_nvx})
+		.finish()
+	}
+}
 /// function prototype `PFN_vkCmdDrawIndirectCountAMD` from VK_AMD_draw_indirect_count
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkCmdDrawIndirectCountAMD.html>
 type PFN_vkCmdDrawIndirectCountAMD = extern "system" fn(commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize, countBuffer: VkBuffer, countBufferOffset: VkDeviceSize, maxDrawCount: u32, stride: u32);
@@ -33353,7 +34676,7 @@ pub trait VK_AMD_draw_indirect_count: Debug {
 	fn vkCmdDrawIndexedIndirectCountAMD(&self, commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize, countBuffer: VkBuffer, countBufferOffset: VkDeviceSize, maxDrawCount: u32, stride: u32) -> Result<()>;
 }
 /// struct for `VK_AMD_draw_indirect_count`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_AMD_draw_indirect_count {
 	vk_cmd_draw_indirect_count_amd: PFN_vkCmdDrawIndirectCountAMD,
 	vk_cmd_draw_indexed_indirect_count_amd: PFN_vkCmdDrawIndexedIndirectCountAMD,
@@ -33382,11 +34705,19 @@ impl Vulkan_AMD_draw_indirect_count {
 		}
 	}
 }
+impl Debug for Vulkan_AMD_draw_indirect_count {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_AMD_draw_indirect_count")
+		.field("vkCmdDrawIndirectCountAMD", &if self.vk_cmd_draw_indirect_count_amd == dummy_vkCmdDrawIndirectCountAMD {unsafe {transmute(null::<PFN_vkCmdDrawIndirectCountAMD>())}} else {self.vk_cmd_draw_indirect_count_amd})
+		.field("vkCmdDrawIndexedIndirectCountAMD", &if self.vk_cmd_draw_indexed_indirect_count_amd == dummy_vkCmdDrawIndexedIndirectCountAMD {unsafe {transmute(null::<PFN_vkCmdDrawIndexedIndirectCountAMD>())}} else {self.vk_cmd_draw_indexed_indirect_count_amd})
+		.finish()
+	}
+}
 /// trait for `VK_AMD_negative_viewport_height`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_AMD_negative_viewport_height.html>
 pub trait VK_AMD_negative_viewport_height: Debug {}
 /// struct for `VK_AMD_negative_viewport_height`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_AMD_negative_viewport_height {}
 impl VK_AMD_negative_viewport_height for Vulkan_AMD_negative_viewport_height {}
 impl Default for Vulkan_AMD_negative_viewport_height {
@@ -33399,11 +34730,17 @@ impl Vulkan_AMD_negative_viewport_height {
 		Self {}
 	}
 }
+impl Debug for Vulkan_AMD_negative_viewport_height {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_AMD_negative_viewport_height")
+		.finish()
+	}
+}
 /// trait for `VK_AMD_gpu_shader_half_float`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_AMD_gpu_shader_half_float.html>
 pub trait VK_AMD_gpu_shader_half_float: Debug {}
 /// struct for `VK_AMD_gpu_shader_half_float`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_AMD_gpu_shader_half_float {}
 impl VK_AMD_gpu_shader_half_float for Vulkan_AMD_gpu_shader_half_float {}
 impl Default for Vulkan_AMD_gpu_shader_half_float {
@@ -33416,11 +34753,17 @@ impl Vulkan_AMD_gpu_shader_half_float {
 		Self {}
 	}
 }
+impl Debug for Vulkan_AMD_gpu_shader_half_float {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_AMD_gpu_shader_half_float")
+		.finish()
+	}
+}
 /// trait for `VK_AMD_shader_ballot`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_AMD_shader_ballot.html>
 pub trait VK_AMD_shader_ballot: Debug {}
 /// struct for `VK_AMD_shader_ballot`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_AMD_shader_ballot {}
 impl VK_AMD_shader_ballot for Vulkan_AMD_shader_ballot {}
 impl Default for Vulkan_AMD_shader_ballot {
@@ -33431,6 +34774,12 @@ impl Default for Vulkan_AMD_shader_ballot {
 impl Vulkan_AMD_shader_ballot {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_AMD_shader_ballot {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_AMD_shader_ballot")
+		.finish()
 	}
 }
 /// struct `VkTextureLODGatherFormatPropertiesAMD` from VK_AMD_texture_gather_bias_lod
@@ -33446,7 +34795,7 @@ pub struct VkTextureLODGatherFormatPropertiesAMD {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_AMD_texture_gather_bias_lod.html>
 pub trait VK_AMD_texture_gather_bias_lod: Debug {}
 /// struct for `VK_AMD_texture_gather_bias_lod`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_AMD_texture_gather_bias_lod {}
 impl VK_AMD_texture_gather_bias_lod for Vulkan_AMD_texture_gather_bias_lod {}
 impl Default for Vulkan_AMD_texture_gather_bias_lod {
@@ -33457,6 +34806,12 @@ impl Default for Vulkan_AMD_texture_gather_bias_lod {
 impl Vulkan_AMD_texture_gather_bias_lod {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_AMD_texture_gather_bias_lod {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_AMD_texture_gather_bias_lod")
+		.finish()
 	}
 }
 /// enum `VkShaderInfoTypeAMD` from VK_AMD_shader_info
@@ -33507,7 +34862,7 @@ pub trait VK_AMD_shader_info: Debug {
 	fn vkGetShaderInfoAMD(&self, device: VkDevice, pipeline: VkPipeline, shaderStage: VkShaderStageFlagBits, infoType: VkShaderInfoTypeAMD, pInfoSize: *mut size_t, pInfo: *mut c_void) -> Result<()>;
 }
 /// struct for `VK_AMD_shader_info`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_AMD_shader_info {
 	vk_get_shader_info_amd: PFN_vkGetShaderInfoAMD,
 }
@@ -33530,11 +34885,18 @@ impl Vulkan_AMD_shader_info {
 		}
 	}
 }
+impl Debug for Vulkan_AMD_shader_info {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_AMD_shader_info")
+		.field("vkGetShaderInfoAMD", &if self.vk_get_shader_info_amd == dummy_vkGetShaderInfoAMD {unsafe {transmute(null::<PFN_vkGetShaderInfoAMD>())}} else {self.vk_get_shader_info_amd})
+		.finish()
+	}
+}
 /// trait for `VK_AMD_shader_image_load_store_lod`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_AMD_shader_image_load_store_lod.html>
 pub trait VK_AMD_shader_image_load_store_lod: Debug {}
 /// struct for `VK_AMD_shader_image_load_store_lod`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_AMD_shader_image_load_store_lod {}
 impl VK_AMD_shader_image_load_store_lod for Vulkan_AMD_shader_image_load_store_lod {}
 impl Default for Vulkan_AMD_shader_image_load_store_lod {
@@ -33545,6 +34907,12 @@ impl Default for Vulkan_AMD_shader_image_load_store_lod {
 impl Vulkan_AMD_shader_image_load_store_lod {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_AMD_shader_image_load_store_lod {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_AMD_shader_image_load_store_lod")
+		.finish()
 	}
 }
 /// struct `VkPhysicalDeviceCornerSampledImageFeaturesNV` from VK_NV_corner_sampled_image
@@ -33560,7 +34928,7 @@ pub struct VkPhysicalDeviceCornerSampledImageFeaturesNV {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NV_corner_sampled_image.html>
 pub trait VK_NV_corner_sampled_image: Debug {}
 /// struct for `VK_NV_corner_sampled_image`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_NV_corner_sampled_image {}
 impl VK_NV_corner_sampled_image for Vulkan_NV_corner_sampled_image {}
 impl Default for Vulkan_NV_corner_sampled_image {
@@ -33573,11 +34941,17 @@ impl Vulkan_NV_corner_sampled_image {
 		Self {}
 	}
 }
+impl Debug for Vulkan_NV_corner_sampled_image {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_NV_corner_sampled_image")
+		.finish()
+	}
+}
 /// trait for `VK_IMG_format_pvrtc`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_IMG_format_pvrtc.html>
 pub trait VK_IMG_format_pvrtc: Debug {}
 /// struct for `VK_IMG_format_pvrtc`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_IMG_format_pvrtc {}
 impl VK_IMG_format_pvrtc for Vulkan_IMG_format_pvrtc {}
 impl Default for Vulkan_IMG_format_pvrtc {
@@ -33588,6 +34962,12 @@ impl Default for Vulkan_IMG_format_pvrtc {
 impl Vulkan_IMG_format_pvrtc {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_IMG_format_pvrtc {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_IMG_format_pvrtc")
+		.finish()
 	}
 }
 /// type definition `VkExternalMemoryHandleTypeFlagsNV` from VK_NV_external_memory_capabilities
@@ -33698,7 +35078,7 @@ pub trait VK_NV_external_memory_capabilities: Debug {
 	fn vkGetPhysicalDeviceExternalImageFormatPropertiesNV(&self, physicalDevice: VkPhysicalDevice, format: VkFormat, type_: VkImageType, tiling: VkImageTiling, usage: VkImageUsageFlags, flags: VkImageCreateFlags, externalHandleType: VkExternalMemoryHandleTypeFlagsNV, pExternalImageFormatProperties: *mut VkExternalImageFormatPropertiesNV) -> Result<()>;
 }
 /// struct for `VK_NV_external_memory_capabilities`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_NV_external_memory_capabilities {
 	vk_get_physical_device_external_image_format_properties_nv: PFN_vkGetPhysicalDeviceExternalImageFormatPropertiesNV,
 }
@@ -33719,6 +35099,13 @@ impl Vulkan_NV_external_memory_capabilities {
 		Self {
 			vk_get_physical_device_external_image_format_properties_nv: {let proc = get_instance_proc_address(instance, "vkGetPhysicalDeviceExternalImageFormatPropertiesNV"); if proc == null() {dummy_vkGetPhysicalDeviceExternalImageFormatPropertiesNV} else {unsafe {transmute(proc)}}},
 		}
+	}
+}
+impl Debug for Vulkan_NV_external_memory_capabilities {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_NV_external_memory_capabilities")
+		.field("vkGetPhysicalDeviceExternalImageFormatPropertiesNV", &if self.vk_get_physical_device_external_image_format_properties_nv == dummy_vkGetPhysicalDeviceExternalImageFormatPropertiesNV {unsafe {transmute(null::<PFN_vkGetPhysicalDeviceExternalImageFormatPropertiesNV>())}} else {self.vk_get_physical_device_external_image_format_properties_nv})
+		.finish()
 	}
 }
 /// struct `VkExternalMemoryImageCreateInfoNV` from VK_NV_external_memory
@@ -33743,7 +35130,7 @@ pub struct VkExportMemoryAllocateInfoNV {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NV_external_memory.html>
 pub trait VK_NV_external_memory: Debug {}
 /// struct for `VK_NV_external_memory`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_NV_external_memory {}
 impl VK_NV_external_memory for Vulkan_NV_external_memory {}
 impl Default for Vulkan_NV_external_memory {
@@ -33754,6 +35141,12 @@ impl Default for Vulkan_NV_external_memory {
 impl Vulkan_NV_external_memory {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_NV_external_memory {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_NV_external_memory")
+		.finish()
 	}
 }
 /// enum `VkValidationCheckEXT` from VK_EXT_validation_flags
@@ -33779,7 +35172,7 @@ pub struct VkValidationFlagsEXT {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_validation_flags.html>
 pub trait VK_EXT_validation_flags: Debug {}
 /// struct for `VK_EXT_validation_flags`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_validation_flags {}
 impl VK_EXT_validation_flags for Vulkan_EXT_validation_flags {}
 impl Default for Vulkan_EXT_validation_flags {
@@ -33792,11 +35185,17 @@ impl Vulkan_EXT_validation_flags {
 		Self {}
 	}
 }
+impl Debug for Vulkan_EXT_validation_flags {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_validation_flags")
+		.finish()
+	}
+}
 /// trait for `VK_EXT_shader_subgroup_ballot`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_shader_subgroup_ballot.html>
 pub trait VK_EXT_shader_subgroup_ballot: Debug {}
 /// struct for `VK_EXT_shader_subgroup_ballot`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_shader_subgroup_ballot {}
 impl VK_EXT_shader_subgroup_ballot for Vulkan_EXT_shader_subgroup_ballot {}
 impl Default for Vulkan_EXT_shader_subgroup_ballot {
@@ -33809,11 +35208,17 @@ impl Vulkan_EXT_shader_subgroup_ballot {
 		Self {}
 	}
 }
+impl Debug for Vulkan_EXT_shader_subgroup_ballot {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_shader_subgroup_ballot")
+		.finish()
+	}
+}
 /// trait for `VK_EXT_shader_subgroup_vote`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_shader_subgroup_vote.html>
 pub trait VK_EXT_shader_subgroup_vote: Debug {}
 /// struct for `VK_EXT_shader_subgroup_vote`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_shader_subgroup_vote {}
 impl VK_EXT_shader_subgroup_vote for Vulkan_EXT_shader_subgroup_vote {}
 impl Default for Vulkan_EXT_shader_subgroup_vote {
@@ -33826,6 +35231,12 @@ impl Vulkan_EXT_shader_subgroup_vote {
 		Self {}
 	}
 }
+impl Debug for Vulkan_EXT_shader_subgroup_vote {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_shader_subgroup_vote")
+		.finish()
+	}
+}
 /// type definition `VkPhysicalDeviceTextureCompressionASTCHDRFeaturesEXT` from VK_EXT_texture_compression_astc_hdr
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPhysicalDeviceTextureCompressionASTCHDRFeaturesEXT.html>
 pub type VkPhysicalDeviceTextureCompressionASTCHDRFeaturesEXT = VkPhysicalDeviceTextureCompressionASTCHDRFeatures;
@@ -33833,7 +35244,7 @@ pub type VkPhysicalDeviceTextureCompressionASTCHDRFeaturesEXT = VkPhysicalDevice
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_texture_compression_astc_hdr.html>
 pub trait VK_EXT_texture_compression_astc_hdr: Debug {}
 /// struct for `VK_EXT_texture_compression_astc_hdr`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_texture_compression_astc_hdr {}
 impl VK_EXT_texture_compression_astc_hdr for Vulkan_EXT_texture_compression_astc_hdr {}
 impl Default for Vulkan_EXT_texture_compression_astc_hdr {
@@ -33844,6 +35255,12 @@ impl Default for Vulkan_EXT_texture_compression_astc_hdr {
 impl Vulkan_EXT_texture_compression_astc_hdr {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_EXT_texture_compression_astc_hdr {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_texture_compression_astc_hdr")
+		.finish()
 	}
 }
 /// struct `VkImageViewASTCDecodeModeEXT` from VK_EXT_astc_decode_mode
@@ -33868,7 +35285,7 @@ pub struct VkPhysicalDeviceASTCDecodeFeaturesEXT {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_astc_decode_mode.html>
 pub trait VK_EXT_astc_decode_mode: Debug {}
 /// struct for `VK_EXT_astc_decode_mode`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_astc_decode_mode {}
 impl VK_EXT_astc_decode_mode for Vulkan_EXT_astc_decode_mode {}
 impl Default for Vulkan_EXT_astc_decode_mode {
@@ -33879,6 +35296,12 @@ impl Default for Vulkan_EXT_astc_decode_mode {
 impl Vulkan_EXT_astc_decode_mode {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_EXT_astc_decode_mode {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_astc_decode_mode")
+		.finish()
 	}
 }
 /// type definition `VkPipelineRobustnessBufferBehaviorEXT` from VK_EXT_pipeline_robustness
@@ -33900,7 +35323,7 @@ pub type VkPipelineRobustnessCreateInfoEXT = VkPipelineRobustnessCreateInfo;
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_pipeline_robustness.html>
 pub trait VK_EXT_pipeline_robustness: Debug {}
 /// struct for `VK_EXT_pipeline_robustness`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_pipeline_robustness {}
 impl VK_EXT_pipeline_robustness for Vulkan_EXT_pipeline_robustness {}
 impl Default for Vulkan_EXT_pipeline_robustness {
@@ -33911,6 +35334,12 @@ impl Default for Vulkan_EXT_pipeline_robustness {
 impl Vulkan_EXT_pipeline_robustness {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_EXT_pipeline_robustness {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_pipeline_robustness")
+		.finish()
 	}
 }
 /// type definition `VkConditionalRenderingFlagsEXT` from VK_EXT_conditional_rendering
@@ -34004,7 +35433,7 @@ pub trait VK_EXT_conditional_rendering: Debug {
 	fn vkCmdEndConditionalRenderingEXT(&self, commandBuffer: VkCommandBuffer) -> Result<()>;
 }
 /// struct for `VK_EXT_conditional_rendering`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_conditional_rendering {
 	vk_cmd_begin_conditional_rendering_ext: PFN_vkCmdBeginConditionalRenderingEXT,
 	vk_cmd_end_conditional_rendering_ext: PFN_vkCmdEndConditionalRenderingEXT,
@@ -34031,6 +35460,14 @@ impl Vulkan_EXT_conditional_rendering {
 			vk_cmd_begin_conditional_rendering_ext: {let proc = get_instance_proc_address(instance, "vkCmdBeginConditionalRenderingEXT"); if proc == null() {dummy_vkCmdBeginConditionalRenderingEXT} else {unsafe {transmute(proc)}}},
 			vk_cmd_end_conditional_rendering_ext: {let proc = get_instance_proc_address(instance, "vkCmdEndConditionalRenderingEXT"); if proc == null() {dummy_vkCmdEndConditionalRenderingEXT} else {unsafe {transmute(proc)}}},
 		}
+	}
+}
+impl Debug for Vulkan_EXT_conditional_rendering {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_conditional_rendering")
+		.field("vkCmdBeginConditionalRenderingEXT", &if self.vk_cmd_begin_conditional_rendering_ext == dummy_vkCmdBeginConditionalRenderingEXT {unsafe {transmute(null::<PFN_vkCmdBeginConditionalRenderingEXT>())}} else {self.vk_cmd_begin_conditional_rendering_ext})
+		.field("vkCmdEndConditionalRenderingEXT", &if self.vk_cmd_end_conditional_rendering_ext == dummy_vkCmdEndConditionalRenderingEXT {unsafe {transmute(null::<PFN_vkCmdEndConditionalRenderingEXT>())}} else {self.vk_cmd_end_conditional_rendering_ext})
+		.finish()
 	}
 }
 /// struct `VkViewportWScalingNV` from VK_NV_clip_space_w_scaling
@@ -34066,7 +35503,7 @@ pub trait VK_NV_clip_space_w_scaling: Debug {
 	fn vkCmdSetViewportWScalingNV(&self, commandBuffer: VkCommandBuffer, firstViewport: u32, viewportCount: u32, pViewportWScalings: *const VkViewportWScalingNV) -> Result<()>;
 }
 /// struct for `VK_NV_clip_space_w_scaling`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_NV_clip_space_w_scaling {
 	vk_cmd_set_viewport_wscaling_nv: PFN_vkCmdSetViewportWScalingNV,
 }
@@ -34089,6 +35526,13 @@ impl Vulkan_NV_clip_space_w_scaling {
 		}
 	}
 }
+impl Debug for Vulkan_NV_clip_space_w_scaling {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_NV_clip_space_w_scaling")
+		.field("vkCmdSetViewportWScalingNV", &if self.vk_cmd_set_viewport_wscaling_nv == dummy_vkCmdSetViewportWScalingNV {unsafe {transmute(null::<PFN_vkCmdSetViewportWScalingNV>())}} else {self.vk_cmd_set_viewport_wscaling_nv})
+		.finish()
+	}
+}
 /// function prototype `PFN_vkReleaseDisplayEXT` from VK_EXT_direct_mode_display
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkReleaseDisplayEXT.html>
 type PFN_vkReleaseDisplayEXT = extern "system" fn(physicalDevice: VkPhysicalDevice, display: VkDisplayKHR) -> VkResult;
@@ -34103,7 +35547,7 @@ pub trait VK_EXT_direct_mode_display: Debug {
 	fn vkReleaseDisplayEXT(&self, physicalDevice: VkPhysicalDevice, display: VkDisplayKHR) -> Result<()>;
 }
 /// struct for `VK_EXT_direct_mode_display`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_direct_mode_display {
 	vk_release_display_ext: PFN_vkReleaseDisplayEXT,
 }
@@ -34124,6 +35568,13 @@ impl Vulkan_EXT_direct_mode_display {
 		Self {
 			vk_release_display_ext: {let proc = get_instance_proc_address(instance, "vkReleaseDisplayEXT"); if proc == null() {dummy_vkReleaseDisplayEXT} else {unsafe {transmute(proc)}}},
 		}
+	}
+}
+impl Debug for Vulkan_EXT_direct_mode_display {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_direct_mode_display")
+		.field("vkReleaseDisplayEXT", &if self.vk_release_display_ext == dummy_vkReleaseDisplayEXT {unsafe {transmute(null::<PFN_vkReleaseDisplayEXT>())}} else {self.vk_release_display_ext})
+		.finish()
 	}
 }
 /// type definition `VkSurfaceCounterFlagsEXT` from VK_EXT_display_surface_counter
@@ -34211,7 +35662,7 @@ pub trait VK_EXT_display_surface_counter: Debug {
 	fn vkGetPhysicalDeviceSurfaceCapabilities2EXT(&self, physicalDevice: VkPhysicalDevice, surface: VkSurfaceKHR, pSurfaceCapabilities: *mut VkSurfaceCapabilities2EXT) -> Result<()>;
 }
 /// struct for `VK_EXT_display_surface_counter`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_display_surface_counter {
 	vk_get_physical_device_surface_capabilities2_ext: PFN_vkGetPhysicalDeviceSurfaceCapabilities2EXT,
 }
@@ -34232,6 +35683,13 @@ impl Vulkan_EXT_display_surface_counter {
 		Self {
 			vk_get_physical_device_surface_capabilities2_ext: {let proc = get_instance_proc_address(instance, "vkGetPhysicalDeviceSurfaceCapabilities2EXT"); if proc == null() {dummy_vkGetPhysicalDeviceSurfaceCapabilities2EXT} else {unsafe {transmute(proc)}}},
 		}
+	}
+}
+impl Debug for Vulkan_EXT_display_surface_counter {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_display_surface_counter")
+		.field("vkGetPhysicalDeviceSurfaceCapabilities2EXT", &if self.vk_get_physical_device_surface_capabilities2_ext == dummy_vkGetPhysicalDeviceSurfaceCapabilities2EXT {unsafe {transmute(null::<PFN_vkGetPhysicalDeviceSurfaceCapabilities2EXT>())}} else {self.vk_get_physical_device_surface_capabilities2_ext})
+		.finish()
 	}
 }
 /// enum `VkDisplayPowerStateEXT` from VK_EXT_display_control
@@ -34337,7 +35795,7 @@ pub trait VK_EXT_display_control: Debug {
 	fn vkGetSwapchainCounterEXT(&self, device: VkDevice, swapchain: VkSwapchainKHR, counter: VkSurfaceCounterFlagBitsEXT, pCounterValue: *mut uint64_t) -> Result<()>;
 }
 /// struct for `VK_EXT_display_control`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_display_control {
 	vk_display_power_control_ext: PFN_vkDisplayPowerControlEXT,
 	vk_register_device_event_ext: PFN_vkRegisterDeviceEventEXT,
@@ -34376,6 +35834,16 @@ impl Vulkan_EXT_display_control {
 			vk_register_display_event_ext: {let proc = get_instance_proc_address(instance, "vkRegisterDisplayEventEXT"); if proc == null() {dummy_vkRegisterDisplayEventEXT} else {unsafe {transmute(proc)}}},
 			vk_get_swapchain_counter_ext: {let proc = get_instance_proc_address(instance, "vkGetSwapchainCounterEXT"); if proc == null() {dummy_vkGetSwapchainCounterEXT} else {unsafe {transmute(proc)}}},
 		}
+	}
+}
+impl Debug for Vulkan_EXT_display_control {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_display_control")
+		.field("vkDisplayPowerControlEXT", &if self.vk_display_power_control_ext == dummy_vkDisplayPowerControlEXT {unsafe {transmute(null::<PFN_vkDisplayPowerControlEXT>())}} else {self.vk_display_power_control_ext})
+		.field("vkRegisterDeviceEventEXT", &if self.vk_register_device_event_ext == dummy_vkRegisterDeviceEventEXT {unsafe {transmute(null::<PFN_vkRegisterDeviceEventEXT>())}} else {self.vk_register_device_event_ext})
+		.field("vkRegisterDisplayEventEXT", &if self.vk_register_display_event_ext == dummy_vkRegisterDisplayEventEXT {unsafe {transmute(null::<PFN_vkRegisterDisplayEventEXT>())}} else {self.vk_register_display_event_ext})
+		.field("vkGetSwapchainCounterEXT", &if self.vk_get_swapchain_counter_ext == dummy_vkGetSwapchainCounterEXT {unsafe {transmute(null::<PFN_vkGetSwapchainCounterEXT>())}} else {self.vk_get_swapchain_counter_ext})
+		.finish()
 	}
 }
 /// struct `VkRefreshCycleDurationGOOGLE` from VK_GOOGLE_display_timing
@@ -34437,7 +35905,7 @@ pub trait VK_GOOGLE_display_timing: Debug {
 	fn vkGetPastPresentationTimingGOOGLE(&self, device: VkDevice, swapchain: VkSwapchainKHR, pPresentationTimingCount: *mut uint32_t, pPresentationTimings: *mut VkPastPresentationTimingGOOGLE) -> Result<()>;
 }
 /// struct for `VK_GOOGLE_display_timing`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_GOOGLE_display_timing {
 	vk_get_refresh_cycle_duration_google: PFN_vkGetRefreshCycleDurationGOOGLE,
 	vk_get_past_presentation_timing_google: PFN_vkGetPastPresentationTimingGOOGLE,
@@ -34466,11 +35934,19 @@ impl Vulkan_GOOGLE_display_timing {
 		}
 	}
 }
+impl Debug for Vulkan_GOOGLE_display_timing {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_GOOGLE_display_timing")
+		.field("vkGetRefreshCycleDurationGOOGLE", &if self.vk_get_refresh_cycle_duration_google == dummy_vkGetRefreshCycleDurationGOOGLE {unsafe {transmute(null::<PFN_vkGetRefreshCycleDurationGOOGLE>())}} else {self.vk_get_refresh_cycle_duration_google})
+		.field("vkGetPastPresentationTimingGOOGLE", &if self.vk_get_past_presentation_timing_google == dummy_vkGetPastPresentationTimingGOOGLE {unsafe {transmute(null::<PFN_vkGetPastPresentationTimingGOOGLE>())}} else {self.vk_get_past_presentation_timing_google})
+		.finish()
+	}
+}
 /// trait for `VK_NV_sample_mask_override_coverage`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NV_sample_mask_override_coverage.html>
 pub trait VK_NV_sample_mask_override_coverage: Debug {}
 /// struct for `VK_NV_sample_mask_override_coverage`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_NV_sample_mask_override_coverage {}
 impl VK_NV_sample_mask_override_coverage for Vulkan_NV_sample_mask_override_coverage {}
 impl Default for Vulkan_NV_sample_mask_override_coverage {
@@ -34483,11 +35959,17 @@ impl Vulkan_NV_sample_mask_override_coverage {
 		Self {}
 	}
 }
+impl Debug for Vulkan_NV_sample_mask_override_coverage {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_NV_sample_mask_override_coverage")
+		.finish()
+	}
+}
 /// trait for `VK_NV_geometry_shader_passthrough`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NV_geometry_shader_passthrough.html>
 pub trait VK_NV_geometry_shader_passthrough: Debug {}
 /// struct for `VK_NV_geometry_shader_passthrough`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_NV_geometry_shader_passthrough {}
 impl VK_NV_geometry_shader_passthrough for Vulkan_NV_geometry_shader_passthrough {}
 impl Default for Vulkan_NV_geometry_shader_passthrough {
@@ -34500,11 +35982,17 @@ impl Vulkan_NV_geometry_shader_passthrough {
 		Self {}
 	}
 }
+impl Debug for Vulkan_NV_geometry_shader_passthrough {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_NV_geometry_shader_passthrough")
+		.finish()
+	}
+}
 /// trait for `VK_NV_viewport_array2`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NV_viewport_array2.html>
 pub trait VK_NV_viewport_array2: Debug {}
 /// struct for `VK_NV_viewport_array2`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_NV_viewport_array2 {}
 impl VK_NV_viewport_array2 for Vulkan_NV_viewport_array2 {}
 impl Default for Vulkan_NV_viewport_array2 {
@@ -34515,6 +36003,12 @@ impl Default for Vulkan_NV_viewport_array2 {
 impl Vulkan_NV_viewport_array2 {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_NV_viewport_array2 {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_NV_viewport_array2")
+		.finish()
 	}
 }
 /// struct `VkPhysicalDeviceMultiviewPerViewAttributesPropertiesNVX` from VK_NVX_multiview_per_view_attributes
@@ -34540,7 +36034,7 @@ pub struct VkMultiviewPerViewAttributesInfoNVX {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NVX_multiview_per_view_attributes.html>
 pub trait VK_NVX_multiview_per_view_attributes: Debug {}
 /// struct for `VK_NVX_multiview_per_view_attributes`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_NVX_multiview_per_view_attributes {}
 impl VK_NVX_multiview_per_view_attributes for Vulkan_NVX_multiview_per_view_attributes {}
 impl Default for Vulkan_NVX_multiview_per_view_attributes {
@@ -34551,6 +36045,12 @@ impl Default for Vulkan_NVX_multiview_per_view_attributes {
 impl Vulkan_NVX_multiview_per_view_attributes {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_NVX_multiview_per_view_attributes {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_NVX_multiview_per_view_attributes")
+		.finish()
 	}
 }
 /// type definition `VkPipelineViewportSwizzleStateCreateFlagsNV` from VK_NV_viewport_swizzle
@@ -34596,7 +36096,7 @@ pub struct VkPipelineViewportSwizzleStateCreateInfoNV {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NV_viewport_swizzle.html>
 pub trait VK_NV_viewport_swizzle: Debug {}
 /// struct for `VK_NV_viewport_swizzle`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_NV_viewport_swizzle {}
 impl VK_NV_viewport_swizzle for Vulkan_NV_viewport_swizzle {}
 impl Default for Vulkan_NV_viewport_swizzle {
@@ -34607,6 +36107,12 @@ impl Default for Vulkan_NV_viewport_swizzle {
 impl Vulkan_NV_viewport_swizzle {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_NV_viewport_swizzle {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_NV_viewport_swizzle")
+		.finish()
 	}
 }
 /// type definition `VkPipelineDiscardRectangleStateCreateFlagsEXT` from VK_EXT_discard_rectangles
@@ -34674,7 +36180,7 @@ pub trait VK_EXT_discard_rectangles: Debug {
 	fn vkCmdSetDiscardRectangleModeEXT(&self, commandBuffer: VkCommandBuffer, discardRectangleMode: VkDiscardRectangleModeEXT) -> Result<()>;
 }
 /// struct for `VK_EXT_discard_rectangles`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_discard_rectangles {
 	vk_cmd_set_discard_rectangle_ext: PFN_vkCmdSetDiscardRectangleEXT,
 	vk_cmd_set_discard_rectangle_enable_ext: PFN_vkCmdSetDiscardRectangleEnableEXT,
@@ -34707,6 +36213,15 @@ impl Vulkan_EXT_discard_rectangles {
 			vk_cmd_set_discard_rectangle_enable_ext: {let proc = get_instance_proc_address(instance, "vkCmdSetDiscardRectangleEnableEXT"); if proc == null() {dummy_vkCmdSetDiscardRectangleEnableEXT} else {unsafe {transmute(proc)}}},
 			vk_cmd_set_discard_rectangle_mode_ext: {let proc = get_instance_proc_address(instance, "vkCmdSetDiscardRectangleModeEXT"); if proc == null() {dummy_vkCmdSetDiscardRectangleModeEXT} else {unsafe {transmute(proc)}}},
 		}
+	}
+}
+impl Debug for Vulkan_EXT_discard_rectangles {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_discard_rectangles")
+		.field("vkCmdSetDiscardRectangleEXT", &if self.vk_cmd_set_discard_rectangle_ext == dummy_vkCmdSetDiscardRectangleEXT {unsafe {transmute(null::<PFN_vkCmdSetDiscardRectangleEXT>())}} else {self.vk_cmd_set_discard_rectangle_ext})
+		.field("vkCmdSetDiscardRectangleEnableEXT", &if self.vk_cmd_set_discard_rectangle_enable_ext == dummy_vkCmdSetDiscardRectangleEnableEXT {unsafe {transmute(null::<PFN_vkCmdSetDiscardRectangleEnableEXT>())}} else {self.vk_cmd_set_discard_rectangle_enable_ext})
+		.field("vkCmdSetDiscardRectangleModeEXT", &if self.vk_cmd_set_discard_rectangle_mode_ext == dummy_vkCmdSetDiscardRectangleModeEXT {unsafe {transmute(null::<PFN_vkCmdSetDiscardRectangleModeEXT>())}} else {self.vk_cmd_set_discard_rectangle_mode_ext})
+		.finish()
 	}
 }
 /// type definition `VkPipelineRasterizationConservativeStateCreateFlagsEXT` from VK_EXT_conservative_rasterization
@@ -34754,7 +36269,7 @@ pub struct VkPipelineRasterizationConservativeStateCreateInfoEXT {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_conservative_rasterization.html>
 pub trait VK_EXT_conservative_rasterization: Debug {}
 /// struct for `VK_EXT_conservative_rasterization`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_conservative_rasterization {}
 impl VK_EXT_conservative_rasterization for Vulkan_EXT_conservative_rasterization {}
 impl Default for Vulkan_EXT_conservative_rasterization {
@@ -34765,6 +36280,12 @@ impl Default for Vulkan_EXT_conservative_rasterization {
 impl Vulkan_EXT_conservative_rasterization {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_EXT_conservative_rasterization {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_conservative_rasterization")
+		.finish()
 	}
 }
 /// type definition `VkPipelineRasterizationDepthClipStateCreateFlagsEXT` from VK_EXT_depth_clip_enable
@@ -34793,7 +36314,7 @@ pub struct VkPipelineRasterizationDepthClipStateCreateInfoEXT {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_depth_clip_enable.html>
 pub trait VK_EXT_depth_clip_enable: Debug {}
 /// struct for `VK_EXT_depth_clip_enable`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_depth_clip_enable {}
 impl VK_EXT_depth_clip_enable for Vulkan_EXT_depth_clip_enable {}
 impl Default for Vulkan_EXT_depth_clip_enable {
@@ -34806,11 +36327,17 @@ impl Vulkan_EXT_depth_clip_enable {
 		Self {}
 	}
 }
+impl Debug for Vulkan_EXT_depth_clip_enable {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_depth_clip_enable")
+		.finish()
+	}
+}
 /// trait for `VK_EXT_swapchain_colorspace`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_swapchain_colorspace.html>
 pub trait VK_EXT_swapchain_colorspace: Debug {}
 /// struct for `VK_EXT_swapchain_colorspace`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_swapchain_colorspace {}
 impl VK_EXT_swapchain_colorspace for Vulkan_EXT_swapchain_colorspace {}
 impl Default for Vulkan_EXT_swapchain_colorspace {
@@ -34821,6 +36348,12 @@ impl Default for Vulkan_EXT_swapchain_colorspace {
 impl Vulkan_EXT_swapchain_colorspace {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_EXT_swapchain_colorspace {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_swapchain_colorspace")
+		.finish()
 	}
 }
 /// struct `VkXYColorEXT` from VK_EXT_hdr_metadata
@@ -34861,7 +36394,7 @@ pub trait VK_EXT_hdr_metadata: Debug {
 	fn vkSetHdrMetadataEXT(&self, device: VkDevice, swapchainCount: u32, pSwapchains: *const VkSwapchainKHR, pMetadata: *const VkHdrMetadataEXT) -> Result<()>;
 }
 /// struct for `VK_EXT_hdr_metadata`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_hdr_metadata {
 	vk_set_hdr_metadata_ext: PFN_vkSetHdrMetadataEXT,
 }
@@ -34884,6 +36417,13 @@ impl Vulkan_EXT_hdr_metadata {
 		}
 	}
 }
+impl Debug for Vulkan_EXT_hdr_metadata {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_hdr_metadata")
+		.field("vkSetHdrMetadataEXT", &if self.vk_set_hdr_metadata_ext == dummy_vkSetHdrMetadataEXT {unsafe {transmute(null::<PFN_vkSetHdrMetadataEXT>())}} else {self.vk_set_hdr_metadata_ext})
+		.finish()
+	}
+}
 /// struct `VkPhysicalDeviceRelaxedLineRasterizationFeaturesIMG` from VK_IMG_relaxed_line_rasterization
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPhysicalDeviceRelaxedLineRasterizationFeaturesIMG.html>
 #[repr(C)]
@@ -34897,7 +36437,7 @@ pub struct VkPhysicalDeviceRelaxedLineRasterizationFeaturesIMG {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_IMG_relaxed_line_rasterization.html>
 pub trait VK_IMG_relaxed_line_rasterization: Debug {}
 /// struct for `VK_IMG_relaxed_line_rasterization`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_IMG_relaxed_line_rasterization {}
 impl VK_IMG_relaxed_line_rasterization for Vulkan_IMG_relaxed_line_rasterization {}
 impl Default for Vulkan_IMG_relaxed_line_rasterization {
@@ -34910,11 +36450,17 @@ impl Vulkan_IMG_relaxed_line_rasterization {
 		Self {}
 	}
 }
+impl Debug for Vulkan_IMG_relaxed_line_rasterization {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_IMG_relaxed_line_rasterization")
+		.finish()
+	}
+}
 /// trait for `VK_EXT_external_memory_dma_buf`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_external_memory_dma_buf.html>
 pub trait VK_EXT_external_memory_dma_buf: Debug {}
 /// struct for `VK_EXT_external_memory_dma_buf`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_external_memory_dma_buf {}
 impl VK_EXT_external_memory_dma_buf for Vulkan_EXT_external_memory_dma_buf {}
 impl Default for Vulkan_EXT_external_memory_dma_buf {
@@ -34927,6 +36473,12 @@ impl Vulkan_EXT_external_memory_dma_buf {
 		Self {}
 	}
 }
+impl Debug for Vulkan_EXT_external_memory_dma_buf {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_external_memory_dma_buf")
+		.finish()
+	}
+}
 /// constant `VK_QUEUE_FAMILY_FOREIGN_EXT` from VK_EXT_queue_family_foreign
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_QUEUE_FAMILY_FOREIGN_EXT.html>
 pub const VK_QUEUE_FAMILY_FOREIGN_EXT: u32 = !2u32;
@@ -34934,7 +36486,7 @@ pub const VK_QUEUE_FAMILY_FOREIGN_EXT: u32 = !2u32;
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_queue_family_foreign.html>
 pub trait VK_EXT_queue_family_foreign: Debug {}
 /// struct for `VK_EXT_queue_family_foreign`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_queue_family_foreign {}
 impl VK_EXT_queue_family_foreign for Vulkan_EXT_queue_family_foreign {}
 impl Default for Vulkan_EXT_queue_family_foreign {
@@ -34945,6 +36497,12 @@ impl Default for Vulkan_EXT_queue_family_foreign {
 impl Vulkan_EXT_queue_family_foreign {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_EXT_queue_family_foreign {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_queue_family_foreign")
+		.finish()
 	}
 }
 /// type definition `VkDebugUtilsMessengerCallbackDataFlagsEXT` from VK_EXT_debug_utils
@@ -35221,7 +36779,7 @@ pub trait VK_EXT_debug_utils: Debug {
 	fn vkSubmitDebugUtilsMessageEXT(&self, instance: VkInstance, messageSeverity: VkDebugUtilsMessageSeverityFlagBitsEXT, messageTypes: VkDebugUtilsMessageTypeFlagsEXT, pCallbackData: *const VkDebugUtilsMessengerCallbackDataEXT) -> Result<()>;
 }
 /// struct for `VK_EXT_debug_utils`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_debug_utils {
 	vk_set_debug_utils_object_name_ext: PFN_vkSetDebugUtilsObjectNameEXT,
 	vk_set_debug_utils_object_tag_ext: PFN_vkSetDebugUtilsObjectTagEXT,
@@ -35304,6 +36862,23 @@ impl Vulkan_EXT_debug_utils {
 		}
 	}
 }
+impl Debug for Vulkan_EXT_debug_utils {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_debug_utils")
+		.field("vkSetDebugUtilsObjectNameEXT", &if self.vk_set_debug_utils_object_name_ext == dummy_vkSetDebugUtilsObjectNameEXT {unsafe {transmute(null::<PFN_vkSetDebugUtilsObjectNameEXT>())}} else {self.vk_set_debug_utils_object_name_ext})
+		.field("vkSetDebugUtilsObjectTagEXT", &if self.vk_set_debug_utils_object_tag_ext == dummy_vkSetDebugUtilsObjectTagEXT {unsafe {transmute(null::<PFN_vkSetDebugUtilsObjectTagEXT>())}} else {self.vk_set_debug_utils_object_tag_ext})
+		.field("vkQueueBeginDebugUtilsLabelEXT", &if self.vk_queue_begin_debug_utils_label_ext == dummy_vkQueueBeginDebugUtilsLabelEXT {unsafe {transmute(null::<PFN_vkQueueBeginDebugUtilsLabelEXT>())}} else {self.vk_queue_begin_debug_utils_label_ext})
+		.field("vkQueueEndDebugUtilsLabelEXT", &if self.vk_queue_end_debug_utils_label_ext == dummy_vkQueueEndDebugUtilsLabelEXT {unsafe {transmute(null::<PFN_vkQueueEndDebugUtilsLabelEXT>())}} else {self.vk_queue_end_debug_utils_label_ext})
+		.field("vkQueueInsertDebugUtilsLabelEXT", &if self.vk_queue_insert_debug_utils_label_ext == dummy_vkQueueInsertDebugUtilsLabelEXT {unsafe {transmute(null::<PFN_vkQueueInsertDebugUtilsLabelEXT>())}} else {self.vk_queue_insert_debug_utils_label_ext})
+		.field("vkCmdBeginDebugUtilsLabelEXT", &if self.vk_cmd_begin_debug_utils_label_ext == dummy_vkCmdBeginDebugUtilsLabelEXT {unsafe {transmute(null::<PFN_vkCmdBeginDebugUtilsLabelEXT>())}} else {self.vk_cmd_begin_debug_utils_label_ext})
+		.field("vkCmdEndDebugUtilsLabelEXT", &if self.vk_cmd_end_debug_utils_label_ext == dummy_vkCmdEndDebugUtilsLabelEXT {unsafe {transmute(null::<PFN_vkCmdEndDebugUtilsLabelEXT>())}} else {self.vk_cmd_end_debug_utils_label_ext})
+		.field("vkCmdInsertDebugUtilsLabelEXT", &if self.vk_cmd_insert_debug_utils_label_ext == dummy_vkCmdInsertDebugUtilsLabelEXT {unsafe {transmute(null::<PFN_vkCmdInsertDebugUtilsLabelEXT>())}} else {self.vk_cmd_insert_debug_utils_label_ext})
+		.field("vkCreateDebugUtilsMessengerEXT", &if self.vk_create_debug_utils_messenger_ext == dummy_vkCreateDebugUtilsMessengerEXT {unsafe {transmute(null::<PFN_vkCreateDebugUtilsMessengerEXT>())}} else {self.vk_create_debug_utils_messenger_ext})
+		.field("vkDestroyDebugUtilsMessengerEXT", &if self.vk_destroy_debug_utils_messenger_ext == dummy_vkDestroyDebugUtilsMessengerEXT {unsafe {transmute(null::<PFN_vkDestroyDebugUtilsMessengerEXT>())}} else {self.vk_destroy_debug_utils_messenger_ext})
+		.field("vkSubmitDebugUtilsMessageEXT", &if self.vk_submit_debug_utils_message_ext == dummy_vkSubmitDebugUtilsMessageEXT {unsafe {transmute(null::<PFN_vkSubmitDebugUtilsMessageEXT>())}} else {self.vk_submit_debug_utils_message_ext})
+		.finish()
+	}
+}
 /// type definition `VkSamplerReductionModeEXT` from VK_EXT_sampler_filter_minmax
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkSamplerReductionModeEXT.html>
 pub type VkSamplerReductionModeEXT = VkSamplerReductionMode;
@@ -35317,7 +36892,7 @@ pub type VkPhysicalDeviceSamplerFilterMinmaxPropertiesEXT = VkPhysicalDeviceSamp
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_sampler_filter_minmax.html>
 pub trait VK_EXT_sampler_filter_minmax: Debug {}
 /// struct for `VK_EXT_sampler_filter_minmax`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_sampler_filter_minmax {}
 impl VK_EXT_sampler_filter_minmax for Vulkan_EXT_sampler_filter_minmax {}
 impl Default for Vulkan_EXT_sampler_filter_minmax {
@@ -35330,11 +36905,17 @@ impl Vulkan_EXT_sampler_filter_minmax {
 		Self {}
 	}
 }
+impl Debug for Vulkan_EXT_sampler_filter_minmax {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_sampler_filter_minmax")
+		.finish()
+	}
+}
 /// trait for `VK_AMD_gpu_shader_int16`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_AMD_gpu_shader_int16.html>
 pub trait VK_AMD_gpu_shader_int16: Debug {}
 /// struct for `VK_AMD_gpu_shader_int16`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_AMD_gpu_shader_int16 {}
 impl VK_AMD_gpu_shader_int16 for Vulkan_AMD_gpu_shader_int16 {}
 impl Default for Vulkan_AMD_gpu_shader_int16 {
@@ -35345,6 +36926,12 @@ impl Default for Vulkan_AMD_gpu_shader_int16 {
 impl Vulkan_AMD_gpu_shader_int16 {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_AMD_gpu_shader_int16 {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_AMD_gpu_shader_int16")
+		.finish()
 	}
 }
 /// struct `VkAttachmentSampleCountInfoAMD` from VK_AMD_mixed_attachment_samples
@@ -35362,7 +36949,7 @@ pub struct VkAttachmentSampleCountInfoAMD {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_AMD_mixed_attachment_samples.html>
 pub trait VK_AMD_mixed_attachment_samples: Debug {}
 /// struct for `VK_AMD_mixed_attachment_samples`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_AMD_mixed_attachment_samples {}
 impl VK_AMD_mixed_attachment_samples for Vulkan_AMD_mixed_attachment_samples {}
 impl Default for Vulkan_AMD_mixed_attachment_samples {
@@ -35375,11 +36962,17 @@ impl Vulkan_AMD_mixed_attachment_samples {
 		Self {}
 	}
 }
+impl Debug for Vulkan_AMD_mixed_attachment_samples {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_AMD_mixed_attachment_samples")
+		.finish()
+	}
+}
 /// trait for `VK_AMD_shader_fragment_mask`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_AMD_shader_fragment_mask.html>
 pub trait VK_AMD_shader_fragment_mask: Debug {}
 /// struct for `VK_AMD_shader_fragment_mask`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_AMD_shader_fragment_mask {}
 impl VK_AMD_shader_fragment_mask for Vulkan_AMD_shader_fragment_mask {}
 impl Default for Vulkan_AMD_shader_fragment_mask {
@@ -35390,6 +36983,12 @@ impl Default for Vulkan_AMD_shader_fragment_mask {
 impl Vulkan_AMD_shader_fragment_mask {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_AMD_shader_fragment_mask {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_AMD_shader_fragment_mask")
+		.finish()
 	}
 }
 /// type definition `VkPhysicalDeviceInlineUniformBlockFeaturesEXT` from VK_EXT_inline_uniform_block
@@ -35408,7 +37007,7 @@ pub type VkDescriptorPoolInlineUniformBlockCreateInfoEXT = VkDescriptorPoolInlin
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_inline_uniform_block.html>
 pub trait VK_EXT_inline_uniform_block: Debug {}
 /// struct for `VK_EXT_inline_uniform_block`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_inline_uniform_block {}
 impl VK_EXT_inline_uniform_block for Vulkan_EXT_inline_uniform_block {}
 impl Default for Vulkan_EXT_inline_uniform_block {
@@ -35421,11 +37020,17 @@ impl Vulkan_EXT_inline_uniform_block {
 		Self {}
 	}
 }
+impl Debug for Vulkan_EXT_inline_uniform_block {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_inline_uniform_block")
+		.finish()
+	}
+}
 /// trait for `VK_EXT_shader_stencil_export`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_shader_stencil_export.html>
 pub trait VK_EXT_shader_stencil_export: Debug {}
 /// struct for `VK_EXT_shader_stencil_export`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_shader_stencil_export {}
 impl VK_EXT_shader_stencil_export for Vulkan_EXT_shader_stencil_export {}
 impl Default for Vulkan_EXT_shader_stencil_export {
@@ -35436,6 +37041,12 @@ impl Default for Vulkan_EXT_shader_stencil_export {
 impl Vulkan_EXT_shader_stencil_export {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_EXT_shader_stencil_export {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_shader_stencil_export")
+		.finish()
 	}
 }
 /// struct `VkSampleLocationEXT` from VK_EXT_sample_locations
@@ -35541,7 +37152,7 @@ pub trait VK_EXT_sample_locations: Debug {
 	fn vkGetPhysicalDeviceMultisamplePropertiesEXT(&self, physicalDevice: VkPhysicalDevice, samples: VkSampleCountFlagBits, pMultisampleProperties: *mut VkMultisamplePropertiesEXT) -> Result<()>;
 }
 /// struct for `VK_EXT_sample_locations`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_sample_locations {
 	vk_cmd_set_sample_locations_ext: PFN_vkCmdSetSampleLocationsEXT,
 	vk_get_physical_device_multisample_properties_ext: PFN_vkGetPhysicalDeviceMultisamplePropertiesEXT,
@@ -35568,6 +37179,14 @@ impl Vulkan_EXT_sample_locations {
 			vk_cmd_set_sample_locations_ext: {let proc = get_instance_proc_address(instance, "vkCmdSetSampleLocationsEXT"); if proc == null() {dummy_vkCmdSetSampleLocationsEXT} else {unsafe {transmute(proc)}}},
 			vk_get_physical_device_multisample_properties_ext: {let proc = get_instance_proc_address(instance, "vkGetPhysicalDeviceMultisamplePropertiesEXT"); if proc == null() {dummy_vkGetPhysicalDeviceMultisamplePropertiesEXT} else {unsafe {transmute(proc)}}},
 		}
+	}
+}
+impl Debug for Vulkan_EXT_sample_locations {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_sample_locations")
+		.field("vkCmdSetSampleLocationsEXT", &if self.vk_cmd_set_sample_locations_ext == dummy_vkCmdSetSampleLocationsEXT {unsafe {transmute(null::<PFN_vkCmdSetSampleLocationsEXT>())}} else {self.vk_cmd_set_sample_locations_ext})
+		.field("vkGetPhysicalDeviceMultisamplePropertiesEXT", &if self.vk_get_physical_device_multisample_properties_ext == dummy_vkGetPhysicalDeviceMultisamplePropertiesEXT {unsafe {transmute(null::<PFN_vkGetPhysicalDeviceMultisamplePropertiesEXT>())}} else {self.vk_get_physical_device_multisample_properties_ext})
+		.finish()
 	}
 }
 /// enum `VkBlendOverlapEXT` from VK_EXT_blend_operation_advanced
@@ -35618,7 +37237,7 @@ pub struct VkPipelineColorBlendAdvancedStateCreateInfoEXT {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_blend_operation_advanced.html>
 pub trait VK_EXT_blend_operation_advanced: Debug {}
 /// struct for `VK_EXT_blend_operation_advanced`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_blend_operation_advanced {}
 impl VK_EXT_blend_operation_advanced for Vulkan_EXT_blend_operation_advanced {}
 impl Default for Vulkan_EXT_blend_operation_advanced {
@@ -35629,6 +37248,12 @@ impl Default for Vulkan_EXT_blend_operation_advanced {
 impl Vulkan_EXT_blend_operation_advanced {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_EXT_blend_operation_advanced {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_blend_operation_advanced")
+		.finish()
 	}
 }
 /// type definition `VkPipelineCoverageToColorStateCreateFlagsNV` from VK_NV_fragment_coverage_to_color
@@ -35649,7 +37274,7 @@ pub struct VkPipelineCoverageToColorStateCreateInfoNV {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NV_fragment_coverage_to_color.html>
 pub trait VK_NV_fragment_coverage_to_color: Debug {}
 /// struct for `VK_NV_fragment_coverage_to_color`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_NV_fragment_coverage_to_color {}
 impl VK_NV_fragment_coverage_to_color for Vulkan_NV_fragment_coverage_to_color {}
 impl Default for Vulkan_NV_fragment_coverage_to_color {
@@ -35660,6 +37285,12 @@ impl Default for Vulkan_NV_fragment_coverage_to_color {
 impl Vulkan_NV_fragment_coverage_to_color {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_NV_fragment_coverage_to_color {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_NV_fragment_coverage_to_color")
+		.finish()
 	}
 }
 /// type definition `VkPipelineCoverageModulationStateCreateFlagsNV` from VK_NV_framebuffer_mixed_samples
@@ -35696,7 +37327,7 @@ pub struct VkPipelineCoverageModulationStateCreateInfoNV {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NV_framebuffer_mixed_samples.html>
 pub trait VK_NV_framebuffer_mixed_samples: Debug {}
 /// struct for `VK_NV_framebuffer_mixed_samples`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_NV_framebuffer_mixed_samples {}
 impl VK_NV_framebuffer_mixed_samples for Vulkan_NV_framebuffer_mixed_samples {}
 impl Default for Vulkan_NV_framebuffer_mixed_samples {
@@ -35709,11 +37340,17 @@ impl Vulkan_NV_framebuffer_mixed_samples {
 		Self {}
 	}
 }
+impl Debug for Vulkan_NV_framebuffer_mixed_samples {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_NV_framebuffer_mixed_samples")
+		.finish()
+	}
+}
 /// trait for `VK_NV_fill_rectangle`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NV_fill_rectangle.html>
 pub trait VK_NV_fill_rectangle: Debug {}
 /// struct for `VK_NV_fill_rectangle`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_NV_fill_rectangle {}
 impl VK_NV_fill_rectangle for Vulkan_NV_fill_rectangle {}
 impl Default for Vulkan_NV_fill_rectangle {
@@ -35724,6 +37361,12 @@ impl Default for Vulkan_NV_fill_rectangle {
 impl Vulkan_NV_fill_rectangle {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_NV_fill_rectangle {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_NV_fill_rectangle")
+		.finish()
 	}
 }
 /// struct `VkPhysicalDeviceShaderSMBuiltinsPropertiesNV` from VK_NV_shader_sm_builtins
@@ -35749,7 +37392,7 @@ pub struct VkPhysicalDeviceShaderSMBuiltinsFeaturesNV {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NV_shader_sm_builtins.html>
 pub trait VK_NV_shader_sm_builtins: Debug {}
 /// struct for `VK_NV_shader_sm_builtins`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_NV_shader_sm_builtins {}
 impl VK_NV_shader_sm_builtins for Vulkan_NV_shader_sm_builtins {}
 impl Default for Vulkan_NV_shader_sm_builtins {
@@ -35762,11 +37405,17 @@ impl Vulkan_NV_shader_sm_builtins {
 		Self {}
 	}
 }
+impl Debug for Vulkan_NV_shader_sm_builtins {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_NV_shader_sm_builtins")
+		.finish()
+	}
+}
 /// trait for `VK_EXT_post_depth_coverage`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_post_depth_coverage.html>
 pub trait VK_EXT_post_depth_coverage: Debug {}
 /// struct for `VK_EXT_post_depth_coverage`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_post_depth_coverage {}
 impl VK_EXT_post_depth_coverage for Vulkan_EXT_post_depth_coverage {}
 impl Default for Vulkan_EXT_post_depth_coverage {
@@ -35777,6 +37426,12 @@ impl Default for Vulkan_EXT_post_depth_coverage {
 impl Vulkan_EXT_post_depth_coverage {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_EXT_post_depth_coverage {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_post_depth_coverage")
+		.finish()
 	}
 }
 /// struct `VkDrmFormatModifierPropertiesEXT` from VK_EXT_image_drm_format_modifier
@@ -35873,7 +37528,7 @@ pub trait VK_EXT_image_drm_format_modifier: Debug {
 	fn vkGetImageDrmFormatModifierPropertiesEXT(&self, device: VkDevice, image: VkImage, pProperties: *mut VkImageDrmFormatModifierPropertiesEXT) -> Result<()>;
 }
 /// struct for `VK_EXT_image_drm_format_modifier`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_image_drm_format_modifier {
 	vk_get_image_drm_format_modifier_properties_ext: PFN_vkGetImageDrmFormatModifierPropertiesEXT,
 }
@@ -35894,6 +37549,13 @@ impl Vulkan_EXT_image_drm_format_modifier {
 		Self {
 			vk_get_image_drm_format_modifier_properties_ext: {let proc = get_instance_proc_address(instance, "vkGetImageDrmFormatModifierPropertiesEXT"); if proc == null() {dummy_vkGetImageDrmFormatModifierPropertiesEXT} else {unsafe {transmute(proc)}}},
 		}
+	}
+}
+impl Debug for Vulkan_EXT_image_drm_format_modifier {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_image_drm_format_modifier")
+		.field("vkGetImageDrmFormatModifierPropertiesEXT", &if self.vk_get_image_drm_format_modifier_properties_ext == dummy_vkGetImageDrmFormatModifierPropertiesEXT {unsafe {transmute(null::<PFN_vkGetImageDrmFormatModifierPropertiesEXT>())}} else {self.vk_get_image_drm_format_modifier_properties_ext})
+		.finish()
 	}
 }
 /// type definition `VkValidationCacheCreateFlagsEXT` from VK_EXT_validation_cache
@@ -35973,7 +37635,7 @@ pub trait VK_EXT_validation_cache: Debug {
 	fn vkGetValidationCacheDataEXT(&self, device: VkDevice, validationCache: VkValidationCacheEXT, pDataSize: *mut size_t, pData: *mut c_void) -> Result<()>;
 }
 /// struct for `VK_EXT_validation_cache`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_validation_cache {
 	vk_create_validation_cache_ext: PFN_vkCreateValidationCacheEXT,
 	vk_destroy_validation_cache_ext: PFN_vkDestroyValidationCacheEXT,
@@ -36014,6 +37676,16 @@ impl Vulkan_EXT_validation_cache {
 		}
 	}
 }
+impl Debug for Vulkan_EXT_validation_cache {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_validation_cache")
+		.field("vkCreateValidationCacheEXT", &if self.vk_create_validation_cache_ext == dummy_vkCreateValidationCacheEXT {unsafe {transmute(null::<PFN_vkCreateValidationCacheEXT>())}} else {self.vk_create_validation_cache_ext})
+		.field("vkDestroyValidationCacheEXT", &if self.vk_destroy_validation_cache_ext == dummy_vkDestroyValidationCacheEXT {unsafe {transmute(null::<PFN_vkDestroyValidationCacheEXT>())}} else {self.vk_destroy_validation_cache_ext})
+		.field("vkMergeValidationCachesEXT", &if self.vk_merge_validation_caches_ext == dummy_vkMergeValidationCachesEXT {unsafe {transmute(null::<PFN_vkMergeValidationCachesEXT>())}} else {self.vk_merge_validation_caches_ext})
+		.field("vkGetValidationCacheDataEXT", &if self.vk_get_validation_cache_data_ext == dummy_vkGetValidationCacheDataEXT {unsafe {transmute(null::<PFN_vkGetValidationCacheDataEXT>())}} else {self.vk_get_validation_cache_data_ext})
+		.finish()
+	}
+}
 /// type definition `VkDescriptorBindingFlagBitsEXT` from VK_EXT_descriptor_indexing
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkDescriptorBindingFlagBitsEXT.html>
 pub type VkDescriptorBindingFlagBitsEXT = VkDescriptorBindingFlagBits;
@@ -36039,7 +37711,7 @@ pub type VkDescriptorSetVariableDescriptorCountLayoutSupportEXT = VkDescriptorSe
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_descriptor_indexing.html>
 pub trait VK_EXT_descriptor_indexing: Debug {}
 /// struct for `VK_EXT_descriptor_indexing`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_descriptor_indexing {}
 impl VK_EXT_descriptor_indexing for Vulkan_EXT_descriptor_indexing {}
 impl Default for Vulkan_EXT_descriptor_indexing {
@@ -36052,11 +37724,17 @@ impl Vulkan_EXT_descriptor_indexing {
 		Self {}
 	}
 }
+impl Debug for Vulkan_EXT_descriptor_indexing {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_descriptor_indexing")
+		.finish()
+	}
+}
 /// trait for `VK_EXT_shader_viewport_index_layer`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_shader_viewport_index_layer.html>
 pub trait VK_EXT_shader_viewport_index_layer: Debug {}
 /// struct for `VK_EXT_shader_viewport_index_layer`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_shader_viewport_index_layer {}
 impl VK_EXT_shader_viewport_index_layer for Vulkan_EXT_shader_viewport_index_layer {}
 impl Default for Vulkan_EXT_shader_viewport_index_layer {
@@ -36067,6 +37745,12 @@ impl Default for Vulkan_EXT_shader_viewport_index_layer {
 impl Vulkan_EXT_shader_viewport_index_layer {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_EXT_shader_viewport_index_layer {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_shader_viewport_index_layer")
+		.finish()
 	}
 }
 /// enum `VkShadingRatePaletteEntryNV` from VK_NV_shading_rate_image
@@ -36201,7 +37885,7 @@ pub trait VK_NV_shading_rate_image: Debug {
 	fn vkCmdSetCoarseSampleOrderNV(&self, commandBuffer: VkCommandBuffer, sampleOrderType: VkCoarseSampleOrderTypeNV, customSampleOrderCount: u32, pCustomSampleOrders: *const VkCoarseSampleOrderCustomNV) -> Result<()>;
 }
 /// struct for `VK_NV_shading_rate_image`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_NV_shading_rate_image {
 	vk_cmd_bind_shading_rate_image_nv: PFN_vkCmdBindShadingRateImageNV,
 	vk_cmd_set_viewport_shading_rate_palette_nv: PFN_vkCmdSetViewportShadingRatePaletteNV,
@@ -36234,6 +37918,15 @@ impl Vulkan_NV_shading_rate_image {
 			vk_cmd_set_viewport_shading_rate_palette_nv: {let proc = get_instance_proc_address(instance, "vkCmdSetViewportShadingRatePaletteNV"); if proc == null() {dummy_vkCmdSetViewportShadingRatePaletteNV} else {unsafe {transmute(proc)}}},
 			vk_cmd_set_coarse_sample_order_nv: {let proc = get_instance_proc_address(instance, "vkCmdSetCoarseSampleOrderNV"); if proc == null() {dummy_vkCmdSetCoarseSampleOrderNV} else {unsafe {transmute(proc)}}},
 		}
+	}
+}
+impl Debug for Vulkan_NV_shading_rate_image {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_NV_shading_rate_image")
+		.field("vkCmdBindShadingRateImageNV", &if self.vk_cmd_bind_shading_rate_image_nv == dummy_vkCmdBindShadingRateImageNV {unsafe {transmute(null::<PFN_vkCmdBindShadingRateImageNV>())}} else {self.vk_cmd_bind_shading_rate_image_nv})
+		.field("vkCmdSetViewportShadingRatePaletteNV", &if self.vk_cmd_set_viewport_shading_rate_palette_nv == dummy_vkCmdSetViewportShadingRatePaletteNV {unsafe {transmute(null::<PFN_vkCmdSetViewportShadingRatePaletteNV>())}} else {self.vk_cmd_set_viewport_shading_rate_palette_nv})
+		.field("vkCmdSetCoarseSampleOrderNV", &if self.vk_cmd_set_coarse_sample_order_nv == dummy_vkCmdSetCoarseSampleOrderNV {unsafe {transmute(null::<PFN_vkCmdSetCoarseSampleOrderNV>())}} else {self.vk_cmd_set_coarse_sample_order_nv})
+		.finish()
 	}
 }
 /// constant `VK_SHADER_UNUSED_KHR` from VK_NV_ray_tracing
@@ -36944,7 +38637,7 @@ pub trait VK_NV_ray_tracing: Debug {
 	fn vkCompileDeferredNV(&self, device: VkDevice, pipeline: VkPipeline, shader: u32) -> Result<()>;
 }
 /// struct for `VK_NV_ray_tracing`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_NV_ray_tracing {
 	vk_create_acceleration_structure_nv: PFN_vkCreateAccelerationStructureNV,
 	vk_destroy_acceleration_structure_nv: PFN_vkDestroyAccelerationStructureNV,
@@ -37039,6 +38732,25 @@ impl Vulkan_NV_ray_tracing {
 		}
 	}
 }
+impl Debug for Vulkan_NV_ray_tracing {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_NV_ray_tracing")
+		.field("vkCreateAccelerationStructureNV", &if self.vk_create_acceleration_structure_nv == dummy_vkCreateAccelerationStructureNV {unsafe {transmute(null::<PFN_vkCreateAccelerationStructureNV>())}} else {self.vk_create_acceleration_structure_nv})
+		.field("vkDestroyAccelerationStructureNV", &if self.vk_destroy_acceleration_structure_nv == dummy_vkDestroyAccelerationStructureNV {unsafe {transmute(null::<PFN_vkDestroyAccelerationStructureNV>())}} else {self.vk_destroy_acceleration_structure_nv})
+		.field("vkGetAccelerationStructureMemoryRequirementsNV", &if self.vk_get_acceleration_structure_memory_requirements_nv == dummy_vkGetAccelerationStructureMemoryRequirementsNV {unsafe {transmute(null::<PFN_vkGetAccelerationStructureMemoryRequirementsNV>())}} else {self.vk_get_acceleration_structure_memory_requirements_nv})
+		.field("vkBindAccelerationStructureMemoryNV", &if self.vk_bind_acceleration_structure_memory_nv == dummy_vkBindAccelerationStructureMemoryNV {unsafe {transmute(null::<PFN_vkBindAccelerationStructureMemoryNV>())}} else {self.vk_bind_acceleration_structure_memory_nv})
+		.field("vkCmdBuildAccelerationStructureNV", &if self.vk_cmd_build_acceleration_structure_nv == dummy_vkCmdBuildAccelerationStructureNV {unsafe {transmute(null::<PFN_vkCmdBuildAccelerationStructureNV>())}} else {self.vk_cmd_build_acceleration_structure_nv})
+		.field("vkCmdCopyAccelerationStructureNV", &if self.vk_cmd_copy_acceleration_structure_nv == dummy_vkCmdCopyAccelerationStructureNV {unsafe {transmute(null::<PFN_vkCmdCopyAccelerationStructureNV>())}} else {self.vk_cmd_copy_acceleration_structure_nv})
+		.field("vkCmdTraceRaysNV", &if self.vk_cmd_trace_rays_nv == dummy_vkCmdTraceRaysNV {unsafe {transmute(null::<PFN_vkCmdTraceRaysNV>())}} else {self.vk_cmd_trace_rays_nv})
+		.field("vkCreateRayTracingPipelinesNV", &if self.vk_create_ray_tracing_pipelines_nv == dummy_vkCreateRayTracingPipelinesNV {unsafe {transmute(null::<PFN_vkCreateRayTracingPipelinesNV>())}} else {self.vk_create_ray_tracing_pipelines_nv})
+		.field("vkGetRayTracingShaderGroupHandlesKHR", &if self.vk_get_ray_tracing_shader_group_handles_khr == dummy_vkGetRayTracingShaderGroupHandlesKHR {unsafe {transmute(null::<PFN_vkGetRayTracingShaderGroupHandlesKHR>())}} else {self.vk_get_ray_tracing_shader_group_handles_khr})
+		.field("vkGetRayTracingShaderGroupHandlesNV", &if self.vk_get_ray_tracing_shader_group_handles_nv == dummy_vkGetRayTracingShaderGroupHandlesNV {unsafe {transmute(null::<PFN_vkGetRayTracingShaderGroupHandlesNV>())}} else {self.vk_get_ray_tracing_shader_group_handles_nv})
+		.field("vkGetAccelerationStructureHandleNV", &if self.vk_get_acceleration_structure_handle_nv == dummy_vkGetAccelerationStructureHandleNV {unsafe {transmute(null::<PFN_vkGetAccelerationStructureHandleNV>())}} else {self.vk_get_acceleration_structure_handle_nv})
+		.field("vkCmdWriteAccelerationStructuresPropertiesNV", &if self.vk_cmd_write_acceleration_structures_properties_nv == dummy_vkCmdWriteAccelerationStructuresPropertiesNV {unsafe {transmute(null::<PFN_vkCmdWriteAccelerationStructuresPropertiesNV>())}} else {self.vk_cmd_write_acceleration_structures_properties_nv})
+		.field("vkCompileDeferredNV", &if self.vk_compile_deferred_nv == dummy_vkCompileDeferredNV {unsafe {transmute(null::<PFN_vkCompileDeferredNV>())}} else {self.vk_compile_deferred_nv})
+		.finish()
+	}
+}
 /// struct `VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV` from VK_NV_representative_fragment_test
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV.html>
 #[repr(C)]
@@ -37061,7 +38773,7 @@ pub struct VkPipelineRepresentativeFragmentTestStateCreateInfoNV {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NV_representative_fragment_test.html>
 pub trait VK_NV_representative_fragment_test: Debug {}
 /// struct for `VK_NV_representative_fragment_test`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_NV_representative_fragment_test {}
 impl VK_NV_representative_fragment_test for Vulkan_NV_representative_fragment_test {}
 impl Default for Vulkan_NV_representative_fragment_test {
@@ -37072,6 +38784,12 @@ impl Default for Vulkan_NV_representative_fragment_test {
 impl Vulkan_NV_representative_fragment_test {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_NV_representative_fragment_test {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_NV_representative_fragment_test")
+		.finish()
 	}
 }
 /// struct `VkPhysicalDeviceImageViewImageFormatInfoEXT` from VK_EXT_filter_cubic
@@ -37097,7 +38815,7 @@ pub struct VkFilterCubicImageViewImageFormatPropertiesEXT {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_filter_cubic.html>
 pub trait VK_EXT_filter_cubic: Debug {}
 /// struct for `VK_EXT_filter_cubic`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_filter_cubic {}
 impl VK_EXT_filter_cubic for Vulkan_EXT_filter_cubic {}
 impl Default for Vulkan_EXT_filter_cubic {
@@ -37110,11 +38828,17 @@ impl Vulkan_EXT_filter_cubic {
 		Self {}
 	}
 }
+impl Debug for Vulkan_EXT_filter_cubic {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_filter_cubic")
+		.finish()
+	}
+}
 /// trait for `VK_QCOM_render_pass_shader_resolve`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_QCOM_render_pass_shader_resolve.html>
 pub trait VK_QCOM_render_pass_shader_resolve: Debug {}
 /// struct for `VK_QCOM_render_pass_shader_resolve`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_QCOM_render_pass_shader_resolve {}
 impl VK_QCOM_render_pass_shader_resolve for Vulkan_QCOM_render_pass_shader_resolve {}
 impl Default for Vulkan_QCOM_render_pass_shader_resolve {
@@ -37127,6 +38851,12 @@ impl Vulkan_QCOM_render_pass_shader_resolve {
 		Self {}
 	}
 }
+impl Debug for Vulkan_QCOM_render_pass_shader_resolve {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_QCOM_render_pass_shader_resolve")
+		.finish()
+	}
+}
 /// type definition `VkQueueGlobalPriorityEXT` from VK_EXT_global_priority
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkQueueGlobalPriorityEXT.html>
 pub type VkQueueGlobalPriorityEXT = VkQueueGlobalPriority;
@@ -37137,7 +38867,7 @@ pub type VkDeviceQueueGlobalPriorityCreateInfoEXT = VkDeviceQueueGlobalPriorityC
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_global_priority.html>
 pub trait VK_EXT_global_priority: Debug {}
 /// struct for `VK_EXT_global_priority`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_global_priority {}
 impl VK_EXT_global_priority for Vulkan_EXT_global_priority {}
 impl Default for Vulkan_EXT_global_priority {
@@ -37148,6 +38878,12 @@ impl Default for Vulkan_EXT_global_priority {
 impl Vulkan_EXT_global_priority {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_EXT_global_priority {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_global_priority")
+		.finish()
 	}
 }
 /// struct `VkImportMemoryHostPointerInfoEXT` from VK_EXT_external_memory_host
@@ -37192,7 +38928,7 @@ pub trait VK_EXT_external_memory_host: Debug {
 	fn vkGetMemoryHostPointerPropertiesEXT(&self, device: VkDevice, handleType: VkExternalMemoryHandleTypeFlagBits, pHostPointer: *const c_void, pMemoryHostPointerProperties: *mut VkMemoryHostPointerPropertiesEXT) -> Result<()>;
 }
 /// struct for `VK_EXT_external_memory_host`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_external_memory_host {
 	vk_get_memory_host_pointer_properties_ext: PFN_vkGetMemoryHostPointerPropertiesEXT,
 }
@@ -37213,6 +38949,13 @@ impl Vulkan_EXT_external_memory_host {
 		Self {
 			vk_get_memory_host_pointer_properties_ext: {let proc = get_instance_proc_address(instance, "vkGetMemoryHostPointerPropertiesEXT"); if proc == null() {dummy_vkGetMemoryHostPointerPropertiesEXT} else {unsafe {transmute(proc)}}},
 		}
+	}
+}
+impl Debug for Vulkan_EXT_external_memory_host {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_external_memory_host")
+		.field("vkGetMemoryHostPointerPropertiesEXT", &if self.vk_get_memory_host_pointer_properties_ext == dummy_vkGetMemoryHostPointerPropertiesEXT {unsafe {transmute(null::<PFN_vkGetMemoryHostPointerPropertiesEXT>())}} else {self.vk_get_memory_host_pointer_properties_ext})
+		.finish()
 	}
 }
 /// function prototype `PFN_vkCmdWriteBufferMarkerAMD` from VK_AMD_buffer_marker
@@ -37238,7 +38981,7 @@ pub trait VK_AMD_buffer_marker: Debug {
 	fn vkCmdWriteBufferMarker2AMD(&self, commandBuffer: VkCommandBuffer, stage: VkPipelineStageFlags2, dstBuffer: VkBuffer, dstOffset: VkDeviceSize, marker: u32) -> Result<()>;
 }
 /// struct for `VK_AMD_buffer_marker`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_AMD_buffer_marker {
 	vk_cmd_write_buffer_marker_amd: PFN_vkCmdWriteBufferMarkerAMD,
 	vk_cmd_write_buffer_marker2_amd: PFN_vkCmdWriteBufferMarker2AMD,
@@ -37265,6 +39008,14 @@ impl Vulkan_AMD_buffer_marker {
 			vk_cmd_write_buffer_marker_amd: {let proc = get_instance_proc_address(instance, "vkCmdWriteBufferMarkerAMD"); if proc == null() {dummy_vkCmdWriteBufferMarkerAMD} else {unsafe {transmute(proc)}}},
 			vk_cmd_write_buffer_marker2_amd: {let proc = get_instance_proc_address(instance, "vkCmdWriteBufferMarker2AMD"); if proc == null() {dummy_vkCmdWriteBufferMarker2AMD} else {unsafe {transmute(proc)}}},
 		}
+	}
+}
+impl Debug for Vulkan_AMD_buffer_marker {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_AMD_buffer_marker")
+		.field("vkCmdWriteBufferMarkerAMD", &if self.vk_cmd_write_buffer_marker_amd == dummy_vkCmdWriteBufferMarkerAMD {unsafe {transmute(null::<PFN_vkCmdWriteBufferMarkerAMD>())}} else {self.vk_cmd_write_buffer_marker_amd})
+		.field("vkCmdWriteBufferMarker2AMD", &if self.vk_cmd_write_buffer_marker2_amd == dummy_vkCmdWriteBufferMarker2AMD {unsafe {transmute(null::<PFN_vkCmdWriteBufferMarker2AMD>())}} else {self.vk_cmd_write_buffer_marker2_amd})
+		.finish()
 	}
 }
 /// type definition `VkPipelineCompilerControlFlagsAMD` from VK_AMD_pipeline_compiler_control
@@ -37312,7 +39063,7 @@ impl Debug for VkPipelineCompilerControlCreateInfoAMD {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_AMD_pipeline_compiler_control.html>
 pub trait VK_AMD_pipeline_compiler_control: Debug {}
 /// struct for `VK_AMD_pipeline_compiler_control`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_AMD_pipeline_compiler_control {}
 impl VK_AMD_pipeline_compiler_control for Vulkan_AMD_pipeline_compiler_control {}
 impl Default for Vulkan_AMD_pipeline_compiler_control {
@@ -37323,6 +39074,12 @@ impl Default for Vulkan_AMD_pipeline_compiler_control {
 impl Vulkan_AMD_pipeline_compiler_control {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_AMD_pipeline_compiler_control {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_AMD_pipeline_compiler_control")
+		.finish()
 	}
 }
 /// type definition `VkTimeDomainEXT` from VK_EXT_calibrated_timestamps
@@ -37354,7 +39111,7 @@ pub trait VK_EXT_calibrated_timestamps: Debug {
 	fn vkGetCalibratedTimestampsEXT(&self, device: VkDevice, timestampCount: u32, pTimestampInfos: *const VkCalibratedTimestampInfoKHR, pTimestamps: *mut uint64_t, pMaxDeviation: *mut uint64_t) -> Result<()>;
 }
 /// struct for `VK_EXT_calibrated_timestamps`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_calibrated_timestamps {
 	vk_get_physical_device_calibrateable_time_domains_ext: PFN_vkGetPhysicalDeviceCalibrateableTimeDomainsEXT,
 	vk_get_calibrated_timestamps_ext: PFN_vkGetCalibratedTimestampsEXT,
@@ -37383,6 +39140,14 @@ impl Vulkan_EXT_calibrated_timestamps {
 		}
 	}
 }
+impl Debug for Vulkan_EXT_calibrated_timestamps {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_calibrated_timestamps")
+		.field("vkGetPhysicalDeviceCalibrateableTimeDomainsEXT", &if self.vk_get_physical_device_calibrateable_time_domains_ext == dummy_vkGetPhysicalDeviceCalibrateableTimeDomainsEXT {unsafe {transmute(null::<PFN_vkGetPhysicalDeviceCalibrateableTimeDomainsEXT>())}} else {self.vk_get_physical_device_calibrateable_time_domains_ext})
+		.field("vkGetCalibratedTimestampsEXT", &if self.vk_get_calibrated_timestamps_ext == dummy_vkGetCalibratedTimestampsEXT {unsafe {transmute(null::<PFN_vkGetCalibratedTimestampsEXT>())}} else {self.vk_get_calibrated_timestamps_ext})
+		.finish()
+	}
+}
 /// struct `VkPhysicalDeviceShaderCorePropertiesAMD` from VK_AMD_shader_core_properties
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPhysicalDeviceShaderCorePropertiesAMD.html>
 #[repr(C)]
@@ -37409,7 +39174,7 @@ pub struct VkPhysicalDeviceShaderCorePropertiesAMD {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_AMD_shader_core_properties.html>
 pub trait VK_AMD_shader_core_properties: Debug {}
 /// struct for `VK_AMD_shader_core_properties`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_AMD_shader_core_properties {}
 impl VK_AMD_shader_core_properties for Vulkan_AMD_shader_core_properties {}
 impl Default for Vulkan_AMD_shader_core_properties {
@@ -37420,6 +39185,12 @@ impl Default for Vulkan_AMD_shader_core_properties {
 impl Vulkan_AMD_shader_core_properties {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_AMD_shader_core_properties {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_AMD_shader_core_properties")
+		.finish()
 	}
 }
 /// enum `VkMemoryOverallocationBehaviorAMD` from VK_AMD_memory_overallocation_behavior
@@ -37445,7 +39216,7 @@ pub struct VkDeviceMemoryOverallocationCreateInfoAMD {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_AMD_memory_overallocation_behavior.html>
 pub trait VK_AMD_memory_overallocation_behavior: Debug {}
 /// struct for `VK_AMD_memory_overallocation_behavior`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_AMD_memory_overallocation_behavior {}
 impl VK_AMD_memory_overallocation_behavior for Vulkan_AMD_memory_overallocation_behavior {}
 impl Default for Vulkan_AMD_memory_overallocation_behavior {
@@ -37456,6 +39227,12 @@ impl Default for Vulkan_AMD_memory_overallocation_behavior {
 impl Vulkan_AMD_memory_overallocation_behavior {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_AMD_memory_overallocation_behavior {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_AMD_memory_overallocation_behavior")
+		.finish()
 	}
 }
 /// type definition `VkVertexInputBindingDivisorDescriptionEXT` from VK_EXT_vertex_attribute_divisor
@@ -37480,7 +39257,7 @@ pub struct VkPhysicalDeviceVertexAttributeDivisorPropertiesEXT {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_vertex_attribute_divisor.html>
 pub trait VK_EXT_vertex_attribute_divisor: Debug {}
 /// struct for `VK_EXT_vertex_attribute_divisor`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_vertex_attribute_divisor {}
 impl VK_EXT_vertex_attribute_divisor for Vulkan_EXT_vertex_attribute_divisor {}
 impl Default for Vulkan_EXT_vertex_attribute_divisor {
@@ -37491,6 +39268,12 @@ impl Default for Vulkan_EXT_vertex_attribute_divisor {
 impl Vulkan_EXT_vertex_attribute_divisor {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_EXT_vertex_attribute_divisor {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_vertex_attribute_divisor")
+		.finish()
 	}
 }
 /// type definition `VkPipelineCreationFeedbackFlagBitsEXT` from VK_EXT_pipeline_creation_feedback
@@ -37509,7 +39292,7 @@ pub type VkPipelineCreationFeedbackEXT = VkPipelineCreationFeedback;
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_pipeline_creation_feedback.html>
 pub trait VK_EXT_pipeline_creation_feedback: Debug {}
 /// struct for `VK_EXT_pipeline_creation_feedback`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_pipeline_creation_feedback {}
 impl VK_EXT_pipeline_creation_feedback for Vulkan_EXT_pipeline_creation_feedback {}
 impl Default for Vulkan_EXT_pipeline_creation_feedback {
@@ -37522,11 +39305,17 @@ impl Vulkan_EXT_pipeline_creation_feedback {
 		Self {}
 	}
 }
+impl Debug for Vulkan_EXT_pipeline_creation_feedback {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_pipeline_creation_feedback")
+		.finish()
+	}
+}
 /// trait for `VK_NV_shader_subgroup_partitioned`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NV_shader_subgroup_partitioned.html>
 pub trait VK_NV_shader_subgroup_partitioned: Debug {}
 /// struct for `VK_NV_shader_subgroup_partitioned`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_NV_shader_subgroup_partitioned {}
 impl VK_NV_shader_subgroup_partitioned for Vulkan_NV_shader_subgroup_partitioned {}
 impl Default for Vulkan_NV_shader_subgroup_partitioned {
@@ -37539,6 +39328,12 @@ impl Vulkan_NV_shader_subgroup_partitioned {
 		Self {}
 	}
 }
+impl Debug for Vulkan_NV_shader_subgroup_partitioned {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_NV_shader_subgroup_partitioned")
+		.finish()
+	}
+}
 /// type definition `VkPhysicalDeviceComputeShaderDerivativesFeaturesNV` from VK_NV_compute_shader_derivatives
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPhysicalDeviceComputeShaderDerivativesFeaturesNV.html>
 pub type VkPhysicalDeviceComputeShaderDerivativesFeaturesNV = VkPhysicalDeviceComputeShaderDerivativesFeaturesKHR;
@@ -37546,7 +39341,7 @@ pub type VkPhysicalDeviceComputeShaderDerivativesFeaturesNV = VkPhysicalDeviceCo
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NV_compute_shader_derivatives.html>
 pub trait VK_NV_compute_shader_derivatives: Debug {}
 /// struct for `VK_NV_compute_shader_derivatives`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_NV_compute_shader_derivatives {}
 impl VK_NV_compute_shader_derivatives for Vulkan_NV_compute_shader_derivatives {}
 impl Default for Vulkan_NV_compute_shader_derivatives {
@@ -37557,6 +39352,12 @@ impl Default for Vulkan_NV_compute_shader_derivatives {
 impl Vulkan_NV_compute_shader_derivatives {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_NV_compute_shader_derivatives {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_NV_compute_shader_derivatives")
+		.finish()
 	}
 }
 /// struct `VkPhysicalDeviceMeshShaderFeaturesNV` from VK_NV_mesh_shader
@@ -37630,7 +39431,7 @@ pub trait VK_NV_mesh_shader: Debug {
 	fn vkCmdDrawMeshTasksIndirectCountNV(&self, commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize, countBuffer: VkBuffer, countBufferOffset: VkDeviceSize, maxDrawCount: u32, stride: u32) -> Result<()>;
 }
 /// struct for `VK_NV_mesh_shader`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_NV_mesh_shader {
 	vk_cmd_draw_mesh_tasks_nv: PFN_vkCmdDrawMeshTasksNV,
 	vk_cmd_draw_mesh_tasks_indirect_nv: PFN_vkCmdDrawMeshTasksIndirectNV,
@@ -37665,6 +39466,15 @@ impl Vulkan_NV_mesh_shader {
 		}
 	}
 }
+impl Debug for Vulkan_NV_mesh_shader {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_NV_mesh_shader")
+		.field("vkCmdDrawMeshTasksNV", &if self.vk_cmd_draw_mesh_tasks_nv == dummy_vkCmdDrawMeshTasksNV {unsafe {transmute(null::<PFN_vkCmdDrawMeshTasksNV>())}} else {self.vk_cmd_draw_mesh_tasks_nv})
+		.field("vkCmdDrawMeshTasksIndirectNV", &if self.vk_cmd_draw_mesh_tasks_indirect_nv == dummy_vkCmdDrawMeshTasksIndirectNV {unsafe {transmute(null::<PFN_vkCmdDrawMeshTasksIndirectNV>())}} else {self.vk_cmd_draw_mesh_tasks_indirect_nv})
+		.field("vkCmdDrawMeshTasksIndirectCountNV", &if self.vk_cmd_draw_mesh_tasks_indirect_count_nv == dummy_vkCmdDrawMeshTasksIndirectCountNV {unsafe {transmute(null::<PFN_vkCmdDrawMeshTasksIndirectCountNV>())}} else {self.vk_cmd_draw_mesh_tasks_indirect_count_nv})
+		.finish()
+	}
+}
 /// type definition `VkPhysicalDeviceFragmentShaderBarycentricFeaturesNV` from VK_NV_fragment_shader_barycentric
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPhysicalDeviceFragmentShaderBarycentricFeaturesNV.html>
 pub type VkPhysicalDeviceFragmentShaderBarycentricFeaturesNV = VkPhysicalDeviceFragmentShaderBarycentricFeaturesKHR;
@@ -37672,7 +39482,7 @@ pub type VkPhysicalDeviceFragmentShaderBarycentricFeaturesNV = VkPhysicalDeviceF
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NV_fragment_shader_barycentric.html>
 pub trait VK_NV_fragment_shader_barycentric: Debug {}
 /// struct for `VK_NV_fragment_shader_barycentric`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_NV_fragment_shader_barycentric {}
 impl VK_NV_fragment_shader_barycentric for Vulkan_NV_fragment_shader_barycentric {}
 impl Default for Vulkan_NV_fragment_shader_barycentric {
@@ -37683,6 +39493,12 @@ impl Default for Vulkan_NV_fragment_shader_barycentric {
 impl Vulkan_NV_fragment_shader_barycentric {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_NV_fragment_shader_barycentric {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_NV_fragment_shader_barycentric")
+		.finish()
 	}
 }
 /// struct `VkPhysicalDeviceShaderImageFootprintFeaturesNV` from VK_NV_shader_image_footprint
@@ -37698,7 +39514,7 @@ pub struct VkPhysicalDeviceShaderImageFootprintFeaturesNV {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NV_shader_image_footprint.html>
 pub trait VK_NV_shader_image_footprint: Debug {}
 /// struct for `VK_NV_shader_image_footprint`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_NV_shader_image_footprint {}
 impl VK_NV_shader_image_footprint for Vulkan_NV_shader_image_footprint {}
 impl Default for Vulkan_NV_shader_image_footprint {
@@ -37709,6 +39525,12 @@ impl Default for Vulkan_NV_shader_image_footprint {
 impl Vulkan_NV_shader_image_footprint {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_NV_shader_image_footprint {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_NV_shader_image_footprint")
+		.finish()
 	}
 }
 /// struct `VkPipelineViewportExclusiveScissorStateCreateInfoNV` from VK_NV_scissor_exclusive
@@ -37753,7 +39575,7 @@ pub trait VK_NV_scissor_exclusive: Debug {
 	fn vkCmdSetExclusiveScissorNV(&self, commandBuffer: VkCommandBuffer, firstExclusiveScissor: u32, exclusiveScissorCount: u32, pExclusiveScissors: *const VkRect2D) -> Result<()>;
 }
 /// struct for `VK_NV_scissor_exclusive`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_NV_scissor_exclusive {
 	vk_cmd_set_exclusive_scissor_enable_nv: PFN_vkCmdSetExclusiveScissorEnableNV,
 	vk_cmd_set_exclusive_scissor_nv: PFN_vkCmdSetExclusiveScissorNV,
@@ -37780,6 +39602,14 @@ impl Vulkan_NV_scissor_exclusive {
 			vk_cmd_set_exclusive_scissor_enable_nv: {let proc = get_instance_proc_address(instance, "vkCmdSetExclusiveScissorEnableNV"); if proc == null() {dummy_vkCmdSetExclusiveScissorEnableNV} else {unsafe {transmute(proc)}}},
 			vk_cmd_set_exclusive_scissor_nv: {let proc = get_instance_proc_address(instance, "vkCmdSetExclusiveScissorNV"); if proc == null() {dummy_vkCmdSetExclusiveScissorNV} else {unsafe {transmute(proc)}}},
 		}
+	}
+}
+impl Debug for Vulkan_NV_scissor_exclusive {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_NV_scissor_exclusive")
+		.field("vkCmdSetExclusiveScissorEnableNV", &if self.vk_cmd_set_exclusive_scissor_enable_nv == dummy_vkCmdSetExclusiveScissorEnableNV {unsafe {transmute(null::<PFN_vkCmdSetExclusiveScissorEnableNV>())}} else {self.vk_cmd_set_exclusive_scissor_enable_nv})
+		.field("vkCmdSetExclusiveScissorNV", &if self.vk_cmd_set_exclusive_scissor_nv == dummy_vkCmdSetExclusiveScissorNV {unsafe {transmute(null::<PFN_vkCmdSetExclusiveScissorNV>())}} else {self.vk_cmd_set_exclusive_scissor_nv})
+		.finish()
 	}
 }
 /// struct `VkQueueFamilyCheckpointPropertiesNV` from VK_NV_device_diagnostic_checkpoints
@@ -37852,7 +39682,7 @@ pub trait VK_NV_device_diagnostic_checkpoints: Debug {
 	fn vkGetQueueCheckpointData2NV(&self, queue: VkQueue, pCheckpointDataCount: *mut uint32_t, pCheckpointData: *mut VkCheckpointData2NV) -> Result<()>;
 }
 /// struct for `VK_NV_device_diagnostic_checkpoints`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_NV_device_diagnostic_checkpoints {
 	vk_cmd_set_checkpoint_nv: PFN_vkCmdSetCheckpointNV,
 	vk_get_queue_checkpoint_data_nv: PFN_vkGetQueueCheckpointDataNV,
@@ -37887,6 +39717,15 @@ impl Vulkan_NV_device_diagnostic_checkpoints {
 		}
 	}
 }
+impl Debug for Vulkan_NV_device_diagnostic_checkpoints {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_NV_device_diagnostic_checkpoints")
+		.field("vkCmdSetCheckpointNV", &if self.vk_cmd_set_checkpoint_nv == dummy_vkCmdSetCheckpointNV {unsafe {transmute(null::<PFN_vkCmdSetCheckpointNV>())}} else {self.vk_cmd_set_checkpoint_nv})
+		.field("vkGetQueueCheckpointDataNV", &if self.vk_get_queue_checkpoint_data_nv == dummy_vkGetQueueCheckpointDataNV {unsafe {transmute(null::<PFN_vkGetQueueCheckpointDataNV>())}} else {self.vk_get_queue_checkpoint_data_nv})
+		.field("vkGetQueueCheckpointData2NV", &if self.vk_get_queue_checkpoint_data2_nv == dummy_vkGetQueueCheckpointData2NV {unsafe {transmute(null::<PFN_vkGetQueueCheckpointData2NV>())}} else {self.vk_get_queue_checkpoint_data2_nv})
+		.finish()
+	}
+}
 /// struct `VkPhysicalDeviceShaderIntegerFunctions2FeaturesINTEL` from VK_INTEL_shader_integer_functions2
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPhysicalDeviceShaderIntegerFunctions2FeaturesINTEL.html>
 #[repr(C)]
@@ -37900,7 +39739,7 @@ pub struct VkPhysicalDeviceShaderIntegerFunctions2FeaturesINTEL {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_INTEL_shader_integer_functions2.html>
 pub trait VK_INTEL_shader_integer_functions2: Debug {}
 /// struct for `VK_INTEL_shader_integer_functions2`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_INTEL_shader_integer_functions2 {}
 impl VK_INTEL_shader_integer_functions2 for Vulkan_INTEL_shader_integer_functions2 {}
 impl Default for Vulkan_INTEL_shader_integer_functions2 {
@@ -37911,6 +39750,12 @@ impl Default for Vulkan_INTEL_shader_integer_functions2 {
 impl Vulkan_INTEL_shader_integer_functions2 {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_INTEL_shader_integer_functions2 {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_INTEL_shader_integer_functions2")
+		.finish()
 	}
 }
 /// type definition `VkQueryPoolCreateInfoINTEL` from VK_INTEL_performance_query
@@ -38139,7 +39984,7 @@ pub trait VK_INTEL_performance_query: Debug {
 	fn vkGetPerformanceParameterINTEL(&self, device: VkDevice, parameter: VkPerformanceParameterTypeINTEL, pValue: *mut VkPerformanceValueINTEL) -> Result<()>;
 }
 /// struct for `VK_INTEL_performance_query`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_INTEL_performance_query {
 	vk_initialize_performance_api_intel: PFN_vkInitializePerformanceApiINTEL,
 	vk_uninitialize_performance_api_intel: PFN_vkUninitializePerformanceApiINTEL,
@@ -38210,6 +40055,21 @@ impl Vulkan_INTEL_performance_query {
 		}
 	}
 }
+impl Debug for Vulkan_INTEL_performance_query {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_INTEL_performance_query")
+		.field("vkInitializePerformanceApiINTEL", &if self.vk_initialize_performance_api_intel == dummy_vkInitializePerformanceApiINTEL {unsafe {transmute(null::<PFN_vkInitializePerformanceApiINTEL>())}} else {self.vk_initialize_performance_api_intel})
+		.field("vkUninitializePerformanceApiINTEL", &if self.vk_uninitialize_performance_api_intel == dummy_vkUninitializePerformanceApiINTEL {unsafe {transmute(null::<PFN_vkUninitializePerformanceApiINTEL>())}} else {self.vk_uninitialize_performance_api_intel})
+		.field("vkCmdSetPerformanceMarkerINTEL", &if self.vk_cmd_set_performance_marker_intel == dummy_vkCmdSetPerformanceMarkerINTEL {unsafe {transmute(null::<PFN_vkCmdSetPerformanceMarkerINTEL>())}} else {self.vk_cmd_set_performance_marker_intel})
+		.field("vkCmdSetPerformanceStreamMarkerINTEL", &if self.vk_cmd_set_performance_stream_marker_intel == dummy_vkCmdSetPerformanceStreamMarkerINTEL {unsafe {transmute(null::<PFN_vkCmdSetPerformanceStreamMarkerINTEL>())}} else {self.vk_cmd_set_performance_stream_marker_intel})
+		.field("vkCmdSetPerformanceOverrideINTEL", &if self.vk_cmd_set_performance_override_intel == dummy_vkCmdSetPerformanceOverrideINTEL {unsafe {transmute(null::<PFN_vkCmdSetPerformanceOverrideINTEL>())}} else {self.vk_cmd_set_performance_override_intel})
+		.field("vkAcquirePerformanceConfigurationINTEL", &if self.vk_acquire_performance_configuration_intel == dummy_vkAcquirePerformanceConfigurationINTEL {unsafe {transmute(null::<PFN_vkAcquirePerformanceConfigurationINTEL>())}} else {self.vk_acquire_performance_configuration_intel})
+		.field("vkReleasePerformanceConfigurationINTEL", &if self.vk_release_performance_configuration_intel == dummy_vkReleasePerformanceConfigurationINTEL {unsafe {transmute(null::<PFN_vkReleasePerformanceConfigurationINTEL>())}} else {self.vk_release_performance_configuration_intel})
+		.field("vkQueueSetPerformanceConfigurationINTEL", &if self.vk_queue_set_performance_configuration_intel == dummy_vkQueueSetPerformanceConfigurationINTEL {unsafe {transmute(null::<PFN_vkQueueSetPerformanceConfigurationINTEL>())}} else {self.vk_queue_set_performance_configuration_intel})
+		.field("vkGetPerformanceParameterINTEL", &if self.vk_get_performance_parameter_intel == dummy_vkGetPerformanceParameterINTEL {unsafe {transmute(null::<PFN_vkGetPerformanceParameterINTEL>())}} else {self.vk_get_performance_parameter_intel})
+		.finish()
+	}
+}
 /// struct `VkPhysicalDevicePCIBusInfoPropertiesEXT` from VK_EXT_pci_bus_info
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPhysicalDevicePCIBusInfoPropertiesEXT.html>
 #[repr(C)]
@@ -38226,7 +40086,7 @@ pub struct VkPhysicalDevicePCIBusInfoPropertiesEXT {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_pci_bus_info.html>
 pub trait VK_EXT_pci_bus_info: Debug {}
 /// struct for `VK_EXT_pci_bus_info`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_pci_bus_info {}
 impl VK_EXT_pci_bus_info for Vulkan_EXT_pci_bus_info {}
 impl Default for Vulkan_EXT_pci_bus_info {
@@ -38237,6 +40097,12 @@ impl Default for Vulkan_EXT_pci_bus_info {
 impl Vulkan_EXT_pci_bus_info {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_EXT_pci_bus_info {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_pci_bus_info")
+		.finish()
 	}
 }
 /// struct `VkDisplayNativeHdrSurfaceCapabilitiesAMD` from VK_AMD_display_native_hdr
@@ -38271,7 +40137,7 @@ pub trait VK_AMD_display_native_hdr: Debug {
 	fn vkSetLocalDimmingAMD(&self, device: VkDevice, swapChain: VkSwapchainKHR, localDimmingEnable: VkBool32) -> Result<()>;
 }
 /// struct for `VK_AMD_display_native_hdr`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_AMD_display_native_hdr {
 	vk_set_local_dimming_amd: PFN_vkSetLocalDimmingAMD,
 }
@@ -38292,6 +40158,13 @@ impl Vulkan_AMD_display_native_hdr {
 		Self {
 			vk_set_local_dimming_amd: {let proc = get_instance_proc_address(instance, "vkSetLocalDimmingAMD"); if proc == null() {dummy_vkSetLocalDimmingAMD} else {unsafe {transmute(proc)}}},
 		}
+	}
+}
+impl Debug for Vulkan_AMD_display_native_hdr {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_AMD_display_native_hdr")
+		.field("vkSetLocalDimmingAMD", &if self.vk_set_local_dimming_amd == dummy_vkSetLocalDimmingAMD {unsafe {transmute(null::<PFN_vkSetLocalDimmingAMD>())}} else {self.vk_set_local_dimming_amd})
+		.finish()
 	}
 }
 /// struct `VkPhysicalDeviceFragmentDensityMapFeaturesEXT` from VK_EXT_fragment_density_map
@@ -38339,7 +40212,7 @@ pub struct VkRenderingFragmentDensityMapAttachmentInfoEXT {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_fragment_density_map.html>
 pub trait VK_EXT_fragment_density_map: Debug {}
 /// struct for `VK_EXT_fragment_density_map`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_fragment_density_map {}
 impl VK_EXT_fragment_density_map for Vulkan_EXT_fragment_density_map {}
 impl Default for Vulkan_EXT_fragment_density_map {
@@ -38352,6 +40225,12 @@ impl Vulkan_EXT_fragment_density_map {
 		Self {}
 	}
 }
+impl Debug for Vulkan_EXT_fragment_density_map {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_fragment_density_map")
+		.finish()
+	}
+}
 /// type definition `VkPhysicalDeviceScalarBlockLayoutFeaturesEXT` from VK_EXT_scalar_block_layout
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPhysicalDeviceScalarBlockLayoutFeaturesEXT.html>
 pub type VkPhysicalDeviceScalarBlockLayoutFeaturesEXT = VkPhysicalDeviceScalarBlockLayoutFeatures;
@@ -38359,7 +40238,7 @@ pub type VkPhysicalDeviceScalarBlockLayoutFeaturesEXT = VkPhysicalDeviceScalarBl
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_scalar_block_layout.html>
 pub trait VK_EXT_scalar_block_layout: Debug {}
 /// struct for `VK_EXT_scalar_block_layout`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_scalar_block_layout {}
 impl VK_EXT_scalar_block_layout for Vulkan_EXT_scalar_block_layout {}
 impl Default for Vulkan_EXT_scalar_block_layout {
@@ -38372,11 +40251,17 @@ impl Vulkan_EXT_scalar_block_layout {
 		Self {}
 	}
 }
+impl Debug for Vulkan_EXT_scalar_block_layout {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_scalar_block_layout")
+		.finish()
+	}
+}
 /// trait for `VK_GOOGLE_hlsl_functionality1`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_GOOGLE_hlsl_functionality1.html>
 pub trait VK_GOOGLE_hlsl_functionality1: Debug {}
 /// struct for `VK_GOOGLE_hlsl_functionality1`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_GOOGLE_hlsl_functionality1 {}
 impl VK_GOOGLE_hlsl_functionality1 for Vulkan_GOOGLE_hlsl_functionality1 {}
 impl Default for Vulkan_GOOGLE_hlsl_functionality1 {
@@ -38389,11 +40274,17 @@ impl Vulkan_GOOGLE_hlsl_functionality1 {
 		Self {}
 	}
 }
+impl Debug for Vulkan_GOOGLE_hlsl_functionality1 {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_GOOGLE_hlsl_functionality1")
+		.finish()
+	}
+}
 /// trait for `VK_GOOGLE_decorate_string`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_GOOGLE_decorate_string.html>
 pub trait VK_GOOGLE_decorate_string: Debug {}
 /// struct for `VK_GOOGLE_decorate_string`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_GOOGLE_decorate_string {}
 impl VK_GOOGLE_decorate_string for Vulkan_GOOGLE_decorate_string {}
 impl Default for Vulkan_GOOGLE_decorate_string {
@@ -38404,6 +40295,12 @@ impl Default for Vulkan_GOOGLE_decorate_string {
 impl Vulkan_GOOGLE_decorate_string {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_GOOGLE_decorate_string {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_GOOGLE_decorate_string")
+		.finish()
 	}
 }
 /// type definition `VkPhysicalDeviceSubgroupSizeControlFeaturesEXT` from VK_EXT_subgroup_size_control
@@ -38419,7 +40316,7 @@ pub type VkPipelineShaderStageRequiredSubgroupSizeCreateInfoEXT = VkPipelineShad
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_subgroup_size_control.html>
 pub trait VK_EXT_subgroup_size_control: Debug {}
 /// struct for `VK_EXT_subgroup_size_control`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_subgroup_size_control {}
 impl VK_EXT_subgroup_size_control for Vulkan_EXT_subgroup_size_control {}
 impl Default for Vulkan_EXT_subgroup_size_control {
@@ -38430,6 +40327,12 @@ impl Default for Vulkan_EXT_subgroup_size_control {
 impl Vulkan_EXT_subgroup_size_control {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_EXT_subgroup_size_control {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_subgroup_size_control")
+		.finish()
 	}
 }
 /// type definition `VkShaderCorePropertiesFlagsAMD` from VK_AMD_shader_core_properties2
@@ -38479,7 +40382,7 @@ impl Debug for VkPhysicalDeviceShaderCoreProperties2AMD {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_AMD_shader_core_properties2.html>
 pub trait VK_AMD_shader_core_properties2: Debug {}
 /// struct for `VK_AMD_shader_core_properties2`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_AMD_shader_core_properties2 {}
 impl VK_AMD_shader_core_properties2 for Vulkan_AMD_shader_core_properties2 {}
 impl Default for Vulkan_AMD_shader_core_properties2 {
@@ -38490,6 +40393,12 @@ impl Default for Vulkan_AMD_shader_core_properties2 {
 impl Vulkan_AMD_shader_core_properties2 {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_AMD_shader_core_properties2 {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_AMD_shader_core_properties2")
+		.finish()
 	}
 }
 /// struct `VkPhysicalDeviceCoherentMemoryFeaturesAMD` from VK_AMD_device_coherent_memory
@@ -38505,7 +40414,7 @@ pub struct VkPhysicalDeviceCoherentMemoryFeaturesAMD {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_AMD_device_coherent_memory.html>
 pub trait VK_AMD_device_coherent_memory: Debug {}
 /// struct for `VK_AMD_device_coherent_memory`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_AMD_device_coherent_memory {}
 impl VK_AMD_device_coherent_memory for Vulkan_AMD_device_coherent_memory {}
 impl Default for Vulkan_AMD_device_coherent_memory {
@@ -38516,6 +40425,12 @@ impl Default for Vulkan_AMD_device_coherent_memory {
 impl Vulkan_AMD_device_coherent_memory {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_AMD_device_coherent_memory {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_AMD_device_coherent_memory")
+		.finish()
 	}
 }
 /// struct `VkPhysicalDeviceShaderImageAtomicInt64FeaturesEXT` from VK_EXT_shader_image_atomic_int64
@@ -38532,7 +40447,7 @@ pub struct VkPhysicalDeviceShaderImageAtomicInt64FeaturesEXT {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_shader_image_atomic_int64.html>
 pub trait VK_EXT_shader_image_atomic_int64: Debug {}
 /// struct for `VK_EXT_shader_image_atomic_int64`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_shader_image_atomic_int64 {}
 impl VK_EXT_shader_image_atomic_int64 for Vulkan_EXT_shader_image_atomic_int64 {}
 impl Default for Vulkan_EXT_shader_image_atomic_int64 {
@@ -38543,6 +40458,12 @@ impl Default for Vulkan_EXT_shader_image_atomic_int64 {
 impl Vulkan_EXT_shader_image_atomic_int64 {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_EXT_shader_image_atomic_int64 {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_shader_image_atomic_int64")
+		.finish()
 	}
 }
 /// struct `VkPhysicalDeviceMemoryBudgetPropertiesEXT` from VK_EXT_memory_budget
@@ -38559,7 +40480,7 @@ pub struct VkPhysicalDeviceMemoryBudgetPropertiesEXT {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_memory_budget.html>
 pub trait VK_EXT_memory_budget: Debug {}
 /// struct for `VK_EXT_memory_budget`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_memory_budget {}
 impl VK_EXT_memory_budget for Vulkan_EXT_memory_budget {}
 impl Default for Vulkan_EXT_memory_budget {
@@ -38570,6 +40491,12 @@ impl Default for Vulkan_EXT_memory_budget {
 impl Vulkan_EXT_memory_budget {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_EXT_memory_budget {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_memory_budget")
+		.finish()
 	}
 }
 /// struct `VkPhysicalDeviceMemoryPriorityFeaturesEXT` from VK_EXT_memory_priority
@@ -38594,7 +40521,7 @@ pub struct VkMemoryPriorityAllocateInfoEXT {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_memory_priority.html>
 pub trait VK_EXT_memory_priority: Debug {}
 /// struct for `VK_EXT_memory_priority`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_memory_priority {}
 impl VK_EXT_memory_priority for Vulkan_EXT_memory_priority {}
 impl Default for Vulkan_EXT_memory_priority {
@@ -38605,6 +40532,12 @@ impl Default for Vulkan_EXT_memory_priority {
 impl Vulkan_EXT_memory_priority {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_EXT_memory_priority {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_memory_priority")
+		.finish()
 	}
 }
 /// struct `VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV` from VK_NV_dedicated_allocation_image_aliasing
@@ -38620,7 +40553,7 @@ pub struct VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NV_dedicated_allocation_image_aliasing.html>
 pub trait VK_NV_dedicated_allocation_image_aliasing: Debug {}
 /// struct for `VK_NV_dedicated_allocation_image_aliasing`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_NV_dedicated_allocation_image_aliasing {}
 impl VK_NV_dedicated_allocation_image_aliasing for Vulkan_NV_dedicated_allocation_image_aliasing {}
 impl Default for Vulkan_NV_dedicated_allocation_image_aliasing {
@@ -38631,6 +40564,12 @@ impl Default for Vulkan_NV_dedicated_allocation_image_aliasing {
 impl Vulkan_NV_dedicated_allocation_image_aliasing {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_NV_dedicated_allocation_image_aliasing {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_NV_dedicated_allocation_image_aliasing")
+		.finish()
 	}
 }
 /// type definition `VkPhysicalDeviceBufferAddressFeaturesEXT` from VK_EXT_buffer_device_address
@@ -38673,7 +40612,7 @@ pub trait VK_EXT_buffer_device_address: Debug {
 	fn vkGetBufferDeviceAddressEXT(&self, device: VkDevice, pInfo: *const VkBufferDeviceAddressInfo) -> Result<VkDeviceAddress>;
 }
 /// struct for `VK_EXT_buffer_device_address`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_buffer_device_address {
 	vk_get_buffer_device_address_ext: PFN_vkGetBufferDeviceAddressEXT,
 }
@@ -38694,6 +40633,13 @@ impl Vulkan_EXT_buffer_device_address {
 		Self {
 			vk_get_buffer_device_address_ext: {let proc = get_instance_proc_address(instance, "vkGetBufferDeviceAddressEXT"); if proc == null() {dummy_vkGetBufferDeviceAddressEXT} else {unsafe {transmute(proc)}}},
 		}
+	}
+}
+impl Debug for Vulkan_EXT_buffer_device_address {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_buffer_device_address")
+		.field("vkGetBufferDeviceAddressEXT", &if self.vk_get_buffer_device_address_ext == dummy_vkGetBufferDeviceAddressEXT {unsafe {transmute(null::<PFN_vkGetBufferDeviceAddressEXT>())}} else {self.vk_get_buffer_device_address_ext})
+		.finish()
 	}
 }
 /// type definition `VkToolPurposeFlagBitsEXT` from VK_EXT_tooling_info
@@ -38719,7 +40665,7 @@ pub trait VK_EXT_tooling_info: Debug {
 	fn vkGetPhysicalDeviceToolPropertiesEXT(&self, physicalDevice: VkPhysicalDevice, pToolCount: *mut uint32_t, pToolProperties: *mut VkPhysicalDeviceToolProperties) -> Result<()>;
 }
 /// struct for `VK_EXT_tooling_info`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_tooling_info {
 	vk_get_physical_device_tool_properties_ext: PFN_vkGetPhysicalDeviceToolPropertiesEXT,
 }
@@ -38742,6 +40688,13 @@ impl Vulkan_EXT_tooling_info {
 		}
 	}
 }
+impl Debug for Vulkan_EXT_tooling_info {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_tooling_info")
+		.field("vkGetPhysicalDeviceToolPropertiesEXT", &if self.vk_get_physical_device_tool_properties_ext == dummy_vkGetPhysicalDeviceToolPropertiesEXT {unsafe {transmute(null::<PFN_vkGetPhysicalDeviceToolPropertiesEXT>())}} else {self.vk_get_physical_device_tool_properties_ext})
+		.finish()
+	}
+}
 /// type definition `VkImageStencilUsageCreateInfoEXT` from VK_EXT_separate_stencil_usage
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkImageStencilUsageCreateInfoEXT.html>
 pub type VkImageStencilUsageCreateInfoEXT = VkImageStencilUsageCreateInfo;
@@ -38749,7 +40702,7 @@ pub type VkImageStencilUsageCreateInfoEXT = VkImageStencilUsageCreateInfo;
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_separate_stencil_usage.html>
 pub trait VK_EXT_separate_stencil_usage: Debug {}
 /// struct for `VK_EXT_separate_stencil_usage`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_separate_stencil_usage {}
 impl VK_EXT_separate_stencil_usage for Vulkan_EXT_separate_stencil_usage {}
 impl Default for Vulkan_EXT_separate_stencil_usage {
@@ -38760,6 +40713,12 @@ impl Default for Vulkan_EXT_separate_stencil_usage {
 impl Vulkan_EXT_separate_stencil_usage {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_EXT_separate_stencil_usage {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_separate_stencil_usage")
+		.finish()
 	}
 }
 /// enum `VkValidationFeatureEnableEXT` from VK_EXT_validation_features
@@ -38805,7 +40764,7 @@ pub struct VkValidationFeaturesEXT {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_validation_features.html>
 pub trait VK_EXT_validation_features: Debug {}
 /// struct for `VK_EXT_validation_features`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_validation_features {}
 impl VK_EXT_validation_features for Vulkan_EXT_validation_features {}
 impl Default for Vulkan_EXT_validation_features {
@@ -38816,6 +40775,12 @@ impl Default for Vulkan_EXT_validation_features {
 impl Vulkan_EXT_validation_features {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_EXT_validation_features {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_validation_features")
+		.finish()
 	}
 }
 /// type definition `VkComponentTypeNV` from VK_NV_cooperative_matrix
@@ -38873,7 +40838,7 @@ pub trait VK_NV_cooperative_matrix: Debug {
 	fn vkGetPhysicalDeviceCooperativeMatrixPropertiesNV(&self, physicalDevice: VkPhysicalDevice, pPropertyCount: *mut uint32_t, pProperties: *mut VkCooperativeMatrixPropertiesNV) -> Result<()>;
 }
 /// struct for `VK_NV_cooperative_matrix`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_NV_cooperative_matrix {
 	vk_get_physical_device_cooperative_matrix_properties_nv: PFN_vkGetPhysicalDeviceCooperativeMatrixPropertiesNV,
 }
@@ -38894,6 +40859,13 @@ impl Vulkan_NV_cooperative_matrix {
 		Self {
 			vk_get_physical_device_cooperative_matrix_properties_nv: {let proc = get_instance_proc_address(instance, "vkGetPhysicalDeviceCooperativeMatrixPropertiesNV"); if proc == null() {dummy_vkGetPhysicalDeviceCooperativeMatrixPropertiesNV} else {unsafe {transmute(proc)}}},
 		}
+	}
+}
+impl Debug for Vulkan_NV_cooperative_matrix {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_NV_cooperative_matrix")
+		.field("vkGetPhysicalDeviceCooperativeMatrixPropertiesNV", &if self.vk_get_physical_device_cooperative_matrix_properties_nv == dummy_vkGetPhysicalDeviceCooperativeMatrixPropertiesNV {unsafe {transmute(null::<PFN_vkGetPhysicalDeviceCooperativeMatrixPropertiesNV>())}} else {self.vk_get_physical_device_cooperative_matrix_properties_nv})
+		.finish()
 	}
 }
 /// type definition `VkPipelineCoverageReductionStateCreateFlagsNV` from VK_NV_coverage_reduction_mode
@@ -38953,7 +40925,7 @@ pub trait VK_NV_coverage_reduction_mode: Debug {
 	fn vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV(&self, physicalDevice: VkPhysicalDevice, pCombinationCount: *mut uint32_t, pCombinations: *mut VkFramebufferMixedSamplesCombinationNV) -> Result<()>;
 }
 /// struct for `VK_NV_coverage_reduction_mode`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_NV_coverage_reduction_mode {
 	vk_get_physical_device_supported_framebuffer_mixed_samples_combinations_nv: PFN_vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV,
 }
@@ -38976,6 +40948,13 @@ impl Vulkan_NV_coverage_reduction_mode {
 		}
 	}
 }
+impl Debug for Vulkan_NV_coverage_reduction_mode {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_NV_coverage_reduction_mode")
+		.field("vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV", &if self.vk_get_physical_device_supported_framebuffer_mixed_samples_combinations_nv == dummy_vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV {unsafe {transmute(null::<PFN_vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV>())}} else {self.vk_get_physical_device_supported_framebuffer_mixed_samples_combinations_nv})
+		.finish()
+	}
+}
 /// struct `VkPhysicalDeviceFragmentShaderInterlockFeaturesEXT` from VK_EXT_fragment_shader_interlock
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPhysicalDeviceFragmentShaderInterlockFeaturesEXT.html>
 #[repr(C)]
@@ -38991,7 +40970,7 @@ pub struct VkPhysicalDeviceFragmentShaderInterlockFeaturesEXT {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_fragment_shader_interlock.html>
 pub trait VK_EXT_fragment_shader_interlock: Debug {}
 /// struct for `VK_EXT_fragment_shader_interlock`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_fragment_shader_interlock {}
 impl VK_EXT_fragment_shader_interlock for Vulkan_EXT_fragment_shader_interlock {}
 impl Default for Vulkan_EXT_fragment_shader_interlock {
@@ -39002,6 +40981,12 @@ impl Default for Vulkan_EXT_fragment_shader_interlock {
 impl Vulkan_EXT_fragment_shader_interlock {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_EXT_fragment_shader_interlock {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_fragment_shader_interlock")
+		.finish()
 	}
 }
 /// struct `VkPhysicalDeviceYcbcrImageArraysFeaturesEXT` from VK_EXT_ycbcr_image_arrays
@@ -39017,7 +41002,7 @@ pub struct VkPhysicalDeviceYcbcrImageArraysFeaturesEXT {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_ycbcr_image_arrays.html>
 pub trait VK_EXT_ycbcr_image_arrays: Debug {}
 /// struct for `VK_EXT_ycbcr_image_arrays`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_ycbcr_image_arrays {}
 impl VK_EXT_ycbcr_image_arrays for Vulkan_EXT_ycbcr_image_arrays {}
 impl Default for Vulkan_EXT_ycbcr_image_arrays {
@@ -39028,6 +41013,12 @@ impl Default for Vulkan_EXT_ycbcr_image_arrays {
 impl Vulkan_EXT_ycbcr_image_arrays {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_EXT_ycbcr_image_arrays {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_ycbcr_image_arrays")
+		.finish()
 	}
 }
 /// enum `VkProvokingVertexModeEXT` from VK_EXT_provoking_vertex
@@ -39072,7 +41063,7 @@ pub struct VkPipelineRasterizationProvokingVertexStateCreateInfoEXT {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_provoking_vertex.html>
 pub trait VK_EXT_provoking_vertex: Debug {}
 /// struct for `VK_EXT_provoking_vertex`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_provoking_vertex {}
 impl VK_EXT_provoking_vertex for Vulkan_EXT_provoking_vertex {}
 impl Default for Vulkan_EXT_provoking_vertex {
@@ -39083,6 +41074,12 @@ impl Default for Vulkan_EXT_provoking_vertex {
 impl Vulkan_EXT_provoking_vertex {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_EXT_provoking_vertex {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_provoking_vertex")
+		.finish()
 	}
 }
 /// type definition `VkHeadlessSurfaceCreateFlagsEXT` from VK_EXT_headless_surface
@@ -39111,7 +41108,7 @@ pub trait VK_EXT_headless_surface: Debug {
 	fn vkCreateHeadlessSurfaceEXT(&self, instance: VkInstance, pCreateInfo: *const VkHeadlessSurfaceCreateInfoEXT, pAllocator: *const VkAllocationCallbacks, pSurface: *mut VkSurfaceKHR) -> Result<()>;
 }
 /// struct for `VK_EXT_headless_surface`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_headless_surface {
 	vk_create_headless_surface_ext: PFN_vkCreateHeadlessSurfaceEXT,
 }
@@ -39132,6 +41129,13 @@ impl Vulkan_EXT_headless_surface {
 		Self {
 			vk_create_headless_surface_ext: {let proc = get_instance_proc_address(instance, "vkCreateHeadlessSurfaceEXT"); if proc == null() {dummy_vkCreateHeadlessSurfaceEXT} else {unsafe {transmute(proc)}}},
 		}
+	}
+}
+impl Debug for Vulkan_EXT_headless_surface {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_headless_surface")
+		.field("vkCreateHeadlessSurfaceEXT", &if self.vk_create_headless_surface_ext == dummy_vkCreateHeadlessSurfaceEXT {unsafe {transmute(null::<PFN_vkCreateHeadlessSurfaceEXT>())}} else {self.vk_create_headless_surface_ext})
+		.finish()
 	}
 }
 /// type definition `VkLineRasterizationModeEXT` from VK_EXT_line_rasterization
@@ -39160,7 +41164,7 @@ pub trait VK_EXT_line_rasterization: Debug {
 	fn vkCmdSetLineStippleEXT(&self, commandBuffer: VkCommandBuffer, lineStippleFactor: u32, lineStipplePattern: u16) -> Result<()>;
 }
 /// struct for `VK_EXT_line_rasterization`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_line_rasterization {
 	vk_cmd_set_line_stipple_ext: PFN_vkCmdSetLineStippleEXT,
 }
@@ -39181,6 +41185,13 @@ impl Vulkan_EXT_line_rasterization {
 		Self {
 			vk_cmd_set_line_stipple_ext: {let proc = get_instance_proc_address(instance, "vkCmdSetLineStippleEXT"); if proc == null() {dummy_vkCmdSetLineStippleEXT} else {unsafe {transmute(proc)}}},
 		}
+	}
+}
+impl Debug for Vulkan_EXT_line_rasterization {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_line_rasterization")
+		.field("vkCmdSetLineStippleEXT", &if self.vk_cmd_set_line_stipple_ext == dummy_vkCmdSetLineStippleEXT {unsafe {transmute(null::<PFN_vkCmdSetLineStippleEXT>())}} else {self.vk_cmd_set_line_stipple_ext})
+		.finish()
 	}
 }
 /// struct `VkPhysicalDeviceShaderAtomicFloatFeaturesEXT` from VK_EXT_shader_atomic_float
@@ -39207,7 +41218,7 @@ pub struct VkPhysicalDeviceShaderAtomicFloatFeaturesEXT {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_shader_atomic_float.html>
 pub trait VK_EXT_shader_atomic_float: Debug {}
 /// struct for `VK_EXT_shader_atomic_float`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_shader_atomic_float {}
 impl VK_EXT_shader_atomic_float for Vulkan_EXT_shader_atomic_float {}
 impl Default for Vulkan_EXT_shader_atomic_float {
@@ -39218,6 +41229,12 @@ impl Default for Vulkan_EXT_shader_atomic_float {
 impl Vulkan_EXT_shader_atomic_float {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_EXT_shader_atomic_float {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_shader_atomic_float")
+		.finish()
 	}
 }
 /// type definition `VkPhysicalDeviceHostQueryResetFeaturesEXT` from VK_EXT_host_query_reset
@@ -39237,7 +41254,7 @@ pub trait VK_EXT_host_query_reset: Debug {
 	fn vkResetQueryPoolEXT(&self, device: VkDevice, queryPool: VkQueryPool, firstQuery: u32, queryCount: u32) -> Result<()>;
 }
 /// struct for `VK_EXT_host_query_reset`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_host_query_reset {
 	vk_reset_query_pool_ext: PFN_vkResetQueryPoolEXT,
 }
@@ -39260,6 +41277,13 @@ impl Vulkan_EXT_host_query_reset {
 		}
 	}
 }
+impl Debug for Vulkan_EXT_host_query_reset {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_host_query_reset")
+		.field("vkResetQueryPoolEXT", &if self.vk_reset_query_pool_ext == dummy_vkResetQueryPoolEXT {unsafe {transmute(null::<PFN_vkResetQueryPoolEXT>())}} else {self.vk_reset_query_pool_ext})
+		.finish()
+	}
+}
 /// type definition `VkPhysicalDeviceIndexTypeUint8FeaturesEXT` from VK_EXT_index_type_uint8
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPhysicalDeviceIndexTypeUint8FeaturesEXT.html>
 pub type VkPhysicalDeviceIndexTypeUint8FeaturesEXT = VkPhysicalDeviceIndexTypeUint8Features;
@@ -39267,7 +41291,7 @@ pub type VkPhysicalDeviceIndexTypeUint8FeaturesEXT = VkPhysicalDeviceIndexTypeUi
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_index_type_uint8.html>
 pub trait VK_EXT_index_type_uint8: Debug {}
 /// struct for `VK_EXT_index_type_uint8`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_index_type_uint8 {}
 impl VK_EXT_index_type_uint8 for Vulkan_EXT_index_type_uint8 {}
 impl Default for Vulkan_EXT_index_type_uint8 {
@@ -39278,6 +41302,12 @@ impl Default for Vulkan_EXT_index_type_uint8 {
 impl Vulkan_EXT_index_type_uint8 {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_EXT_index_type_uint8 {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_index_type_uint8")
+		.finish()
 	}
 }
 /// struct `VkPhysicalDeviceExtendedDynamicStateFeaturesEXT` from VK_EXT_extended_dynamic_state
@@ -39402,7 +41432,7 @@ pub trait VK_EXT_extended_dynamic_state: Debug {
 	fn vkCmdSetStencilOpEXT(&self, commandBuffer: VkCommandBuffer, faceMask: VkStencilFaceFlags, failOp: VkStencilOp, passOp: VkStencilOp, depthFailOp: VkStencilOp, compareOp: VkCompareOp) -> Result<()>;
 }
 /// struct for `VK_EXT_extended_dynamic_state`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_extended_dynamic_state {
 	vk_cmd_set_cull_mode_ext: PFN_vkCmdSetCullModeEXT,
 	vk_cmd_set_front_face_ext: PFN_vkCmdSetFrontFaceEXT,
@@ -39489,6 +41519,24 @@ impl Vulkan_EXT_extended_dynamic_state {
 			vk_cmd_set_stencil_test_enable_ext: {let proc = get_instance_proc_address(instance, "vkCmdSetStencilTestEnableEXT"); if proc == null() {dummy_vkCmdSetStencilTestEnableEXT} else {unsafe {transmute(proc)}}},
 			vk_cmd_set_stencil_op_ext: {let proc = get_instance_proc_address(instance, "vkCmdSetStencilOpEXT"); if proc == null() {dummy_vkCmdSetStencilOpEXT} else {unsafe {transmute(proc)}}},
 		}
+	}
+}
+impl Debug for Vulkan_EXT_extended_dynamic_state {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_extended_dynamic_state")
+		.field("vkCmdSetCullModeEXT", &if self.vk_cmd_set_cull_mode_ext == dummy_vkCmdSetCullModeEXT {unsafe {transmute(null::<PFN_vkCmdSetCullModeEXT>())}} else {self.vk_cmd_set_cull_mode_ext})
+		.field("vkCmdSetFrontFaceEXT", &if self.vk_cmd_set_front_face_ext == dummy_vkCmdSetFrontFaceEXT {unsafe {transmute(null::<PFN_vkCmdSetFrontFaceEXT>())}} else {self.vk_cmd_set_front_face_ext})
+		.field("vkCmdSetPrimitiveTopologyEXT", &if self.vk_cmd_set_primitive_topology_ext == dummy_vkCmdSetPrimitiveTopologyEXT {unsafe {transmute(null::<PFN_vkCmdSetPrimitiveTopologyEXT>())}} else {self.vk_cmd_set_primitive_topology_ext})
+		.field("vkCmdSetViewportWithCountEXT", &if self.vk_cmd_set_viewport_with_count_ext == dummy_vkCmdSetViewportWithCountEXT {unsafe {transmute(null::<PFN_vkCmdSetViewportWithCountEXT>())}} else {self.vk_cmd_set_viewport_with_count_ext})
+		.field("vkCmdSetScissorWithCountEXT", &if self.vk_cmd_set_scissor_with_count_ext == dummy_vkCmdSetScissorWithCountEXT {unsafe {transmute(null::<PFN_vkCmdSetScissorWithCountEXT>())}} else {self.vk_cmd_set_scissor_with_count_ext})
+		.field("vkCmdBindVertexBuffers2EXT", &if self.vk_cmd_bind_vertex_buffers2_ext == dummy_vkCmdBindVertexBuffers2EXT {unsafe {transmute(null::<PFN_vkCmdBindVertexBuffers2EXT>())}} else {self.vk_cmd_bind_vertex_buffers2_ext})
+		.field("vkCmdSetDepthTestEnableEXT", &if self.vk_cmd_set_depth_test_enable_ext == dummy_vkCmdSetDepthTestEnableEXT {unsafe {transmute(null::<PFN_vkCmdSetDepthTestEnableEXT>())}} else {self.vk_cmd_set_depth_test_enable_ext})
+		.field("vkCmdSetDepthWriteEnableEXT", &if self.vk_cmd_set_depth_write_enable_ext == dummy_vkCmdSetDepthWriteEnableEXT {unsafe {transmute(null::<PFN_vkCmdSetDepthWriteEnableEXT>())}} else {self.vk_cmd_set_depth_write_enable_ext})
+		.field("vkCmdSetDepthCompareOpEXT", &if self.vk_cmd_set_depth_compare_op_ext == dummy_vkCmdSetDepthCompareOpEXT {unsafe {transmute(null::<PFN_vkCmdSetDepthCompareOpEXT>())}} else {self.vk_cmd_set_depth_compare_op_ext})
+		.field("vkCmdSetDepthBoundsTestEnableEXT", &if self.vk_cmd_set_depth_bounds_test_enable_ext == dummy_vkCmdSetDepthBoundsTestEnableEXT {unsafe {transmute(null::<PFN_vkCmdSetDepthBoundsTestEnableEXT>())}} else {self.vk_cmd_set_depth_bounds_test_enable_ext})
+		.field("vkCmdSetStencilTestEnableEXT", &if self.vk_cmd_set_stencil_test_enable_ext == dummy_vkCmdSetStencilTestEnableEXT {unsafe {transmute(null::<PFN_vkCmdSetStencilTestEnableEXT>())}} else {self.vk_cmd_set_stencil_test_enable_ext})
+		.field("vkCmdSetStencilOpEXT", &if self.vk_cmd_set_stencil_op_ext == dummy_vkCmdSetStencilOpEXT {unsafe {transmute(null::<PFN_vkCmdSetStencilOpEXT>())}} else {self.vk_cmd_set_stencil_op_ext})
+		.finish()
 	}
 }
 /// type definition `VkHostImageCopyFlagBitsEXT` from VK_EXT_host_image_copy
@@ -39583,7 +41631,7 @@ pub trait VK_EXT_host_image_copy: Debug {
 	fn vkGetImageSubresourceLayout2EXT(&self, device: VkDevice, image: VkImage, pSubresource: *const VkImageSubresource2, pLayout: *mut VkSubresourceLayout2) -> Result<()>;
 }
 /// struct for `VK_EXT_host_image_copy`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_host_image_copy {
 	vk_copy_memory_to_image_ext: PFN_vkCopyMemoryToImageEXT,
 	vk_copy_image_to_memory_ext: PFN_vkCopyImageToMemoryEXT,
@@ -39630,6 +41678,17 @@ impl Vulkan_EXT_host_image_copy {
 		}
 	}
 }
+impl Debug for Vulkan_EXT_host_image_copy {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_host_image_copy")
+		.field("vkCopyMemoryToImageEXT", &if self.vk_copy_memory_to_image_ext == dummy_vkCopyMemoryToImageEXT {unsafe {transmute(null::<PFN_vkCopyMemoryToImageEXT>())}} else {self.vk_copy_memory_to_image_ext})
+		.field("vkCopyImageToMemoryEXT", &if self.vk_copy_image_to_memory_ext == dummy_vkCopyImageToMemoryEXT {unsafe {transmute(null::<PFN_vkCopyImageToMemoryEXT>())}} else {self.vk_copy_image_to_memory_ext})
+		.field("vkCopyImageToImageEXT", &if self.vk_copy_image_to_image_ext == dummy_vkCopyImageToImageEXT {unsafe {transmute(null::<PFN_vkCopyImageToImageEXT>())}} else {self.vk_copy_image_to_image_ext})
+		.field("vkTransitionImageLayoutEXT", &if self.vk_transition_image_layout_ext == dummy_vkTransitionImageLayoutEXT {unsafe {transmute(null::<PFN_vkTransitionImageLayoutEXT>())}} else {self.vk_transition_image_layout_ext})
+		.field("vkGetImageSubresourceLayout2EXT", &if self.vk_get_image_subresource_layout2_ext == dummy_vkGetImageSubresourceLayout2EXT {unsafe {transmute(null::<PFN_vkGetImageSubresourceLayout2EXT>())}} else {self.vk_get_image_subresource_layout2_ext})
+		.finish()
+	}
+}
 /// struct `VkPhysicalDeviceMapMemoryPlacedFeaturesEXT` from VK_EXT_map_memory_placed
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPhysicalDeviceMapMemoryPlacedFeaturesEXT.html>
 #[repr(C)]
@@ -39663,7 +41722,7 @@ pub struct VkMemoryMapPlacedInfoEXT {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_map_memory_placed.html>
 pub trait VK_EXT_map_memory_placed: Debug {}
 /// struct for `VK_EXT_map_memory_placed`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_map_memory_placed {}
 impl VK_EXT_map_memory_placed for Vulkan_EXT_map_memory_placed {}
 impl Default for Vulkan_EXT_map_memory_placed {
@@ -39674,6 +41733,12 @@ impl Default for Vulkan_EXT_map_memory_placed {
 impl Vulkan_EXT_map_memory_placed {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_EXT_map_memory_placed {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_map_memory_placed")
+		.finish()
 	}
 }
 /// struct `VkPhysicalDeviceShaderAtomicFloat2FeaturesEXT` from VK_EXT_shader_atomic_float2
@@ -39700,7 +41765,7 @@ pub struct VkPhysicalDeviceShaderAtomicFloat2FeaturesEXT {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_shader_atomic_float2.html>
 pub trait VK_EXT_shader_atomic_float2: Debug {}
 /// struct for `VK_EXT_shader_atomic_float2`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_shader_atomic_float2 {}
 impl VK_EXT_shader_atomic_float2 for Vulkan_EXT_shader_atomic_float2 {}
 impl Default for Vulkan_EXT_shader_atomic_float2 {
@@ -39711,6 +41776,12 @@ impl Default for Vulkan_EXT_shader_atomic_float2 {
 impl Vulkan_EXT_shader_atomic_float2 {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_EXT_shader_atomic_float2 {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_shader_atomic_float2")
+		.finish()
 	}
 }
 /// type definition `VkPresentScalingFlagBitsEXT` from VK_EXT_surface_maintenance1
@@ -39738,7 +41809,7 @@ pub type VkSurfacePresentModeCompatibilityEXT = VkSurfacePresentModeCompatibilit
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_surface_maintenance1.html>
 pub trait VK_EXT_surface_maintenance1: Debug {}
 /// struct for `VK_EXT_surface_maintenance1`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_surface_maintenance1 {}
 impl VK_EXT_surface_maintenance1 for Vulkan_EXT_surface_maintenance1 {}
 impl Default for Vulkan_EXT_surface_maintenance1 {
@@ -39749,6 +41820,12 @@ impl Default for Vulkan_EXT_surface_maintenance1 {
 impl Vulkan_EXT_surface_maintenance1 {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_EXT_surface_maintenance1 {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_surface_maintenance1")
+		.finish()
 	}
 }
 /// type definition `VkPhysicalDeviceSwapchainMaintenance1FeaturesEXT` from VK_EXT_swapchain_maintenance1
@@ -39783,7 +41860,7 @@ pub trait VK_EXT_swapchain_maintenance1: Debug {
 	fn vkReleaseSwapchainImagesEXT(&self, device: VkDevice, pReleaseInfo: *const VkReleaseSwapchainImagesInfoKHR) -> Result<()>;
 }
 /// struct for `VK_EXT_swapchain_maintenance1`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_swapchain_maintenance1 {
 	vk_release_swapchain_images_ext: PFN_vkReleaseSwapchainImagesEXT,
 }
@@ -39806,6 +41883,13 @@ impl Vulkan_EXT_swapchain_maintenance1 {
 		}
 	}
 }
+impl Debug for Vulkan_EXT_swapchain_maintenance1 {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_swapchain_maintenance1")
+		.field("vkReleaseSwapchainImagesEXT", &if self.vk_release_swapchain_images_ext == dummy_vkReleaseSwapchainImagesEXT {unsafe {transmute(null::<PFN_vkReleaseSwapchainImagesEXT>())}} else {self.vk_release_swapchain_images_ext})
+		.finish()
+	}
+}
 /// type definition `VkPhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT` from VK_EXT_shader_demote_to_helper_invocation
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT.html>
 pub type VkPhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT = VkPhysicalDeviceShaderDemoteToHelperInvocationFeatures;
@@ -39813,7 +41897,7 @@ pub type VkPhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT = VkPhysicalD
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_shader_demote_to_helper_invocation.html>
 pub trait VK_EXT_shader_demote_to_helper_invocation: Debug {}
 /// struct for `VK_EXT_shader_demote_to_helper_invocation`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_shader_demote_to_helper_invocation {}
 impl VK_EXT_shader_demote_to_helper_invocation for Vulkan_EXT_shader_demote_to_helper_invocation {}
 impl Default for Vulkan_EXT_shader_demote_to_helper_invocation {
@@ -39824,6 +41908,12 @@ impl Default for Vulkan_EXT_shader_demote_to_helper_invocation {
 impl Vulkan_EXT_shader_demote_to_helper_invocation {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_EXT_shader_demote_to_helper_invocation {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_shader_demote_to_helper_invocation")
+		.finish()
 	}
 }
 /// type definition `VkIndirectStateFlagsNV` from VK_NV_device_generated_commands
@@ -40163,7 +42253,7 @@ pub trait VK_NV_device_generated_commands: Debug {
 	fn vkDestroyIndirectCommandsLayoutNV(&self, device: VkDevice, indirectCommandsLayout: VkIndirectCommandsLayoutNV, pAllocator: *const VkAllocationCallbacks) -> Result<()>;
 }
 /// struct for `VK_NV_device_generated_commands`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_NV_device_generated_commands {
 	vk_get_generated_commands_memory_requirements_nv: PFN_vkGetGeneratedCommandsMemoryRequirementsNV,
 	vk_cmd_preprocess_generated_commands_nv: PFN_vkCmdPreprocessGeneratedCommandsNV,
@@ -40216,6 +42306,18 @@ impl Vulkan_NV_device_generated_commands {
 		}
 	}
 }
+impl Debug for Vulkan_NV_device_generated_commands {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_NV_device_generated_commands")
+		.field("vkGetGeneratedCommandsMemoryRequirementsNV", &if self.vk_get_generated_commands_memory_requirements_nv == dummy_vkGetGeneratedCommandsMemoryRequirementsNV {unsafe {transmute(null::<PFN_vkGetGeneratedCommandsMemoryRequirementsNV>())}} else {self.vk_get_generated_commands_memory_requirements_nv})
+		.field("vkCmdPreprocessGeneratedCommandsNV", &if self.vk_cmd_preprocess_generated_commands_nv == dummy_vkCmdPreprocessGeneratedCommandsNV {unsafe {transmute(null::<PFN_vkCmdPreprocessGeneratedCommandsNV>())}} else {self.vk_cmd_preprocess_generated_commands_nv})
+		.field("vkCmdExecuteGeneratedCommandsNV", &if self.vk_cmd_execute_generated_commands_nv == dummy_vkCmdExecuteGeneratedCommandsNV {unsafe {transmute(null::<PFN_vkCmdExecuteGeneratedCommandsNV>())}} else {self.vk_cmd_execute_generated_commands_nv})
+		.field("vkCmdBindPipelineShaderGroupNV", &if self.vk_cmd_bind_pipeline_shader_group_nv == dummy_vkCmdBindPipelineShaderGroupNV {unsafe {transmute(null::<PFN_vkCmdBindPipelineShaderGroupNV>())}} else {self.vk_cmd_bind_pipeline_shader_group_nv})
+		.field("vkCreateIndirectCommandsLayoutNV", &if self.vk_create_indirect_commands_layout_nv == dummy_vkCreateIndirectCommandsLayoutNV {unsafe {transmute(null::<PFN_vkCreateIndirectCommandsLayoutNV>())}} else {self.vk_create_indirect_commands_layout_nv})
+		.field("vkDestroyIndirectCommandsLayoutNV", &if self.vk_destroy_indirect_commands_layout_nv == dummy_vkDestroyIndirectCommandsLayoutNV {unsafe {transmute(null::<PFN_vkDestroyIndirectCommandsLayoutNV>())}} else {self.vk_destroy_indirect_commands_layout_nv})
+		.finish()
+	}
+}
 /// struct `VkPhysicalDeviceInheritedViewportScissorFeaturesNV` from VK_NV_inherited_viewport_scissor
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPhysicalDeviceInheritedViewportScissorFeaturesNV.html>
 #[repr(C)]
@@ -40240,7 +42342,7 @@ pub struct VkCommandBufferInheritanceViewportScissorInfoNV {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NV_inherited_viewport_scissor.html>
 pub trait VK_NV_inherited_viewport_scissor: Debug {}
 /// struct for `VK_NV_inherited_viewport_scissor`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_NV_inherited_viewport_scissor {}
 impl VK_NV_inherited_viewport_scissor for Vulkan_NV_inherited_viewport_scissor {}
 impl Default for Vulkan_NV_inherited_viewport_scissor {
@@ -40251,6 +42353,12 @@ impl Default for Vulkan_NV_inherited_viewport_scissor {
 impl Vulkan_NV_inherited_viewport_scissor {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_NV_inherited_viewport_scissor {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_NV_inherited_viewport_scissor")
+		.finish()
 	}
 }
 /// type definition `VkPhysicalDeviceTexelBufferAlignmentPropertiesEXT` from VK_EXT_texel_buffer_alignment
@@ -40269,7 +42377,7 @@ pub struct VkPhysicalDeviceTexelBufferAlignmentFeaturesEXT {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_texel_buffer_alignment.html>
 pub trait VK_EXT_texel_buffer_alignment: Debug {}
 /// struct for `VK_EXT_texel_buffer_alignment`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_texel_buffer_alignment {}
 impl VK_EXT_texel_buffer_alignment for Vulkan_EXT_texel_buffer_alignment {}
 impl Default for Vulkan_EXT_texel_buffer_alignment {
@@ -40280,6 +42388,12 @@ impl Default for Vulkan_EXT_texel_buffer_alignment {
 impl Vulkan_EXT_texel_buffer_alignment {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_EXT_texel_buffer_alignment {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_texel_buffer_alignment")
+		.finish()
 	}
 }
 /// struct `VkRenderPassTransformBeginInfoQCOM` from VK_QCOM_render_pass_transform
@@ -40305,7 +42419,7 @@ pub struct VkCommandBufferInheritanceRenderPassTransformInfoQCOM {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_QCOM_render_pass_transform.html>
 pub trait VK_QCOM_render_pass_transform: Debug {}
 /// struct for `VK_QCOM_render_pass_transform`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_QCOM_render_pass_transform {}
 impl VK_QCOM_render_pass_transform for Vulkan_QCOM_render_pass_transform {}
 impl Default for Vulkan_QCOM_render_pass_transform {
@@ -40316,6 +42430,12 @@ impl Default for Vulkan_QCOM_render_pass_transform {
 impl Vulkan_QCOM_render_pass_transform {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_QCOM_render_pass_transform {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_QCOM_render_pass_transform")
+		.finish()
 	}
 }
 /// enum `VkDepthBiasRepresentationEXT` from VK_EXT_depth_bias_control
@@ -40375,7 +42495,7 @@ pub trait VK_EXT_depth_bias_control: Debug {
 	fn vkCmdSetDepthBias2EXT(&self, commandBuffer: VkCommandBuffer, pDepthBiasInfo: *const VkDepthBiasInfoEXT) -> Result<()>;
 }
 /// struct for `VK_EXT_depth_bias_control`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_depth_bias_control {
 	vk_cmd_set_depth_bias2_ext: PFN_vkCmdSetDepthBias2EXT,
 }
@@ -40396,6 +42516,13 @@ impl Vulkan_EXT_depth_bias_control {
 		Self {
 			vk_cmd_set_depth_bias2_ext: {let proc = get_instance_proc_address(instance, "vkCmdSetDepthBias2EXT"); if proc == null() {dummy_vkCmdSetDepthBias2EXT} else {unsafe {transmute(proc)}}},
 		}
+	}
+}
+impl Debug for Vulkan_EXT_depth_bias_control {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_depth_bias_control")
+		.field("vkCmdSetDepthBias2EXT", &if self.vk_cmd_set_depth_bias2_ext == dummy_vkCmdSetDepthBias2EXT {unsafe {transmute(null::<PFN_vkCmdSetDepthBias2EXT>())}} else {self.vk_cmd_set_depth_bias2_ext})
+		.finish()
 	}
 }
 /// type definition `VkDeviceMemoryReportFlagsEXT` from VK_EXT_device_memory_report
@@ -40455,7 +42582,7 @@ type PFN_vkDeviceMemoryReportCallbackEXT = extern "system" fn(pCallbackData: *co
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_device_memory_report.html>
 pub trait VK_EXT_device_memory_report: Debug {}
 /// struct for `VK_EXT_device_memory_report`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_device_memory_report {}
 impl VK_EXT_device_memory_report for Vulkan_EXT_device_memory_report {}
 impl Default for Vulkan_EXT_device_memory_report {
@@ -40466,6 +42593,12 @@ impl Default for Vulkan_EXT_device_memory_report {
 impl Vulkan_EXT_device_memory_report {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_EXT_device_memory_report {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_device_memory_report")
+		.finish()
 	}
 }
 /// function prototype `PFN_vkAcquireDrmDisplayEXT` from VK_EXT_acquire_drm_display
@@ -40491,7 +42624,7 @@ pub trait VK_EXT_acquire_drm_display: Debug {
 	fn vkGetDrmDisplayEXT(&self, physicalDevice: VkPhysicalDevice, drmFd: i32, connectorId: u32, display: *mut VkDisplayKHR) -> Result<()>;
 }
 /// struct for `VK_EXT_acquire_drm_display`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_acquire_drm_display {
 	vk_acquire_drm_display_ext: PFN_vkAcquireDrmDisplayEXT,
 	vk_get_drm_display_ext: PFN_vkGetDrmDisplayEXT,
@@ -40520,6 +42653,14 @@ impl Vulkan_EXT_acquire_drm_display {
 		}
 	}
 }
+impl Debug for Vulkan_EXT_acquire_drm_display {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_acquire_drm_display")
+		.field("vkAcquireDrmDisplayEXT", &if self.vk_acquire_drm_display_ext == dummy_vkAcquireDrmDisplayEXT {unsafe {transmute(null::<PFN_vkAcquireDrmDisplayEXT>())}} else {self.vk_acquire_drm_display_ext})
+		.field("vkGetDrmDisplayEXT", &if self.vk_get_drm_display_ext == dummy_vkGetDrmDisplayEXT {unsafe {transmute(null::<PFN_vkGetDrmDisplayEXT>())}} else {self.vk_get_drm_display_ext})
+		.finish()
+	}
+}
 /// type definition `VkPhysicalDeviceRobustness2FeaturesEXT` from VK_EXT_robustness2
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPhysicalDeviceRobustness2FeaturesEXT.html>
 pub type VkPhysicalDeviceRobustness2FeaturesEXT = VkPhysicalDeviceRobustness2FeaturesKHR;
@@ -40530,7 +42671,7 @@ pub type VkPhysicalDeviceRobustness2PropertiesEXT = VkPhysicalDeviceRobustness2P
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_robustness2.html>
 pub trait VK_EXT_robustness2: Debug {}
 /// struct for `VK_EXT_robustness2`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_robustness2 {}
 impl VK_EXT_robustness2 for Vulkan_EXT_robustness2 {}
 impl Default for Vulkan_EXT_robustness2 {
@@ -40541,6 +42682,12 @@ impl Default for Vulkan_EXT_robustness2 {
 impl Vulkan_EXT_robustness2 {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_EXT_robustness2 {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_robustness2")
+		.finish()
 	}
 }
 /// struct `VkSamplerCustomBorderColorCreateInfoEXT` from VK_EXT_custom_border_color
@@ -40576,7 +42723,7 @@ pub struct VkPhysicalDeviceCustomBorderColorFeaturesEXT {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_custom_border_color.html>
 pub trait VK_EXT_custom_border_color: Debug {}
 /// struct for `VK_EXT_custom_border_color`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_custom_border_color {}
 impl VK_EXT_custom_border_color for Vulkan_EXT_custom_border_color {}
 impl Default for Vulkan_EXT_custom_border_color {
@@ -40589,11 +42736,17 @@ impl Vulkan_EXT_custom_border_color {
 		Self {}
 	}
 }
+impl Debug for Vulkan_EXT_custom_border_color {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_custom_border_color")
+		.finish()
+	}
+}
 /// trait for `VK_GOOGLE_user_type`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_GOOGLE_user_type.html>
 pub trait VK_GOOGLE_user_type: Debug {}
 /// struct for `VK_GOOGLE_user_type`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_GOOGLE_user_type {}
 impl VK_GOOGLE_user_type for Vulkan_GOOGLE_user_type {}
 impl Default for Vulkan_GOOGLE_user_type {
@@ -40604,6 +42757,12 @@ impl Default for Vulkan_GOOGLE_user_type {
 impl Vulkan_GOOGLE_user_type {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_GOOGLE_user_type {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_GOOGLE_user_type")
+		.finish()
 	}
 }
 /// struct `VkPhysicalDevicePresentBarrierFeaturesNV` from VK_NV_present_barrier
@@ -40637,7 +42796,7 @@ pub struct VkSwapchainPresentBarrierCreateInfoNV {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NV_present_barrier.html>
 pub trait VK_NV_present_barrier: Debug {}
 /// struct for `VK_NV_present_barrier`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_NV_present_barrier {}
 impl VK_NV_present_barrier for Vulkan_NV_present_barrier {}
 impl Default for Vulkan_NV_present_barrier {
@@ -40648,6 +42807,12 @@ impl Default for Vulkan_NV_present_barrier {
 impl Vulkan_NV_present_barrier {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_NV_present_barrier {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_NV_present_barrier")
+		.finish()
 	}
 }
 /// type definition `VkPrivateDataSlotEXT` from VK_EXT_private_data
@@ -40706,7 +42871,7 @@ pub trait VK_EXT_private_data: Debug {
 	fn vkGetPrivateDataEXT(&self, device: VkDevice, objectType: VkObjectType, objectHandle: u64, privateDataSlot: VkPrivateDataSlot, pData: *mut uint64_t) -> Result<()>;
 }
 /// struct for `VK_EXT_private_data`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_private_data {
 	vk_create_private_data_slot_ext: PFN_vkCreatePrivateDataSlotEXT,
 	vk_destroy_private_data_slot_ext: PFN_vkDestroyPrivateDataSlotEXT,
@@ -40747,6 +42912,16 @@ impl Vulkan_EXT_private_data {
 		}
 	}
 }
+impl Debug for Vulkan_EXT_private_data {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_private_data")
+		.field("vkCreatePrivateDataSlotEXT", &if self.vk_create_private_data_slot_ext == dummy_vkCreatePrivateDataSlotEXT {unsafe {transmute(null::<PFN_vkCreatePrivateDataSlotEXT>())}} else {self.vk_create_private_data_slot_ext})
+		.field("vkDestroyPrivateDataSlotEXT", &if self.vk_destroy_private_data_slot_ext == dummy_vkDestroyPrivateDataSlotEXT {unsafe {transmute(null::<PFN_vkDestroyPrivateDataSlotEXT>())}} else {self.vk_destroy_private_data_slot_ext})
+		.field("vkSetPrivateDataEXT", &if self.vk_set_private_data_ext == dummy_vkSetPrivateDataEXT {unsafe {transmute(null::<PFN_vkSetPrivateDataEXT>())}} else {self.vk_set_private_data_ext})
+		.field("vkGetPrivateDataEXT", &if self.vk_get_private_data_ext == dummy_vkGetPrivateDataEXT {unsafe {transmute(null::<PFN_vkGetPrivateDataEXT>())}} else {self.vk_get_private_data_ext})
+		.finish()
+	}
+}
 /// type definition `VkPhysicalDevicePipelineCreationCacheControlFeaturesEXT` from VK_EXT_pipeline_creation_cache_control
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPhysicalDevicePipelineCreationCacheControlFeaturesEXT.html>
 pub type VkPhysicalDevicePipelineCreationCacheControlFeaturesEXT = VkPhysicalDevicePipelineCreationCacheControlFeatures;
@@ -40754,7 +42929,7 @@ pub type VkPhysicalDevicePipelineCreationCacheControlFeaturesEXT = VkPhysicalDev
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_pipeline_creation_cache_control.html>
 pub trait VK_EXT_pipeline_creation_cache_control: Debug {}
 /// struct for `VK_EXT_pipeline_creation_cache_control`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_pipeline_creation_cache_control {}
 impl VK_EXT_pipeline_creation_cache_control for Vulkan_EXT_pipeline_creation_cache_control {}
 impl Default for Vulkan_EXT_pipeline_creation_cache_control {
@@ -40765,6 +42940,12 @@ impl Default for Vulkan_EXT_pipeline_creation_cache_control {
 impl Vulkan_EXT_pipeline_creation_cache_control {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_EXT_pipeline_creation_cache_control {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_pipeline_creation_cache_control")
+		.finish()
 	}
 }
 /// type definition `VkDeviceDiagnosticsConfigFlagsNV` from VK_NV_device_diagnostics_config
@@ -40837,7 +43018,7 @@ impl Debug for VkDeviceDiagnosticsConfigCreateInfoNV {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NV_device_diagnostics_config.html>
 pub trait VK_NV_device_diagnostics_config: Debug {}
 /// struct for `VK_NV_device_diagnostics_config`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_NV_device_diagnostics_config {}
 impl VK_NV_device_diagnostics_config for Vulkan_NV_device_diagnostics_config {}
 impl Default for Vulkan_NV_device_diagnostics_config {
@@ -40850,11 +43031,17 @@ impl Vulkan_NV_device_diagnostics_config {
 		Self {}
 	}
 }
+impl Debug for Vulkan_NV_device_diagnostics_config {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_NV_device_diagnostics_config")
+		.finish()
+	}
+}
 /// trait for `VK_QCOM_render_pass_store_ops`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_QCOM_render_pass_store_ops.html>
 pub trait VK_QCOM_render_pass_store_ops: Debug {}
 /// struct for `VK_QCOM_render_pass_store_ops`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_QCOM_render_pass_store_ops {}
 impl VK_QCOM_render_pass_store_ops for Vulkan_QCOM_render_pass_store_ops {}
 impl Default for Vulkan_QCOM_render_pass_store_ops {
@@ -40865,6 +43052,12 @@ impl Default for Vulkan_QCOM_render_pass_store_ops {
 impl Vulkan_QCOM_render_pass_store_ops {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_QCOM_render_pass_store_ops {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_QCOM_render_pass_store_ops")
+		.finish()
 	}
 }
 /// type definition `VkTileShadingRenderPassFlagsQCOM` from VK_QCOM_tile_shading
@@ -41008,7 +43201,7 @@ pub trait VK_QCOM_tile_shading: Debug {
 	fn vkCmdEndPerTileExecutionQCOM(&self, commandBuffer: VkCommandBuffer, pPerTileEndInfo: *const VkPerTileEndInfoQCOM) -> Result<()>;
 }
 /// struct for `VK_QCOM_tile_shading`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_QCOM_tile_shading {
 	vk_cmd_dispatch_tile_qcom: PFN_vkCmdDispatchTileQCOM,
 	vk_cmd_begin_per_tile_execution_qcom: PFN_vkCmdBeginPerTileExecutionQCOM,
@@ -41043,6 +43236,15 @@ impl Vulkan_QCOM_tile_shading {
 		}
 	}
 }
+impl Debug for Vulkan_QCOM_tile_shading {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_QCOM_tile_shading")
+		.field("vkCmdDispatchTileQCOM", &if self.vk_cmd_dispatch_tile_qcom == dummy_vkCmdDispatchTileQCOM {unsafe {transmute(null::<PFN_vkCmdDispatchTileQCOM>())}} else {self.vk_cmd_dispatch_tile_qcom})
+		.field("vkCmdBeginPerTileExecutionQCOM", &if self.vk_cmd_begin_per_tile_execution_qcom == dummy_vkCmdBeginPerTileExecutionQCOM {unsafe {transmute(null::<PFN_vkCmdBeginPerTileExecutionQCOM>())}} else {self.vk_cmd_begin_per_tile_execution_qcom})
+		.field("vkCmdEndPerTileExecutionQCOM", &if self.vk_cmd_end_per_tile_execution_qcom == dummy_vkCmdEndPerTileExecutionQCOM {unsafe {transmute(null::<PFN_vkCmdEndPerTileExecutionQCOM>())}} else {self.vk_cmd_end_per_tile_execution_qcom})
+		.finish()
+	}
+}
 /// struct `VkQueryLowLatencySupportNV` from VK_NV_low_latency
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkQueryLowLatencySupportNV.html>
 #[repr(C)]
@@ -41056,7 +43258,7 @@ pub struct VkQueryLowLatencySupportNV {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NV_low_latency.html>
 pub trait VK_NV_low_latency: Debug {}
 /// struct for `VK_NV_low_latency`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_NV_low_latency {}
 impl VK_NV_low_latency for Vulkan_NV_low_latency {}
 impl Default for Vulkan_NV_low_latency {
@@ -41067,6 +43269,12 @@ impl Default for Vulkan_NV_low_latency {
 impl Vulkan_NV_low_latency {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_NV_low_latency {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_NV_low_latency")
+		.finish()
 	}
 }
 /// Non-dispatchable handle `VkAccelerationStructureKHR` from VK_EXT_descriptor_buffer
@@ -41367,7 +43575,7 @@ pub trait VK_EXT_descriptor_buffer: Debug {
 	fn vkGetAccelerationStructureOpaqueCaptureDescriptorDataEXT(&self, device: VkDevice, pInfo: *const VkAccelerationStructureCaptureDescriptorDataInfoEXT, pData: *mut c_void) -> Result<()>;
 }
 /// struct for `VK_EXT_descriptor_buffer`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_descriptor_buffer {
 	vk_get_descriptor_set_layout_size_ext: PFN_vkGetDescriptorSetLayoutSizeEXT,
 	vk_get_descriptor_set_layout_binding_offset_ext: PFN_vkGetDescriptorSetLayoutBindingOffsetEXT,
@@ -41450,6 +43658,23 @@ impl Vulkan_EXT_descriptor_buffer {
 		}
 	}
 }
+impl Debug for Vulkan_EXT_descriptor_buffer {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_descriptor_buffer")
+		.field("vkGetDescriptorSetLayoutSizeEXT", &if self.vk_get_descriptor_set_layout_size_ext == dummy_vkGetDescriptorSetLayoutSizeEXT {unsafe {transmute(null::<PFN_vkGetDescriptorSetLayoutSizeEXT>())}} else {self.vk_get_descriptor_set_layout_size_ext})
+		.field("vkGetDescriptorSetLayoutBindingOffsetEXT", &if self.vk_get_descriptor_set_layout_binding_offset_ext == dummy_vkGetDescriptorSetLayoutBindingOffsetEXT {unsafe {transmute(null::<PFN_vkGetDescriptorSetLayoutBindingOffsetEXT>())}} else {self.vk_get_descriptor_set_layout_binding_offset_ext})
+		.field("vkGetDescriptorEXT", &if self.vk_get_descriptor_ext == dummy_vkGetDescriptorEXT {unsafe {transmute(null::<PFN_vkGetDescriptorEXT>())}} else {self.vk_get_descriptor_ext})
+		.field("vkCmdBindDescriptorBuffersEXT", &if self.vk_cmd_bind_descriptor_buffers_ext == dummy_vkCmdBindDescriptorBuffersEXT {unsafe {transmute(null::<PFN_vkCmdBindDescriptorBuffersEXT>())}} else {self.vk_cmd_bind_descriptor_buffers_ext})
+		.field("vkCmdSetDescriptorBufferOffsetsEXT", &if self.vk_cmd_set_descriptor_buffer_offsets_ext == dummy_vkCmdSetDescriptorBufferOffsetsEXT {unsafe {transmute(null::<PFN_vkCmdSetDescriptorBufferOffsetsEXT>())}} else {self.vk_cmd_set_descriptor_buffer_offsets_ext})
+		.field("vkCmdBindDescriptorBufferEmbeddedSamplersEXT", &if self.vk_cmd_bind_descriptor_buffer_embedded_samplers_ext == dummy_vkCmdBindDescriptorBufferEmbeddedSamplersEXT {unsafe {transmute(null::<PFN_vkCmdBindDescriptorBufferEmbeddedSamplersEXT>())}} else {self.vk_cmd_bind_descriptor_buffer_embedded_samplers_ext})
+		.field("vkGetBufferOpaqueCaptureDescriptorDataEXT", &if self.vk_get_buffer_opaque_capture_descriptor_data_ext == dummy_vkGetBufferOpaqueCaptureDescriptorDataEXT {unsafe {transmute(null::<PFN_vkGetBufferOpaqueCaptureDescriptorDataEXT>())}} else {self.vk_get_buffer_opaque_capture_descriptor_data_ext})
+		.field("vkGetImageOpaqueCaptureDescriptorDataEXT", &if self.vk_get_image_opaque_capture_descriptor_data_ext == dummy_vkGetImageOpaqueCaptureDescriptorDataEXT {unsafe {transmute(null::<PFN_vkGetImageOpaqueCaptureDescriptorDataEXT>())}} else {self.vk_get_image_opaque_capture_descriptor_data_ext})
+		.field("vkGetImageViewOpaqueCaptureDescriptorDataEXT", &if self.vk_get_image_view_opaque_capture_descriptor_data_ext == dummy_vkGetImageViewOpaqueCaptureDescriptorDataEXT {unsafe {transmute(null::<PFN_vkGetImageViewOpaqueCaptureDescriptorDataEXT>())}} else {self.vk_get_image_view_opaque_capture_descriptor_data_ext})
+		.field("vkGetSamplerOpaqueCaptureDescriptorDataEXT", &if self.vk_get_sampler_opaque_capture_descriptor_data_ext == dummy_vkGetSamplerOpaqueCaptureDescriptorDataEXT {unsafe {transmute(null::<PFN_vkGetSamplerOpaqueCaptureDescriptorDataEXT>())}} else {self.vk_get_sampler_opaque_capture_descriptor_data_ext})
+		.field("vkGetAccelerationStructureOpaqueCaptureDescriptorDataEXT", &if self.vk_get_acceleration_structure_opaque_capture_descriptor_data_ext == dummy_vkGetAccelerationStructureOpaqueCaptureDescriptorDataEXT {unsafe {transmute(null::<PFN_vkGetAccelerationStructureOpaqueCaptureDescriptorDataEXT>())}} else {self.vk_get_acceleration_structure_opaque_capture_descriptor_data_ext})
+		.finish()
+	}
+}
 /// type definition `VkGraphicsPipelineLibraryFlagsEXT` from VK_EXT_graphics_pipeline_library
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkGraphicsPipelineLibraryFlagsEXT.html>
 pub type VkGraphicsPipelineLibraryFlagsEXT = VkFlags;
@@ -41530,7 +43755,7 @@ impl Debug for VkGraphicsPipelineLibraryCreateInfoEXT {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_graphics_pipeline_library.html>
 pub trait VK_EXT_graphics_pipeline_library: Debug {}
 /// struct for `VK_EXT_graphics_pipeline_library`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_graphics_pipeline_library {}
 impl VK_EXT_graphics_pipeline_library for Vulkan_EXT_graphics_pipeline_library {}
 impl Default for Vulkan_EXT_graphics_pipeline_library {
@@ -41541,6 +43766,12 @@ impl Default for Vulkan_EXT_graphics_pipeline_library {
 impl Vulkan_EXT_graphics_pipeline_library {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_EXT_graphics_pipeline_library {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_graphics_pipeline_library")
+		.finish()
 	}
 }
 /// struct `VkPhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesAMD` from VK_AMD_shader_early_and_late_fragment_tests
@@ -41556,7 +43787,7 @@ pub struct VkPhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesAMD {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_AMD_shader_early_and_late_fragment_tests.html>
 pub trait VK_AMD_shader_early_and_late_fragment_tests: Debug {}
 /// struct for `VK_AMD_shader_early_and_late_fragment_tests`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_AMD_shader_early_and_late_fragment_tests {}
 impl VK_AMD_shader_early_and_late_fragment_tests for Vulkan_AMD_shader_early_and_late_fragment_tests {}
 impl Default for Vulkan_AMD_shader_early_and_late_fragment_tests {
@@ -41567,6 +43798,12 @@ impl Default for Vulkan_AMD_shader_early_and_late_fragment_tests {
 impl Vulkan_AMD_shader_early_and_late_fragment_tests {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_AMD_shader_early_and_late_fragment_tests {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_AMD_shader_early_and_late_fragment_tests")
+		.finish()
 	}
 }
 /// enum `VkFragmentShadingRateTypeNV` from VK_NV_fragment_shading_rate_enums
@@ -41642,7 +43879,7 @@ pub trait VK_NV_fragment_shading_rate_enums: Debug {
 	fn vkCmdSetFragmentShadingRateEnumNV(&self, commandBuffer: VkCommandBuffer, shadingRate: VkFragmentShadingRateNV, combinerOps: &[VkFragmentShadingRateCombinerOpKHR; 2 as usize]) -> Result<()>;
 }
 /// struct for `VK_NV_fragment_shading_rate_enums`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_NV_fragment_shading_rate_enums {
 	vk_cmd_set_fragment_shading_rate_enum_nv: PFN_vkCmdSetFragmentShadingRateEnumNV,
 }
@@ -41663,6 +43900,13 @@ impl Vulkan_NV_fragment_shading_rate_enums {
 		Self {
 			vk_cmd_set_fragment_shading_rate_enum_nv: {let proc = get_instance_proc_address(instance, "vkCmdSetFragmentShadingRateEnumNV"); if proc == null() {dummy_vkCmdSetFragmentShadingRateEnumNV} else {unsafe {transmute(proc)}}},
 		}
+	}
+}
+impl Debug for Vulkan_NV_fragment_shading_rate_enums {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_NV_fragment_shading_rate_enums")
+		.field("vkCmdSetFragmentShadingRateEnumNV", &if self.vk_cmd_set_fragment_shading_rate_enum_nv == dummy_vkCmdSetFragmentShadingRateEnumNV {unsafe {transmute(null::<PFN_vkCmdSetFragmentShadingRateEnumNV>())}} else {self.vk_cmd_set_fragment_shading_rate_enum_nv})
+		.finish()
 	}
 }
 /// type definition `VkAccelerationStructureMotionInfoFlagsNV` from VK_NV_ray_tracing_motion_blur
@@ -41861,7 +44105,7 @@ pub struct VkPhysicalDeviceRayTracingMotionBlurFeaturesNV {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NV_ray_tracing_motion_blur.html>
 pub trait VK_NV_ray_tracing_motion_blur: Debug {}
 /// struct for `VK_NV_ray_tracing_motion_blur`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_NV_ray_tracing_motion_blur {}
 impl VK_NV_ray_tracing_motion_blur for Vulkan_NV_ray_tracing_motion_blur {}
 impl Default for Vulkan_NV_ray_tracing_motion_blur {
@@ -41872,6 +44116,12 @@ impl Default for Vulkan_NV_ray_tracing_motion_blur {
 impl Vulkan_NV_ray_tracing_motion_blur {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_NV_ray_tracing_motion_blur {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_NV_ray_tracing_motion_blur")
+		.finish()
 	}
 }
 /// struct `VkPhysicalDeviceYcbcr2Plane444FormatsFeaturesEXT` from VK_EXT_ycbcr_2plane_444_formats
@@ -41887,7 +44137,7 @@ pub struct VkPhysicalDeviceYcbcr2Plane444FormatsFeaturesEXT {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_ycbcr_2plane_444_formats.html>
 pub trait VK_EXT_ycbcr_2plane_444_formats: Debug {}
 /// struct for `VK_EXT_ycbcr_2plane_444_formats`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_ycbcr_2plane_444_formats {}
 impl VK_EXT_ycbcr_2plane_444_formats for Vulkan_EXT_ycbcr_2plane_444_formats {}
 impl Default for Vulkan_EXT_ycbcr_2plane_444_formats {
@@ -41898,6 +44148,12 @@ impl Default for Vulkan_EXT_ycbcr_2plane_444_formats {
 impl Vulkan_EXT_ycbcr_2plane_444_formats {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_EXT_ycbcr_2plane_444_formats {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_ycbcr_2plane_444_formats")
+		.finish()
 	}
 }
 /// struct `VkPhysicalDeviceFragmentDensityMap2FeaturesEXT` from VK_EXT_fragment_density_map2
@@ -41925,7 +44181,7 @@ pub struct VkPhysicalDeviceFragmentDensityMap2PropertiesEXT {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_fragment_density_map2.html>
 pub trait VK_EXT_fragment_density_map2: Debug {}
 /// struct for `VK_EXT_fragment_density_map2`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_fragment_density_map2 {}
 impl VK_EXT_fragment_density_map2 for Vulkan_EXT_fragment_density_map2 {}
 impl Default for Vulkan_EXT_fragment_density_map2 {
@@ -41936,6 +44192,12 @@ impl Default for Vulkan_EXT_fragment_density_map2 {
 impl Vulkan_EXT_fragment_density_map2 {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_EXT_fragment_density_map2 {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_fragment_density_map2")
+		.finish()
 	}
 }
 /// struct `VkCopyCommandTransformInfoQCOM` from VK_QCOM_rotated_copy_commands
@@ -41951,7 +44213,7 @@ pub struct VkCopyCommandTransformInfoQCOM {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_QCOM_rotated_copy_commands.html>
 pub trait VK_QCOM_rotated_copy_commands: Debug {}
 /// struct for `VK_QCOM_rotated_copy_commands`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_QCOM_rotated_copy_commands {}
 impl VK_QCOM_rotated_copy_commands for Vulkan_QCOM_rotated_copy_commands {}
 impl Default for Vulkan_QCOM_rotated_copy_commands {
@@ -41964,6 +44226,12 @@ impl Vulkan_QCOM_rotated_copy_commands {
 		Self {}
 	}
 }
+impl Debug for Vulkan_QCOM_rotated_copy_commands {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_QCOM_rotated_copy_commands")
+		.finish()
+	}
+}
 /// type definition `VkPhysicalDeviceImageRobustnessFeaturesEXT` from VK_EXT_image_robustness
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPhysicalDeviceImageRobustnessFeaturesEXT.html>
 pub type VkPhysicalDeviceImageRobustnessFeaturesEXT = VkPhysicalDeviceImageRobustnessFeatures;
@@ -41971,7 +44239,7 @@ pub type VkPhysicalDeviceImageRobustnessFeaturesEXT = VkPhysicalDeviceImageRobus
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_image_robustness.html>
 pub trait VK_EXT_image_robustness: Debug {}
 /// struct for `VK_EXT_image_robustness`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_image_robustness {}
 impl VK_EXT_image_robustness for Vulkan_EXT_image_robustness {}
 impl Default for Vulkan_EXT_image_robustness {
@@ -41982,6 +44250,12 @@ impl Default for Vulkan_EXT_image_robustness {
 impl Vulkan_EXT_image_robustness {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_EXT_image_robustness {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_image_robustness")
+		.finish()
 	}
 }
 /// type definition `VkImageCompressionFlagsEXT` from VK_EXT_image_compression_control
@@ -42201,7 +44475,7 @@ impl Debug for VkImageCompressionPropertiesEXT {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_image_compression_control.html>
 pub trait VK_EXT_image_compression_control: Debug {}
 /// struct for `VK_EXT_image_compression_control`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_image_compression_control {}
 impl VK_EXT_image_compression_control for Vulkan_EXT_image_compression_control {}
 impl Default for Vulkan_EXT_image_compression_control {
@@ -42212,6 +44486,12 @@ impl Default for Vulkan_EXT_image_compression_control {
 impl Vulkan_EXT_image_compression_control {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_EXT_image_compression_control {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_image_compression_control")
+		.finish()
 	}
 }
 /// struct `VkPhysicalDeviceAttachmentFeedbackLoopLayoutFeaturesEXT` from VK_EXT_attachment_feedback_loop_layout
@@ -42227,7 +44507,7 @@ pub struct VkPhysicalDeviceAttachmentFeedbackLoopLayoutFeaturesEXT {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_attachment_feedback_loop_layout.html>
 pub trait VK_EXT_attachment_feedback_loop_layout: Debug {}
 /// struct for `VK_EXT_attachment_feedback_loop_layout`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_attachment_feedback_loop_layout {}
 impl VK_EXT_attachment_feedback_loop_layout for Vulkan_EXT_attachment_feedback_loop_layout {}
 impl Default for Vulkan_EXT_attachment_feedback_loop_layout {
@@ -42238,6 +44518,12 @@ impl Default for Vulkan_EXT_attachment_feedback_loop_layout {
 impl Vulkan_EXT_attachment_feedback_loop_layout {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_EXT_attachment_feedback_loop_layout {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_attachment_feedback_loop_layout")
+		.finish()
 	}
 }
 /// struct `VkPhysicalDevice4444FormatsFeaturesEXT` from VK_EXT_4444_formats
@@ -42254,7 +44540,7 @@ pub struct VkPhysicalDevice4444FormatsFeaturesEXT {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_4444_formats.html>
 pub trait VK_EXT_4444_formats: Debug {}
 /// struct for `VK_EXT_4444_formats`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_4444_formats {}
 impl VK_EXT_4444_formats for Vulkan_EXT_4444_formats {}
 impl Default for Vulkan_EXT_4444_formats {
@@ -42265,6 +44551,12 @@ impl Default for Vulkan_EXT_4444_formats {
 impl Vulkan_EXT_4444_formats {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_EXT_4444_formats {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_4444_formats")
+		.finish()
 	}
 }
 /// enum `VkDeviceFaultAddressTypeEXT` from VK_EXT_device_fault
@@ -42409,7 +44701,7 @@ pub trait VK_EXT_device_fault: Debug {
 	fn vkGetDeviceFaultInfoEXT(&self, device: VkDevice, pFaultCounts: *mut VkDeviceFaultCountsEXT, pFaultInfo: *mut VkDeviceFaultInfoEXT) -> Result<()>;
 }
 /// struct for `VK_EXT_device_fault`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_device_fault {
 	vk_get_device_fault_info_ext: PFN_vkGetDeviceFaultInfoEXT,
 }
@@ -42432,6 +44724,13 @@ impl Vulkan_EXT_device_fault {
 		}
 	}
 }
+impl Debug for Vulkan_EXT_device_fault {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_device_fault")
+		.field("vkGetDeviceFaultInfoEXT", &if self.vk_get_device_fault_info_ext == dummy_vkGetDeviceFaultInfoEXT {unsafe {transmute(null::<PFN_vkGetDeviceFaultInfoEXT>())}} else {self.vk_get_device_fault_info_ext})
+		.finish()
+	}
+}
 /// type definition `VkPhysicalDeviceRasterizationOrderAttachmentAccessFeaturesARM` from VK_ARM_rasterization_order_attachment_access
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPhysicalDeviceRasterizationOrderAttachmentAccessFeaturesARM.html>
 pub type VkPhysicalDeviceRasterizationOrderAttachmentAccessFeaturesARM = VkPhysicalDeviceRasterizationOrderAttachmentAccessFeaturesEXT;
@@ -42450,7 +44749,7 @@ pub struct VkPhysicalDeviceRasterizationOrderAttachmentAccessFeaturesEXT {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_ARM_rasterization_order_attachment_access.html>
 pub trait VK_ARM_rasterization_order_attachment_access: Debug {}
 /// struct for `VK_ARM_rasterization_order_attachment_access`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_ARM_rasterization_order_attachment_access {}
 impl VK_ARM_rasterization_order_attachment_access for Vulkan_ARM_rasterization_order_attachment_access {}
 impl Default for Vulkan_ARM_rasterization_order_attachment_access {
@@ -42461,6 +44760,12 @@ impl Default for Vulkan_ARM_rasterization_order_attachment_access {
 impl Vulkan_ARM_rasterization_order_attachment_access {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_ARM_rasterization_order_attachment_access {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_ARM_rasterization_order_attachment_access")
+		.finish()
 	}
 }
 /// struct `VkPhysicalDeviceRGBA10X6FormatsFeaturesEXT` from VK_EXT_rgba10x6_formats
@@ -42476,7 +44781,7 @@ pub struct VkPhysicalDeviceRGBA10X6FormatsFeaturesEXT {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_rgba10x6_formats.html>
 pub trait VK_EXT_rgba10x6_formats: Debug {}
 /// struct for `VK_EXT_rgba10x6_formats`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_rgba10x6_formats {}
 impl VK_EXT_rgba10x6_formats for Vulkan_EXT_rgba10x6_formats {}
 impl Default for Vulkan_EXT_rgba10x6_formats {
@@ -42487,6 +44792,12 @@ impl Default for Vulkan_EXT_rgba10x6_formats {
 impl Vulkan_EXT_rgba10x6_formats {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_EXT_rgba10x6_formats {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_rgba10x6_formats")
+		.finish()
 	}
 }
 /// type definition `VkPhysicalDeviceMutableDescriptorTypeFeaturesVALVE` from VK_VALVE_mutable_descriptor_type
@@ -42529,7 +44840,7 @@ pub struct VkMutableDescriptorTypeCreateInfoEXT {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_VALVE_mutable_descriptor_type.html>
 pub trait VK_VALVE_mutable_descriptor_type: Debug {}
 /// struct for `VK_VALVE_mutable_descriptor_type`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_VALVE_mutable_descriptor_type {}
 impl VK_VALVE_mutable_descriptor_type for Vulkan_VALVE_mutable_descriptor_type {}
 impl Default for Vulkan_VALVE_mutable_descriptor_type {
@@ -42540,6 +44851,12 @@ impl Default for Vulkan_VALVE_mutable_descriptor_type {
 impl Vulkan_VALVE_mutable_descriptor_type {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_VALVE_mutable_descriptor_type {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_VALVE_mutable_descriptor_type")
+		.finish()
 	}
 }
 /// struct `VkPhysicalDeviceVertexInputDynamicStateFeaturesEXT` from VK_EXT_vertex_input_dynamic_state
@@ -42589,7 +44906,7 @@ pub trait VK_EXT_vertex_input_dynamic_state: Debug {
 	fn vkCmdSetVertexInputEXT(&self, commandBuffer: VkCommandBuffer, vertexBindingDescriptionCount: u32, pVertexBindingDescriptions: *const VkVertexInputBindingDescription2EXT, vertexAttributeDescriptionCount: u32, pVertexAttributeDescriptions: *const VkVertexInputAttributeDescription2EXT) -> Result<()>;
 }
 /// struct for `VK_EXT_vertex_input_dynamic_state`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_vertex_input_dynamic_state {
 	vk_cmd_set_vertex_input_ext: PFN_vkCmdSetVertexInputEXT,
 }
@@ -42612,6 +44929,13 @@ impl Vulkan_EXT_vertex_input_dynamic_state {
 		}
 	}
 }
+impl Debug for Vulkan_EXT_vertex_input_dynamic_state {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_vertex_input_dynamic_state")
+		.field("vkCmdSetVertexInputEXT", &if self.vk_cmd_set_vertex_input_ext == dummy_vkCmdSetVertexInputEXT {unsafe {transmute(null::<PFN_vkCmdSetVertexInputEXT>())}} else {self.vk_cmd_set_vertex_input_ext})
+		.finish()
+	}
+}
 /// struct `VkPhysicalDeviceDrmPropertiesEXT` from VK_EXT_physical_device_drm
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPhysicalDeviceDrmPropertiesEXT.html>
 #[repr(C)]
@@ -42630,7 +44954,7 @@ pub struct VkPhysicalDeviceDrmPropertiesEXT {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_physical_device_drm.html>
 pub trait VK_EXT_physical_device_drm: Debug {}
 /// struct for `VK_EXT_physical_device_drm`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_physical_device_drm {}
 impl VK_EXT_physical_device_drm for Vulkan_EXT_physical_device_drm {}
 impl Default for Vulkan_EXT_physical_device_drm {
@@ -42641,6 +44965,12 @@ impl Default for Vulkan_EXT_physical_device_drm {
 impl Vulkan_EXT_physical_device_drm {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_EXT_physical_device_drm {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_physical_device_drm")
+		.finish()
 	}
 }
 /// type definition `VkDeviceAddressBindingFlagsEXT` from VK_EXT_device_address_binding_report
@@ -42716,7 +45046,7 @@ impl Debug for VkDeviceAddressBindingCallbackDataEXT {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_device_address_binding_report.html>
 pub trait VK_EXT_device_address_binding_report: Debug {}
 /// struct for `VK_EXT_device_address_binding_report`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_device_address_binding_report {}
 impl VK_EXT_device_address_binding_report for Vulkan_EXT_device_address_binding_report {}
 impl Default for Vulkan_EXT_device_address_binding_report {
@@ -42727,6 +45057,12 @@ impl Default for Vulkan_EXT_device_address_binding_report {
 impl Vulkan_EXT_device_address_binding_report {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_EXT_device_address_binding_report {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_device_address_binding_report")
+		.finish()
 	}
 }
 /// struct `VkPhysicalDeviceDepthClipControlFeaturesEXT` from VK_EXT_depth_clip_control
@@ -42751,7 +45087,7 @@ pub struct VkPipelineViewportDepthClipControlCreateInfoEXT {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_depth_clip_control.html>
 pub trait VK_EXT_depth_clip_control: Debug {}
 /// struct for `VK_EXT_depth_clip_control`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_depth_clip_control {}
 impl VK_EXT_depth_clip_control for Vulkan_EXT_depth_clip_control {}
 impl Default for Vulkan_EXT_depth_clip_control {
@@ -42762,6 +45098,12 @@ impl Default for Vulkan_EXT_depth_clip_control {
 impl Vulkan_EXT_depth_clip_control {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_EXT_depth_clip_control {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_depth_clip_control")
+		.finish()
 	}
 }
 /// struct `VkPhysicalDevicePrimitiveTopologyListRestartFeaturesEXT` from VK_EXT_primitive_topology_list_restart
@@ -42778,7 +45120,7 @@ pub struct VkPhysicalDevicePrimitiveTopologyListRestartFeaturesEXT {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_primitive_topology_list_restart.html>
 pub trait VK_EXT_primitive_topology_list_restart: Debug {}
 /// struct for `VK_EXT_primitive_topology_list_restart`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_primitive_topology_list_restart {}
 impl VK_EXT_primitive_topology_list_restart for Vulkan_EXT_primitive_topology_list_restart {}
 impl Default for Vulkan_EXT_primitive_topology_list_restart {
@@ -42791,6 +45133,12 @@ impl Vulkan_EXT_primitive_topology_list_restart {
 		Self {}
 	}
 }
+impl Debug for Vulkan_EXT_primitive_topology_list_restart {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_primitive_topology_list_restart")
+		.finish()
+	}
+}
 /// type definition `VkPhysicalDevicePresentModeFifoLatestReadyFeaturesEXT` from VK_EXT_present_mode_fifo_latest_ready
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPhysicalDevicePresentModeFifoLatestReadyFeaturesEXT.html>
 pub type VkPhysicalDevicePresentModeFifoLatestReadyFeaturesEXT = VkPhysicalDevicePresentModeFifoLatestReadyFeaturesKHR;
@@ -42798,7 +45146,7 @@ pub type VkPhysicalDevicePresentModeFifoLatestReadyFeaturesEXT = VkPhysicalDevic
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_present_mode_fifo_latest_ready.html>
 pub trait VK_EXT_present_mode_fifo_latest_ready: Debug {}
 /// struct for `VK_EXT_present_mode_fifo_latest_ready`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_present_mode_fifo_latest_ready {}
 impl VK_EXT_present_mode_fifo_latest_ready for Vulkan_EXT_present_mode_fifo_latest_ready {}
 impl Default for Vulkan_EXT_present_mode_fifo_latest_ready {
@@ -42809,6 +45157,12 @@ impl Default for Vulkan_EXT_present_mode_fifo_latest_ready {
 impl Vulkan_EXT_present_mode_fifo_latest_ready {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_EXT_present_mode_fifo_latest_ready {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_present_mode_fifo_latest_ready")
+		.finish()
 	}
 }
 /// struct `VkSubpassShadingPipelineCreateInfoHUAWEI` from VK_HUAWEI_subpass_shading
@@ -42862,7 +45216,7 @@ pub trait VK_HUAWEI_subpass_shading: Debug {
 	fn vkCmdSubpassShadingHUAWEI(&self, commandBuffer: VkCommandBuffer) -> Result<()>;
 }
 /// struct for `VK_HUAWEI_subpass_shading`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_HUAWEI_subpass_shading {
 	vk_get_device_subpass_shading_max_workgroup_size_huawei: PFN_vkGetDeviceSubpassShadingMaxWorkgroupSizeHUAWEI,
 	vk_cmd_subpass_shading_huawei: PFN_vkCmdSubpassShadingHUAWEI,
@@ -42891,6 +45245,14 @@ impl Vulkan_HUAWEI_subpass_shading {
 		}
 	}
 }
+impl Debug for Vulkan_HUAWEI_subpass_shading {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_HUAWEI_subpass_shading")
+		.field("vkGetDeviceSubpassShadingMaxWorkgroupSizeHUAWEI", &if self.vk_get_device_subpass_shading_max_workgroup_size_huawei == dummy_vkGetDeviceSubpassShadingMaxWorkgroupSizeHUAWEI {unsafe {transmute(null::<PFN_vkGetDeviceSubpassShadingMaxWorkgroupSizeHUAWEI>())}} else {self.vk_get_device_subpass_shading_max_workgroup_size_huawei})
+		.field("vkCmdSubpassShadingHUAWEI", &if self.vk_cmd_subpass_shading_huawei == dummy_vkCmdSubpassShadingHUAWEI {unsafe {transmute(null::<PFN_vkCmdSubpassShadingHUAWEI>())}} else {self.vk_cmd_subpass_shading_huawei})
+		.finish()
+	}
+}
 /// struct `VkPhysicalDeviceInvocationMaskFeaturesHUAWEI` from VK_HUAWEI_invocation_mask
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPhysicalDeviceInvocationMaskFeaturesHUAWEI.html>
 #[repr(C)]
@@ -42914,7 +45276,7 @@ pub trait VK_HUAWEI_invocation_mask: Debug {
 	fn vkCmdBindInvocationMaskHUAWEI(&self, commandBuffer: VkCommandBuffer, imageView: VkImageView, imageLayout: VkImageLayout) -> Result<()>;
 }
 /// struct for `VK_HUAWEI_invocation_mask`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_HUAWEI_invocation_mask {
 	vk_cmd_bind_invocation_mask_huawei: PFN_vkCmdBindInvocationMaskHUAWEI,
 }
@@ -42935,6 +45297,13 @@ impl Vulkan_HUAWEI_invocation_mask {
 		Self {
 			vk_cmd_bind_invocation_mask_huawei: {let proc = get_instance_proc_address(instance, "vkCmdBindInvocationMaskHUAWEI"); if proc == null() {dummy_vkCmdBindInvocationMaskHUAWEI} else {unsafe {transmute(proc)}}},
 		}
+	}
+}
+impl Debug for Vulkan_HUAWEI_invocation_mask {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_HUAWEI_invocation_mask")
+		.field("vkCmdBindInvocationMaskHUAWEI", &if self.vk_cmd_bind_invocation_mask_huawei == dummy_vkCmdBindInvocationMaskHUAWEI {unsafe {transmute(null::<PFN_vkCmdBindInvocationMaskHUAWEI>())}} else {self.vk_cmd_bind_invocation_mask_huawei})
+		.finish()
 	}
 }
 /// type definition `VkRemoteAddressNV` from VK_NV_external_memory_rdma
@@ -42973,7 +45342,7 @@ pub trait VK_NV_external_memory_rdma: Debug {
 	fn vkGetMemoryRemoteAddressNV(&self, device: VkDevice, pMemoryGetRemoteAddressInfo: *const VkMemoryGetRemoteAddressInfoNV, pAddress: *mut VkRemoteAddressNV) -> Result<()>;
 }
 /// struct for `VK_NV_external_memory_rdma`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_NV_external_memory_rdma {
 	vk_get_memory_remote_address_nv: PFN_vkGetMemoryRemoteAddressNV,
 }
@@ -42994,6 +45363,13 @@ impl Vulkan_NV_external_memory_rdma {
 		Self {
 			vk_get_memory_remote_address_nv: {let proc = get_instance_proc_address(instance, "vkGetMemoryRemoteAddressNV"); if proc == null() {dummy_vkGetMemoryRemoteAddressNV} else {unsafe {transmute(proc)}}},
 		}
+	}
+}
+impl Debug for Vulkan_NV_external_memory_rdma {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_NV_external_memory_rdma")
+		.field("vkGetMemoryRemoteAddressNV", &if self.vk_get_memory_remote_address_nv == dummy_vkGetMemoryRemoteAddressNV {unsafe {transmute(null::<PFN_vkGetMemoryRemoteAddressNV>())}} else {self.vk_get_memory_remote_address_nv})
+		.finish()
 	}
 }
 /// type definition `VkPipelineInfoEXT` from VK_EXT_pipeline_properties
@@ -43040,7 +45416,7 @@ pub trait VK_EXT_pipeline_properties: Debug {
 	fn vkGetPipelinePropertiesEXT(&self, device: VkDevice, pPipelineInfo: *const VkPipelineInfoEXT, pPipelineProperties: *mut VkBaseOutStructure) -> Result<()>;
 }
 /// struct for `VK_EXT_pipeline_properties`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_pipeline_properties {
 	vk_get_pipeline_properties_ext: PFN_vkGetPipelinePropertiesEXT,
 }
@@ -43061,6 +45437,13 @@ impl Vulkan_EXT_pipeline_properties {
 		Self {
 			vk_get_pipeline_properties_ext: {let proc = get_instance_proc_address(instance, "vkGetPipelinePropertiesEXT"); if proc == null() {dummy_vkGetPipelinePropertiesEXT} else {unsafe {transmute(proc)}}},
 		}
+	}
+}
+impl Debug for Vulkan_EXT_pipeline_properties {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_pipeline_properties")
+		.field("vkGetPipelinePropertiesEXT", &if self.vk_get_pipeline_properties_ext == dummy_vkGetPipelinePropertiesEXT {unsafe {transmute(null::<PFN_vkGetPipelinePropertiesEXT>())}} else {self.vk_get_pipeline_properties_ext})
+		.finish()
 	}
 }
 /// type definition `VkFrameBoundaryFlagsEXT` from VK_EXT_frame_boundary
@@ -43137,7 +45520,7 @@ impl Debug for VkFrameBoundaryEXT {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_frame_boundary.html>
 pub trait VK_EXT_frame_boundary: Debug {}
 /// struct for `VK_EXT_frame_boundary`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_frame_boundary {}
 impl VK_EXT_frame_boundary for Vulkan_EXT_frame_boundary {}
 impl Default for Vulkan_EXT_frame_boundary {
@@ -43148,6 +45531,12 @@ impl Default for Vulkan_EXT_frame_boundary {
 impl Vulkan_EXT_frame_boundary {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_EXT_frame_boundary {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_frame_boundary")
+		.finish()
 	}
 }
 /// struct `VkPhysicalDeviceMultisampledRenderToSingleSampledFeaturesEXT` from VK_EXT_multisampled_render_to_single_sampled
@@ -43182,7 +45571,7 @@ pub struct VkMultisampledRenderToSingleSampledInfoEXT {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_multisampled_render_to_single_sampled.html>
 pub trait VK_EXT_multisampled_render_to_single_sampled: Debug {}
 /// struct for `VK_EXT_multisampled_render_to_single_sampled`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_multisampled_render_to_single_sampled {}
 impl VK_EXT_multisampled_render_to_single_sampled for Vulkan_EXT_multisampled_render_to_single_sampled {}
 impl Default for Vulkan_EXT_multisampled_render_to_single_sampled {
@@ -43193,6 +45582,12 @@ impl Default for Vulkan_EXT_multisampled_render_to_single_sampled {
 impl Vulkan_EXT_multisampled_render_to_single_sampled {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_EXT_multisampled_render_to_single_sampled {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_multisampled_render_to_single_sampled")
+		.finish()
 	}
 }
 /// struct `VkPhysicalDeviceExtendedDynamicState2FeaturesEXT` from VK_EXT_extended_dynamic_state2
@@ -43256,7 +45651,7 @@ pub trait VK_EXT_extended_dynamic_state2: Debug {
 	fn vkCmdSetPrimitiveRestartEnableEXT(&self, commandBuffer: VkCommandBuffer, primitiveRestartEnable: VkBool32) -> Result<()>;
 }
 /// struct for `VK_EXT_extended_dynamic_state2`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_extended_dynamic_state2 {
 	vk_cmd_set_patch_control_points_ext: PFN_vkCmdSetPatchControlPointsEXT,
 	vk_cmd_set_rasterizer_discard_enable_ext: PFN_vkCmdSetRasterizerDiscardEnableEXT,
@@ -43303,6 +45698,17 @@ impl Vulkan_EXT_extended_dynamic_state2 {
 		}
 	}
 }
+impl Debug for Vulkan_EXT_extended_dynamic_state2 {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_extended_dynamic_state2")
+		.field("vkCmdSetPatchControlPointsEXT", &if self.vk_cmd_set_patch_control_points_ext == dummy_vkCmdSetPatchControlPointsEXT {unsafe {transmute(null::<PFN_vkCmdSetPatchControlPointsEXT>())}} else {self.vk_cmd_set_patch_control_points_ext})
+		.field("vkCmdSetRasterizerDiscardEnableEXT", &if self.vk_cmd_set_rasterizer_discard_enable_ext == dummy_vkCmdSetRasterizerDiscardEnableEXT {unsafe {transmute(null::<PFN_vkCmdSetRasterizerDiscardEnableEXT>())}} else {self.vk_cmd_set_rasterizer_discard_enable_ext})
+		.field("vkCmdSetDepthBiasEnableEXT", &if self.vk_cmd_set_depth_bias_enable_ext == dummy_vkCmdSetDepthBiasEnableEXT {unsafe {transmute(null::<PFN_vkCmdSetDepthBiasEnableEXT>())}} else {self.vk_cmd_set_depth_bias_enable_ext})
+		.field("vkCmdSetLogicOpEXT", &if self.vk_cmd_set_logic_op_ext == dummy_vkCmdSetLogicOpEXT {unsafe {transmute(null::<PFN_vkCmdSetLogicOpEXT>())}} else {self.vk_cmd_set_logic_op_ext})
+		.field("vkCmdSetPrimitiveRestartEnableEXT", &if self.vk_cmd_set_primitive_restart_enable_ext == dummy_vkCmdSetPrimitiveRestartEnableEXT {unsafe {transmute(null::<PFN_vkCmdSetPrimitiveRestartEnableEXT>())}} else {self.vk_cmd_set_primitive_restart_enable_ext})
+		.finish()
+	}
+}
 /// struct `VkPhysicalDeviceColorWriteEnableFeaturesEXT` from VK_EXT_color_write_enable
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPhysicalDeviceColorWriteEnableFeaturesEXT.html>
 #[repr(C)]
@@ -43336,7 +45742,7 @@ pub trait VK_EXT_color_write_enable: Debug {
 	fn vkCmdSetColorWriteEnableEXT(&self, commandBuffer: VkCommandBuffer, attachmentCount: u32, pColorWriteEnables: *const VkBool32) -> Result<()>;
 }
 /// struct for `VK_EXT_color_write_enable`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_color_write_enable {
 	vk_cmd_set_color_write_enable_ext: PFN_vkCmdSetColorWriteEnableEXT,
 }
@@ -43359,6 +45765,13 @@ impl Vulkan_EXT_color_write_enable {
 		}
 	}
 }
+impl Debug for Vulkan_EXT_color_write_enable {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_color_write_enable")
+		.field("vkCmdSetColorWriteEnableEXT", &if self.vk_cmd_set_color_write_enable_ext == dummy_vkCmdSetColorWriteEnableEXT {unsafe {transmute(null::<PFN_vkCmdSetColorWriteEnableEXT>())}} else {self.vk_cmd_set_color_write_enable_ext})
+		.finish()
+	}
+}
 /// struct `VkPhysicalDevicePrimitivesGeneratedQueryFeaturesEXT` from VK_EXT_primitives_generated_query
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPhysicalDevicePrimitivesGeneratedQueryFeaturesEXT.html>
 #[repr(C)]
@@ -43374,7 +45787,7 @@ pub struct VkPhysicalDevicePrimitivesGeneratedQueryFeaturesEXT {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_primitives_generated_query.html>
 pub trait VK_EXT_primitives_generated_query: Debug {}
 /// struct for `VK_EXT_primitives_generated_query`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_primitives_generated_query {}
 impl VK_EXT_primitives_generated_query for Vulkan_EXT_primitives_generated_query {}
 impl Default for Vulkan_EXT_primitives_generated_query {
@@ -43385,6 +45798,12 @@ impl Default for Vulkan_EXT_primitives_generated_query {
 impl Vulkan_EXT_primitives_generated_query {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_EXT_primitives_generated_query {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_primitives_generated_query")
+		.finish()
 	}
 }
 /// constant `VK_MAX_GLOBAL_PRIORITY_SIZE_EXT` from VK_EXT_global_priority_query
@@ -43400,7 +45819,7 @@ pub type VkQueueFamilyGlobalPriorityPropertiesEXT = VkQueueFamilyGlobalPriorityP
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_global_priority_query.html>
 pub trait VK_EXT_global_priority_query: Debug {}
 /// struct for `VK_EXT_global_priority_query`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_global_priority_query {}
 impl VK_EXT_global_priority_query for Vulkan_EXT_global_priority_query {}
 impl Default for Vulkan_EXT_global_priority_query {
@@ -43411,6 +45830,12 @@ impl Default for Vulkan_EXT_global_priority_query {
 impl Vulkan_EXT_global_priority_query {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_EXT_global_priority_query {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_global_priority_query")
+		.finish()
 	}
 }
 /// struct `VkPhysicalDeviceImageViewMinLodFeaturesEXT` from VK_EXT_image_view_min_lod
@@ -43435,7 +45860,7 @@ pub struct VkImageViewMinLodCreateInfoEXT {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_image_view_min_lod.html>
 pub trait VK_EXT_image_view_min_lod: Debug {}
 /// struct for `VK_EXT_image_view_min_lod`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_image_view_min_lod {}
 impl VK_EXT_image_view_min_lod for Vulkan_EXT_image_view_min_lod {}
 impl Default for Vulkan_EXT_image_view_min_lod {
@@ -43446,6 +45871,12 @@ impl Default for Vulkan_EXT_image_view_min_lod {
 impl Vulkan_EXT_image_view_min_lod {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_EXT_image_view_min_lod {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_image_view_min_lod")
+		.finish()
 	}
 }
 /// struct `VkPhysicalDeviceMultiDrawFeaturesEXT` from VK_EXT_multi_draw
@@ -43506,7 +45937,7 @@ pub trait VK_EXT_multi_draw: Debug {
 	fn vkCmdDrawMultiIndexedEXT(&self, commandBuffer: VkCommandBuffer, drawCount: u32, pIndexInfo: *const VkMultiDrawIndexedInfoEXT, instanceCount: u32, firstInstance: u32, stride: u32, pVertexOffset: *const int32_t) -> Result<()>;
 }
 /// struct for `VK_EXT_multi_draw`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_multi_draw {
 	vk_cmd_draw_multi_ext: PFN_vkCmdDrawMultiEXT,
 	vk_cmd_draw_multi_indexed_ext: PFN_vkCmdDrawMultiIndexedEXT,
@@ -43535,6 +45966,14 @@ impl Vulkan_EXT_multi_draw {
 		}
 	}
 }
+impl Debug for Vulkan_EXT_multi_draw {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_multi_draw")
+		.field("vkCmdDrawMultiEXT", &if self.vk_cmd_draw_multi_ext == dummy_vkCmdDrawMultiEXT {unsafe {transmute(null::<PFN_vkCmdDrawMultiEXT>())}} else {self.vk_cmd_draw_multi_ext})
+		.field("vkCmdDrawMultiIndexedEXT", &if self.vk_cmd_draw_multi_indexed_ext == dummy_vkCmdDrawMultiIndexedEXT {unsafe {transmute(null::<PFN_vkCmdDrawMultiIndexedEXT>())}} else {self.vk_cmd_draw_multi_indexed_ext})
+		.finish()
+	}
+}
 /// struct `VkPhysicalDeviceImage2DViewOf3DFeaturesEXT` from VK_EXT_image_2d_view_of_3d
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPhysicalDeviceImage2DViewOf3DFeaturesEXT.html>
 #[repr(C)]
@@ -43549,7 +45988,7 @@ pub struct VkPhysicalDeviceImage2DViewOf3DFeaturesEXT {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_image_2d_view_of_3d.html>
 pub trait VK_EXT_image_2d_view_of_3d: Debug {}
 /// struct for `VK_EXT_image_2d_view_of_3d`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_image_2d_view_of_3d {}
 impl VK_EXT_image_2d_view_of_3d for Vulkan_EXT_image_2d_view_of_3d {}
 impl Default for Vulkan_EXT_image_2d_view_of_3d {
@@ -43560,6 +45999,12 @@ impl Default for Vulkan_EXT_image_2d_view_of_3d {
 impl Vulkan_EXT_image_2d_view_of_3d {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_EXT_image_2d_view_of_3d {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_image_2d_view_of_3d")
+		.finish()
 	}
 }
 /// struct `VkPhysicalDeviceShaderTileImageFeaturesEXT` from VK_EXT_shader_tile_image
@@ -43588,7 +46033,7 @@ pub struct VkPhysicalDeviceShaderTileImagePropertiesEXT {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_shader_tile_image.html>
 pub trait VK_EXT_shader_tile_image: Debug {}
 /// struct for `VK_EXT_shader_tile_image`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_shader_tile_image {}
 impl VK_EXT_shader_tile_image for Vulkan_EXT_shader_tile_image {}
 impl Default for Vulkan_EXT_shader_tile_image {
@@ -43599,6 +46044,12 @@ impl Default for Vulkan_EXT_shader_tile_image {
 impl Vulkan_EXT_shader_tile_image {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_EXT_shader_tile_image {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_shader_tile_image")
+		.finish()
 	}
 }
 /// type definition `VkBuildMicromapFlagsEXT` from VK_EXT_opacity_micromap
@@ -44057,7 +46508,7 @@ pub trait VK_EXT_opacity_micromap: Debug {
 	fn vkGetMicromapBuildSizesEXT(&self, device: VkDevice, buildType: VkAccelerationStructureBuildTypeKHR, pBuildInfo: *const VkMicromapBuildInfoEXT, pSizeInfo: *mut VkMicromapBuildSizesInfoEXT) -> Result<()>;
 }
 /// struct for `VK_EXT_opacity_micromap`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_opacity_micromap {
 	vk_create_micromap_ext: PFN_vkCreateMicromapEXT,
 	vk_destroy_micromap_ext: PFN_vkDestroyMicromapEXT,
@@ -44158,11 +46609,31 @@ impl Vulkan_EXT_opacity_micromap {
 		}
 	}
 }
+impl Debug for Vulkan_EXT_opacity_micromap {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_opacity_micromap")
+		.field("vkCreateMicromapEXT", &if self.vk_create_micromap_ext == dummy_vkCreateMicromapEXT {unsafe {transmute(null::<PFN_vkCreateMicromapEXT>())}} else {self.vk_create_micromap_ext})
+		.field("vkDestroyMicromapEXT", &if self.vk_destroy_micromap_ext == dummy_vkDestroyMicromapEXT {unsafe {transmute(null::<PFN_vkDestroyMicromapEXT>())}} else {self.vk_destroy_micromap_ext})
+		.field("vkCmdBuildMicromapsEXT", &if self.vk_cmd_build_micromaps_ext == dummy_vkCmdBuildMicromapsEXT {unsafe {transmute(null::<PFN_vkCmdBuildMicromapsEXT>())}} else {self.vk_cmd_build_micromaps_ext})
+		.field("vkBuildMicromapsEXT", &if self.vk_build_micromaps_ext == dummy_vkBuildMicromapsEXT {unsafe {transmute(null::<PFN_vkBuildMicromapsEXT>())}} else {self.vk_build_micromaps_ext})
+		.field("vkCopyMicromapEXT", &if self.vk_copy_micromap_ext == dummy_vkCopyMicromapEXT {unsafe {transmute(null::<PFN_vkCopyMicromapEXT>())}} else {self.vk_copy_micromap_ext})
+		.field("vkCopyMicromapToMemoryEXT", &if self.vk_copy_micromap_to_memory_ext == dummy_vkCopyMicromapToMemoryEXT {unsafe {transmute(null::<PFN_vkCopyMicromapToMemoryEXT>())}} else {self.vk_copy_micromap_to_memory_ext})
+		.field("vkCopyMemoryToMicromapEXT", &if self.vk_copy_memory_to_micromap_ext == dummy_vkCopyMemoryToMicromapEXT {unsafe {transmute(null::<PFN_vkCopyMemoryToMicromapEXT>())}} else {self.vk_copy_memory_to_micromap_ext})
+		.field("vkWriteMicromapsPropertiesEXT", &if self.vk_write_micromaps_properties_ext == dummy_vkWriteMicromapsPropertiesEXT {unsafe {transmute(null::<PFN_vkWriteMicromapsPropertiesEXT>())}} else {self.vk_write_micromaps_properties_ext})
+		.field("vkCmdCopyMicromapEXT", &if self.vk_cmd_copy_micromap_ext == dummy_vkCmdCopyMicromapEXT {unsafe {transmute(null::<PFN_vkCmdCopyMicromapEXT>())}} else {self.vk_cmd_copy_micromap_ext})
+		.field("vkCmdCopyMicromapToMemoryEXT", &if self.vk_cmd_copy_micromap_to_memory_ext == dummy_vkCmdCopyMicromapToMemoryEXT {unsafe {transmute(null::<PFN_vkCmdCopyMicromapToMemoryEXT>())}} else {self.vk_cmd_copy_micromap_to_memory_ext})
+		.field("vkCmdCopyMemoryToMicromapEXT", &if self.vk_cmd_copy_memory_to_micromap_ext == dummy_vkCmdCopyMemoryToMicromapEXT {unsafe {transmute(null::<PFN_vkCmdCopyMemoryToMicromapEXT>())}} else {self.vk_cmd_copy_memory_to_micromap_ext})
+		.field("vkCmdWriteMicromapsPropertiesEXT", &if self.vk_cmd_write_micromaps_properties_ext == dummy_vkCmdWriteMicromapsPropertiesEXT {unsafe {transmute(null::<PFN_vkCmdWriteMicromapsPropertiesEXT>())}} else {self.vk_cmd_write_micromaps_properties_ext})
+		.field("vkGetDeviceMicromapCompatibilityEXT", &if self.vk_get_device_micromap_compatibility_ext == dummy_vkGetDeviceMicromapCompatibilityEXT {unsafe {transmute(null::<PFN_vkGetDeviceMicromapCompatibilityEXT>())}} else {self.vk_get_device_micromap_compatibility_ext})
+		.field("vkGetMicromapBuildSizesEXT", &if self.vk_get_micromap_build_sizes_ext == dummy_vkGetMicromapBuildSizesEXT {unsafe {transmute(null::<PFN_vkGetMicromapBuildSizesEXT>())}} else {self.vk_get_micromap_build_sizes_ext})
+		.finish()
+	}
+}
 /// trait for `VK_EXT_load_store_op_none`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_load_store_op_none.html>
 pub trait VK_EXT_load_store_op_none: Debug {}
 /// struct for `VK_EXT_load_store_op_none`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_load_store_op_none {}
 impl VK_EXT_load_store_op_none for Vulkan_EXT_load_store_op_none {}
 impl Default for Vulkan_EXT_load_store_op_none {
@@ -44173,6 +46644,12 @@ impl Default for Vulkan_EXT_load_store_op_none {
 impl Vulkan_EXT_load_store_op_none {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_EXT_load_store_op_none {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_load_store_op_none")
+		.finish()
 	}
 }
 /// struct `VkPhysicalDeviceClusterCullingShaderFeaturesHUAWEI` from VK_HUAWEI_cluster_culling_shader
@@ -44229,7 +46706,7 @@ pub trait VK_HUAWEI_cluster_culling_shader: Debug {
 	fn vkCmdDrawClusterIndirectHUAWEI(&self, commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize) -> Result<()>;
 }
 /// struct for `VK_HUAWEI_cluster_culling_shader`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_HUAWEI_cluster_culling_shader {
 	vk_cmd_draw_cluster_huawei: PFN_vkCmdDrawClusterHUAWEI,
 	vk_cmd_draw_cluster_indirect_huawei: PFN_vkCmdDrawClusterIndirectHUAWEI,
@@ -44258,6 +46735,14 @@ impl Vulkan_HUAWEI_cluster_culling_shader {
 		}
 	}
 }
+impl Debug for Vulkan_HUAWEI_cluster_culling_shader {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_HUAWEI_cluster_culling_shader")
+		.field("vkCmdDrawClusterHUAWEI", &if self.vk_cmd_draw_cluster_huawei == dummy_vkCmdDrawClusterHUAWEI {unsafe {transmute(null::<PFN_vkCmdDrawClusterHUAWEI>())}} else {self.vk_cmd_draw_cluster_huawei})
+		.field("vkCmdDrawClusterIndirectHUAWEI", &if self.vk_cmd_draw_cluster_indirect_huawei == dummy_vkCmdDrawClusterIndirectHUAWEI {unsafe {transmute(null::<PFN_vkCmdDrawClusterIndirectHUAWEI>())}} else {self.vk_cmd_draw_cluster_indirect_huawei})
+		.finish()
+	}
+}
 /// struct `VkPhysicalDeviceBorderColorSwizzleFeaturesEXT` from VK_EXT_border_color_swizzle
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPhysicalDeviceBorderColorSwizzleFeaturesEXT.html>
 #[repr(C)]
@@ -44282,7 +46767,7 @@ pub struct VkSamplerBorderColorComponentMappingCreateInfoEXT {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_border_color_swizzle.html>
 pub trait VK_EXT_border_color_swizzle: Debug {}
 /// struct for `VK_EXT_border_color_swizzle`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_border_color_swizzle {}
 impl VK_EXT_border_color_swizzle for Vulkan_EXT_border_color_swizzle {}
 impl Default for Vulkan_EXT_border_color_swizzle {
@@ -44293,6 +46778,12 @@ impl Default for Vulkan_EXT_border_color_swizzle {
 impl Vulkan_EXT_border_color_swizzle {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_EXT_border_color_swizzle {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_border_color_swizzle")
+		.finish()
 	}
 }
 /// struct `VkPhysicalDevicePageableDeviceLocalMemoryFeaturesEXT` from VK_EXT_pageable_device_local_memory
@@ -44318,7 +46809,7 @@ pub trait VK_EXT_pageable_device_local_memory: Debug {
 	fn vkSetDeviceMemoryPriorityEXT(&self, device: VkDevice, memory: VkDeviceMemory, priority: f32) -> Result<()>;
 }
 /// struct for `VK_EXT_pageable_device_local_memory`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_pageable_device_local_memory {
 	vk_set_device_memory_priority_ext: PFN_vkSetDeviceMemoryPriorityEXT,
 }
@@ -44341,6 +46832,13 @@ impl Vulkan_EXT_pageable_device_local_memory {
 		}
 	}
 }
+impl Debug for Vulkan_EXT_pageable_device_local_memory {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_pageable_device_local_memory")
+		.field("vkSetDeviceMemoryPriorityEXT", &if self.vk_set_device_memory_priority_ext == dummy_vkSetDeviceMemoryPriorityEXT {unsafe {transmute(null::<PFN_vkSetDeviceMemoryPriorityEXT>())}} else {self.vk_set_device_memory_priority_ext})
+		.finish()
+	}
+}
 /// struct `VkPhysicalDeviceShaderCorePropertiesARM` from VK_ARM_shader_core_properties
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPhysicalDeviceShaderCorePropertiesARM.html>
 #[repr(C)]
@@ -44356,7 +46854,7 @@ pub struct VkPhysicalDeviceShaderCorePropertiesARM {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_ARM_shader_core_properties.html>
 pub trait VK_ARM_shader_core_properties: Debug {}
 /// struct for `VK_ARM_shader_core_properties`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_ARM_shader_core_properties {}
 impl VK_ARM_shader_core_properties for Vulkan_ARM_shader_core_properties {}
 impl Default for Vulkan_ARM_shader_core_properties {
@@ -44367,6 +46865,12 @@ impl Default for Vulkan_ARM_shader_core_properties {
 impl Vulkan_ARM_shader_core_properties {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_ARM_shader_core_properties {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_ARM_shader_core_properties")
+		.finish()
 	}
 }
 /// constant `VK_PHYSICAL_DEVICE_SCHEDULING_CONTROLS_SHADER_CORE_COUNT_ARM` from VK_ARM_scheduling_controls
@@ -44409,7 +46913,7 @@ pub struct VkPhysicalDeviceSchedulingControlsPropertiesARM {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_ARM_scheduling_controls.html>
 pub trait VK_ARM_scheduling_controls: Debug {}
 /// struct for `VK_ARM_scheduling_controls`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_ARM_scheduling_controls {}
 impl VK_ARM_scheduling_controls for Vulkan_ARM_scheduling_controls {}
 impl Default for Vulkan_ARM_scheduling_controls {
@@ -44420,6 +46924,12 @@ impl Default for Vulkan_ARM_scheduling_controls {
 impl Vulkan_ARM_scheduling_controls {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_ARM_scheduling_controls {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_ARM_scheduling_controls")
+		.finish()
 	}
 }
 /// constant `VK_REMAINING_3D_SLICES_EXT` from VK_EXT_image_sliced_view_of_3d
@@ -44448,7 +46958,7 @@ pub struct VkImageViewSlicedCreateInfoEXT {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_image_sliced_view_of_3d.html>
 pub trait VK_EXT_image_sliced_view_of_3d: Debug {}
 /// struct for `VK_EXT_image_sliced_view_of_3d`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_image_sliced_view_of_3d {}
 impl VK_EXT_image_sliced_view_of_3d for Vulkan_EXT_image_sliced_view_of_3d {}
 impl Default for Vulkan_EXT_image_sliced_view_of_3d {
@@ -44459,6 +46969,12 @@ impl Default for Vulkan_EXT_image_sliced_view_of_3d {
 impl Vulkan_EXT_image_sliced_view_of_3d {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_EXT_image_sliced_view_of_3d {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_image_sliced_view_of_3d")
+		.finish()
 	}
 }
 /// struct `VkPhysicalDeviceDescriptorSetHostMappingFeaturesVALVE` from VK_VALVE_descriptor_set_host_mapping
@@ -44513,7 +47029,7 @@ pub trait VK_VALVE_descriptor_set_host_mapping: Debug {
 	fn vkGetDescriptorSetHostMappingVALVE(&self, device: VkDevice, descriptorSet: VkDescriptorSet, ppData: *mut *mut c_void) -> Result<()>;
 }
 /// struct for `VK_VALVE_descriptor_set_host_mapping`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_VALVE_descriptor_set_host_mapping {
 	vk_get_descriptor_set_layout_host_mapping_info_valve: PFN_vkGetDescriptorSetLayoutHostMappingInfoVALVE,
 	vk_get_descriptor_set_host_mapping_valve: PFN_vkGetDescriptorSetHostMappingVALVE,
@@ -44542,6 +47058,14 @@ impl Vulkan_VALVE_descriptor_set_host_mapping {
 		}
 	}
 }
+impl Debug for Vulkan_VALVE_descriptor_set_host_mapping {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_VALVE_descriptor_set_host_mapping")
+		.field("vkGetDescriptorSetLayoutHostMappingInfoVALVE", &if self.vk_get_descriptor_set_layout_host_mapping_info_valve == dummy_vkGetDescriptorSetLayoutHostMappingInfoVALVE {unsafe {transmute(null::<PFN_vkGetDescriptorSetLayoutHostMappingInfoVALVE>())}} else {self.vk_get_descriptor_set_layout_host_mapping_info_valve})
+		.field("vkGetDescriptorSetHostMappingVALVE", &if self.vk_get_descriptor_set_host_mapping_valve == dummy_vkGetDescriptorSetHostMappingVALVE {unsafe {transmute(null::<PFN_vkGetDescriptorSetHostMappingVALVE>())}} else {self.vk_get_descriptor_set_host_mapping_valve})
+		.finish()
+	}
+}
 /// type definition `VkPhysicalDeviceDepthClampZeroOneFeaturesEXT` from VK_EXT_depth_clamp_zero_one
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPhysicalDeviceDepthClampZeroOneFeaturesEXT.html>
 pub type VkPhysicalDeviceDepthClampZeroOneFeaturesEXT = VkPhysicalDeviceDepthClampZeroOneFeaturesKHR;
@@ -44549,7 +47073,7 @@ pub type VkPhysicalDeviceDepthClampZeroOneFeaturesEXT = VkPhysicalDeviceDepthCla
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_depth_clamp_zero_one.html>
 pub trait VK_EXT_depth_clamp_zero_one: Debug {}
 /// struct for `VK_EXT_depth_clamp_zero_one`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_depth_clamp_zero_one {}
 impl VK_EXT_depth_clamp_zero_one for Vulkan_EXT_depth_clamp_zero_one {}
 impl Default for Vulkan_EXT_depth_clamp_zero_one {
@@ -44560,6 +47084,12 @@ impl Default for Vulkan_EXT_depth_clamp_zero_one {
 impl Vulkan_EXT_depth_clamp_zero_one {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_EXT_depth_clamp_zero_one {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_depth_clamp_zero_one")
+		.finish()
 	}
 }
 /// struct `VkPhysicalDeviceNonSeamlessCubeMapFeaturesEXT` from VK_EXT_non_seamless_cube_map
@@ -44575,7 +47105,7 @@ pub struct VkPhysicalDeviceNonSeamlessCubeMapFeaturesEXT {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_non_seamless_cube_map.html>
 pub trait VK_EXT_non_seamless_cube_map: Debug {}
 /// struct for `VK_EXT_non_seamless_cube_map`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_non_seamless_cube_map {}
 impl VK_EXT_non_seamless_cube_map for Vulkan_EXT_non_seamless_cube_map {}
 impl Default for Vulkan_EXT_non_seamless_cube_map {
@@ -44586,6 +47116,12 @@ impl Default for Vulkan_EXT_non_seamless_cube_map {
 impl Vulkan_EXT_non_seamless_cube_map {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_EXT_non_seamless_cube_map {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_non_seamless_cube_map")
+		.finish()
 	}
 }
 /// struct `VkPhysicalDeviceRenderPassStripedFeaturesARM` from VK_ARM_render_pass_striped
@@ -44640,7 +47176,7 @@ pub struct VkRenderPassStripeSubmitInfoARM {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_ARM_render_pass_striped.html>
 pub trait VK_ARM_render_pass_striped: Debug {}
 /// struct for `VK_ARM_render_pass_striped`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_ARM_render_pass_striped {}
 impl VK_ARM_render_pass_striped for Vulkan_ARM_render_pass_striped {}
 impl Default for Vulkan_ARM_render_pass_striped {
@@ -44651,6 +47187,12 @@ impl Default for Vulkan_ARM_render_pass_striped {
 impl Vulkan_ARM_render_pass_striped {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_ARM_render_pass_striped {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_ARM_render_pass_striped")
+		.finish()
 	}
 }
 /// type definition `VkPhysicalDeviceFragmentDensityMapOffsetFeaturesQCOM` from VK_QCOM_fragment_density_map_offset
@@ -44694,7 +47236,7 @@ pub struct VkRenderPassFragmentDensityMapOffsetEndInfoEXT {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_QCOM_fragment_density_map_offset.html>
 pub trait VK_QCOM_fragment_density_map_offset: Debug {}
 /// struct for `VK_QCOM_fragment_density_map_offset`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_QCOM_fragment_density_map_offset {}
 impl VK_QCOM_fragment_density_map_offset for Vulkan_QCOM_fragment_density_map_offset {}
 impl Default for Vulkan_QCOM_fragment_density_map_offset {
@@ -44705,6 +47247,12 @@ impl Default for Vulkan_QCOM_fragment_density_map_offset {
 impl Vulkan_QCOM_fragment_density_map_offset {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_QCOM_fragment_density_map_offset {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_QCOM_fragment_density_map_offset")
+		.finish()
 	}
 }
 /// struct `VkCopyMemoryIndirectCommandNV` from VK_NV_copy_memory_indirect
@@ -44769,7 +47317,7 @@ pub trait VK_NV_copy_memory_indirect: Debug {
 	fn vkCmdCopyMemoryToImageIndirectNV(&self, commandBuffer: VkCommandBuffer, copyBufferAddress: VkDeviceAddress, copyCount: u32, stride: u32, dstImage: VkImage, dstImageLayout: VkImageLayout, pImageSubresources: *const VkImageSubresourceLayers) -> Result<()>;
 }
 /// struct for `VK_NV_copy_memory_indirect`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_NV_copy_memory_indirect {
 	vk_cmd_copy_memory_indirect_nv: PFN_vkCmdCopyMemoryIndirectNV,
 	vk_cmd_copy_memory_to_image_indirect_nv: PFN_vkCmdCopyMemoryToImageIndirectNV,
@@ -44796,6 +47344,14 @@ impl Vulkan_NV_copy_memory_indirect {
 			vk_cmd_copy_memory_indirect_nv: {let proc = get_instance_proc_address(instance, "vkCmdCopyMemoryIndirectNV"); if proc == null() {dummy_vkCmdCopyMemoryIndirectNV} else {unsafe {transmute(proc)}}},
 			vk_cmd_copy_memory_to_image_indirect_nv: {let proc = get_instance_proc_address(instance, "vkCmdCopyMemoryToImageIndirectNV"); if proc == null() {dummy_vkCmdCopyMemoryToImageIndirectNV} else {unsafe {transmute(proc)}}},
 		}
+	}
+}
+impl Debug for Vulkan_NV_copy_memory_indirect {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_NV_copy_memory_indirect")
+		.field("vkCmdCopyMemoryIndirectNV", &if self.vk_cmd_copy_memory_indirect_nv == dummy_vkCmdCopyMemoryIndirectNV {unsafe {transmute(null::<PFN_vkCmdCopyMemoryIndirectNV>())}} else {self.vk_cmd_copy_memory_indirect_nv})
+		.field("vkCmdCopyMemoryToImageIndirectNV", &if self.vk_cmd_copy_memory_to_image_indirect_nv == dummy_vkCmdCopyMemoryToImageIndirectNV {unsafe {transmute(null::<PFN_vkCmdCopyMemoryToImageIndirectNV>())}} else {self.vk_cmd_copy_memory_to_image_indirect_nv})
+		.finish()
 	}
 }
 /// constant `VK_MEMORY_DECOMPRESSION_METHOD_GDEFLATE_1_0_BIT_NV` from VK_NV_memory_decompression
@@ -44860,7 +47416,7 @@ pub trait VK_NV_memory_decompression: Debug {
 	fn vkCmdDecompressMemoryIndirectCountNV(&self, commandBuffer: VkCommandBuffer, indirectCommandsAddress: VkDeviceAddress, indirectCommandsCountAddress: VkDeviceAddress, stride: u32) -> Result<()>;
 }
 /// struct for `VK_NV_memory_decompression`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_NV_memory_decompression {
 	vk_cmd_decompress_memory_nv: PFN_vkCmdDecompressMemoryNV,
 	vk_cmd_decompress_memory_indirect_count_nv: PFN_vkCmdDecompressMemoryIndirectCountNV,
@@ -44887,6 +47443,14 @@ impl Vulkan_NV_memory_decompression {
 			vk_cmd_decompress_memory_nv: {let proc = get_instance_proc_address(instance, "vkCmdDecompressMemoryNV"); if proc == null() {dummy_vkCmdDecompressMemoryNV} else {unsafe {transmute(proc)}}},
 			vk_cmd_decompress_memory_indirect_count_nv: {let proc = get_instance_proc_address(instance, "vkCmdDecompressMemoryIndirectCountNV"); if proc == null() {dummy_vkCmdDecompressMemoryIndirectCountNV} else {unsafe {transmute(proc)}}},
 		}
+	}
+}
+impl Debug for Vulkan_NV_memory_decompression {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_NV_memory_decompression")
+		.field("vkCmdDecompressMemoryNV", &if self.vk_cmd_decompress_memory_nv == dummy_vkCmdDecompressMemoryNV {unsafe {transmute(null::<PFN_vkCmdDecompressMemoryNV>())}} else {self.vk_cmd_decompress_memory_nv})
+		.field("vkCmdDecompressMemoryIndirectCountNV", &if self.vk_cmd_decompress_memory_indirect_count_nv == dummy_vkCmdDecompressMemoryIndirectCountNV {unsafe {transmute(null::<PFN_vkCmdDecompressMemoryIndirectCountNV>())}} else {self.vk_cmd_decompress_memory_indirect_count_nv})
+		.finish()
 	}
 }
 /// struct `VkPhysicalDeviceDeviceGeneratedCommandsComputeFeaturesNV` from VK_NV_device_generated_commands_compute
@@ -44960,7 +47524,7 @@ pub trait VK_NV_device_generated_commands_compute: Debug {
 	fn vkGetPipelineIndirectDeviceAddressNV(&self, device: VkDevice, pInfo: *const VkPipelineIndirectDeviceAddressInfoNV) -> Result<VkDeviceAddress>;
 }
 /// struct for `VK_NV_device_generated_commands_compute`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_NV_device_generated_commands_compute {
 	vk_get_pipeline_indirect_memory_requirements_nv: PFN_vkGetPipelineIndirectMemoryRequirementsNV,
 	vk_cmd_update_pipeline_indirect_buffer_nv: PFN_vkCmdUpdatePipelineIndirectBufferNV,
@@ -44993,6 +47557,15 @@ impl Vulkan_NV_device_generated_commands_compute {
 			vk_cmd_update_pipeline_indirect_buffer_nv: {let proc = get_instance_proc_address(instance, "vkCmdUpdatePipelineIndirectBufferNV"); if proc == null() {dummy_vkCmdUpdatePipelineIndirectBufferNV} else {unsafe {transmute(proc)}}},
 			vk_get_pipeline_indirect_device_address_nv: {let proc = get_instance_proc_address(instance, "vkGetPipelineIndirectDeviceAddressNV"); if proc == null() {dummy_vkGetPipelineIndirectDeviceAddressNV} else {unsafe {transmute(proc)}}},
 		}
+	}
+}
+impl Debug for Vulkan_NV_device_generated_commands_compute {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_NV_device_generated_commands_compute")
+		.field("vkGetPipelineIndirectMemoryRequirementsNV", &if self.vk_get_pipeline_indirect_memory_requirements_nv == dummy_vkGetPipelineIndirectMemoryRequirementsNV {unsafe {transmute(null::<PFN_vkGetPipelineIndirectMemoryRequirementsNV>())}} else {self.vk_get_pipeline_indirect_memory_requirements_nv})
+		.field("vkCmdUpdatePipelineIndirectBufferNV", &if self.vk_cmd_update_pipeline_indirect_buffer_nv == dummy_vkCmdUpdatePipelineIndirectBufferNV {unsafe {transmute(null::<PFN_vkCmdUpdatePipelineIndirectBufferNV>())}} else {self.vk_cmd_update_pipeline_indirect_buffer_nv})
+		.field("vkGetPipelineIndirectDeviceAddressNV", &if self.vk_get_pipeline_indirect_device_address_nv == dummy_vkGetPipelineIndirectDeviceAddressNV {unsafe {transmute(null::<PFN_vkGetPipelineIndirectDeviceAddressNV>())}} else {self.vk_get_pipeline_indirect_device_address_nv})
+		.finish()
 	}
 }
 /// enum `VkRayTracingLssIndexingModeNV` from VK_NV_ray_tracing_linear_swept_spheres
@@ -45063,7 +47636,7 @@ pub struct VkAccelerationStructureGeometrySpheresDataNV {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NV_ray_tracing_linear_swept_spheres.html>
 pub trait VK_NV_ray_tracing_linear_swept_spheres: Debug {}
 /// struct for `VK_NV_ray_tracing_linear_swept_spheres`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_NV_ray_tracing_linear_swept_spheres {}
 impl VK_NV_ray_tracing_linear_swept_spheres for Vulkan_NV_ray_tracing_linear_swept_spheres {}
 impl Default for Vulkan_NV_ray_tracing_linear_swept_spheres {
@@ -45074,6 +47647,12 @@ impl Default for Vulkan_NV_ray_tracing_linear_swept_spheres {
 impl Vulkan_NV_ray_tracing_linear_swept_spheres {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_NV_ray_tracing_linear_swept_spheres {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_NV_ray_tracing_linear_swept_spheres")
+		.finish()
 	}
 }
 /// struct `VkPhysicalDeviceLinearColorAttachmentFeaturesNV` from VK_NV_linear_color_attachment
@@ -45089,7 +47668,7 @@ pub struct VkPhysicalDeviceLinearColorAttachmentFeaturesNV {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NV_linear_color_attachment.html>
 pub trait VK_NV_linear_color_attachment: Debug {}
 /// struct for `VK_NV_linear_color_attachment`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_NV_linear_color_attachment {}
 impl VK_NV_linear_color_attachment for Vulkan_NV_linear_color_attachment {}
 impl Default for Vulkan_NV_linear_color_attachment {
@@ -45102,11 +47681,17 @@ impl Vulkan_NV_linear_color_attachment {
 		Self {}
 	}
 }
+impl Debug for Vulkan_NV_linear_color_attachment {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_NV_linear_color_attachment")
+		.finish()
+	}
+}
 /// trait for `VK_GOOGLE_surfaceless_query`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_GOOGLE_surfaceless_query.html>
 pub trait VK_GOOGLE_surfaceless_query: Debug {}
 /// struct for `VK_GOOGLE_surfaceless_query`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_GOOGLE_surfaceless_query {}
 impl VK_GOOGLE_surfaceless_query for Vulkan_GOOGLE_surfaceless_query {}
 impl Default for Vulkan_GOOGLE_surfaceless_query {
@@ -45117,6 +47702,12 @@ impl Default for Vulkan_GOOGLE_surfaceless_query {
 impl Vulkan_GOOGLE_surfaceless_query {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_GOOGLE_surfaceless_query {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_GOOGLE_surfaceless_query")
+		.finish()
 	}
 }
 /// struct `VkPhysicalDeviceImageCompressionControlSwapchainFeaturesEXT` from VK_EXT_image_compression_control_swapchain
@@ -45132,7 +47723,7 @@ pub struct VkPhysicalDeviceImageCompressionControlSwapchainFeaturesEXT {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_image_compression_control_swapchain.html>
 pub trait VK_EXT_image_compression_control_swapchain: Debug {}
 /// struct for `VK_EXT_image_compression_control_swapchain`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_image_compression_control_swapchain {}
 impl VK_EXT_image_compression_control_swapchain for Vulkan_EXT_image_compression_control_swapchain {}
 impl Default for Vulkan_EXT_image_compression_control_swapchain {
@@ -45143,6 +47734,12 @@ impl Default for Vulkan_EXT_image_compression_control_swapchain {
 impl Vulkan_EXT_image_compression_control_swapchain {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_EXT_image_compression_control_swapchain {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_image_compression_control_swapchain")
+		.finish()
 	}
 }
 /// struct `VkImageViewSampleWeightCreateInfoQCOM` from VK_QCOM_image_processing
@@ -45183,7 +47780,7 @@ pub struct VkPhysicalDeviceImageProcessingPropertiesQCOM {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_QCOM_image_processing.html>
 pub trait VK_QCOM_image_processing: Debug {}
 /// struct for `VK_QCOM_image_processing`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_QCOM_image_processing {}
 impl VK_QCOM_image_processing for Vulkan_QCOM_image_processing {}
 impl Default for Vulkan_QCOM_image_processing {
@@ -45194,6 +47791,12 @@ impl Default for Vulkan_QCOM_image_processing {
 impl Vulkan_QCOM_image_processing {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_QCOM_image_processing {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_QCOM_image_processing")
+		.finish()
 	}
 }
 /// struct `VkPhysicalDeviceNestedCommandBufferFeaturesEXT` from VK_EXT_nested_command_buffer
@@ -45220,7 +47823,7 @@ pub struct VkPhysicalDeviceNestedCommandBufferPropertiesEXT {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_nested_command_buffer.html>
 pub trait VK_EXT_nested_command_buffer: Debug {}
 /// struct for `VK_EXT_nested_command_buffer`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_nested_command_buffer {}
 impl VK_EXT_nested_command_buffer for Vulkan_EXT_nested_command_buffer {}
 impl Default for Vulkan_EXT_nested_command_buffer {
@@ -45231,6 +47834,12 @@ impl Default for Vulkan_EXT_nested_command_buffer {
 impl Vulkan_EXT_nested_command_buffer {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_EXT_nested_command_buffer {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_nested_command_buffer")
+		.finish()
 	}
 }
 /// struct `VkExternalMemoryAcquireUnmodifiedEXT` from VK_EXT_external_memory_acquire_unmodified
@@ -45246,7 +47855,7 @@ pub struct VkExternalMemoryAcquireUnmodifiedEXT {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_external_memory_acquire_unmodified.html>
 pub trait VK_EXT_external_memory_acquire_unmodified: Debug {}
 /// struct for `VK_EXT_external_memory_acquire_unmodified`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_external_memory_acquire_unmodified {}
 impl VK_EXT_external_memory_acquire_unmodified for Vulkan_EXT_external_memory_acquire_unmodified {}
 impl Default for Vulkan_EXT_external_memory_acquire_unmodified {
@@ -45257,6 +47866,12 @@ impl Default for Vulkan_EXT_external_memory_acquire_unmodified {
 impl Vulkan_EXT_external_memory_acquire_unmodified {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_EXT_external_memory_acquire_unmodified {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_external_memory_acquire_unmodified")
+		.finish()
 	}
 }
 /// struct `VkPhysicalDeviceExtendedDynamicState3FeaturesEXT` from VK_EXT_extended_dynamic_state3
@@ -45614,7 +48229,7 @@ pub trait VK_EXT_extended_dynamic_state3: Debug {
 	fn vkCmdSetCoverageReductionModeNV(&self, commandBuffer: VkCommandBuffer, coverageReductionMode: VkCoverageReductionModeNV) -> Result<()>;
 }
 /// struct for `VK_EXT_extended_dynamic_state3`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_extended_dynamic_state3 {
 	vk_cmd_set_depth_clamp_enable_ext: PFN_vkCmdSetDepthClampEnableEXT,
 	vk_cmd_set_polygon_mode_ext: PFN_vkCmdSetPolygonModeEXT,
@@ -45817,6 +48432,43 @@ impl Vulkan_EXT_extended_dynamic_state3 {
 		}
 	}
 }
+impl Debug for Vulkan_EXT_extended_dynamic_state3 {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_extended_dynamic_state3")
+		.field("vkCmdSetDepthClampEnableEXT", &if self.vk_cmd_set_depth_clamp_enable_ext == dummy_vkCmdSetDepthClampEnableEXT {unsafe {transmute(null::<PFN_vkCmdSetDepthClampEnableEXT>())}} else {self.vk_cmd_set_depth_clamp_enable_ext})
+		.field("vkCmdSetPolygonModeEXT", &if self.vk_cmd_set_polygon_mode_ext == dummy_vkCmdSetPolygonModeEXT {unsafe {transmute(null::<PFN_vkCmdSetPolygonModeEXT>())}} else {self.vk_cmd_set_polygon_mode_ext})
+		.field("vkCmdSetRasterizationSamplesEXT", &if self.vk_cmd_set_rasterization_samples_ext == dummy_vkCmdSetRasterizationSamplesEXT {unsafe {transmute(null::<PFN_vkCmdSetRasterizationSamplesEXT>())}} else {self.vk_cmd_set_rasterization_samples_ext})
+		.field("vkCmdSetSampleMaskEXT", &if self.vk_cmd_set_sample_mask_ext == dummy_vkCmdSetSampleMaskEXT {unsafe {transmute(null::<PFN_vkCmdSetSampleMaskEXT>())}} else {self.vk_cmd_set_sample_mask_ext})
+		.field("vkCmdSetAlphaToCoverageEnableEXT", &if self.vk_cmd_set_alpha_to_coverage_enable_ext == dummy_vkCmdSetAlphaToCoverageEnableEXT {unsafe {transmute(null::<PFN_vkCmdSetAlphaToCoverageEnableEXT>())}} else {self.vk_cmd_set_alpha_to_coverage_enable_ext})
+		.field("vkCmdSetAlphaToOneEnableEXT", &if self.vk_cmd_set_alpha_to_one_enable_ext == dummy_vkCmdSetAlphaToOneEnableEXT {unsafe {transmute(null::<PFN_vkCmdSetAlphaToOneEnableEXT>())}} else {self.vk_cmd_set_alpha_to_one_enable_ext})
+		.field("vkCmdSetLogicOpEnableEXT", &if self.vk_cmd_set_logic_op_enable_ext == dummy_vkCmdSetLogicOpEnableEXT {unsafe {transmute(null::<PFN_vkCmdSetLogicOpEnableEXT>())}} else {self.vk_cmd_set_logic_op_enable_ext})
+		.field("vkCmdSetColorBlendEnableEXT", &if self.vk_cmd_set_color_blend_enable_ext == dummy_vkCmdSetColorBlendEnableEXT {unsafe {transmute(null::<PFN_vkCmdSetColorBlendEnableEXT>())}} else {self.vk_cmd_set_color_blend_enable_ext})
+		.field("vkCmdSetColorBlendEquationEXT", &if self.vk_cmd_set_color_blend_equation_ext == dummy_vkCmdSetColorBlendEquationEXT {unsafe {transmute(null::<PFN_vkCmdSetColorBlendEquationEXT>())}} else {self.vk_cmd_set_color_blend_equation_ext})
+		.field("vkCmdSetColorWriteMaskEXT", &if self.vk_cmd_set_color_write_mask_ext == dummy_vkCmdSetColorWriteMaskEXT {unsafe {transmute(null::<PFN_vkCmdSetColorWriteMaskEXT>())}} else {self.vk_cmd_set_color_write_mask_ext})
+		.field("vkCmdSetTessellationDomainOriginEXT", &if self.vk_cmd_set_tessellation_domain_origin_ext == dummy_vkCmdSetTessellationDomainOriginEXT {unsafe {transmute(null::<PFN_vkCmdSetTessellationDomainOriginEXT>())}} else {self.vk_cmd_set_tessellation_domain_origin_ext})
+		.field("vkCmdSetRasterizationStreamEXT", &if self.vk_cmd_set_rasterization_stream_ext == dummy_vkCmdSetRasterizationStreamEXT {unsafe {transmute(null::<PFN_vkCmdSetRasterizationStreamEXT>())}} else {self.vk_cmd_set_rasterization_stream_ext})
+		.field("vkCmdSetConservativeRasterizationModeEXT", &if self.vk_cmd_set_conservative_rasterization_mode_ext == dummy_vkCmdSetConservativeRasterizationModeEXT {unsafe {transmute(null::<PFN_vkCmdSetConservativeRasterizationModeEXT>())}} else {self.vk_cmd_set_conservative_rasterization_mode_ext})
+		.field("vkCmdSetExtraPrimitiveOverestimationSizeEXT", &if self.vk_cmd_set_extra_primitive_overestimation_size_ext == dummy_vkCmdSetExtraPrimitiveOverestimationSizeEXT {unsafe {transmute(null::<PFN_vkCmdSetExtraPrimitiveOverestimationSizeEXT>())}} else {self.vk_cmd_set_extra_primitive_overestimation_size_ext})
+		.field("vkCmdSetDepthClipEnableEXT", &if self.vk_cmd_set_depth_clip_enable_ext == dummy_vkCmdSetDepthClipEnableEXT {unsafe {transmute(null::<PFN_vkCmdSetDepthClipEnableEXT>())}} else {self.vk_cmd_set_depth_clip_enable_ext})
+		.field("vkCmdSetSampleLocationsEnableEXT", &if self.vk_cmd_set_sample_locations_enable_ext == dummy_vkCmdSetSampleLocationsEnableEXT {unsafe {transmute(null::<PFN_vkCmdSetSampleLocationsEnableEXT>())}} else {self.vk_cmd_set_sample_locations_enable_ext})
+		.field("vkCmdSetColorBlendAdvancedEXT", &if self.vk_cmd_set_color_blend_advanced_ext == dummy_vkCmdSetColorBlendAdvancedEXT {unsafe {transmute(null::<PFN_vkCmdSetColorBlendAdvancedEXT>())}} else {self.vk_cmd_set_color_blend_advanced_ext})
+		.field("vkCmdSetProvokingVertexModeEXT", &if self.vk_cmd_set_provoking_vertex_mode_ext == dummy_vkCmdSetProvokingVertexModeEXT {unsafe {transmute(null::<PFN_vkCmdSetProvokingVertexModeEXT>())}} else {self.vk_cmd_set_provoking_vertex_mode_ext})
+		.field("vkCmdSetLineRasterizationModeEXT", &if self.vk_cmd_set_line_rasterization_mode_ext == dummy_vkCmdSetLineRasterizationModeEXT {unsafe {transmute(null::<PFN_vkCmdSetLineRasterizationModeEXT>())}} else {self.vk_cmd_set_line_rasterization_mode_ext})
+		.field("vkCmdSetLineStippleEnableEXT", &if self.vk_cmd_set_line_stipple_enable_ext == dummy_vkCmdSetLineStippleEnableEXT {unsafe {transmute(null::<PFN_vkCmdSetLineStippleEnableEXT>())}} else {self.vk_cmd_set_line_stipple_enable_ext})
+		.field("vkCmdSetDepthClipNegativeOneToOneEXT", &if self.vk_cmd_set_depth_clip_negative_one_to_one_ext == dummy_vkCmdSetDepthClipNegativeOneToOneEXT {unsafe {transmute(null::<PFN_vkCmdSetDepthClipNegativeOneToOneEXT>())}} else {self.vk_cmd_set_depth_clip_negative_one_to_one_ext})
+		.field("vkCmdSetViewportWScalingEnableNV", &if self.vk_cmd_set_viewport_wscaling_enable_nv == dummy_vkCmdSetViewportWScalingEnableNV {unsafe {transmute(null::<PFN_vkCmdSetViewportWScalingEnableNV>())}} else {self.vk_cmd_set_viewport_wscaling_enable_nv})
+		.field("vkCmdSetViewportSwizzleNV", &if self.vk_cmd_set_viewport_swizzle_nv == dummy_vkCmdSetViewportSwizzleNV {unsafe {transmute(null::<PFN_vkCmdSetViewportSwizzleNV>())}} else {self.vk_cmd_set_viewport_swizzle_nv})
+		.field("vkCmdSetCoverageToColorEnableNV", &if self.vk_cmd_set_coverage_to_color_enable_nv == dummy_vkCmdSetCoverageToColorEnableNV {unsafe {transmute(null::<PFN_vkCmdSetCoverageToColorEnableNV>())}} else {self.vk_cmd_set_coverage_to_color_enable_nv})
+		.field("vkCmdSetCoverageToColorLocationNV", &if self.vk_cmd_set_coverage_to_color_location_nv == dummy_vkCmdSetCoverageToColorLocationNV {unsafe {transmute(null::<PFN_vkCmdSetCoverageToColorLocationNV>())}} else {self.vk_cmd_set_coverage_to_color_location_nv})
+		.field("vkCmdSetCoverageModulationModeNV", &if self.vk_cmd_set_coverage_modulation_mode_nv == dummy_vkCmdSetCoverageModulationModeNV {unsafe {transmute(null::<PFN_vkCmdSetCoverageModulationModeNV>())}} else {self.vk_cmd_set_coverage_modulation_mode_nv})
+		.field("vkCmdSetCoverageModulationTableEnableNV", &if self.vk_cmd_set_coverage_modulation_table_enable_nv == dummy_vkCmdSetCoverageModulationTableEnableNV {unsafe {transmute(null::<PFN_vkCmdSetCoverageModulationTableEnableNV>())}} else {self.vk_cmd_set_coverage_modulation_table_enable_nv})
+		.field("vkCmdSetCoverageModulationTableNV", &if self.vk_cmd_set_coverage_modulation_table_nv == dummy_vkCmdSetCoverageModulationTableNV {unsafe {transmute(null::<PFN_vkCmdSetCoverageModulationTableNV>())}} else {self.vk_cmd_set_coverage_modulation_table_nv})
+		.field("vkCmdSetShadingRateImageEnableNV", &if self.vk_cmd_set_shading_rate_image_enable_nv == dummy_vkCmdSetShadingRateImageEnableNV {unsafe {transmute(null::<PFN_vkCmdSetShadingRateImageEnableNV>())}} else {self.vk_cmd_set_shading_rate_image_enable_nv})
+		.field("vkCmdSetRepresentativeFragmentTestEnableNV", &if self.vk_cmd_set_representative_fragment_test_enable_nv == dummy_vkCmdSetRepresentativeFragmentTestEnableNV {unsafe {transmute(null::<PFN_vkCmdSetRepresentativeFragmentTestEnableNV>())}} else {self.vk_cmd_set_representative_fragment_test_enable_nv})
+		.field("vkCmdSetCoverageReductionModeNV", &if self.vk_cmd_set_coverage_reduction_mode_nv == dummy_vkCmdSetCoverageReductionModeNV {unsafe {transmute(null::<PFN_vkCmdSetCoverageReductionModeNV>())}} else {self.vk_cmd_set_coverage_reduction_mode_nv})
+		.finish()
+	}
+}
 /// enum `VkSubpassMergeStatusEXT` from VK_EXT_subpass_merge_feedback
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkSubpassMergeStatusEXT.html>
 #[repr(C)]
@@ -45903,7 +48555,7 @@ pub struct VkRenderPassSubpassFeedbackCreateInfoEXT {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_subpass_merge_feedback.html>
 pub trait VK_EXT_subpass_merge_feedback: Debug {}
 /// struct for `VK_EXT_subpass_merge_feedback`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_subpass_merge_feedback {}
 impl VK_EXT_subpass_merge_feedback for Vulkan_EXT_subpass_merge_feedback {}
 impl Default for Vulkan_EXT_subpass_merge_feedback {
@@ -45914,6 +48566,12 @@ impl Default for Vulkan_EXT_subpass_merge_feedback {
 impl Vulkan_EXT_subpass_merge_feedback {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_EXT_subpass_merge_feedback {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_subpass_merge_feedback")
+		.finish()
 	}
 }
 /// type definition `VkDirectDriverLoadingFlagsLUNARG` from VK_LUNARG_direct_driver_loading
@@ -45956,7 +48614,7 @@ type PFN_vkGetInstanceProcAddrLUNARG = extern "system" fn(instance: VkInstance, 
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_LUNARG_direct_driver_loading.html>
 pub trait VK_LUNARG_direct_driver_loading: Debug {}
 /// struct for `VK_LUNARG_direct_driver_loading`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_LUNARG_direct_driver_loading {}
 impl VK_LUNARG_direct_driver_loading for Vulkan_LUNARG_direct_driver_loading {}
 impl Default for Vulkan_LUNARG_direct_driver_loading {
@@ -45967,6 +48625,12 @@ impl Default for Vulkan_LUNARG_direct_driver_loading {
 impl Vulkan_LUNARG_direct_driver_loading {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_LUNARG_direct_driver_loading {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_LUNARG_direct_driver_loading")
+		.finish()
 	}
 }
 /// constant `VK_TENSOR_CREATE_MUTABLE_FORMAT_BIT_ARM` from VK_ARM_tensors
@@ -46403,7 +49067,7 @@ pub trait VK_ARM_tensors: Debug {
 	fn vkGetTensorViewOpaqueCaptureDescriptorDataARM(&self, device: VkDevice, pInfo: *const VkTensorViewCaptureDescriptorDataInfoARM, pData: *mut c_void) -> Result<()>;
 }
 /// struct for `VK_ARM_tensors`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_ARM_tensors {
 	vk_create_tensor_arm: PFN_vkCreateTensorARM,
 	vk_destroy_tensor_arm: PFN_vkDestroyTensorARM,
@@ -46484,6 +49148,23 @@ impl Vulkan_ARM_tensors {
 			vk_get_tensor_opaque_capture_descriptor_data_arm: {let proc = get_instance_proc_address(instance, "vkGetTensorOpaqueCaptureDescriptorDataARM"); if proc == null() {dummy_vkGetTensorOpaqueCaptureDescriptorDataARM} else {unsafe {transmute(proc)}}},
 			vk_get_tensor_view_opaque_capture_descriptor_data_arm: {let proc = get_instance_proc_address(instance, "vkGetTensorViewOpaqueCaptureDescriptorDataARM"); if proc == null() {dummy_vkGetTensorViewOpaqueCaptureDescriptorDataARM} else {unsafe {transmute(proc)}}},
 		}
+	}
+}
+impl Debug for Vulkan_ARM_tensors {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_ARM_tensors")
+		.field("vkCreateTensorARM", &if self.vk_create_tensor_arm == dummy_vkCreateTensorARM {unsafe {transmute(null::<PFN_vkCreateTensorARM>())}} else {self.vk_create_tensor_arm})
+		.field("vkDestroyTensorARM", &if self.vk_destroy_tensor_arm == dummy_vkDestroyTensorARM {unsafe {transmute(null::<PFN_vkDestroyTensorARM>())}} else {self.vk_destroy_tensor_arm})
+		.field("vkCreateTensorViewARM", &if self.vk_create_tensor_view_arm == dummy_vkCreateTensorViewARM {unsafe {transmute(null::<PFN_vkCreateTensorViewARM>())}} else {self.vk_create_tensor_view_arm})
+		.field("vkDestroyTensorViewARM", &if self.vk_destroy_tensor_view_arm == dummy_vkDestroyTensorViewARM {unsafe {transmute(null::<PFN_vkDestroyTensorViewARM>())}} else {self.vk_destroy_tensor_view_arm})
+		.field("vkGetTensorMemoryRequirementsARM", &if self.vk_get_tensor_memory_requirements_arm == dummy_vkGetTensorMemoryRequirementsARM {unsafe {transmute(null::<PFN_vkGetTensorMemoryRequirementsARM>())}} else {self.vk_get_tensor_memory_requirements_arm})
+		.field("vkBindTensorMemoryARM", &if self.vk_bind_tensor_memory_arm == dummy_vkBindTensorMemoryARM {unsafe {transmute(null::<PFN_vkBindTensorMemoryARM>())}} else {self.vk_bind_tensor_memory_arm})
+		.field("vkGetDeviceTensorMemoryRequirementsARM", &if self.vk_get_device_tensor_memory_requirements_arm == dummy_vkGetDeviceTensorMemoryRequirementsARM {unsafe {transmute(null::<PFN_vkGetDeviceTensorMemoryRequirementsARM>())}} else {self.vk_get_device_tensor_memory_requirements_arm})
+		.field("vkCmdCopyTensorARM", &if self.vk_cmd_copy_tensor_arm == dummy_vkCmdCopyTensorARM {unsafe {transmute(null::<PFN_vkCmdCopyTensorARM>())}} else {self.vk_cmd_copy_tensor_arm})
+		.field("vkGetPhysicalDeviceExternalTensorPropertiesARM", &if self.vk_get_physical_device_external_tensor_properties_arm == dummy_vkGetPhysicalDeviceExternalTensorPropertiesARM {unsafe {transmute(null::<PFN_vkGetPhysicalDeviceExternalTensorPropertiesARM>())}} else {self.vk_get_physical_device_external_tensor_properties_arm})
+		.field("vkGetTensorOpaqueCaptureDescriptorDataARM", &if self.vk_get_tensor_opaque_capture_descriptor_data_arm == dummy_vkGetTensorOpaqueCaptureDescriptorDataARM {unsafe {transmute(null::<PFN_vkGetTensorOpaqueCaptureDescriptorDataARM>())}} else {self.vk_get_tensor_opaque_capture_descriptor_data_arm})
+		.field("vkGetTensorViewOpaqueCaptureDescriptorDataARM", &if self.vk_get_tensor_view_opaque_capture_descriptor_data_arm == dummy_vkGetTensorViewOpaqueCaptureDescriptorDataARM {unsafe {transmute(null::<PFN_vkGetTensorViewOpaqueCaptureDescriptorDataARM>())}} else {self.vk_get_tensor_view_opaque_capture_descriptor_data_arm})
+		.finish()
 	}
 }
 /// constant `VK_MAX_SHADER_MODULE_IDENTIFIER_SIZE_EXT` from VK_EXT_shader_module_identifier
@@ -46569,7 +49250,7 @@ pub trait VK_EXT_shader_module_identifier: Debug {
 	fn vkGetShaderModuleCreateInfoIdentifierEXT(&self, device: VkDevice, pCreateInfo: *const VkShaderModuleCreateInfo, pIdentifier: *mut VkShaderModuleIdentifierEXT) -> Result<()>;
 }
 /// struct for `VK_EXT_shader_module_identifier`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_shader_module_identifier {
 	vk_get_shader_module_identifier_ext: PFN_vkGetShaderModuleIdentifierEXT,
 	vk_get_shader_module_create_info_identifier_ext: PFN_vkGetShaderModuleCreateInfoIdentifierEXT,
@@ -46598,11 +49279,19 @@ impl Vulkan_EXT_shader_module_identifier {
 		}
 	}
 }
+impl Debug for Vulkan_EXT_shader_module_identifier {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_shader_module_identifier")
+		.field("vkGetShaderModuleIdentifierEXT", &if self.vk_get_shader_module_identifier_ext == dummy_vkGetShaderModuleIdentifierEXT {unsafe {transmute(null::<PFN_vkGetShaderModuleIdentifierEXT>())}} else {self.vk_get_shader_module_identifier_ext})
+		.field("vkGetShaderModuleCreateInfoIdentifierEXT", &if self.vk_get_shader_module_create_info_identifier_ext == dummy_vkGetShaderModuleCreateInfoIdentifierEXT {unsafe {transmute(null::<PFN_vkGetShaderModuleCreateInfoIdentifierEXT>())}} else {self.vk_get_shader_module_create_info_identifier_ext})
+		.finish()
+	}
+}
 /// trait for `VK_EXT_rasterization_order_attachment_access`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_rasterization_order_attachment_access.html>
 pub trait VK_EXT_rasterization_order_attachment_access: Debug {}
 /// struct for `VK_EXT_rasterization_order_attachment_access`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_rasterization_order_attachment_access {}
 impl VK_EXT_rasterization_order_attachment_access for Vulkan_EXT_rasterization_order_attachment_access {}
 impl Default for Vulkan_EXT_rasterization_order_attachment_access {
@@ -46613,6 +49302,12 @@ impl Default for Vulkan_EXT_rasterization_order_attachment_access {
 impl Vulkan_EXT_rasterization_order_attachment_access {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_EXT_rasterization_order_attachment_access {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_rasterization_order_attachment_access")
+		.finish()
 	}
 }
 /// type definition `VkOpticalFlowGridSizeFlagsNV` from VK_NV_optical_flow
@@ -46998,7 +49693,7 @@ pub trait VK_NV_optical_flow: Debug {
 	fn vkCmdOpticalFlowExecuteNV(&self, commandBuffer: VkCommandBuffer, session: VkOpticalFlowSessionNV, pExecuteInfo: *const VkOpticalFlowExecuteInfoNV) -> Result<()>;
 }
 /// struct for `VK_NV_optical_flow`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_NV_optical_flow {
 	vk_get_physical_device_optical_flow_image_formats_nv: PFN_vkGetPhysicalDeviceOpticalFlowImageFormatsNV,
 	vk_create_optical_flow_session_nv: PFN_vkCreateOpticalFlowSessionNV,
@@ -47045,6 +49740,17 @@ impl Vulkan_NV_optical_flow {
 		}
 	}
 }
+impl Debug for Vulkan_NV_optical_flow {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_NV_optical_flow")
+		.field("vkGetPhysicalDeviceOpticalFlowImageFormatsNV", &if self.vk_get_physical_device_optical_flow_image_formats_nv == dummy_vkGetPhysicalDeviceOpticalFlowImageFormatsNV {unsafe {transmute(null::<PFN_vkGetPhysicalDeviceOpticalFlowImageFormatsNV>())}} else {self.vk_get_physical_device_optical_flow_image_formats_nv})
+		.field("vkCreateOpticalFlowSessionNV", &if self.vk_create_optical_flow_session_nv == dummy_vkCreateOpticalFlowSessionNV {unsafe {transmute(null::<PFN_vkCreateOpticalFlowSessionNV>())}} else {self.vk_create_optical_flow_session_nv})
+		.field("vkDestroyOpticalFlowSessionNV", &if self.vk_destroy_optical_flow_session_nv == dummy_vkDestroyOpticalFlowSessionNV {unsafe {transmute(null::<PFN_vkDestroyOpticalFlowSessionNV>())}} else {self.vk_destroy_optical_flow_session_nv})
+		.field("vkBindOpticalFlowSessionImageNV", &if self.vk_bind_optical_flow_session_image_nv == dummy_vkBindOpticalFlowSessionImageNV {unsafe {transmute(null::<PFN_vkBindOpticalFlowSessionImageNV>())}} else {self.vk_bind_optical_flow_session_image_nv})
+		.field("vkCmdOpticalFlowExecuteNV", &if self.vk_cmd_optical_flow_execute_nv == dummy_vkCmdOpticalFlowExecuteNV {unsafe {transmute(null::<PFN_vkCmdOpticalFlowExecuteNV>())}} else {self.vk_cmd_optical_flow_execute_nv})
+		.finish()
+	}
+}
 /// struct `VkPhysicalDeviceLegacyDitheringFeaturesEXT` from VK_EXT_legacy_dithering
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPhysicalDeviceLegacyDitheringFeaturesEXT.html>
 #[repr(C)]
@@ -47058,7 +49764,7 @@ pub struct VkPhysicalDeviceLegacyDitheringFeaturesEXT {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_legacy_dithering.html>
 pub trait VK_EXT_legacy_dithering: Debug {}
 /// struct for `VK_EXT_legacy_dithering`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_legacy_dithering {}
 impl VK_EXT_legacy_dithering for Vulkan_EXT_legacy_dithering {}
 impl Default for Vulkan_EXT_legacy_dithering {
@@ -47071,6 +49777,12 @@ impl Vulkan_EXT_legacy_dithering {
 		Self {}
 	}
 }
+impl Debug for Vulkan_EXT_legacy_dithering {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_legacy_dithering")
+		.finish()
+	}
+}
 /// type definition `VkPhysicalDevicePipelineProtectedAccessFeaturesEXT` from VK_EXT_pipeline_protected_access
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPhysicalDevicePipelineProtectedAccessFeaturesEXT.html>
 pub type VkPhysicalDevicePipelineProtectedAccessFeaturesEXT = VkPhysicalDevicePipelineProtectedAccessFeatures;
@@ -47078,7 +49790,7 @@ pub type VkPhysicalDevicePipelineProtectedAccessFeaturesEXT = VkPhysicalDevicePi
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_pipeline_protected_access.html>
 pub trait VK_EXT_pipeline_protected_access: Debug {}
 /// struct for `VK_EXT_pipeline_protected_access`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_pipeline_protected_access {}
 impl VK_EXT_pipeline_protected_access for Vulkan_EXT_pipeline_protected_access {}
 impl Default for Vulkan_EXT_pipeline_protected_access {
@@ -47089,6 +49801,12 @@ impl Default for Vulkan_EXT_pipeline_protected_access {
 impl Vulkan_EXT_pipeline_protected_access {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_EXT_pipeline_protected_access {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_pipeline_protected_access")
+		.finish()
 	}
 }
 /// enum `VkAntiLagModeAMD` from VK_AMD_anti_lag
@@ -47154,7 +49872,7 @@ pub trait VK_AMD_anti_lag: Debug {
 	fn vkAntiLagUpdateAMD(&self, device: VkDevice, pData: *const VkAntiLagDataAMD) -> Result<()>;
 }
 /// struct for `VK_AMD_anti_lag`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_AMD_anti_lag {
 	vk_anti_lag_update_amd: PFN_vkAntiLagUpdateAMD,
 }
@@ -47175,6 +49893,13 @@ impl Vulkan_AMD_anti_lag {
 		Self {
 			vk_anti_lag_update_amd: {let proc = get_instance_proc_address(instance, "vkAntiLagUpdateAMD"); if proc == null() {dummy_vkAntiLagUpdateAMD} else {unsafe {transmute(proc)}}},
 		}
+	}
+}
+impl Debug for Vulkan_AMD_anti_lag {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_AMD_anti_lag")
+		.field("vkAntiLagUpdateAMD", &if self.vk_anti_lag_update_amd == dummy_vkAntiLagUpdateAMD {unsafe {transmute(null::<PFN_vkAntiLagUpdateAMD>())}} else {self.vk_anti_lag_update_amd})
+		.finish()
 	}
 }
 /// type definition `VkShaderCreateFlagsEXT` from VK_EXT_shader_object
@@ -47385,7 +50110,7 @@ pub trait VK_EXT_shader_object: Debug {
 	fn vkCmdSetDepthClampRangeEXT(&self, commandBuffer: VkCommandBuffer, depthClampMode: VkDepthClampModeEXT, pDepthClampRange: *const VkDepthClampRangeEXT) -> Result<()>;
 }
 /// struct for `VK_EXT_shader_object`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_shader_object {
 	vk_create_shaders_ext: PFN_vkCreateShadersEXT,
 	vk_destroy_shader_ext: PFN_vkDestroyShaderEXT,
@@ -47432,6 +50157,17 @@ impl Vulkan_EXT_shader_object {
 		}
 	}
 }
+impl Debug for Vulkan_EXT_shader_object {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_shader_object")
+		.field("vkCreateShadersEXT", &if self.vk_create_shaders_ext == dummy_vkCreateShadersEXT {unsafe {transmute(null::<PFN_vkCreateShadersEXT>())}} else {self.vk_create_shaders_ext})
+		.field("vkDestroyShaderEXT", &if self.vk_destroy_shader_ext == dummy_vkDestroyShaderEXT {unsafe {transmute(null::<PFN_vkDestroyShaderEXT>())}} else {self.vk_destroy_shader_ext})
+		.field("vkGetShaderBinaryDataEXT", &if self.vk_get_shader_binary_data_ext == dummy_vkGetShaderBinaryDataEXT {unsafe {transmute(null::<PFN_vkGetShaderBinaryDataEXT>())}} else {self.vk_get_shader_binary_data_ext})
+		.field("vkCmdBindShadersEXT", &if self.vk_cmd_bind_shaders_ext == dummy_vkCmdBindShadersEXT {unsafe {transmute(null::<PFN_vkCmdBindShadersEXT>())}} else {self.vk_cmd_bind_shaders_ext})
+		.field("vkCmdSetDepthClampRangeEXT", &if self.vk_cmd_set_depth_clamp_range_ext == dummy_vkCmdSetDepthClampRangeEXT {unsafe {transmute(null::<PFN_vkCmdSetDepthClampRangeEXT>())}} else {self.vk_cmd_set_depth_clamp_range_ext})
+		.finish()
+	}
+}
 /// struct `VkPhysicalDeviceTilePropertiesFeaturesQCOM` from VK_QCOM_tile_properties
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPhysicalDeviceTilePropertiesFeaturesQCOM.html>
 #[repr(C)]
@@ -47475,7 +50211,7 @@ pub trait VK_QCOM_tile_properties: Debug {
 	fn vkGetDynamicRenderingTilePropertiesQCOM(&self, device: VkDevice, pRenderingInfo: *const VkRenderingInfo, pProperties: *mut VkTilePropertiesQCOM) -> Result<()>;
 }
 /// struct for `VK_QCOM_tile_properties`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_QCOM_tile_properties {
 	vk_get_framebuffer_tile_properties_qcom: PFN_vkGetFramebufferTilePropertiesQCOM,
 	vk_get_dynamic_rendering_tile_properties_qcom: PFN_vkGetDynamicRenderingTilePropertiesQCOM,
@@ -47504,6 +50240,14 @@ impl Vulkan_QCOM_tile_properties {
 		}
 	}
 }
+impl Debug for Vulkan_QCOM_tile_properties {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_QCOM_tile_properties")
+		.field("vkGetFramebufferTilePropertiesQCOM", &if self.vk_get_framebuffer_tile_properties_qcom == dummy_vkGetFramebufferTilePropertiesQCOM {unsafe {transmute(null::<PFN_vkGetFramebufferTilePropertiesQCOM>())}} else {self.vk_get_framebuffer_tile_properties_qcom})
+		.field("vkGetDynamicRenderingTilePropertiesQCOM", &if self.vk_get_dynamic_rendering_tile_properties_qcom == dummy_vkGetDynamicRenderingTilePropertiesQCOM {unsafe {transmute(null::<PFN_vkGetDynamicRenderingTilePropertiesQCOM>())}} else {self.vk_get_dynamic_rendering_tile_properties_qcom})
+		.finish()
+	}
+}
 /// struct `VkPhysicalDeviceAmigoProfilingFeaturesSEC` from VK_SEC_amigo_profiling
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPhysicalDeviceAmigoProfilingFeaturesSEC.html>
 #[repr(C)]
@@ -47527,7 +50271,7 @@ pub struct VkAmigoProfilingSubmitInfoSEC {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_SEC_amigo_profiling.html>
 pub trait VK_SEC_amigo_profiling: Debug {}
 /// struct for `VK_SEC_amigo_profiling`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_SEC_amigo_profiling {}
 impl VK_SEC_amigo_profiling for Vulkan_SEC_amigo_profiling {}
 impl Default for Vulkan_SEC_amigo_profiling {
@@ -47538,6 +50282,12 @@ impl Default for Vulkan_SEC_amigo_profiling {
 impl Vulkan_SEC_amigo_profiling {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_SEC_amigo_profiling {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_SEC_amigo_profiling")
+		.finish()
 	}
 }
 /// struct `VkPhysicalDeviceMultiviewPerViewViewportsFeaturesQCOM` from VK_QCOM_multiview_per_view_viewports
@@ -47553,7 +50303,7 @@ pub struct VkPhysicalDeviceMultiviewPerViewViewportsFeaturesQCOM {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_QCOM_multiview_per_view_viewports.html>
 pub trait VK_QCOM_multiview_per_view_viewports: Debug {}
 /// struct for `VK_QCOM_multiview_per_view_viewports`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_QCOM_multiview_per_view_viewports {}
 impl VK_QCOM_multiview_per_view_viewports for Vulkan_QCOM_multiview_per_view_viewports {}
 impl Default for Vulkan_QCOM_multiview_per_view_viewports {
@@ -47564,6 +50314,12 @@ impl Default for Vulkan_QCOM_multiview_per_view_viewports {
 impl Vulkan_QCOM_multiview_per_view_viewports {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_QCOM_multiview_per_view_viewports {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_QCOM_multiview_per_view_viewports")
+		.finish()
 	}
 }
 /// enum `VkRayTracingInvocationReorderModeNV` from VK_NV_ray_tracing_invocation_reorder
@@ -47597,7 +50353,7 @@ pub struct VkPhysicalDeviceRayTracingInvocationReorderFeaturesNV {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NV_ray_tracing_invocation_reorder.html>
 pub trait VK_NV_ray_tracing_invocation_reorder: Debug {}
 /// struct for `VK_NV_ray_tracing_invocation_reorder`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_NV_ray_tracing_invocation_reorder {}
 impl VK_NV_ray_tracing_invocation_reorder for Vulkan_NV_ray_tracing_invocation_reorder {}
 impl Default for Vulkan_NV_ray_tracing_invocation_reorder {
@@ -47608,6 +50364,12 @@ impl Default for Vulkan_NV_ray_tracing_invocation_reorder {
 impl Vulkan_NV_ray_tracing_invocation_reorder {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_NV_ray_tracing_invocation_reorder {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_NV_ray_tracing_invocation_reorder")
+		.finish()
 	}
 }
 /// enum `VkCooperativeVectorMatrixLayoutNV` from VK_NV_cooperative_vector
@@ -47709,7 +50471,7 @@ pub trait VK_NV_cooperative_vector: Debug {
 	fn vkCmdConvertCooperativeVectorMatrixNV(&self, commandBuffer: VkCommandBuffer, infoCount: u32, pInfos: *const VkConvertCooperativeVectorMatrixInfoNV) -> Result<()>;
 }
 /// struct for `VK_NV_cooperative_vector`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_NV_cooperative_vector {
 	vk_get_physical_device_cooperative_vector_properties_nv: PFN_vkGetPhysicalDeviceCooperativeVectorPropertiesNV,
 	vk_convert_cooperative_vector_matrix_nv: PFN_vkConvertCooperativeVectorMatrixNV,
@@ -47744,6 +50506,15 @@ impl Vulkan_NV_cooperative_vector {
 		}
 	}
 }
+impl Debug for Vulkan_NV_cooperative_vector {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_NV_cooperative_vector")
+		.field("vkGetPhysicalDeviceCooperativeVectorPropertiesNV", &if self.vk_get_physical_device_cooperative_vector_properties_nv == dummy_vkGetPhysicalDeviceCooperativeVectorPropertiesNV {unsafe {transmute(null::<PFN_vkGetPhysicalDeviceCooperativeVectorPropertiesNV>())}} else {self.vk_get_physical_device_cooperative_vector_properties_nv})
+		.field("vkConvertCooperativeVectorMatrixNV", &if self.vk_convert_cooperative_vector_matrix_nv == dummy_vkConvertCooperativeVectorMatrixNV {unsafe {transmute(null::<PFN_vkConvertCooperativeVectorMatrixNV>())}} else {self.vk_convert_cooperative_vector_matrix_nv})
+		.field("vkCmdConvertCooperativeVectorMatrixNV", &if self.vk_cmd_convert_cooperative_vector_matrix_nv == dummy_vkCmdConvertCooperativeVectorMatrixNV {unsafe {transmute(null::<PFN_vkCmdConvertCooperativeVectorMatrixNV>())}} else {self.vk_cmd_convert_cooperative_vector_matrix_nv})
+		.finish()
+	}
+}
 /// struct `VkPhysicalDeviceExtendedSparseAddressSpaceFeaturesNV` from VK_NV_extended_sparse_address_space
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPhysicalDeviceExtendedSparseAddressSpaceFeaturesNV.html>
 #[repr(C)]
@@ -47768,7 +50539,7 @@ pub struct VkPhysicalDeviceExtendedSparseAddressSpacePropertiesNV {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NV_extended_sparse_address_space.html>
 pub trait VK_NV_extended_sparse_address_space: Debug {}
 /// struct for `VK_NV_extended_sparse_address_space`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_NV_extended_sparse_address_space {}
 impl VK_NV_extended_sparse_address_space for Vulkan_NV_extended_sparse_address_space {}
 impl Default for Vulkan_NV_extended_sparse_address_space {
@@ -47781,11 +50552,17 @@ impl Vulkan_NV_extended_sparse_address_space {
 		Self {}
 	}
 }
+impl Debug for Vulkan_NV_extended_sparse_address_space {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_NV_extended_sparse_address_space")
+		.finish()
+	}
+}
 /// trait for `VK_EXT_mutable_descriptor_type`
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_mutable_descriptor_type.html>
 pub trait VK_EXT_mutable_descriptor_type: Debug {}
 /// struct for `VK_EXT_mutable_descriptor_type`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_mutable_descriptor_type {}
 impl VK_EXT_mutable_descriptor_type for Vulkan_EXT_mutable_descriptor_type {}
 impl Default for Vulkan_EXT_mutable_descriptor_type {
@@ -47796,6 +50573,12 @@ impl Default for Vulkan_EXT_mutable_descriptor_type {
 impl Vulkan_EXT_mutable_descriptor_type {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_EXT_mutable_descriptor_type {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_mutable_descriptor_type")
+		.finish()
 	}
 }
 /// struct `VkPhysicalDeviceLegacyVertexAttributesFeaturesEXT` from VK_EXT_legacy_vertex_attributes
@@ -47820,7 +50603,7 @@ pub struct VkPhysicalDeviceLegacyVertexAttributesPropertiesEXT {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_legacy_vertex_attributes.html>
 pub trait VK_EXT_legacy_vertex_attributes: Debug {}
 /// struct for `VK_EXT_legacy_vertex_attributes`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_legacy_vertex_attributes {}
 impl VK_EXT_legacy_vertex_attributes for Vulkan_EXT_legacy_vertex_attributes {}
 impl Default for Vulkan_EXT_legacy_vertex_attributes {
@@ -47831,6 +50614,12 @@ impl Default for Vulkan_EXT_legacy_vertex_attributes {
 impl Vulkan_EXT_legacy_vertex_attributes {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_EXT_legacy_vertex_attributes {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_legacy_vertex_attributes")
+		.finish()
 	}
 }
 /// enum `VkLayerSettingTypeEXT` from VK_EXT_layer_settings
@@ -47873,7 +50662,7 @@ pub struct VkLayerSettingsCreateInfoEXT {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_layer_settings.html>
 pub trait VK_EXT_layer_settings: Debug {}
 /// struct for `VK_EXT_layer_settings`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_layer_settings {}
 impl VK_EXT_layer_settings for Vulkan_EXT_layer_settings {}
 impl Default for Vulkan_EXT_layer_settings {
@@ -47884,6 +50673,12 @@ impl Default for Vulkan_EXT_layer_settings {
 impl Vulkan_EXT_layer_settings {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_EXT_layer_settings {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_layer_settings")
+		.finish()
 	}
 }
 /// struct `VkPhysicalDeviceShaderCoreBuiltinsFeaturesARM` from VK_ARM_shader_core_builtins
@@ -47910,7 +50705,7 @@ pub struct VkPhysicalDeviceShaderCoreBuiltinsPropertiesARM {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_ARM_shader_core_builtins.html>
 pub trait VK_ARM_shader_core_builtins: Debug {}
 /// struct for `VK_ARM_shader_core_builtins`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_ARM_shader_core_builtins {}
 impl VK_ARM_shader_core_builtins for Vulkan_ARM_shader_core_builtins {}
 impl Default for Vulkan_ARM_shader_core_builtins {
@@ -47921,6 +50716,12 @@ impl Default for Vulkan_ARM_shader_core_builtins {
 impl Vulkan_ARM_shader_core_builtins {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_ARM_shader_core_builtins {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_ARM_shader_core_builtins")
+		.finish()
 	}
 }
 /// struct `VkPhysicalDevicePipelineLibraryGroupHandlesFeaturesEXT` from VK_EXT_pipeline_library_group_handles
@@ -47936,7 +50737,7 @@ pub struct VkPhysicalDevicePipelineLibraryGroupHandlesFeaturesEXT {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_pipeline_library_group_handles.html>
 pub trait VK_EXT_pipeline_library_group_handles: Debug {}
 /// struct for `VK_EXT_pipeline_library_group_handles`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_pipeline_library_group_handles {}
 impl VK_EXT_pipeline_library_group_handles for Vulkan_EXT_pipeline_library_group_handles {}
 impl Default for Vulkan_EXT_pipeline_library_group_handles {
@@ -47947,6 +50748,12 @@ impl Default for Vulkan_EXT_pipeline_library_group_handles {
 impl Vulkan_EXT_pipeline_library_group_handles {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_EXT_pipeline_library_group_handles {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_pipeline_library_group_handles")
+		.finish()
 	}
 }
 /// struct `VkPhysicalDeviceDynamicRenderingUnusedAttachmentsFeaturesEXT` from VK_EXT_dynamic_rendering_unused_attachments
@@ -47962,7 +50769,7 @@ pub struct VkPhysicalDeviceDynamicRenderingUnusedAttachmentsFeaturesEXT {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_dynamic_rendering_unused_attachments.html>
 pub trait VK_EXT_dynamic_rendering_unused_attachments: Debug {}
 /// struct for `VK_EXT_dynamic_rendering_unused_attachments`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_dynamic_rendering_unused_attachments {}
 impl VK_EXT_dynamic_rendering_unused_attachments for Vulkan_EXT_dynamic_rendering_unused_attachments {}
 impl Default for Vulkan_EXT_dynamic_rendering_unused_attachments {
@@ -47973,6 +50780,12 @@ impl Default for Vulkan_EXT_dynamic_rendering_unused_attachments {
 impl Vulkan_EXT_dynamic_rendering_unused_attachments {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_EXT_dynamic_rendering_unused_attachments {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_dynamic_rendering_unused_attachments")
+		.finish()
 	}
 }
 /// enum `VkLatencyMarkerNV` from VK_NV_low_latency2
@@ -48153,7 +50966,7 @@ pub trait VK_NV_low_latency2: Debug {
 	fn vkQueueNotifyOutOfBandNV(&self, queue: VkQueue, pQueueTypeInfo: *const VkOutOfBandQueueTypeInfoNV) -> Result<()>;
 }
 /// struct for `VK_NV_low_latency2`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_NV_low_latency2 {
 	vk_set_latency_sleep_mode_nv: PFN_vkSetLatencySleepModeNV,
 	vk_latency_sleep_nv: PFN_vkLatencySleepNV,
@@ -48198,6 +51011,17 @@ impl Vulkan_NV_low_latency2 {
 			vk_get_latency_timings_nv: {let proc = get_instance_proc_address(instance, "vkGetLatencyTimingsNV"); if proc == null() {dummy_vkGetLatencyTimingsNV} else {unsafe {transmute(proc)}}},
 			vk_queue_notify_out_of_band_nv: {let proc = get_instance_proc_address(instance, "vkQueueNotifyOutOfBandNV"); if proc == null() {dummy_vkQueueNotifyOutOfBandNV} else {unsafe {transmute(proc)}}},
 		}
+	}
+}
+impl Debug for Vulkan_NV_low_latency2 {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_NV_low_latency2")
+		.field("vkSetLatencySleepModeNV", &if self.vk_set_latency_sleep_mode_nv == dummy_vkSetLatencySleepModeNV {unsafe {transmute(null::<PFN_vkSetLatencySleepModeNV>())}} else {self.vk_set_latency_sleep_mode_nv})
+		.field("vkLatencySleepNV", &if self.vk_latency_sleep_nv == dummy_vkLatencySleepNV {unsafe {transmute(null::<PFN_vkLatencySleepNV>())}} else {self.vk_latency_sleep_nv})
+		.field("vkSetLatencyMarkerNV", &if self.vk_set_latency_marker_nv == dummy_vkSetLatencyMarkerNV {unsafe {transmute(null::<PFN_vkSetLatencyMarkerNV>())}} else {self.vk_set_latency_marker_nv})
+		.field("vkGetLatencyTimingsNV", &if self.vk_get_latency_timings_nv == dummy_vkGetLatencyTimingsNV {unsafe {transmute(null::<PFN_vkGetLatencyTimingsNV>())}} else {self.vk_get_latency_timings_nv})
+		.field("vkQueueNotifyOutOfBandNV", &if self.vk_queue_notify_out_of_band_nv == dummy_vkQueueNotifyOutOfBandNV {unsafe {transmute(null::<PFN_vkQueueNotifyOutOfBandNV>())}} else {self.vk_queue_notify_out_of_band_nv})
+		.finish()
 	}
 }
 /// constant `VK_MAX_PHYSICAL_DEVICE_DATA_GRAPH_OPERATION_SET_NAME_SIZE_ARM` from VK_ARM_data_graph
@@ -48607,7 +51431,7 @@ pub trait VK_ARM_data_graph: Debug {
 	fn vkGetPhysicalDeviceQueueFamilyDataGraphProcessingEnginePropertiesARM(&self, physicalDevice: VkPhysicalDevice, pQueueFamilyDataGraphProcessingEngineInfo: *const VkPhysicalDeviceQueueFamilyDataGraphProcessingEngineInfoARM, pQueueFamilyDataGraphProcessingEngineProperties: *mut VkQueueFamilyDataGraphProcessingEnginePropertiesARM) -> Result<()>;
 }
 /// struct for `VK_ARM_data_graph`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_ARM_data_graph {
 	vk_create_data_graph_pipelines_arm: PFN_vkCreateDataGraphPipelinesARM,
 	vk_create_data_graph_pipeline_session_arm: PFN_vkCreateDataGraphPipelineSessionARM,
@@ -48690,6 +51514,23 @@ impl Vulkan_ARM_data_graph {
 		}
 	}
 }
+impl Debug for Vulkan_ARM_data_graph {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_ARM_data_graph")
+		.field("vkCreateDataGraphPipelinesARM", &if self.vk_create_data_graph_pipelines_arm == dummy_vkCreateDataGraphPipelinesARM {unsafe {transmute(null::<PFN_vkCreateDataGraphPipelinesARM>())}} else {self.vk_create_data_graph_pipelines_arm})
+		.field("vkCreateDataGraphPipelineSessionARM", &if self.vk_create_data_graph_pipeline_session_arm == dummy_vkCreateDataGraphPipelineSessionARM {unsafe {transmute(null::<PFN_vkCreateDataGraphPipelineSessionARM>())}} else {self.vk_create_data_graph_pipeline_session_arm})
+		.field("vkGetDataGraphPipelineSessionBindPointRequirementsARM", &if self.vk_get_data_graph_pipeline_session_bind_point_requirements_arm == dummy_vkGetDataGraphPipelineSessionBindPointRequirementsARM {unsafe {transmute(null::<PFN_vkGetDataGraphPipelineSessionBindPointRequirementsARM>())}} else {self.vk_get_data_graph_pipeline_session_bind_point_requirements_arm})
+		.field("vkGetDataGraphPipelineSessionMemoryRequirementsARM", &if self.vk_get_data_graph_pipeline_session_memory_requirements_arm == dummy_vkGetDataGraphPipelineSessionMemoryRequirementsARM {unsafe {transmute(null::<PFN_vkGetDataGraphPipelineSessionMemoryRequirementsARM>())}} else {self.vk_get_data_graph_pipeline_session_memory_requirements_arm})
+		.field("vkBindDataGraphPipelineSessionMemoryARM", &if self.vk_bind_data_graph_pipeline_session_memory_arm == dummy_vkBindDataGraphPipelineSessionMemoryARM {unsafe {transmute(null::<PFN_vkBindDataGraphPipelineSessionMemoryARM>())}} else {self.vk_bind_data_graph_pipeline_session_memory_arm})
+		.field("vkDestroyDataGraphPipelineSessionARM", &if self.vk_destroy_data_graph_pipeline_session_arm == dummy_vkDestroyDataGraphPipelineSessionARM {unsafe {transmute(null::<PFN_vkDestroyDataGraphPipelineSessionARM>())}} else {self.vk_destroy_data_graph_pipeline_session_arm})
+		.field("vkCmdDispatchDataGraphARM", &if self.vk_cmd_dispatch_data_graph_arm == dummy_vkCmdDispatchDataGraphARM {unsafe {transmute(null::<PFN_vkCmdDispatchDataGraphARM>())}} else {self.vk_cmd_dispatch_data_graph_arm})
+		.field("vkGetDataGraphPipelineAvailablePropertiesARM", &if self.vk_get_data_graph_pipeline_available_properties_arm == dummy_vkGetDataGraphPipelineAvailablePropertiesARM {unsafe {transmute(null::<PFN_vkGetDataGraphPipelineAvailablePropertiesARM>())}} else {self.vk_get_data_graph_pipeline_available_properties_arm})
+		.field("vkGetDataGraphPipelinePropertiesARM", &if self.vk_get_data_graph_pipeline_properties_arm == dummy_vkGetDataGraphPipelinePropertiesARM {unsafe {transmute(null::<PFN_vkGetDataGraphPipelinePropertiesARM>())}} else {self.vk_get_data_graph_pipeline_properties_arm})
+		.field("vkGetPhysicalDeviceQueueFamilyDataGraphPropertiesARM", &if self.vk_get_physical_device_queue_family_data_graph_properties_arm == dummy_vkGetPhysicalDeviceQueueFamilyDataGraphPropertiesARM {unsafe {transmute(null::<PFN_vkGetPhysicalDeviceQueueFamilyDataGraphPropertiesARM>())}} else {self.vk_get_physical_device_queue_family_data_graph_properties_arm})
+		.field("vkGetPhysicalDeviceQueueFamilyDataGraphProcessingEnginePropertiesARM", &if self.vk_get_physical_device_queue_family_data_graph_processing_engine_properties_arm == dummy_vkGetPhysicalDeviceQueueFamilyDataGraphProcessingEnginePropertiesARM {unsafe {transmute(null::<PFN_vkGetPhysicalDeviceQueueFamilyDataGraphProcessingEnginePropertiesARM>())}} else {self.vk_get_physical_device_queue_family_data_graph_processing_engine_properties_arm})
+		.finish()
+	}
+}
 /// struct `VkPhysicalDeviceMultiviewPerViewRenderAreasFeaturesQCOM` from VK_QCOM_multiview_per_view_render_areas
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPhysicalDeviceMultiviewPerViewRenderAreasFeaturesQCOM.html>
 #[repr(C)]
@@ -48713,7 +51554,7 @@ pub struct VkMultiviewPerViewRenderAreasRenderPassBeginInfoQCOM {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_QCOM_multiview_per_view_render_areas.html>
 pub trait VK_QCOM_multiview_per_view_render_areas: Debug {}
 /// struct for `VK_QCOM_multiview_per_view_render_areas`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_QCOM_multiview_per_view_render_areas {}
 impl VK_QCOM_multiview_per_view_render_areas for Vulkan_QCOM_multiview_per_view_render_areas {}
 impl Default for Vulkan_QCOM_multiview_per_view_render_areas {
@@ -48724,6 +51565,12 @@ impl Default for Vulkan_QCOM_multiview_per_view_render_areas {
 impl Vulkan_QCOM_multiview_per_view_render_areas {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_QCOM_multiview_per_view_render_areas {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_QCOM_multiview_per_view_render_areas")
+		.finish()
 	}
 }
 /// struct `VkPhysicalDevicePerStageDescriptorSetFeaturesNV` from VK_NV_per_stage_descriptor_set
@@ -48740,7 +51587,7 @@ pub struct VkPhysicalDevicePerStageDescriptorSetFeaturesNV {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NV_per_stage_descriptor_set.html>
 pub trait VK_NV_per_stage_descriptor_set: Debug {}
 /// struct for `VK_NV_per_stage_descriptor_set`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_NV_per_stage_descriptor_set {}
 impl VK_NV_per_stage_descriptor_set for Vulkan_NV_per_stage_descriptor_set {}
 impl Default for Vulkan_NV_per_stage_descriptor_set {
@@ -48751,6 +51598,12 @@ impl Default for Vulkan_NV_per_stage_descriptor_set {
 impl Vulkan_NV_per_stage_descriptor_set {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_NV_per_stage_descriptor_set {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_NV_per_stage_descriptor_set")
+		.finish()
 	}
 }
 /// enum `VkBlockMatchWindowCompareModeQCOM` from VK_QCOM_image_processing2
@@ -48794,7 +51647,7 @@ pub struct VkSamplerBlockMatchWindowCreateInfoQCOM {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_QCOM_image_processing2.html>
 pub trait VK_QCOM_image_processing2: Debug {}
 /// struct for `VK_QCOM_image_processing2`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_QCOM_image_processing2 {}
 impl VK_QCOM_image_processing2 for Vulkan_QCOM_image_processing2 {}
 impl Default for Vulkan_QCOM_image_processing2 {
@@ -48805,6 +51658,12 @@ impl Default for Vulkan_QCOM_image_processing2 {
 impl Vulkan_QCOM_image_processing2 {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_QCOM_image_processing2 {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_QCOM_image_processing2")
+		.finish()
 	}
 }
 /// enum `VkCubicFilterWeightsQCOM` from VK_QCOM_filter_cubic_weights
@@ -48849,7 +51708,7 @@ pub struct VkBlitImageCubicWeightsInfoQCOM {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_QCOM_filter_cubic_weights.html>
 pub trait VK_QCOM_filter_cubic_weights: Debug {}
 /// struct for `VK_QCOM_filter_cubic_weights`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_QCOM_filter_cubic_weights {}
 impl VK_QCOM_filter_cubic_weights for Vulkan_QCOM_filter_cubic_weights {}
 impl Default for Vulkan_QCOM_filter_cubic_weights {
@@ -48860,6 +51719,12 @@ impl Default for Vulkan_QCOM_filter_cubic_weights {
 impl Vulkan_QCOM_filter_cubic_weights {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_QCOM_filter_cubic_weights {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_QCOM_filter_cubic_weights")
+		.finish()
 	}
 }
 /// struct `VkPhysicalDeviceYcbcrDegammaFeaturesQCOM` from VK_QCOM_ycbcr_degamma
@@ -48885,7 +51750,7 @@ pub struct VkSamplerYcbcrConversionYcbcrDegammaCreateInfoQCOM {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_QCOM_ycbcr_degamma.html>
 pub trait VK_QCOM_ycbcr_degamma: Debug {}
 /// struct for `VK_QCOM_ycbcr_degamma`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_QCOM_ycbcr_degamma {}
 impl VK_QCOM_ycbcr_degamma for Vulkan_QCOM_ycbcr_degamma {}
 impl Default for Vulkan_QCOM_ycbcr_degamma {
@@ -48896,6 +51761,12 @@ impl Default for Vulkan_QCOM_ycbcr_degamma {
 impl Vulkan_QCOM_ycbcr_degamma {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_QCOM_ycbcr_degamma {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_QCOM_ycbcr_degamma")
+		.finish()
 	}
 }
 /// struct `VkPhysicalDeviceCubicClampFeaturesQCOM` from VK_QCOM_filter_cubic_clamp
@@ -48911,7 +51782,7 @@ pub struct VkPhysicalDeviceCubicClampFeaturesQCOM {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_QCOM_filter_cubic_clamp.html>
 pub trait VK_QCOM_filter_cubic_clamp: Debug {}
 /// struct for `VK_QCOM_filter_cubic_clamp`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_QCOM_filter_cubic_clamp {}
 impl VK_QCOM_filter_cubic_clamp for Vulkan_QCOM_filter_cubic_clamp {}
 impl Default for Vulkan_QCOM_filter_cubic_clamp {
@@ -48922,6 +51793,12 @@ impl Default for Vulkan_QCOM_filter_cubic_clamp {
 impl Vulkan_QCOM_filter_cubic_clamp {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_QCOM_filter_cubic_clamp {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_QCOM_filter_cubic_clamp")
+		.finish()
 	}
 }
 /// struct `VkPhysicalDeviceAttachmentFeedbackLoopDynamicStateFeaturesEXT` from VK_EXT_attachment_feedback_loop_dynamic_state
@@ -48947,7 +51824,7 @@ pub trait VK_EXT_attachment_feedback_loop_dynamic_state: Debug {
 	fn vkCmdSetAttachmentFeedbackLoopEnableEXT(&self, commandBuffer: VkCommandBuffer, aspectMask: VkImageAspectFlags) -> Result<()>;
 }
 /// struct for `VK_EXT_attachment_feedback_loop_dynamic_state`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_attachment_feedback_loop_dynamic_state {
 	vk_cmd_set_attachment_feedback_loop_enable_ext: PFN_vkCmdSetAttachmentFeedbackLoopEnableEXT,
 }
@@ -48968,6 +51845,13 @@ impl Vulkan_EXT_attachment_feedback_loop_dynamic_state {
 		Self {
 			vk_cmd_set_attachment_feedback_loop_enable_ext: {let proc = get_instance_proc_address(instance, "vkCmdSetAttachmentFeedbackLoopEnableEXT"); if proc == null() {dummy_vkCmdSetAttachmentFeedbackLoopEnableEXT} else {unsafe {transmute(proc)}}},
 		}
+	}
+}
+impl Debug for Vulkan_EXT_attachment_feedback_loop_dynamic_state {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_attachment_feedback_loop_dynamic_state")
+		.field("vkCmdSetAttachmentFeedbackLoopEnableEXT", &if self.vk_cmd_set_attachment_feedback_loop_enable_ext == dummy_vkCmdSetAttachmentFeedbackLoopEnableEXT {unsafe {transmute(null::<PFN_vkCmdSetAttachmentFeedbackLoopEnableEXT>())}} else {self.vk_cmd_set_attachment_feedback_loop_enable_ext})
+		.finish()
 	}
 }
 /// enum `VkLayeredDriverUnderlyingApiMSFT` from VK_MSFT_layered_driver
@@ -48992,7 +51876,7 @@ pub struct VkPhysicalDeviceLayeredDriverPropertiesMSFT {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_MSFT_layered_driver.html>
 pub trait VK_MSFT_layered_driver: Debug {}
 /// struct for `VK_MSFT_layered_driver`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_MSFT_layered_driver {}
 impl VK_MSFT_layered_driver for Vulkan_MSFT_layered_driver {}
 impl Default for Vulkan_MSFT_layered_driver {
@@ -49003,6 +51887,12 @@ impl Default for Vulkan_MSFT_layered_driver {
 impl Vulkan_MSFT_layered_driver {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_MSFT_layered_driver {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_MSFT_layered_driver")
+		.finish()
 	}
 }
 /// struct `VkPhysicalDeviceDescriptorPoolOverallocationFeaturesNV` from VK_NV_descriptor_pool_overallocation
@@ -49018,7 +51908,7 @@ pub struct VkPhysicalDeviceDescriptorPoolOverallocationFeaturesNV {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NV_descriptor_pool_overallocation.html>
 pub trait VK_NV_descriptor_pool_overallocation: Debug {}
 /// struct for `VK_NV_descriptor_pool_overallocation`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_NV_descriptor_pool_overallocation {}
 impl VK_NV_descriptor_pool_overallocation for Vulkan_NV_descriptor_pool_overallocation {}
 impl Default for Vulkan_NV_descriptor_pool_overallocation {
@@ -49029,6 +51919,12 @@ impl Default for Vulkan_NV_descriptor_pool_overallocation {
 impl Vulkan_NV_descriptor_pool_overallocation {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_NV_descriptor_pool_overallocation {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_NV_descriptor_pool_overallocation")
+		.finish()
 	}
 }
 /// struct `VkPhysicalDeviceTileMemoryHeapFeaturesQCOM` from VK_QCOM_tile_memory_heap
@@ -49092,7 +51988,7 @@ pub trait VK_QCOM_tile_memory_heap: Debug {
 	fn vkCmdBindTileMemoryQCOM(&self, commandBuffer: VkCommandBuffer, pTileMemoryBindInfo: *const VkTileMemoryBindInfoQCOM) -> Result<()>;
 }
 /// struct for `VK_QCOM_tile_memory_heap`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_QCOM_tile_memory_heap {
 	vk_cmd_bind_tile_memory_qcom: PFN_vkCmdBindTileMemoryQCOM,
 }
@@ -49113,6 +52009,13 @@ impl Vulkan_QCOM_tile_memory_heap {
 		Self {
 			vk_cmd_bind_tile_memory_qcom: {let proc = get_instance_proc_address(instance, "vkCmdBindTileMemoryQCOM"); if proc == null() {dummy_vkCmdBindTileMemoryQCOM} else {unsafe {transmute(proc)}}},
 		}
+	}
+}
+impl Debug for Vulkan_QCOM_tile_memory_heap {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_QCOM_tile_memory_heap")
+		.field("vkCmdBindTileMemoryQCOM", &if self.vk_cmd_bind_tile_memory_qcom == dummy_vkCmdBindTileMemoryQCOM {unsafe {transmute(null::<PFN_vkCmdBindTileMemoryQCOM>())}} else {self.vk_cmd_bind_tile_memory_qcom})
+		.finish()
 	}
 }
 /// enum `VkDisplaySurfaceStereoTypeNV` from VK_NV_display_stereo
@@ -49148,7 +52051,7 @@ pub struct VkDisplayModeStereoPropertiesNV {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NV_display_stereo.html>
 pub trait VK_NV_display_stereo: Debug {}
 /// struct for `VK_NV_display_stereo`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_NV_display_stereo {}
 impl VK_NV_display_stereo for Vulkan_NV_display_stereo {}
 impl Default for Vulkan_NV_display_stereo {
@@ -49159,6 +52062,12 @@ impl Default for Vulkan_NV_display_stereo {
 impl Vulkan_NV_display_stereo {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_NV_display_stereo {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_NV_display_stereo")
+		.finish()
 	}
 }
 /// struct `VkPhysicalDeviceRawAccessChainsFeaturesNV` from VK_NV_raw_access_chains
@@ -49174,7 +52083,7 @@ pub struct VkPhysicalDeviceRawAccessChainsFeaturesNV {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NV_raw_access_chains.html>
 pub trait VK_NV_raw_access_chains: Debug {}
 /// struct for `VK_NV_raw_access_chains`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_NV_raw_access_chains {}
 impl VK_NV_raw_access_chains for Vulkan_NV_raw_access_chains {}
 impl Default for Vulkan_NV_raw_access_chains {
@@ -49185,6 +52094,12 @@ impl Default for Vulkan_NV_raw_access_chains {
 impl Vulkan_NV_raw_access_chains {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_NV_raw_access_chains {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_NV_raw_access_chains")
+		.finish()
 	}
 }
 /// Normal handle `VkExternalComputeQueueNV` from VK_NV_external_compute_queue
@@ -49260,7 +52175,7 @@ pub trait VK_NV_external_compute_queue: Debug {
 	fn vkGetExternalComputeQueueDataNV(&self, externalQueue: VkExternalComputeQueueNV, params: *mut VkExternalComputeQueueDataParamsNV, pData: *mut c_void) -> Result<()>;
 }
 /// struct for `VK_NV_external_compute_queue`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_NV_external_compute_queue {
 	vk_create_external_compute_queue_nv: PFN_vkCreateExternalComputeQueueNV,
 	vk_destroy_external_compute_queue_nv: PFN_vkDestroyExternalComputeQueueNV,
@@ -49295,6 +52210,15 @@ impl Vulkan_NV_external_compute_queue {
 		}
 	}
 }
+impl Debug for Vulkan_NV_external_compute_queue {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_NV_external_compute_queue")
+		.field("vkCreateExternalComputeQueueNV", &if self.vk_create_external_compute_queue_nv == dummy_vkCreateExternalComputeQueueNV {unsafe {transmute(null::<PFN_vkCreateExternalComputeQueueNV>())}} else {self.vk_create_external_compute_queue_nv})
+		.field("vkDestroyExternalComputeQueueNV", &if self.vk_destroy_external_compute_queue_nv == dummy_vkDestroyExternalComputeQueueNV {unsafe {transmute(null::<PFN_vkDestroyExternalComputeQueueNV>())}} else {self.vk_destroy_external_compute_queue_nv})
+		.field("vkGetExternalComputeQueueDataNV", &if self.vk_get_external_compute_queue_data_nv == dummy_vkGetExternalComputeQueueDataNV {unsafe {transmute(null::<PFN_vkGetExternalComputeQueueDataNV>())}} else {self.vk_get_external_compute_queue_data_nv})
+		.finish()
+	}
+}
 /// struct `VkPhysicalDeviceCommandBufferInheritanceFeaturesNV` from VK_NV_command_buffer_inheritance
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPhysicalDeviceCommandBufferInheritanceFeaturesNV.html>
 #[repr(C)]
@@ -49308,7 +52232,7 @@ pub struct VkPhysicalDeviceCommandBufferInheritanceFeaturesNV {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NV_command_buffer_inheritance.html>
 pub trait VK_NV_command_buffer_inheritance: Debug {}
 /// struct for `VK_NV_command_buffer_inheritance`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_NV_command_buffer_inheritance {}
 impl VK_NV_command_buffer_inheritance for Vulkan_NV_command_buffer_inheritance {}
 impl Default for Vulkan_NV_command_buffer_inheritance {
@@ -49319,6 +52243,12 @@ impl Default for Vulkan_NV_command_buffer_inheritance {
 impl Vulkan_NV_command_buffer_inheritance {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_NV_command_buffer_inheritance {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_NV_command_buffer_inheritance")
+		.finish()
 	}
 }
 /// struct `VkPhysicalDeviceShaderAtomicFloat16VectorFeaturesNV` from VK_NV_shader_atomic_float16_vector
@@ -49334,7 +52264,7 @@ pub struct VkPhysicalDeviceShaderAtomicFloat16VectorFeaturesNV {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NV_shader_atomic_float16_vector.html>
 pub trait VK_NV_shader_atomic_float16_vector: Debug {}
 /// struct for `VK_NV_shader_atomic_float16_vector`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_NV_shader_atomic_float16_vector {}
 impl VK_NV_shader_atomic_float16_vector for Vulkan_NV_shader_atomic_float16_vector {}
 impl Default for Vulkan_NV_shader_atomic_float16_vector {
@@ -49345,6 +52275,12 @@ impl Default for Vulkan_NV_shader_atomic_float16_vector {
 impl Vulkan_NV_shader_atomic_float16_vector {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_NV_shader_atomic_float16_vector {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_NV_shader_atomic_float16_vector")
+		.finish()
 	}
 }
 /// struct `VkPhysicalDeviceShaderReplicatedCompositesFeaturesEXT` from VK_EXT_shader_replicated_composites
@@ -49360,7 +52296,7 @@ pub struct VkPhysicalDeviceShaderReplicatedCompositesFeaturesEXT {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_shader_replicated_composites.html>
 pub trait VK_EXT_shader_replicated_composites: Debug {}
 /// struct for `VK_EXT_shader_replicated_composites`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_shader_replicated_composites {}
 impl VK_EXT_shader_replicated_composites for Vulkan_EXT_shader_replicated_composites {}
 impl Default for Vulkan_EXT_shader_replicated_composites {
@@ -49371,6 +52307,12 @@ impl Default for Vulkan_EXT_shader_replicated_composites {
 impl Vulkan_EXT_shader_replicated_composites {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_EXT_shader_replicated_composites {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_shader_replicated_composites")
+		.finish()
 	}
 }
 /// struct `VkPhysicalDeviceShaderFloat8FeaturesEXT` from VK_EXT_shader_float8
@@ -49387,7 +52329,7 @@ pub struct VkPhysicalDeviceShaderFloat8FeaturesEXT {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_shader_float8.html>
 pub trait VK_EXT_shader_float8: Debug {}
 /// struct for `VK_EXT_shader_float8`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_shader_float8 {}
 impl VK_EXT_shader_float8 for Vulkan_EXT_shader_float8 {}
 impl Default for Vulkan_EXT_shader_float8 {
@@ -49398,6 +52340,12 @@ impl Default for Vulkan_EXT_shader_float8 {
 impl Vulkan_EXT_shader_float8 {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_EXT_shader_float8 {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_shader_float8")
+		.finish()
 	}
 }
 /// struct `VkPhysicalDeviceRayTracingValidationFeaturesNV` from VK_NV_ray_tracing_validation
@@ -49413,7 +52361,7 @@ pub struct VkPhysicalDeviceRayTracingValidationFeaturesNV {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NV_ray_tracing_validation.html>
 pub trait VK_NV_ray_tracing_validation: Debug {}
 /// struct for `VK_NV_ray_tracing_validation`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_NV_ray_tracing_validation {}
 impl VK_NV_ray_tracing_validation for Vulkan_NV_ray_tracing_validation {}
 impl Default for Vulkan_NV_ray_tracing_validation {
@@ -49424,6 +52372,12 @@ impl Default for Vulkan_NV_ray_tracing_validation {
 impl Vulkan_NV_ray_tracing_validation {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_NV_ray_tracing_validation {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_NV_ray_tracing_validation")
+		.finish()
 	}
 }
 /// type definition `VkClusterAccelerationStructureAddressResolutionFlagsNV` from VK_NV_cluster_acceleration_structure
@@ -50031,7 +52985,7 @@ pub trait VK_NV_cluster_acceleration_structure: Debug {
 	fn vkCmdBuildClusterAccelerationStructureIndirectNV(&self, commandBuffer: VkCommandBuffer, pCommandInfos: *const VkClusterAccelerationStructureCommandsInfoNV) -> Result<()>;
 }
 /// struct for `VK_NV_cluster_acceleration_structure`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_NV_cluster_acceleration_structure {
 	vk_get_cluster_acceleration_structure_build_sizes_nv: PFN_vkGetClusterAccelerationStructureBuildSizesNV,
 	vk_cmd_build_cluster_acceleration_structure_indirect_nv: PFN_vkCmdBuildClusterAccelerationStructureIndirectNV,
@@ -50058,6 +53012,14 @@ impl Vulkan_NV_cluster_acceleration_structure {
 			vk_get_cluster_acceleration_structure_build_sizes_nv: {let proc = get_instance_proc_address(instance, "vkGetClusterAccelerationStructureBuildSizesNV"); if proc == null() {dummy_vkGetClusterAccelerationStructureBuildSizesNV} else {unsafe {transmute(proc)}}},
 			vk_cmd_build_cluster_acceleration_structure_indirect_nv: {let proc = get_instance_proc_address(instance, "vkCmdBuildClusterAccelerationStructureIndirectNV"); if proc == null() {dummy_vkCmdBuildClusterAccelerationStructureIndirectNV} else {unsafe {transmute(proc)}}},
 		}
+	}
+}
+impl Debug for Vulkan_NV_cluster_acceleration_structure {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_NV_cluster_acceleration_structure")
+		.field("vkGetClusterAccelerationStructureBuildSizesNV", &if self.vk_get_cluster_acceleration_structure_build_sizes_nv == dummy_vkGetClusterAccelerationStructureBuildSizesNV {unsafe {transmute(null::<PFN_vkGetClusterAccelerationStructureBuildSizesNV>())}} else {self.vk_get_cluster_acceleration_structure_build_sizes_nv})
+		.field("vkCmdBuildClusterAccelerationStructureIndirectNV", &if self.vk_cmd_build_cluster_acceleration_structure_indirect_nv == dummy_vkCmdBuildClusterAccelerationStructureIndirectNV {unsafe {transmute(null::<PFN_vkCmdBuildClusterAccelerationStructureIndirectNV>())}} else {self.vk_cmd_build_cluster_acceleration_structure_indirect_nv})
+		.finish()
 	}
 }
 /// constant `VK_PARTITIONED_ACCELERATION_STRUCTURE_PARTITION_INDEX_GLOBAL_NV` from VK_NV_partitioned_acceleration_structure
@@ -50259,7 +53221,7 @@ pub trait VK_NV_partitioned_acceleration_structure: Debug {
 	fn vkCmdBuildPartitionedAccelerationStructuresNV(&self, commandBuffer: VkCommandBuffer, pBuildInfo: *const VkBuildPartitionedAccelerationStructureInfoNV) -> Result<()>;
 }
 /// struct for `VK_NV_partitioned_acceleration_structure`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_NV_partitioned_acceleration_structure {
 	vk_get_partitioned_acceleration_structures_build_sizes_nv: PFN_vkGetPartitionedAccelerationStructuresBuildSizesNV,
 	vk_cmd_build_partitioned_acceleration_structures_nv: PFN_vkCmdBuildPartitionedAccelerationStructuresNV,
@@ -50286,6 +53248,14 @@ impl Vulkan_NV_partitioned_acceleration_structure {
 			vk_get_partitioned_acceleration_structures_build_sizes_nv: {let proc = get_instance_proc_address(instance, "vkGetPartitionedAccelerationStructuresBuildSizesNV"); if proc == null() {dummy_vkGetPartitionedAccelerationStructuresBuildSizesNV} else {unsafe {transmute(proc)}}},
 			vk_cmd_build_partitioned_acceleration_structures_nv: {let proc = get_instance_proc_address(instance, "vkCmdBuildPartitionedAccelerationStructuresNV"); if proc == null() {dummy_vkCmdBuildPartitionedAccelerationStructuresNV} else {unsafe {transmute(proc)}}},
 		}
+	}
+}
+impl Debug for Vulkan_NV_partitioned_acceleration_structure {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_NV_partitioned_acceleration_structure")
+		.field("vkGetPartitionedAccelerationStructuresBuildSizesNV", &if self.vk_get_partitioned_acceleration_structures_build_sizes_nv == dummy_vkGetPartitionedAccelerationStructuresBuildSizesNV {unsafe {transmute(null::<PFN_vkGetPartitionedAccelerationStructuresBuildSizesNV>())}} else {self.vk_get_partitioned_acceleration_structures_build_sizes_nv})
+		.field("vkCmdBuildPartitionedAccelerationStructuresNV", &if self.vk_cmd_build_partitioned_acceleration_structures_nv == dummy_vkCmdBuildPartitionedAccelerationStructuresNV {unsafe {transmute(null::<PFN_vkCmdBuildPartitionedAccelerationStructuresNV>())}} else {self.vk_cmd_build_partitioned_acceleration_structures_nv})
+		.finish()
 	}
 }
 /// type definition `VkIndirectCommandsInputModeFlagsEXT` from VK_EXT_device_generated_commands
@@ -50771,7 +53741,7 @@ pub trait VK_EXT_device_generated_commands: Debug {
 	fn vkUpdateIndirectExecutionSetShaderEXT(&self, device: VkDevice, indirectExecutionSet: VkIndirectExecutionSetEXT, executionSetWriteCount: u32, pExecutionSetWrites: *const VkWriteIndirectExecutionSetShaderEXT) -> Result<()>;
 }
 /// struct for `VK_EXT_device_generated_commands`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_device_generated_commands {
 	vk_get_generated_commands_memory_requirements_ext: PFN_vkGetGeneratedCommandsMemoryRequirementsEXT,
 	vk_cmd_preprocess_generated_commands_ext: PFN_vkCmdPreprocessGeneratedCommandsEXT,
@@ -50842,6 +53812,21 @@ impl Vulkan_EXT_device_generated_commands {
 		}
 	}
 }
+impl Debug for Vulkan_EXT_device_generated_commands {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_device_generated_commands")
+		.field("vkGetGeneratedCommandsMemoryRequirementsEXT", &if self.vk_get_generated_commands_memory_requirements_ext == dummy_vkGetGeneratedCommandsMemoryRequirementsEXT {unsafe {transmute(null::<PFN_vkGetGeneratedCommandsMemoryRequirementsEXT>())}} else {self.vk_get_generated_commands_memory_requirements_ext})
+		.field("vkCmdPreprocessGeneratedCommandsEXT", &if self.vk_cmd_preprocess_generated_commands_ext == dummy_vkCmdPreprocessGeneratedCommandsEXT {unsafe {transmute(null::<PFN_vkCmdPreprocessGeneratedCommandsEXT>())}} else {self.vk_cmd_preprocess_generated_commands_ext})
+		.field("vkCmdExecuteGeneratedCommandsEXT", &if self.vk_cmd_execute_generated_commands_ext == dummy_vkCmdExecuteGeneratedCommandsEXT {unsafe {transmute(null::<PFN_vkCmdExecuteGeneratedCommandsEXT>())}} else {self.vk_cmd_execute_generated_commands_ext})
+		.field("vkCreateIndirectCommandsLayoutEXT", &if self.vk_create_indirect_commands_layout_ext == dummy_vkCreateIndirectCommandsLayoutEXT {unsafe {transmute(null::<PFN_vkCreateIndirectCommandsLayoutEXT>())}} else {self.vk_create_indirect_commands_layout_ext})
+		.field("vkDestroyIndirectCommandsLayoutEXT", &if self.vk_destroy_indirect_commands_layout_ext == dummy_vkDestroyIndirectCommandsLayoutEXT {unsafe {transmute(null::<PFN_vkDestroyIndirectCommandsLayoutEXT>())}} else {self.vk_destroy_indirect_commands_layout_ext})
+		.field("vkCreateIndirectExecutionSetEXT", &if self.vk_create_indirect_execution_set_ext == dummy_vkCreateIndirectExecutionSetEXT {unsafe {transmute(null::<PFN_vkCreateIndirectExecutionSetEXT>())}} else {self.vk_create_indirect_execution_set_ext})
+		.field("vkDestroyIndirectExecutionSetEXT", &if self.vk_destroy_indirect_execution_set_ext == dummy_vkDestroyIndirectExecutionSetEXT {unsafe {transmute(null::<PFN_vkDestroyIndirectExecutionSetEXT>())}} else {self.vk_destroy_indirect_execution_set_ext})
+		.field("vkUpdateIndirectExecutionSetPipelineEXT", &if self.vk_update_indirect_execution_set_pipeline_ext == dummy_vkUpdateIndirectExecutionSetPipelineEXT {unsafe {transmute(null::<PFN_vkUpdateIndirectExecutionSetPipelineEXT>())}} else {self.vk_update_indirect_execution_set_pipeline_ext})
+		.field("vkUpdateIndirectExecutionSetShaderEXT", &if self.vk_update_indirect_execution_set_shader_ext == dummy_vkUpdateIndirectExecutionSetShaderEXT {unsafe {transmute(null::<PFN_vkUpdateIndirectExecutionSetShaderEXT>())}} else {self.vk_update_indirect_execution_set_shader_ext})
+		.finish()
+	}
+}
 /// struct `VkPhysicalDeviceImageAlignmentControlFeaturesMESA` from VK_MESA_image_alignment_control
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPhysicalDeviceImageAlignmentControlFeaturesMESA.html>
 #[repr(C)]
@@ -50873,7 +53858,7 @@ pub struct VkImageAlignmentControlCreateInfoMESA {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_MESA_image_alignment_control.html>
 pub trait VK_MESA_image_alignment_control: Debug {}
 /// struct for `VK_MESA_image_alignment_control`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_MESA_image_alignment_control {}
 impl VK_MESA_image_alignment_control for Vulkan_MESA_image_alignment_control {}
 impl Default for Vulkan_MESA_image_alignment_control {
@@ -50884,6 +53869,12 @@ impl Default for Vulkan_MESA_image_alignment_control {
 impl Vulkan_MESA_image_alignment_control {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_MESA_image_alignment_control {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_MESA_image_alignment_control")
+		.finish()
 	}
 }
 /// struct `VkPhysicalDeviceDepthClampControlFeaturesEXT` from VK_EXT_depth_clamp_control
@@ -50909,7 +53900,7 @@ pub struct VkPipelineViewportDepthClampControlCreateInfoEXT {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_depth_clamp_control.html>
 pub trait VK_EXT_depth_clamp_control: Debug {}
 /// struct for `VK_EXT_depth_clamp_control`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_depth_clamp_control {}
 impl VK_EXT_depth_clamp_control for Vulkan_EXT_depth_clamp_control {}
 impl Default for Vulkan_EXT_depth_clamp_control {
@@ -50920,6 +53911,12 @@ impl Default for Vulkan_EXT_depth_clamp_control {
 impl Vulkan_EXT_depth_clamp_control {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_EXT_depth_clamp_control {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_depth_clamp_control")
+		.finish()
 	}
 }
 /// struct `VkPhysicalDeviceHdrVividFeaturesHUAWEI` from VK_HUAWEI_hdr_vivid
@@ -50945,7 +53942,7 @@ pub struct VkHdrVividDynamicMetadataHUAWEI {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_HUAWEI_hdr_vivid.html>
 pub trait VK_HUAWEI_hdr_vivid: Debug {}
 /// struct for `VK_HUAWEI_hdr_vivid`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_HUAWEI_hdr_vivid {}
 impl VK_HUAWEI_hdr_vivid for Vulkan_HUAWEI_hdr_vivid {}
 impl Default for Vulkan_HUAWEI_hdr_vivid {
@@ -50956,6 +53953,12 @@ impl Default for Vulkan_HUAWEI_hdr_vivid {
 impl Vulkan_HUAWEI_hdr_vivid {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_HUAWEI_hdr_vivid {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_HUAWEI_hdr_vivid")
+		.finish()
 	}
 }
 /// struct `VkCooperativeMatrixFlexibleDimensionsPropertiesNV` from VK_NV_cooperative_matrix2
@@ -51016,7 +54019,7 @@ pub trait VK_NV_cooperative_matrix2: Debug {
 	fn vkGetPhysicalDeviceCooperativeMatrixFlexibleDimensionsPropertiesNV(&self, physicalDevice: VkPhysicalDevice, pPropertyCount: *mut uint32_t, pProperties: *mut VkCooperativeMatrixFlexibleDimensionsPropertiesNV) -> Result<()>;
 }
 /// struct for `VK_NV_cooperative_matrix2`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_NV_cooperative_matrix2 {
 	vk_get_physical_device_cooperative_matrix_flexible_dimensions_properties_nv: PFN_vkGetPhysicalDeviceCooperativeMatrixFlexibleDimensionsPropertiesNV,
 }
@@ -51039,6 +54042,13 @@ impl Vulkan_NV_cooperative_matrix2 {
 		}
 	}
 }
+impl Debug for Vulkan_NV_cooperative_matrix2 {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_NV_cooperative_matrix2")
+		.field("vkGetPhysicalDeviceCooperativeMatrixFlexibleDimensionsPropertiesNV", &if self.vk_get_physical_device_cooperative_matrix_flexible_dimensions_properties_nv == dummy_vkGetPhysicalDeviceCooperativeMatrixFlexibleDimensionsPropertiesNV {unsafe {transmute(null::<PFN_vkGetPhysicalDeviceCooperativeMatrixFlexibleDimensionsPropertiesNV>())}} else {self.vk_get_physical_device_cooperative_matrix_flexible_dimensions_properties_nv})
+		.finish()
+	}
+}
 /// struct `VkPhysicalDevicePipelineOpacityMicromapFeaturesARM` from VK_ARM_pipeline_opacity_micromap
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPhysicalDevicePipelineOpacityMicromapFeaturesARM.html>
 #[repr(C)]
@@ -51052,7 +54062,7 @@ pub struct VkPhysicalDevicePipelineOpacityMicromapFeaturesARM {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_ARM_pipeline_opacity_micromap.html>
 pub trait VK_ARM_pipeline_opacity_micromap: Debug {}
 /// struct for `VK_ARM_pipeline_opacity_micromap`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_ARM_pipeline_opacity_micromap {}
 impl VK_ARM_pipeline_opacity_micromap for Vulkan_ARM_pipeline_opacity_micromap {}
 impl Default for Vulkan_ARM_pipeline_opacity_micromap {
@@ -51063,6 +54073,12 @@ impl Default for Vulkan_ARM_pipeline_opacity_micromap {
 impl Vulkan_ARM_pipeline_opacity_micromap {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_ARM_pipeline_opacity_micromap {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_ARM_pipeline_opacity_micromap")
+		.finish()
 	}
 }
 /// struct `VkPhysicalDeviceVertexAttributeRobustnessFeaturesEXT` from VK_EXT_vertex_attribute_robustness
@@ -51078,7 +54094,7 @@ pub struct VkPhysicalDeviceVertexAttributeRobustnessFeaturesEXT {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_vertex_attribute_robustness.html>
 pub trait VK_EXT_vertex_attribute_robustness: Debug {}
 /// struct for `VK_EXT_vertex_attribute_robustness`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_vertex_attribute_robustness {}
 impl VK_EXT_vertex_attribute_robustness for Vulkan_EXT_vertex_attribute_robustness {}
 impl Default for Vulkan_EXT_vertex_attribute_robustness {
@@ -51089,6 +54105,12 @@ impl Default for Vulkan_EXT_vertex_attribute_robustness {
 impl Vulkan_EXT_vertex_attribute_robustness {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_EXT_vertex_attribute_robustness {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_vertex_attribute_robustness")
+		.finish()
 	}
 }
 /// struct `VkPhysicalDeviceFormatPackFeaturesARM` from VK_ARM_format_pack
@@ -51104,7 +54126,7 @@ pub struct VkPhysicalDeviceFormatPackFeaturesARM {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_ARM_format_pack.html>
 pub trait VK_ARM_format_pack: Debug {}
 /// struct for `VK_ARM_format_pack`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_ARM_format_pack {}
 impl VK_ARM_format_pack for Vulkan_ARM_format_pack {}
 impl Default for Vulkan_ARM_format_pack {
@@ -51115,6 +54137,12 @@ impl Default for Vulkan_ARM_format_pack {
 impl Vulkan_ARM_format_pack {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_ARM_format_pack {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_ARM_format_pack")
+		.finish()
 	}
 }
 /// struct `VkPhysicalDeviceFragmentDensityMapLayeredFeaturesVALVE` from VK_VALVE_fragment_density_map_layered
@@ -51148,7 +54176,7 @@ pub struct VkPipelineFragmentDensityMapLayeredCreateInfoVALVE {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_VALVE_fragment_density_map_layered.html>
 pub trait VK_VALVE_fragment_density_map_layered: Debug {}
 /// struct for `VK_VALVE_fragment_density_map_layered`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_VALVE_fragment_density_map_layered {}
 impl VK_VALVE_fragment_density_map_layered for Vulkan_VALVE_fragment_density_map_layered {}
 impl Default for Vulkan_VALVE_fragment_density_map_layered {
@@ -51159,6 +54187,12 @@ impl Default for Vulkan_VALVE_fragment_density_map_layered {
 impl Vulkan_VALVE_fragment_density_map_layered {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_VALVE_fragment_density_map_layered {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_VALVE_fragment_density_map_layered")
+		.finish()
 	}
 }
 /// struct `VkSetPresentConfigNV` from VK_NV_present_metering
@@ -51184,7 +54218,7 @@ pub struct VkPhysicalDevicePresentMeteringFeaturesNV {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NV_present_metering.html>
 pub trait VK_NV_present_metering: Debug {}
 /// struct for `VK_NV_present_metering`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_NV_present_metering {}
 impl VK_NV_present_metering for Vulkan_NV_present_metering {}
 impl Default for Vulkan_NV_present_metering {
@@ -51195,6 +54229,12 @@ impl Default for Vulkan_NV_present_metering {
 impl Vulkan_NV_present_metering {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_NV_present_metering {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_NV_present_metering")
+		.finish()
 	}
 }
 /// struct `VkRenderingEndInfoEXT` from VK_EXT_fragment_density_map_offset
@@ -51219,7 +54259,7 @@ pub trait VK_EXT_fragment_density_map_offset: Debug {
 	fn vkCmdEndRendering2EXT(&self, commandBuffer: VkCommandBuffer, pRenderingEndInfo: *const VkRenderingEndInfoEXT) -> Result<()>;
 }
 /// struct for `VK_EXT_fragment_density_map_offset`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_fragment_density_map_offset {
 	vk_cmd_end_rendering2_ext: PFN_vkCmdEndRendering2EXT,
 }
@@ -51242,6 +54282,13 @@ impl Vulkan_EXT_fragment_density_map_offset {
 		}
 	}
 }
+impl Debug for Vulkan_EXT_fragment_density_map_offset {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_fragment_density_map_offset")
+		.field("vkCmdEndRendering2EXT", &if self.vk_cmd_end_rendering2_ext == dummy_vkCmdEndRendering2EXT {unsafe {transmute(null::<PFN_vkCmdEndRendering2EXT>())}} else {self.vk_cmd_end_rendering2_ext})
+		.finish()
+	}
+}
 /// struct `VkPhysicalDeviceZeroInitializeDeviceMemoryFeaturesEXT` from VK_EXT_zero_initialize_device_memory
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPhysicalDeviceZeroInitializeDeviceMemoryFeaturesEXT.html>
 #[repr(C)]
@@ -51255,7 +54302,7 @@ pub struct VkPhysicalDeviceZeroInitializeDeviceMemoryFeaturesEXT {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_zero_initialize_device_memory.html>
 pub trait VK_EXT_zero_initialize_device_memory: Debug {}
 /// struct for `VK_EXT_zero_initialize_device_memory`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_zero_initialize_device_memory {}
 impl VK_EXT_zero_initialize_device_memory for Vulkan_EXT_zero_initialize_device_memory {}
 impl Default for Vulkan_EXT_zero_initialize_device_memory {
@@ -51266,6 +54313,12 @@ impl Default for Vulkan_EXT_zero_initialize_device_memory {
 impl Vulkan_EXT_zero_initialize_device_memory {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_EXT_zero_initialize_device_memory {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_zero_initialize_device_memory")
+		.finish()
 	}
 }
 /// struct `VkPhysicalDevicePipelineCacheIncrementalModeFeaturesSEC` from VK_SEC_pipeline_cache_incremental_mode
@@ -51281,7 +54334,7 @@ pub struct VkPhysicalDevicePipelineCacheIncrementalModeFeaturesSEC {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_SEC_pipeline_cache_incremental_mode.html>
 pub trait VK_SEC_pipeline_cache_incremental_mode: Debug {}
 /// struct for `VK_SEC_pipeline_cache_incremental_mode`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_SEC_pipeline_cache_incremental_mode {}
 impl VK_SEC_pipeline_cache_incremental_mode for Vulkan_SEC_pipeline_cache_incremental_mode {}
 impl Default for Vulkan_SEC_pipeline_cache_incremental_mode {
@@ -51292,6 +54345,12 @@ impl Default for Vulkan_SEC_pipeline_cache_incremental_mode {
 impl Vulkan_SEC_pipeline_cache_incremental_mode {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_SEC_pipeline_cache_incremental_mode {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_SEC_pipeline_cache_incremental_mode")
+		.finish()
 	}
 }
 /// type definition `VkAccelerationStructureCreateFlagsKHR` from VK_KHR_acceleration_structure
@@ -51696,7 +54755,7 @@ pub trait VK_KHR_acceleration_structure: Debug {
 	fn vkGetAccelerationStructureBuildSizesKHR(&self, device: VkDevice, buildType: VkAccelerationStructureBuildTypeKHR, pBuildInfo: *const VkAccelerationStructureBuildGeometryInfoKHR, pMaxPrimitiveCounts: *const uint32_t, pSizeInfo: *mut VkAccelerationStructureBuildSizesInfoKHR) -> Result<()>;
 }
 /// struct for `VK_KHR_acceleration_structure`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_acceleration_structure {
 	vk_create_acceleration_structure_khr: PFN_vkCreateAccelerationStructureKHR,
 	vk_destroy_acceleration_structure_khr: PFN_vkDestroyAccelerationStructureKHR,
@@ -51807,6 +54866,28 @@ impl Vulkan_KHR_acceleration_structure {
 			vk_get_device_acceleration_structure_compatibility_khr: {let proc = get_instance_proc_address(instance, "vkGetDeviceAccelerationStructureCompatibilityKHR"); if proc == null() {dummy_vkGetDeviceAccelerationStructureCompatibilityKHR} else {unsafe {transmute(proc)}}},
 			vk_get_acceleration_structure_build_sizes_khr: {let proc = get_instance_proc_address(instance, "vkGetAccelerationStructureBuildSizesKHR"); if proc == null() {dummy_vkGetAccelerationStructureBuildSizesKHR} else {unsafe {transmute(proc)}}},
 		}
+	}
+}
+impl Debug for Vulkan_KHR_acceleration_structure {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_acceleration_structure")
+		.field("vkCreateAccelerationStructureKHR", &if self.vk_create_acceleration_structure_khr == dummy_vkCreateAccelerationStructureKHR {unsafe {transmute(null::<PFN_vkCreateAccelerationStructureKHR>())}} else {self.vk_create_acceleration_structure_khr})
+		.field("vkDestroyAccelerationStructureKHR", &if self.vk_destroy_acceleration_structure_khr == dummy_vkDestroyAccelerationStructureKHR {unsafe {transmute(null::<PFN_vkDestroyAccelerationStructureKHR>())}} else {self.vk_destroy_acceleration_structure_khr})
+		.field("vkCmdBuildAccelerationStructuresKHR", &if self.vk_cmd_build_acceleration_structures_khr == dummy_vkCmdBuildAccelerationStructuresKHR {unsafe {transmute(null::<PFN_vkCmdBuildAccelerationStructuresKHR>())}} else {self.vk_cmd_build_acceleration_structures_khr})
+		.field("vkCmdBuildAccelerationStructuresIndirectKHR", &if self.vk_cmd_build_acceleration_structures_indirect_khr == dummy_vkCmdBuildAccelerationStructuresIndirectKHR {unsafe {transmute(null::<PFN_vkCmdBuildAccelerationStructuresIndirectKHR>())}} else {self.vk_cmd_build_acceleration_structures_indirect_khr})
+		.field("vkBuildAccelerationStructuresKHR", &if self.vk_build_acceleration_structures_khr == dummy_vkBuildAccelerationStructuresKHR {unsafe {transmute(null::<PFN_vkBuildAccelerationStructuresKHR>())}} else {self.vk_build_acceleration_structures_khr})
+		.field("vkCopyAccelerationStructureKHR", &if self.vk_copy_acceleration_structure_khr == dummy_vkCopyAccelerationStructureKHR {unsafe {transmute(null::<PFN_vkCopyAccelerationStructureKHR>())}} else {self.vk_copy_acceleration_structure_khr})
+		.field("vkCopyAccelerationStructureToMemoryKHR", &if self.vk_copy_acceleration_structure_to_memory_khr == dummy_vkCopyAccelerationStructureToMemoryKHR {unsafe {transmute(null::<PFN_vkCopyAccelerationStructureToMemoryKHR>())}} else {self.vk_copy_acceleration_structure_to_memory_khr})
+		.field("vkCopyMemoryToAccelerationStructureKHR", &if self.vk_copy_memory_to_acceleration_structure_khr == dummy_vkCopyMemoryToAccelerationStructureKHR {unsafe {transmute(null::<PFN_vkCopyMemoryToAccelerationStructureKHR>())}} else {self.vk_copy_memory_to_acceleration_structure_khr})
+		.field("vkWriteAccelerationStructuresPropertiesKHR", &if self.vk_write_acceleration_structures_properties_khr == dummy_vkWriteAccelerationStructuresPropertiesKHR {unsafe {transmute(null::<PFN_vkWriteAccelerationStructuresPropertiesKHR>())}} else {self.vk_write_acceleration_structures_properties_khr})
+		.field("vkCmdCopyAccelerationStructureKHR", &if self.vk_cmd_copy_acceleration_structure_khr == dummy_vkCmdCopyAccelerationStructureKHR {unsafe {transmute(null::<PFN_vkCmdCopyAccelerationStructureKHR>())}} else {self.vk_cmd_copy_acceleration_structure_khr})
+		.field("vkCmdCopyAccelerationStructureToMemoryKHR", &if self.vk_cmd_copy_acceleration_structure_to_memory_khr == dummy_vkCmdCopyAccelerationStructureToMemoryKHR {unsafe {transmute(null::<PFN_vkCmdCopyAccelerationStructureToMemoryKHR>())}} else {self.vk_cmd_copy_acceleration_structure_to_memory_khr})
+		.field("vkCmdCopyMemoryToAccelerationStructureKHR", &if self.vk_cmd_copy_memory_to_acceleration_structure_khr == dummy_vkCmdCopyMemoryToAccelerationStructureKHR {unsafe {transmute(null::<PFN_vkCmdCopyMemoryToAccelerationStructureKHR>())}} else {self.vk_cmd_copy_memory_to_acceleration_structure_khr})
+		.field("vkGetAccelerationStructureDeviceAddressKHR", &if self.vk_get_acceleration_structure_device_address_khr == dummy_vkGetAccelerationStructureDeviceAddressKHR {unsafe {transmute(null::<PFN_vkGetAccelerationStructureDeviceAddressKHR>())}} else {self.vk_get_acceleration_structure_device_address_khr})
+		.field("vkCmdWriteAccelerationStructuresPropertiesKHR", &if self.vk_cmd_write_acceleration_structures_properties_khr == dummy_vkCmdWriteAccelerationStructuresPropertiesKHR {unsafe {transmute(null::<PFN_vkCmdWriteAccelerationStructuresPropertiesKHR>())}} else {self.vk_cmd_write_acceleration_structures_properties_khr})
+		.field("vkGetDeviceAccelerationStructureCompatibilityKHR", &if self.vk_get_device_acceleration_structure_compatibility_khr == dummy_vkGetDeviceAccelerationStructureCompatibilityKHR {unsafe {transmute(null::<PFN_vkGetDeviceAccelerationStructureCompatibilityKHR>())}} else {self.vk_get_device_acceleration_structure_compatibility_khr})
+		.field("vkGetAccelerationStructureBuildSizesKHR", &if self.vk_get_acceleration_structure_build_sizes_khr == dummy_vkGetAccelerationStructureBuildSizesKHR {unsafe {transmute(null::<PFN_vkGetAccelerationStructureBuildSizesKHR>())}} else {self.vk_get_acceleration_structure_build_sizes_khr})
+		.finish()
 	}
 }
 /// enum `VkShaderGroupShaderKHR` from VK_KHR_ray_tracing_pipeline
@@ -51961,7 +55042,7 @@ pub trait VK_KHR_ray_tracing_pipeline: Debug {
 	fn vkCmdSetRayTracingPipelineStackSizeKHR(&self, commandBuffer: VkCommandBuffer, pipelineStackSize: u32) -> Result<()>;
 }
 /// struct for `VK_KHR_ray_tracing_pipeline`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_ray_tracing_pipeline {
 	vk_cmd_trace_rays_khr: PFN_vkCmdTraceRaysKHR,
 	vk_create_ray_tracing_pipelines_khr: PFN_vkCreateRayTracingPipelinesKHR,
@@ -52014,6 +55095,18 @@ impl Vulkan_KHR_ray_tracing_pipeline {
 		}
 	}
 }
+impl Debug for Vulkan_KHR_ray_tracing_pipeline {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_ray_tracing_pipeline")
+		.field("vkCmdTraceRaysKHR", &if self.vk_cmd_trace_rays_khr == dummy_vkCmdTraceRaysKHR {unsafe {transmute(null::<PFN_vkCmdTraceRaysKHR>())}} else {self.vk_cmd_trace_rays_khr})
+		.field("vkCreateRayTracingPipelinesKHR", &if self.vk_create_ray_tracing_pipelines_khr == dummy_vkCreateRayTracingPipelinesKHR {unsafe {transmute(null::<PFN_vkCreateRayTracingPipelinesKHR>())}} else {self.vk_create_ray_tracing_pipelines_khr})
+		.field("vkGetRayTracingCaptureReplayShaderGroupHandlesKHR", &if self.vk_get_ray_tracing_capture_replay_shader_group_handles_khr == dummy_vkGetRayTracingCaptureReplayShaderGroupHandlesKHR {unsafe {transmute(null::<PFN_vkGetRayTracingCaptureReplayShaderGroupHandlesKHR>())}} else {self.vk_get_ray_tracing_capture_replay_shader_group_handles_khr})
+		.field("vkCmdTraceRaysIndirectKHR", &if self.vk_cmd_trace_rays_indirect_khr == dummy_vkCmdTraceRaysIndirectKHR {unsafe {transmute(null::<PFN_vkCmdTraceRaysIndirectKHR>())}} else {self.vk_cmd_trace_rays_indirect_khr})
+		.field("vkGetRayTracingShaderGroupStackSizeKHR", &if self.vk_get_ray_tracing_shader_group_stack_size_khr == dummy_vkGetRayTracingShaderGroupStackSizeKHR {unsafe {transmute(null::<PFN_vkGetRayTracingShaderGroupStackSizeKHR>())}} else {self.vk_get_ray_tracing_shader_group_stack_size_khr})
+		.field("vkCmdSetRayTracingPipelineStackSizeKHR", &if self.vk_cmd_set_ray_tracing_pipeline_stack_size_khr == dummy_vkCmdSetRayTracingPipelineStackSizeKHR {unsafe {transmute(null::<PFN_vkCmdSetRayTracingPipelineStackSizeKHR>())}} else {self.vk_cmd_set_ray_tracing_pipeline_stack_size_khr})
+		.finish()
+	}
+}
 /// struct `VkPhysicalDeviceRayQueryFeaturesKHR` from VK_KHR_ray_query
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkPhysicalDeviceRayQueryFeaturesKHR.html>
 #[repr(C)]
@@ -52027,7 +55120,7 @@ pub struct VkPhysicalDeviceRayQueryFeaturesKHR {
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_ray_query.html>
 pub trait VK_KHR_ray_query: Debug {}
 /// struct for `VK_KHR_ray_query`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_ray_query {}
 impl VK_KHR_ray_query for Vulkan_KHR_ray_query {}
 impl Default for Vulkan_KHR_ray_query {
@@ -52038,6 +55131,12 @@ impl Default for Vulkan_KHR_ray_query {
 impl Vulkan_KHR_ray_query {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+impl Debug for Vulkan_KHR_ray_query {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_ray_query")
+		.finish()
 	}
 }
 /// struct `VkPhysicalDeviceMeshShaderFeaturesEXT` from VK_EXT_mesh_shader
@@ -52130,7 +55229,7 @@ pub trait VK_EXT_mesh_shader: Debug {
 	fn vkCmdDrawMeshTasksIndirectCountEXT(&self, commandBuffer: VkCommandBuffer, buffer: VkBuffer, offset: VkDeviceSize, countBuffer: VkBuffer, countBufferOffset: VkDeviceSize, maxDrawCount: u32, stride: u32) -> Result<()>;
 }
 /// struct for `VK_EXT_mesh_shader`
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_mesh_shader {
 	vk_cmd_draw_mesh_tasks_ext: PFN_vkCmdDrawMeshTasksEXT,
 	vk_cmd_draw_mesh_tasks_indirect_ext: PFN_vkCmdDrawMeshTasksIndirectEXT,
@@ -52163,6 +55262,15 @@ impl Vulkan_EXT_mesh_shader {
 			vk_cmd_draw_mesh_tasks_indirect_ext: {let proc = get_instance_proc_address(instance, "vkCmdDrawMeshTasksIndirectEXT"); if proc == null() {dummy_vkCmdDrawMeshTasksIndirectEXT} else {unsafe {transmute(proc)}}},
 			vk_cmd_draw_mesh_tasks_indirect_count_ext: {let proc = get_instance_proc_address(instance, "vkCmdDrawMeshTasksIndirectCountEXT"); if proc == null() {dummy_vkCmdDrawMeshTasksIndirectCountEXT} else {unsafe {transmute(proc)}}},
 		}
+	}
+}
+impl Debug for Vulkan_EXT_mesh_shader {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_mesh_shader")
+		.field("vkCmdDrawMeshTasksEXT", &if self.vk_cmd_draw_mesh_tasks_ext == dummy_vkCmdDrawMeshTasksEXT {unsafe {transmute(null::<PFN_vkCmdDrawMeshTasksEXT>())}} else {self.vk_cmd_draw_mesh_tasks_ext})
+		.field("vkCmdDrawMeshTasksIndirectEXT", &if self.vk_cmd_draw_mesh_tasks_indirect_ext == dummy_vkCmdDrawMeshTasksIndirectEXT {unsafe {transmute(null::<PFN_vkCmdDrawMeshTasksIndirectEXT>())}} else {self.vk_cmd_draw_mesh_tasks_indirect_ext})
+		.field("vkCmdDrawMeshTasksIndirectCountEXT", &if self.vk_cmd_draw_mesh_tasks_indirect_count_ext == dummy_vkCmdDrawMeshTasksIndirectCountEXT {unsafe {transmute(null::<PFN_vkCmdDrawMeshTasksIndirectCountEXT>())}} else {self.vk_cmd_draw_mesh_tasks_indirect_count_ext})
+		.finish()
 	}
 }
 /// type definition `VkAndroidSurfaceCreateFlagsKHR` from VK_KHR_android_surface
@@ -52202,7 +55310,7 @@ pub trait VK_KHR_android_surface: Debug {
 }
 /// struct for `VK_KHR_android_surface`
 #[cfg(feature = "android_khr")]
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_android_surface {
 	vk_create_android_surface_khr: PFN_vkCreateAndroidSurfaceKHR,
 }
@@ -52226,6 +55334,14 @@ impl Vulkan_KHR_android_surface {
 		Self {
 			vk_create_android_surface_khr: {let proc = get_instance_proc_address(instance, "vkCreateAndroidSurfaceKHR"); if proc == null() {dummy_vkCreateAndroidSurfaceKHR} else {unsafe {transmute(proc)}}},
 		}
+	}
+}
+#[cfg(feature = "android_khr")]
+impl Debug for Vulkan_KHR_android_surface {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_android_surface")
+		.field("vkCreateAndroidSurfaceKHR", &if self.vk_create_android_surface_khr == dummy_vkCreateAndroidSurfaceKHR {unsafe {transmute(null::<PFN_vkCreateAndroidSurfaceKHR>())}} else {self.vk_create_android_surface_khr})
+		.finish()
 	}
 }
 /// Normal handle `AHardwareBuffer` from VK_ANDROID_external_memory_android_hardware_buffer
@@ -52346,7 +55462,7 @@ pub trait VK_ANDROID_external_memory_android_hardware_buffer: Debug {
 }
 /// struct for `VK_ANDROID_external_memory_android_hardware_buffer`
 #[cfg(feature = "android_khr")]
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_ANDROID_external_memory_android_hardware_buffer {
 	vk_get_android_hardware_buffer_properties_android: PFN_vkGetAndroidHardwareBufferPropertiesANDROID,
 	vk_get_memory_android_hardware_buffer_android: PFN_vkGetMemoryAndroidHardwareBufferANDROID,
@@ -52376,6 +55492,15 @@ impl Vulkan_ANDROID_external_memory_android_hardware_buffer {
 			vk_get_android_hardware_buffer_properties_android: {let proc = get_instance_proc_address(instance, "vkGetAndroidHardwareBufferPropertiesANDROID"); if proc == null() {dummy_vkGetAndroidHardwareBufferPropertiesANDROID} else {unsafe {transmute(proc)}}},
 			vk_get_memory_android_hardware_buffer_android: {let proc = get_instance_proc_address(instance, "vkGetMemoryAndroidHardwareBufferANDROID"); if proc == null() {dummy_vkGetMemoryAndroidHardwareBufferANDROID} else {unsafe {transmute(proc)}}},
 		}
+	}
+}
+#[cfg(feature = "android_khr")]
+impl Debug for Vulkan_ANDROID_external_memory_android_hardware_buffer {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_ANDROID_external_memory_android_hardware_buffer")
+		.field("vkGetAndroidHardwareBufferPropertiesANDROID", &if self.vk_get_android_hardware_buffer_properties_android == dummy_vkGetAndroidHardwareBufferPropertiesANDROID {unsafe {transmute(null::<PFN_vkGetAndroidHardwareBufferPropertiesANDROID>())}} else {self.vk_get_android_hardware_buffer_properties_android})
+		.field("vkGetMemoryAndroidHardwareBufferANDROID", &if self.vk_get_memory_android_hardware_buffer_android == dummy_vkGetMemoryAndroidHardwareBufferANDROID {unsafe {transmute(null::<PFN_vkGetMemoryAndroidHardwareBufferANDROID>())}} else {self.vk_get_memory_android_hardware_buffer_android})
+		.finish()
 	}
 }
 /// struct `VkPhysicalDeviceExternalFormatResolveFeaturesANDROID` from VK_ANDROID_external_format_resolve
@@ -52416,7 +55541,7 @@ pub struct VkAndroidHardwareBufferFormatResolvePropertiesANDROID {
 pub trait VK_ANDROID_external_format_resolve: Debug {}
 /// struct for `VK_ANDROID_external_format_resolve`
 #[cfg(feature = "android_khr")]
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_ANDROID_external_format_resolve {}
 #[cfg(feature = "android_khr")]
 impl VK_ANDROID_external_format_resolve for Vulkan_ANDROID_external_format_resolve {}
@@ -52430,6 +55555,13 @@ impl Default for Vulkan_ANDROID_external_format_resolve {
 impl Vulkan_ANDROID_external_format_resolve {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+#[cfg(feature = "android_khr")]
+impl Debug for Vulkan_ANDROID_external_format_resolve {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_ANDROID_external_format_resolve")
+		.finish()
 	}
 }
 /// type definition `VkIOSSurfaceCreateFlagsMVK` from VK_MVK_ios_surface
@@ -52465,7 +55597,7 @@ pub trait VK_MVK_ios_surface: Debug {
 }
 /// struct for `VK_MVK_ios_surface`
 #[cfg(feature = "ios_mvk")]
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_MVK_ios_surface {
 	vk_create_iossurface_mvk: PFN_vkCreateIOSSurfaceMVK,
 }
@@ -52489,6 +55621,14 @@ impl Vulkan_MVK_ios_surface {
 		Self {
 			vk_create_iossurface_mvk: {let proc = get_instance_proc_address(instance, "vkCreateIOSSurfaceMVK"); if proc == null() {dummy_vkCreateIOSSurfaceMVK} else {unsafe {transmute(proc)}}},
 		}
+	}
+}
+#[cfg(feature = "ios_mvk")]
+impl Debug for Vulkan_MVK_ios_surface {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_MVK_ios_surface")
+		.field("vkCreateIOSSurfaceMVK", &if self.vk_create_iossurface_mvk == dummy_vkCreateIOSSurfaceMVK {unsafe {transmute(null::<PFN_vkCreateIOSSurfaceMVK>())}} else {self.vk_create_iossurface_mvk})
+		.finish()
 	}
 }
 /// type definition `VkMacOSSurfaceCreateFlagsMVK` from VK_MVK_macos_surface
@@ -52524,7 +55664,7 @@ pub trait VK_MVK_macos_surface: Debug {
 }
 /// struct for `VK_MVK_macos_surface`
 #[cfg(feature = "macos_mvk")]
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_MVK_macos_surface {
 	vk_create_mac_ossurface_mvk: PFN_vkCreateMacOSSurfaceMVK,
 }
@@ -52548,6 +55688,14 @@ impl Vulkan_MVK_macos_surface {
 		Self {
 			vk_create_mac_ossurface_mvk: {let proc = get_instance_proc_address(instance, "vkCreateMacOSSurfaceMVK"); if proc == null() {dummy_vkCreateMacOSSurfaceMVK} else {unsafe {transmute(proc)}}},
 		}
+	}
+}
+#[cfg(feature = "macos_mvk")]
+impl Debug for Vulkan_MVK_macos_surface {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_MVK_macos_surface")
+		.field("vkCreateMacOSSurfaceMVK", &if self.vk_create_mac_ossurface_mvk == dummy_vkCreateMacOSSurfaceMVK {unsafe {transmute(null::<PFN_vkCreateMacOSSurfaceMVK>())}} else {self.vk_create_mac_ossurface_mvk})
+		.finish()
 	}
 }
 /// type definition `CAMetalLayer` from VK_EXT_metal_surface
@@ -52587,7 +55735,7 @@ pub trait VK_EXT_metal_surface: Debug {
 }
 /// struct for `VK_EXT_metal_surface`
 #[cfg(feature = "metal_ext")]
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_metal_surface {
 	vk_create_metal_surface_ext: PFN_vkCreateMetalSurfaceEXT,
 }
@@ -52611,6 +55759,14 @@ impl Vulkan_EXT_metal_surface {
 		Self {
 			vk_create_metal_surface_ext: {let proc = get_instance_proc_address(instance, "vkCreateMetalSurfaceEXT"); if proc == null() {dummy_vkCreateMetalSurfaceEXT} else {unsafe {transmute(proc)}}},
 		}
+	}
+}
+#[cfg(feature = "metal_ext")]
+impl Debug for Vulkan_EXT_metal_surface {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_metal_surface")
+		.field("vkCreateMetalSurfaceEXT", &if self.vk_create_metal_surface_ext == dummy_vkCreateMetalSurfaceEXT {unsafe {transmute(null::<PFN_vkCreateMetalSurfaceEXT>())}} else {self.vk_create_metal_surface_ext})
+		.finish()
 	}
 }
 /// type definition `MTLDevice_id` from VK_EXT_metal_objects
@@ -52834,7 +55990,7 @@ pub trait VK_EXT_metal_objects: Debug {
 }
 /// struct for `VK_EXT_metal_objects`
 #[cfg(feature = "metal_ext")]
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_metal_objects {
 	vk_export_metal_objects_ext: PFN_vkExportMetalObjectsEXT,
 }
@@ -52858,6 +56014,14 @@ impl Vulkan_EXT_metal_objects {
 		Self {
 			vk_export_metal_objects_ext: {let proc = get_instance_proc_address(instance, "vkExportMetalObjectsEXT"); if proc == null() {dummy_vkExportMetalObjectsEXT} else {unsafe {transmute(proc)}}},
 		}
+	}
+}
+#[cfg(feature = "metal_ext")]
+impl Debug for Vulkan_EXT_metal_objects {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_metal_objects")
+		.field("vkExportMetalObjectsEXT", &if self.vk_export_metal_objects_ext == dummy_vkExportMetalObjectsEXT {unsafe {transmute(null::<PFN_vkExportMetalObjectsEXT>())}} else {self.vk_export_metal_objects_ext})
+		.finish()
 	}
 }
 /// struct `VkImportMemoryMetalHandleInfoEXT` from VK_EXT_external_memory_metal
@@ -52921,7 +56085,7 @@ pub trait VK_EXT_external_memory_metal: Debug {
 }
 /// struct for `VK_EXT_external_memory_metal`
 #[cfg(feature = "metal_ext")]
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_external_memory_metal {
 	vk_get_memory_metal_handle_ext: PFN_vkGetMemoryMetalHandleEXT,
 	vk_get_memory_metal_handle_properties_ext: PFN_vkGetMemoryMetalHandlePropertiesEXT,
@@ -52951,6 +56115,15 @@ impl Vulkan_EXT_external_memory_metal {
 			vk_get_memory_metal_handle_ext: {let proc = get_instance_proc_address(instance, "vkGetMemoryMetalHandleEXT"); if proc == null() {dummy_vkGetMemoryMetalHandleEXT} else {unsafe {transmute(proc)}}},
 			vk_get_memory_metal_handle_properties_ext: {let proc = get_instance_proc_address(instance, "vkGetMemoryMetalHandlePropertiesEXT"); if proc == null() {dummy_vkGetMemoryMetalHandlePropertiesEXT} else {unsafe {transmute(proc)}}},
 		}
+	}
+}
+#[cfg(feature = "metal_ext")]
+impl Debug for Vulkan_EXT_external_memory_metal {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_external_memory_metal")
+		.field("vkGetMemoryMetalHandleEXT", &if self.vk_get_memory_metal_handle_ext == dummy_vkGetMemoryMetalHandleEXT {unsafe {transmute(null::<PFN_vkGetMemoryMetalHandleEXT>())}} else {self.vk_get_memory_metal_handle_ext})
+		.field("vkGetMemoryMetalHandlePropertiesEXT", &if self.vk_get_memory_metal_handle_properties_ext == dummy_vkGetMemoryMetalHandlePropertiesEXT {unsafe {transmute(null::<PFN_vkGetMemoryMetalHandlePropertiesEXT>())}} else {self.vk_get_memory_metal_handle_properties_ext})
+		.finish()
 	}
 }
 /// type definition for Rust: `struct wl_display*` = `*const c_void`
@@ -53006,7 +56179,7 @@ pub trait VK_KHR_wayland_surface: Debug {
 }
 /// struct for `VK_KHR_wayland_surface`
 #[cfg(feature = "wayland_khr")]
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_wayland_surface {
 	vk_create_wayland_surface_khr: PFN_vkCreateWaylandSurfaceKHR,
 	vk_get_physical_device_wayland_presentation_support_khr: PFN_vkGetPhysicalDeviceWaylandPresentationSupportKHR,
@@ -53038,6 +56211,15 @@ impl Vulkan_KHR_wayland_surface {
 		}
 	}
 }
+#[cfg(feature = "wayland_khr")]
+impl Debug for Vulkan_KHR_wayland_surface {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_wayland_surface")
+		.field("vkCreateWaylandSurfaceKHR", &if self.vk_create_wayland_surface_khr == dummy_vkCreateWaylandSurfaceKHR {unsafe {transmute(null::<PFN_vkCreateWaylandSurfaceKHR>())}} else {self.vk_create_wayland_surface_khr})
+		.field("vkGetPhysicalDeviceWaylandPresentationSupportKHR", &if self.vk_get_physical_device_wayland_presentation_support_khr == dummy_vkGetPhysicalDeviceWaylandPresentationSupportKHR {unsafe {transmute(null::<PFN_vkGetPhysicalDeviceWaylandPresentationSupportKHR>())}} else {self.vk_get_physical_device_wayland_presentation_support_khr})
+		.finish()
+	}
+}
 /// type definition `LPCWSTR` from VK_KHR_win32_surface
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/LPCWSTR.html>
 #[cfg(feature = "win32_khr")]
@@ -53054,22 +56236,22 @@ pub type BOOL = u32;
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkWin32SurfaceCreateFlagsKHR.html>
 #[cfg(feature = "win32_khr")]
 pub type VkWin32SurfaceCreateFlagsKHR = VkFlags;
-/// Normal handle `HANDLE` from VK_KHR_win32_surface
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/HANDLE.html>
-#[cfg(feature = "win32_khr")] #[repr(C)] #[derive(Debug, Clone, Copy)] pub struct HANDLE_T {_unused: u32,}
-#[cfg(feature = "win32_khr")] pub type HANDLE = *const HANDLE_T;
-/// Normal handle `HMONITOR` from VK_KHR_win32_surface
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/HMONITOR.html>
-#[cfg(feature = "win32_khr")] #[repr(C)] #[derive(Debug, Clone, Copy)] pub struct HMONITOR_T {_unused: u32,}
-#[cfg(feature = "win32_khr")] pub type HMONITOR = *const HMONITOR_T;
-/// Normal handle `HWND` from VK_KHR_win32_surface
-/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/HWND.html>
-#[cfg(feature = "win32_khr")] #[repr(C)] #[derive(Debug, Clone, Copy)] pub struct HWND_T {_unused: u32,}
-#[cfg(feature = "win32_khr")] pub type HWND = *const HWND_T;
 /// Normal handle `HINSTANCE` from VK_KHR_win32_surface
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/HINSTANCE.html>
 #[cfg(feature = "win32_khr")] #[repr(C)] #[derive(Debug, Clone, Copy)] pub struct HINSTANCE_T {_unused: u32,}
 #[cfg(feature = "win32_khr")] pub type HINSTANCE = *const HINSTANCE_T;
+/// Normal handle `HANDLE` from VK_KHR_win32_surface
+/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/HANDLE.html>
+#[cfg(feature = "win32_khr")] #[repr(C)] #[derive(Debug, Clone, Copy)] pub struct HANDLE_T {_unused: u32,}
+#[cfg(feature = "win32_khr")] pub type HANDLE = *const HANDLE_T;
+/// Normal handle `HWND` from VK_KHR_win32_surface
+/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/HWND.html>
+#[cfg(feature = "win32_khr")] #[repr(C)] #[derive(Debug, Clone, Copy)] pub struct HWND_T {_unused: u32,}
+#[cfg(feature = "win32_khr")] pub type HWND = *const HWND_T;
+/// Normal handle `HMONITOR` from VK_KHR_win32_surface
+/// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/HMONITOR.html>
+#[cfg(feature = "win32_khr")] #[repr(C)] #[derive(Debug, Clone, Copy)] pub struct HMONITOR_T {_unused: u32,}
+#[cfg(feature = "win32_khr")] pub type HMONITOR = *const HMONITOR_T;
 /// struct `SECURITY_ATTRIBUTES` from VK_KHR_win32_surface
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/SECURITY_ATTRIBUTES.html>
 #[cfg(feature = "win32_khr")]
@@ -53121,7 +56303,7 @@ pub trait VK_KHR_win32_surface: Debug {
 }
 /// struct for `VK_KHR_win32_surface`
 #[cfg(feature = "win32_khr")]
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_win32_surface {
 	vk_create_win32_surface_khr: PFN_vkCreateWin32SurfaceKHR,
 	vk_get_physical_device_win32_presentation_support_khr: PFN_vkGetPhysicalDeviceWin32PresentationSupportKHR,
@@ -53151,6 +56333,15 @@ impl Vulkan_KHR_win32_surface {
 			vk_create_win32_surface_khr: {let proc = get_instance_proc_address(instance, "vkCreateWin32SurfaceKHR"); if proc == null() {dummy_vkCreateWin32SurfaceKHR} else {unsafe {transmute(proc)}}},
 			vk_get_physical_device_win32_presentation_support_khr: {let proc = get_instance_proc_address(instance, "vkGetPhysicalDeviceWin32PresentationSupportKHR"); if proc == null() {dummy_vkGetPhysicalDeviceWin32PresentationSupportKHR} else {unsafe {transmute(proc)}}},
 		}
+	}
+}
+#[cfg(feature = "win32_khr")]
+impl Debug for Vulkan_KHR_win32_surface {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_win32_surface")
+		.field("vkCreateWin32SurfaceKHR", &if self.vk_create_win32_surface_khr == dummy_vkCreateWin32SurfaceKHR {unsafe {transmute(null::<PFN_vkCreateWin32SurfaceKHR>())}} else {self.vk_create_win32_surface_khr})
+		.field("vkGetPhysicalDeviceWin32PresentationSupportKHR", &if self.vk_get_physical_device_win32_presentation_support_khr == dummy_vkGetPhysicalDeviceWin32PresentationSupportKHR {unsafe {transmute(null::<PFN_vkGetPhysicalDeviceWin32PresentationSupportKHR>())}} else {self.vk_get_physical_device_win32_presentation_support_khr})
+		.finish()
 	}
 }
 /// struct `VkImportMemoryWin32HandleInfoKHR` from VK_KHR_external_memory_win32
@@ -53227,7 +56418,7 @@ pub trait VK_KHR_external_memory_win32: Debug {
 }
 /// struct for `VK_KHR_external_memory_win32`
 #[cfg(feature = "win32_khr")]
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_external_memory_win32 {
 	vk_get_memory_win32_handle_khr: PFN_vkGetMemoryWin32HandleKHR,
 	vk_get_memory_win32_handle_properties_khr: PFN_vkGetMemoryWin32HandlePropertiesKHR,
@@ -53259,6 +56450,15 @@ impl Vulkan_KHR_external_memory_win32 {
 		}
 	}
 }
+#[cfg(feature = "win32_khr")]
+impl Debug for Vulkan_KHR_external_memory_win32 {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_external_memory_win32")
+		.field("vkGetMemoryWin32HandleKHR", &if self.vk_get_memory_win32_handle_khr == dummy_vkGetMemoryWin32HandleKHR {unsafe {transmute(null::<PFN_vkGetMemoryWin32HandleKHR>())}} else {self.vk_get_memory_win32_handle_khr})
+		.field("vkGetMemoryWin32HandlePropertiesKHR", &if self.vk_get_memory_win32_handle_properties_khr == dummy_vkGetMemoryWin32HandlePropertiesKHR {unsafe {transmute(null::<PFN_vkGetMemoryWin32HandlePropertiesKHR>())}} else {self.vk_get_memory_win32_handle_properties_khr})
+		.finish()
+	}
+}
 /// struct `VkWin32KeyedMutexAcquireReleaseInfoKHR` from VK_KHR_win32_keyed_mutex
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkWin32KeyedMutexAcquireReleaseInfoKHR.html>
 #[cfg(feature = "win32_khr")]
@@ -53281,7 +56481,7 @@ pub struct VkWin32KeyedMutexAcquireReleaseInfoKHR {
 pub trait VK_KHR_win32_keyed_mutex: Debug {}
 /// struct for `VK_KHR_win32_keyed_mutex`
 #[cfg(feature = "win32_khr")]
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_win32_keyed_mutex {}
 #[cfg(feature = "win32_khr")]
 impl VK_KHR_win32_keyed_mutex for Vulkan_KHR_win32_keyed_mutex {}
@@ -53295,6 +56495,13 @@ impl Default for Vulkan_KHR_win32_keyed_mutex {
 impl Vulkan_KHR_win32_keyed_mutex {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+#[cfg(feature = "win32_khr")]
+impl Debug for Vulkan_KHR_win32_keyed_mutex {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_win32_keyed_mutex")
+		.finish()
 	}
 }
 /// struct `VkImportSemaphoreWin32HandleInfoKHR` from VK_KHR_external_semaphore_win32
@@ -53376,7 +56583,7 @@ pub trait VK_KHR_external_semaphore_win32: Debug {
 }
 /// struct for `VK_KHR_external_semaphore_win32`
 #[cfg(feature = "win32_khr")]
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_external_semaphore_win32 {
 	vk_import_semaphore_win32_handle_khr: PFN_vkImportSemaphoreWin32HandleKHR,
 	vk_get_semaphore_win32_handle_khr: PFN_vkGetSemaphoreWin32HandleKHR,
@@ -53406,6 +56613,15 @@ impl Vulkan_KHR_external_semaphore_win32 {
 			vk_import_semaphore_win32_handle_khr: {let proc = get_instance_proc_address(instance, "vkImportSemaphoreWin32HandleKHR"); if proc == null() {dummy_vkImportSemaphoreWin32HandleKHR} else {unsafe {transmute(proc)}}},
 			vk_get_semaphore_win32_handle_khr: {let proc = get_instance_proc_address(instance, "vkGetSemaphoreWin32HandleKHR"); if proc == null() {dummy_vkGetSemaphoreWin32HandleKHR} else {unsafe {transmute(proc)}}},
 		}
+	}
+}
+#[cfg(feature = "win32_khr")]
+impl Debug for Vulkan_KHR_external_semaphore_win32 {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_external_semaphore_win32")
+		.field("vkImportSemaphoreWin32HandleKHR", &if self.vk_import_semaphore_win32_handle_khr == dummy_vkImportSemaphoreWin32HandleKHR {unsafe {transmute(null::<PFN_vkImportSemaphoreWin32HandleKHR>())}} else {self.vk_import_semaphore_win32_handle_khr})
+		.field("vkGetSemaphoreWin32HandleKHR", &if self.vk_get_semaphore_win32_handle_khr == dummy_vkGetSemaphoreWin32HandleKHR {unsafe {transmute(null::<PFN_vkGetSemaphoreWin32HandleKHR>())}} else {self.vk_get_semaphore_win32_handle_khr})
+		.finish()
 	}
 }
 /// struct `VkImportFenceWin32HandleInfoKHR` from VK_KHR_external_fence_win32
@@ -53474,7 +56690,7 @@ pub trait VK_KHR_external_fence_win32: Debug {
 }
 /// struct for `VK_KHR_external_fence_win32`
 #[cfg(feature = "win32_khr")]
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_external_fence_win32 {
 	vk_import_fence_win32_handle_khr: PFN_vkImportFenceWin32HandleKHR,
 	vk_get_fence_win32_handle_khr: PFN_vkGetFenceWin32HandleKHR,
@@ -53504,6 +56720,15 @@ impl Vulkan_KHR_external_fence_win32 {
 			vk_import_fence_win32_handle_khr: {let proc = get_instance_proc_address(instance, "vkImportFenceWin32HandleKHR"); if proc == null() {dummy_vkImportFenceWin32HandleKHR} else {unsafe {transmute(proc)}}},
 			vk_get_fence_win32_handle_khr: {let proc = get_instance_proc_address(instance, "vkGetFenceWin32HandleKHR"); if proc == null() {dummy_vkGetFenceWin32HandleKHR} else {unsafe {transmute(proc)}}},
 		}
+	}
+}
+#[cfg(feature = "win32_khr")]
+impl Debug for Vulkan_KHR_external_fence_win32 {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_external_fence_win32")
+		.field("vkImportFenceWin32HandleKHR", &if self.vk_import_fence_win32_handle_khr == dummy_vkImportFenceWin32HandleKHR {unsafe {transmute(null::<PFN_vkImportFenceWin32HandleKHR>())}} else {self.vk_import_fence_win32_handle_khr})
+		.field("vkGetFenceWin32HandleKHR", &if self.vk_get_fence_win32_handle_khr == dummy_vkGetFenceWin32HandleKHR {unsafe {transmute(null::<PFN_vkGetFenceWin32HandleKHR>())}} else {self.vk_get_fence_win32_handle_khr})
+		.finish()
 	}
 }
 /// struct `VkImportMemoryWin32HandleInfoNV` from VK_NV_external_memory_win32
@@ -53546,7 +56771,7 @@ pub trait VK_NV_external_memory_win32: Debug {
 }
 /// struct for `VK_NV_external_memory_win32`
 #[cfg(feature = "win32_khr")]
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_NV_external_memory_win32 {
 	vk_get_memory_win32_handle_nv: PFN_vkGetMemoryWin32HandleNV,
 }
@@ -53572,6 +56797,14 @@ impl Vulkan_NV_external_memory_win32 {
 		}
 	}
 }
+#[cfg(feature = "win32_khr")]
+impl Debug for Vulkan_NV_external_memory_win32 {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_NV_external_memory_win32")
+		.field("vkGetMemoryWin32HandleNV", &if self.vk_get_memory_win32_handle_nv == dummy_vkGetMemoryWin32HandleNV {unsafe {transmute(null::<PFN_vkGetMemoryWin32HandleNV>())}} else {self.vk_get_memory_win32_handle_nv})
+		.finish()
+	}
+}
 /// struct `VkWin32KeyedMutexAcquireReleaseInfoNV` from VK_NV_win32_keyed_mutex
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/VkWin32KeyedMutexAcquireReleaseInfoNV.html>
 #[cfg(feature = "win32_khr")]
@@ -53594,7 +56827,7 @@ pub struct VkWin32KeyedMutexAcquireReleaseInfoNV {
 pub trait VK_NV_win32_keyed_mutex: Debug {}
 /// struct for `VK_NV_win32_keyed_mutex`
 #[cfg(feature = "win32_khr")]
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_NV_win32_keyed_mutex {}
 #[cfg(feature = "win32_khr")]
 impl VK_NV_win32_keyed_mutex for Vulkan_NV_win32_keyed_mutex {}
@@ -53608,6 +56841,13 @@ impl Default for Vulkan_NV_win32_keyed_mutex {
 impl Vulkan_NV_win32_keyed_mutex {
 	pub fn new(_instance: VkInstance, _get_instance_proc_address: impl FnMut(VkInstance, &'static str) -> *const c_void) -> Self {
 		Self {}
+	}
+}
+#[cfg(feature = "win32_khr")]
+impl Debug for Vulkan_NV_win32_keyed_mutex {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_NV_win32_keyed_mutex")
+		.finish()
 	}
 }
 /// enum `VkFullScreenExclusiveEXT` from VK_EXT_full_screen_exclusive
@@ -53703,7 +56943,7 @@ pub trait VK_EXT_full_screen_exclusive: Debug {
 }
 /// struct for `VK_EXT_full_screen_exclusive`
 #[cfg(feature = "win32_khr")]
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_EXT_full_screen_exclusive {
 	vk_get_physical_device_surface_present_modes2_ext: PFN_vkGetPhysicalDeviceSurfacePresentModes2EXT,
 	vk_acquire_full_screen_exclusive_mode_ext: PFN_vkAcquireFullScreenExclusiveModeEXT,
@@ -53747,6 +56987,17 @@ impl Vulkan_EXT_full_screen_exclusive {
 		}
 	}
 }
+#[cfg(feature = "win32_khr")]
+impl Debug for Vulkan_EXT_full_screen_exclusive {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_EXT_full_screen_exclusive")
+		.field("vkGetPhysicalDeviceSurfacePresentModes2EXT", &if self.vk_get_physical_device_surface_present_modes2_ext == dummy_vkGetPhysicalDeviceSurfacePresentModes2EXT {unsafe {transmute(null::<PFN_vkGetPhysicalDeviceSurfacePresentModes2EXT>())}} else {self.vk_get_physical_device_surface_present_modes2_ext})
+		.field("vkAcquireFullScreenExclusiveModeEXT", &if self.vk_acquire_full_screen_exclusive_mode_ext == dummy_vkAcquireFullScreenExclusiveModeEXT {unsafe {transmute(null::<PFN_vkAcquireFullScreenExclusiveModeEXT>())}} else {self.vk_acquire_full_screen_exclusive_mode_ext})
+		.field("vkReleaseFullScreenExclusiveModeEXT", &if self.vk_release_full_screen_exclusive_mode_ext == dummy_vkReleaseFullScreenExclusiveModeEXT {unsafe {transmute(null::<PFN_vkReleaseFullScreenExclusiveModeEXT>())}} else {self.vk_release_full_screen_exclusive_mode_ext})
+		.field("vkGetDeviceGroupSurfacePresentModes2EXT", &if self.vk_get_device_group_surface_present_modes2_ext == dummy_vkGetDeviceGroupSurfacePresentModes2EXT {unsafe {transmute(null::<PFN_vkGetDeviceGroupSurfacePresentModes2EXT>())}} else {self.vk_get_device_group_surface_present_modes2_ext})
+		.finish()
+	}
+}
 /// function prototype `PFN_vkAcquireWinrtDisplayNV` from VK_NV_acquire_winrt_display
 /// - Reference: <https://registry.khronos.org/vulkan/specs/latest/man/html/vkAcquireWinrtDisplayNV.html>
 #[cfg(feature = "win32_khr")]
@@ -53776,7 +57027,7 @@ pub trait VK_NV_acquire_winrt_display: Debug {
 }
 /// struct for `VK_NV_acquire_winrt_display`
 #[cfg(feature = "win32_khr")]
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_NV_acquire_winrt_display {
 	vk_acquire_winrt_display_nv: PFN_vkAcquireWinrtDisplayNV,
 	vk_get_winrt_display_nv: PFN_vkGetWinrtDisplayNV,
@@ -53806,6 +57057,15 @@ impl Vulkan_NV_acquire_winrt_display {
 			vk_acquire_winrt_display_nv: {let proc = get_instance_proc_address(instance, "vkAcquireWinrtDisplayNV"); if proc == null() {dummy_vkAcquireWinrtDisplayNV} else {unsafe {transmute(proc)}}},
 			vk_get_winrt_display_nv: {let proc = get_instance_proc_address(instance, "vkGetWinrtDisplayNV"); if proc == null() {dummy_vkGetWinrtDisplayNV} else {unsafe {transmute(proc)}}},
 		}
+	}
+}
+#[cfg(feature = "win32_khr")]
+impl Debug for Vulkan_NV_acquire_winrt_display {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_NV_acquire_winrt_display")
+		.field("vkAcquireWinrtDisplayNV", &if self.vk_acquire_winrt_display_nv == dummy_vkAcquireWinrtDisplayNV {unsafe {transmute(null::<PFN_vkAcquireWinrtDisplayNV>())}} else {self.vk_acquire_winrt_display_nv})
+		.field("vkGetWinrtDisplayNV", &if self.vk_get_winrt_display_nv == dummy_vkGetWinrtDisplayNV {unsafe {transmute(null::<PFN_vkGetWinrtDisplayNV>())}} else {self.vk_get_winrt_display_nv})
+		.finish()
 	}
 }
 /// type definition `xcb_connection_t*` from VK_KHR_xcb_surface
@@ -53865,7 +57125,7 @@ pub trait VK_KHR_xcb_surface: Debug {
 }
 /// struct for `VK_KHR_xcb_surface`
 #[cfg(feature = "xcb_khr")]
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vulkan_KHR_xcb_surface {
 	vk_create_xcb_surface_khr: PFN_vkCreateXcbSurfaceKHR,
 	vk_get_physical_device_xcb_presentation_support_khr: PFN_vkGetPhysicalDeviceXcbPresentationSupportKHR,
@@ -53895,6 +57155,15 @@ impl Vulkan_KHR_xcb_surface {
 			vk_create_xcb_surface_khr: {let proc = get_instance_proc_address(instance, "vkCreateXcbSurfaceKHR"); if proc == null() {dummy_vkCreateXcbSurfaceKHR} else {unsafe {transmute(proc)}}},
 			vk_get_physical_device_xcb_presentation_support_khr: {let proc = get_instance_proc_address(instance, "vkGetPhysicalDeviceXcbPresentationSupportKHR"); if proc == null() {dummy_vkGetPhysicalDeviceXcbPresentationSupportKHR} else {unsafe {transmute(proc)}}},
 		}
+	}
+}
+#[cfg(feature = "xcb_khr")]
+impl Debug for Vulkan_KHR_xcb_surface {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		f.debug_struct("Vulkan_KHR_xcb_surface")
+		.field("vkCreateXcbSurfaceKHR", &if self.vk_create_xcb_surface_khr == dummy_vkCreateXcbSurfaceKHR {unsafe {transmute(null::<PFN_vkCreateXcbSurfaceKHR>())}} else {self.vk_create_xcb_surface_khr})
+		.field("vkGetPhysicalDeviceXcbPresentationSupportKHR", &if self.vk_get_physical_device_xcb_presentation_support_khr == dummy_vkGetPhysicalDeviceXcbPresentationSupportKHR {unsafe {transmute(null::<PFN_vkGetPhysicalDeviceXcbPresentationSupportKHR>())}} else {self.vk_get_physical_device_xcb_presentation_support_khr})
+		.finish()
 	}
 }
 /// The all-in-one struct for your Vulkan APIs
