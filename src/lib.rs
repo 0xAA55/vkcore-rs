@@ -36,7 +36,7 @@ mod tests {
 			engineVersion: vk_make_version(1, 0, 0),
 			apiVersion: VK_API_VERSION_1_4,
 		};
-		let vkcore = VkCore::new(app_info, |instance, proc_name|unsafe {glfwGetInstanceProcAddress(instance, CString::new(proc_name).unwrap().as_ptr())});
+		let vkcore = VkCore::new(app_info, |instance, proc_name|unsafe {glfwGetInstanceProcAddress(instance, CString::new(proc_name).unwrap().as_ptr())}).unwrap();
 		dbg!(vkcore);
 
 		let start_time = glfw.get_time();
