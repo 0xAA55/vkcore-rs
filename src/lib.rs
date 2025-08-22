@@ -43,7 +43,6 @@ mod tests {
 		while !window.should_close() {
 			let cur_frame_time = glfw.get_time();
 
-			window.swap_buffers();
 			glfw.poll_events();
 			for (_, event) in glfw::flush_messages(&events) {
 				match event {
