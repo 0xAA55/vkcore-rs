@@ -7,7 +7,7 @@ mod tests {
 		ffi::{c_void, CString},
 		ptr::null,
 	};
-	use glfw::{Action, Context, Key, SwapInterval};
+	use glfw::*;
 	use crate::vkcore::*;
 
 	unsafe extern "C" {
